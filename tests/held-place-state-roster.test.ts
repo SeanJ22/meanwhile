@@ -134,7 +134,8 @@ test("NH's selected member/crosswalk fields preserve the existing roster convers
   await fixture();
   const nh = "ocd-division/country:us/state:nh", later = "2026-10-29T11:00:00.000Z";
   const members = [["S", "1", "Merrimack", "1"], ["H", "2", "Belknap", "1"],
-    ["H", "3", "Carroll", "5"], ["H", "4", "Carroll", "5"], ["H", "5", "Unmapped", "1"]].map(([chamber, seatNo, county, district], n) => ({
+    ["H", "3", "Carroll", "5"], ["H", "4", "Carroll", "5"], ["H", "5", "Unmapped", "1"],
+    ["H", "6", "Carroll", "105"]].map(([chamber, seatNo, county, district], n) => ({
     chamber, seatNo, county, district, givenName: `First${n}`, middleName: n ? "Middle" : "", familyName: `Last${n}`,
     party: n ? "Party" : "", phone: n ? null : "603-555-0100", email: n ? `member${n}@gc.nh.gov` : null,
     unusedHomeAddress: "unused source address",
@@ -152,14 +153,19 @@ test("NH's selected member/crosswalk fields preserve the existing roster convers
     retrieval: { requestedUrl: "https://gc.nh.gov/downloads/Members.txt", finalUrl: "https://gc.nh.gov/downloads/Members.txt", httpStatus: 200,
       rawHash: "b".repeat(64), retrievedAt: later }, stamps: null, observedAt: later,
   })]);
-  const ids = [`${nh}/sldu:1`, `${nh}/sldl:1`, `${nh}/sldl:1005`];
+  const ids = [`${nh}/sldu:1`, `${nh}/sldl:1`, `${nh}/sldl:105`, `${nh}/sldl:1105`];
   const read = await readPlaceOfficialLegislatorRoster("US-NH", "nh-general-court", ids, query);
   assert.equal(read.kind, "PROMOTED");
-  assert.equal(read.value!.roster.officeholders.length, 4);
+  assert.equal(read.value!.roster.officeholders.length, 5);
+  assert.deepEqual(read.value!.roster.divisions.map(row => row.ocdId), [
+    `${nh}/sldu:1`, `${nh}/sldl:1`, `${nh}/sldl:105`, `${nh}/sldl:105`, `${nh}/sldl:1105`,
+  ], "literal county encodings preserve multi-member seats and never truncate a long district");
+  assert.ok(read.value!.roster.divisions.every(row => ids.includes(row.ocdId)), "the SQL selector and canonical county encoding agree");
   assert.ok(!JSON.stringify(read.value).includes("unused source address"));
   const expected = nhMembersReadModel(model, { retrievedAt: later, sourceThrough: null }).roster;
   assert.deepEqual(projectHeldPlaceFamilies(ids, null, { rosters: [read.value!.roster] }),
     projectHeldPlaceFamilies(ids, null, { rosters: [expected] }));
+  assert.equal(projectHeldPlaceFamilies(ids, null, { rosters: [read.value!.roster] }).subjects.length, 5);
   assert.equal(read.value!.roster.officeholders[0].provenance.collectedAt, model.memberSourceDates![identities[0].officeholderId]);
   assert.equal(read.value!.roster.officeholders[1].provenance.collectedAt, later, "legacy rows retain their exact confirmation fallback date");
   assert.deepEqual((await readPlaceOfficialLegislatorRoster("US-NH", "nh-general-court", [nh], query)).value!.roster.officeholders, []);

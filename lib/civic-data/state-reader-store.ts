@@ -46,7 +46,8 @@ export async function readNhPlaceRosterRows(query: Query, ids: readonly string[]
       CASE WHEN m.value->>'chamber'='S' THEN 'ocd-division/country:us/state:nh/sldu:'||(m.value->>'district')::numeric::text
         WHEN (m.value->>'district')::numeric>0 AND array_position($2::text[],btrim(m.value->>'county')) IS NOT NULL
         THEN 'ocd-division/country:us/state:nh/sldl:'||((
-          (array_position($2::text[],btrim(m.value->>'county'))-1)::text||lpad((m.value->>'district')::numeric::text,3,'0'))::numeric)::text
+          (array_position($2::text[],btrim(m.value->>'county'))-1)::text||lpad((m.value->>'district')::numeric::text,
+            greatest(length((m.value->>'district')::numeric::text),2),'0'))::numeric)::text
       END END AS division FROM members m LEFT JOIN LATERAL (
         SELECT value FROM identities i WHERE i.value->>'chamber'=m.value->>'chamber' AND i.value->>'seatNo'=m.value->>'seatNo'
           AND i.value->>'district'=m.value->>'district' ORDER BY ordinal_index DESC LIMIT 1) i ON true
@@ -71,7 +72,7 @@ export async function readNhPlaceRosterRows(query: Query, ids: readonly string[]
   if (row.valid !== true) throw new Error("HELD_PLACE_READ_FAILED:STATE_LEGISLATOR:US-NH:STORE_UNREACHABLE");
   const confirmation = typeof row.confirmation === "string" ? parseUnchangedConfirmation(row.confirmation) : null;
   const retrievedAt = new Date(row.retrieved_at as string).toISOString();
-  const confirmedAt = confirmation?.versionId === row.current_version_id && Date.parse(confirmation.retrieval.retrievedAt)>Date.parse(retrievedAt)
+  const confirmedAt = confirmation !== null && confirmation.versionId === row.current_version_id && Date.parse(confirmation.retrieval.retrievedAt)>Date.parse(retrievedAt)
     ? confirmation.retrieval.retrievedAt : retrievedAt;
   const model = nhMembersReadModel(row.payload as NhMemberReadModel,{ retrievedAt: confirmedAt, sourceThrough: row.source_through as string | null });
   return { versionId: row.current_version_id as string, payload: { roster: model.roster } };

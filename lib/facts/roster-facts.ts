@@ -157,7 +157,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     }
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {
-    tally.departed = await retireAbsent(db,{subjectId:body.id,fieldPrefix:"member:",copyId:copy.id,stillShown:[...seated].map(id=>`member:${id}`),at:copy.fetchedAt,purge:input.purge});
+    tally.departed = await retireAbsent(db,{subjectId:body.id,fieldPrefix:"member:",copyId:copy.id,stillShown:[...seated].map(id=>`member:${id}`),at:now,purge:input.purge});
   }
   if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, purge: input.purge }, clocks, now);
   return tally;

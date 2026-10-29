@@ -8,6 +8,7 @@ const json = (body: unknown, status = 200) => Response.json(body, { status, head
 
 export async function handleKeys(request: Request, cookie: string | undefined, dependencies: {
   readonly store?: () => KeysStore; readonly test?: typeof testDueKeys;
+  readonly waitUntil?: (test: Promise<unknown>) => void;
 } = {}): Promise<Response> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie,
     checkOrigin: request.method !== "GET", nowSeconds: Math.floor(Date.now() / 1000) });
@@ -15,6 +16,15 @@ export async function handleKeys(request: Request, cookie: string | undefined, d
   try {
     const store = (dependencies.store ?? productionKeysStore)();
     const testSaved = dependencies.test ?? testDueKeys;
+    const startTest = async (at: string, name: string) => {
+      const pending = testSaved(store, at, name);
+      if (!dependencies.waitUntil) return await pending;
+      dependencies.waitUntil(pending.catch(() => {
+        // The persisted due-time lease lets the standing runner recover an interrupted check.
+        console.error("The saved key check could not finish. Check the Keys box in Settings.");
+      }));
+      return 0;
+    };
     if (request.method === "GET") return json({ rows: await store.list(true) });
     if (Number(request.headers.get("content-length") ?? "0") > 24_000) return json({ says: "That key is too long." }, 400);
     const text = await request.text();
@@ -27,13 +37,14 @@ export async function handleKeys(request: Request, cookie: string | undefined, d
     if (request.method === "DELETE") { await store.remove(name); return json({ says: "Key deleted." }); }
     if (body.action === "test") {
       const at = new Date().toISOString(); await store.retest(name, at);
-      const checked = await testSaved(store, at, name);
+      const checked = await startTest(at, name);
       if (!checked && !(await store.list()).some(row => row.name === name)) return json({ says: "That key is no longer saved." }, 404);
       return json({ says: checked ? "The saved key was tested." : "Its test is running." });
     }
     if (body.action === "undo") {
-      const at = new Date().toISOString(); await store.undo(name, at); await testSaved(store, at, name);
-      return json({ says: "The earlier key setting was restored and tested." });
+      const at = new Date().toISOString(); await store.undo(name, at);
+      const checked = await startTest(at, name);
+      return json({ says: checked ? "The earlier key setting was restored and tested." : "The earlier key setting was restored. Its test is running." });
     }
     const service = knownKeyService(name) ?? body.service;
     if (typeof body.value !== "string" || !body.value.trim() || body.value.length > 16_384 || typeof service !== "string" || !Object.hasOwn(KEY_SERVICES, service)) {
@@ -41,7 +52,7 @@ export async function handleKeys(request: Request, cookie: string | undefined, d
     }
     const at = new Date().toISOString();
     await store.save(name, body.value.trim(), service as KeyService, at);
-    await testSaved(store, at, name);
+    await startTest(at, name);
     const rows = await store.list(true);
     return json({ says: rows.find(row => row.name === name)?.testedAt ? "Key saved and tested." : "Key saved. Its test is running.", rows });
   } catch { return json({ says: "The Keys box could not finish that change. Check the saved keys before trying again." }, 503); }

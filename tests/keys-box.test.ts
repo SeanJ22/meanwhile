@@ -241,6 +241,40 @@ test("the protected Settings API saves, tests, lists and deletes without returni
   });
 });
 
+test("saving starts the provider test immediately and keeps its work alive without holding the response", async t => {
+  const { store } = await fixture(t);
+  let release!: () => void;
+  const provider = new Promise<void>(resolve => { release = resolve; });
+  const kept: Promise<unknown>[] = [];
+  let started = false;
+  await withAdminSessionKey(async () => {
+    const cookie = (await adminSessionCookie()).split("=")[1];
+    const response = await handleKeys(new Request(`${ADMIN_ORIGIN}/api/admin/v6/keys`, {
+      method: "POST", headers: { host: hostOf(ADMIN_ORIGIN), origin: ADMIN_ORIGIN, "content-type": "application/json" },
+      body: JSON.stringify({ name: "Slow provider", value: SECRET, service: "anthropic" }),
+    }), cookie, {
+      store: () => store,
+      test: (saved, at, name) => {
+        started = true;
+        return testDueKeys(saved, at, name, async (_service, value) => {
+          assert.equal(value, SECRET); await provider; return good();
+        });
+      },
+      waitUntil: pending => { kept.push(pending); },
+    });
+    assert.equal(started, true);
+    assert.equal(response.status, 200);
+    const body = await response.json();
+    assert.match(body.says, /saved.*test is running/i);
+    assert.equal(body.rows[0].testedAt, null);
+    assert.equal(JSON.stringify(body).includes(SECRET), false);
+    assert.equal(kept.length, 1);
+    assert.equal(await store.read("Slow provider"), SECRET);
+    release(); await Promise.all(kept);
+    assert.equal((await store.list())[0].working, true);
+  });
+});
+
 test("known credentials cannot skip their provider check by choosing a different purpose", async t => {
   const { store } = await fixture(t);
   await withAdminSessionKey(async () => {

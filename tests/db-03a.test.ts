@@ -2,8 +2,18 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
+import { readFileSync } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { migrateLinkingPages } from "../lib/control-plane/repository/migrations/DB-03A.ts";
-import { LINKING_COPY_SCHEMA, linkingCopyIdentity, openLinkingCopy, saveLinkingCopy } from "../lib/facts/linking-copy.ts";
+import { moveRetiredDoorPages } from "../lib/control-plane/repository/migrations/RIVER-DOORCFG-149.ts";
+import { LINKING_COPY_SCHEMA, installLinkingCopyQuery, linkingCopyIdentity, openLinkingCopy, saveLinkingCopy } from "../lib/facts/linking-copy.ts";
+import { refreshVotingSources } from "../scripts/fetch-voting-sites.mts";
+import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
 
 const at = "2026-10-25T05:15:00Z";
@@ -99,4 +109,45 @@ test("cp_doors is locked only after the walk and saves, and a door written meanw
     assert.equal(JSON.stringify(two).includes("officialLinkingPage"), false);
     assert.ok(primary.linkingPage.sourceCopyId);
   } finally {await control.close();await reader.close();}
+});
+
+test("a door written back with its retired page keeps its newer reference, moves the rest, and publishes the same voting sites", async () => {
+  // Oct 25: runs that read doors before DB-03A wrote 283 pages back (72 MB), 213 beside the reference discovery saved since.
+  const {control,reader,cp,copies}=await setup(true);
+  try {
+    await copies.query(LINKING_COPY_SCHEMA);
+    installLinkingCopyQuery(copies.query);
+    const wheeling={...JSON.parse(readFileSync("data/reference/voting-source-doors.json","utf8")).find((door: {id: string}) => door.id === "vs07-cook-wheeling-early"),
+      officialLinkingPage: page};
+    const newer=await saveLinkingCopy({url:page.url,html:page.html+"<p>Updated</p>"},at,copies.query);
+    await control.query("UPDATE cp_doors SET value=jsonb_set(value,'{config,votingSource}',to_jsonb($1::text)) WHERE id='one'",[JSON.stringify({...wheeling,linkingPage:newer})]);
+    await control.query("UPDATE cp_doors SET value=jsonb_set(value,'{config,votingSource}',to_jsonb($1::text)) WHERE id='two'",[JSON.stringify({...wheeling,id:"wheeling-two"})]);
+    const doors=async () => (await control.query<{id:string;revision:number;source:string}>("SELECT id,revision,value#>>'{config,votingSource}' AS source FROM cp_doors ORDER BY id")).rows;
+    const before=await doors();
+    assert.match(await moveRetiredDoorPages(cp,copies),/^1 voting doors kept their newer reference/);
+    const after=await doors();
+    assert.equal(JSON.stringify(after).includes("officialLinkingPage"),false);
+    assert.deepEqual(JSON.parse(after[0].source).linkingPage,newer);
+    assert.equal(JSON.parse(after[1].source).linkingPage.sourceCopyId,linkingCopyIdentity(page.url,page.html).id);
+    await moveRetiredDoorPages(cp,copies);
+    assert.deepEqual(await doors(),after,"a repeated move changes no door");
+    const now="2026-10-24T12:00:00.000Z";
+    const published=async (seed: unknown) => {
+      const store=new MemoryRoutineDataStore(), root=await mkdtemp(join(tmpdir(),"doorcfg-"));
+      try {
+        await refreshVotingSources({ state:"IL", store, context:{repos:createMemoryRepositories()}, now:() => now, deadlineMs:Date.now()+60_000,
+          fetch:(async (input: string | URL | Request) => String(input) === wheeling.url ? new Response(readFileSync(
+            "tests/fixtures/voting-sources/vs-07-counties/wheeling-election.html"),{headers:{"content-type":"text/html"}}) : new Response(null,{status:404})) as typeof fetch,
+          geocode:async () => null, registry:{divisions:[],bodies:[]}, vault:cycleVault(root), seeds:[seed as never] });
+        const read=await readVotingSitesProjection("IL",{store,now});
+        assert.equal(read.kind,"PROMOTED");
+        return read.kind === "PROMOTED" ? read.value.jurisdictions : [];
+      } finally { await rm(root,{recursive:true,force:true}); }
+    };
+    for (const at of [0,1]) {
+      const sites=await published(JSON.parse(before[at].source));
+      assert.equal(sites.flatMap(row => row.sites).length,1);
+      assert.deepEqual(await published(JSON.parse(after[at].source)),sites);
+    }
+  } finally {installLinkingCopyQuery();await control.close();await reader.close();}
 });

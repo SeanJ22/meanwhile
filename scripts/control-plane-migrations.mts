@@ -18,11 +18,20 @@ import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition, installHourlyCounts 
 import { buildResearchRevisionIndexes, researchRevisionIndexesMigrationDefinition } from "../lib/control-plane/repository/migrations/DB-03.ts";
 import { boxDueIndexesMigrationDefinition, buildBoxDueIndexes } from "../lib/control-plane/repository/migrations/RV-BOX.ts";
 import { LINKING_SEEDS, linkingPagesMigrationDefinition, migrateLinkingPages } from "../lib/control-plane/repository/migrations/DB-03A.ts";
+import { moveRetiredDoorPages } from "../lib/control-plane/repository/migrations/RIVER-DOORCFG-149.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installJobBreaker, jobBreakerMigrationDefinition } from "../lib/control-plane/repository/migrations/BB-01.ts";
 import { installKeys, keysMigrationDefinition } from "../lib/control-plane/repository/migrations/KB-01.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
+function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
+  return async (sql: Sql, env: NodeJS.ProcessEnv, connect: NonNullable<Dependencies["withDatabase"]>) => {
+    const reader = resolveProductionWriteHandle(env);
+    if (reader.host.replace("-pooler.", ".") !== "ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech")
+      throw Error("db:apply: REFUSED — saved linking pages require the production reader database");
+    return connect(reader.connection, async readerSql => migrate(sql, readerSql));
+  };
+}
 const MIGRATIONS = [
   { id: "CP-01_expand", source: "lib/control-plane/repository/migrations/CP-01.ts", declarations: CP01_DECLARATION_SOURCES,
     definition: controlReadsMigrationDefinition, apply: async (sql: Sql) => { await expandControlReads(sql); return "control reads"; } },
@@ -43,12 +52,7 @@ const MIGRATIONS = [
   { id: "DB-03_expand", source: "lib/control-plane/repository/migrations/DB-03.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
     definition: researchRevisionIndexesMigrationDefinition, apply: buildResearchRevisionIndexes },
   { id: "DB-03A_expand", source: "lib/control-plane/repository/migrations/DB-03A.ts", declarations: [LINKING_SEEDS, "lib/facts/linking-copy.ts"],
-    definition: linkingPagesMigrationDefinition, apply: async (sql: Sql, env: NodeJS.ProcessEnv, connect: NonNullable<Dependencies["withDatabase"]>) => {
-      const reader = resolveProductionWriteHandle(env);
-      if (reader.host.replace("-pooler.", ".") !== "ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech")
-        throw Error("db:apply: REFUSED — saved linking pages require the production reader database");
-      return connect(reader.connection, async readerSql => migrateLinkingPages(sql, readerSql));
-    } },
+    definition: linkingPagesMigrationDefinition, apply: withProductionReader(migrateLinkingPages) },
   { id: "BB-01_expand", source: "lib/control-plane/repository/migrations/BB-01.ts", declarations: [] as readonly string[],
     definition: jobBreakerMigrationDefinition, apply: installJobBreaker },
   { id: "CP-01_counts_expand", source: "lib/control-plane/repository/migrations/CP-01-counts.ts", declarations: CP01_COUNTS_DECLARATIONS,
@@ -56,6 +60,8 @@ const MIGRATIONS = [
   { id: "CP-01_counts_contract", source: "lib/control-plane/repository/migrations/CP-01-counts.ts", declarations: CP01_COUNTS_DECLARATIONS,
     definition: contractControlCountsMigrationDefinition, apply: contractControlCounts },
   { id:"RB-A9_expand",source:"lib/control-plane/repository/migrations/RB-A9.ts",declarations:[LEGISTAR_WORK_MIGRATION_SOURCE],definition:legistarWorkMigrationDefinition,apply:expandLegistarWork },
+  { id: "RIVER-DOORCFG-149_expand", source: "lib/control-plane/repository/migrations/RIVER-DOORCFG-149.ts", declarations: ["lib/control-plane/repository/migrations/DB-03A.ts", LINKING_SEEDS, "lib/facts/linking-copy.ts"],
+    definition: linkingPagesMigrationDefinition, apply: withProductionReader(moveRetiredDoorPages) },
   { id: "KB-01_expand", source: "lib/control-plane/repository/migrations/KB-01.ts", declarations: ["lib/core/keys-store.ts"], definition: keysMigrationDefinition, apply: installKeys },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }

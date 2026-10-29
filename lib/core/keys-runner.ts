@@ -21,7 +21,14 @@ export function keyProblems(keys: readonly KeyView[], at: string): readonly Brie
 
 /** Uses the same control-plane connection as Admin. No Admin request or Google session is involved. */
 export async function keysRunnerPass(store: KeysStore = productionKeysStore(), at = new Date().toISOString()): Promise<void> {
-  if (process.env.WTP_RUNTIME_MODE === "production") await importExistingKeys(billingCollectorEnvironment(), store, at);
+  if (process.env.WTP_RUNTIME_MODE === "production") {
+    const env = billingCollectorEnvironment();
+    if (!env.GH_TOKEN && !env.GITHUB_TOKEN && !(await store.list(true)).some(row => row.name === "GH_TOKEN" || row.name === "GITHUB_TOKEN")) {
+      const { runtimeGithubCredential } = await import("../ops/runtime-release-handoff.ts");
+      env.GH_TOKEN = runtimeGithubCredential({ root: process.cwd(), env }) ?? undefined;
+    }
+    await importExistingKeys(env, store, at);
+  }
   await testDueKeys(store, at);
   const keys = await store.list();
   await Promise.all(keys.map(async row => { await store.read(row.name, true, at); }));

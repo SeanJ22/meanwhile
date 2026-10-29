@@ -66,11 +66,12 @@ export function forgetChanges(): void {
   memo = null;
 }
 
-const QUERY = `query($owner:String!,$name:String!,$n:Int!){repository(owner:$owner,name:$name){pullRequests(first:$n,orderBy:{field:UPDATED_AT,direction:DESC}){nodes{number title url state isDraft updatedAt mergedAt headRefName baseRefName mergeCommit{oid} commits(last:1){nodes{commit{statusCheckRollup{state}}}}}}}}`;
+const QUERY = `query($owner:String!,$name:String!,$n:Int!){repository(owner:$owner,name:$name){pullRequests(first:$n,orderBy:{field:UPDATED_AT,direction:DESC}){nodes{number title body url state isDraft updatedAt mergedAt headRefName baseRefName mergeCommit{oid} commits(last:1){nodes{commit{statusCheckRollup{state}}}}}}}}`;
 
 interface GraphNode {
   readonly number: number;
   readonly title: string;
+  readonly body?: string | null;
   readonly url: string;
   readonly state: "OPEN" | "MERGED" | "CLOSED";
   readonly isDraft: boolean;
@@ -96,6 +97,7 @@ function toPr(node: GraphNode): ChangePr {
   return {
     number: node.number,
     title: node.title,
+    body: node.body ?? "",
     url: node.url,
     state: node.state,
     isDraft: node.isDraft === true,

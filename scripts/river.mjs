@@ -27,10 +27,15 @@
  *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
  *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
  *   node scripts/river.mjs observe <sha> [--dry-run]     one post-deploy reading per deployed SHA
+ *   node scripts/river.mjs measure [--after] [--fresh] [--facts N|N/H] [--reads GB] [--at ISO] [--pr N]
+ *                                                        the four release numbers (rulings §5), into the release notes
  *
- * A release, in order: `fold`, `migrations`, `release <n>`, then `settle <n>`
- * once GitHub CI has finished. `fold` leaves out a lane whose open return names
- * the same READY, unless `--lanes` names it.
+ * A release, in order: `measure` on the live site, `fold`, `migrations`,
+ * `release <n>`, then `settle <n>` once GitHub CI has finished, and `measure
+ * --after` once the release is live. `release` refuses a release that grows
+ * the lines of code; the other three numbers are read before and after.
+ * `fold` leaves out a lane whose open return names the same READY, unless
+ * `--lanes` names it.
  *
  * GitHub API calls use GITHUB_TOKEN or GH_TOKEN over REST. Without a token, or
  * when the call fails, the command prints `ACTION NEEDED:` with the exact request
@@ -53,6 +58,9 @@ import { join, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { DEVICES, MEASURES_END, MEASURES_START, measuresBlock } from "../lib/control-plane/changes/measures.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 /* -------------------------------------------------------------------------- */
 /* Constants                                                                  */
@@ -448,6 +456,58 @@ export function planMigrationNumbers({ added, journal, baseCount }) {
     renames.push({ from: name, to: `${tag}.sql`, oldTag, tag, idx, when });
   }
   return { ok: true, problems, renames, journal: entries };
+}
+
+/* -------------------------------------------------------------------------- */
+/* The four release numbers (rulings §5)                                       */
+/* -------------------------------------------------------------------------- */
+
+/** Lines of code count these tracked files: source, styles and SQL, not declarations, minified, installed, built or vendored. */
+export const countsAsCode = (path) => /\.(?:[cm]?[jt]s|[jt]sx|css|sql)$/.test(path)
+  && !/\.d\.ts$|\.min\.|(?:^|\/)node_modules\/|^\.next\/|^public\/vendor\//.test(path);
+
+/** Newlines in every counted file at `ref`, as `wc -l` counts them. */
+export function linesOfCode(ref, cwd = ROOT) {
+  const files = execFileSync("git", ["ls-tree", "-r", "-z", "--name-only", ref], { cwd, encoding: "utf8", maxBuffer: 1 << 28 }).split("\0").filter(countsAsCode);
+  const out = execFileSync("git", ["cat-file", "--batch"], { cwd, input: files.map((file) => `${ref}:${file}\n`).join(""), maxBuffer: 1 << 30 });
+  let lines = 0;
+  for (let at = 0; at < out.length;) {
+    const eol = out.indexOf(10, at);
+    const [, type, size] = out.toString("latin1", at, eol).split(" ");
+    if (type !== "blob") { at = eol + 1; continue; }
+    for (let i = out.indexOf(10, eol + 1); i !== -1 && i <= eol + Number(size); i = out.indexOf(10, i + 1)) lines++;
+    at = eol + Number(size) + 2;
+  }
+  return lines;
+}
+
+export const FIFTY_STATES = Object.freeze(REGISTRY_STATES.filter((state) => !["DC", "PR", "VI", "AS", "GU", "MP"].includes(state)));
+
+/** Each state's ZIPs with residents that lie wholly inside it, from the ZIP index the site already ships. */
+export function zipsByState(root = ROOT) {
+  const dir = join(root, "data/derived/zip-divisions");
+  const index = JSON.parse(readFileSync(join(dir, "index.json"), "utf8"));
+  const byState = new Map();
+  for (const shard of new Set(Object.values(index.statesToShards).flat())) {
+    const { divisions, zips, zipResidents } = JSON.parse(readFileSync(join(dir, `${shard}.json`), "utf8"));
+    for (const [zip, ids] of Object.entries(zips)) {
+      const states = new Set(ids.map((id) => /\/state:([a-z]{2})(?:\/|$)/.exec(divisions[id])?.[1]?.toUpperCase()));
+      const [state] = states;
+      if (states.size !== 1 || !state || !(zipResidents?.[zip] > 0)) continue;
+      if (!byState.has(state)) byState.set(state, []);
+      byState.get(state).push(zip);
+    }
+  }
+  return byState;
+}
+
+/** One random ZIP in each of the 50 states, drawn fresh for each release. */
+export function drawZips(byState, random = Math.random) {
+  return FIFTY_STATES.map((state) => {
+    const zips = byState.get(state) ?? [];
+    if (!zips.length) throw new Refusal(`the ZIP index holds no ZIP for ${state}`);
+    return { state, zip: zips[Math.floor(random() * zips.length)] };
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -881,6 +941,11 @@ function quickCheck({ commands = true } = {}) {
     for (const problem of problems) console.error(`  - ${problem}`);
     throw new Refusal("river-next's migrations are not ready to ship");
   }
+  // The one release number known before ship: the code gets smaller or stays the same.
+  const lines = { before: linesOfCode(folded.base_river_sha), after: linesOfCode(head) };
+  if (lines.after > lines.before) {
+    throw new Refusal(`river-next ${short(head)} grows the code from ${lines.before} to ${lines.after} lines (+${lines.after - lines.before}); a release keeps the code the same size or smaller`);
+  }
   if (commands) {
     const [command, prefix] = whichPnpm() ? ["pnpm", []] : ["corepack", ["pnpm"]];
     // A stale .next feeds tsc route types that may no longer exist, and a warm
@@ -894,8 +959,8 @@ function quickCheck({ commands = true } = {}) {
       if (run.status !== 0) throw new Refusal(`${check.id} failed on river-next ${short(head)}; fix it in the fold or return the lane that broke it`);
     }
   }
-  console.log(`river check: river-next ${short(head)} folds clean with numbered migrations${commands ? "; lint and types pass" : ""}`);
-  return { folded, head };
+  console.log(`river check: river-next ${short(head)} folds clean with numbered migrations; ${lines.before} → ${lines.after} lines of code${commands ? "; lint and types pass" : ""}`);
+  return { folded, head, lines };
 }
 
 function whichPnpm() {
@@ -964,7 +1029,7 @@ async function returnCommand(lane, flags) {
  */
 async function release(n, flags) {
   if (!/^\d+$/.test(n ?? "")) throw new Refusal("usage: river.mjs release <n> [--dry-run]", 2);
-  const { folded, head } = quickCheck({ commands: !flags["dry-run"] });
+  const { folded, head, lines } = quickCheck({ commands: !flags["dry-run"] });
   fetchBranches([BOARD]);
   const existing = readJson(remoteRef(BOARD), `releases/${n}.json`, null);
   if (existing && existing.head_sha !== head) throw new Refusal(`release ${n} is already recorded at ${short(existing.head_sha ?? existing.river_sha ?? "unknown")}`);
@@ -986,7 +1051,12 @@ async function release(n, flags) {
     `GitHub CI on this pull request is the full test of this exact commit (\`${FULL_CI_LABEL}\`, auto-merge). River moves \`river\` here only after it passes.`,
     "",
     "Built by `scripts/river.mjs release`. Data never rides the river; this carries code only.",
+    "",
   ].join("\n");
+  // The before numbers measured on the live site; a measurement that already has after numbers belongs to an earlier release.
+  const saved = readScratch("measure.json");
+  const measured = { ...(saved && !saved.after ? saved : { zips: [], before: {} }), lines, release: Number(n) };
+  const notes = `${body}${measuresBlock(measuresOf(measured), measureNotes(measured))}`;
 
   // Never two competing release candidates.
   const open = await github("GET", `repos/${repo}/pulls?state=open&base=main&per_page=100`);
@@ -995,7 +1065,7 @@ async function release(n, flags) {
     if (rival) throw new Refusal(`#${rival.number} from ${rival.head.ref} is still open; settle or close it before release ${n}`);
   }
   if (flags["dry-run"]) {
-    console.log(JSON.stringify({ branch, head, title, body, steps, label: FULL_CI_LABEL }, null, 2));
+    console.log(JSON.stringify({ branch, head, title, body: notes, steps, label: FULL_CI_LABEL }, null, 2));
     return;
   }
 
@@ -1003,7 +1073,7 @@ async function release(n, flags) {
   if (remote && remote !== head) throw new Refusal(`${branch} already exists at ${short(remote)}`);
   if (!remote && !ok(["push", "--quiet", "origin", `${head}:refs/heads/${branch}`])) throw new Refusal(`could not push ${branch}`);
 
-  const create = { title, head: branch, base: "main", body };
+  const create = { title, head: branch, base: "main", body: notes };
   const labels = { labels: [FULL_CI_LABEL] };
   const autoMerge = "mutation($id: ID!) { enablePullRequestAutoMerge(input: { pullRequestId: $id, mergeMethod: MERGE }) { clientMutationId } }";
   let pr = null;
@@ -1033,6 +1103,7 @@ async function release(n, flags) {
     }
   }
 
+  writeScratch("measure.json", { ...measured, pr: pr?.number ?? null });
   commitToBranch(BOARD, (tip) => {
     const old = readJson(tip, `releases/${n}.json`, null);
     if (old && old.pr && !pr) return null;
@@ -1226,6 +1297,147 @@ async function settleFail(n, record, { failed, log, lanes: named, repo }) {
 }
 
 /* -------------------------------------------------------------------------- */
+/* measure                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/** Cold visits per device: the window, and a normal connection as [Mbps down, Mbps up, ms latency]. */
+const DEVICE_VISITS = Object.freeze({
+  phone: { context: { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 }, net: [12, 3, 70] },
+  tablet: { context: { viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }, net: [30, 10, 40] },
+  desktop: { context: { viewport: { width: 1440, height: 900 } }, net: [30, 10, 40] },
+});
+/** Usable: the side panel shows the place (no loading note; the count badge where the panel is a sheet) and the map has drawn. */
+const USABLE = `(() => {
+  const count = document.querySelector('[data-stat="meetings"] .num'), map = window.__wtpMap;
+  return /^\\d/.test(count?.textContent ?? "") && !document.querySelector(".mw-loading-note")
+    && (!document.querySelector(".mw-sheet-handle") || !!document.querySelector(".count-badge"))
+    && !!map && map.loaded() && !map.isMoving() && performance.now();
+})()`;
+const VISIT_LIMIT_MS = 15_000;
+
+/** Each ZIP opened cold on each device; milliseconds to usable, or null past the limit. */
+async function zipTimes(zips) {
+  if ((process.env.WTP_PROVIDER_ACCESS ?? "").trim().toLowerCase() !== "maptiler") {
+    throw new Refusal("a reader's map draws its MapTiler basemap; run measure with WTP_PROVIDER_ACCESS=maptiler (about 16 requests a visit)");
+  }
+  // One guarded browser per ZIP: three cold visits of about 16 provider requests each.
+  process.env.WTP_PROVIDER_REQUEST_CEILING ||= "100";
+  const { launchGuarded } = await import("./browser.mts");
+  const times = Object.fromEntries(DEVICES.map((device) => [device, []]));
+  for (const { state, zip } of zips) {
+    const browser = await launchGuarded({ label: "river-measure", headless: true, blockWrites: true, spendsProviderQuota: "maptiler" });
+    try {
+      for (const device of DEVICES) {
+        const { context: options, net: [down, up, latency] } = DEVICE_VISITS[device];
+        const context = await browser.context(options);
+        let ms = null;
+        try {
+          const page = await context.newPage();
+          const cdp = await context.newCDPSession(page);
+          await cdp.send("Network.emulateNetworkConditions", { offline: false, latency, downloadThroughput: down * 125_000, uploadThroughput: up * 125_000 });
+          await page.goto(`${PUBLIC_SITE_ORIGIN}/?zip=${zip}`, { waitUntil: "commit", timeout: VISIT_LIMIT_MS });
+          ms = Math.round(await (await page.waitForFunction(USABLE, undefined, { polling: "raf", timeout: VISIT_LIMIT_MS })).jsonValue());
+        } catch {
+          // Not usable within the limit: counted as not usable, never retried.
+        } finally {
+          await context.close();
+        }
+        times[device].push(ms);
+        console.log(`river measure: ${state} ${zip} ${device} ${ms === null ? "not usable in 15 s" : `${ms} ms`}`);
+      }
+    } finally {
+      await browser.close();
+    }
+  }
+  return times;
+}
+
+/** The four numbers from a saved measurement. */
+function measuresOf(record) {
+  const under3s = (times) => (times ? times.filter((ms) => ms !== null && ms < 3000).length : null);
+  return {
+    facts: { before: record.before?.facts ?? null, after: record.after?.facts ?? null, early: record.after?.early ?? null },
+    zips: Object.fromEntries(DEVICES.map((device) => [device, { before: under3s(record.before?.zips?.[device]), after: under3s(record.after?.zips?.[device]) }])),
+    reads: { before: record.before?.reads ?? null, after: record.after?.reads ?? null },
+    lines: record.lines ?? { before: null, after: null },
+  };
+}
+
+/** The notes under the four lines: the slowest ZIPs, the ZIPs drawn, and what each number means. */
+function measureNotes(record) {
+  const slowest = (side) => DEVICES.filter((device) => record[side]?.zips?.[device]).map((device) => `${device} ${record.zips
+    .map((place, i) => ({ ...place, ms: record[side].zips[device][i] }))
+    .sort((a, b) => (b.ms ?? 1e9) - (a.ms ?? 1e9)).slice(0, 3)
+    .map(({ zip, state, ms }) => `${zip} ${state} ${ms === null ? "over 15 s" : `${(ms / 1000).toFixed(1)} s`}`).join(", ")}`).join("; ");
+  return [
+    ...["before", "after"].filter((side) => record[side]?.zips).map((side) => `Slowest ZIPs ${side} (${record[side].at}, live ${record[side].live?.slice(0, 7) ?? "unknown"}): ${slowest(side)}.`),
+    ...(record.zips.length ? [`The 50 ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
+    "",
+    "Facts reaching readers: fact rows in the reader database whose live_at falls in the 24 hours ending at the deploy, then in the first 24 hours on the release (any status except held); an early read gives facts an hour over the first full hours.",
+    `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap included, has finished drawing; counted when under 3 seconds.`,
+    "Database reads: request plus response bytes in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
+    "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
+  ];
+}
+
+/** The reader-database SQL River runs for facts and reads (`at` is the deploy, or the runner switch for reads after). */
+export function measureSql(at, after) {
+  const t = `timestamptz '${at}'`;
+  return {
+    facts: after
+      ? `SELECT count(*) FILTER (WHERE live_at < ${t} + interval '24 hours') AS facts_first_day, least(24, floor(extract(epoch FROM now() - ${t}) / 3600))::int AS full_hours, count(*) FILTER (WHERE live_at < ${t} + make_interval(hours => least(24, floor(extract(epoch FROM now() - ${t}) / 3600))::int)) AS facts_in_full_hours FROM fact WHERE status <> 'held' AND live_at >= ${t} AND live_at < ${t} + interval '24 hours';`
+      : `SELECT count(*) AS facts_a_day FROM fact WHERE status <> 'held' AND live_at >= ${t} - interval '24 hours' AND live_at < ${t};`,
+    reads: after
+      ? `SELECT round(sum(request_bytes + response_bytes) / 1e9 / nullif(count(DISTINCT hour), 0), 2) AS gb_an_hour, count(DISTINCT hour) AS hours FROM database_transfer_hourly WHERE hour >= date_trunc('hour', ${t} + interval '59 minutes 59 seconds') AND hour < date_trunc('hour', ${t} + interval '59 minutes 59 seconds') + interval '6 hours' AND hour + interval '1 hour' <= now();`
+      : `SELECT round(sum(request_bytes + response_bytes) / 1e9 / nullif(count(DISTINCT hour), 0), 2) AS gb_an_hour, count(DISTINCT hour) AS hours FROM database_transfer_hourly WHERE hour >= date_trunc('hour', ${t}) - interval '6 hours' AND hour < date_trunc('hour', ${t});`,
+  };
+}
+
+/**
+ * Measure the live site before a deploy (a fresh draw of 50 ZIPs) or, with
+ * `--after`, the same ZIPs once the release is live. Facts and reads come from
+ * SQL River runs itself (printed when absent) and are given back as flags. The
+ * block goes into the release's pull request once `release` has opened it.
+ */
+async function measure(flags) {
+  const after = flags.after === true;
+  let record = readScratch("measure.json");
+  if (after && !record?.before?.zips) throw new Refusal("no before measurement in .scratch/river/measure.json; measure before the deploy first");
+  if (!after && (flags.fresh || !record || record.after)) record = { zips: drawZips(zipsByState()), before: {} };
+  const phase = after ? (record.after ??= {}) : record.before;
+  if (flags.facts !== undefined) {
+    const [count, hours] = String(flags.facts).split("/").map(Number);
+    if (hours && after && hours < 24) record.after.early = { perHour: Math.round(count / hours), hours };
+    else phase.facts = count;
+  }
+  if (flags.reads !== undefined) phase.reads = Number(flags.reads);
+  if (!phase.zips) {
+    const build = await fetch(`${PUBLIC_SITE_ORIGIN}/api/build`, { signal: AbortSignal.timeout(10_000) }).then((r) => r.json()).catch(() => ({}));
+    Object.assign(phase, { at: nowIso(), live: typeof build.commit === "string" ? build.commit : null, zips: await zipTimes(record.zips) });
+  }
+  if (!record.lines) {
+    fetchBranches([RIVER]);
+    record.lines = { before: linesOfCode(remoteRef(RIVER)), after: linesOfCode("HEAD") };
+  }
+  writeScratch("measure.json", record);
+  const block = measuresBlock(measuresOf(record), measureNotes(record));
+  console.log(block);
+  const sql = measureSql(typeof flags.at === "string" ? flags.at : nowIso(), after);
+  if (phase.facts === undefined || phase.reads === undefined) {
+    console.log(`\nRun on the reader database with the ${after ? "deploy (reads: runner switch)" : "deploy"} instant as --at, then measure${after ? " --after" : ""} --facts N${after ? "[/hours]" : ""} --reads GB:`);
+    console.log(`  ${sql.facts}\n  ${sql.reads}`);
+  }
+  const pr = flags.pr ?? record.pr;
+  if (!record.release) return;
+  const path = `repos/${repoSlug()}/pulls/${pr}`;
+  const got = pr ? await github("GET", path) : { ok: false, status: 0, body: "no release pull request number; pass --pr" };
+  const body = got.ok && typeof got.body?.body === "string" && got.body.body.includes(MEASURES_END) ? got.body.body : null;
+  const patched = body === null ? got : await github("PATCH", path, { body: `${body.split(MEASURES_START)[0]}${block}${body.split(MEASURES_END)[1]}` });
+  if (patched.ok) console.log(`river measure: release ${record.release} notes updated on #${pr}`);
+  else actionNeeded(`replace the release-measures block in release ${record.release}'s pull request body with the block above`, "PATCH", path, undefined, `${patched.status}: ${patched.body?.message ?? patched.body}`);
+}
+
+/* -------------------------------------------------------------------------- */
 /* observe                                                                    */
 /* -------------------------------------------------------------------------- */
 
@@ -1273,7 +1485,7 @@ export function parseArgs(argv) {
   return { flags, positional };
 }
 
-const BOOLEAN_FLAGS = new Set(["dry-run"]);
+const BOOLEAN_FLAGS = new Set(["dry-run", "after", "fresh"]);
 
 async function main(argv) {
   const [command, ...rest] = argv;
@@ -1291,6 +1503,7 @@ async function main(argv) {
     case "release": await release(positional[0], flags); return;
     case "settle": await settle(positional[0], flags); return;
     case "observe": await observe(positional[0], flags); return;
+    case "measure": await measure(flags); return;
     case "lock": {
       const mode = positional[0];
       if (!["claim", "heartbeat", "release"].includes(mode)) throw new Refusal("usage: river.mjs lock claim|heartbeat|release --branch B --file F --token T", 2);
@@ -1298,11 +1511,11 @@ async function main(argv) {
       return;
     }
     default:
-      throw new Refusal("usage: river.mjs scan | fold | migrations | check | release <n> | settle <n> | return <lane> | lock <mode> | observe <sha>", 2);
+      throw new Refusal("usage: river.mjs scan | fold | migrations | check | release <n> | settle <n> | return <lane> | lock <mode> | observe <sha> | measure", 2);
   }
 }
 
-const NEEDS_GITHUB = new Set(["release", "settle", "observe"]);
+const NEEDS_GITHUB = new Set(["release", "settle", "observe", "measure"]);
 const PROXY = process.env.HTTPS_PROXY || process.env.https_proxy;
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)

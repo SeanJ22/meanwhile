@@ -3,7 +3,7 @@ import { OWNER_COST_REFS_DDL, OWNER_COST_REFS_SEED_DDL } from "../owner-cost-ref
 import { OWNER_STUCK_COUNTS_DDL, OWNER_STUCK_COUNTS_BACKFILL_DDL } from "../owner-stuck-counts.ts";
 import { ASSIGNMENT_STATES } from "../../assignment-view.ts";
 import { ASK_GAP_CODES } from "../../../ask/gap-codes.ts";
-import { CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL } from "../control-counts.ts";
+import { ADMIN_ASK_MEMBERSHIP_DDL, CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL } from "../control-counts.ts";
 import { OWNER_ASSIGNMENT_ROWS_DDL } from "../owner-assignment-rows.ts";
 import { DOOR_READS_DDL } from "../../../doors/read-changes.ts";
 import { LOSS_STUDY_COUNTS_DDL } from "../../../method/loss-study-counts.ts";
@@ -97,12 +97,12 @@ CREATE TRIGGER count_hour_owner_assignment AFTER INSERT OR UPDATE OR DELETE ON c
 
 export function controlCountsMigrationDefinition(): string {
   return JSON.stringify({ statements: [...OWNER_LEASE_CHANGES_DDL, OWNER_COST_REFS_DDL, OWNER_COST_REFS_SEED_DDL, ...OWNER_ASSIGNMENT_ROWS_DDL, ...OWNER_STUCK_COUNTS_DDL, ...CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL,
-    ...DOOR_READS_DDL, ...LOSS_STUDY_COUNTS_DDL], backfill: OWNER_STUCK_COUNTS_BACKFILL_DDL, split: SPLIT_OWNER_ROWS_SQL, parts: OWNER_ASSIGNMENT_PARTS_SQL, counters: OWNER_COUNTER_TRIGGER_DDL });
+    ...DOOR_READS_DDL, ...LOSS_STUDY_COUNTS_DDL, ...ADMIN_ASK_MEMBERSHIP_DDL], backfill: OWNER_STUCK_COUNTS_BACKFILL_DDL, split: SPLIT_OWNER_ROWS_SQL, parts: OWNER_ASSIGNMENT_PARTS_SQL, counters: OWNER_COUNTER_TRIGGER_DDL });
 }
 
 export async function expandControlCounts(sql: Sql): Promise<string> {
   for (const statement of [...OWNER_LEASE_CHANGES_DDL, OWNER_COST_REFS_DDL, OWNER_COST_REFS_SEED_DDL, ...OWNER_ASSIGNMENT_ROWS_DDL, ...OWNER_STUCK_COUNTS_DDL, ...CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL,
-    ...DOOR_READS_DDL, ...LOSS_STUDY_COUNTS_DDL]) await sql.query(statement);
+    ...DOOR_READS_DDL, ...LOSS_STUDY_COUNTS_DDL, ...ADMIN_ASK_MEMBERSHIP_DDL]) await sql.query(statement);
   return migrateOwnerRows(sql, false);
 }
 

@@ -70,7 +70,7 @@ import type { CostEntry } from "../cost.ts";
 import { pgOwnerLeaseChanges } from "./owner-lease-changes.ts";
 import type { Escalation } from "../work-item.ts";
 import type { RouteTask } from "../route-task.ts";
-import type { WorkItem } from "../work-item.ts";
+import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
 
 import { budgetRepositoryFrom } from "./shared.ts";
 import {
@@ -1723,6 +1723,19 @@ export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, sta
     values.push(...rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${row.id}`)));
   }
   return values;
+}
+
+/** Resolve the archived repository's same revision winner before reading unanswered organic Ask rows. */
+export async function pgActiveReaderQuestions(sql: Sql): Promise<readonly {id:unknown;value:unknown}[]> {
+  const fields = { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] } as const;
+  const winners = `SELECT DISTINCT ON (id) id,source,state FROM (
+    SELECT id,revision,0 AS source,value->>'state' AS state FROM cp_work_items WHERE value #>> '{autonomousPlan,readerQuestion,origin}'='ASK'
+    UNION ALL SELECT id,revision,1 AS source,value->>'state' AS state FROM cp_work_items_archive WHERE value #>> '{autonomousPlan,readerQuestion,origin}'='ASK'
+  ) versions ORDER BY id,revision DESC,source DESC`;
+  return (await Promise.all(["cp_work_items", "cp_work_items_archive"].map((table, source) =>
+    versionedRowsFor(sql).selectedRows((text, params) => boundedQuery(sql, { operation: `${table}.activeReaderQuestions`, callClass: "PAGE" }, text, params),
+      table, `SELECT id FROM (${winners}) winner WHERE source=$1 AND NOT coalesce(state=ANY($2::text[]),false) ORDER BY id`,
+      [source, TERMINAL_WORK_ITEM_STATES], recordProjectionSql(table, fields, "value"))))).flat().sort((a,b)=>String(a.id).localeCompare(String(b.id)));
 }
 
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {

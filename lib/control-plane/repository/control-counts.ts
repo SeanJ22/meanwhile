@@ -39,6 +39,11 @@ export const CONTROL_COUNTS_DDL = [
   END $$`,
 ] as const;
 
+/** Admin's standing Ask list seeks only its own question rows in either tier. */
+export const ADMIN_ASK_MEMBERSHIP_DDL = ["cp_work_items", "cp_work_items_archive"].map(table =>
+  `CREATE INDEX IF NOT EXISTS ${table}_ask_question_membership ON ${table}(id)
+   WHERE value #>> '{autonomousPlan,readerQuestion,origin}' = 'ASK'`);
+
 export const CONTROL_COUNT_TABLES = ["cp_doors", "cp_obligations", "cp_leases", "cp_log_artifacts", "cp_work_items", "cp_route_tasks", "cp_attempts", "cp_occurrences", "cp_debts"] as const;
 
 /** A single transaction attaches counters while the initial stock is stable. */

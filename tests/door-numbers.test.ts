@@ -6,6 +6,7 @@ import type { PostingToLiveRow } from "../lib/civic-data/posting-to-live.ts";
 import type { OverdueDoor } from "../lib/doors/overdue.ts";
 import type { FixItem } from "../lib/control-plane/fix-list.ts";
 import { SHUT_DOOR_FIX_BY } from "../lib/doors/shut-repair.ts";
+import { readDoorNumbers } from "../lib/control-plane/admin-view/door-numbers-read.ts";
 
 const NOW = "2026-10-05T12:00:00Z";
 const base = (over: Partial<DoorNumberReadings> = {}): DoorNumberReadings => ({ now: NOW, shutDoors: { shut: 2, open: 40, setAside: 1, unreadable: 0 }, overdue: [], scheduled: 30, posting: [], fixes: [], ...over });
@@ -14,6 +15,14 @@ const post = (firstSeenAt: string, minutes: number | null, basis: "POSTED" | "FI
 });
 const fix = (addedAt: string, fixedAt: string | null, changedBy?: string): FixItem => ({
   id: addedAt, where: "Door a", says: "x", addedBy: SHUT_DOOR_FIX_BY, addedAt, state: fixedAt === null ? "OPEN" : "FIXED", ...(fixedAt === null ? {} : { fixedAt, changedBy: changedBy ?? "The source itself" }),
+});
+
+test("door numbers retain an independently started posting reading, including an unread result",async()=>{
+  const posting=[post("2026-10-04T00:00:00Z",30)];
+  const reading=await readDoorNumbers({now:NOW,config:null,posting:Promise.resolve(posting)});
+  assert.equal(reading.posting,posting);
+  assert.equal(doorRows(base(reading)).get("Posted to live")!.value,"100%");
+  assert.equal((await readDoorNumbers({now:NOW,config:null,posting:Promise.resolve(null)})).posting,null);
 });
 
 test("every door row says why it has no value when its reading failed", () => {

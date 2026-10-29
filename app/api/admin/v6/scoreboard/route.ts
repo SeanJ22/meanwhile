@@ -28,7 +28,7 @@ import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.
 import { fixItems } from "@/lib/control-plane/fix-list.ts";
 import { readLatestLookPasses } from "@/lib/control-plane/live-audit-log.ts";
 import { DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTING, SLOW_SURFACE_SHARE_DEFAULT, SLOW_SURFACE_SHARE_SETTING } from "@/lib/health/surface-speed.ts";
-import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
+import { readDoorNumbers, readRecentPostingToLive } from "@/lib/control-plane/admin-view/door-numbers-read.ts";
 import { readLineReport } from "@/lib/control-plane/line-keeper/report.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
 import { keeperStatus } from "@/lib/control-plane/line-keeper/model.ts";
@@ -75,13 +75,14 @@ async function get(request: NextRequest) {
         coreIds: new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT)) };
     });
     const keeperRead=attempt(async()=>url?readLineReport(databaseReadOnlySql(url)):null);
+    const postingRead=attempt(readRecentPostingToLive);
     const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks, vital] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? readDoorCounts(opened) : null)),
       attempt(async () => (opened ? readGateHeartbeat(opened) : null)),
-      attempt(async () => { const [{ repairConfig }, keeper] = await Promise.all([settingsRead, keeperRead]);
-        return readDoorNumbers({ now: observedAt, config: repairConfig, keeper }); }),
+      attempt(async () => { const { repairConfig } = await settingsRead;
+        return readDoorNumbers({ now: observedAt, config: repairConfig, posting: postingRead }); }),
       attempt(async () => { if (!url) return null; const r = await readPipeline(databaseReadOnlySql(url), observedAt); return r.state === "READ" ? r : null; }),
       attempt(() => readRoutinePublicationCounts()),
       attempt(async () => {

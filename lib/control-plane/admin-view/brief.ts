@@ -20,11 +20,14 @@ import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
 import { compactKeeperProblems, type BriefProblem } from "../../counts/problem-groups.ts";
+import { placeReadConnection, pgActiveReaderQuestions } from "../repository/pg-store.ts";
 
 /** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
-export async function readerQuestionRows(repos: Pick<ControlPlaneRepositories, "workItems">): Promise<readonly QueueRow[]> {
-  const rows = await repos.workItems.listWhereNarrowed(["autonomousPlan", "readerQuestion", "origin"], "ASK",
-    { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] });
+export async function readerQuestionRows(repos: ControlPlaneRepositories): Promise<readonly QueueRow[]> {
+  const fields = { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] } as const;
+  const sql = placeReadConnection(repos);
+  const rows = sql ? await pgActiveReaderQuestions(sql)
+    : await repos.workItems.listWhereNarrowed(["autonomousPlan", "readerQuestion", "origin"], "ASK", fields);
   return rows.flatMap(row => {
     const item = row.value as Pick<WorkItem, "id" | "state" | "createdAt" | "autonomousPlan">;
     const question = item.autonomousPlan?.readerQuestion;

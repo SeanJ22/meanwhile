@@ -8,6 +8,7 @@ import { readQueueDoorsFromSql } from "../lib/control-plane/admin-view/door-quer
 import { projectDoors } from "../lib/control-plane/admin-view/v6-doors-read.ts";
 import { applyManualEdit,checkDoorDraft } from "../lib/doors/registry.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { pgActiveReaderQuestions } from "../lib/control-plane/repository/pg-store.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { existsSync,readdirSync,readFileSync } from "node:fs";
 import { DISPATCH_CONFIRMATION_SQL } from "../lib/control-plane/gateway/confirmation-read.ts";
@@ -143,5 +144,20 @@ test("publication counters match the typed readback verdict for current, failed,
     }))});
     assert.deepEqual(current.counts,expected.counts);
     assert.deepEqual(current.contracts.map(c=>c.readback),expected.contracts.map(c=>c.readback));
+  }finally{await pg.close();}
+});
+
+test("active Ask reads preserve archive winners, terminal exclusions, missing states and current row changes",async()=>{
+  const pg=new PGlite();try{
+    await pg.exec("CREATE TABLE cp_work_items(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb);CREATE TABLE cp_work_items_archive(LIKE cp_work_items INCLUDING ALL)");
+    const records=[['a',1,false,{state:'OPEN'}],['a',2,true,{state:'VERIFIED_COMPLETE'}],['b',2,false,{state:'OPEN'}],['b',1,true,{state:'VERIFIED_COMPLETE'}],
+      ['c',2,false,{state:'OPEN'}],['c',2,true,{state:'VERIFIED_COMPLETE'}],['d',1,false,{}],['e',1,true,{state:null}],['f',1,false,{state:'HUMAN_INTERACTION_REQUIRED'}]] as const;
+    for(const[id,revision,archive,extra]of records)await pg.query(`INSERT INTO ${archive?'cp_work_items_archive':'cp_work_items'} VALUES($1,$2,now(),$3::jsonb)`,[id,revision,JSON.stringify({id,createdAt:'2026-10-29T00:00:00Z',autonomousPlan:{readerQuestion:{origin:'ASK',text:'A sourced answer?',place:'85001'}},...extra,unused:'x'.repeat(100000)})]);
+    const sql={query:async(text:string,params:readonly unknown[]=[]) => (await pg.query(text,[...params])).rows};
+    const rows=await pgActiveReaderQuestions(sql);assert.deepEqual(rows.map(row=>row.id),['b','d','e']);
+    assert.ok(JSON.stringify(rows).length<2000,'terminal and unused payloads never enter the result');
+    assert.equal(Object.hasOwn(rows[1].value as object,'state'),false);assert.equal((rows[2].value as {state:unknown}).state,null);
+    await pg.query("UPDATE cp_work_items SET revision=revision+1,value=jsonb_set(value,'{state}','\"VERIFIED_COMPLETE\"') WHERE id='b'");
+    assert.deepEqual((await pgActiveReaderQuestions(sql)).map(row=>row.id),['d','e']);
   }finally{await pg.close();}
 });

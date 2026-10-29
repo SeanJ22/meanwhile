@@ -1,7 +1,7 @@
 import { OWNER_COST_REFS_DDL } from "./owner-cost-refs.ts";
 import { OWNER_LEASE_CHANGES_DDL } from "./owner-lease-changes.ts";
 import { OWNER_STUCK_COUNTS_DDL, OWNER_STUCK_COUNTS_BACKFILL_DDL } from "./owner-stuck-counts.ts";
-import { CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL } from "./control-counts.ts";
+import { ADMIN_ASK_MEMBERSHIP_DDL, CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL } from "./control-counts.ts";
 import { OWNER_ASSIGNMENT_ROWS_DDL } from "./owner-assignment-rows.ts";
 import { DOOR_READS_DDL } from "../../doors/read-changes.ts";
 import { LOSS_STUDY_COUNTS_DDL } from "../../method/loss-study-counts.ts";
@@ -728,6 +728,7 @@ END $$;`,
   ...OWNER_STUCK_COUNTS_DDL,
   OWNER_STUCK_COUNTS_BACKFILL_DDL,
   ...CONTROL_COUNTS_DDL,
+  ...ADMIN_ASK_MEMBERSHIP_DDL,
   CONTROL_COUNTS_INITIALIZE_DDL,
   ...DOOR_READS_DDL,
   ...LOSS_STUDY_COUNTS_DDL,

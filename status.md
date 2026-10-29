@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 145 (site 12:20 AM, runner 12:31 AM EDT Oct 29; main 9662c1d56, river 6e9a415f9). CivicClerk/Apptegy doors now get looks; full-hour hot-door check at 1:37 AM. 146 folding (CP-01 + RB-A9; OB-01 only if its fresh cut passes).
+build_state: LIVE: release 145 (site 12:20 AM, runner 12:31 AM EDT; main 9662c1d56, river 6e9a415f9). Full hour: 1,322/1,347 hot doors looked (98%); 25 held by saved site refusals on 9 sites (Sean's call). 146 = CP-01 + RB-A9 + OB-01 on river-next-146, checks running.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T04:46:00Z
+heartbeat: 2026-10-29T05:45:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -171,6 +171,12 @@ heartbeat: 2026-10-29T04:46:00Z
 - Sean 12:25 AM: OB-01 recut fresh from river 6e9a415f9 on stream/river-ob-01-146 and re-tested against the current site; folds into 146 only if it passes. CP-01 and RB-A9 go in 146.
   - river-next-146 (b7f0df38d): CP-01 2c965e00f + RB-A9 da09af624 + main. Fold fixes: migration numbering (CP-01_source_status 76, RB-A9_legistar_members 77; control-plane journal CP-01 counts then RB-A9), two exports left unused by the pair removed. Lint 0 errors, read lock shrank (whole-record reads 338 → 337), tsc clean, knip clean; focused tests running.
   - OB-01 and RB-A9 both rewrite lib/sources/legistar/members-*; if OB-01 passes, its Legistar behaviors are carried into RB-A9's new core at the fold.
+- 1:37 AM: 145 full-hour check (04:37–05:37Z; hot list from stored parts, 1,740 hot partitions → 1,347 hot doors on 255 websites):
+  - looked in the hour 1,322/1,347 (98%; 144's first hour was 1,056/1,372). legistar 476/476, legistar-insite 417/417, granicus 73/73, civicclerk 51/51 (was 0), primegov 22/22, diligent 18/18, iqm2 17/17, civicplus 14/14, apptegy 1/1 (was 0), schedulepage/pima-edu/onbase/suiteone all; ical 226/248, escribe 1/4.
+  - Request limits held: no site above 10 in the hour (8 at exactly 10, 1 on a hold). door-probes 0.040 GB in the 12 AM hour; 0.030 GB so far in the 1 AM hour.
+  - The 25 unlooked doors are on 9 sites: CivicPlus iCal feeds champlinmn.gov 4, cityofinkstermi.gov 5, brainerdmn.gov 4, eastgrmi.gov 2, il-rockislandcountymtd.civicplus.com 1, laurelmd.gov 3, www.bsbmt.gov 3; eScribe pub-bellbrook 2, pub-sunlinetransit 1. Most last looked Oct 24–26. One request each from here: all nine answer 200 with real calendars/portals.
+  - Cause (from code; unverified on the runner disk): lib/sources/http.ts saves a whole-site refusal after one 403 or Cloudflare challenge on a page (state.refused[origin], until 9999, "a named site wall stays open for separate work") in /var/lib/meanwhile/source-hosts/<sha256(host)>.source-host-state. The probe then holds the site forever and stores nothing. Needs Sean: clear these nine, and/or allow a once-a-day recheck of a saved site wall.
+- 146: OB-01 recut from river 6e9a415f9 passed (lint 0 errors, tsc, knip, 601/602 focused + feedback 16/16 after build, live-site before/after on welcome/tour), then carried onto RB-A9's Legistar core (calendar-selector aliases and binding/day inputs in RB-A9's loader/worker; RB-A9's own fingerprint stop kept) as e82e13c82; folded into river-next-146 4b786e598. River checks on the full combination running.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

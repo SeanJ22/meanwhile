@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE on site: release 146 (merged 2:23 AM, site 2:34 AM EDT; main dc4a4202b, river f41f87502). Runner still on 145 at 2:48 AM. Reader + control-plane expand migrations applied; CP-01_counts_contract waits for the runner.
+build_state: LIVE: release 146 (site 2:34 AM; runner switched ~2:51 AM EDT to main 912710f0d = 146 + rulings #862). 147 building: breaker slows, never pauses (urgent) + research-cycle stall fix and line-keeper flag.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T06:50:00Z
+heartbeat: 2026-10-29T07:05:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -182,6 +182,10 @@ heartbeat: 2026-10-29T06:50:00Z
 - PAUSE missed on this board until now: place-pages paused at 6:59 PM EDT Oct 28 (0.52 GB in the 6 PM hour, top table civic_data_promotions; 0.49 GB the hour before). Sean released it in Admin at 2:33 AM Oct 29. Watching whether it pauses again on 146.
 - 2:20 AM: 146 CI green (4/4 shards, gates); river → f41f87502; PR #861 merged 2:23 AM; site serves dc4a4202b from 2:34 AM. Reader migrations CP-01_source_status (76) and RB-A9_legistar_members (77) applied; control plane CP-01_counts_expand and RB-A9_expand applied; CP-01_counts_contract runs once the runner serves 146.
   - Runner at 2:48 AM: still tested 9662c1d56 (145); 46 processes, 14.3 GB RSS, four old legistar-members-refresh children still running.
+- 3:05 AM: runner on 146 (breaker CHECK carries 912710f0d from 2:51 AM; 24 runner processes, down from 46). legistar-members-worker.mts reserved at 512 MiB. RB-A9 legistar-members read 0.054 GB in the 2 AM hour (declared 450 MB per run). Door probes looked at 288 meeting doors in the last 15 minutes. CP-01_counts_contract not yet applied (waits for the runner to apply it on the served commit).
+  - Neon 2 AM EDT hour: reader 2.104 + control plane 1.323 = 3.43 GB/h (146 deploy + place-pages backlog).
+  - RISK until 147: place-pages is rebuilding the 7 PM–2:33 AM backlog: 0.149 GB in the 2 AM hour, 0.081 GB in the first minutes of 3 AM. The old breaker will likely pause it again this hour; if it does, it is posted here at once.
+- Sean 2:55 AM: (1) breaker must slow a spiking job against its own normal reads and never pause it; ship as an urgent fix with whatever is ready. (2) research cycle hasn't finished since Oct 25 9:53 PM while the heartbeat beat; find and fix the cause; line keeper flags any job without a finished run in two of its own intervals. Builders on stream/river-breaker-147 and stream/river-cycle-147 from river f41f87502.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

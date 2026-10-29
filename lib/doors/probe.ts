@@ -34,6 +34,8 @@ export interface ProbeResult {
   /** Requests this probe made: 0 or 1. */
   readonly requests: number;
   readonly detail: string;
+  /** WAITING only: when it may be asked again, and why: a small publisher's hour (this page's count) or the whole website's wait. */
+  readonly wait?: { readonly until: number; readonly why: WebsiteWait["why"] };
 }
 
 const sha256 = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
@@ -47,7 +49,7 @@ export async function firstLook(url: string, previous: DoorValidators | null | u
   try {
     response = await fetchFn(url, headers);
   } catch (error) {
-    if (error instanceof WebsiteWait) return { url, verdict: "WAITING", validators: null, requests: error.requests, detail: error.message };
+    if (error instanceof WebsiteWait) return { url, verdict: "WAITING", validators: null, requests: error.requests, detail: error.message, wait: { until: error.until, why: error.why } };
     return { url, verdict: "FAILED", validators: null, requests: 1, detail: `the first look could not reach the page (${(error as Error)?.name ?? "error"})` };
   }
   if (response.status === 304) {

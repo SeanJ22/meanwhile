@@ -3,7 +3,7 @@ import { runnerFamilyLabel, runnerReadFamily } from "../db/runner-read-families.
 
 const NAMED: Readonly<Record<string, string>> = {
   ...Object.fromEntries(Object.values(ROUTINE_JOBS).map(job => [job.id, job.label])),
-  "place-pages": "Place pages", "hunter-lane": "Hunters", "intake-runtime": "Intake checks", "platform-census": "Website platform census",
+  "door-probes": "Hourly door checks", "place-pages": "Place pages", "hunter-lane": "Hunters", "intake-runtime": "Intake checks", "platform-census": "Website platform census",
   "research-cycle": "Paid research rounds", "people-portraits": "Portraits", "place-map": "Place maps", "voting-sites": "Voting places",
   "registration": "Voter registration", "legistar-members": "Legistar members", "meeting-partition": "Meeting calendar",
   "meeting-doors": "Meeting doors", "audit-pass": "Audit pass", "console-publish": "Console publishing", "member-offices": "Member offices",

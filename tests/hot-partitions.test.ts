@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
+import { drizzle } from "drizzle-orm/pglite";
 
-import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { hotMeetingPartitions, statedSittingEndsRead } from "../lib/doors/hot-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingPartitionId, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
 import { routineTaskFromContract, sittingWindowSignals } from "../lib/civic-data/runner.ts";
-import { meetingPayloadSittingStarts } from "../lib/civic-data/store.ts";
-import { meetingPayloadStatedEnds } from "../lib/civic-data/sitting-window-admission.ts";
+import { meetingPayloadSittingStarts, sittingStartsRead } from "../lib/civic-data/store.ts";
+import { meetingPayloadStatedEnds, statedSittingEndsByScope } from "../lib/civic-data/sitting-window-admission.ts";
 import type { Query } from "../lib/facts/publish.ts";
 
 const DAY = 86_400_000;
@@ -214,4 +215,67 @@ test("a statement that cannot be read leaves every meeting partition hot", async
   } finally {
     console.warn = warn;
   }
+});
+
+test("the scheduler's sitting reads see sittings held in stored parts exactly as whole payloads give them, each in one statement", async () => {
+  const { pg, put } = await fixture();
+  for (const [index, [, payload]] of CASES.entries()) await put("MEETING", TASKS[index]!.scope, payload);
+  const missingGroup = CASES.findIndex(([name]) => name === "held list: a group part is missing");
+  const [{ hash }] = (await pg.query<{ hash: string }>(`SELECT p.hash FROM civic_data_promotions m, civic_data_payload_parts r, civic_data_payload_parts l,
+    civic_data_payload_parts p WHERE m.scope = $1 AND r.hash = m.payload->>'$civicPayloadPart' AND l.hash = r.payload->'value'->'meetings'->>'$civicPayloadPart'
+    AND p.hash = l.payload->'groups'->0->>'$civicPayloadPart'`, [TASKS[missingGroup]!.scope])).rows;
+  await pg.query("DELETE FROM civic_data_payload_parts WHERE hash = $1", [hash]);
+  await put("MEETING_OUTCOME", TASKS[CASES.length]!.scope, meetings({ startsAt: at(30 * DAY), endsAt: at(31 * DAY) }));
+  const statements: string[] = [];
+  const db = drizzle(pg, { logger: { logQuery: (text) => { statements.push(text); } } });
+  const parts = partsOf(pg);
+
+  const ends = statedSittingEndsByScope(await statedSittingEndsRead(db));
+  assert.equal(statements.length, 1, "every pointer's stated ends: one statement");
+  const reads: { task: (typeof TASKS)[number]; ok: boolean; clock: { sittingStarts?: readonly string[] } }[] = [];
+  for (const [index, [name]] of [...CASES, ["never read", null] as const, ["another record class", null] as const].entries()) {
+    const task = TASKS[index]!;
+    const [row] = (await pg.query<{ payload: unknown }>("SELECT payload FROM civic_data_promotions WHERE record_class = 'MEETING' AND scope = $1", [task.scope])).rows;
+    const whole = row ? await parts.load(row.payload).catch((error: Error) => { assert.match(error.message, /CIVIC_PAYLOAD_PART_MISSING/); return undefined; }) : undefined;
+    statements.length = 0;
+    const [read] = await sittingStartsRead(db, task.scope);
+    assert.equal(statements.length, 1, `${name}: one statement`);
+    if (!row) { assert.equal(read, undefined, `${name}: no pointer, no row`); continue; }
+    const starts = read!.starts;
+    if (whole === undefined) {
+      assert.equal(starts, null, `${name}: a missing part leaves the sittings unknown, so the partition counts as hot`);
+      assert.equal(ends.has(task.scope), false, `${name}: no stated ends from a payload that cannot be read`);
+    } else {
+      assert.deepEqual([...starts as string[]].sort(), [...meetingPayloadSittingStarts(whole)].sort(), `${name}: starts`);
+      const stated = meetingPayloadStatedEnds(whole);
+      assert.deepEqual(Object.fromEntries(ends.get(task.scope) ?? new Map()), Object.fromEntries(stated), `${name}: stated ends`);
+    }
+    reads.push({ task, ok: true, clock: { sittingStarts: Array.isArray(starts) ? starts as string[] : undefined } });
+  }
+  assert.ok(JSON.stringify(await statedSittingEndsRead(db)).length < 4_000, "only start and end strings cross, never a payload or part");
+  // The scheduler's signals from these reads are the rule's over whole payloads.
+  const whole = await wholePayloads(pg);
+  const endsByTask = new Map(TASKS.flatMap((task) => ends.has(task.scope) ? [[task.id, ends.get(task.scope)!] as const] : []));
+  for (let offset = -12 * DAY; offset <= 40 * DAY; offset += 11 * 3_600_000 + 13) {
+    const nowMs = NOW + offset;
+    const signals: ReadonlyMap<string, boolean | undefined> = new Map([...sittingWindowSignals(reads, nowMs, endsByTask)].filter(([id]) => reads.some((read) => read.task.id === id)));
+    const expected: ReadonlyMap<string, boolean | undefined> = new Map([...sittingWindowSignals(whole.reads, nowMs, whole.ends)].filter(([id]) => signals.has(id)));
+    assert.deepEqual(signals, expected, `signals at ${at(offset)}`);
+  }
+  await pg.close();
+});
+
+test("a door's own meeting partition is decided by the same rule though this process never installed the door", async () => {
+  const { pg, put, query, statements } = await fixture();
+  const body = (name: string) => `ocd-division/country:us/state:az/place:${name}#board`;
+  const soon = meetingPartitionId("legistar", body("soon")), past = meetingPartitionId("legistar", body("past"), "0123456789abcdef");
+  const unread = meetingPartitionId("legistar", body("unread")), heldId = meetingPartitionId("civicclerk", body("held"));
+  assert.ok(![soon, past, unread, heldId].some((id) => MEETING_PARTITION_CONTRACTS.some((partition) => partition.id === id)), "none is a registered contract here");
+  await put("MEETING", meetingPartitionScope("legistar", body("soon")), meetings({ startsAt: at(DAY) }));
+  await put("MEETING", meetingPartitionScope("legistar", body("past"), "0123456789abcdef"), meetings({ startsAt: at(-30 * DAY) }));
+  await put("MEETING", meetingPartitionScope("civicclerk", body("held")), held({ startsAt: at(2 * DAY) }));
+  const hot = await hotMeetingPartitions(query, NOW, [soon, past, unread, heldId, "campaign-finance-source", TASKS[0]!.id]);
+  assert.equal(statements.length, 1, "one statement for every partition");
+  assert.deepEqual([...hot].sort(), [soon, unread, heldId, TASKS[0]!.id].sort(), "a sitting tomorrow, one held in parts, and never-read partitions are hot; a month-old one is not; a feed is no meeting partition");
+  await pg.close();
 });

@@ -3,10 +3,7 @@
  * concluded in the previous seven. The day bound for a sitting without a stated end is a scheduling bound only; it is
  * never stored or shown, and a stated end always replaces it.
  */
-import { and, eq, sql } from "drizzle-orm";
-
 import { sittingWindowHot, sittingWindowRereadMs, type SittingWindowSchedule } from "./contracts.ts";
-import { civicDataPromotions } from "../db/schema.ts";
 
 /** An hourly read, or a retry, is eligible this long before its deadline. */
 export const SITTING_WINDOW_ADMISSION_LEAD_MS = 25 * 60_000;
@@ -50,20 +47,6 @@ export function meetingPayloadStatedEnds(payload: unknown): Map<string, number> 
     if (Number.isFinite(end)) ends.set(startsAt, Math.max(end, ends.get(startsAt) ?? Number.NEGATIVE_INFINITY));
   }
   return ends;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function statedSittingEndsRead(db: any) {
-  const payload = civicDataPromotions.payload;
-  const pairs = sql<unknown>`(
-    select coalesce(jsonb_agg(jsonb_build_array(m->'startsAt', m->'endsAt')), '[]'::jsonb)
-    from jsonb_array_elements(case when jsonb_typeof(${payload}->'meetings') = 'array' then ${payload}->'meetings' else '[]'::jsonb end) as m
-    where jsonb_typeof(m->'startsAt') = 'string' and jsonb_typeof(m->'endsAt') = 'string'
-  )`;
-  return db
-    .select({ scope: civicDataPromotions.scope, pairs })
-    .from(civicDataPromotions)
-    .where(and(eq(civicDataPromotions.recordClass, "MEETING"), sql`${pairs} <> '[]'::jsonb`));
 }
 
 export function statedSittingEndsByScope(rows: readonly { readonly scope: string; readonly pairs: unknown }[]): Map<string, Map<string, number>> {

@@ -2256,7 +2256,7 @@ test("a paused runner still publishes Box findings; only the paid hunt-source re
   const pause = read.indexOf("intents.runnerPause.paused");
   assert.ok(pause > read.indexOf("publishBoxFindings("), "the Box publishing pass runs before any pause is consulted");
   assert.ok(pause > read.indexOf("return publication"), "owed facts, door probes and publication tasks run under a pause");
-  assert.ok(pause < read.indexOf("huntSourceTasks(admitted"), "paid hunt-source reads still wait for the resume");
+  assert.ok(pause < read.indexOf("huntSourceTasks(resolved.scopes"), "paid hunt-source reads still wait for the resume");
   assert.equal(read.match(/runnerPause\.paused/g)?.length, 1);
 });
 

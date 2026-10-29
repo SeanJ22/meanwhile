@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 143 (site 8:34 PM, runner 8:51 PM EDT; main 699655cae, river fa41b1e51). BROKEN since 143: door-probes made no looks; fix in release 144 (CI): https://github.com/SeanJ22/meanwhile/pull/857. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 144 (site 10:06 PM, runner 10:15 PM EDT; main 159f2b210, river c6317a7e0). door probes looking again since 144 (runner 10:15 PM). Full-hour check 11:20 PM. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -139,6 +139,11 @@ heartbeat: 2026-10-28T08:35:00Z
   - Every 143 door-probes turn crashed on its first statement. The Postgres projection builder refused dotted Admin setting keys ("fetch.hostConcurrency"), so the turn's first settings read threw before any database request, every minute. Unit tests use in-memory repositories that skip that check, which is how it passed. Reproduced locally; the fix is one character (dots allowed in projection keys). The same refusal also hit other dotted-setting reads on Postgres: held-subject runs, people-source probe, open-data refresh, Google Civic refresh.
   - Probe turns now run inside the runner, so bulk workers holding memory can't block them. Pause/release, the release drain and door-probes metering are kept, and websites are asked exactly as before.
   - Quick check clean; focused tests 52/52. Hour before (8 PM): 3.41 GB/h.
+- WIN 10:45 PM: DOOR PROBES ARE LOOKING AGAIN. Release 144 is live: site 10:06 PM (main 159f2b210, full CI passed, river c6317a7e0), runner 10:15 PM.
+  - Meeting doors looked at in the last 30 minutes: 1,607 (none from 8:38 to 10:15 PM).
+  - door-probes read 23.8 MB from 10:15 to 10:45 PM.
+  - Website caps hold: the busiest small publishers are at exactly 10 requests in the last hour (cityofstroud.com, upperfrederick.org, colliertownship.net, redwoods.edu, cityofcatoosa.org). None is over its limit.
+  - The full-hour check (every hot door looked at, by platform; door-probes GB/h; hour after) runs at 11:20 PM.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

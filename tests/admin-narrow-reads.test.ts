@@ -63,7 +63,7 @@ test("readNarrowed narrows alike in the file provider", async () => {
   }
 });
 
-test("readNarrowed in Postgres narrows in the database, reads no value for an unchanged revision, and refuses an unsafe key", async () => {
+test("readNarrowed in Postgres narrows in the database, reads no value for an unchanged revision, narrows a dotted setting key, and refuses an unsafe key", async () => {
   const calls: { text: string; params: readonly unknown[] }[] = [];
   const flat = (text: string) => text.replace(/\s+/g, " ").trim();
   // The row is at revision 7. Like Postgres, the statement sends NULL instead of the value when $2 names that revision.
@@ -94,6 +94,8 @@ test("readNarrowed in Postgres narrows in the database, reads no value for an un
 
   await assert.rejects(() => snapshots.readNarrowed(SNAPSHOT_ID, { "decisionCards') --": true }), /unsafe projection key/);
   assert.equal(calls.length, 3, "the unsafe key was refused before any statement was sent");
+  await snapshots.readNarrowed(SNAPSHOT_ID, { settings: ["fetch.hostConcurrency"] });
+  assert.match(flat(calls[3]!.text), /WHERE f\.key IN \('fetch\.hostConcurrency'\)/, "an Admin setting's dotted key is narrowed in the database");
 });
 
 /* ------------------------------------------------------------------ the pulse */

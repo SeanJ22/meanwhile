@@ -1,14 +1,24 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import * as nodeModule from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { createContext, runInContext } from "node:vm";
 
+import { MEETING_PARTITION_CONTRACTS } from "@/lib/civic-data/meeting-partitions.ts";
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV } from "@/lib/control-plane/job-breaker-local.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
+import { pgAggregateRepository } from "@/lib/control-plane/repository/pg-store.ts";
+import { routineProcessSlots } from "@/lib/control-plane/workers/worker-slots.ts";
+import { countNeonBytes, processNeonBytes } from "@/lib/db/transfer-by-caller.ts";
+import type { Query } from "@/lib/facts/publish.ts";
+import { IndependentRuntimeLaneScheduler } from "@/lib/ops/independent-runtime-pass.ts";
+import { PendingRestart } from "@/lib/ops/pending-restart.ts";
 import { memoryWebsitePacing, WEBSITE_WINDOW_MS } from "@/lib/control-plane/website-pacing.ts";
 import { PROBE_RETRY_MS, runHourlyProbes } from "@/lib/doors/hourly-check.ts";
-import { DOOR_PROBE_REFRESH_MS, DOOR_PROBES_JOB, doorProbesLane, runDoorProbeTurn } from "@/lib/doors/probe-lane.ts";
+import { DOOR_PROBE_REFRESH_MS, DOOR_PROBES_JOB, doorProbesLane, runDoorProbeTurn, runStandingDoorProbes,
+  type StandingDoorProbeInput } from "@/lib/doors/probe-lane.ts";
 import { pacedProbeFetch } from "@/lib/doors/probe-fetch.ts";
 import { applyManualEdit, checkDoorDraft, type DoorRecord } from "@/lib/doors/registry.ts";
 
@@ -169,18 +179,124 @@ test("a breaker pause stops the turn within it, and a drained turn starts no new
   }
 });
 
+/** A meeting partition whose sittings decide its doors' checks. */
+const PARTITION = MEETING_PARTITION_CONTRACTS.find((contract) => contract.schedule?.kind === "SITTING_WINDOW")!.id;
+/** An hour of its own, so the meter rows this file counts are not mixed with any other test's. */
+const METER_HOUR = Date.parse("2031-01-01T05:00:00.000Z");
+
+function partitionDoor(id: string, url: string): DoorRecord {
+  const d = door(id, url);
+  return { ...d, meeting: { ...d.meeting!, family: PARTITION } };
+}
+
+/** The reader's hot-partition statement, answering that no partition is cold, metered like a real read. */
+const readerQuery: Query = async () => {
+  countNeonBytes("reader", 100, METER_HOUR, { requests: 1, bytes: 10 }, undefined, "hot-partition-test");
+  return [{ cold: "", undecided: {} }];
+};
+
+/** The production repositories' Admin settings read (Postgres), over a statement double that answers the owner's row. */
+function postgresAdminConfig(settings: Record<string, unknown>) {
+  const statements: string[] = [];
+  const sql = {
+    async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
+      statements.push(text);
+      countNeonBytes("control-plane", 50, METER_HOUR, { requests: 1, bytes: 5 }, undefined, "admin-config-test");
+      return [{ id: params[0], revision: 3, updated_at: new Date(START).toISOString(), __unchanged: false, value: { settings } }];
+    },
+  };
+  return { statements, adminConfig: pgAggregateRepository(sql, "AdminConfig", "cp_admin_config") as StandingDoorProbeInput["repos"]["adminConfig"] };
+}
+
+test("a standing turn reads the owner's dotted settings from Postgres and looks at every due hot door", async () => {
+  // Release 143's turn ended at this read: the Postgres projection refused "fetch.hostConcurrency" before any request.
+  const doors = ["a", "b", "c"].flatMap((host) => [0, 1].map((i) => partitionDoor(`${host}-${i}`, `https://${host}.example.gov/${i}.ics`)));
+  const held = await registry(doors);
+  const owner = postgresAdminConfig({ "fetch.hostConcurrency": 2, "meetings.hotEveryMinutes": 60, "unrelated.secret": "never read" });
+  let now = START;
+  const clock = () => now;
+  const site = websites({ clock });
+  const lines: string[] = [];
+  const report = await runStandingDoorProbes({ repos: { adminConfig: owner.adminConfig, doors: held.repo, websitePacing: site.pacing }, readerQuery,
+    deadlineMs: START + 30 * MINUTE, admitted: () => true, log: (line) => lines.push(line), clock, sleep: async (ms) => { now += ms; },
+    fetchImpl: (async (url: string) => new Response(`page ${url}`)) as unknown as typeof fetch });
+  assert.equal(owner.statements.length, 1);
+  assert.match(owner.statements[0]!, /'fetch\.hostConcurrency'/, "the setting is narrowed in the database");
+  assert.doesNotMatch(owner.statements[0]!, /unrelated/);
+  assert.equal(report.ended, "DEADLINE");
+  assert.equal(report.looked, 6, "every due hot door is looked at");
+  for (const d of doors) assert.ok((await held.repo.read(d.doorId))!.value.validators?.checkedAt, `${d.doorId}: its look is stored`);
+  assert.ok(lines.some((line) => /up to 2 websites at once/.test(line)), "the owner's in-flight bound is used");
+  assert.ok(lines.some((line) => /^RCD_PROBE turn ended \(its hour is up\): .* 6 door\(s\) looked at/.test(line)));
+  const meter = processNeonBytes().find((hour) => Date.parse(hour.hour) === METER_HOUR)?.reads ?? {};
+  const metered = (prefix: string) => Object.keys(meter).some((key) => key.startsWith(prefix));
+  assert.ok(metered("reader\tdoor-probes\thot-partition-test"), "the reader read is metered under door-probes");
+  assert.ok(metered("control-plane\tdoor-probes\tadmin-config-test"), "the settings read is metered under door-probes");
+});
+
+const runnerSource = readFileSync("scripts/pilot-runner.mts", "utf8");
+const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & { stripTypeScriptTypes(source: string): string };
+function runnerFunction(name: string): string {
+  const fn = runnerSource.match(new RegExp(`\\n(?:async )?function ${name}\\([\\s\\S]*?\\n\\}`))?.[0];
+  assert.ok(fn, `pilot-runner.mts has no ${name}()`);
+  return fn;
+}
+
+test("the runner's door-probes lane looks at due hot doors while bulk work holds all the host's memory, and a release drain ends it", async () => {
+  const doors = Array.from({ length: 8 }, (_, i) => partitionDoor(`hot-${i}`, `https://${i % 4}.example.gov/${i}.ics`));
+  const held = await registry(doors);
+  const owner = postgresAdminConfig({ "fetch.hostConcurrency": 8 });
+  const pacing = memoryWebsitePacing();
+  // Other work holds every byte: a bulk worker asking now gets no memory before its deadline.
+  const bulk = routineProcessSlots({ availableBytes: () => 0 });
+  const bulkWait = bulk.acquire("promote-manual-civic-projection.mts", Date.now() + 200).then(() => "ADMITTED", (error: Error) => error.message);
+  let now = Date.now();
+  const asked: string[] = [];
+  const log: string[] = [];
+  const context = createContext({
+    provider: "postgres", canary: false, runtimeAdmissionsHeld: false, admitJobLaunch, DOOR_PROBES_JOB,
+    pendingRestart: new PendingRestart(), researchCycleActive: false, researchCycleChild: null, drainHunterLane: () => {},
+    ownerRepositories: async () => ({ adminConfig: owner.adminConfig, doors: held.repo, websitePacing: pacing }),
+    readerFactDb: () => ({ query: readerQuery }),
+    // The runner's own turn, on the test's clock so an hour passes at once.
+    runStandingDoorProbes: (input: StandingDoorProbeInput) => runStandingDoorProbes({ ...input, clock: () => now, sleep: async (ms) => { now += ms; },
+      fetchImpl: (async (url: string) => {
+        asked.push(url);
+        if (asked.length === doors.length + 1) context.holdForRestart("a".repeat(40));
+        return new Response(`page ${url} ${asked.length}`);
+      }) as unknown as typeof fetch }),
+    console: { log: (line: string) => log.push(line), error: (line: string) => log.push(line) },
+  });
+  runInContext(stripTypeScriptTypes(["jobLaunchAllowed", "runDoorProbes", "holdForRestart"].map(runnerFunction).join("\n")), context);
+  assert.doesNotMatch(runnerFunction("runDoorProbes"), /acquire\(|runRuntimeChildren/, "the turn waits for no host memory and starts no child");
+  context.standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([doorProbesLane(context.runDoorProbes)], (outcome) => {
+    if (outcome.state === "FAILED") log.push(`FAILED ${outcome.error}`);
+  });
+  assert.deepEqual(context.standingRuntimeScheduler.tick(Date.now()), ["door-probes"]);
+  // Within the hour every door is due again; the release drain lands with the first look of that round.
+  await context.standingRuntimeScheduler.waitForIdle();
+  assert.match(await bulkWait, /WORKER_MEMORY_DEADLINE/, "bulk work found no memory the whole time");
+  assert.deepEqual(log.filter((line) => line.startsWith("FAILED")), []);
+  assert.ok(new Set(asked).size === doors.length, "every due hot door's page was asked");
+  for (const d of doors) assert.ok((await held.repo.read(d.doorId))!.value.validators?.checkedAt, `${d.doorId}: its look is stored`);
+  assert.equal(context.runtimeAdmissionsHeld, true);
+  assert.ok(log.some((line) => /^RCD_PROBE turn ended \(paused or drained\)/.test(line)), "the release drain ends the turn");
+  assert.ok(asked.length > doors.length && asked.length <= doors.length + 4, "only looks already started (one per website) finish after the drain");
+  const reads = owner.statements.length, looks = asked.length;
+  context.standingRuntimeScheduler.tick(Date.now() + 2 * MINUTE);
+  await context.standingRuntimeScheduler.waitForIdle();
+  assert.deepEqual([owner.statements.length, asked.length], [reads, looks], "while admissions are held a new turn reads and asks nothing");
+});
+
 test("door probes run in their own standing lane, not inside the publish-now pass", () => {
   const lane = doorProbesLane(async () => undefined);
   assert.equal(lane.id, "door-probes", "the breaker, Admin's pause and release and the meter rows keep the name");
   assert.ok(lane.budgetMs >= 60 * MINUTE && lane.everyMs <= MINUTE);
-  const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(pilot, /doorProbesLane\(runDoorProbes\)/);
-  assert.match(pilot, /if \(!jobLaunchAllowed\(DOOR_PROBES_JOB\.id\)\) return;/);
-  assert.match(pilot, /args: \[\.\.\.TS_CHILD, "scripts\/door-probes\.mts"\]/);
-  assert.match(pilot, /function holdForRestart[\s\S]*?drainDoorProbes\(\);[\s\S]*?\n}/);
-  const turn = readFileSync("scripts/door-probes.mts", "utf8");
-  assert.match(turn, /admitted: \(\) => !drained && admitJobLaunch\(DOOR_PROBES_JOB\.id\)/);
-  assert.match(turn, /pacedProbeFetch\(\{ pacing: repos\.websitePacing/);
+  assert.match(runnerSource, /doorProbesLane\(runDoorProbes\)/);
+  assert.match(runnerFunction("runDoorProbes"), /if \(!jobLaunchAllowed\(DOOR_PROBES_JOB\.id\)\) return;/);
+  assert.match(runnerFunction("runDoorProbes"), /admitted: \(\) => !runtimeAdmissionsHeld && admitJobLaunch\(DOOR_PROBES_JOB\.id\)/);
+  const turn = readFileSync("lib/doors/probe-lane.ts", "utf8");
+  assert.match(turn, /withDatabaseJob\(DOOR_PROBES_JOB\.id/);
   assert.match(turn, /readRunnerDoors\(repos\.doors, \["status"\], "OPEN", "probes"\)/);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.doesNotMatch(runner, /runHourlyProbes|ROUTINE_JOBS\.doorProbes|hotMeetingPartitions/);

@@ -132,7 +132,7 @@ test("DB-26: the shared paced fetch identifies itself and probes always run", as
   await Promise.all([paced("https://a.example.gov/1", {}), paced("https://a.example.gov/2", {}), paced("https://b.example.gov/1", {})]);
   assert.equal(seen.length, 3);
   assert.ok(seen.every((s) => /we-the-people civic meeting index/.test(s.ua ?? "")));
-  const turn = readFileSync("scripts/door-probes.mts", "utf8");
+  const turn = readFileSync("lib/doors/probe-lane.ts", "utf8");
   assert.match(turn, /runDoorProbeTurn\([\s\S]*pacedProbeFetch\(\{ pacing: repos\.websitePacing/);
   assert.doesNotMatch(turn, /WTP_DOOR_PROBES|doorProbesOn/);
 });

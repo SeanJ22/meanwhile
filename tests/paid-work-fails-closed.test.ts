@@ -183,7 +183,7 @@ function checkRunnerFailsClosed(src: string): void {
   assert.ok(hold, "no holdWhilePaused() returning the unreadable fact");
   assert.match(hold[0], /while \(says === "HOLD" && pendingRestart\.target === null\)/, "the pause no longer holds");
   assert.match(hold[0], /return \{ ownerIntentsUnreadable: says === "UNREADABLE" \};/);
-  assert.match(src, /const owner = await holdWhilePaused\(\);[\s\S]*?const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary\(\);[\s\S]*?if \(wakeReleaseExit !== null\) \{[\s\S]*?break;[\s\S]*?cycle \+= 1;[\s\S]*?const result = await runOneCycle\(owner\)/,
+  assert.match(src, /async function researchCycle\(cycle: number, owner[\s\S]*?const result = await runOneCycle\(owner\)[\s\S]*?waitForOwner: holdWhilePaused,\s*releaseExit: reconcileRuntimeReleaseAtBoundary,[\s\S]*?researchCycle\(n, owner\)/,
     "the owner pause is read before release reconciliation and the normal child inherits its unreadable state");
   assert.match(src, /\.\.\.\(owner\.ownerIntentsUnreadable \? \["--owner-intents-unreadable"\] : \[\]\),/, "the child is not told to hold its paid lane");
 }

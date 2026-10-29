@@ -230,6 +230,8 @@ export interface RunnerHeartbeat {
   readonly settings?: import("./settings.ts").RunnerSettingsApplied | null;
 
   readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
+  /** When each job the runner schedules last started, finished or failed; the line keeper flags the ones that stopped finishing. */
+  readonly jobs?: import("./job-runs.ts").JobRuns | null;
 
   readonly neonBytes?: {
     readonly lastFullHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;

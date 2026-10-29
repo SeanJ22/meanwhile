@@ -14,12 +14,6 @@ export async function ownerCountsReady(controlUrl: string, sql: Sql = neon(contr
   return rows.length > 0 && rows[0].format === "4" && rows[0].ready === "true" && rows[0].initializing !== "true";
 }
 
-/** The existing console interval still elapses when no research cycle is admitted. */
-export function consolePublishClock(everyMs: number, now:()=>number=Date.now) {
-  let attemptedAt=Number.NEGATIVE_INFINITY;
-  return {due:()=>now()<attemptedAt||now()-attemptedAt>=everyMs,attempted:()=>{attemptedAt=now();}};
-}
-
 export const CONSOLE_INPUT_SQL = `SELECT md5(jsonb_build_array(
   ${AGGREGATES.map(name => `(SELECT COALESCE(jsonb_agg(jsonb_build_array(id, revision) ORDER BY id), '[]'::jsonb) FROM cp_${name})`).join(",\n  ")},
   ${LOGS.map(name => `(SELECT jsonb_build_array(count(*), max(position)) FROM cp_log_${name})`).join(",\n  ")},

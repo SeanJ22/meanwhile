@@ -51,12 +51,14 @@ export interface IndependentRuntimeLane {
 export class IndependentRuntimeLaneScheduler {
   readonly #lanes: readonly IndependentRuntimeLane[];
   readonly #onOutcome: (outcome: IndependentRuntimeOutcome) => void;
+  readonly #onStart: (id: string) => void;
   readonly #lastStarted = new Map<string, number>();
   readonly #inFlight = new Map<string, Promise<IndependentRuntimeOutcome>>();
 
   constructor(
     lanes: readonly IndependentRuntimeLane[],
     onOutcome: (outcome: IndependentRuntimeOutcome) => void = () => undefined,
+    onStart: (id: string) => void = () => undefined,
   ) {
     const ids = lanes.map((lane) => lane.id);
     if (new Set(ids).size !== ids.length) throw new Error("INDEPENDENT_RUNTIME_LANE_IDS_NOT_UNIQUE");
@@ -70,7 +72,10 @@ export class IndependentRuntimeLaneScheduler {
     }
     this.#lanes = lanes;
     this.#onOutcome = onOutcome;
+    this.#onStart = onStart;
   }
+
+  get lanes(): readonly IndependentRuntimeLane[] { return this.#lanes; }
 
   tick(nowMs: number, force = false): readonly string[] {
     if (!Number.isFinite(nowMs)) throw new Error(`INDEPENDENT_RUNTIME_TICK_INVALID:${nowMs}`);
@@ -81,6 +86,7 @@ export class IndependentRuntimeLaneScheduler {
       if (!force && nowMs - lastStarted < lane.everyMs) continue;
       this.#lastStarted.set(lane.id, nowMs);
       launched.push(lane.id);
+      this.#onStart(lane.id);
       const running = settleOperation({ id: lane.id, run: () => lane.run(nowMs + lane.budgetMs) });
       this.#inFlight.set(lane.id, running);
       void running.then((outcome) => {

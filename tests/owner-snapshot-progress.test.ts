@@ -2,18 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { RUNTIME_NO_PROGRESS_MS, runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
-import { consolePublishClock } from "../scripts/pilot-runtime-publish.mts";
-
-test("stopped hunts keep the configured console interval without repeated snapshot reads or a research child",()=>{
-  let now=0;const interval=2*60*60_000,clock=consolePublishClock(interval,()=>now);
-  assert.equal(clock.due(),true);clock.attempted();
-  for(now=3000;now<interval;now+=3000)assert.equal(clock.due(),false);
-  now=interval;assert.equal(clock.due(),true);clock.attempted();assert.equal(clock.due(),false);
-  const source=readFileSync(new URL("../scripts/pilot-runner.mts",import.meta.url),"utf8");
-  const stopped=source.slice(source.indexOf("if (repos && !(await researchPlanningStates"),source.indexOf("  cycle += 1;"));
-  assert.ok(stopped.includes("await publishConsole(true)"));
-  assert.ok(!stopped.includes("runOneCycle"));
-});
 
 /*
  * The runner starts the owner-snapshot publisher after every cycle, failed or not, and ends any child that prints no
@@ -85,7 +73,7 @@ test("POSITIVE CONTROL: a publisher that goes quiet after the provider bills fai
 
 test("the runner publishes the console after every cycle's digest, including a failed cycle", () => {
   const runner = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
-  const failedBeat = runner.indexOf("if (!result.ok) await writeFailedCycleBeat(startedAt);");
+  const failedBeat = runner.indexOf("const delivered = deliver(buildDigest(record, cycle, today(), result.ok)");
   const publish = runner.indexOf("\n  await publishConsole();", failedBeat);
   assert.ok(failedBeat > 0 && publish > failedBeat, "a failed cycle reaches the console publish");
   assert.doesNotMatch(runner.slice(failedBeat, publish), /\bcontinue;|\bbreak;/, "nothing between a failed cycle and the publish skips it");

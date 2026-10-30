@@ -7,7 +7,7 @@
   "steps": [
     "CP-01"
   ],
-  "ci": "running",
+  "ci": "tests-running",
   "authorization": "Sean: Authorize one CP-01 release; protected release before READY, then a complete LIVE hour below 10 MB.",
   "at": "2026-10-30T04:54:04.241020+00:00",
   "head_sha": "2dba6239985e9e5622cfd956971ace3aed3d08c7",
@@ -30,5 +30,20 @@
     "before": 690151,
     "after": 690145
   },
-  "updated_at": "2026-10-30T05:00:04.471163+00:00"
+  "updated_at": "2026-10-30T05:06:49.315575+00:00",
+  "ci_run": 41005805432,
+  "before": {
+    "owner_peak_hour": "2026-10-29T20:00:00Z",
+    "owner_peak_bytes": 999322081,
+    "owner_latest_active_hour": "2026-10-30T03:00:00Z",
+    "owner_latest_active_bytes": 427368401,
+    "facts_a_day": 10368,
+    "facts_at": "2026-10-30T04:58:00Z",
+    "all_jobs_six_hour_gb_per_hour": 4.812316413,
+    "zips_under_3s": {
+      "phone": 37,
+      "tablet": 48,
+      "desktop": 47
+    }
+  }
 }

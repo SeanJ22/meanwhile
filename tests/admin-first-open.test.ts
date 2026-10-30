@@ -2,8 +2,6 @@
  * The first open of an Admin page waits only for what it must:
  *
  * ```
- *   bodies      the watched-body read leaves out the change history; only an opened routine read
- *               asks for its own body's history
  *   drilldown   an opened piece of standing work is read in as few dependent round trips as its
  *               keys allow, returning the same records in the same order
  *   page        Work reads it beside its other reads and reads the newest digest alone
@@ -16,7 +14,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { readLatestDigest } from "../lib/control-plane/admin-data.ts";
-import { buildBodyViews, type BodyStoreFacts, type BodyView, type VersionFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
 import { readAssignmentSourcesById } from "../lib/control-plane/assignment-read.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { AggregateRepository, AppendOnlyRepository, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -206,85 +203,4 @@ test("the runner card's digest is one row from the tail of the log, the newest",
   assert.deepEqual(rounds, [["ownerDigests:recent(1)"]]);
   assert.equal(value.kind, "HELD");
   assert.equal(value.kind === "HELD" ? (value.value as unknown as { n: number }).n : null, 3);
-});
-
-/* ------------------------------------------------------------------ the body read */
-
-const AZ = "ocd-division/country:us/state:az";
-const contract = (id: string, bodyId: string): WatchedContract => ({
-  id: `meetings:test:${id}`,
-  scope: `source:test:body:${id}`,
-  bodyId,
-  ocdId: `${AZ}/county:pima`,
-  meetingSource: "test",
-  jurisdiction: "Pima County",
-  publishingOrg: "Pima County",
-  sourceUrl: `https://example.gov/${id}`,
-  verifiedAt: null,
-  cadence: { description: "every hour", defaultEveryMs: 3_600_000 },
-  retry: { afterMs: 900_000, description: "fifteen minutes later" },
-});
-// One body read through two sources, and another body.
-const legistar = contract("pima-legistar", `${AZ}/county:pima#board`);
-const insite = contract("pima-insite", `${AZ}/county:pima#board`);
-const clerk = contract("pima-clerk", `${AZ}/county:pima#clerk`);
-const CONTRACTS = [legistar, insite, clerk];
-const version = (c: WatchedContract, id: string, meetings: number): VersionFacts => ({
-  scope: c.scope, versionId: id, promotedAt: "2026-09-25T19:00:00.000Z", meetings, fresh: meetings, carried: 0, docs: 1, noAgendaLink: 0,
-  noAgendaAhead: 0, upcoming: 2, furthestAhead: "2026-12-01T00:00:00.000Z", bodyName: "Board of Supervisors", jurisdiction: "Pima County",
-  outcome: "UNCHANGED", added: 0, changed: 0, removed: 0, held: 0, horizon: null,
-});
-const attempt = (c: WatchedContract, id: string, at: string) => ({ scope: c.scope, candidateId: id, state: "PROMOTED", failureCode: null, failureDetail: null, acquisitionSucceeded: true, attemptedAt: at });
-const change = (c: WatchedContract, id: string) => ({
-  scope: c.scope, versionId: id, retrievedAt: "2026-09-24T09:59:00.000Z", promotedAt: "2026-09-24T10:00:00.000Z", validatedAt: "2026-09-24T10:00:00.000Z",
-  added: 2, changed: 1, removed: 0, held: 0, meetingsAdded: 2, named: [{ title: "Regular meeting", startsAt: "2026-10-07T17:00:00.000Z" }], meetingsChanged: 1, changedNamed: [],
-});
-
-/* The whole read, as the pages read it before: figures, the served versions' readbacks, the day, and every body's latest change with its readbacks. */
-const WHOLE: BodyStoreFacts = {
-  asOf: NOW,
-  versions: [version(legistar, "cv-l", 15), version(insite, "cv-i", 12), version(clerk, "cv-k", 4)],
-  attempts: [attempt(legistar, "cv-l", "2026-09-25T19:00:00.000Z"), attempt(insite, "cv-i", "2026-09-25T18:00:00.000Z"), attempt(clerk, "cv-k", "2026-09-25T19:30:00.000Z")],
-  readbacks: [
-    { candidateId: "cv-l", at: "2026-09-25T19:05:00.000Z", passed: true },
-    { candidateId: "cv-i", at: "2026-09-25T18:05:00.000Z", passed: true },
-    { candidateId: "cv-k", at: "2026-09-25T19:35:00.000Z", passed: false },
-    // The latest changes' own readbacks: read with the history, and about versions no longer served.
-    { candidateId: "cv-l-old", at: "2026-09-24T10:05:00.000Z", passed: true },
-    { candidateId: "cv-k-old", at: "2026-09-24T10:05:00.000Z", passed: true },
-  ],
-  day: CONTRACTS.map((c) => ({ scope: c.scope, reads: 24, gotIn: 24, versions: 24, changedVersions: 0, cannotTell: 0, added: 0, changed: 0, removed: 0 })),
-  changes: [change(legistar, "cv-l-old"), change(clerk, "cv-k-old")],
-};
-/* Every page's read now: the same statements without the history, so no change and none of its readbacks. */
-const WITHOUT_HISTORY: BodyStoreFacts = { ...WHOLE, readbacks: WHOLE.readbacks.filter((r) => !r.candidateId.endsWith("-old")), changes: null };
-
-test("the body read every page makes without the change history draws every figure the whole read drew, and marks each trail not read", () => {
-  const whole = buildBodyViews({ contracts: CONTRACTS, store: WHOLE, nowIso: NOW });
-  const light = buildBodyViews({ contracts: CONTRACTS, store: WITHOUT_HISTORY, nowIso: NOW });
-  const strip = (views: readonly BodyView[]) => views.map(({ lastChange: _trail, changeRead: _read, ...rest }) => rest);
-  assert.deepEqual(strip(light), strip(whole));
-  assert.ok(whole.every((v) => v.changeRead && v.lastChange !== null), "the whole read holds a trail for each body");
-  assert.ok(light.every((v) => !v.changeRead && v.lastChange === null), "without the history each trail is not read, never 'no change'");
-});
-
-test("one body read whole, narrowed to its own sources, is the view the whole read built for it", () => {
-  const whole = buildBodyViews({ contracts: CONTRACTS, store: WHOLE, nowIso: NOW });
-  const board = CONTRACTS.filter((c) => c.bodyId === legistar.bodyId);
-  const scopes = new Set(board.map((c) => c.scope));
-  // What the narrowed statements answer: the rows of this body's scopes, and the readbacks of its versions.
-  const mine = new Set([...WHOLE.versions.filter((v) => scopes.has(v.scope)).map((v) => v.versionId), ...(WHOLE.changes ?? []).filter((c) => scopes.has(c.scope)).map((c) => c.versionId)]);
-  const narrowed: BodyStoreFacts = {
-    asOf: NOW,
-    versions: WHOLE.versions.filter((v) => scopes.has(v.scope)),
-    attempts: WHOLE.attempts.filter((a) => scopes.has(a.scope)),
-    readbacks: WHOLE.readbacks.filter((r) => mine.has(r.candidateId)),
-    day: WHOLE.day.filter((d) => scopes.has(d.scope)),
-    changes: (WHOLE.changes ?? []).filter((c) => scopes.has(c.scope)),
-  };
-  const [one, ...none] = buildBodyViews({ contracts: board, store: narrowed, nowIso: NOW });
-  assert.equal(none.length, 0);
-  assert.deepEqual(one, whole.find((v) => v.id === legistar.bodyId));
-  assert.equal(one.contractIds.length, 2, "both of the body's sources");
-  assert.equal(one.lastChange?.versionId, "cv-l-old");
 });

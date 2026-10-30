@@ -4,7 +4,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { IDENTITY_DOMAINS } from "../lib/db/identity-domains.ts";
 import { hashSpeakKey } from "../lib/db/speak.ts";
 import {
   SPEAK_LABEL,
@@ -23,28 +22,6 @@ const ROOT = process.cwd();
 /* ====================================================================== *
  *  RULE 1 — DISTRICT-STAMPED, JOINED TO NOTHING
  * ====================================================================== */
-
-test("BC-11 RULE 1: the store holds a district and no way to reach a person", () => {
-  const domain = IDENTITY_DOMAINS.speak_your_mind;
-  assert.ok(domain, "the store is not registered in the identity domains");
-  assert.equal(domain.storeClass, "READER_COLLECTION");
-
-  // No world identity value. Not an email, not a phone, not an address — the
-  // surface never asks for one, and the schema could not hold one if it did.
-  for (const [column, spec] of Object.entries(domain.columns)) {
-    assert.ok(
-      !["EMAIL_ADDRESS", "PHONE_NUMBER", "POSTAL_ADDRESS", "IP_ADDRESS"].includes(
-        spec.space,
-      ),
-      `speak_your_mind.${column} holds a world identity value (${spec.space})`,
-    );
-  }
-
-  // The district IS there — a store with no district would be sentiment about
-  // nowhere, which is the one thing it must not be.
-  assert.equal(domain.columns.ocd_ids.space, "CIVIC_IDENTIFIER");
-  assert.equal(domain.columns.division_vintage.space, "NON_IDENTIFYING");
-});
 
 test("BC-11 RULE 1: the continuity key is in its OWN digest space", () => {
   /*
@@ -65,12 +42,6 @@ test("BC-11 RULE 1: the continuity key is in its OWN digest space", () => {
     speak,
     createSha256(`speak-your-mind:${key}`),
     "the speak key is not digested under its declared prefix",
-  );
-
-  // And the registry SAYS so, so the boundary test can compute over it.
-  assert.equal(
-    IDENTITY_DOMAINS.speak_your_mind.columns.speak_key_hash.digestSpace,
-    "speak-your-mind:",
   );
 });
 

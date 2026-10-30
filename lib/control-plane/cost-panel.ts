@@ -24,8 +24,8 @@ import {
 } from "./cost.ts";
 import { addExact, exactSum, exactValue, subtractExact, type ExactSum } from "./exact-sum.ts";
 import { cacheSavingUsd } from "./model-cost.ts";
-import { gap, held, measured, type Held, type Measured, type OwnerSnapshot, type RenderedNumber } from "./owner-surface.ts";
-import { modelName, usdCents, usdOf } from "./plain-words.ts";
+import { gap, held, measured, type Held, type Measured, type OwnerSnapshot } from "./owner-surface.ts";
+import { usdCents } from "./plain-words.ts";
 import { countsAsScoutAttempt, scoutCapacityOf, type CacheHitRate, type ScoutCapacity, type ShareTrend } from "./research-metrics.ts";
 import { RESEARCH_BOUNDS } from "./scheduler/research-policy.ts";
 
@@ -603,90 +603,8 @@ export function costClassOf(row: CostRowLike): CostClassReading {
   );
 }
 
-/**
- * Spend window rows, rendered by both the console and the runner card. An
- * unmeasured window is never shown as `$0.00`.
- */
-export interface SpendWindowRow {
-  /** "Current cycle", "Operational night", "Last 24 hours". */
-  readonly window: string;
-  readonly spentUsd: number | null;
-  readonly ceilingUsd: number;
-  /** The spend against the ceiling, or the named gap. Always to the cent. */
-  readonly shown: string;
-  /** True when the figure is a gap rather than a total. */
-  readonly unmeasured: boolean;
-  /** One sentence defining the window, where the name alone does not. */
-  readonly defines: string | null;
-}
-
-/** The ceilings, taken structurally so this module never imports the admission controller. */
-export interface SpendCeilings {
-  /** The one spend ceiling every window is framed against. */
-  readonly rolling24HourModelUsd: number;
-}
-
-const UNMEASURED_WINDOW = "not measured — a model reply reported no cost, so this window has no total";
-
-export function spendWindowRows(input: {
-  readonly cycleUsd: number | null;
-  readonly operationalNightUsd: number | null;
-  readonly rolling24HourUsd: number | null;
-  readonly ceilings: SpendCeilings;
-}): readonly SpendWindowRow[] {
-  const ceilingUsd = input.ceilings.rolling24HourModelUsd;
-  const row = (window: string, spentUsd: number | null, defines: string | null): SpendWindowRow => ({
-    window,
-    spentUsd,
-    ceilingUsd,
-    shown: spentUsd === null ? UNMEASURED_WINDOW : usdOf(spentUsd, ceilingUsd),
-    unmeasured: spentUsd === null,
-    defines,
-  });
-  return [
-    row("Current cycle", input.cycleUsd, "One pass of the runner through the work that is due. No per-cycle spend cap — the rolling daily ceiling is the limit."),
-    row(
-      "Operational night",
-      input.operationalNightUsd,
-      "The overnight working window: 6pm to 6am Phoenix time, the stretch in which the runner does paid model work.",
-    ),
-    row("Last 24 hours", input.rolling24HourUsd, "A sliding day ending now, not a calendar day — the one spend ceiling."),
-  ];
-}
-
 /** The rolling research ceiling, read from the canonical bounds. */
 export const DEFAULT_DAILY_CEILING_USD = RESEARCH_BOUNDS.dailyCeilingUsd;
-
-/** The capacity sentence the cost section leads with. A null mean means no attempt reported a cost, not $0. */
-export function capacitySentence(capacity: ScoutCapacity | null): string {
-  if (capacity === null) {
-    return "How much the daily limit buys is not published on this snapshot yet — the publisher passes no clock, so no window could be dated.";
-  }
-  if (capacity.meanUsdPerAttempt === null || capacity.attemptsPerDayAtCap === null) {
-    return (
-      `No hunt in the last ${capacity.windowHours} hours reported what it cost` +
-      (capacity.unmeasuredAttempts > 0 ? ` (${capacity.unmeasuredAttempts} ran and reported nothing)` : "") +
-      `, so how much the ${usdCents(capacity.ceilingUsd)} daily limit buys is not measured — which is not the same as it buying nothing.`
-    );
-  }
-  return (
-    `At the current average cost, the ${usdCents(capacity.ceilingUsd)} daily limit buys about ${capacity.attemptsPerDayAtCap} ` +
-    `hunt${capacity.attemptsPerDayAtCap === 1 ? "" : "s"} at roughly ${usdCents(capacity.meanUsdPerAttempt)} each.`
-  );
-}
-
-/** `0%` model work can mean nothing dispatched, all plain code, or no split recorded; the sentence names which. */
-export function shareSentence(share: Held<Measured>): string {
-  if (!share.held) return share.gap.says;
-  const { value, denominator } = share.value;
-  if (denominator === 0) return "0% model work this cycle — nothing was dispatched.";
-  const modelJobs = denominator - value;
-  if (modelJobs === 0) {
-    return `0% model work this cycle — all ${denominator} job${denominator === 1 ? "" : "s"} ran as plain code, with no paid model.`;
-  }
-  const pct = Math.round((value / denominator) * 100);
-  return `${pct}% of this cycle's ${denominator} job${denominator === 1 ? "" : "s"} ran as plain code; ${modelJobs} used a paid model.`;
-}
 
 /**
  * The month's billed quantities, as ledger metric keys summed by `sumMetric`.
@@ -928,14 +846,6 @@ export function foldCostMonth(t: CostLedgerTotals, e: CostEntry, worker: WorkerR
   if (isSearchCharge(e)) foldBreakdown(month.bySearchSource, e.source ?? SEARCH_SOURCE_NOT_ON_RECORD, e);
 }
 
-export function buildMonthlySpend(input: {
-  readonly costs: readonly CostEntry[];
-  readonly attempts: readonly AttemptRef[];
-  readonly nowIso: string;
-}): MonthlySpendView {
-  return monthlySpendOf(costLedgerOf(input.costs, input.attempts, input.nowIso), input.nowIso);
-}
-
 export function monthlySpendOf(ledger: CostLedgerTotals, nowIso: string): MonthlySpendView {
   const window = utcMonthWindow(nowIso);
   const month = ledger.months[window.since.slice(0, 7)] ?? monthTotals();
@@ -1121,52 +1031,3 @@ export function spendByPlaceOf(states: Readonly<Record<string, PlaceTotals>>, ov
   return { total: { ...whole, total: whole.total === null ? null : round(whole.total) }, states: rows };
 }
 
-/** A by-model key as the owner reads it. */
-export function modelLabel(key: string): string {
-  return key === ATTEMPT_NOT_ON_RECORD ? "Attempt not on record" : modelName(key);
-}
-
-/** Bar class for a worker role; colour is defined in the console stylesheet. */
-export function roleBarClass(roleCode: string): string {
-  const role = roleCode.replace(/ \(.*\)$/, "").trim();
-  return roleCostPolicy(role) === null ? "role-other" : `role-${role.toLowerCase().replace(/_/g, "-")}`;
-}
-
-/**
- * Every figure this section renders, as audit rows. The admin page refuses to
- * render if any pushed number lacks a denominator and a contract.
- */
-export function costSectionNumbers(input: {
-  readonly monthly: MonthlySpendView | null;
-  readonly windows: readonly SpendWindowRow[];
-  readonly capacity: ScoutCapacity | null;
-}): readonly RenderedNumber[] {
-  const numbers: RenderedNumber[] = [];
-  for (const w of input.windows) {
-    if (w.spentUsd === null) continue;
-    numbers.push({
-      label: `spend window ${w.window}`,
-      value: w.spentUsd,
-      denominator: w.ceilingUsd,
-      contract: `measured model dollars in this window, against the hard ceiling that stops work when it is reached`,
-    });
-  }
-  const m = input.monthly;
-  if (m && m.total.total !== null) {
-    numbers.push({
-      label: `spend this UTC month (${m.window.label})`,
-      value: m.total.measured,
-      denominator: m.total.measured + m.total.unmeasured,
-      contract: `ledger rows recorded since ${m.window.since} that reported a dollar cost, out of every row in the month; the dollar total covers only the rows that reported one`,
-    });
-  }
-  if (input.capacity && input.capacity.attemptsPerDayAtCap !== null) {
-    numbers.push({
-      label: "hunts the daily limit buys",
-      value: input.capacity.measuredAttempts,
-      denominator: input.capacity.measuredAttempts + input.capacity.unmeasuredAttempts,
-      contract: input.capacity.denominator,
-    });
-  }
-  return numbers;
-}

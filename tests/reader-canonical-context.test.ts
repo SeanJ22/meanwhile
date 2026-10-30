@@ -7,7 +7,8 @@ import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts"
 import { stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { readStatePackage, readStateAuthorities, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../lib/reader/state.ts";
-import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { installReaderDatabaseQuery as installQuery } from "../lib/reader/database.ts";
+import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../lib/reader/authority-reads.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -18,6 +19,18 @@ import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+
+/** These tests are about a state's own reads: the President is held in this server's memory and answers nothing here. */
+function installReaderDatabaseQuery(query: Parameters<typeof installQuery>[0]): void {
+  forgetNationalShelf();
+  installQuery(query && (async statements => {
+    const [only] = statements, keys = only?.params[0];
+    if (statements.length === 1 && Array.isArray(keys) && keys.length && keys.every(key => String(key).includes(":US:people:") || String(key).includes("US:people:"))) {
+      return [only.text.includes("p.xmin::text") ? [{ value: "a".repeat(64) }] : []];
+    }
+    return query(statements);
+  }));
+}
 
 function stateRows(version: string, divisions: readonly string[], zip = false, withMember = false) {
   const at = "2026-10-19T00:00:00.000Z", scope = "US-AZ:reader-registry-runtime";

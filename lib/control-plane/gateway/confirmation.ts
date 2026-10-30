@@ -13,6 +13,8 @@ import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowO
 import { OFFICIALS_CHECK_ACTION } from "./officials-action.ts";
 import { officialsReceiptFeeds } from "../admin-view/officials-results.ts";
 import { officialsLeadStatus } from "../officials-leads.ts";
+import type { OrderStep } from "../../core/work-kinds.ts";
+import { controlPlaneQuery, workList, type WorkList } from "../../core/work.ts";
 
 export type ConfirmationState =
   | "applied"
@@ -55,8 +57,18 @@ export interface Confirmation {
   readonly change?: ActionReceipt["change"];
 
   readonly items?: readonly OrderItem[];
+  /** The steps the order's row on the work list has stored; absent when the order is not tracked there. */
+  readonly steps?: readonly OrderStep[];
   readonly at: string | null;
   readonly words: string;
+}
+
+/** Where an order is kept: its row on the work list. */
+export type OrderBook = Pick<WorkList, "order" | "advanceOrder" | "readOrder">;
+
+/** The live book, or none when the control-plane database is not reachable from here; an order is then confirmed without its stored steps. */
+export function liveOrderBook(): OrderBook | undefined {
+  try { return workList(controlPlaneQuery(), { owner: "admin-orders" }); } catch { return undefined; }
 }
 
 export const INTENT_ACTIONS: ReadonlySet<string> = new Set([
@@ -143,7 +155,41 @@ export function confirmationReadSession(repos: ControlPlaneRepositories): Contro
   };
 }
 
-export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
+/** The step an order has reached, from what the runner has done about it. */
+function stepOf(confirmation: Confirmation): OrderStep["step"] | null {
+  switch (confirmation.state) {
+    case "applied": case "not-needed": return "Done";
+    case "in-progress": case "working": return "In progress";
+    case "waiting": return confirmation.plan?.resultsBy ? "Scheduled" : null;
+    default: return null;
+  }
+}
+
+/** An accepted order is a row on the work list; each step it reaches is stored once, and the stored steps are what Admin shows. */
+async function trackOrder(orders: OrderBook, receipt: ConfirmationReceipt, confirmation: Confirmation): Promise<readonly OrderStep[] | undefined> {
+  if (receipt.outcome === "REFUSED") return undefined;
+  try {
+    const at = receipt.completedAt ?? receipt.startedAt;
+    let held = await orders.readOrder(receipt.receiptId);
+    if (held === null) {
+      await orders.order({ receiptId: receipt.receiptId, label: receipt.label, at });
+      held = await orders.readOrder(receipt.receiptId);
+    }
+    const step = stepOf(confirmation);
+    if (step === null || held?.steps.some(reached => reached.step === step)) return held?.steps;
+    await orders.advanceOrder(receipt.receiptId, step, step === "Scheduled" ? at : confirmation.at ?? at, step === "Done" ? { words: confirmation.words } : null);
+    return (await orders.readOrder(receipt.receiptId))?.steps;
+  } catch { return undefined; }
+}
+
+export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader,
+  orders?: OrderBook): Promise<Confirmation> {
+  const confirmation = await confirmCurrent(repos, receipt, nowMs, readPlaceScore);
+  const steps = orders === undefined ? undefined : await trackOrder(orders, receipt, confirmation);
+  return steps === undefined ? confirmation : { ...confirmation, steps };
+}
+
+async function confirmCurrent(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number, readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
   if (receipt.type === OFFICIALS_CHECK_ACTION && receipt.outcome !== "REFUSED") return confirmOfficials(repos, receipt, nowMs);
   let core = await confirmCore(repos, receipt, nowMs, readPlaceScore);
@@ -248,7 +294,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: Confirmatio
   if (type === "orders.schedule") {
     try {
       const child=await findScheduledChild(repos,receipt.subject);
-      if(child)return confirmReceipt(repos,child,nowMs,readPlaceScore);
+      if(child)return confirmCurrent(repos,child,nowMs,readPlaceScore);
       const config=(await repos.adminConfig.read("current"))?.value;
       const scheduled=config?.scheduledOrders?.find(o=>o.id===receipt.subject);
       if(scheduled && !scheduled.after && nowMs - Date.parse(scheduled.startAt ?? scheduled.decidedAt) > RUNNER_SILENT_MS) return {state:"not-picked-up",at:null,words:"The scheduled time passed, and the timer has not sent this order."};
@@ -258,7 +304,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: Confirmatio
   if (type === "queue.add") {
     try {
       const item = (await repos.adminConfig.read("current", { fixList: { ids: [receipt.subject] } }))?.value.fixList?.find(i=>i.id === receipt.subject);
-      if (item?.dispatch) return confirmReceipt(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
+      if (item?.dispatch) return confirmCurrent(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
     } catch { return { state: "unread", at: null, words: "Saved. Runner status —" }; }
   }
   const inIntent = INTENT_ACTIONS.has(type);

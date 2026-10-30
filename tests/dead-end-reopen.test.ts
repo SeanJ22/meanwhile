@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
-import { CAPABILITY_DDL, REOPEN_BATCH, capabilitiesOfEntries, capabilityLog, deadEndOf, installedParsers, reopenDeadEnds, unlockOf, type Unlock } from "../lib/core/capability.ts";
+import { CAPABILITY_DDL, REOPEN_BATCH, capabilitiesOfEntries, capabilityLog, deadEndOf, reopenDeadEnds, unlockOf, type Unlock } from "../lib/core/capability.ts";
+import { installedParsers } from "../scripts/lib/installed-parsers.mts";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { WORK_DDL, workList, type WorkInput } from "../lib/core/work.ts";
 import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
@@ -158,7 +159,7 @@ test("a hunt that leaves a blank open names what would unlock it, the list's clo
   t.after(() => pg.close());
   const repos = createMemoryRepositories();
   const unfilled = new Map<string, unknown>();
-  const claims = hunterClaims({ list, repos, now: at, deadEndMs: async () => 5 * DAY, capabilities: log, log: () => {}, deadEndOf: async result => deadEndOf(unfilled.get(`${result.obligationId}:${result.attemptId}`)) });
+  const claims = hunterClaims({ list, repos, now: at, deadEndMs: async () => 5 * DAY, capabilities: log, log: () => {}, funded: () => [], due: async () => true, deadEndOf: async result => deadEndOf(unfilled.get(`${result.obligationId}:${result.attemptId}`)) });
   const pressed = await list.sooner({ placeId: place, subjectId: `${place}#board`, subjectType: "body" });
   await claims.select(["ma"], false);
   const queue = await claims.claim(true);

@@ -530,7 +530,6 @@ test("an interrupted snapshot publish resumes from the state count row without r
   assertSamePanels("after an unpaired state", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
 });
 
-
 test("the owner contract checkpoints a backlog before publication and replays a post-state crash without adding spend twice",async()=>{
   const repos=createMemoryRepositories(),world=initialWorld();
   await seed(repos,world);
@@ -569,7 +568,6 @@ test("the owner contract checkpoints a backlog before publication and replays a 
   const after=await publish(repos,migrationNow,initial.published,[],null);
   assertSamePanels("resumed contract",after.panels,await fromScratch(repos,migrationNow,[],null,after.published.readings));
 });
-
 
 test("an empty owner contract finishes billing and refresh phases in one bounded attempt",async()=>{
   const repos=createMemoryRepositories();

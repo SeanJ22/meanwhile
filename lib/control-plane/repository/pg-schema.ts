@@ -18,7 +18,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
 import { CAPABILITY_DDL } from "../../core/capability.ts";
-import { WORK_DDL } from "../../core/work.ts";
+import { LEAD_DDL, WORK_DDL } from "../../core/work.ts";
 import { KEYS_DDL } from "../../core/keys-store.ts";
 
 export const BOOTSTRAP_VERSION = 34;
@@ -723,6 +723,7 @@ END $$;`,
   ...CONTROL_READS_EXPAND_DDL,
   ...RESEARCH_REVISION_INDEXES.map(index => index.ddl),
   ...WORK_DDL,
+  ...LEAD_DDL,
   ...CAPABILITY_DDL,
   ...MODEL_CHARGE_KIND_DDL,
 
@@ -739,13 +740,6 @@ END $$;`,
   ...DOOR_READS_DDL,
   ...LOSS_STUDY_COUNTS_DDL,
 ];
-
-export function duplicatePositionQuery(log: string): string {
-  return `SELECT log_key, position, count(*) AS n
-          FROM cp_log_${log}
-          GROUP BY log_key, position
-          HAVING count(*) > 1`;
-}
 
 export function recordVersionStatement(version: number, nowIso: string): string {
   return `INSERT INTO cp_schema_version (singleton, version, applied_at)
@@ -765,86 +759,3 @@ export interface SchemaVerdict {
   readonly problems: readonly string[];
 }
 
-export function judgeSchema(input: {
-  readonly configured: boolean;
-  readonly reachable: boolean;
-  readonly appliedVersion: number | null;
-  readonly liveTables: readonly string[] | null;
-  readonly unreachableReason?: string;
-}): SchemaVerdict {
-  const problems: string[] = [];
-
-  if (!input.configured) {
-    return {
-      configured: false,
-      reachable: false,
-      appliedVersion: null,
-      expectedVersion: BOOTSTRAP_VERSION,
-      missingTables: [],
-      unexpectedTables: [],
-      problems: [],
-    };
-  }
-
-  if (!input.reachable || input.liveTables === null) {
-    return {
-      configured: true,
-      reachable: false,
-      appliedVersion: null,
-      expectedVersion: BOOTSTRAP_VERSION,
-      missingTables: [],
-      unexpectedTables: [],
-      problems: [
-        `the control-plane database is configured and could not be reached: ${
-          input.unreachableReason ?? "no reason given"
-        }. A gate that read this as "nothing wrong" would go green on a database that does not ` +
-          "exist, which is the shape of an unenforced check.",
-      ],
-    };
-  }
-
-  const live = new Set(input.liveTables);
-  const missingTables = DECLARED_TABLES.filter((t) => !live.has(t));
-
-  const unexpectedTables = [...live].filter(
-    (t) => t.startsWith("cp_") && !DECLARED_TABLES.includes(t),
-  );
-
-  if (missingTables.length > 0) {
-    problems.push(
-      `${missingTables.length} declared table(s) are absent: ${missingTables.join(", ")}. The ` +
-        "bootstrap is idempotent and runs on connect, so an absent table means no provider has " +
-        "connected to this database yet, or something dropped it.",
-    );
-  }
-  if (unexpectedTables.length > 0) {
-    problems.push(
-      `${unexpectedTables.length} control-plane table(s) exist that this module does not ` +
-        `declare: ${unexpectedTables.join(", ")}. Schema is owned by the provider module; a ` +
-        "table nobody declared is a hand edit, and a hand edit nobody can see is how a schema " +
-        "stops being what its code says it is.",
-    );
-  }
-  if (input.appliedVersion === null) {
-    problems.push(
-      "the database records no schema version. It cannot be placed against " +
-        `BOOTSTRAP_VERSION ${BOOTSTRAP_VERSION}, and an unplaceable schema is not a current one.`,
-    );
-  } else if (input.appliedVersion !== BOOTSTRAP_VERSION) {
-    problems.push(
-      `the database is at schema version ${input.appliedVersion} and this module declares ` +
-        `${BOOTSTRAP_VERSION}. Connect a provider to bring it up, or the code and the database ` +
-        "are two different schemas.",
-    );
-  }
-
-  return {
-    configured: true,
-    reachable: true,
-    appliedVersion: input.appliedVersion,
-    expectedVersion: BOOTSTRAP_VERSION,
-    missingTables,
-    unexpectedTables,
-    problems,
-  };
-}

@@ -11,12 +11,17 @@ import { WORKER_CREDENTIAL_VAR } from "../lib/control-plane/scheduler/research-p
 import { anthropicTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { durableSearchBudget } from "../lib/control-plane/discovery/search-runtime.ts";
-import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneAutonomousTransport, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
 import { HUNTER_CLAIM_LEASE_MS, HUNTER_CLAIM_RENEW_MS, hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
-import { capabilityLog, deadEndOf, installedParsers } from "../lib/core/capability.ts";
+import { capabilityLog, deadEndOf } from "../lib/core/capability.ts";
+import { installedParsers } from "./lib/installed-parsers.mts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
-import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
+import { deadEndWaitMs, duePackets } from "../lib/hunt/runtime.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { claimPlacementQuestions, settlePlacement } from "../lib/facts/portal-publication.ts";
+import { placementTurn } from "../lib/identity/placement-agent.ts";
+import { meteredPlacement, placementPages } from "../lib/identity/placement-runtime.ts";
 
 
 const ROOT = process.cwd();
@@ -44,8 +49,11 @@ let armingPath = hunterLaneArmingPath(ROOT, state);
 const capabilities = capabilityLog(controlPlaneQuery());
 // A reader that is new or changed since the last lane is an event; one that is not is already on record.
 await capabilities.record(await installedParsers(), nowIso());
+// Money was pointed at the places the owner's orders fund; the arming names them, and a lane that could not arm funds none.
+const fundedPlaces = (): readonly string[] => { try { return lane.current().arming?.lifetimeHuntSubjects ?? []; } catch { return []; } };
 const claims = hunterClaims({ list: workList(controlPlaneQuery(), { owner: "hunter-lane", leaseMs: HUNTER_CLAIM_LEASE_MS }), repos, now: nowIso,
-  deadEndMs: () => deadEndWaitMs(repos), capabilities, log: say,
+  deadEndMs: () => deadEndWaitMs(repos), capabilities, log: say, funded: fundedPlaces,
+  due: async governmentId => (await duePackets(repos, [{ governmentId }], nowIso())).get(governmentId)?.due === true,
   deadEndOf: async result => deadEndOf((await controlPlaneQuery()("SELECT record->'unfilled' AS unfilled FROM cp_log_scout_results WHERE log_key = $1 AND record_id = $2",
     [result.obligationId, result.attemptId ?? ""]))[0]?.unfilled) });
 const keeper = setInterval(() => { void claims.keep().catch(error => say(`hunter lane: leases could not be renewed (${error instanceof Error ? error.message : String(error)})`)); }, HUNTER_CLAIM_RENEW_MS);
@@ -56,6 +64,7 @@ const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
 const messages = anthropicTransport(workerKey, fetch, undefined, { onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } });
 const batch = backgroundBatchTransport({ apiKey: workerKey });
 const ownSpend = new LaneOwnSpend();
+const facts = readerFactDb();
 
 let lastFleet: ArmedHunterLane["fleetSafety"] = null;
 
@@ -64,6 +73,9 @@ const lane = hunterLane({
   sleep: ms => new Promise(done => setTimeout(done, ms)),
   stopRequested: () => drain,
   log: say,
+  between: () => placementTurn({ query: facts.query, claim: n => claimPlacementQuestions(facts, n), settle: (decision, question) => settlePlacement(facts, decision, question),
+    transportFor: subject => meteredPlacement(repos, laneAutonomousTransport(lane.current, messages, ownSpend, nowIso)({ subjectId: subject, state: null }, `placement:${subject}`), subject),
+    pagesFor: placementPages, log: say }),
   selectState: async () => {
     let paidOpen = false;
     try { paidOpen = lane.current().closed === null; } catch { paidOpen = false; }

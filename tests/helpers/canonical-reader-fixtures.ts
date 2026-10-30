@@ -56,6 +56,11 @@ function censusRows(value: CensusDistrictEdge, state?: unknown): Record<string, 
 
 function canonicalRows(sql: string, params: readonly unknown[]): Record<string, unknown>[] | undefined {
   const held = fixture().store as unknown as { promotions: Map<string, PromotedProjection>; candidates: Map<string, CandidateVersionRecord> };
+  // The version of some promoted entries moves when any of them is published again or changed.
+  if (sql.includes("string_agg(") && sql.includes("p.xmin::text")) return [{ value: canonicalCivicDataHash(((params[0] ?? []) as readonly string[]).map(key => {
+    const entry = held.promotions.get(key);
+    return entry ? [key, entry.versionId, canonicalCivicDataHash(entry.payload)] : [key];
+  })) }];
   const zipPeople = sql.includes("AS zip_people") && sql.includes("selected(ordinal_index)");
   const selectedOutcomes = sql.includes("AS snapshot_shape_valid") && sql.includes("p.record_class='MEETING_OUTCOME'");
   const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[]");

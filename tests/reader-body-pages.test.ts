@@ -365,9 +365,9 @@ test("a queued body fold immediately corrects ready ZIP and saved contexts befor
     await query('INSERT INTO place_page_dependency(page_id,entity_id) SELECT $1,entity_id FROM place_page_dependency WHERE page_id=$2',[zip,division]);
     const old=await readPlacePackage({state:'AZ',placeId:zip,divisionIds:[]},query);
     assert.ok(old.bodies.some(row=>row.name==='Special Meeting'),'the cached fixture starts with the reported defect');
-    const {foldPortalBodyLabels}=await import('../lib/facts/portal-publication.ts');
+    const {placeBodies}=await import('../lib/facts/portal-publication.ts');
     const purged:string[]=[];
-    assert.equal((await foldPortalBodyLabels(db,'AZ',async tags=>{purged.push(...tags);return {purged:true};})).folded,1);
+    assert.equal((await placeBodies(db,'AZ',async tags=>{purged.push(...tags);return {purged:true};})).merged,1);
     assert.ok(readerCacheTags({places:[zip,division,body,alias]}).every(tag=>purged.includes(tag)),'cached ZIP, division and body responses are purged before queued rebuilds');
     assert.equal(purged.includes('reader-settings'),false);
     assert.ok(Number((await query('SELECT count(*) AS n FROM rebuild_queue'))[0]?.n)>0,'replacement pages are still queued');

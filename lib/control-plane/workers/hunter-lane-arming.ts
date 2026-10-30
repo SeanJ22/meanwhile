@@ -17,7 +17,7 @@ import {
   type AssignmentSpend,
 } from "../expansion/assignment-budget.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../expansion/membership.ts";
-import { DurableSpendHolds, SendBudgetRefusal, SETTLED_HOLD_RETENTION_MS, type BudgetLine } from "../expansion/spend-holds.ts";
+import { DurableSpendHolds, SendBudgetRefusal, SETTLED_HOLD_RETENTION_MS, type AutonomousJurisdiction, type BudgetLine } from "../expansion/spend-holds.ts";
 import { modelLaneClosure, type ModelProviderQueue } from "../scheduler/model-lane.ts";
 import { RESEARCH_BOUNDS, ceilingPermits, readIntents } from "../scheduler/research-policy.ts";
 import type { ModelTransport } from "../scheduler/scout-executor.ts";
@@ -302,14 +302,16 @@ export async function armHunterLane(deps: HunterLaneDeps): Promise<ArmedHunterLa
   return { closed: null, armedAt: now, fleetSafety, guards, arming, spendHolds, ceilingUsd, discoverySearchOn };
 }
 
-export function laneWorkerTransport(lane: () => ArmedHunterLane, ownSpend: LaneOwnSpend, now: () => string) {
-  return (jurisdiction: Parameters<ReturnType<typeof paidWorkGuards>["workerTransportFor"]>[0], taskId: string): ModelTransport => async request => {
+/** A request through the lane's guards, counted in the lane's own spend until the next reading of the ledger includes it. */
+function throughGuards(lane: () => ArmedHunterLane, ownSpend: LaneOwnSpend, now: () => string, taskId: string,
+  guarded: (guards: NonNullable<ArmedHunterLane["guards"]>) => ModelTransport): ModelTransport {
+  return async request => {
     const armed = lane();
     if (armed.guards === null) throw new SendBudgetRefusal(armed.closed?.code ?? "LANE_DISABLED", armed.closed?.reason ?? "the hunter lane is not armed");
     const worst = modelRequestWorstCaseUsd(request);
     const entry = ownSpend.begin(taskId, now(), worst ?? 0);
     try {
-      const response = await armed.guards.workerTransportFor(jurisdiction, taskId)(request);
+      const response = await guarded(armed.guards)(request);
       ownSpend.settle(entry, modelResponseUsd(response));
       return response;
     } catch (error) {
@@ -318,4 +320,15 @@ export function laneWorkerTransport(lane: () => ArmedHunterLane, ownSpend: LaneO
       throw error;
     }
   };
+}
+
+export function laneWorkerTransport(lane: () => ArmedHunterLane, ownSpend: LaneOwnSpend, now: () => string) {
+  return (jurisdiction: Parameters<ReturnType<typeof paidWorkGuards>["workerTransportFor"]>[0], taskId: string): ModelTransport =>
+    throughGuards(lane, ownSpend, now, taskId, guards => guards.workerTransportFor(jurisdiction, taskId));
+}
+
+/** Work that belongs to no hunt, such as the placement agent: held against the Fleet ceiling and the area budgets covering its place. */
+export function laneAutonomousTransport(lane: () => ArmedHunterLane, messages: ModelTransport, ownSpend: LaneOwnSpend, now: () => string) {
+  return (jurisdiction: AutonomousJurisdiction, taskId: string): ModelTransport =>
+    throughGuards(lane, ownSpend, now, taskId, guards => guards.autonomousTransportFor(messages)(jurisdiction));
 }

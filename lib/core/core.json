@@ -13,6 +13,7 @@
     "blank": {
       "writers": [
         "lib/core/door.ts",
+        "lib/db/move-blanks-up.ts",
         "lib/facts/publish.ts"
       ],
       "bypass": [
@@ -182,7 +183,6 @@
         "lib/facts/entity-places.ts"
       ],
       "bypass": [
-        "lib/facts/portal-publication.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
         "lib/meetings/pin-blanks.ts",
@@ -200,7 +200,6 @@
       "bypass": [
         "lib/control-plane/scheduler/providers/held-subject-member-identities.ts",
         "lib/control-plane/scheduler/providers/held-subject-publication.ts",
-        "lib/facts/portal-publication.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
         "lib/place-map/load.ts"
@@ -212,9 +211,7 @@
         "lib/facts/entities.ts",
         "lib/facts/entity-places.ts"
       ],
-      "bypass": [
-        "lib/facts/portal-publication.ts"
-      ]
+      "bypass": []
     },
     "entity_place": {
       "writers": [
@@ -224,7 +221,6 @@
       ],
       "bypass": [
         "lib/control-plane/scheduler/providers/held-subject-publication.ts",
-        "lib/facts/portal-publication.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
         "lib/hunt/body-target.ts",
@@ -240,7 +236,6 @@
         "lib/civic-data/meeting-source-confirmation.ts",
         "lib/facts/entities.ts",
         "lib/facts/owner-flags.ts",
-        "lib/facts/portal-publication.ts",
         "lib/funding/state-cycles.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
@@ -312,6 +307,12 @@
       "bypass": [
         "scripts/prepare-place-pages.mts"
       ]
+    },
+    "place_slice": {
+      "writers": [
+        "lib/reader/slices.ts"
+      ],
+      "bypass": []
     },
     "questionnaire_invitations": {
       "writers": [

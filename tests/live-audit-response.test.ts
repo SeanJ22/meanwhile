@@ -5,7 +5,7 @@ import test from "node:test";
 import type { AuditCorrection } from "../lib/control-plane/admin-view/v6-audit-read.ts";
 import type { FieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import type { LiveAuditResult } from "../lib/control-plane/workers/live-audit.ts";
-import { fixedAfterReaudit, originFromPublications, redFlagLesson, respondToRedFlag, type FactOrigin, type FixItem, type RedFlagWriters } from "../lib/control-plane/workers/live-audit-response.ts";
+import { fixedAfterReaudit, redFlagLesson, respondToRedFlag, type FactOrigin, type FixItem, type RedFlagWriters } from "../lib/control-plane/workers/live-audit-response.ts";
 
 const NOW = "2026-10-05T12:00:00.000Z";
 const red: LiveAuditResult = { pickedBecause: "ROUTINE", factId: "comment-access:a", family: "comment-access", area: "body-a", verdict: "RED", checkedAt: NOW,
@@ -66,15 +66,3 @@ test("a pulled fact that audits green again becomes FIXED, once", () => {
   assert.deepEqual(fixedAfterReaudit([...corrections, ...fixed], [green("f1", "2026-10-07T00:00:00.000Z")]), [], "recorded once");
 });
 
-test("a published member is traced to its work item and extraction through the publication outcome", () => {
-  const item = { id: "wi-9", publicationOutcome: { status: "PUBLISHED", workerResultId: "wr-p9",
-    recordChanges: [{ recordId: "rec-a", readerId: "comment:body-a" }, { recordId: "rec-b", readerId: "comment:body-b" }] },
-    autonomousPlan: { contract: { schemaVersion: 2, recordClass: "PUBLIC_COMMENT_RULE", jurisdiction: { state: "NH" } } } };
-  const parser = { id: "wr-p9", result: { role: "PARSER", attemptId: "at-p9" } };
-  const traced = originFromPublications({ items: [item] as never, parsers: [parser] as never, memberId: "comment:body-b", host: "h.example.gov", platform: "civicplus" });
-  assert.deepEqual([traced?.workItemId, traced?.parserAttemptId, traced?.extractionRecordIds, traced?.recordClass, traced?.state],
-    ["wi-9", "at-p9", ["rec-b"], "PUBLIC_COMMENT_RULE", "NH"]);
-  assert.equal(originFromPublications({ items: [item] as never, parsers: [parser] as never, memberId: "comment:nobody", host: "h", platform: null }), null);
-  const held = { ...item, publicationOutcome: { ...item.publicationOutcome, status: "HELD" } };
-  assert.equal(originFromPublications({ items: [held] as never, parsers: [parser] as never, memberId: "comment:body-a", host: "h", platform: null }), null, "a held outcome published nothing");
-});

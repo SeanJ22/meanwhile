@@ -1,12 +1,11 @@
-import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { readCanonicalShelf } from "../reader/canonical.ts";
-import { readNationalShelf } from "../reader/national.ts";
+import { nationalCongress, nationalFederalState } from "../reader/national.ts";
 import { refreshFederalDirectoryFromPromoted, refreshRegistryRuntimeFromPromoted } from "../reader/authority-reads.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { federalDirectoryScope, type FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
-import { placePortraitsScope, readFederalDirectoryProjection, readStateFederalDirectory } from "./federal-directory-read-model.ts";
+import { placePortraitsScope } from "./federal-directory-read-model.ts";
 import { federalOfficeRecordsForMember } from "./member-offices.ts";
 import { readMemberOffices } from "./member-offices-read.ts";
 import { statePeopleScopeForId, statePeopleSourcePointers } from "./people-identity.ts";
@@ -50,22 +49,18 @@ function memberDirectory(value: FederalDirectoryReadModel, member: string) {
     offices: federalOfficeRecordsForMember(value, member), committeeJurisdictions: value.directory.committees} : null;
 }
 
-/** A place hint saves a national read only after its held directory confirms the exact member. */
-export async function readCardFederalDirectory(member: string, state?: string, options: PromotedCivicDataReadOptions = {}) {
+/** A federal member's offices and committees. A place hint reads that state's members, held in this server's memory; a missing or wrong hint reads all of Congress, held the same way. */
+export async function readCardFederalDirectory(member: string, state?: string) {
   const place = REGISTRY_STATES.find(place => place === state?.replace(/^US-/i, "").toUpperCase());
   if (place) {
-    const read = !options.store && currentReaderAuthorityEdge() ? await readFederalDirectoryProjection([place], options)
-      : await readStateFederalDirectory(place, {...options, store: options.store ?? await readCanonicalShelf([{recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(place)}])});
-    if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
-    if ((read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") && read.value.roster.officeholders.some(holder => holder.id === member)) {
-      const found = memberDirectory(read.value, member);
+    const held = await nationalFederalState(place);
+    if (held?.roster.officeholders.some(holder => holder.id === member)) {
+      const found = memberDirectory(held, member);
       if (found) return found;
     }
   }
-  // An absent, invalid or different-place hint cannot change a native member's
-  // answer. The established national reader supplies that lookup.
-  const shelf = await readNationalShelf();
-  const heldState = shelf.congress.roster.officeholders.find(holder => holder.id === member)?.state;
-  const model = heldState ? shelf.federalByState.get(heldState.replace(/^US-/i, "").toUpperCase()) ?? shelf.congress : shelf.congress;
+  const { congress, federalByState } = await nationalCongress();
+  const heldState = congress.roster.officeholders.find(holder => holder.id === member)?.state;
+  const model = heldState ? federalByState.get(heldState.replace(/^US-/i, "").toUpperCase()) ?? congress : congress;
   return memberDirectory(model, member);
 }

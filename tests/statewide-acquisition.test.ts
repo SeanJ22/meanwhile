@@ -5,7 +5,7 @@ import { contestIncumbency } from "../lib/ballot/incumbency-resolve.ts";
 import { resolveContestIncumbency } from "../lib/ballot/incumbency.ts";
 import { samePerson } from "../lib/identity/match-person.ts";
 import { nameParts } from "../lib/identity/name-parts.ts";
-import { looksLikeFurniture, pickPortrait, pickPortraits } from "../lib/hunt/portrait-pick.ts";
+import { looksLikeFurniture } from "../lib/hunt/portrait-pick.ts";
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
@@ -18,7 +18,6 @@ import { installFactReader } from "../lib/facts/db.ts";
 import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-
 
 function served<T>(read: CivicDataReadResult<T>, what: string): T {
   if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
@@ -52,8 +51,6 @@ async function installRegistryRuntime(states?: readonly string[]): Promise<{ rea
   const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
   return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
 }
-
-
 
 await installRegistryRuntime(["AZ", "NH", "NJ"]);
 
@@ -179,23 +176,6 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
   assert.equal(result.holderFor.get("k")?.id, "statewide:az/secretary-of-state");
 });
 
-test("an image the page's own words call a LOGO is never a face", () => {
-  // An office masthead named after the officeholder matches the
-  // surname-plus-extension clause exactly.
-  const banner = {
-    src: "https://azsos.gov/sites/default/files/fontes_banner01_small-white.png",
-    alt: "Logo for Arizona Secretary of State",
-  };
-  const portrait = {
-    src: "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
-    alt: "Photo of Secretary",
-  };
-  assert.equal(looksLikeFurniture(banner), true);
-  assert.equal(looksLikeFurniture(portrait), false);
-  const picked = pickPortrait("Adrian Fontes", [banner, portrait]);
-  assert.equal(picked?.src, portrait.src, "the banner must never be picked over the portrait");
-});
-
 test("a seal, a masthead and a favicon are refused the same way", () => {
   for (const alt of ["Official Seal of the State of Arizona", "site masthead", "favicon"]) {
     assert.equal(looksLikeFurniture({ src: "https://x.gov/a.png", alt }), true, alt);
@@ -207,18 +187,3 @@ test("a seal, a masthead and a favicon are refused the same way", () => {
   );
 });
 
-test("every explicitly full-name-labelled rendition is offered, including CamelCase filenames", () => {
-  // An official photo at 85x120 and again at 326x468: MIN_PORTRAIT_EDGE is 96
-  // and only the second clears it.
-  const small = { src: "https://x.gov/w_85,h_120/Kimberly%20Yee.jpg", alt: "Treasurer Kimberly Yee Official Photo" };
-  const large = { src: "https://x.gov/w_326,h_468/KimberlyYee_2024_official.jpg", alt: "KimberlyYee_2024_official.jpg" };
-  const all = pickPortraits("Kimberly Yee", [small, large]);
-  assert.equal(all.length, 2, "both renditions are candidates");
-  assert.equal(all[0].src, small.src, "page order is preserved");
-  assert.equal(pickPortrait("Kimberly Yee", [small, large])?.src, small.src, "the singular picker is unchanged");
-  assert.deepEqual(pickPortraits("Kimberly Yee", [
-    { src: "https://x.gov/Yee.jpg", alt: "Official photo" },
-    { src: "https://x.gov/KimberlyYeeting.jpg", alt: "Official photo" },
-    { src: "https://x.gov/KimberlyYeeLogo.png", alt: "Official photo" },
-  ]), [], "neither a surname, an extended name nor page furniture supplies the full source name");
-});

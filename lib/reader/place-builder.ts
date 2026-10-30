@@ -671,3 +671,11 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
   const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
   return {rebuilt,failed,remaining:Number(remaining?.n ?? 0),...(unchanged?{unchanged}:{})};
 }
+
+/** A body folded into another has no page of its own any more; the pages that showed it now depend on the body that took its place. */
+export async function foldPlacePages(query: Query, losers: readonly string[], survivors: readonly string[]): Promise<void> {
+  await query(`INSERT INTO place_page_dependency(page_id,entity_id) SELECT d.page_id,m.survivor FROM unnest($1::text[],$2::text[]) AS m(loser,survivor)
+    JOIN place_page_dependency d ON d.entity_id=m.loser ON CONFLICT DO NOTHING`, [losers, survivors]);
+  await query("DELETE FROM place_page WHERE place_id=ANY($1::text[])", [losers]);
+  await query("DELETE FROM rebuild_queue WHERE place_id=ANY($1::text[])", [losers]);
+}

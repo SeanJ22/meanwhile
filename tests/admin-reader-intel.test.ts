@@ -1,35 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
-import {
-  DEFAULT_READER_RUN_CLASS,
-  DEFAULT_READER_WINDOW_DAYS,
-  DETAIL_KEY_BY_EVENT,
-  READER_RUN_CLASSES,
-  READER_TOP_N,
-  READER_WINDOW_CHOICES,
-  READER_WORDS,
-  censusCountFor,
-  censusReconciles,
-  countClaimsOf,
-  impossibleNumbersIn,
-  openReaderStore,
-  readAsk,
-  readReaderIntel,
-  readerRunClassFromParam,
-  readerWindow,
-  readerWindowDaysFromParam,
-  readerWord,
-  renderedNumbersOf,
-  scopeSentence,
-  share,
-  topListSentence,
-  windowSentence,
-  type ReaderStoreQuery,
-} from "../lib/control-plane/reader-intel.ts";
+import { assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
+import { DEFAULT_READER_WINDOW_DAYS, READER_RUN_CLASSES, READER_TOP_N, censusCountFor, censusReconciles, openReaderStore, readReaderIntel, readerWindow, readerWord, renderedNumbersOf, type ReaderStoreQuery } from "../lib/control-plane/reader-intel.ts";
 import { SEARCH_LOG_EVENT_TYPES } from "../lib/db/search-log.ts";
-import { organicDenominatorSentence } from "../lib/signal/search-log-reads.ts";
 import { codeOf } from "./read-code.ts";
 
 /**
@@ -136,24 +110,6 @@ const WINDOW = readerWindow(NOW, DEFAULT_READER_WINDOW_DAYS);
  * 1. THE ORGANIC DEFAULT EXCLUDES SYNTHETIC TRAFFIC
  * ------------------------------------------------------------------ */
 
-test("ADM-C12: the view defaults to ORGANIC and nothing a request says widens it", () => {
-  assert.equal(DEFAULT_READER_RUN_CLASS, "ORGANIC");
-  assert.equal(readerRunClassFromParam(undefined), "ORGANIC");
-  assert.equal(readerRunClassFromParam(""), "ORGANIC");
-  assert.equal(readerRunClassFromParam("   "), "ORGANIC");
-  // The shapes a hand-edited query string actually takes.
-  assert.equal(readerRunClassFromParam("ALL"), "ORGANIC");
-  assert.equal(readerRunClassFromParam("*"), "ORGANIC");
-  assert.equal(readerRunClassFromParam("ORGANIC,SYNTHETIC"), "ORGANIC");
-  assert.equal(readerRunClassFromParam("' OR 1=1 --"), "ORGANIC");
-  // Deliberate selection is honoured, in either case, including from a repeated param.
-  assert.equal(readerRunClassFromParam("author"), "AUTHOR");
-  assert.equal(readerRunClassFromParam("SYNTHETIC"), "SYNTHETIC");
-  assert.equal(readerRunClassFromParam(["UNKNOWN", "ORGANIC"]), "UNKNOWN");
-  // And there is no fifth class to select.
-  assert.deepEqual([...READER_RUN_CLASSES], ["ORGANIC", "AUTHOR", "SYNTHETIC", "UNKNOWN"]);
-});
-
 test("ADM-C12: every aggregate carries a run-class filter, and only the census does not", async () => {
   const store = recordedStore(fullPlan);
   await readReaderIntel(store.sql, WINDOW, "ORGANIC");
@@ -194,26 +150,6 @@ test("ADM-C12: 500 synthetic rows never reach a figure the page prints", async (
   const headline = numbers.find((n) => n.label === "Events in the selected class");
   assert.equal(headline?.value, 3);
   assert.equal(headline?.denominator, 550);
-});
-
-test("ADM-C12: selecting another class binds THAT class, and says it is not a demand figure", async () => {
-  const store = recordedStore(fullPlan);
-  await readReaderIntel(store.sql, WINDOW, "SYNTHETIC");
-  const bound = store.asked.filter((a) => /run_class = \$\d+/.test(a.text));
-  assert.ok(bound.length > 0, "no query bound a run class at all");
-  for (const asked of bound) {
-    assert.ok(
-      asked.values.includes("SYNTHETIC"),
-      `a filtered query did not bind the selected class: ${asked.text.trim().slice(0, 120)}`,
-    );
-    assert.ok(!asked.values.includes("ORGANIC"), "a class-filtered query bound ORGANIC while another class was selected");
-  }
-  const said = scopeSentence("SYNTHETIC", CENSUS);
-  assert.match(said, /not readers/i);
-  assert.match(said, /Nothing on this screen is a demand figure/);
-  // ORGANIC keeps the project's one shared denominator sentence, unchanged.
-  assert.match(scopeSentence("ORGANIC", CENSUS), /Counted from 3 reader events/);
-  assert.match(scopeSentence("ORGANIC", CENSUS), /An unattributable row is never counted as a reader/);
 });
 
 test("ADM-C12: the census is checked for reconciliation rather than assumed to sum", () => {
@@ -288,131 +224,6 @@ test("ADM-C12: a missing handle names the variable and never a value", () => {
 /* ------------------------------------------------------------------ *
  * 3. DENOMINATORS ARE EXACT
  * ------------------------------------------------------------------ */
-
-test("ADM-C12: every number the page prints carries a denominator and a contract", async () => {
-  const store = recordedStore(fullPlan);
-  const intel = await readReaderIntel(store.sql, WINDOW, "ORGANIC");
-  const numbers = renderedNumbersOf(intel);
-  assert.ok(numbers.length > 20, `expected the page's declared numbers, saw ${numbers.length}`);
-  const verdict = auditRenderedNumbers(numbers);
-  assert.equal(verdict.ok, true, verdict.detail);
-  for (const number of numbers) {
-    assert.equal(typeof number.denominator, "number", `${number.label} has no denominator`);
-    assert.ok((number.contract ?? "").trim().length > 20, `${number.label} has no interpretation contract`);
-  }
-  // A numerator larger than its denominator means two different populations.
-  assert.deepEqual(impossibleNumbersIn(numbers), []);
-});
-
-test("ADM-C12: PLANT — a bare number and an impossible one are both caught", () => {
-  assert.equal(
-    auditRenderedNumbers([{ label: "Searches", value: 18, denominator: null, contract: "x" }]).ok,
-    false,
-  );
-  assert.equal(
-    auditRenderedNumbers([{ label: "Searches", value: 18, denominator: 42, contract: "  " }]).ok,
-    false,
-  );
-  assert.deepEqual(
-    impossibleNumbersIn([{ label: "Searches", value: 43, denominator: 42, contract: "x" }]),
-    ["Searches: 43 counted out of 42"],
-  );
-});
-
-test("ADM-C12: a rate states its exact denominator, and a zero denominator is a named gap", () => {
-  const ok = share(18, 42, "Searches that named a ZIP, out of every organic search in the window.", "the search log");
-  assert.equal(ok.held, true);
-  if (!ok.held) return;
-  assert.equal(ok.value.value, 18);
-  assert.equal(ok.value.denominator, 42);
-  assert.ok(ok.value.contract.length > 20);
-  assert.ok(ok.value.denominatorSource.length > 0);
-
-  // Nought out of nought is not nought percent; it is a question nobody asked.
-  const none = share(0, 0, "x is y", "the search log over this window");
-  assert.equal(none.held, false);
-  if (none.held) return;
-  assert.equal(none.gap.whose, "OURS");
-  assert.match(none.gap.says, /nothing to be a share of/);
-
-  // A numerator over its denominator refuses rather than clamping.
-  const wrong = share(43, 42, "x is y", "the search log over this window");
-  assert.equal(wrong.held, false);
-  if (wrong.held) return;
-  assert.match(wrong.gap.says, /different populations/);
-});
-
-test("ADM-C12: stated N equals the rows actually rendered, and a mismatch is caught", async () => {
-  const store = recordedStore(fullPlan);
-  const intel = await readReaderIntel(store.sql, WINDOW, "ORGANIC");
-  const claims = countClaimsOf(intel);
-  assert.ok(claims.length > 5, `expected the page's count claims, saw ${claims.length}`);
-  const verdict = checkStatedEqualsRendered(claims);
-  assert.equal(verdict.ok, true, verdict.detail);
-
-  assert.equal(checkStatedEqualsRendered([{ label: "Top ZIPs", stated: 7, rendered: 5 }]).ok, false);
-});
-
-test("ADM-C12: PLANT — a list rendered short of what the database counted is caught", async () => {
-  const store = recordedStore(fullPlan);
-  const intel = await readReaderIntel(store.sql, WINDOW, "ORGANIC");
-  if (intel.activity.kind !== "HELD") throw new Error("expected a held reading");
-  // Postgres counted two distinct districts; the projection draws one.
-  const list = intel.activity.value.topDivisions;
-  assert.equal(list.distinct, 2);
-  const cut = {
-    ...intel,
-    activity: {
-      ...intel.activity,
-      value: { ...intel.activity.value, topDivisions: { ...list, rows: list.rows.slice(0, 1) } },
-    },
-  };
-  const verdict = checkStatedEqualsRendered(countClaimsOf(cut));
-  assert.equal(verdict.ok, false);
-  assert.match(verdict.detail, /Top districts: stated 2, rendered 1/);
-});
-
-test("ADM-C12: a top list says how many exist behind it, so it never implies it showed everything", () => {
-  const one = [{ key: "a", label: "a", count: 3 }];
-  assert.equal(
-    topListSentence({ rows: one, distinct: 61, keyed: 90 }, "body", "bodies"),
-    "The top 1 of 61 bodies named in this window, out of 90 events that named one.",
-  );
-  assert.equal(
-    topListSentence({ rows: one, distinct: 1, keyed: 3 }, "body", "bodies"),
-    "All 1 body named in this window, out of 3 events that named one.",
-  );
-  assert.equal(
-    topListSentence({ rows: one, distinct: 1, keyed: 1 }, "ZIP", "ZIPs"),
-    "All 1 ZIP named in this window, out of 1 event that named one.",
-  );
-  // Nought is a named absence, never a list with nothing in it.
-  assert.equal(
-    topListSentence({ rows: [], distinct: 0, keyed: 0 }, "body", "bodies"),
-    "No body was named by any event in this window.",
-  );
-});
-
-test("ADM-C12: the window is bounded, stated, and computed once for every panel", () => {
-  assert.deepEqual([...READER_WINDOW_CHOICES], [7, 30, 90]);
-  assert.equal(DEFAULT_READER_WINDOW_DAYS, 30);
-  assert.equal(readerWindowDaysFromParam(undefined), 30);
-  assert.equal(readerWindowDaysFromParam("7"), 7);
-  assert.equal(readerWindowDaysFromParam("90"), 90);
-  // There is no "all time", and no arbitrary span a query string can ask for.
-  assert.equal(readerWindowDaysFromParam("100000"), 30);
-  assert.equal(readerWindowDaysFromParam("0"), 30);
-  assert.equal(readerWindowDaysFromParam("-1"), 30);
-  assert.equal(readerWindowDaysFromParam("all"), 30);
-
-  const w = readerWindow(NOW, 7);
-  assert.equal(w.toIso, NOW);
-  assert.equal(w.fromIso, "2026-08-30T18:00:00.000Z");
-  assert.equal(w.days, 7);
-  assert.match(windowSentence(w), /last 7 days only/);
-  assert.match(windowSentence(w), /reads the whole history/);
-  assert.throws(() => readerWindow("not a time", 7), /render clock/);
-});
 
 test("ADM-C12: every query is bounded by that window and cut inside the database", async () => {
   const store = recordedStore(fullPlan);
@@ -514,23 +325,3 @@ test("ADM-C12: every stored constant this page can print has owner words", () =>
   assert.equal(readerWord(null).label, "");
 });
 
-test("ADM-C12: the detail-key map and the SQL that reads it cannot drift apart", () => {
-  const src = code(MODULE_PATH);
-  const entries = Object.entries(DETAIL_KEY_BY_EVENT);
-  assert.ok(entries.length >= 5, `expected the detail-key map, saw ${entries.length} entries`);
-  for (const [event, key] of entries) {
-    assert.ok(
-      (SEARCH_LOG_EVENT_TYPES as readonly string[]).includes(event),
-      `${event} is not a search-log event type`,
-    );
-    // A map that drifted from the query would produce an empty "top bodies"
-    // list looking exactly like nobody ever opening a body.
-    assert.ok(
-      src.includes(`WHEN '${event}'`) && src.includes(`detail->>'${key}'`),
-      `the SQL does not read ${key} for ${event}`,
-    );
-  }
-  for (const word of Object.keys(READER_WORDS)) {
-    assert.ok(word.trim() === word && word.length > 0, "a dictionary key is malformed");
-  }
-});

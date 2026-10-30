@@ -28,15 +28,23 @@ type SharedSnapshot = { readonly fingerprint: string; readonly rows: readonly Ro
 type PendingSnapshot = { readonly expected: Promise<string>; readonly body: Promise<SharedSnapshot> };
 const inFlight = serverReaderValue("canonical-in-flight-by-publication-v2", () => new Map<string, Set<PendingSnapshot>>());
 
+async function publicationFingerprint(query: ReadOnlyQuery, params: readonly unknown[]): Promise<string> {
+  const [[row]] = await query([{ text: PUBLICATION_FINGERPRINT, params }]);
+  if (typeof row?.value !== "string" || !/^[a-f0-9]{64}$/.test(row.value)) throw new Error("READER_PUBLICATION_FINGERPRINT_MISSING");
+  return row.value;
+}
+
+/** The version of these promoted entries: it moves when any is published, confirmed again or changed in any way. One small statement. */
+export function publicationVersion(keys: readonly string[], query: ReadOnlyQuery | null = readerDatabaseQuery()): Promise<string> {
+  if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+  return publicationFingerprint(query, [keys, ""]);
+}
+
 /** Only borrow an in-flight snapshot after an independent current fingerprint check. */
 async function sharedCanonicalRead(query: ReadOnlyQuery, statement: Statement, sources: NonNullable<Additional["sharedSources"]>) {
   const selection = createHash("sha256").update(JSON.stringify([process.env.DATABASE_URL, statement, sources])).digest("hex");
   const params = [sources.keys, sources.translations];
-  const current = async () => {
-    const [[row]] = await query([{ text: PUBLICATION_FINGERPRINT, params }]);
-    if (typeof row?.value !== "string" || !/^[a-f0-9]{64}$/.test(row.value)) throw new Error("READER_PUBLICATION_FINGERPRINT_MISSING");
-    return row.value;
-  };
+  const current = () => publicationFingerprint(query, params);
   const candidates = [...inFlight.get(selection) ?? []];
   if (candidates.length) {
     let fingerprint = await current();

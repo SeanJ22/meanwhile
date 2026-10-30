@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { readNationalPresident, readNationalShelf } from "../lib/reader/national.ts";
+import { nationalCongress, nationalPresident } from "../lib/reader/national.ts";
+import { refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { Pool } from "@neondatabase/serverless";
 import { PGlite } from "@electric-sql/pglite";
 import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
@@ -23,7 +24,7 @@ test("separately loaded server module contexts share resource containers", async
   assert.equal(loads, 1);
 });
 
-test("President reads stay current and independent of a blocked Congress read, including a changed row under the same pointer", async () => {
+test("the President is held in memory: loaded once for every caller, independent of a blocked Congress load, read again only when its rows change, and kept when a check fails", async () => {
   const priorUrl = process.env.DATABASE_URL, priorConnect = Pool.prototype.connect;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@national-reader.invalid/fixture";
   const pg = new PGlite();
@@ -63,8 +64,8 @@ test("President reads stay current and independent of a blocked Congress read, i
   let national: Promise<unknown> | undefined;
   const presidentReads = () => calls.filter(keys => keys.every(key => !key.startsWith("FEDERAL_DIRECTORY:"))).length;
   try {
-    national = readNationalShelf().catch(error => error);
-    const [first, second, officials] = await Promise.all([readNationalPresident(), readNationalPresident(),
+    national = nationalCongress().catch((error: unknown) => error);
+    const [first, second, officials] = await Promise.all([nationalPresident(), nationalPresident(),
       readerOfficeholders(["ocd-division/country:us/state:az"], [], ["us_president", "us_vice_president"])]);
     assert.deepEqual(first, second);
     assert.equal(first?.officeholders[0].name, holder.name);
@@ -77,19 +78,25 @@ test("President reads stay current and independent of a blocked Congress read, i
       assert.deepEqual(answer?.named.map(row => row.seat.id), [person.id]);
     }
     assert.equal(congressComplete, false, "the President is usable while the national Congress read is still blocked");
-    assert.equal(presidentReads(), 4, "the national composition, two independent readers, and Ask each confirm stored versions");
+    assert.equal(presidentReads(), 2, "one version read and one body read serve the two readers and Ask");
+    assert.equal((await nationalPresident())?.officeholders[0].name, holder.name);
+    assert.equal(presidentReads(), 2, "once held, a read asks the database nothing");
     assert.ok(calls.find(keys => keys.some(key => key.startsWith("FEDERAL_DIRECTORY:")))?.every(key => key.startsWith("FEDERAL_DIRECTORY:")), "the Congress query carries no President source dependency");
     holder.name = "Newly Published President";
     await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [payload, `STATE_LEGISLATOR:${scope}`]);
     await pg.query("UPDATE civic_data_candidates SET normalized_hash=$1 WHERE id='president-version'", [canonicalCivicDataHash(payload)]);
-    assert.equal((await readNationalPresident())?.officeholders[0].name, holder.name, "the next read sees changes without waiting for a TTL or a new pointer id");
-    assert.equal(presidentReads(), 5);
+    await refreshNationalShelf();
+    assert.equal((await nationalPresident())?.officeholders[0].name, holder.name, "a changed row under the same pointer is read at the next check, without a TTL or a new pointer id");
+    assert.equal(presidentReads(), 4, "the check read the version, then the changed body");
+    await refreshNationalShelf();
+    assert.equal(presidentReads(), 5, "a check of an unchanged President is one small version read");
     await pg.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{roster,officeholders,0,name}','\"Unverified mutation\"') WHERE key=$1", [`STATE_LEGISLATOR:${scope}`]);
-    await assert.rejects(readNationalPresident(), /READER_PUBLISHED_PAYLOAD_HASH_MISMATCH/, "changed payload bytes with an unchanged proof cannot reuse the earlier verified body");
+    await assert.rejects(refreshNationalShelf(), /READER_PUBLISHED_PAYLOAD_HASH_MISMATCH/, "changed payload bytes with an unchanged proof are never held");
+    assert.equal((await nationalPresident())?.officeholders[0].name, holder.name, "the last verified body stays");
     await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [payload, `STATE_LEGISLATOR:${scope}`]);
     unavailable = true;
-    await assert.rejects(readNationalPresident(), /national version read unavailable/, "a failed version read cannot serve the previous national body");
-    assert.equal(presidentReads(), 7);
+    await assert.rejects(refreshNationalShelf(), /national version read unavailable/);
+    assert.equal((await nationalPresident())?.officeholders[0].name, holder.name, "a failed check keeps serving what is held");
   } finally {
     releaseCongress!();
     await national;

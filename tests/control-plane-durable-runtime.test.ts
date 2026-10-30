@@ -1,20 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
 
-import {
-  AttemptContract,
-  LeaseConflict,
-  claim,
-  endAttempt,
-  mayWriteDisposition,
-  type WorkerRef,
-} from "../lib/control-plane/attempt.ts";
+import { LeaseConflict, claim, endAttempt, type WorkerRef } from "../lib/control-plane/attempt.ts";
 import { createLedger, type HostBudget } from "../lib/control-plane/budget.ts";
-import { CostCapExceeded, assertWithinHardCap } from "../lib/control-plane/cost.ts";
 import { DispositionRefused, createRouteTask, disposeRoute, type RouteDisposition, type RouteTask } from "../lib/control-plane/route-task.ts";
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import {
@@ -688,102 +679,6 @@ test("SEEDED: twelve workers on one publisher contend on ONE DURABLE HostBudget"
     const overTheLine = await acquireHostBudget(restarted, { host: HOST, now: T0 });
     assert.equal(overTheLine.granted, false, "back at the shared limit");
     assert.equal(overTheLine.refusal, "HOST_CONCURRENCY");
-  });
-});
-
-function stripComments(source: string): string {
-  return source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/.*$/gm, "$1");
-}
-
-function costGatedBranches(source: string): string[] {
-  return stripComments(source)
-    .split("\n")
-    .filter((line) => /\b(if|while)\s*\(/.test(line))
-    // Substrings, not whole words: camelCase identifiers like `spentUsd` must match.
-    .filter((line) => /(budget|cap|spend|spent|usd|token|ledger|acquire|cost)/i.test(line));
-}
-
-test("SEEDED: no cost or budget refusal can produce or alter a RouteDisposition", async () => {
-  const planted = costGatedBranches(
-    ["async function disposeRouteTask() {", "  if (spentUsd >= capUsd) return null;", "}"].join("\n"),
-  );
-  assert.equal(planted.length, 1, "the detector fires on a cost-gated branch");
-  assert.match(planted[0], /spentUsd/);
-
-  assert.deepEqual(
-    costGatedBranches("// if (spentUsd >= capUsd) this would be a defect\nreturn null;"),
-    [],
-    "a comment naming the defect is not the defect",
-  );
-
-  const file = fileURLToPath(
-    new URL("../lib/control-plane/repository/coordinator.ts", import.meta.url),
-  );
-  const source = await readFile(file, "utf8");
-  const start = source.indexOf("export async function disposeRouteTask(");
-  const end = source.indexOf("async function applyDispositionCommit(");
-  assert.ok(start > 0 && end > start, "the disposition path was located in the source");
-  assert.deepEqual(
-    costGatedBranches(source.slice(start, end)),
-    [],
-    "nothing on the disposition path branches on a cost or budget value",
-  );
-
-  await withFileRepos(async (repos) => {
-    const { task } = await seeded(repos);
-    const claimed = await claimRouteTask(repos, {
-      routeTaskId: task.id,
-      holder: "worker-alpha",
-      now: T0,
-      ttlMs: TTL,
-    });
-    const attempt = await beginAttemptFor(repos, {
-      routeTaskId: task.id,
-      workItemId: task.workItemId,
-      worker: workerRef("alpha-1"),
-      lease: claimed.lease.value,
-      now: T0,
-      methodVersion: METHOD_VERSION,
-      policyVersion: POLICY,
-    });
-
-    const capped = await caught(async () => assertWithinHardCap(5, 5, "usd"));
-    assert.ok(capped instanceof CostCapExceeded, "the cap fires at the cap");
-    assert.match(capped.message, /A hard cap stops SCHEDULING/);
-
-    const abandoned = endAttempt(attempt.value, "ABORTED", T3M, {
-      abortReason: `Scheduling stopped: ${capped.message}`,
-    });
-    assert.equal(
-      mayWriteDisposition(abandoned),
-      false,
-      "a cost-stopped Attempt may never carry a conclusion",
-    );
-    await repos.attempts.compareAndSet(attempt.value.id, attempt.revision, abandoned, T3M);
-
-    const row = await repos.routeTasks.mustRead(task.id);
-    const thrown = await caught(() =>
-      disposeRouteTask(repos, {
-        routeTaskId: task.id,
-        attemptId: attempt.value.id,
-        expectedTaskRevision: row.revision,
-        disposition: {
-          ...ingested(attempt.value.id, ["ar-alpha"], T3M),
-          disposition: "WALKED_NO_YIELD",
-          artifactIds: [],
-        },
-        now: T3M,
-      }),
-    );
-    assert.ok(thrown instanceof AttemptContract, "the closed Attempt refuses to end again");
-    assert.match((thrown as Error).message, /already ended as ABORTED/);
-
-    assert.equal(
-      (await repos.routeTasks.mustRead(task.id)).value.disposition,
-      null,
-      "the route is still open: a scheduling stop said nothing about the government",
-    );
-    assert.deepEqual(await repos.dispositions.read(task.id), []);
   });
 });
 

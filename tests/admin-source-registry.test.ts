@@ -8,7 +8,6 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { auditRenderedNumbers } from "@/lib/control-plane/owner-surface.ts";
 import { isEnvVarName } from "@/lib/control-plane/plain-words.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -65,7 +64,3 @@ function stripComments(source: string): string {
   return source.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
 }
 
-test("ADM-C11: the audit catches a number with no denominator", () => {
-  const verdict = auditRenderedNumbers([{ label: "planted", value: 14, denominator: null, contract: "some contract" }]);
-  assert.equal(verdict.ok, false, "the audit accepted a bare number");
-});

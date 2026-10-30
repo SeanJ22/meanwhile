@@ -30,7 +30,7 @@ export async function readCheckEntity(query: Query, id: string): Promise<CheckEn
         WHERE f.entity_id=e.id AND f.field='name' AND f.status='live'),'{}') AS names,
       coalesce((SELECT array_agg(DISTINCT host) FROM entity_host WHERE entity_id IN (SELECT id FROM up)
         OR entity_id IN (SELECT g.id FROM entity g WHERE g.kind = 'government' AND g.parent_id IN (SELECT id FROM near))), '{}') AS hosts,
-      coalesce((SELECT array_agg(value) FROM entity_external_id WHERE entity_id = e.id AND scheme NOT LIKE 'roster-%' AND scheme <> 'body-alias'), '{}') AS ids
+      coalesce((SELECT array_agg(value) FROM entity_external_id WHERE entity_id = e.id AND scheme NOT LIKE 'roster-%' AND scheme NOT IN ('body-alias','placement-source')), '{}') AS ids
     FROM entity e JOIN subject ON e.id = subject.id`, [id]);
   if (!row) return null;
   return { id: String(row.id), fullName: String(row.name), names: (row.names as string[]) ?? [], stateName: stateName(row.state as string | null),

@@ -24,7 +24,7 @@ import type { AskNominee } from "./ballot-inventory.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
 import { stateDivisionsOf, readerOfficialKey, type HeldOfficial } from "./reader-officials.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "../ballot/tickets.ts";
-import { liveNationalExecutiveRoster, readNationalPresident } from "../reader/national.ts";
+import { liveNationalExecutiveRoster, nationalPresident } from "../reader/national.ts";
 
 /** An exact full name in the already-read federal directory needs no state legislature lookup. */
 export function namedFederalOfficeholder(question: string): SeatHolder | null {
@@ -63,7 +63,7 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
 export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = [], offices?: readonly string[]): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
   if (offices?.length && offices.every(key => key === "us_president" || key === "us_vice_president")) {
     try {
-      const roster = liveNationalExecutiveRoster(await readNationalPresident());
+      const roster = liveNationalExecutiveRoster(await nationalPresident());
       const seats = roster ? [...new Map([...indexByOfficeholderId([roster]).values()].map(seat => [seat.id, seat])).values()] : [];
       const held = seats.map((seat): HeldOfficial => ({ seat, divisionIds: ["ocd-division/country:us"], bodyId: null, bodyName: null }))
         .filter(holder => offices.some(key => key === readerOfficialKey(holder)));

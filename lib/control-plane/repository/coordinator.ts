@@ -30,7 +30,7 @@ import {
   type RouteDisposition,
   type RouteTask,
 } from "../route-task.ts";
-import { withRouteTasks, type Escalation, type WorkItem, type WorkItemState } from "../work-item.ts";
+import { withRouteTasks, type WorkItem, type WorkItemState } from "../work-item.ts";
 import {
   AppendOnlyViolation,
   ConcurrentModification,
@@ -671,31 +671,6 @@ export async function transitionWorkItem(
     transition,
   };
   await repos.transitions.append(input.workItemId, recorded.transitionId, recorded, input.now);
-  return persisted;
-}
-
-/** Record an escalation on a WorkItem and in the replayable escalation log. */
-export async function recordEscalation(
-  repos: ControlPlaneRepositories,
-  input: { workItemId: string; escalation: Escalation; now: string },
-): Promise<Persisted<WorkItem>> {
-  const current = await repos.workItems.mustRead(input.workItemId);
-  const next: WorkItem = {
-    ...current.value,
-    escalations: [...current.value.escalations, input.escalation],
-  };
-  const persisted = await repos.workItems.compareAndSet(
-    input.workItemId,
-    current.revision,
-    next,
-    input.now,
-  );
-  await repos.escalations.append(
-    input.workItemId,
-    input.escalation.id,
-    input.escalation,
-    input.now,
-  );
   return persisted;
 }
 

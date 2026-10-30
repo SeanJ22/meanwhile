@@ -558,6 +558,27 @@
     {
       "idx": 79,
       "version": "7",
+      "when": 1792834201200,
+      "tag": "SPN-01A_placement",
+      "breakpoints": true
+    },
+    {
+      "idx": 80,
+      "version": "7",
+      "when": 1792834201300,
+      "tag": "SPN-01D_place_slice",
+      "breakpoints": true
+    },
+    {
+      "idx": 81,
+      "version": "7",
+      "when": 1792834201400,
+      "tag": "SPN-01B4_blank_changes",
+      "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "7",
       "when": 1792834202024,
       "tag": "SPN-01C_retire_meeting_tables",
       "breakpoints": true

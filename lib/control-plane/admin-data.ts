@@ -96,15 +96,6 @@ export async function readSnapshot(
   );
 }
 
-export async function readDecisionCards(
-  repos: ControlPlaneRepositories,
-): Promise<ReadOutcome<Pick<OwnerSnapshot, "decisionCards">>> {
-  return readAggregate(repos, "control-centre snapshot", async () => {
-    const row = await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, { decisionCards: true });
-    return row === null ? null : { value: row.value as Pick<OwnerSnapshot, "decisionCards"> };
-  });
-}
-
 export async function readHeartbeat(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<RunnerHeartbeat>> {
@@ -127,68 +118,6 @@ export async function readDigests(
     return {
       kind: "STORE_UNREACHABLE",
       detail: `Reading the digest log failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
-    };
-  }
-}
-
-export async function readLatestDigest(repos: ControlPlaneRepositories): Promise<ReadOutcome<OwnerDigestRecord>> {
-  try {
-    const [latest] = await repos.ownerDigests.readRecent(DIGEST_LOG_KEY, 1);
-    return latest === undefined
-      ? { kind: "NOT_RECORDED", detail: "The control plane is reachable and holds no digest yet." }
-      : { kind: "HELD", value: latest };
-  } catch (error) {
-    return {
-      kind: "STORE_UNREACHABLE",
-      detail: `Reading the digest log failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
-    };
-  }
-}
-
-export async function readMapTilerUsageDigests(
-  repos: ControlPlaneRepositories,
-): Promise<ReadOutcome<readonly OwnerDigestRecord[]>> {
-  try {
-    const maptiler = await repos.ownerDigests.readWhere(
-      DIGEST_LOG_KEY,
-      ["runtimeOutcome", "kind"],
-      "MAPTILER_USAGE_COLLECTION",
-    );
-    if (maptiler.length === 0) {
-      return {
-        kind: "NOT_RECORDED",
-        detail: "The control plane is reachable and holds no append-only map-provider attempt yet.",
-      };
-    }
-    return { kind: "HELD", value: [...maptiler].reverse() };
-  } catch (error) {
-    return {
-      kind: "STORE_UNREACHABLE",
-      detail: `Reading the map-provider outcome history failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
-    };
-  }
-}
-
-export async function readLatestIntakeRuntimeDigest(
-  repos: ControlPlaneRepositories,
-): Promise<ReadOutcome<OwnerDigestRecord>> {
-  try {
-    const observations = await repos.ownerDigests.readWhere(
-      DIGEST_LOG_KEY,
-      ["runtimeOutcome", "kind"],
-      "INTAKE_RUNTIME_OBSERVATION",
-    );
-    const latest = observations.at(-1);
-    return latest
-      ? { kind: "HELD", value: latest }
-      : {
-          kind: "NOT_RECORDED",
-          detail: "The control plane is reachable and holds no append-only intake-runtime observation yet.",
-        };
-  } catch (error) {
-    return {
-      kind: "STORE_UNREACHABLE",
-      detail: `Reading the intake-runtime outcome history failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
     };
   }
 }

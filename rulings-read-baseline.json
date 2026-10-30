@@ -149,7 +149,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1317
+      "line": 1323
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",
@@ -227,25 +227,25 @@
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 122
+      "line": 130
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 219
+      "line": 227
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 133
+      "line": 141
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 175
+      "line": 183
     },
     {
       "file": "lib/sources/legiscan/reader.ts",
@@ -1062,10 +1062,6 @@
       "table": "cp_admin_config"
     },
     {
-      "file": "lib/civic-data/candidate-profile-findings-job.ts",
-      "table": "cp_box_findings"
-    },
-    {
       "file": "lib/civic-data/held-artifact-captures.ts",
       "table": "cp_log_artifacts"
     },
@@ -1200,10 +1196,6 @@
     {
       "file": "lib/control-plane/admin-view/model-spend.ts",
       "table": "cp_log_costs"
-    },
-    {
-      "file": "lib/control-plane/admin-view/runner-progress-read.ts",
-      "table": "cp_log_owner_digests"
     },
     {
       "file": "lib/control-plane/admin-view/v6-agents-read.ts",
@@ -1691,19 +1683,7 @@
     },
     {
       "file": "lib/control-plane/research-view.ts",
-      "table": "cp_log_costs"
-    },
-    {
-      "file": "lib/control-plane/research-view.ts",
       "table": "cp_log_research_intents"
-    },
-    {
-      "file": "lib/control-plane/research-view.ts",
-      "table": "cp_log_scout_results"
-    },
-    {
-      "file": "lib/control-plane/research-view.ts",
-      "table": "cp_research_state"
     },
     {
       "file": "lib/control-plane/scheduler/cycle-selection.ts",

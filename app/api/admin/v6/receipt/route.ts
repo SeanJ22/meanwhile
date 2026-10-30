@@ -5,7 +5,7 @@ import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { ADMIN_V6_RECEIPT_CONTRACT, lookupAdminReceipt, validReceiptIdentity } from "@/lib/control-plane/admin-view/receipt-lookup.ts";
-import { confirmReceipt } from "@/lib/control-plane/gateway/confirmation.ts";
+import { confirmReceipt, liveOrderBook } from "@/lib/control-plane/gateway/confirmation.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -29,7 +29,7 @@ async function get(request: NextRequest): Promise<NextResponse> {
   try {
     const receipt = await lookupAdminReceipt(opened.repos, type, key);
     // What the runner did about it, from the runner's own records. Null when there is no receipt.
-    const confirmation = receipt ? await confirmReceipt(opened.repos, receipt) : null;
+    const confirmation = receipt ? await confirmReceipt(opened.repos, receipt, Date.now(), undefined, liveOrderBook()) : null;
     return NextResponse.json({ contract: ADMIN_V6_RECEIPT_CONTRACT, receipt, confirmation }, { headers: privateHeaders });
   } catch {
     return NextResponse.json({ error: "The exact receipt could not be checked." }, { status: 503, headers: privateHeaders });

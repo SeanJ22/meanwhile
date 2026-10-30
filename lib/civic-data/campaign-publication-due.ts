@@ -1,5 +1,4 @@
 import { REGISTRY_STATES, parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
-import { CANDIDATE_PROFILE_LEAD } from "../facts/finding-slots.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 
@@ -32,28 +31,13 @@ export function campaignPublicationInputsDue(taskId: string, inputs: CampaignPub
 }
 
 type Query = (sql: string, params: unknown[]) => Promise<unknown>;
-const findingStates = `WITH waiting AS MATERIALIZED (
-  SELECT id,value->>'subjectId' subject,value->>'lastRecordedAt' requested_at,value->'origins' origins
-  FROM cp_box_findings WHERE value->>'state'='waiting' AND value#>>'{waitingFor,reason}'=$1),
-  origins AS MATERIALIZED (SELECT w.id,o->>'workItemId' work_id FROM waiting w,LATERAL jsonb_array_elements(w.origins) a(o)),
-  scopes AS (
-    SELECT o.id,COALESCE(
-      (regexp_match(upper(w.value#>>'{autonomousPlan,contract,jurisdiction,state}'),'^(?:US-)?([A-Z]{2})$'))[1],
-      (regexp_match(upper(w.value#>>'{autonomousPlan,jurisdiction}'),'^(?:US-)?([A-Z]{2})$'))[1]) state
-    FROM origins o JOIN cp_work_items w ON w.id=o.work_id
-    UNION ALL
-    SELECT o.id,upper((regexp_match(division,'^ocd-division/country:us/state:([a-z]{2})(?:/|$)'))[1]) state
-    FROM origins o JOIN cp_occurrences c ON c.value->>'workItemId'=o.work_id
-    JOIN cp_obligations b ON b.id=c.value->>'obligationId'
-    CROSS JOIN LATERAL jsonb_array_elements_text(COALESCE(b.value->'scopeDivisions','[]')) a(division)),
-  bound AS (SELECT DISTINCT w.id,w.subject,w.requested_at,s.state FROM waiting w LEFT JOIN scopes s ON s.id=w.id AND s.state=ANY($2::text[]))`;
 
 export async function readCandidateProfilePublicationTasks(query: Query, now: string): Promise<{ readonly tasks: readonly RoutineSourceTask[]; readonly unscoped: number }> {
-  const rows = await query(`${findingStates} SELECT state,count(DISTINCT id)::int findings,min(requested_at) requested_at
-    FROM bound GROUP BY state ORDER BY state`, [CANDIDATE_PROFILE_LEAD, REGISTRY_STATES]) as { state: string | null; findings: number; requested_at: string | null }[];
+  const rows = await query(`SELECT state,count(*)::int findings,min(due_at) requested_at FROM work
+    WHERE kind='fact' AND status='waiting' AND value->>'platform'='candidate-profile' GROUP BY state ORDER BY state`, []) as { state: string; findings: number; requested_at: string | null }[];
   let unscoped = 0;
   const tasks = rows.flatMap(row => {
-    if (row.state === null) { unscoped += Number(row.findings); return []; }
+    if (!(REGISTRY_STATES as readonly string[]).includes(row.state)) { unscoped += Number(row.findings); return []; }
     const contract = requiredManualProductionContract(stateBallotContractId("candidate-profiles", requireBallotState(row.state)));
     return [{ id: `candidate-findings:${contract.id}`, registeredContractId: contract.id,
       sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
@@ -64,9 +48,4 @@ export async function readCandidateProfilePublicationTasks(query: Query, now: st
       ownerInvocation: { publicationPending: true as const, requestedAt: row.requested_at ?? now, instructions: ["section3-publication"] } }];
   });
   return { tasks, unscoped };
-}
-
-export async function readCandidateProfileFindingBatch(state: string, query: Query): Promise<readonly { readonly id: string; readonly subject: string }[]> {
-  return await query(`${findingStates} SELECT DISTINCT id,subject FROM bound WHERE state=$3 ORDER BY id LIMIT 500`,
-    [CANDIDATE_PROFILE_LEAD, REGISTRY_STATES, requireBallotState(state)]) as { id: string; subject: string }[];
 }

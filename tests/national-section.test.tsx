@@ -8,6 +8,7 @@ import { peopleSourceRecordClass, peopleSourceScope } from "../lib/officials/peo
 import { installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 import { absentEdgeEntry, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { NATIONAL_LINK_LABEL, NATIONAL_PATH } from "../lib/national/link.ts";
+import { forgetNationalShelf, refreshNationalShelf } from "../lib/reader/shelf.ts";
 
 function publishNationalRoster(roster: OfficeholderSet | null): void {
   const pointer = { recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources") };
@@ -78,6 +79,7 @@ test("a current executive with seat, name and source page reaches the page; the 
   };
   const roster: OfficeholderSet = { scope: "US", generatedAt: at, officeholders: [person], unmatched: [],
     divisions: [{ officeholderId: person.id, ocdId: "ocd-division/country:us", bodyId: null }] };
+  forgetNationalShelf();
   publishNationalRoster(roster);
   try {
     const cards = await readNationalCards();
@@ -93,16 +95,20 @@ test("a current executive with seat, name and source page reaches the page; the 
     // The production shape on Oct 23: seat, name and the White House page, with no portrait, biography, term or votes yet.
     const minimum: Officeholder = { ...person, photo: null, partyLabel: null, termStart: "", termEnd: "", contactFormUrl: null, social: [], fieldSources: {}, executive: undefined };
     publishNationalRoster({ ...roster, officeholders: [minimum] });
+    await refreshNationalShelf();
     assert.deepEqual((await readNationalCards()).map(row => [row.holder, row.title]), [["JD Vance", "Vice President of the United States"]]);
     assert.match(renderToStaticMarkup(await NationalPage()), /JD Vance/);
     publishNationalRoster({ ...roster, officeholders: [{ ...minimum, provenance: { ...provenance, sourceUrl: "" } }] });
-    await assert.rejects(readNationalCards(), /PEOPLE_SOURCE_PROJECTION_INVALID/, "an unsourced person cannot become a valid publication");
+    await assert.rejects(refreshNationalShelf(), /PEOPLE_SOURCE_PROJECTION_INVALID/, "an unsourced person cannot become a valid publication");
+    assert.deepEqual((await readNationalCards()).map(row => row.holder), ["JD Vance"], "the last valid publication stays");
     publishNationalRoster(null);
+    await refreshNationalShelf();
     assert.deepEqual(await readNationalCards(), [], "without the page it came from, the holder is not published");
     assert.match(renderToStaticMarkup(await NationalPage()), /data-national-gap/);
     publishNationalRoster({ ...roster, officeholders: [{ ...person, memberships: [{ id: "former-vp", personId: person.id,
       officeId: "vice-president", jurisdiction: "US", sourceUrl, officeTitle: person.officeTitle,
       divisionId: "ocd-division/country:us", current: false }] }], divisions: [{ ...roster.divisions[0], membershipId: "former-vp" }] });
+    await refreshNationalShelf();
     assert.deepEqual(await readNationalCards(), [], "a former holder is never listed");
   } finally { publishNationalRoster(null); }
 });

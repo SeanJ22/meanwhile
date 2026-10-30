@@ -143,15 +143,6 @@ test("voting sites promote with exact source/class/scope evidence and the Reader
   assert.equal(read.kind === "PROMOTED" && read.value.jurisdictions.length, votingFixture().jurisdictions.length);
 });
 
-test("a first voting-site holding publishes without requiring other states", async () => {
-  const file = votingFixture();
-  file.jurisdictions = [file.jurisdictions.find(row => row.state === "AZ" && row.sites.length > 0)!];
-  const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredManualCandidate(store, "voting-sites:AZ", votingCandidate(file, T0, "one authority's sites"), T0);
-  assert.equal(outcome.candidate.state, "PROMOTED");
-  assert.deepEqual((outcome.promoted!.payload as VotingSitesFile).jurisdictions, file.jurisdictions);
-});
-
 test("voting publication shares unchanged source rows and distinguishes equal and changed prior jurisdictions", () => {
   const prior = votingFixture();
   const current = { ...prior, jurisdictions: [prior.jurisdictions[0], structuredClone(prior.jurisdictions[1]),

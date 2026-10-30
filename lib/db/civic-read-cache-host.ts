@@ -52,6 +52,11 @@ export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX
   void ready.catch(() => {});
   return {
     ready,
+    /** A copy that was read is the newest, so the oldest unread copies go first. */
+    touch(key: string): void {
+      const path = join(root, key + ".json"), entry = entries.get(path);
+      if (entry) { entries.delete(path); entries.set(path, entry); }
+    },
     write(key: string, body: CopyBody): Promise<void> {
       const work = queue.then(async () => {
         await ready;
@@ -134,6 +139,7 @@ export async function startCivicReadCacheHost(options: { readonly maxBytes?: num
       if (request.method === "GET") {
         const file = join(root, key + ".json");
         await stat(file);
+        store.touch(key);
         response.writeHead(200, { "content-type": "application/json" });
         await pipeline(createReadStream(file), response); return;
       }

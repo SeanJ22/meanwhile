@@ -2164,22 +2164,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ? sql`${sql.param(params[Number(part.slice(1)) - 1])}` : sql.raw(part)), sql``);
     return (await this.db.execute(statement)).rows as Record<string, unknown>[];
   }
-  private async readPayloadParts(hashes: readonly string[]) {
-    return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));
-  }
   private readonly payloadPartIO: CivicPayloadPartIO = {
     existing: async hashes => (await this.db.select({ hash: civicDataPayloadParts.hash }).from(civicDataPayloadParts)
       .where(inArray(civicDataPayloadParts.hash, [...hashes]))).map(row => row.hash),
     write: async parts => { await this.db.insert(civicDataPayloadParts).values([...parts]).onConflictDoNothing(); },
-    read: async hashes => {
-      const values = (keys: readonly string[]) => this.readPayloadParts(keys);
-      return this.readCache.rows({ namespace: "payload-part", keys: hashes,
-        versions: async keys => this.db.select({ key: civicDataPayloadParts.hash,
-          etag: sql<string>`concat('part-v1/',${civicDataPayloadParts.hash})`,
-        }).from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...keys])),
-        values, keyOf: row => row.hash,
-      });
-    },
+    // A part is its content hash and is never changed or deleted: a held copy needs no database check.
+    read: async hashes => this.readCache.rows({ namespace: "payload-part", keys: hashes,
+      versions: async keys => keys.map(key => ({ key, etag: `part-v1/${key}` })),
+      values: keys => this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...keys])), keyOf: row => row.hash }),
   };
   private readonly payloadParts = new CivicPayloadParts(this.payloadPartIO);
   private readonly ownedPayloadParts = new CivicPayloadParts(this.payloadPartIO);

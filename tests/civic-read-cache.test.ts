@@ -221,6 +221,15 @@ test("replacing a disposable copy makes it newer than older copies when the cach
   assert.equal(await diskBytes(root), 24);
 });
 
+test("a copy that was read outlives older copies nobody read when the cache is full", async t => {
+  const root = await scratch(t), store = civicReadCopyStore(root, 24);
+  await store.ready;
+  for (const key of ["a", "b", "c"]) await store.write(key, "12345678");
+  store.touch("a");
+  await store.write("d", "12345678");
+  assert.deepEqual((await readdir(root)).sort(), ["a.json", "c.json", "d.json"]);
+});
+
 test("seventeen concurrent uploads do not accumulate complete copies in the supervisor", async t => {
   const root = await scratch(t);
   const child = fork(new URL("./fixtures/civic-read-cache-host.mjs", import.meta.url), [], { cwd: root,

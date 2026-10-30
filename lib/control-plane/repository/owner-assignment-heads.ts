@@ -6,7 +6,7 @@ import type { Sql } from "./pg-store.ts";
 import { boundedQuery } from "./request-bounds.ts";
 
 const ATTEMPT_FIELDS="id routeTaskId workItemId leaseId startedAt endedAt outcome abortReason";
-const OBLIGATION_FIELDS="id recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason";
+const OBLIGATION_FIELDS="id recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason openOccurrenceId";
 const projection=(fields:string):RecordProjection=>Object.fromEntries(fields.split(" ").map(field=>[field,true]));
 
 export interface AssignmentHeadSeeds {
@@ -194,7 +194,7 @@ SELECT g.id,
   coalesce((SELECT jsonb_agg(m.member ORDER BY m.ordinal) FROM members m WHERE m.id=g.id),'[]'::jsonb) AS members,
   coalesce((SELECT jsonb_agg(${routing("i.value")} ORDER BY i.ordinal) FROM items i WHERE i.id=g.id AND i.value IS NOT NULL AND (i.member=g.id OR i.value->'publicationOutcome' IS NOT NULL)),'[]'::jsonb) AS items,
   jsonb_strip_nulls(jsonb_build_object(
-    'obligation',CASE WHEN o.id IS NOT NULL THEN ${pick("o.value",OBLIGATION_FIELDS.replace("id ",""))} END,
+    'obligation',CASE WHEN o.id IS NOT NULL THEN ${pick("o.value",OBLIGATION_FIELDS.replace("id ","").replace(" openOccurrenceId",""))} END,
     'debt',CASE WHEN d.id IS NOT NULL THEN ${pick("d.value","cause consecutiveFailures firstFailedAt retryAt")} END,
     'item',CASE WHEN o.id IS NULL AND NOT EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN (SELECT ${item("i.value")} FROM items i WHERE i.id=g.id AND i.value IS NOT NULL ORDER BY i.ordinal LIMIT 1) END,
     'proof',CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,

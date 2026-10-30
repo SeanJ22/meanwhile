@@ -23,3 +23,24 @@ export async function importExistingKeys(env: Readonly<Record<string, string | u
   }
   await testDueKeys(store, at, undefined, undefined, source);
 }
+
+/** Presence evidence lives in the existing owner log; no values or ciphertext are recorded. */
+export async function importRuntimeKeys(env: Readonly<Record<string, string | undefined>>, source: "runner" | "website", at: string,
+  store: KeysStore = productionKeysStore(env), write?: (record: import("../control-plane/owner-surface.ts").OwnerDigestRecord) => Promise<void>): Promise<void> {
+  await importExistingKeys(env, store, at, source);
+  const present = Object.keys(KEY_NAMES).filter(name => Boolean(env[name]?.trim())), absent = Object.keys(KEY_NAMES).filter(name => !env[name]?.trim());
+  const { createHash } = await import("node:crypto");
+  const id = `${source}:${createHash("sha256").update(JSON.stringify([KEY_NAMES, present])).digest("hex")}`;
+  if (recorded.has(id)) return;
+  const record = { formatVersion: 1, digestId: id, writtenAt: at, headline: `Saved-key copy from the ${source}`,
+    lines: [`Present: ${present.join(", ")}`, `Absent: ${absent.join(", ")}`], cycleOk: null,
+    testedSha: env.WTP_RUNTIME_AUTHORITY_SHA ?? env.COMMIT_REF ?? null };
+  if (write) await write(record);
+  else {
+    const { createPgRepositories } = await import("../control-plane/repository/pg-store.ts");
+    const repos = await createPgRepositories(env.WTP_CONTROL_PLANE_DATABASE_URL!, at, { skipBootstrap: true });
+    await repos.ownerDigests.append(`keys-copy:${source}`, id, record, at);
+  }
+  recorded.add(id);
+}
+const recorded = new Set<string>();

@@ -54,7 +54,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
     provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, JOB_SLOWED_WORDS,
     admitJobLaunch: (job: string) => admitJobLaunch(job, process.env, clock.now), jobRuns: new JobRunBook(), BREAKER_SLOWED: "slowed",
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
-    drainHunterLane: () => {}, drainMemberLane: () => {}, drainSliceLane: () => {},
+    drainHunterLane: () => {}, drainMemberLane: () => {}, drainSliceLane: () => {}, drainParserLane: () => {},
     TS_CHILD: ["--experimental-strip-types"], CODE_ROOT: process.cwd(), process,
     ownerRepositories: async () => ({}),
     readRunnerPauseIntents: async () => { if (pause instanceof Error) throw pause; return pause; },

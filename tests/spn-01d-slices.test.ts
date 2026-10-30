@@ -43,21 +43,16 @@ test("a fact the Slide files marks its slice, the lane rebuilds it, the slice ho
     const turn = () => sliceTurn({ list, facts, now });
 
     // Every place is given its slices, five cards each, before any fact is marked.
-    assert.deepEqual(await sliceProgress(db.query), { built: 0, places: 1 });
-    const first = await turn();
-    assert.deepEqual([first.backfilled, first.written], [1, 5]);
-    assert.deepEqual(await sliceProgress(db.query), { built: 1, places: 1 });
+    assert.deepEqual(await sliceProgress(db.query), { built: 0, places: 1 }); const first = await turn();
+    assert.deepEqual([first.backfilled, first.written], [1, 5]); assert.deepEqual(await sliceProgress(db.query), { built: 1, places: 1 });
     const held = async (card: string) => (await db.query("SELECT body FROM place_slice WHERE place_id=$1 AND card=$2", [PLACE, card]))[0]!.body as { entities: { id: string; f: Record<string, unknown[]> }[]; sources: string[] } | null;
     assert.deepEqual((await held("bodies"))!.entities.map(entity => entity.id), [BODY], "the body is on the place's bodies card before it has a fact");
-    assert.deepEqual((await held("governs"))!.entities.map(entity => entity.id), [PERSON]);
-    assert.equal(await held("ballot"), null);
+    assert.deepEqual((await held("governs"))!.entities.map(entity => entity.id), [PERSON]); assert.equal(await held("ballot"), null);
     assert.equal((await db.query("SELECT 1 FROM place_slice WHERE place_id='az:meeting:one'")).length, 0, "meetings are not on any card yet");
     const idle = await turn();
     assert.deepEqual([idle.claimed, idle.backfilled, idle.written, idle.idle], [0, 0, 0, true], "once every place has slices, a look with nothing marked builds nothing");
-
     // A new fact through the Slide marks the slices it belongs to.
-    const filed = await publish(db, "office_phone", "520-555-0100", "Phone");
-    assert.ok("decision" in filed && filed.decision === "PUBLISH");
+    const filed = await publish(db, "office_phone", "520-555-0100", "Phone"); assert.ok("decision" in filed && filed.decision === "PUBLISH");
     assert.deepEqual(await db.query("SELECT kind,place_id,field,status FROM work ORDER BY field"),
       [{ kind: "slice", place_id: PLACE, field: "bodies", status: "waiting" }, { kind: "slice", place_id: PLACE, field: "more", status: "waiting" }]);
     reads.length = 0;
@@ -68,17 +63,14 @@ test("a fact the Slide files marks its slice, the lane rebuilds it, the slice ho
     const phone = bodies.entities[0]!.f.office_phone!;
     assert.deepEqual([phone[0], bodies.sources[phone[1] as number], phone[2], phone[3]], ["520-555-0100", "https://example.gov/api", "2026-10-24", "OFFICIAL"], "the slice holds the fact, its page, the day it was checked and its kind");
     assert.deepEqual(await db.query("SELECT status FROM work ORDER BY field"), [{ status: "done" }, { status: "done" }]);
-
     // The next look, with nothing new filed, rebuilds nothing and reads nothing about the place.
     reads.length = 0;
     const unchanged = await turn();
     assert.deepEqual([unchanged.claimed, unchanged.built, unchanged.written], [0, 0, 0]);
     assert.equal(reads.filter(sql => sql.includes("entity_place")).length, 0, "an unchanged place is not read");
     const builtAt = (await db.query("SELECT built_at FROM place_slice WHERE card='bodies'"))[0]!.built_at;
-
     // The same fact seen again changes nothing; a different value marks and rebuilds just that.
-    const again = await publish(db, "office_phone", "520-555-0100", "Phone");
-    assert.ok("decision" in again && again.decision === "CONFIRM");
+    const again = await publish(db, "office_phone", "520-555-0100", "Phone"); assert.ok("decision" in again && again.decision === "CONFIRM");
     assert.deepEqual(await db.query("SELECT status FROM work ORDER BY field"), [{ status: "done" }, { status: "done" }], "a fact seen again marks nothing");
     assert.equal((await turn()).claimed, 0);
     assert.deepEqual((await db.query("SELECT built_at FROM place_slice WHERE card='bodies'"))[0]!.built_at, builtAt);
@@ -98,8 +90,7 @@ test("a slice holds only what its card shows: no donor or money lines, only a pe
     const built = (await buildSlices(db.query, new Map([[PLACE, new Set<SliceCard>(SLICE_CARDS)]]))).get(PLACE)!;
     const fields = (card: SliceCard) => built.get(card)!.entities.map(entity => [entity.id, Object.keys(entity.f).sort()]);
     assert.deepEqual(fields("governs"), [[PERSON, ["name", "office@0"]]], "the seat on the board filed here shows; the seat on a board filed elsewhere waits for that board's place");
-    assert.deepEqual(built.get("governs")!.boards, [BODY]);
-    assert.deepEqual(fields("money"), [[PERSON, ["campaign-cycle:one"]]], "a summary shows; the lines never do");
+    assert.deepEqual(built.get("governs")!.boards, [BODY]); assert.deepEqual(fields("money"), [[PERSON, ["campaign-cycle:one"]]], "a summary shows; the lines never do");
     assert.deepEqual(fields("more"), [[PERSON, ["pronouns"]], ["az:vote:one", ["result"]]], "a fact no card claims lands in More about this");
     assert.equal(built.get("ballot"), null);
     assert.ok(![...built.values()].some(slice => JSON.stringify(slice).includes("donor") || JSON.stringify(slice).includes("A line")));
@@ -112,14 +103,23 @@ test("a slice asked for again waits again when it was done, is left alone when i
   const { db, list } = await open();
   try {
     const ask = () => list.touch([{ kind: "slice", placeId: PLACE, subjectId: PLACE, field: "bodies", origin: { from: "loader" }, source: { source: "test" } }]);
-    assert.equal(await ask(), 1);
-    assert.equal(await ask(), 0, "already waiting: nothing is written");
-    const [claim] = await list.claim("slice", 1);
-    assert.equal(await ask(), 1, "asked for while it is being built");
+    assert.equal(await ask(), 1); assert.equal(await ask(), 0, "already waiting: nothing is written");
+    const [claim] = await list.claim("slice", 1); assert.equal(await ask(), 1, "asked for while it is being built");
     assert.equal(await list.finish(claim!), false, "the build that began before the new fact does not close the row");
-    const [again] = await list.claim("slice", 1);
-    assert.equal(await list.finish(again!), true);
+    const [again] = await list.claim("slice", 1); assert.equal(await list.finish(again!), true);
     assert.equal(await ask(), 1, "a finished slice waits again");
     assert.deepEqual(await db.query("SELECT status FROM work"), [{ status: "waiting" }]);
+  } finally { await db.pg.close(); }
+});
+
+test("a turn whose end arrives mid-rebuild puts the marked slices back to waiting, unfailed, and the next look rebuilds them", async () => {
+  const { db, list } = await open(), end = new AbortController();
+  try {
+    await sliceTurn({ list, facts: db.query, now });
+    await publish(db, "office_phone", "520-555-0100", "Phone");
+    const stuck = Object.assign(async (sql: string) => { if (sql.includes("entity_place")) { end.abort(); await new Promise(() => {}); } return []; }, {});
+    await assert.rejects(sliceTurn({ list, facts: stuck, now, turnEnd: end.signal }));
+    assert.deepEqual(await db.query("SELECT status,attempts FROM work"), [{ status: "waiting", attempts: 0 }, { status: "waiting", attempts: 0 }]);
+    assert.equal((await sliceTurn({ list, facts: db.query, now })).claimed, 2);
   } finally { await db.pg.close(); }
 });

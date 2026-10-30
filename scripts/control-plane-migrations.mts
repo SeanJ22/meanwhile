@@ -22,6 +22,7 @@ import { moveRetiredDoorPages } from "../lib/control-plane/repository/migrations
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installJobBreaker, jobBreakerMigrationDefinition } from "../lib/control-plane/repository/migrations/BB-01.ts";
 import { installKeys, keysMigrationDefinition } from "../lib/control-plane/repository/migrations/KB-01.ts";
+import { contractOwnerLive, expandOwnerLive, ownerLiveContractMigrationDefinition, ownerLiveMigrationDefinition } from "../lib/control-plane/repository/migrations/CP-01-LIVE.ts";
 import { WORK_MIGRATION_DECLARATIONS, contractWork, expandWork, oneWorkListContractDefinition, oneWorkListDefinition } from "../lib/control-plane/repository/migrations/SPN-01B.ts";
 import { addChargeWorkKind, workKindMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-cost.ts";
 import { addLeadClaimIndex, leadClaimMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01F.ts";
@@ -66,6 +67,8 @@ const MIGRATIONS = [
   { id: "RIVER-DOORCFG-149_expand", source: "lib/control-plane/repository/migrations/RIVER-DOORCFG-149.ts", declarations: ["lib/control-plane/repository/migrations/DB-03A.ts", LINKING_SEEDS, "lib/facts/linking-copy.ts"],
     definition: linkingPagesMigrationDefinition, apply: withProductionReader(moveRetiredDoorPages) },
   { id: "KB-01_expand", source: "lib/control-plane/repository/migrations/KB-01.ts", declarations: ["lib/core/keys-store.ts"], definition: keysMigrationDefinition, apply: installKeys },
+  { id: "CP-01-LIVE_expand", source: "lib/control-plane/repository/migrations/CP-01-LIVE.ts", declarations: ["lib/control-plane/repository/owner-lease-changes.ts"], definition: ownerLiveMigrationDefinition, apply: expandOwnerLive },
+  { id: "CP-01-LIVE_contract", source: "lib/control-plane/repository/migrations/CP-01-LIVE.ts", declarations: [] as readonly string[], definition: ownerLiveContractMigrationDefinition, apply: contractOwnerLive },
   { id: "SPN-01B_expand", source: "lib/control-plane/repository/migrations/SPN-01B.ts", declarations: WORK_MIGRATION_DECLARATIONS, definition: oneWorkListDefinition, apply: expandWork },
   { id: "SPN-01B_contract", source: "lib/control-plane/repository/migrations/SPN-01B.ts", declarations: WORK_MIGRATION_DECLARATIONS, definition: oneWorkListContractDefinition, apply: contractWork },
   { id: "SPN-01B_cost_expand", source: "lib/control-plane/repository/migrations/SPN-01B-cost.ts", declarations: ["lib/control-plane/repository/model-charges.ts"],

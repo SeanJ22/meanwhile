@@ -1,4 +1,3 @@
-import { attemptFamilyOf, type AttemptFamily } from "../registry/attempt-families.ts";
 import { ASK_GAP_CODES, type AskGapCode } from "../ask/gap-codes.ts";
 import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
 import {
@@ -468,6 +467,28 @@ export interface AssignmentSources {
   readonly askGapObservations?: readonly AskGapObservation[] | null;
 }
 
+/** The publisher joins only these source heads; the keyed drilldown keeps full records. */
+export type AssignmentArtifact = Pick<ArtifactRecord, "artifactId" | "workItemId" | "attemptId" | "recordedAt" | "canonicalUrl" | "byteLength" | "contentType" | "partial">;
+export type AssignmentCostHead = Pick<CostEntry, "attemptId" | "workItemId" | "routeId" | "role"> & {
+  readonly cost: Pick<CostEntry["cost"], "usd" | "requestCount" | "bytesFetched" | "durationMs"> };
+export type AssignmentScout = Pick<ScoutResult, "attemptId" | "workItemId" | "recordClass" | "outcome" | "recordedAt" | "refusal" | "candidates" | "findings" | "distinctEvidenceRungs"> & {
+  readonly worker: Pick<ScoutResult["worker"], "modelReported">;
+  readonly rungs: readonly unknown[] | number; readonly nextRungs: readonly unknown[] | number };
+type ResultHead<T> = T extends { readonly role: string } ? Pick<T, Extract<keyof T,
+  "role" | "verdict" | "blockers" | "findings" | "warnings" | "actualRowCount" | "sourceRowCount" | "declaredRowCount" | "validatedRecordCount" | "survivingRecordCount" | "conclusion" | "nextAction">> : never;
+export type AssignmentWorkerResult = Pick<WorkerResultRecord, "id" | "attemptId" | "workItemId" | "endedAt"> & {
+  readonly result: ResultHead<WorkerResultRecord["result"]>;
+  readonly modelReview?: Pick<NonNullable<WorkerResultRecord["modelReview"]>, "model" | "escalation" | "validationError"> };
+type AssignmentPipeline = Pick<PipelineItemState, "itemId" | "stage"> & {
+  readonly byStage: { readonly SCOUTED?: Pick<NonNullable<PipelineItemState["byStage"]["SCOUTED"]>, "source">;
+    readonly APPROVED_FOR_PROMOTION?: Pick<NonNullable<PipelineItemState["byStage"]["APPROVED_FOR_PROMOTION"]>, "recordId"> };
+  readonly records: readonly ({ readonly stage: PipelineStage } | Pick<RefusedRecord, "stage" | "atStage" | "reasons">)[] };
+export type AssignmentSummarySources = Omit<AssignmentSources, "artifacts" | "costs" | "scoutResults" | "workerResults" | "pipeline"> & {
+  readonly artifacts: readonly AssignmentArtifact[]; readonly costs: readonly AssignmentCostHead[];
+  readonly scoutResults: readonly AssignmentScout[]; readonly workerResults: readonly AssignmentWorkerResult[];
+  readonly pipeline: readonly AssignmentPipeline[] | null };
+const countOf = (value: number | readonly unknown[]): number => typeof value === "number" ? value : value.length;
+
 export interface AssignmentBuildOptions {
   readonly textClip?: number;
   readonly listClip?: number;
@@ -546,7 +567,7 @@ export function isProofRecord(input: { readonly obligationId?: string | null; re
   return isProofProject(input.project);
 }
 
-export function isSharedCost(entry: Pick<CostEntry, "routeId" | "attemptId">): boolean {
+export function isSharedCost(entry: Pick<AssignmentCostHead, "routeId" | "attemptId">): boolean {
   return entry.routeId === SCOUT_PREWARM_ROUTE_ID || entry.attemptId.startsWith("scout-prewarm:");
 }
 
@@ -576,7 +597,7 @@ function canReachPaidModel(role: string, worker: WorkerIdentity | undefined): bo
 type CostRowKind = "MEASURED" | "NO_MODEL_CALL" | "PLAIN_CODE" | "UNMEASURED";
 
 /** `worker` is the charge's Attempt's worker, absent when the Attempt is not on record. */
-function costRowKind(entry: CostEntry, worker: WorkerIdentity | undefined): CostRowKind {
+function costRowKind(entry: AssignmentCostHead, worker: WorkerIdentity | undefined): CostRowKind {
   const usd = entry.cost.usd;
   const modelCapable = canReachPaidModel(entry.role, worker);
   if (typeof usd === "number" && Number.isFinite(usd)) {
@@ -606,7 +627,7 @@ export const assignmentCostTotals = (): AssignmentCostTotals => ({ rows: 0, meas
   sharedUsd: exactSum(), unattributed: 0, unattributedUsd: exactSum(), modelRows: 0, unmeasuredModel: 0, plainCode: 0 });
 
 /** `assigned` says whether an assignment holds the charge's work item. */
-export function foldAssignmentCost(t: AssignmentCostTotals, e: CostEntry, worker: WorkerIdentity | undefined, assigned: boolean): void {
+export function foldAssignmentCost(t: AssignmentCostTotals, e: AssignmentCostHead, worker: WorkerIdentity | undefined, assigned: boolean): void {
   const kind = costRowKind(e, worker);
   const usd = reportsDollars(kind) ? (e.cost.usd ?? 0) : 0;
   t.rows += 1;
@@ -681,18 +702,18 @@ interface Index {
   readonly debts: Map<string, FreshnessDebt>;
   readonly leases: Map<string, ExecutionLease> | null;
   readonly commitsByRouteTask: Map<string, DispositionCommit[]>;
-  readonly artifactsByWorkItem: Map<string, ArtifactRecord[]>;
-  readonly costsByWorkItem: Map<string, CostEntry[]>;
-  readonly scoutByAttempt: Map<string, ScoutResult>;
-  readonly scoutsByWorkItem: Map<string, ScoutResult[]>;
-  readonly workerResultsByWorkItem: Map<string, WorkerResultRecord[]>;
-  readonly workerResultByAttempt: Map<string, WorkerResultRecord>;
-  readonly pipelineByAttempt: Map<string, PipelineItemState[]>;
-  readonly pipelineByWorkItem: Map<string, PipelineItemState[]>;
+  readonly artifactsByWorkItem: Map<string, AssignmentArtifact[]>;
+  readonly costsByWorkItem: Map<string, AssignmentCostHead[]>;
+  readonly scoutByAttempt: Map<string, AssignmentScout>;
+  readonly scoutsByWorkItem: Map<string, AssignmentScout[]>;
+  readonly workerResultsByWorkItem: Map<string, AssignmentWorkerResult[]>;
+  readonly workerResultByAttempt: Map<string, AssignmentWorkerResult>;
+  readonly pipelineByAttempt: Map<string, AssignmentPipeline[]>;
+  readonly pipelineByWorkItem: Map<string, AssignmentPipeline[]>;
   readonly askedGaps: ReadonlyMap<string, AskedGap> | null;
 }
 
-function indexSources(src: AssignmentSources): Index {
+function indexSources(src: AssignmentSummarySources): Index {
   const obligations = new Map(src.obligations.map((o) => [o.id, o]));
   const occurrencesByObligation = new Map<string, FreshnessOccurrence[]>();
   const occurrenceByWorkItem = new Map<string, FreshnessOccurrence>();
@@ -723,28 +744,28 @@ function indexSources(src: AssignmentSources): Index {
   const commitsByRouteTask = new Map<string, DispositionCommit[]>();
   for (const c of src.dispositions ?? []) push(commitsByRouteTask, c.routeTaskId, c);
 
-  const artifactsByWorkItem = new Map<string, ArtifactRecord[]>();
+  const artifactsByWorkItem = new Map<string, AssignmentArtifact[]>();
   for (const a of src.artifacts) push(artifactsByWorkItem, a.workItemId, a);
-  const costsByWorkItem = new Map<string, CostEntry[]>();
+  const costsByWorkItem = new Map<string, AssignmentCostHead[]>();
   for (const c of src.costs) push(costsByWorkItem, c.workItemId, c);
 
-  const scoutByAttempt = new Map<string, ScoutResult>();
-  const scoutsByWorkItem = new Map<string, ScoutResult[]>();
+  const scoutByAttempt = new Map<string, AssignmentScout>();
+  const scoutsByWorkItem = new Map<string, AssignmentScout[]>();
   for (const r of src.scoutResults) {
     const held = scoutByAttempt.get(r.attemptId);
     if (held === undefined || ms(r.recordedAt) >= ms(held.recordedAt)) scoutByAttempt.set(r.attemptId, r);
     push(scoutsByWorkItem, r.workItemId, r);
   }
 
-  const workerResultsByWorkItem = new Map<string, WorkerResultRecord[]>();
-  const workerResultByAttempt = new Map<string, WorkerResultRecord>();
+  const workerResultsByWorkItem = new Map<string, AssignmentWorkerResult[]>();
+  const workerResultByAttempt = new Map<string, AssignmentWorkerResult>();
   for (const r of src.workerResults) {
     push(workerResultsByWorkItem, r.workItemId, r);
     workerResultByAttempt.set(r.attemptId, r);
   }
 
-  const pipelineByAttempt = new Map<string, PipelineItemState[]>();
-  const pipelineByWorkItem = new Map<string, PipelineItemState[]>();
+  const pipelineByAttempt = new Map<string, AssignmentPipeline[]>();
+  const pipelineByWorkItem = new Map<string, AssignmentPipeline[]>();
   for (const state of src.pipeline ?? []) {
     const scouted = state.byStage.SCOUTED;
     if (!scouted) continue;
@@ -925,7 +946,7 @@ function fromDisposition(d: RouteDisposition, clipAt: number): RoundOutcome {
   }
 }
 
-function fromScout(s: ScoutResult, clipAt: number): RoundOutcome {
+function fromScout(s: AssignmentScout, clipAt: number): RoundOutcome {
   if (s.refusal !== null && s.refusal.length > 0) {
     const codes = s.refusal.map((r) => r.code);
     const transport = codes.includes("SCOUT_TRANSPORT_FAILED");
@@ -940,7 +961,7 @@ function fromScout(s: ScoutResult, clipAt: number): RoundOutcome {
       nextAction: "The obligation stays owed; the runner sends a hunter again when it comes due.",
     };
   }
-  const walked = `${plural(s.rungs.length, "rung")} walked, ${plural(s.distinctEvidenceRungs, "rung")} backed by evidence`;
+  const walked = `${plural(countOf(s.rungs), "rung")} walked, ${plural(s.distinctEvidenceRungs, "rung")} backed by evidence`;
   switch (s.outcome) {
     case "ROUTE_CANDIDATE":
       return { state: "SUCCEEDED", code: s.outcome, says: `The hunter proposed ${plural(s.candidates.length, "route")} to the record, each backed by evidence it downloaded (${walked}).`, at: s.recordedAt, owner: "RUNNER", nextAction: "" };
@@ -950,7 +971,7 @@ function fromScout(s: ScoutResult, clipAt: number): RoundOutcome {
       return {
         state: "FAILED",
         code: s.outcome,
-        says: `The hunter found no route and no record (${walked}); it named ${plural(s.nextRungs.length, "next rung")} to try.`,
+        says: `The hunter found no route and no record (${walked}); it named ${plural(countOf(s.nextRungs), "next rung")} to try.`,
         at: s.recordedAt,
         owner: "RUNNER",
         nextAction: "The obligation stays owed; the next hunter resumes from the named next rungs rather than starting over.",
@@ -986,7 +1007,7 @@ function fromScout(s: ScoutResult, clipAt: number): RoundOutcome {
   }
 }
 
-function fromWorkerResult(r: WorkerResultRecord, clipAt: number): RoundOutcome {
+function fromWorkerResult(r: AssignmentWorkerResult, clipAt: number): RoundOutcome {
   const result = r.result;
   const finding = (): string => {
     const f = (result as { readonly findings?: readonly { readonly detail: string }[] }).findings?.[0]?.detail ?? "";
@@ -1132,11 +1153,11 @@ interface Gathered {
   readonly missingWorkItems: readonly string[];
   readonly rounds: readonly Round[];
   readonly attempts: readonly Attempt[];
-  readonly artifacts: readonly ArtifactRecord[];
-  readonly costs: readonly CostEntry[];
-  readonly scouts: readonly ScoutResult[];
-  readonly workerResults: readonly WorkerResultRecord[];
-  readonly pipeline: readonly PipelineItemState[];
+  readonly artifacts: readonly AssignmentArtifact[];
+  readonly costs: readonly AssignmentCostHead[];
+  readonly scouts: readonly AssignmentScout[];
+  readonly workerResults: readonly AssignmentWorkerResult[];
+  readonly pipeline: readonly AssignmentPipeline[];
   readonly commits: readonly DispositionCommit[];
   readonly debt: FreshnessDebt | null;
   readonly observed: readonly RouteDisposition[];
@@ -1178,7 +1199,7 @@ function gather(m: Members, idx: Index): Gathered {
   const artifacts = workItemIds.flatMap((wi) => idx.artifactsByWorkItem.get(wi) ?? []);
   const costs = workItemIds.flatMap((wi) => idx.costsByWorkItem.get(wi) ?? []);
   const scoutSeen = new Set<string>();
-  const scouts: ScoutResult[] = [];
+  const scouts: AssignmentScout[] = [];
   for (const r of [...attempts.map((a) => idx.scoutByAttempt.get(a.id)), ...workItemIds.flatMap((wi) => idx.scoutsByWorkItem.get(wi) ?? [])]) {
     if (!r || scoutSeen.has(`${r.attemptId}|${r.recordedAt}`)) continue;
     scoutSeen.add(`${r.attemptId}|${r.recordedAt}`);
@@ -1187,7 +1208,7 @@ function gather(m: Members, idx: Index): Gathered {
   scouts.sort((a, b) => ms(a.recordedAt) - ms(b.recordedAt));
   const workerResults = workItemIds.flatMap((wi) => idx.workerResultsByWorkItem.get(wi) ?? []).sort((a, b) => ms(a.endedAt) - ms(b.endedAt));
   const pipelineSeen = new Set<string>();
-  const pipeline: PipelineItemState[] = [];
+  const pipeline: AssignmentPipeline[] = [];
   for (const s of [...[...attemptIds].flatMap((id) => idx.pipelineByAttempt.get(id) ?? []), ...workItemIds.flatMap((wi) => idx.pipelineByWorkItem.get(wi) ?? [])]) {
     if (pipelineSeen.has(s.itemId)) continue;
     pipelineSeen.add(s.itemId);
@@ -1275,7 +1296,7 @@ function askedSays(idx: Index, bodyId: string, code: AskGapCode): string {
   return told === undefined ? ` No reader was told it in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days.` : ` ${askedWords(told)}`;
 }
 
-function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips): AssignmentWhat {
+function whatOfStanding(g: Gathered, idx: Index, src: AssignmentSummarySources, clips: Clips): AssignmentWhat {
   const ob = g.obligation;
   if (ob === null) {
     const occ = g.occurrences[0];
@@ -1535,7 +1556,7 @@ function parsingOf(g: Gathered, clips: Clips): AssignmentParsing {
   };
 }
 
-function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): AssignmentVerification {
+function verificationOf(g: Gathered, src: AssignmentSummarySources, clips: Clips): AssignmentVerification {
   const furthest: Record<PipelineStage, number> = { SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 };
   const rejections: AssignmentRejection[] = [];
   let passed = 0;
@@ -1547,7 +1568,7 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
     let quality = false;
     for (const r of s.records) {
       if (r.stage !== "REFUSED") continue;
-      const refused = r as RefusedRecord;
+      const refused = r;
       const guard = refused.reasons.every((reason) => GUARD_CODES.has(reason.code));
       if (guard) guardRefusals += 1;
       else quality = true;
@@ -1628,7 +1649,7 @@ function verificationOf(g: Gathered, src: AssignmentSources, clips: Clips): Assi
   };
 }
 
-function deliveryOf(g: Gathered, src: AssignmentSources): AssignmentDelivery {
+function deliveryOf(g: Gathered, src: AssignmentSummarySources): AssignmentDelivery {
   const workerPublications = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : []);
   const items = g.pipeline.length + workerPublications.length;
   const approved = g.pipeline.filter((s) => s.stage === "APPROVED_FOR_PROMOTION").length + workerPublications.filter(p => p.status === "PUBLISHED").length;
@@ -2254,7 +2275,7 @@ function attributedUsd(all: Iterable<ExactSum | null>): number | null {
   return total === null ? null : round6(exactValue(total));
 }
 
-function buildRow(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips, denominatorUsd: number | null): AssignmentRow {
+function buildRow(g: Gathered, idx: Index, src: AssignmentSummarySources, clips: Clips, denominatorUsd: number | null): AssignmentRow {
   const what = g.members.kind === "STANDING_OBLIGATION" ? whatOfStanding(g, idx, src, clips) : whatOfWorkItem(g, clips);
   const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(g, idx, what, clips) : deriveWorkItem(g, idx, clips);
   const publication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
@@ -2291,7 +2312,7 @@ interface Built {
   readonly rows: AssignmentRow[];
 }
 
-function buildAll(src: AssignmentSources, options: AssignmentBuildOptions): Built {
+function buildAll(src: AssignmentSummarySources, options: AssignmentBuildOptions): Built {
   const idx = indexSources(src);
   const clips: Clips = { text: options.textClip ?? DRILLDOWN_TEXT_CLIP, list: options.listClip ?? DRILLDOWN_LIST_CLIP };
   const memberships = members(idx);
@@ -2301,7 +2322,7 @@ function buildAll(src: AssignmentSources, options: AssignmentBuildOptions): Buil
   return { idx, memberships, gathered, rows };
 }
 
-export function buildAssignments(src: AssignmentSources, options: AssignmentBuildOptions = {}): AssignmentRow[] {
+export function buildAssignments(src: AssignmentSummarySources, options: AssignmentBuildOptions = {}): AssignmentRow[] {
   return buildAll(src, options).rows;
 }
 
@@ -2393,70 +2414,6 @@ export interface AssignmentIndexRow {
 /** An index row over the span it holds for: from an instant (null: from before it was derived) to the next its clock changes it at (null: none). */
 export type IndexSegment = AssignmentIndexRow & { readonly from: string | null; readonly until: string | null };
 
-export interface BodyPublicationAttempt {
-  readonly bodyId: string;
-  readonly family: AttemptFamily | null;
-  readonly workItemId: string;
-  readonly assignmentKeys: readonly string[];
-  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
-  readonly at: string;
-  readonly status: "PUBLISHED" | "PARTIALLY_PUBLISHED" | "HELD";
-  readonly code: string;
-  readonly sourceUrl: string | null;
-  readonly workerResultId: string;
-  readonly acceptedCount: number | null;
-  readonly versionId: string | null;
-  readonly recordChanges?: NonNullable<WorkItem["publicationOutcome"]>["recordChanges"];
-}
-
-export function bodyPublicationAttempts(workItems: readonly WorkItem[],
-  occurrences: readonly FreshnessOccurrence[] = [], obligations: readonly StandingObligation[] = []): BodyPublicationAttempt[] {
-  const obligationById = new Map(obligations.map(row => [row.id, row] as const));
-  const workById = new Map(workItems.map(item => [item.id,item] as const));
-  const assignmentMarksByWorkItem = new Map<string, readonly ObligationAssignment[]>();
-  for (const round of occurrences) {
-    const owner = obligationById.get(round.obligationId);
-    if (!owner) continue;
-    assignmentMarksByWorkItem.set(round.workItemId, owner.assignments ?? []);
-  }
-  const marksFor = (item: WorkItem): readonly ObligationAssignment[] => {
-    let current = item;
-    const seen = new Set<string>();
-    while (!assignmentMarksByWorkItem.has(current.id) && !seen.has(current.id)) {
-      const link=(current as WorkItem & {readonly planRepair?:{readonly parentWorkItemId:string;readonly authority:string}}).planRepair;
-      if (!link) break;
-      seen.add(current.id);
-      const parent = workById.get(link.parentWorkItemId);
-      if (!parent || link.authority !== "WORK_INSTRUCTIONS_ONLY" ||
-        parent.project !== item.project || parent.subject !== item.subject) return [];
-      current = parent;
-    }
-    return assignmentMarksByWorkItem.get(current.id) ?? [];
-  };
-  return workItems.flatMap(item => {
-    const outcome = item.publicationOutcome;
-    const bodyId = item.autonomousPlan?.publication?.bodyId;
-    if (!outcome || !bodyId) return [];
-    const marks=marksFor(item);
-    const effective = new Map<string,ObligationAssignment>();
-    for (const mark of marks) {
-      const acknowledged=item.autonomousPlan?.ownerInstructions?.includes(mark.ref) === true ||
-        (item.autonomousPlan?.ownerInstructions === undefined && !marks.some(other=>other.assignmentKey===mark.assignmentKey&&other.ref!==mark.ref));
-      if (!Number.isFinite(Date.parse(mark.at)) || Date.parse(mark.at) > Date.parse(outcome.at) ||
-        !acknowledged) continue;
-      const old = effective.get(mark.assignmentKey);
-      if (!old || mark.at > old.at || (mark.at === old.at && mark.ref > old.ref)) effective.set(mark.assignmentKey,mark);
-    }
-    const assignmentRefs=[...effective.values()].map(mark=>({key:mark.assignmentKey,ref:mark.ref}));
-    return [{ bodyId, family: attemptFamilyOf(item.autonomousPlan?.publication?.contractId), workItemId: item.id, assignmentKeys: assignmentRefs.map(mark=>mark.key), assignmentRefs,
-      at: outcome.at, status: outcome.status,
-      code: outcome.code, sourceUrl: item.autonomousPlan?.contract.schemaVersion === 2
-        ? item.autonomousPlan.contract.sourceScope.canonicalUrls[0] ?? null : null,
-      workerResultId: outcome.workerResultId, acceptedCount: outcome.acceptedMembers?.length ?? outcome.acceptedRecordIds?.length ?? outcome.bodyIds?.length ?? null,
-      versionId: outcome.versionId, ...(outcome.status !== "HELD" && outcome.recordChanges ? { recordChanges: outcome.recordChanges } : {}) }];
-  }).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId));
-}
-
 export type AssignmentPublication =
   | { readonly kind: "BUILT"; readonly view: AssignmentView }
   | { readonly kind: "NOT_BUILT"; readonly at: string; readonly says: string };
@@ -2508,7 +2465,6 @@ export interface AssignmentEntry {
   readonly horizon: string | null;
   /** The promotion-pipeline items joined to it. */
   readonly items: readonly string[];
-  readonly bodyAttempts: readonly BodyPublicationAttempt[];
   /** Its standing obligation's clock and marks; null for a created work item or a clock not on record. */
   readonly obligation: AssignmentClock | null;
 }
@@ -2523,7 +2479,7 @@ export interface AssignmentClock {
 }
 
 /** The instants at which a lease, a due time, a backoff, an argued absence, a public readback or a reader's telling could change the row on its own. */
-function horizonOf(g: Gathered, idx: Index, src: AssignmentSources): string | null {
+function horizonOf(g: Gathered, idx: Index, src: AssignmentSummarySources): string | null {
   const at: number[] = [];
   for (const a of g.attempts) at.push(ms(idx.leases?.get(a.routeTaskId)?.expiresAt));
   at.push(ms(g.obligation?.nextDueAt), ms(g.obligation?.absentUntil), ms(g.debt?.retryAt));
@@ -2547,7 +2503,7 @@ function clockOf(g: Gathered): AssignmentClock | null {
 }
 
 /** Every assignment `src` holds whole, or only those named in `only`, as the snapshot carries it. */
-export function deriveAssignmentEntries(src: AssignmentSources, only?: ReadonlySet<string>): Map<string, AssignmentEntry> {
+export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: ReadonlySet<string>): Map<string, AssignmentEntry> {
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP, costDenominatorUsd: null });
   const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
     ? [[item.id, item.manualSourceGap] as const] : []));
@@ -2557,8 +2513,6 @@ export function deriveAssignmentEntries(src: AssignmentSources, only?: ReadonlyS
     const dependents = dependentsByUpstream.get(dependency.upstreamId) ?? new Set<string>();
     dependents.add(item.id); dependentsByUpstream.set(dependency.upstreamId,dependents);
   }
-  const bodyByItem = new Map<string, BodyPublicationAttempt[]>();
-  for (const body of bodyPublicationAttempts(src.workItems, src.occurrences, src.obligations)) push(bodyByItem, body.workItemId, body);
   const out = new Map<string, AssignmentEntry>();
   for (const row of built.rows) {
     if (only !== undefined && !only.has(row.id)) continue;
@@ -2600,24 +2554,23 @@ export function deriveAssignmentEntries(src: AssignmentSources, only?: ReadonlyS
       owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };
     const g = built.gathered.get(row.id)!;
     out.set(row.id, { members: [...workIds], index, list: listed, usd: groupUsd(g, built.idx), horizon: horizonOf(g, built.idx, src),
-      items: g.pipeline.map((s) => s.itemId), bodyAttempts: [...workIds].flatMap((id) => bodyByItem.get(id) ?? []), obligation: clockOf(g) });
+      items: g.pipeline.map((s) => s.itemId), obligation: clockOf(g) });
   }
   return out;
 }
 
 /** Whether a pipeline item's source names an attempt or work item an assignment holds. */
-export function pipelineLinked(state: PipelineItemState, assigned: (workItemId: string) => boolean, attempt: (attemptId: string) => boolean): boolean {
+export function pipelineLinked(state: AssignmentPipeline, assigned: (workItemId: string) => boolean, attempt: (attemptId: string) => boolean): boolean {
   const scouted = state.byStage.SCOUTED;
   if (!scouted) return false;
   const source = scouted.source;
   return source.kind === "FLEET_EXTRACTION" ? assigned(source.workItemId) : source.kind !== "PROMOTED_CANDIDACY" && attempt(source.attemptId);
 }
 
-/** The view from every record at once, with every row of the index and every body's publication attempt. */
 export function buildAssignmentView(
-  src: AssignmentSources,
+  src: AssignmentSummarySources,
   options: { readonly perGroup?: number; readonly byteBudget?: number; readonly reads?: AssignmentView["reads"] } = {},
-): AssignmentView & AssignmentStateRows {
+): AssignmentView & { readonly allRowsIndex:readonly AssignmentIndexRow[] } {
   const entries = deriveAssignmentEntries(src);
   const assigned = new Set([...entries.values()].flatMap((e) => e.members));
   const workers = new Map(src.attempts.map((a) => [a.id, a.worker] as const));
@@ -2629,7 +2582,7 @@ export function buildAssignmentView(
   };
   const view = assembleAssignmentView({ nowIso: src.nowIso, part: assignmentPartOf(entries, src.nowIso, options.perGroup), lists: (id) => entries.get(id)?.list,
     totals: { costs: assignmentCostSummaryOf(costs), pipeline, askGapObservations: src.askGapObservations }, activation: src.activation, ...options });
-  return { ...view, ...assignmentStateRowsOf(entries) };
+  return { ...view, allRowsIndex:[...entries.values()].map(entry=>entry.index) };
 }
 
 /** The figures the summary states about the whole plane beside the assignments themselves. */
@@ -2638,21 +2591,6 @@ export interface AssignmentViewTotals {
   /** Promotion-pipeline items, and those whose source an assignment holds; null when the pipeline could not be read. */
   readonly pipeline: { readonly items: number; readonly linked: number } | null;
   readonly askGapObservations?: readonly AskGapObservation[] | null;
-}
-
-/** Every index row and every body's publication attempt of a set of assignments: one state's, on that state's own row. */
-export interface AssignmentStateRows {
-  readonly allRowsIndex: readonly AssignmentIndexRow[];
-  readonly bodyAttempts: readonly BodyPublicationAttempt[];
-}
-
-export function assignmentStateRowsOf(entries: Iterable<readonly [string, Pick<AssignmentEntry, "index" | "bodyAttempts">]>): AssignmentStateRows {
-  const all = [...entries].sort((a, b) => a[0].localeCompare(b[0]));
-  return {
-    allRowsIndex: all.map(([, e]) => e.index),
-    bodyAttempts: [...new Map(all.flatMap(([, e]) => e.bodyAttempts).map((a) => [a.workItemId, a] as const)).values()]
-      .sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId)),
-  };
 }
 
 export type AssignmentCandidate = Pick<AssignmentIndexRow, "id" | "state" | "lane" | "band" | "waitingSince" | "lastActivityAt">;

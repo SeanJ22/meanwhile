@@ -4,9 +4,12 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 import { readIntents, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 import { runnerControlReader, runnerWakeReaderFromEnv } from "../scripts/pilot-runtime-control.mts";
-import { consoleInputReader, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL, ownerCountsReady } from "../scripts/pilot-runtime-publish.mts";
+import { consoleInputReader, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL, ownerCountsReady, ownerSnapshotContinues } from "../scripts/pilot-runtime-publish.mts";
 
 test("owner publication waits for structural and data initialization, then becomes eligible without a failed child",async()=>{
+  assert.equal(ownerSnapshotContinues(75,"OWNER_SNAPSHOT_CONTINUATION_PENDING: saved\n"),true);
+  assert.equal(ownerSnapshotContinues(1,"OWNER_SNAPSHOT_CONTINUATION_PENDING: saved\n"),false);
+  assert.equal(ownerSnapshotContinues(75,"other failure"),false);
   let rows: {format:string;initializing:string|null;ready:string|null}[]=[{format:"3",initializing:null,ready:null}];
   const sql={query:async()=>rows};
   assert.equal(await ownerCountsReady("unused",sql),false);
@@ -16,6 +19,8 @@ test("owner publication waits for structural and data initialization, then becom
   assert.equal(await ownerCountsReady("unused",sql),false);
   rows=[{format:"4",initializing:null,ready:"true"}];
   assert.equal(await ownerCountsReady("unused",sql),true);
+  rows=[{format:"4",initializing:"true",ready:"true"}];
+  assert.equal(await ownerCountsReady("unused",sql),true,"a normal checkpoint resumes without reopening structural initialization");
   rows=[];
   assert.equal(await ownerCountsReady("unused",sql),false,"missing counts require initialization rather than a routine full rebuild");
   await assert.rejects(()=>ownerCountsReady("unused",{query:async()=>{throw Error("unavailable");}}),/unavailable/);

@@ -294,6 +294,8 @@ function recordProjectionSql(table: string, projection: RecordProjection, column
   if (!kept.length) throw new Error(`${table}: an empty projection cannot select a field`);
   return `CASE WHEN jsonb_typeof(${source})='object' THEN ${object(source, kept, key => {
     const field = `${source}->${literal(key)}`, keep = projection[key];
+    if (keep !== true && !Array.isArray(keep) && "count" in keep)
+      return `CASE WHEN jsonb_typeof(${field})='array' THEN to_jsonb(jsonb_array_length(${field})) ELSE ${field} END`;
     return keep === true ? field : `CASE WHEN jsonb_typeof(${field})='object' THEN ${object(`(${field})`, keep,
       nested => `${field}->${literal(nested)}`)} ELSE ${field} END`;
   })} ELSE ${source} END`;

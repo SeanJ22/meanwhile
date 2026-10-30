@@ -50,11 +50,11 @@ export function addCensusVotingGeographies(place: VotingReaderPlace, payload: un
   return next;
 }
 
-export async function censusVotingAddress(address: string, fetchImpl: typeof fetch = fetch): Promise<{ point: { lat: number; lng: number }; payload: unknown } | null> {
+export async function censusVotingAddress(address: string, timeoutMs = 2200): Promise<{ point: { lat: number; lng: number }; payload: unknown } | null> {
   const url = new URL("https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress");
   url.search = new URLSearchParams({ address, benchmark: "Public_AR_Current", vintage: "Current_Current", layers: "all", format: "json" }).toString();
   try {
-    const response = await fetchImpl(url, { cache: "no-store", signal: AbortSignal.timeout(2200), headers: { accept: "application/json" } });
+    const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(timeoutMs), headers: { accept: "application/json" } });
     if (!response.ok) throw new Error(`Census geocoder returned HTTP ${response.status}`);
     const payload: unknown = await response.json();
     const point = parseCensusPoint(payload);

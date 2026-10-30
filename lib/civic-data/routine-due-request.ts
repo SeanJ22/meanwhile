@@ -136,10 +136,25 @@ export function routineDueRequestFor(
     routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 
+/** A due request is read now: first on its lane, never behind the instant its task already owed. */
 export function routineDueRequestDeadlineMs(deadlineMs: number | undefined, request: RoutineDueRequest | null): number | undefined {
-  if (request === null) return deadlineMs;
-  const dueMs = Date.parse(request.dueAt);
-  return deadlineMs === undefined || Number.isNaN(deadlineMs) ? dueMs : Math.min(deadlineMs, dueMs);
+  return request === null ? deadlineMs : Number.NEGATIVE_INFINITY;
+}
+
+type ClassedTask = { readonly id: string; readonly contract: { readonly schedule?: { readonly kind: string } } };
+/** §4 clock work: meeting sources on their sitting window, and where-to-vote sources. */
+const clockWork = (task: ClassedTask) => task.contract.schedule?.kind === "SITTING_WINDOW" || parseStateBallotContractId(task.id)?.family === "voting-sites";
+
+/**
+ * Rulings §0: clock work first, then Sean's orders. A requested clock task goes first among the clock work; a requested
+ * task of any other kind goes first among the rest, never ahead of any clock work. Every other task keeps its place.
+ */
+export function dueRequestsFirstInClass<T extends { readonly task: ClassedTask }>(jobs: readonly T[], requested: ReadonlySet<string>): T[] {
+  const asked = (job: T) => requested.has(job.task.id), clock = jobs.filter(job => clockWork(job.task));
+  const lifted = [...clock.filter(asked), ...clock.filter(job => !asked(job))];
+  const kept = jobs.filter(job => clockWork(job.task) || !asked(job)).map(job => clockWork(job.task) ? lifted.shift()! : job);
+  const after = kept.findLastIndex(job => clockWork(job.task)) + 1;
+  return [...kept.slice(0, after), ...jobs.filter(job => !clockWork(job.task) && asked(job)), ...kept.slice(after)];
 }
 
 function openAt(request: RoutineDueRequest, nowMs: number): boolean {

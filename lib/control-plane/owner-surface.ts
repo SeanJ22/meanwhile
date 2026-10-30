@@ -756,7 +756,6 @@ export interface OwnerCostRow {
 export interface OwnerSnapshotState {
   readonly builtAt: string;
   readonly allRowsIndex: readonly import("./assignment-view.ts").IndexSegment[];
-  readonly bodyAttempts: readonly import("./assignment-view.ts").BodyPublicationAttempt[];
   readonly spendByPlace: readonly import("./cost-panel.ts").SpendByPlaceRow[];
 }
 

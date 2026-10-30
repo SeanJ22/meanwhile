@@ -10,6 +10,7 @@ import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { loadParsers } from "../lib/sources/parser-hook.ts";
+import { moveBoxLinks } from "../lib/sources/box-links.ts";
 import { LEAD_LEASE_MS, runParserWorkers } from "../lib/sources/parser-worker.ts";
 
 prepareProductionCivicDataWrite();
@@ -40,10 +41,18 @@ try {
       clocks = factClocks((admin?.value ?? null) as Parameters<typeof factClocks>[0]);
       adminVersion = String(row?.version);
     };
+    const list = workList(query, { owner: `parser:${process.pid}`, leaseMs: LEAD_LEASE_MS });
+    let movedAt = 0;
     while (!stopRequested()) {
       if (Date.now() - clocksAt >= 60_000) { await settings(); clocksAt = Date.now(); }
+      // Links the hunters found move from the Box to the work list a few hundred at a time, so the move never adds to the hour's reads.
+      if (Date.now() - movedAt >= 30_000) {
+        movedAt = Date.now();
+        const moved = await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date() }).catch(error => { console.error(error); return 0; });
+        if (moved) console.log(`Page readers: ${moved} links moved from the Box to the work list`);
+      }
       const stats = await runParserWorkers({ concurrency: 4, maxClaims: 100, stopRequested, log: console.error, deps: {
-        list: workList(query, { owner: `parser:${process.pid}`, leaseMs: LEAD_LEASE_MS }), facts, repos, parsers, clocks, vault, fetch, now: () => new Date() } });
+        list, facts, repos, parsers, clocks, vault, fetch, now: () => new Date() } });
       if (stats.claimed) console.log(`Page readers: ${JSON.stringify(stats)}`);
       else await new Promise(done => setTimeout(done, 5_000));
     }

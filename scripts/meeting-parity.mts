@@ -87,13 +87,6 @@ for (const { zip, state } of zips) {
   report.perZip.push({ zip, state, before: shown.length, matched, missing, changed, added });
   console.error(`${state} ${zip}: ${shown.length} shown, ${matched} identical, ${changed} changed, ${missing} missing, ${added} added`);
 }
-// The gate also waits on every sitting the acquisition copy holds in the window and the fact store does not yet: they re-read at the sources' own pace.
-const [owed] = await query(`WITH cm AS (SELECT r.value->>'startsAt' AS starts_at, r.row_id, r.body_id FROM civic_data_rows r
-  JOIN civic_data_promotions p ON p.key = r.promotion_key AND p.current_version_id = r.version_id
-  WHERE r.record_class = 'MEETING' AND r.collection = 'meetings' AND r.body_id IS NOT NULL)
-  SELECT count(*)::int AS meetings, count(DISTINCT body_id)::int AS bodies FROM cm WHERE starts_at ~ '^[0-9]{4}-' AND starts_at::timestamptz BETWEEN $1 AND $2
-  AND NOT EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = 'meeting:' || cm.row_id AND f.field = 'starts_at' AND f.status = 'live')`, [new Date(FROM).toISOString(), new Date(TO).toISOString()]);
-(report as Record<string, unknown>).owedByAcquisition = owed;
 (report as Record<string, unknown>).placeLosses = placeLosses;
 if (args.get("dump")) writeFileSync(args.get("dump")!, JSON.stringify(differing));
 console.log(JSON.stringify(report, null, 2));

@@ -36,6 +36,15 @@
     "sha256": "ba347ed5e0d4a9fdc98fe765eced00713f1f24d1c742d9b9ae5e51012c84d331"
   },
   {
+    "file": "mt-voterinfo.json",
+    "capturedAt": "2026-10-30",
+    "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+    "electionId": "12000",
+    "publicGovernmentAddress": "1301 E 6th Ave Helena MT 59601",
+    "httpStatus": 200,
+    "sha256": "7be91b781d3f1e7b6911d6ee96e8a076cb4d9ed8052fa95e8c0b5718f45a9f7d"
+  },
+  {
     "file": "nc-voterinfo.json",
     "capturedAt": "2026-10-12",
     "requestedUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",

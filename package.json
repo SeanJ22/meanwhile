@@ -37,6 +37,7 @@
     "lint": "node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/check-rulings.mjs && eslint",
     "map:worker": "node scripts/build-map-worker.mjs",
     "meetings:parity": "tsx scripts/meeting-parity.mts",
+    "meetings:reread": "tsx scripts/meeting-reread.mts",
     "office:audit": "tsx scripts/top-office-audit.mts",
     "reader:retire-state-authorities": "node --experimental-strip-types scripts/retire-state-authorities.mts",
     "pdf:read": "tsx scripts/read-pdf.mts",

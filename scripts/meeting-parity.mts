@@ -2,15 +2,16 @@
  * Compares the meetings the live meeting API returns for 50 random ZIPs, one in each of 50 states, with the meetings the fact store holds
  * for the same bodies. Reads only: the API over HTTP and the fact store through the read-only connection.
  *
- *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/meeting-parity.mts [--zips=50] [--seed=1]
+ *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/meeting-parity.mts [--zips=50] [--seed=1] [--dump=file]
  *
  * The window is 90 days back and 90 days ahead. A meeting the API shows that the fact store lacks, or holds with another date, time,
  * place, point or agenda link, is a difference; one only the fact store holds is an addition.
  */
+import { writeFileSync } from "node:fs";
 import { MEETING_FACT_ROWS_SQL, meetingsFromFactRows } from "../lib/facts/meeting-read.ts";
+import { differences, type Shown } from "../lib/facts/meeting-parity.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { Query } from "../lib/facts/publish.ts";
-import type { Meeting } from "../lib/sources/types.ts";
 
 const args = new Map(process.argv.slice(2).map(arg => { const [key, value] = arg.replace(/^--/, "").split("="); return [key!, value ?? "true"] as const; }));
 const SITE = args.get("site") ?? PUBLIC_SITE_ORIGIN, COUNT = Number(args.get("zips") ?? 50), SEED = args.get("seed") ?? "1";
@@ -36,7 +37,6 @@ async function pickZips(): Promise<{ zip: string; state: string }[]> {
   return [...seen].slice(0, COUNT).map(([state, zip]) => ({ zip, state }));
 }
 
-type Shown = Pick<Meeting, "id" | "startsAt" | "bodyId" | "bodyName" | "ocdId" | "jurisdiction" | "location" | "mapPin" | "agendaUrl" | "mergedMeetingIds" | "status" | "videoUrl">;
 
 async function apiMeetings(zip: string): Promise<Shown[]> {
   for (let attempt = 0; ; attempt++) {
@@ -47,26 +47,10 @@ async function apiMeetings(zip: string): Promise<Shown[]> {
 }
 
 const inWindow = (m: { startsAt: string }) => { const at = Date.parse(m.startsAt); return at >= FROM && at <= TO; };
-const same = (a: number | undefined, b: number | undefined) => a !== undefined && b !== undefined && Math.abs(a - b) < 1e-5;
-const words = (value: string | null | undefined) => (value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-const where = (m: Shown) => m.location ?? m.mapPin ?? null;
-
-function differences(before: Shown, after: Meeting): string[] {
-  const out: string[] = [];
-  if (Date.parse(before.startsAt) !== Date.parse(after.startsAt)) out.push("start");
-  const b = where(before), a = where(after);
-  if (b && !a) out.push("place lost");
-  else if (b && a && (!same(b.lat, a.lat) || !same(b.lng, a.lng))) out.push("place moved");
-  if (before.mapPin && !after.mapPin) out.push("pin lost");
-  else if (before.mapPin && after.mapPin && (!same(before.mapPin.lat, after.mapPin.lat) || !same(before.mapPin.lng, after.mapPin.lng))) out.push("pin moved");
-  if (before.agendaUrl && !after.agendaUrl) out.push("agenda link lost");
-  else if (before.agendaUrl && after.agendaUrl && words(before.agendaUrl) !== words(after.agendaUrl)) out.push("agenda link changed");
-  if (before.status === "CANCELED" && after.status !== "CANCELED") out.push("cancellation lost");
-  return out;
-}
 
 const zips = await pickZips();
 const report = { site: SITE, at: NOW.toISOString(), zips: zips.length, before: 0, matched: 0, missing: 0, changed: 0, added: 0, byKind: {} as Record<string, number>, missingBySource: {} as Record<string, number>, perZip: [] as unknown[] };
+const differing: { zip: string; state: string; differences: string[]; meeting: Shown }[] = [];
 const bump = (map: Record<string, number>, key: string) => { map[key] = (map[key] ?? 0) + 1; };
 for (const { zip, state } of zips) {
   const shown = (await apiMeetings(zip)).filter(inWindow);
@@ -79,14 +63,22 @@ for (const { zip, state } of zips) {
   let missing = 0, changed = 0, matched = 0;
   for (const meeting of shown) {
     const found = [meeting.id, ...meeting.mergedMeetingIds ?? []].map(id => byId.get(id)).find(Boolean);
-    if (!found) { missing++; bump(report.missingBySource, meeting.id.split(":")[0]!); continue; }
+    if (!found) { missing++; differing.push({ zip, state, differences: ["missing"], meeting }); bump(report.missingBySource, meeting.id.split(":")[0]!); continue; }
     ids.add(found.id);
     const diff = differences(meeting, found);
-    if (diff.length) { changed++; for (const kind of diff) bump(report.byKind, kind); } else matched++;
+    if (diff.length) { changed++; differing.push({ zip, state, differences: diff, meeting }); for (const kind of diff) bump(report.byKind, kind); } else matched++;
   }
   const added = held.filter(meeting => !ids.has(meeting.id) && ![meeting.id, ...meeting.mergedMeetingIds ?? []].some(id => shown.some(s => s.id === id || s.mergedMeetingIds?.includes(id)))).length;
   report.before += shown.length; report.matched += matched; report.missing += missing; report.changed += changed; report.added += added;
   report.perZip.push({ zip, state, before: shown.length, matched, missing, changed, added });
   console.error(`${state} ${zip}: ${shown.length} shown, ${matched} identical, ${changed} changed, ${missing} missing, ${added} added`);
 }
+// The gate also waits on every sitting the acquisition copy holds in the window and the fact store does not yet: they re-read at the sources' own pace.
+const [owed] = await query(`WITH cm AS (SELECT r.value->>'startsAt' AS starts_at, r.row_id, r.body_id FROM civic_data_rows r
+  JOIN civic_data_promotions p ON p.key = r.promotion_key AND p.current_version_id = r.version_id
+  WHERE r.record_class = 'MEETING' AND r.collection = 'meetings' AND r.body_id IS NOT NULL)
+  SELECT count(*)::int AS meetings, count(DISTINCT body_id)::int AS bodies FROM cm WHERE starts_at ~ '^[0-9]{4}-' AND starts_at::timestamptz BETWEEN $1 AND $2
+  AND NOT EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = 'meeting:' || cm.row_id AND f.field = 'starts_at' AND f.status = 'live')`, [new Date(FROM).toISOString(), new Date(TO).toISOString()]);
+(report as Record<string, unknown>).owedByAcquisition = owed;
+if (args.get("dump")) writeFileSync(args.get("dump")!, JSON.stringify(differing));
 console.log(JSON.stringify(report, null, 2));

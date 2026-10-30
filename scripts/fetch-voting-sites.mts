@@ -270,8 +270,7 @@ export async function refreshVotingSources(input: {
       return held;
     };
     // Scopes need only the registration's divisions and bodies, never its governments; the copy is kept by pointer version.
-    const registration = { divisions: [], bodies: [], ...await store.readPromotionPayloadFields(REGISTRATION_RECORD_CLASS, registrationTarget(state).scope,
-      ["divisions", "bodies"]) } as Pick<Registry, "divisions" | "bodies">;
+    const registration = { divisions: [], bodies: [], ...await store.readPromotionPayloadFields(REGISTRATION_RECORD_CLASS, registrationTarget(state).scope, ["divisions", "bodies"]) } as Pick<Registry, "divisions" | "bodies">;
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
     const registered = await votingSourceReadOrder(context.repos.doors, state,
       currentVotingSourceDoors(seeds, savedDoors));

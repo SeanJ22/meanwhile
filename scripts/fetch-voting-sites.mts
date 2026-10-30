@@ -32,7 +32,7 @@ import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-da
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { isOfficialVotingSource, openLinkingCopy } from "../lib/facts/linking-copy.ts";
-import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { routineReceiptFields, successfulRoutineRunnerReceiptIssue, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
@@ -483,10 +483,7 @@ export async function refreshVotingSources(input: {
             await acquire(target, [...linkingCaptures, ...(capture ? [capture] : [])], false);
           }
         }
-        if (capture && disposition.kind !== "DOOR") {
-          for (const old of stateDoors.filter(old => pageAddress(old.url)?.url === url)) doors.delete(old.id);
-
-        }
+        if (capture && disposition.kind !== "DOOR") for (const old of stateDoors.filter(old => pageAddress(old.url)?.url === url)) doors.delete(old.id);
       };
       const walk = async (root: VotingSourceDoor) => {
         if (Date.now() >= deadlineMs) return;
@@ -581,7 +578,7 @@ export async function refreshVotingSources(input: {
     }
     throw error;
   } finally {
-    // Source publications are already durable. The supervisor requires exactly one terminal receipt.
+    // Source publications are already durable. The supervisor requires exactly one terminal receipt, and main's exit agrees with it.
     if (terminal) console.log("RCD_RECEIPT=" + JSON.stringify(terminal));
   }
 }
@@ -600,7 +597,7 @@ async function main() {
     if (!await printWorkerPublicationReceipt(store, votingSitesContract(state).id, report, null, at)) throw new Error("No registered polling worker result reached the reader.");
     return;
   }
-  await refreshVotingSources({ state, store, context });
+  if (successfulRoutineRunnerReceiptIssue((await refreshVotingSources({ state, store, context })).terminal!)) process.exitCode = 2;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch((error: unknown) => {

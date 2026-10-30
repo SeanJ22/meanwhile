@@ -65,11 +65,14 @@ async function abandonedShape(repos: ControlPlaneRepositories) {
   return { first, second };
 }
 
-test("openOccurrence refuses while its obligation points at an open occurrence, and writes nothing", async () => {
+test("openOccurrence reopens an open cut off before its occurrence was saved, refuses while its obligation points at an open occurrence, and writes nothing", async () => {
   for (const [label, repos] of await eachStore("wtp-abandoned-")) {
     await repos.obligations.put(ID, standing(obligation(), T0), T0);
-    const first = await openOccurrence(repos, { obligation: await fresh(repos), dueAt: T0, now: T0 });
-    assert.ok(first);
+    const put = repos.occurrences.put; repos.occurrences.put = async () => { throw new Error("cut off"); };
+    await assert.rejects(openOccurrence(repos, { obligation: await fresh(repos), dueAt: T0, now: T0 }), /cut off/);
+    repos.occurrences.put = put;
+    const first = await openOccurrence(repos, { obligation: await fresh(repos), dueAt: T0, now: T1 });
+    assert.ok(first && (await repos.workItems.list()).length === 1, `${label}: on the WorkItem and RouteTask the cut-off open left`);
     const before = {
       obligation: await repos.obligations.mustRead(ID),
       occurrences: (await repos.occurrences.list()).length,

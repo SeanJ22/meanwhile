@@ -4,6 +4,9 @@ import { join } from "node:path";
 import test from "node:test";
 import type { PGlite } from "@electric-sql/pglite";
 import { CENSUS_GOVERNING_CURSOR, censusBoards, censusGoverningOrder, makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { REGISTRATION_SOURCE_SHA256 } from "../lib/registration/publication.ts";
+import { releaseManifestKey } from "../lib/sources/known-release.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { canonicalEntityId } from "../lib/facts/entities.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
@@ -24,6 +27,14 @@ const OR = "ocd-division/country:us/state:or", PORTLAND = `${OR}/place:portland`
   SCHOOL = `${OR}/school_district:portland_school_district_1j`;
 const CA = "ocd-division/country:us/state:ca", LA = `${CA}/county:los_angeles`;
 const CENSUS = "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP";
+
+/** The registration check's note in the vault: the release still has the fingerprint of the file we keep, as of its latest check. */
+async function censusVault(checkedAt = new Date(Date.now() - 3_600_000).toISOString()): Promise<MemoryEvidenceStore> {
+  const vault = new MemoryEvidenceStore(), bytes = new TextEncoder().encode(JSON.stringify({ requestedUrl: CENSUS, sha256: REGISTRATION_SOURCE_SHA256, checkedAt }));
+  await vault.put(releaseManifestKey({ sourceId: "census-governments-registration", releaseId: "cog-2022", url: CENSUS }), bytes,
+    { contentType: "application/json", contentHash: "manifest:test", byteLength: bytes.byteLength, objectClass: "MUTABLE_INDEX" });
+  return vault;
+}
 
 /** The governments the ordinary registration load files, on the places they govern. */
 async function seedGovernments(query: Query): Promise<void> {
@@ -69,7 +80,7 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     await pg.exec(BOOTSTRAP_DDL.find(ddl => ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
     const db = pgFacts(pg);
     await seedGovernments(db.query);
-    const report = await makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, more: () => true, purge });
+    const report = await makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault: await censusVault(), more: () => true, purge });
     assert.deepEqual(report.states, ["OR"]);
     assert.equal(report.live, 5, "the city's address, the county's address and website, the district's address and website");
     assert.deepEqual(report.refused, {});
@@ -80,9 +91,14 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     ]);
     assert.deepEqual(await db.query(`SELECT f.entity_id,f.field,f.value,f.provenance_kind,s.url FROM fact f JOIN source_copy s ON s.id=f.source_copy_id
       WHERE f.entity_id='or:county:county-of-multnomah#governing' ORDER BY f.field`), [
-      { entity_id: "or:county:county-of-multnomah#governing", field: "homepage", value: "http://www.multco.us/", provenance_kind: "OFFICIAL", url: CENSUS },
-      { entity_id: "or:county:county-of-multnomah#governing", field: "mailing_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
+      { entity_id: "or:county:county-of-multnomah#governing", field: "homepage", value: "http://www.multco.us", provenance_kind: "OFFICIAL", url: CENSUS },
+      { entity_id: "or:county:county-of-multnomah#governing", field: "mailing_address", value: "501 SE HAWTHORNE BLVD,STE 600,PORTLAND,OR,97214,3588", provenance_kind: "OFFICIAL", url: CENSUS },
     ]);
+    const quotes = await db.query("SELECT quote FROM fact WHERE produced_by = 'census-governing:OR' AND status = 'live'");
+    assert.equal(quotes.length, 5);
+    assert.ok(quotes.every(row => /^\d+,\d+,[A-Z]/.test(String(row.quote))), "each fact keeps the Census release's own row for its government");
+    assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE produced_by = 'census-governing:OR' AND quote_start IS NULL"))[0]!.n, 0, "each was checked on the saved row");
+    assert.deepEqual(await db.query("SELECT field FROM blank"), []);
     // The door queued each board's places; the scheduled page worker builds their ready pages before a reader opens them.
     const pages = await rebuildPlacePages({ db, purge, concurrency: 1 });
     assert.equal(pages.failed, 0);
@@ -116,16 +132,16 @@ test("states go one at a time, Oregon first, resuming inside a state; a finished
   const db = await factDb();
   try {
     await seedGovernments(db.query);
-    const watched = recorded(db);
+    const watched = recorded(db), vault = await censusVault();
     let checks = 0;
-    const first = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, purge, more: () => ++checks <= 3 });
+    const first = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, more: () => ++checks <= 3 });
     assert.deepEqual(first.states, ["OR"]);
     const paused = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name=$1", [CENSUS_GOVERNING_CURSOR]))[0]!.position));
     assert.equal(paused.state, "or");
     assert.equal(paused.done, false, "the pass stopped inside Oregon at its deadline");
     assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE produced_by='census-governing:CA'"))[0]!.n, 0, "California waits for Oregon");
 
-    const rest = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, purge, more: () => true });
+    const rest = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, more: () => true });
     assert.deepEqual(rest.states, ["OR", "CA", "WA"]);
     const order = await db.query("SELECT produced_by, min(id)::int AS first, max(id)::int AS last FROM fact GROUP BY produced_by ORDER BY first");
     assert.deepEqual(order.map(row => row.produced_by), ["census-governing:OR", "census-governing:CA"]);
@@ -136,10 +152,27 @@ test("states go one at a time, Oregon first, resuming inside a state; a finished
     assert.ok(!watched.sql.some(sql => /civic_data_|registry/i.test(sql)), "no promotion, candidate or registry runtime write");
 
     const done = recorded(db);
-    const idle = await makeCensusGoverningBodies({ db: done.db, root: ROOT, states: ["ca", "or", "wa"], clocks, purge, more: () => true });
+    const idle = await makeCensusGoverningBodies({ db: done.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, more: () => true });
     assert.deepEqual(idle.states, []);
     assert.deepEqual(done.sql, ["SELECT position FROM pass_cursor WHERE name = $1"]);
     assert.equal(done.transactions, 0);
+  } finally { await db.pg.close(); }
+});
+
+test("a release nobody has re-checked lately is fix work and changes nothing; each later re-check files the same facts again and refreshes their date", async () => {
+  const db = await factDb();
+  try {
+    await seedGovernments(db.query);
+    const run = async (vault: MemoryEvidenceStore) => makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault, purge, more: () => true });
+    await assert.rejects(run(new MemoryEvidenceStore()), /CENSUS_RELEASE_NOT_CONFIRMED_SINCE:2026-09-23/);
+    await assert.rejects(run(await censusVault(new Date(Date.now() - 40 * 86_400_000).toISOString())), /CENSUS_RELEASE_NOT_CONFIRMED_SINCE/);
+    assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0]!.n, 0);
+    assert.equal((await run(await censusVault(new Date(Date.now() - 20 * 86_400_000).toISOString()))).live, 5);
+    const before = await db.query("SELECT id FROM fact ORDER BY id");
+    const confirmed = await run(await censusVault());
+    assert.deepEqual([confirmed.live, confirmed.confirmed, confirmed.refused], [0, 5, {}]);
+    assert.deepEqual(await db.query("SELECT id FROM fact ORDER BY id"), before, "the same facts, no second rows");
+    assert.equal((await db.query("SELECT count(*)::int n FROM checked_fact WHERE checked_at > now() - interval '1 day'"))[0]!.n, 5, "their last-checked date is the release's latest check");
   } finally { await db.pg.close(); }
 });
 

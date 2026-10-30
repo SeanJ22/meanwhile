@@ -79,6 +79,21 @@
       "id": "KB-01_expand",
       "phase": "expand",
       "hash": "630dd43ac3af3fc0ad42892d5239139442d1b5bcbf9933e12a027a6c662f8a4e"
+    },
+    {
+      "id": "SPN-01B_expand",
+      "phase": "expand",
+      "hash": "d9a22435cfdc051d7450c4d3d75d77fd301448d52e559f8895ff9c50c9c31c43"
+    },
+    {
+      "id": "SPN-01B_contract",
+      "phase": "contract",
+      "hash": "6054aeb2089ab12df7c0de73ae1ac27e574b7fa00c1aa42f6cfa1744b733b8aa"
+    },
+    {
+      "id": "SPN-01B_cost_expand",
+      "phase": "expand",
+      "hash": "e7b4b3c61a5a3343ecb72984904c96574e902ce085c60a7543228e4f57633b83"
     }
   ]
 }

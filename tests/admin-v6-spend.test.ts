@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { SPEND_SQL, WORK_SQL, OUTCOMES_SQL, CHECKLIST_MONTHS_SQL, readSpend, readChecklistSpend, modelLabel, neonTransferOf, spendView, workCosts, workName, type SpendRowRaw } from "../lib/control-plane/admin-view/v6-spend-read.ts";
+import { SPEND_SQL, WORK_SQL, workKindSpend, OUTCOMES_SQL, CHECKLIST_MONTHS_SQL, readSpend, readChecklistSpend, modelLabel, neonTransferOf, spendView, workCosts, workName, type SpendRowRaw } from "../lib/control-plane/admin-view/v6-spend-read.ts";
 import { PGlite } from "@electric-sql/pglite";
 
 const row = (day: string, role: string, model: string | null, usd: number | null, n = 1): SpendRowRaw => ({ month: day.slice(0, 7), day, role, model, usd, n });
@@ -121,4 +121,9 @@ test("the rolling 24 hours is read from the ledger as model money (search apart)
     { recordClass: "meetings-discovery", found: 3, route: 0, total: 3 },
     { recordClass: "unrecorded", found: 0, route: 0, total: 1 },
   ]);
+});
+
+test("today's spend by kind of work names the four kinds and shows a dash for one with no spend", () => {
+  assert.deepEqual(workKindSpend([{ work_kind: "ask", usd: 1.23456 }, { work_kind: "planner", usd: 0 }]).map(k => [k.label, k.usd]),
+    [["Ask questions", 1.2346], ["Reader requests", null], ["Your orders", null], ["Planner", 0]]);
 });

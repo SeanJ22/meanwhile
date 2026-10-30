@@ -412,7 +412,7 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
     routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
     cadenceSource:"DEFAULT_NO_SIGNAL",basis:"One hunt packet job"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,
     now:now(),clock:now,leaseTtlMs:300_000,bound:{maxAttempts:3,maxWallMs:hunterWallLimitMs(),maxCostUnits:0},
-    maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project)});
+    maturity:()=>"UNGRADUATED",executor,methodVersion:runtime.methodVersion,policyVersion:FLEET_POLICY_VERSION,...proofChargeOf(item.project),...(plan.workKind?{workKind:plan.workKind}:{})});
 }
 
 /** The standing obligation whose occurrence opened this work item, when one did. */

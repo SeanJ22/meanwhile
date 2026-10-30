@@ -1,0 +1,509 @@
+{
+  "tables": {
+    "agenda_documents": {
+      "writers": [],
+      "bypass": []
+    },
+    "ask_interactions": {
+      "writers": [
+        "lib/db/ask-signal.ts"
+      ],
+      "bypass": []
+    },
+    "blank": {
+      "writers": [
+        "lib/core/door.ts",
+        "lib/facts/publish.ts"
+      ],
+      "bypass": [
+        "lib/facts/meeting-facts.ts",
+        "lib/facts/portal-publication.ts",
+        "lib/funding/state-publication.ts",
+        "lib/funding/state-source-probe.ts",
+        "lib/meetings/office-facts.ts",
+        "lib/meetings/pin-blanks.ts"
+      ]
+    },
+    "civic_data_candidate_events": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": [
+        "scripts/lib/federal-money-benchmark-identities.mts"
+      ]
+    },
+    "civic_data_candidates": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": [
+        "scripts/lib/federal-money-benchmark-identities.mts"
+      ]
+    },
+    "civic_data_clock_versions": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_current_readbacks": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_payload_parts": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_promotions": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": [
+        "lib/civic-data/state-pointer-retirement.ts",
+        "scripts/lib/federal-money-benchmark-identities.mts"
+      ]
+    },
+    "civic_data_reader_projections": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_rows": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_source_checks": {
+      "writers": [
+        "lib/civic-data/source-checks.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_source_status": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "civic_data_source_status_ready": {
+      "writers": [
+        "lib/civic-data/store.ts"
+      ],
+      "bypass": []
+    },
+    "cp_box_findings": {
+      "writers": [
+        "lib/control-plane/repository/pg-store.ts"
+      ],
+      "bypass": []
+    },
+    "cp_debts": {
+      "writers": [
+        "lib/control-plane/repository/pg-store.ts"
+      ],
+      "bypass": []
+    },
+    "cp_hunt_orders": {
+      "writers": [
+        "lib/control-plane/repository/pg-store.ts"
+      ],
+      "bypass": []
+    },
+    "cp_leases": {
+      "writers": [
+        "lib/control-plane/repository/pg-store.ts"
+      ],
+      "bypass": []
+    },
+    "cp_obligations": {
+      "writers": [
+        "lib/control-plane/repository/pg-store.ts"
+      ],
+      "bypass": []
+    },
+    "cp_occurrences": {
+      "writers": [
+        "lib/control-plane/repository/dispatch-state.ts"
+      ],
+      "bypass": []
+    },
+    "cp_occurrences_archive": {
+      "writers": [
+        "lib/control-plane/repository/dispatch-state.ts"
+      ],
+      "bypass": []
+    },
+    "cp_route_tasks": {
+      "writers": [
+        "lib/control-plane/repository/dispatch-state.ts"
+      ],
+      "bypass": []
+    },
+    "cp_route_tasks_archive": {
+      "writers": [
+        "lib/control-plane/repository/dispatch-state.ts"
+      ],
+      "bypass": []
+    },
+    "cp_work_items": {
+      "writers": [
+        "lib/control-plane/repository/dispatch-state.ts"
+      ],
+      "bypass": []
+    },
+    "cp_work_items_archive": {
+      "writers": [
+        "lib/control-plane/repository/dispatch-state.ts"
+      ],
+      "bypass": []
+    },
+    "demand_signals": {
+      "writers": [
+        "lib/db/demand-signal.ts"
+      ],
+      "bypass": []
+    },
+    "entity": {
+      "writers": [
+        "lib/core/door.ts",
+        "lib/facts/entities.ts",
+        "lib/facts/entity-places.ts"
+      ],
+      "bypass": [
+        "lib/facts/portal-publication.ts",
+        "lib/funding/state-facts.ts",
+        "lib/funding/state-publication.ts",
+        "lib/meetings/pin-blanks.ts",
+        "lib/place-map/load.ts",
+        "lib/reader/page-subjects.ts",
+        "scripts/prepare-place-pages.mts"
+      ]
+    },
+    "entity_external_id": {
+      "writers": [
+        "lib/core/door.ts",
+        "lib/facts/entities.ts",
+        "lib/facts/entity-places.ts"
+      ],
+      "bypass": [
+        "lib/control-plane/scheduler/providers/held-subject-member-identities.ts",
+        "lib/control-plane/scheduler/providers/held-subject-publication.ts",
+        "lib/facts/portal-publication.ts",
+        "lib/funding/state-facts.ts",
+        "lib/funding/state-publication.ts",
+        "lib/place-map/load.ts"
+      ]
+    },
+    "entity_host": {
+      "writers": [
+        "lib/core/door.ts",
+        "lib/facts/entities.ts",
+        "lib/facts/entity-places.ts"
+      ],
+      "bypass": [
+        "lib/facts/portal-publication.ts"
+      ]
+    },
+    "entity_place": {
+      "writers": [
+        "lib/core/door.ts",
+        "lib/facts/entities.ts",
+        "lib/facts/entity-places.ts"
+      ],
+      "bypass": [
+        "lib/control-plane/scheduler/providers/held-subject-publication.ts",
+        "lib/facts/portal-publication.ts",
+        "lib/funding/state-facts.ts",
+        "lib/funding/state-publication.ts",
+        "lib/hunt/body-target.ts",
+        "lib/place-map/load.ts",
+        "scripts/lib/minutes-fact-publication.ts"
+      ]
+    },
+    "fact": {
+      "writers": [
+        "lib/core/door.ts"
+      ],
+      "bypass": [
+        "lib/civic-data/meeting-source-confirmation.ts",
+        "lib/facts/entities.ts",
+        "lib/facts/owner-flags.ts",
+        "lib/facts/portal-publication.ts",
+        "lib/funding/state-cycles.ts",
+        "lib/funding/state-facts.ts",
+        "lib/funding/state-publication.ts",
+        "lib/funding/state-source-probe.ts"
+      ]
+    },
+    "fact_confirmation": {
+      "writers": [
+        "lib/facts/confirmation.ts"
+      ],
+      "bypass": []
+    },
+    "fact_watermark": {
+      "writers": [
+        "lib/facts/confirmation.ts"
+      ],
+      "bypass": []
+    },
+    "feedback": {
+      "writers": [
+        "lib/db/feedback.ts"
+      ],
+      "bypass": []
+    },
+    "feedback_contact": {
+      "writers": [
+        "lib/db/feedback.ts"
+      ],
+      "bypass": []
+    },
+    "meetings": {
+      "writers": [],
+      "bypass": []
+    },
+    "owner_flag": {
+      "writers": [
+        "lib/core/door.ts",
+        "lib/facts/owner-flags.ts"
+      ],
+      "bypass": [
+        "lib/civic-data/worker-roster-publication.ts",
+        "lib/facts/box-publication.ts"
+      ]
+    },
+    "place_boundary": {
+      "writers": [
+        "lib/place-map/load.ts"
+      ],
+      "bypass": []
+    },
+    "place_map_counts": {
+      "writers": [
+        "lib/place-map/load.ts"
+      ],
+      "bypass": []
+    },
+    "place_page": {
+      "writers": [
+        "lib/reader/place-builder.ts",
+        "lib/reader/place-build-reuse.ts"
+      ],
+      "bypass": []
+    },
+    "place_page_dependency": {
+      "writers": [
+        "lib/reader/place-builder.ts",
+        "lib/reader/place-build-reuse.ts"
+      ],
+      "bypass": [
+        "scripts/prepare-place-pages.mts"
+      ]
+    },
+    "questionnaire_invitations": {
+      "writers": [
+        "lib/db/questionnaire.ts"
+      ],
+      "bypass": []
+    },
+    "questionnaire_responses": {
+      "writers": [
+        "lib/db/questionnaire.ts"
+      ],
+      "bypass": []
+    },
+    "questionnaire_tokens": {
+      "writers": [
+        "lib/db/questionnaire.ts"
+      ],
+      "bypass": []
+    },
+    "reactions": {
+      "writers": [
+        "lib/db/reactions.ts"
+      ],
+      "bypass": []
+    },
+    "reader_event_batches": {
+      "writers": [
+        "lib/db/reader-events.ts"
+      ],
+      "bypass": []
+    },
+    "reader_event_members": {
+      "writers": [
+        "lib/db/reader-events.ts"
+      ],
+      "bypass": []
+    },
+    "reader_event_totals": {
+      "writers": [
+        "lib/db/reader-events.ts"
+      ],
+      "bypass": [
+        "lib/ballot/voting-sites-counts.ts"
+      ]
+    },
+    "rebuild_queue": {
+      "writers": [
+        "lib/reader/cache.ts",
+        "lib/reader/place-builder.ts"
+      ],
+      "bypass": [
+        "scripts/prepare-place-pages.mts"
+      ]
+    },
+    "saved_ballot_picks": {
+      "writers": [
+        "lib/db/saved-picks.ts"
+      ],
+      "bypass": []
+    },
+    "search_log": {
+      "writers": [
+        "lib/db/search-log.ts"
+      ],
+      "bypass": [
+        "scripts/verify-readonly.mts",
+        "scripts/verify-write-handle.mts"
+      ]
+    },
+    "source_copy": {
+      "writers": [
+        "lib/facts/source-copy.ts"
+      ],
+      "bypass": [
+        "lib/control-plane/scheduler/providers/held-subject-copy.ts",
+        "lib/facts/linking-copy.ts",
+        "lib/facts/owner-flags.ts",
+        "lib/funding/state-facts.ts",
+        "lib/funding/state-publication.ts"
+      ]
+    },
+    "speak_your_mind": {
+      "writers": [
+        "lib/db/speak.ts"
+      ],
+      "bypass": []
+    },
+    "work": {
+      "writers": [
+        "lib/core/work.ts"
+      ],
+      "bypass": []
+    },
+    "work_row": {
+      "writers": [],
+      "bypass": []
+    },
+    "work_waiting": {
+      "writers": [
+        "lib/core/work.ts"
+      ],
+      "bypass": []
+    },
+    "zcta_place": {
+      "writers": [
+        "lib/place-map/load.ts"
+      ],
+      "bypass": []
+    },
+    "zip_location": {
+      "writers": [
+        "lib/place-map/load.ts"
+      ],
+      "bypass": []
+    },
+    "zip_place": {
+      "writers": [
+        "lib/place-map/load.ts"
+      ],
+      "bypass": []
+    }
+  },
+  "other": [
+    "active",
+    "bills",
+    "bindings",
+    "count_hour",
+    "counts",
+    "cp_admin_action_history_projection",
+    "cp_admin_action_history_readiness",
+    "cp_admin_action_history_scope_ref",
+    "cp_admin_config",
+    "cp_checklist_instance_projections",
+    "cp_checklist_scope_heads",
+    "cp_control_backfill_jobs",
+    "cp_control_counts",
+    "cp_dispatch_cursors",
+    "cp_door_changes",
+    "cp_fix_map",
+    "cp_job_transfer_breaker",
+    "cp_keys",
+    "cp_lineage_cache",
+    "cp_log_heads",
+    "cp_loss_obligation_counts",
+    "cp_loss_obligation_heads",
+    "cp_manual_method_meta",
+    "cp_manual_method_rank",
+    "cp_manual_source_classes",
+    "cp_manual_source_facts",
+    "cp_migrations",
+    "cp_model_charges",
+    "cp_owner_assignment_rows",
+    "cp_owner_cost_refs",
+    "cp_owner_stuck_counts",
+    "cp_owner_stuck_ready",
+    "cp_owner_stuck_rows",
+    "cp_planning_controls",
+    "cp_schema_version",
+    "cp_spend_holds",
+    "cp_vital_signs",
+    "cp_website_pacing",
+    "database_transfer_daily",
+    "database_transfer_hourly",
+    "evidence_refs",
+    "fact_store_load",
+    "facts",
+    "held",
+    "intake_limiter",
+    "line_keeper_run",
+    "meeting_publication_queue",
+    "members",
+    "metadata",
+    "occurrence",
+    "organizations",
+    "pass_cursor",
+    "positions",
+    "records",
+    "rolls",
+    "seen_votes",
+    "sources",
+    "tiles",
+    "touched",
+    "transfer_rows",
+    "urls",
+    "votes",
+    "write_alarm"
+  ],
+  "dynamicWrites": [
+    "lib/control-plane/ask-gap-observations.ts",
+    "lib/control-plane/repository/admin-config.ts",
+    "lib/control-plane/repository/pg-store.ts",
+    "lib/control-plane/vital-signs.ts",
+    "lib/db/process-transfer.ts",
+    "lib/place-map/load.ts"
+  ],
+  "dynamicTables": [
+    "lib/control-plane/repository/admin-config.ts",
+    "lib/control-plane/repository/dispatch-state.ts",
+    "lib/control-plane/repository/pg-schema.ts"
+  ]
+}

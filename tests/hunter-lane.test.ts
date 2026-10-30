@@ -1,9 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { hunterLane, hunterQueuePath, readHunterQueue, writeHunterQueue, HUNTER_LANE_IDLE_SAY_MS, type HunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
+import { readFileSync } from "node:fs";
+import { hunterLane, HUNTER_LANE_IDLE_SAY_MS, type HunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
 import type { ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { modelLaneClosure } from "../lib/control-plane/scheduler/model-lane.ts";
 
@@ -14,7 +12,7 @@ function armedLane(closed: string | null, openJobs: unknown[] = []): ArmedHunter
     guards: { openJobs: () => openJobs } as never, arming: null, spendHolds: { settle: async () => null } as never, ceilingUsd: 50, discoverySearchOn: false };
 }
 
-function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: ArmedHunterLane[]; lifeMs?: number; drainAfterWaves?: number }) {
+function harness(options: { queues: (HunterQueue | null)[]; arms: ArmedHunterLane[]; lifeMs?: number; drainAfterWaves?: number }) {
   let now = T0;
   const log: string[] = [];
   const waves: { queue: HunterQueue; paidOpen: boolean; guardsAtEnd: ArmedHunterLane }[] = [];
@@ -35,7 +33,9 @@ function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: 
       await new Promise(done => setImmediate(done));
     },
     arm: async () => options.arms[Math.min(arms++, options.arms.length - 1)],
-    readQueue: () => options.queues[Math.min(reads++, options.queues.length - 1)],
+    selectState: async () => "az",
+    claim: async () => options.queues[Math.min(reads++, options.queues.length - 1)] ?? null,
+    endWave: async () => {},
     runWave: async ({ queue, paidOpen }) => {
 
       for (let i = 0; i < 6; i += 1) { pass(60_000); await new Promise(done => setImmediate(done)); }
@@ -50,45 +50,33 @@ function harness(options: { queues: (HunterQueue | { unread: string })[]; arms: 
   return { lane, log, waves, get arms() { return arms; } };
 }
 
-const queue = (writtenAt: string, taskIds: string[], plainTaskIds: string[] = []): HunterQueue => ({ format: 1, writtenAt, taskIds, plainTaskIds });
+const queue = (claimedAt: string, taskIds: string[], plainTaskIds: string[] = []): HunterQueue => ({ claimedAt, taskIds, plainTaskIds });
 
-test("CH-24 lane: the queue round-trips beside the reading, and a missing or malformed queue is named", () => {
-  const dir = mkdtempSync(join(tmpdir(), "hunter-queue-"));
-  const path = hunterQueuePath(join(dir, "arming.json"));
-  assert.equal(path, join(dir, "queue.json"));
-  assert.deepEqual(readHunterQueue(path), { unread: "no round has written a queue yet" });
-  writeHunterQueue(path, { writtenAt: "2026-10-06T03:00:00.000Z", taskIds: ["a", "b"], plainTaskIds: ["b"] });
-  assert.deepEqual(readHunterQueue(path), queue("2026-10-06T03:00:00.000Z", ["a", "b"], ["b"]));
-  writeFileSync(path, "{\"format\":2}");
-  assert.deepEqual(readHunterQueue(path), { unread: "the round's queue is not in the expected form" });
-});
-
-test("CH-24 lane: works each new queue once, with no slice, and re-arms mid-wave", async () => {
+test("CH-24 lane: works each claim of rows once, with no slice, and re-arms mid-wave", async () => {
   const q1 = queue("2026-10-06T02:59:00.000Z", ["t1", "t2"]);
   const q2 = queue("2026-10-06T03:10:00.000Z", ["t3"]);
-  const h = harness({ queues: [q1, q1, q2, q2], arms: [armedLane(null), armedLane(null), armedLane(null), armedLane(null)] });
+  const h = harness({ queues: [q1, null, q2, null], arms: [armedLane(null), armedLane(null), armedLane(null), armedLane(null)] });
   const run = await h.lane.run();
-  assert.deepEqual(h.waves.map(w => w.queue.writtenAt), [q1.writtenAt, q2.writtenAt], "each queue once; the same queue is not re-run");
+  assert.deepEqual(h.waves.map(w => w.queue.claimedAt), [q1.claimedAt, q2.claimedAt], "each claim once");
   assert.equal(run.dispatched, 3);
   assert.ok(h.arms >= 3, "the guards are re-armed every five minutes, also while a wave runs");
   assert.match(run.ended, /its life ended/);
 });
 
-test("CH-24 lane: while paid work is held only plain-code tasks run; when it opens the same queue runs again for the paid ones", async () => {
-  const q = queue("2026-10-06T02:59:00.000Z", ["scout", "plain"], ["plain"]);
-  const h = harness({ queues: [q], arms: [armedLane("the owner paused the runner"), armedLane(null)], lifeMs: 20 * 60_000 });
-  await h.lane.run();
-  assert.deepEqual(h.waves.map(w => w.paidOpen), [false, true]);
+test("CH-24 lane: while paid work is held it says so and waits for rows it may take", async () => {
+  const h = harness({ queues: [null], arms: [armedLane("the owner paused the runner")], lifeMs: 12 * 60_000 });
+  const run = await h.lane.run();
+  assert.equal(run.waves, 0);
+  assert.ok(h.log.some(line => /waiting for hunts on the work list \(paid work is held; only plain-code tasks are taken\)/.test(line)));
   assert.ok(h.log.some(line => /paid work held: the owner paused the runner; plain-code tasks continue/.test(line)));
-  assert.ok(h.log.some(line => /paid tasks wait/.test(line)));
 });
 
 test("CH-24 lane: an idle lane says what it waits for inside the no-progress limit, and a release drain ends it after its wave", async () => {
-  const idle = harness({ queues: [{ unread: "no round has written a queue yet" }], arms: [armedLane(null)], lifeMs: 12 * 60_000 });
+  const idle = harness({ queues: [null], arms: [armedLane(null)], lifeMs: 12 * 60_000 });
   await idle.lane.run();
-  const waits = idle.log.filter(line => /waiting for the round's next queue \(no round has written a queue yet\)/.test(line));
+  const waits = idle.log.filter(line => /waiting for hunts on the work list/.test(line));
   assert.ok(waits.length >= 2 && HUNTER_LANE_IDLE_SAY_MS < 10 * 60_000, "said at least every five minutes");
-  const drained = harness({ queues: [queue("a", ["t1"]), queue("b", ["t2"])], arms: [armedLane(null)], lifeMs: 60 * 60_000, drainAfterWaves: 1 });
+  const drained = harness({ queues: [queue("a", ["t1"]), null, queue("b", ["t2"])], arms: [armedLane(null)], lifeMs: 60 * 60_000, drainAfterWaves: 1 });
   const run = await drained.lane.run();
   assert.equal(drained.waves.length, 1);
   assert.match(run.ended, /a release asked it to drain/);
@@ -105,13 +93,13 @@ test("CH-24 lane: on exit every request hold any of its guards left open is rele
   assert.ok(released.includes("job-1") && released.includes("job-2"), "holds from every refresh's guards");
 });
 
-test("CH-24 lane: the round under the switch closes its own model lane after any owner closure, queues every planned Scout, and starts no lease worker", () => {
+test("CH-24 lane: the round under the switch closes its own model lane after any owner closure, adds every planned task to the work list, and starts no lease worker", () => {
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /const CONTINUOUS_HUNTERS = process\.env\.WTP_CONTINUOUS_HUNTERS === "1";/);
   assert.match(round, /const laneClosure = modelLaneClosure\(\{[\s\S]{0,800}?paidWorkInHunterLane: CONTINUOUS_HUNTERS,\n  unreadableControls,\n\}\);/);
   assert.match(round, /row\.action === "SCOUT" && \(CONTINUOUS_HUNTERS \|\| paidWorkerCapacity\(\) > 0\)/);
   const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
-  assert.match(wave, /writeHunterQueue\(hunterQueuePath\(hunterLaneArmingPath\(ROOT,PLANNING_STATE\)\)/);
+  assert.match(wave, /list\.ensure\(rows\.slice\(at, at \+ 1_000\)\)/);
   assert.match(wave, /return \{ \.\.\.planned, dispatches: \[\.\.\.queueFailures\], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 \};/);
 });
 

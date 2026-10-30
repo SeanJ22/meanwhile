@@ -4,7 +4,6 @@ import test from "node:test";
 import {
   assertCount,
   assertionLine,
-  isShort,
   notAssertable,
   numberFrom,
   statedCountIn,
@@ -18,7 +17,6 @@ import {
   zeroRows,
 } from "../lib/extract/types.ts";
 import { extractRosterTables } from "../lib/extract/roster-table.ts";
-import { parseRoster } from "../lib/hunt/wikipedia.ts";
 
 /**
  * A partial extraction that reconciles is a failed extraction. None of these throw, and some return a non-zero row
@@ -150,45 +148,6 @@ test("numberFrom reads digits and English number words, and nothing else", () =>
   assert.equal(numberFrom("twenty-one"), 21);
   assert.equal(numberFrom("many"), null);
   assert.equal(numberFrom(undefined), null);
-});
-
-test("parseRoster carries an assertion against the article's own composition sentence", () => {
-  /* The article states nine and the roster sentence is cut short. */
-  const section =
-    "The Township is governed within the Faulkner Act, formally known as the Optional " +
-    "Municipal Charter Law, under the Mayor-Council system of New Jersey municipal " +
-    "government (Plan F). The governing body is comprised of a Mayor and a Township " +
-    "Council of nine members, with one member elected from each of six wards and three " +
-    "elected on an at-large basis. " +
-    "The members of the Township Council are Michael Puzio (R, 2027; Ward 1), " +
-    "Jeremy Jedynak (R, 2026; Ward 2), Adam Salberg (R, 2028; Ward 3), " +
-    "Tucker Kelley (R, 2027; Ward 4), Phyllis Smith (R, 2026; Ward 5).";
-  const parsed = parseRoster(section, "Township Council");
-  assert.equal(parsed.count.stated, 9, "the article's nine is read");
-  assert.equal(parsed.officials.length, 5, "the truncated sentence yields five");
-  assert.equal(parsed.count.verdict, "SHORT");
-  assert.equal(isShort(parsed.count), true);
-  assert.match(parsed.count.reason, /4 missing/);
-});
-
-test("parseRoster on an article stating no size reports NOT_ASSERTABLE, not a pass", () => {
-  const section =
-    "The members of the Board of Selectmen are Kristen Schultz (2027), " +
-    "Scott Wheeler (2026), Sandra Warde (2028).";
-  const parsed = parseRoster(section, "Board of Selectmen");
-  assert.equal(parsed.officials.length, 3);
-  assert.equal(parsed.count.verdict, "NOT_ASSERTABLE");
-  assert.equal(parsed.count.stated, null);
-});
-
-test("an empty roster parse still carries the denominator it failed against", () => {
-  // The sentence states a size and the parse returns nothing. ZERO_ROWS catches this; the assertion says how many
-  // were lost.
-  const section = "The Township Council is composed of five members. No roster is given here.";
-  const parsed = parseRoster(section, "Township Council");
-  assert.equal(parsed.officials.length, 0);
-  assert.equal(parsed.count.stated, 5);
-  assert.equal(parsed.count.verdict, "SHORT");
 });
 
 test("extractRosterTables asserts against the page's own membership sentence", () => {

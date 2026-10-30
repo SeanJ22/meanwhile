@@ -360,7 +360,7 @@ test("a departed roster member clears answers; an audited Box seat stays live fo
   const purge = async (tags: readonly string[]) => {
     totalPurges++;
     assert.deepEqual(tags, ["reader-state:AZ"]);
-    if ((await db.query("SELECT id FROM fact WHERE held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'")).length) removedPurges++;
+    if ((await db.query("SELECT id FROM fact WHERE held_reason='GONE_FROM_SOURCE'")).length) removedPurges++;
     if ((await db.query("SELECT id FROM fact WHERE status='pulled'")).length) pulledPurges++;
     return { purged: true };
   };

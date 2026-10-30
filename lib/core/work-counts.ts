@@ -1,5 +1,6 @@
 import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import type { Query } from "../facts/publish.ts";
+import type { WorkKind, WorkTier } from "./work-kinds.ts";
 
 interface Hour {
   readonly state: string;
@@ -25,4 +26,14 @@ export async function workCounts(query: Query, state: string | null, now: Date):
   [state === null ? regions : [state.toUpperCase()], now.toISOString()]);
   return rows.map(row => ({ state: String(row.state).toLowerCase(), hour: new Date(row.hour as string | Date).toISOString(),
     incoming: Number(row.incoming), done: Number(row.done), refused: Number(row.refused) }));
+}
+
+export interface Waiting { readonly kind: WorkKind; readonly tier: WorkTier; readonly waiting: number }
+
+/** What is waiting now, by kind and tier. Forty small counters are read; no job is opened. */
+export async function workWaiting(query: Query): Promise<{ readonly rows: readonly Waiting[]; readonly changedAt: string | null }> {
+  const rows = await query("SELECT kind,tier,n::text AS waiting,changed_at FROM work_waiting WHERE n>0 ORDER BY kind,tier");
+  const changed = rows.map(row => new Date(row.changed_at as string | Date).getTime());
+  return { rows: rows.map(row => ({ kind: row.kind as WorkKind, tier: row.tier as WorkTier, waiting: Number(row.waiting) })),
+    changedAt: changed.length ? new Date(Math.max(...changed)).toISOString() : null };
 }

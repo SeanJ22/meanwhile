@@ -6,7 +6,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { vaultCapture } from "../lib/facts/capture.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { OFFICE_FACT_TARGETS_SQL, officeAddressesOnPage, publishHeldOfficeFacts, streetOfficeAddress } from "../lib/meetings/office-facts.ts";
-import { REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../lib/registration/publication.ts";
+import { releaseManifestKey } from "../lib/sources/known-release.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const NOW = "2026-10-26T06:30:00.000Z", STATE = "AZ";
@@ -34,13 +34,13 @@ async function setup(address = ADDRESS) {
   const body = new TextEncoder().encode("the existing immutable source archive");
   await vault.put(key, body, { contentType: "application/zip", contentHash: `sha256-${hash}`, byteLength: body.length });
   const manifest = new TextEncoder().encode(JSON.stringify({ sourceId: "nces-ccd", releaseId, requestedUrl: SOURCE,
-    finalUrl: SOURCE, sha256: hash, key, sourceObservedAt: NOW, retrievedAt: NOW, byteLength: body.length }));
+    finalUrl: SOURCE, sha256: hash, key, sourceObservedAt: NOW, retrievedAt: NOW, checkedAt: NOW, byteLength: body.length }));
   await vault.put(`${prefix}/manifest.json`, manifest, { contentType: "application/json", contentHash: "manifest:fixture", byteLength: manifest.length, objectClass: "MUTABLE_INDEX" });
   return { db, vault, key };
 }
 
 test("held national physical office fields publish to the owning government through the fact door without rereading the archive", async () => {
-  const { db, vault, key } = await setup();
+  const { db, vault } = await setup();
   const reads: string[] = [], ordinaryGet = vault.get.bind(vault);
   vault.get = async key => { reads.push(key); return ordinaryGet(key); };
   try {
@@ -48,9 +48,11 @@ test("held national physical office fields publish to the owning government thro
     assert.deepEqual(first, { published: 1, confirmed: 0, blanks: 1, failures: [] });
     assert.deepEqual(await db.query("SELECT entity_id,field,value FROM fact WHERE status='live'"), [{ entity_id: GOVERNMENT, field: "office_address", value: ADDRESS }]);
     const copy = (await db.query("SELECT url,blob_key,fetched_at FROM source_copy"))[0]!;
-    assert.equal(copy.url, SOURCE); assert.equal(copy.blob_key, key); assert.equal(new Date(String(copy.fetched_at)).toISOString(), NOW);
+    assert.equal(copy.url, SOURCE); assert.ok(String(copy.blob_key).startsWith("release:nces-ccd-directory:")); assert.equal(new Date(String(copy.fetched_at)).toISOString(), NOW);
     assert.ok(reads.every(read => read.endsWith("manifest.json")), "only the manifest, never source archive bytes, leaves the vault");
-    const blank = (await db.query("SELECT entity_id,field,next_try_at FROM blank"))[0]!;
+    const blank = (await db.query("SELECT entity_id,field,next_try_at FROM blank WHERE entity_id=$1",[BODY]))[0]!;
+    // This fixture's archive is not the NCES file the repo keeps, so no row of it can be quoted: the address publishes and a detective gets the reason.
+    assert.deepEqual(await db.query("SELECT entity_id,reason FROM blank WHERE entity_id=$1",[GOVERNMENT]), [{ entity_id: GOVERNMENT, reason: "CHECK_FAILED:NO_EXACT_LINE" }]);
     assert.equal(blank.entity_id, BODY); assert.equal(blank.field, "office_address");
     assert.ok(Date.parse(String(blank.next_try_at)) > Date.now());
     const next = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
@@ -148,20 +150,22 @@ test("the supplied NCES directory's exact native row can publish with its origin
   } finally { await db.pg.close(); }
 });
 
-test("a newer registration wrapper cites the original immutable Census copy and capture date", async () => {
-  const { db, vault } = await setup();
+test("an NCES address the release's latest check confirms is quoted from the file's own row and checked there; no blank opens", async () => {
+  const address = "2238 E GINTER RD, TUCSON, AZ, 85706", zip = "https://nces.ed.gov/ccd/data/zip/ccd_lea_029_2526_w_0a_050626.zip";
+  const { db, vault } = await setup(address);
   try {
-    const [copy] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
-      VALUES($1,$1,$2,$3,'held-census-original') RETURNING id`, [REGISTRATION_SOURCE_URL, REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256]);
+    const manifest = new TextEncoder().encode(JSON.stringify({ requestedUrl: zip, sha256: "376539484b400c0c6d72d100766dc7acacc8725f464556062e2920b3a9b6a64c", checkedAt: NOW }));
+    await vault.put(releaseManifestKey({ sourceId: "nces-ccd", releaseId: zip.split("/").at(-1)!, url: zip }), manifest,
+      { contentType: "application/json", contentHash: "manifest:fixture", byteLength: manifest.length, objectClass: "MUTABLE_INDEX" });
     await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(jsonb_set(payload,'{governments,0,provenance}',$1),
-      '{vintage}',$2)`, [JSON.stringify({ ...provenance, sourceUrl: REGISTRATION_SOURCE_URL, collectedAt: NOW }),
-      JSON.stringify({ sourceSha256: REGISTRATION_SOURCE_SHA256 })]);
+      '{governments,0,nativeIds}', '{"nces_leaid":"0408170"}')`, [JSON.stringify({ ...provenance, sourceUrl: zip })]);
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
     assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
-    assert.equal((await db.query("SELECT source_copy_id FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]))[0]!.source_copy_id, copy!.id);
-    const copies = await db.query("SELECT fetched_at,sha256 FROM source_copy");
-    assert.equal(copies.length, 1); assert.equal(new Date(String(copies[0]!.fetched_at)).toISOString(), REGISTRATION_HELD_RETRIEVED_AT);
-    assert.equal(copies[0]!.sha256, REGISTRATION_SOURCE_SHA256);
+    const [fact] = await db.query("SELECT value_text,quote,quote_start IS NOT NULL AS checked FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]);
+    assert.equal(fact!.value_text, "2238 E GINTER RD,,,TUCSON,AZ,85706", "the address as the file's row writes it");
+    assert.ok(String(fact!.quote).startsWith("0408170,2025-2026,AZ,") && fact!.checked);
+    assert.deepEqual(await db.query("SELECT reason FROM blank WHERE entity_id=$1", [GOVERNMENT]), []);
+    assert.equal((await db.query("SELECT value FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]))[0]!.value, address);
   } finally { await db.pg.close(); }
 });
 
@@ -187,7 +191,7 @@ test("sharing a place does not give a board either neighboring government's offi
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
     assert.equal(report.published, 0); assert.equal(report.blanks, 1);
     assert.deepEqual(await db.query("SELECT field FROM fact"), []);
-    assert.deepEqual(await db.query("SELECT entity_id FROM blank"), [{ entity_id: BODY }]);
+    assert.deepEqual(await db.query("SELECT entity_id FROM blank WHERE reason NOT LIKE 'CHECK_FAILED%'"), [{ entity_id: BODY }]);
   } finally { await db.pg.close(); }
 });
 
@@ -224,7 +228,7 @@ for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exa
     assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
     assert.deepEqual(await db.query("SELECT entity_id,value FROM fact WHERE field='office_address' AND status='live'"),
       [{ entity_id: GOVERNMENT, value: ADDRESS }]);
-    assert.deepEqual(await db.query("SELECT entity_id FROM blank WHERE field='office_address'"), [{ entity_id: subbody }]);
+    assert.deepEqual(await db.query("SELECT entity_id FROM blank WHERE field='office_address' AND reason NOT LIKE 'CHECK_FAILED%'"), [{ entity_id: subbody }]);
   } finally { await db.pg.close(); }
 });
 

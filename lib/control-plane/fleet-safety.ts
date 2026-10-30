@@ -1,6 +1,7 @@
 import type { SpendTotals } from "./spend-window.ts";
 import { costEntryModelRequestBound, costEntryWorstCaseUsd, type CostEntry, type MeteredCharge } from "./cost.ts";
 import type { SpendHold } from "./budget.ts";
+import type { WorkCostKind } from "../core/work-kinds.ts";
 import { canonicalModelId } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, rateFor, ratesForPrompt, priceMeteredUsage, readMeteredUsage } from "./model-cost.ts";
 import type { ModelRequest, ModelResponse, ModelTransport } from "./scheduler/scout-executor.ts";
@@ -154,6 +155,8 @@ export interface PricedCharge {
   readonly obligationId: string | null;
   readonly jurisdiction: string | null;
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
+  /** The work row the hunt ran from; absent on work no row started. */
+  readonly workKind?: WorkCostKind;
   readonly usd: number;
   readonly knownUsd: number;
   readonly measured: boolean;
@@ -183,6 +186,7 @@ export function pricedModelCharge(entry: CostEntry, id: string): PricedCharge | 
   return { id, at: entry.recordedAt, jobId: entry.spendHoldJobId ?? entry.attemptId, routeTaskId: entry.routeTaskId,
     obligationId: entry.obligationId ?? null, jurisdiction: entry.jurisdiction,
     ...(entry.assignmentRefs ? { assignmentRefs: entry.assignmentRefs } : {}),
+    ...(entry.workKind ? { workKind: entry.workKind } : {}),
     usd: priced ? answered.usd! + unanswered! : Math.max(answered.knownUsd, costEntryWorstCaseUsd(entry)),
     knownUsd: answered.knownUsd, measured: priced && answered.measured && unanswered === 0,
     bounded: !priced || answered.bounded || unanswered !== 0,

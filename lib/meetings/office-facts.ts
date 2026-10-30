@@ -1,19 +1,18 @@
-import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { join } from "node:path";
+import { createInterface } from "node:readline";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { visibleText } from "../extract/visible-text.ts";
 import { captureProvenance } from "../facts/capture.ts";
-import { isOfficialUrl, isOwnUrl, type SavedCopy } from "../facts/check.ts";
-import { readCheckEntity, stateName } from "../facts/entity-read.ts";
-import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "../facts/publish.ts";
-import { pageCopy, saveCaptureCopy } from "../facts/source-copy.ts";
+import { csvCells, csvWritten, isOfficialUrl, isOwnUrl, type SavedCopy } from "../facts/check.ts";
+import { readCheckEntity, siteUrl, stateName } from "../facts/entity-read.ts";
+import { openBlank, publishClaim, publishLoaded, type Clocks, type FactDb, type PublishOutcome, type Query } from "../facts/publish.ts";
+import { pageCopy, saveCaptureCopy, saveReleaseCopy, saveSourceReference } from "../facts/source-copy.ts";
 import { censusAddressQuery } from "../geo/address-query.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
-import { REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
-import { streamCsvObjects } from "../sources/prl/streaming.ts";
+import { readReleaseCheck } from "../sources/known-release.ts";
 import { statedAgendaAddress, streetKeyOf } from "./agenda-address.ts";
 import type { MeetingPinBody } from "./pin-location.ts";
 import { challengeIn } from "../sources/http.ts";
@@ -25,9 +24,9 @@ const OFFICE_READER_VERSION="street-office-v2";
 export const OFFICE_FACT_TARGETS_SQL = `WITH selected AS MATERIALIZED (
   SELECT id,name,state,parent_id,kind FROM entity WHERE kind IN ('body','government') AND id=ANY($1::text[])
 ), owned AS (
-  SELECT b.*,r.g,r.source_sha256 FROM selected b LEFT JOIN LATERAL (
-    SELECT reader_payload_value(value) AS g,source_sha256 FROM (
-      SELECT r.value,reader_payload_node(reader_payload_node(p.payload)->'vintage')->>'sourceSha256' AS source_sha256,count(*) OVER() AS owners
+  SELECT b.*,r.g FROM selected b LEFT JOIN LATERAL (
+    SELECT reader_payload_value(value) AS g FROM (
+      SELECT r.value,count(*) OVER() AS owners
       FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
       WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
         AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
@@ -42,7 +41,6 @@ SELECT b.id,b.name,b.state,b.parent_id,
   coalesce(direct.id,registered.id) AS government_id,
   coalesce(direct.name,registered.name,b.g->>'name') AS government_name,
   b.g->>'officeAddress' AS registration_address,
-  b.source_sha256 AS registration_source_sha256,
   b.g#>>'{nativeIds,nces_leaid}' AS nces_leaid,
   coalesce(b.g#>'{contactProvenance,officeAddress}',b.g->'provenance') AS registration_source,
   coalesce((SELECT f.value#>>'{}' FROM fact f WHERE f.entity_id=b.id AND f.field='homepage' AND f.status='live'),
@@ -124,71 +122,40 @@ const HELD_NCES_URL = "https://nces.ed.gov/ccd/files.asp";
 const HELD_NCES_AT = "2026-08-19T00:00:00.000Z";
 // Sean supplied this official archive; its source note records the immutable ZIP and unchanged source fields.
 const HELD_NCES_SHA256 = "376539484b400c0c6d72d100766dc7acacc8725f464556062e2920b3a9b6a64c";
+const NCES_ADDRESS = ["location_street1", "location_street2", "location_street3", "location_city", "location_state", "location_zip"] as const;
+const ncesSource = (url: string | null | undefined): url is string => !!url && ["nces.ed.gov", "ies.ed.gov"].includes(new URL(url).hostname);
 
-/** Confirm only these native records against the held NCES source, streaming one row at a time. */
-async function heldNcesOfficeRows(targets: readonly Record<string, unknown>[]): Promise<ReadonlyMap<string, string>> {
-  const ids = new Set(targets.flatMap(row => {
-    const source = row.registration_source as RegistryProvenance | undefined;
-    return typeof row.nces_leaid === "string" && source?.sourceUrl === HELD_NCES_URL ? [row.nces_leaid] : [];
-  }));
-  const found = new Map<string, string>();
-  if (!ids.size) return found;
+/** The directory file's own row for a native record, the address its columns make and the address exactly as the row writes it. */
+interface NcesRow { readonly address: string; readonly row: string; readonly written: string | null }
+
+/** Reads only these native records' rows from the held NCES file, one line at a time. */
+async function heldNcesOfficeRows(targets: readonly Record<string, unknown>[]): Promise<{ readonly header: string; readonly rows: ReadonlyMap<string, NcesRow> }> {
+  const ids = new Set(targets.flatMap(row => typeof row.nces_leaid === "string" && ncesSource((row.registration_source as RegistryProvenance | undefined)?.sourceUrl) ? [row.nces_leaid] : []));
+  const rows = new Map<string, NcesRow>();
+  let header = "";
+  if (!ids.size) return { header, rows };
   const file = createReadStream(join(process.cwd(), "data", "reference", "nces_ccd_lea_directory_2025_26.csv"), { encoding: "utf8" });
-  const chunks = async function* () { for await (const chunk of file) yield String(chunk); };
   try {
-    for await (const row of streamCsvObjects(chunks())) {
-      if (!ids.has(row.nces_leaid!)) continue;
-      found.set(row.nces_leaid!, ["location_street1", "location_street2", "location_street3", "location_city", "location_state", "location_zip"]
-        .map(field => row[field]?.trim()).filter(Boolean).join(", "));
-      if (found.size === ids.size) break;
+    let names: string[] = [];
+    for await (const text of createInterface({ input: file, crlfDelay: Infinity })) {
+      if (!header) { header = text; names = csvCells(header); continue; }
+      const id = text.slice(0, text.indexOf(","));
+      if (!ids.has(id)) continue;
+      const cells = csvCells(text);
+      rows.set(id, { address: NCES_ADDRESS.map(field => cells[names.indexOf(field)]?.trim()).filter(Boolean).join(", "), row: text,
+        written: csvWritten(header, text, NCES_ADDRESS[0], NCES_ADDRESS[5]) });
+      if (rows.size === ids.size) break;
     }
   } finally { file.destroy(); }
-  return found;
+  return { header, rows };
 }
 
-/** Metadata of real held release bytes is enough for the existing structured-field door; the archive is never reread. */
-async function releaseOfficeCopy(input: OfficeFactsInput, source: RegistryProvenance, attestedNces: boolean, sourceHash?: string): Promise<SavedCopy | null> {
-  if (!source.sourceUrl || !isOfficialUrl(source.sourceUrl, [])) return null;
-  const url = source.sourceUrl;
-  const immutableHash = attestedNces ? HELD_NCES_SHA256 : url === REGISTRATION_SOURCE_URL && /^[a-f0-9]{64}$/.test(sourceHash ?? "") ? sourceHash! : null;
-  const [existing] = await input.facts.query(`SELECT id,final_url,fetched_at FROM source_copy
-    WHERE url=$1 AND (CASE WHEN $3::text IS NOT NULL THEN sha256=$3 ELSE fetched_at=$2::timestamptz END)
-      AND NOT is_archive ORDER BY id DESC LIMIT 1`, [url, source.collectedAt, immutableHash]);
-  if (existing) return { id: Number(existing.id), finalUrl: String(existing.final_url), fetchedAt: new Date(existing.fetched_at as string), text: "", isArchive: false };
-  const nces = new URL(url).hostname === "nces.ed.gov" || new URL(url).hostname === "ies.ed.gov";
-  const sourceId = nces ? "nces-ccd" : url === REGISTRATION_SOURCE_URL ? "census-governments-registration" : null;
-  if (!sourceId) return null;
-  const releaseId = nces ? url.split("/").at(-1)! : "cog-2022";
-  const identity = createHash("sha256").update(`${sourceId}\n${releaseId}\n${url}`).digest("hex");
-  const prefix = `project/freshness/source/${sourceId}/releases/${identity}`;
-  const held = await input.vault.get(`${prefix}/manifest.json`);
-  let hash: string | null = null, key: string | null = null, finalUrl = url, fetchedAt = source.collectedAt;
-  if (held) {
-    const manifest = JSON.parse(new TextDecoder().decode(held.bytes)) as Record<string, unknown>;
-    if (manifest.requestedUrl === url && manifest.sourceId === sourceId && manifest.releaseId === releaseId &&
-      typeof manifest.sha256 === "string" && /^[a-f0-9]{64}$/.test(manifest.sha256) &&
-      manifest.key === `${prefix}/${manifest.sha256}.bin` && (!immutableHash || manifest.sha256 === immutableHash)) {
-      const meta = await input.vault.head(String(manifest.key));
-      if (meta?.contentHash === `sha256-${manifest.sha256}` && meta.byteLength === manifest.byteLength &&
-        typeof manifest.finalUrl === "string" && isOfficialUrl(manifest.finalUrl, [])) {
-        hash = manifest.sha256; key = String(manifest.key); finalUrl = manifest.finalUrl;
-        fetchedAt = String(manifest.retrievedAt);
-      }
-    }
-  }
-  if (!hash && url === REGISTRATION_SOURCE_URL && (immutableHash === REGISTRATION_SOURCE_SHA256 || Date.parse(source.collectedAt) === Date.parse(REGISTRATION_HELD_RETRIEVED_AT))) {
-    hash = REGISTRATION_SOURCE_SHA256; key = `release:census-governments-registration:${hash}`;
-    fetchedAt = REGISTRATION_HELD_RETRIEVED_AT;
-  }
-  if (!hash && attestedNces && url === HELD_NCES_URL) {
-    hash = HELD_NCES_SHA256; key = `release:nces-ccd-directory:${hash}`;
-    fetchedAt = HELD_NCES_AT;
-  }
-  if (!hash || !key) return null;
-  const [copy] = await input.facts.query(`INSERT INTO source_copy(url,final_url,fetched_at,http_status,sha256,blob_key,is_archive)
-    VALUES($1,$2,$3,200,$4,$5,false) ON CONFLICT(blob_key) DO UPDATE SET blob_key=EXCLUDED.blob_key RETURNING id`,
-    [url, finalUrl, fetchedAt, hash, key]);
-  return { id: Number(copy!.id), finalUrl, fetchedAt: new Date(fetchedAt), text: "", isArchive: false };
+/** The NCES file as the publisher last confirmed it, carrying the rows we hold when it is the file we keep. Without a check, only our own attestation of the supplied file stands, and only for a row it holds. */
+async function ncesCopy(input: OfficeFactsInput, url: string, rows: string, inSuppliedRow: boolean): Promise<SavedCopy | null> {
+  const check = await readReleaseCheck(input.vault, { sourceId: "nces-ccd", releaseId: url.split("/").at(-1)!, url });
+  const sha256 = check?.sha256 ?? (url === HELD_NCES_URL && inSuppliedRow ? HELD_NCES_SHA256 : null);
+  return sha256 === null ? null : input.facts.transaction(query => saveReleaseCopy(query, { name: "nces-ccd-directory", url, sha256,
+    checkedAt: check?.checkedAt ?? HELD_NCES_AT, text: sha256 === HELD_NCES_SHA256 ? rows : "" }));
 }
 
 /** Saved directory fields, issuing-board letterheads and the government's own contact pages become ordinary contact facts. */
@@ -199,7 +166,7 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
   const checkedNow=()=>new Date(Math.max(Date.parse(input.now),input.clock?.()??Date.now()));
   if (!input.bodyIds.length) return report;
   const targets = await input.facts.query(OFFICE_FACT_TARGETS_SQL, [[...new Set(input.bodyIds)]]);
-  let heldNces: ReadonlyMap<string, string> = new Map();
+  let heldNces: Awaited<ReturnType<typeof heldNcesOfficeRows>> = { header: "", rows: new Map() };
   try { heldNces = await heldNcesOfficeRows(targets); }
   catch (error) { report.failures.push(`Held NCES office rows could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   const known = new Set<string>(), processed = new Set<string>();
@@ -210,8 +177,8 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
   const knownAddress = new Map(values.map(row => [String(row.entity_id), row.address]));
   for (const row of values) if (typeof row.address === "string" && streetOfficeAddress(row.address)) known.add(String(row.entity_id));
   const routeOf = (value: unknown,upgrade=true): string | null => {
-    if (typeof value !== "string" || !URL.canParse(value)) return null;
-    const url = new URL(value);
+    if (typeof value !== "string" || !URL.canParse(siteUrl(value))) return null;
+    const url = new URL(siteUrl(value));
     if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) return null;
     if(upgrade&&url.protocol==="http:")url.protocol="https:";
     url.hash = "";
@@ -253,28 +220,30 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
       [id,String(state),input.now]);
     }
   };
-  const publish = async (id: string, address: string, source: RegistryProvenance, structured: boolean, ncesId?: string, sourceHash?: string,
+  const publish = async (id: string, address: string, source: RegistryProvenance, structured: boolean, ncesId?: string,
     printedQuote?: string, savedSource?: NonNullable<MeetingPinBody["officeContact"]>["savedSource"]) => {
     if (!streetOfficeAddress(address) || !source.sourceUrl) return;
     const entity = await readCheckEntity(input.facts.query, id);
     if (!entity) return;
-    if (structured) {
-      const copy = await releaseOfficeCopy(input, source, ncesId !== undefined && heldNces.get(ncesId) === address, sourceHash);
+    if (structured && ncesSource(source.sourceUrl)) {
+      // The row quoted is the file's own, and its address as written stands for the one registered when they agree.
+      const held = ncesId === undefined ? undefined : heldNces.rows.get(ncesId);
+      const copy = await ncesCopy(input, source.sourceUrl, [heldNces.header, ...[...heldNces.rows.values()].map(row => row.row)].join("\n"), held?.address === address);
       if (copy) {
-        await count(id, await publishClaim(input.facts, { entity, field: "office_address", fieldKind: "contact", value: address,
-          valueText: address, quote: address, provenance: "OFFICIAL", acquisition: "loader", copy,
-          sourceField: { record: { officeAddress: address }, key: "officeAddress" }, producedBy: "held-office-addresses", costUsd: 0 }, input.clocks, checkedNow()));
+        const outcome = await publishLoaded(input.facts, { entity, field: "office_address", fieldKind: "contact", value: address,
+          valueText: address, quote: address, provenance: "OFFICIAL", copy, producedBy: "held-office-addresses", costUsd: 0 },
+        copy.text && held?.written && held.address === address ? { quote: held.row, valueText: held.written } : null, input.clocks, checkedNow());
+        await count(id, "refused" in outcome ? { blank: outcome.refused } : outcome);
         return;
       }
     }
     if (savedSource?.versionId && /^[a-f0-9]{64}$/.test(savedSource.sha256) && savedSource.text && printedQuote?.trim()) {
       const held = pageCopy({ finalUrl: source.sourceUrl, body: savedSource.text, contentType: "text/plain", fetchedAt: source.collectedAt });
-      const [row] = await input.facts.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key,is_archive)
-        VALUES($1,$1,$2,$3,$4,$5) ON CONFLICT(blob_key) DO UPDATE SET blob_key=EXCLUDED.blob_key RETURNING id`,
-        [source.sourceUrl, source.collectedAt, savedSource.sha256, `civic-data:${savedSource.versionId}:agenda:${savedSource.sha256}`, held.isArchive]);
+      const copyId = await input.facts.transaction(query => saveSourceReference(query, { key: `civic-data:${savedSource.versionId}:agenda:${savedSource.sha256}`,
+        url: source.sourceUrl!, finalUrl: source.sourceUrl!, fetchedAt: source.collectedAt, httpStatus: null, contentHash: savedSource.sha256 }));
       await count(id, await publishClaim(input.facts, { entity, field: "office_address", fieldKind: "contact", value: address,
         valueText: printedQuote, quote: printedQuote, provenance: isOfficialUrl(source.sourceUrl, entity.hosts) ? "OFFICIAL" : "REFERENCE",
-        acquisition: "walker", copy: { ...held, id: Number(row!.id) }, producedBy: "held-office-addresses", costUsd: 0 }, input.clocks, checkedNow()));
+        acquisition: "walker", copy: { ...held, id: copyId }, producedBy: "held-office-addresses", costUsd: 0 }, input.clocks, checkedNow()));
       return;
     }
     // Calendar acquisition belongs to its source worker; only an already saved header can prove this citation here.
@@ -349,17 +318,16 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
         const due = (retry?.at ?? 0) <= Date.parse(input.now) || route !== null && (route !== retry?.route||retry?.readerVersion!==OFFICE_READER_VERSION);
         if (id === governmentId && typeof row.registration_address === "string" && row.registration_source)
           await publish(id, row.registration_address, row.registration_source as RegistryProvenance, true,
-            typeof row.nces_leaid === "string" ? row.nces_leaid : undefined,
-            typeof row.registration_source_sha256 === "string" ? row.registration_source_sha256 : undefined);
+            typeof row.nces_leaid === "string" ? row.nces_leaid : undefined);
         if (id === governmentId && !known.has(id)) {
           const office = input.offices?.get(bodyId);
           for (const candidate of [office?.governmentOffice, ...office?.governmentOfficeAlternatives ?? []]) {
             if (!candidate || known.has(id)) continue;
-            await publish(id, candidate.address, candidate.provenance, false,undefined,undefined,candidate.quote);
+            await publish(id, candidate.address, candidate.provenance, false,undefined,candidate.quote);
           }
         }
         if (!known.has(id) && body?.officeContact?.address)
-          await publish(id, body.officeContact.address, body.officeContact.provenance, false, undefined, undefined,
+          await publish(id, body.officeContact.address, body.officeContact.provenance, false, undefined,
             body.officeContact.quote, body.officeContact.savedSource);
         if (!known.has(id) && due) await fromSite(id, homepage, String(row.state));
         if (!known.has(id) && due && !refused.has(id)) {

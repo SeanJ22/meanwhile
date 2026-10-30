@@ -18,7 +18,7 @@ export function SliceProgress() {
       {reading.stale && <p className={s.meta}>The latest reading failed. Showing the last saved reading.</p>}
       <p className={s.p}>{count(reading.data.built)} of {count(reading.data.places)} places have their slices
         {reading.data.built >= reading.data.places ? ". Every place has them." : ` (${Math.floor(100 * reading.data.built / Math.max(1, reading.data.places))}%).`}</p>
-      <div className={s.meter}><div className={s.meterFill} style={{ width: `${Math.min(100, 100 * reading.data.built / Math.max(1, reading.data.places))}%`, background: "var(--v6-teal)" }} /></div>
+      <div className={s.meter}><div className={`${s.meterFill} ${s["c-teal"]}`} style={{ width: `${Math.min(100, 100 * reading.data.built / Math.max(1, reading.data.places))}%` }} /></div>
       <p className={s.meta}>Read {mst(reading.data.at)}</p>
     </>}
   </Card>;

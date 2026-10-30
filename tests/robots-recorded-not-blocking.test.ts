@@ -383,6 +383,7 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/method/method-try.ts": "tests/method-spread.test.ts: a disallowed site's request is still made and its verdict counted",
   "scripts/robots-sweep.mts": "records verdicts only; its consumers below",
   "scripts/verify-extraction.mts": "records the verdict on each result; never skips a roster for one",
+  "lib/identity/placement-runtime.ts": "reads a government's own pages through researchFetch, so tests/robots-first-fetch.test.ts holds it: the verdict is recorded and the page is still read",
   "scripts/research-fetch.mts": "the command line over researchFetch (tests/robots-first-fetch.test.ts)",
 };
 

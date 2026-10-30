@@ -65,9 +65,10 @@ export async function sliceTurn(input: { readonly list: WorkList; readonly facts
 
 /** The lane's turn: keeps looking until it is asked to stop, resting between looks so building every place stays within its pace. */
 export async function runSliceLane(input: { readonly list: WorkList; readonly facts: Query; readonly stopRequested: () => boolean; readonly turnEnd?: AbortSignal;
-  readonly log: (line: string) => void; readonly sleep?: (ms: number) => Promise<void> }): Promise<{ readonly built: number; readonly written: number; readonly backfilled: number }> {
+  readonly log: (line: string) => void; readonly sleep?: (ms: number) => Promise<void>;
+  /** Counts as they happen, for the turn's minute line. */ readonly total?: { built: number; written: number; backfilled: number } }): Promise<{ readonly built: number; readonly written: number; readonly backfilled: number }> {
   const sleep = input.sleep ?? ((ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms)));
-  const total = { built: 0, written: 0, backfilled: 0 };
+  const total = input.total ?? { built: 0, written: 0, backfilled: 0 };
   while (!input.stopRequested()) {
     let turn: Awaited<ReturnType<typeof sliceTurn>>;
     try { turn = await sliceTurn({ list: input.list, facts: input.facts, turnEnd: input.turnEnd }); }

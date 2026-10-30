@@ -6,7 +6,9 @@ import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { exactLine, type SavedCopy } from "../lib/facts/check.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishLoaded } from "../lib/facts/publish.ts";
-import { sliceTurn } from "../lib/reader/slice-lane.ts";
+import { progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
+import { laneTurn } from "../lib/ops/lane-turn.ts";
+import { runSliceLane, sliceTurn } from "../lib/reader/slice-lane.ts";
 import { sliceProgress } from "../lib/reader/slice-progress.ts";
 import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, type SliceCard } from "../lib/reader/slices.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -121,5 +123,19 @@ test("a turn whose end arrives mid-rebuild puts the marked slices back to waitin
     await assert.rejects(sliceTurn({ list, facts: stuck, now, turnEnd: end.signal }));
     assert.deepEqual(await db.query("SELECT status,attempts FROM work"), [{ status: "waiting", attempts: 0 }, { status: "waiting", attempts: 0 }]);
     assert.equal((await sliceTurn({ list, facts: db.query, now })).claimed, 2);
+  } finally { await db.pg.close(); }
+});
+
+test("a release drain lets the rebuild in hand finish, ends the lane without failing anything, and the minute line has moved on", async () => {
+  const { db, list } = await open(), total = { built: 0, written: 0, backfilled: 0 };
+  const turn = laneTurn(() => `Slices: ${total.built} read, ${total.written} written`), lines: string[] = [];
+  try {
+    await sliceTurn({ list, facts: db.query, now });
+    await publish(db, "office_phone", "520-555-0100", "Phone");
+    turn.beat(line => lines.push(line));
+    await runSliceLane({ list, facts: (sql, params) => { turn.ask(); return db.query(sql, params); }, total, stopRequested: turn.asked, log: () => {} });
+    turn.beat(line => lines.push(line));
+    assert.deepEqual(await db.query("SELECT DISTINCT status FROM work"), [{ status: "done" }]);
+    assert.ok(lines[0] !== lines[1] && progressLines()(`${lines[1]}\n`) === 1);
   } finally { await db.pg.close(); }
 });

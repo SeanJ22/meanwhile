@@ -2,6 +2,7 @@ import { capabilityLog } from "../../core/capability.ts";
 import { pgOwnerCostRefs } from "./owner-cost-refs.ts";
 import { pgOwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import { pgOwnerAssignmentHeads } from "./owner-assignment-heads.ts";
+import { pgOwnerAssignmentChanges } from "./owner-assignment-changes.ts";
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
 import { checkedValueQuery, hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
@@ -68,7 +69,6 @@ import type {
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
-import { pgOwnerLeaseChanges } from "./owner-lease-changes.ts";
 import type { Escalation } from "../work-item.ts";
 import type { RouteTask } from "../route-task.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
@@ -1852,7 +1852,7 @@ export async function createPgRepositories(
     ownerSnapshotStateTotals: pgAggregateRepository<StateTotals>(sql, "StateTotals", "cp_owner_snapshots", bounded),
     ownerAssignmentRows: pgOwnerAssignmentRows(sql),
     ownerAssignmentHeads: pgOwnerAssignmentHeads(sql),
-    ownerLeaseChanges: pgOwnerLeaseChanges(sql),
+    ownerAssignmentChanges: pgOwnerAssignmentChanges(sql),
     ownerCostRefs: pgOwnerCostRefs(sql),
     ownerSnapshotInboxes: pgAggregateRepository<SpilledInbox>(sql, "SpilledInbox", "cp_owner_snapshots", bounded),
     fieldManual: pgFieldManualRepository(sql,bounded,()=>repositories.fixMap),

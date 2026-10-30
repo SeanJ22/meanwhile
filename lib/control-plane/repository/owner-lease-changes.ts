@@ -1,16 +1,3 @@
-import type { Sql } from "./pg-store.ts";
-import type { HeldSlots } from "./types.ts";
-
-export interface OwnerLeaseChange {
-  readonly id: string;
-  readonly version: number;
-  readonly changedAt: string;
-  readonly routeTaskId: string;
-}
-export interface OwnerLeaseChanges {
-  read(since: string | null, held: HeldSlots, page: (rows: readonly OwnerLeaseChange[]) => Promise<void>): Promise<string>;
-}
-
 // Assignment state uses these four lease fields. A heartbeat alone changes none of them.
 const fingerprint = (value: string) => `cp_owner_lease_fingerprint(${["id","routeTaskId","released","expiresAt"].map(key=>`${value}->'${key}'`).join(",")})`;
 export const OWNER_LEASE_CHANGES_DDL = [
@@ -45,24 +32,3 @@ export const OWNER_LEASE_RENEWAL_DDL = OWNER_LEASE_CHANGES_DDL[3].replace(
     AND (NEW.value->>'heartbeatAt')::timestamptz>(OLD.value->>'heartbeatAt')::timestamptz
     AND (NEW.value->>'heartbeatAt')::timestamptz<(OLD.value->>'expiresAt')::timestamptz
     AND (NEW.value->>'expiresAt')::timestamptz>(OLD.value->>'expiresAt')::timestamptz))`);
-
-/** A semantic cursor reads only lease identity and routing metadata; its version is never a write/CAS revision. */
-export function pgOwnerLeaseChanges(sql: Sql): OwnerLeaseChanges {
-  return { async read(since, held, page) {
-    const [clock]=await sql.query("SELECT now() AS read_at") as {read_at:string}[];
-    const through=new Date(clock.read_at).toISOString(), known=new Map(held);
-    let after:string|null=null;
-    for (;;) {
-      const rows=await sql.query(`SELECT id,coalesce(owner_revision,revision)::text AS version,
-        coalesce(owner_changed_at,changed_at) AS changed_at,value->>'routeTaskId' AS route_task_id
-        FROM cp_leases WHERE ($1::timestamptz IS NULL OR coalesce(owner_changed_at,changed_at)>=$1::timestamptz)
-        AND ($2::text IS NULL OR id>$2) ORDER BY id LIMIT 500`,[since,after]) as {id:string;version:string;changed_at:string;route_task_id:string}[];
-      const changed=rows.filter(row=>known.get(row.id)!==Number(row.version)).map(row=>({id:row.id,version:Number(row.version),
-        changedAt:new Date(row.changed_at).toISOString(),routeTaskId:row.route_task_id}));
-      if(changed.length)await page(changed);
-      if(rows.length<500)break;
-      after=rows.at(-1)!.id;
-    }
-    return through;
-  } };
-}

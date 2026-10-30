@@ -365,7 +365,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     const metadataKey = `jurisdiction:${proof?.jurisdictionId}`, changes = candidate.changeSet;
     const previous = !prior || !changes || changes.added.some(delta => delta.key === metadataKey) ? undefined :
       (changes.changed.find(delta => delta.key === metadataKey)?.before ?? current) as Omit<VotingJurisdiction, "sites"> | undefined;
-    const covered = new Set(proof?.replaceSourceUrls ?? []);
+    const covered = new Set(proof?.replaceSourceUrls ?? []), owned = new Set(proof?.doors.flatMap(door => [door.url, ...(door.supersedes ?? [])]));
     const valid = proof !== null && checked && candidate.sourceId === "voting-sites" &&
       previous?.electionDate === proof.electionDate && current?.electionDate === proof.electionDate &&
       keys.size === removed.length && evidence.length === removed.length && removed.every(delta => {
@@ -374,7 +374,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
         const site = delta.before as VotingSite | null;
         if (!site || delta.key !== `site:${proof.jurisdictionId}:${site.id}`) return false;
         const sources = new Set(site.sources?.length ? site.sources.map(source => source.url) : [previous.sourceUrl]);
-        return sources.size > 0 && new Set(row.sourceUrls).size === row.sourceUrls.length && row.sourceUrls.length === sources.size &&
+        return [...sources].some(url => owned.has(url)) && new Set(row.sourceUrls).size === row.sourceUrls.length && row.sourceUrls.length === sources.size &&
           row.sourceUrls.every(url => sources.has(url) && covered.has(url));
       });
     return result("COMPLETENESS_HORIZON_VALIDITY", valid ? "PASS" : "FAIL",

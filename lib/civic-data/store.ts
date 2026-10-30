@@ -2125,11 +2125,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const candidate=this.justWrittenBills.get(candidateId);if(!candidate)return undefined;
     // Replace the old whole-row read with the same persisted state/proof metadata.
     const record=await this.readPublishedCandidateMetadata(candidateId);if(!record)return null;
-    if(record.candidate.id!==candidate.id||record.candidate.sourceId!==candidate.sourceId||
-      record.candidate.recordClass!==candidate.recordClass||record.candidate.scope!==candidate.scope||
-      record.candidate.retrieval.rawHash!==candidate.retrieval.rawHash||
-      record.candidate.normalization.normalizedHash!==candidate.normalization.normalizedHash||
-      record.candidate.normalization.normalizedPayloadHash!==candidate.normalization.normalizedPayloadHash)
+    const identity=(c:PublishedCandidateMetadata["candidate"])=>[c.id,c.sourceId,c.recordClass,c.scope,c.retrieval.rawHash,c.normalization.normalizedHash,c.normalization.normalizedPayloadHash];
+    if(identity(record.candidate).some((value,index)=>value!==identity(candidate)[index]))
       throw Error(`CANDIDATE_OWNED_BILL_ENVELOPE_MISMATCH:${candidateId}`);
     return{...record,candidate};
   }
@@ -2164,22 +2161,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ? sql`${sql.param(params[Number(part.slice(1)) - 1])}` : sql.raw(part)), sql``);
     return (await this.db.execute(statement)).rows as Record<string, unknown>[];
   }
-  private async readPayloadParts(hashes: readonly string[]) {
-    return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));
-  }
   private readonly payloadPartIO: CivicPayloadPartIO = {
     existing: async hashes => (await this.db.select({ hash: civicDataPayloadParts.hash }).from(civicDataPayloadParts)
       .where(inArray(civicDataPayloadParts.hash, [...hashes]))).map(row => row.hash),
     write: async parts => { await this.db.insert(civicDataPayloadParts).values([...parts]).onConflictDoNothing(); },
-    read: async hashes => {
-      const values = (keys: readonly string[]) => this.readPayloadParts(keys);
-      return this.readCache.rows({ namespace: "payload-part", keys: hashes,
-        versions: async keys => this.db.select({ key: civicDataPayloadParts.hash,
-          etag: sql<string>`concat('part-v1/',${civicDataPayloadParts.hash})`,
-        }).from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...keys])),
-        values, keyOf: row => row.hash,
-      });
-    },
+    // A part is its content hash and is never changed or deleted: a held copy needs no database check.
+    read: async hashes => this.readCache.rows({ namespace: "payload-part", keys: hashes,
+      versions: async keys => keys.map(key => ({ key, etag: `part-v1/${key}` })),
+      values: keys => this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...keys])), keyOf: row => row.hash }),
   };
   private readonly payloadParts = new CivicPayloadParts(this.payloadPartIO);
   private readonly ownedPayloadParts = new CivicPayloadParts(this.payloadPartIO);

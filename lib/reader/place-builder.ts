@@ -641,35 +641,6 @@ async function heldPlacePage(id:string,query:Query):Promise<HeldPlacePage|undefi
   }};
 }
 
-const ADOPT_CURSOR = "place-pages:adopt";
-const ADOPT_PAGES = 500;
-
-/**
- * Carries the retired queue's marks and each page's dependencies onto the page rows themselves, a few hundred pages a step in
- * place order, from the old tables' own rows. A page keeps what it was built with; only marks and dependencies move.
- */
-async function adoptHeldPages(db: FactDb, deadline: number): Promise<void> {
-  while (Date.now()<deadline) {
-    const finished=await db.transaction(async query=>{
-      const after=await readPassCursor(query,ADOPT_CURSOR) ?? "";
-      if(after==="done")return true;
-      const [chunk]=await query(`WITH chunk AS (SELECT place_id FROM place_page WHERE place_id>$1 AND place_id NOT LIKE 'zip:%' ORDER BY place_id LIMIT $2),
-        moved AS (UPDATE place_page p SET depends=ARRAY(SELECT d.entity_id FROM place_page_dependency d WHERE d.page_id=p.place_id ORDER BY 1),
-          stale_at=coalesce(p.stale_at,q.queued_at),priority=coalesce(q.priority,p.priority) FROM chunk
-          LEFT JOIN rebuild_queue q ON q.place_id=chunk.place_id AND (q.built_generation IS NULL OR q.generation>q.built_generation)
-          WHERE p.place_id=chunk.place_id AND p.depends IS NULL RETURNING p.place_id)
-        SELECT (SELECT count(*)::int FROM chunk) AS n,(SELECT max(place_id) FROM chunk) AS last`,[after,ADOPT_PAGES]);
-      const last=Number(chunk?.n)===ADOPT_PAGES ? String(chunk!.last) : null;
-      await query(`INSERT INTO place_page(place_id,stale_at,priority) SELECT q.place_id,q.queued_at,q.priority FROM rebuild_queue q
-        JOIN entity e ON e.id=q.place_id WHERE q.place_id>$1 AND ($2::text IS NULL OR q.place_id<=$2) AND q.place_id NOT LIKE 'zip:%'
-          AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) ON CONFLICT DO NOTHING`,[after,last]);
-      await writePassCursor(query,ADOPT_CURSOR,last ?? "done");
-      return false;
-    });
-    if(finished)return;
-  }
-}
-
 const STRIP_CURSOR = "place-pages:strip";
 /** One look at a time: at most this much of saved rows is read, then nothing for the pause, so the pass costs about 24 MB an hour whatever the turn rate. */
 const STRIP_BYTES = 8_000_000, STRIP_PAUSE_MS = 20 * 60_000, STRIP_PAGES = 25;
@@ -715,7 +686,6 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
   const db=options.db ?? readerFactDb(),purge=options.purge ?? purgeReaderCacheTags;
   const limit=Math.max(1,options.limit ?? 128),concurrency=Math.max(1,Math.min(options.concurrency ?? 4,limit));
   const deadline=Date.now()+(options.timeBudgetMs ?? 240_000);
-  await adoptHeldPages(db,Date.now()+Math.floor((deadline-Date.now())/4));
   const [pass]=await db.transaction(query=>query("SELECT clock_timestamp()::text AS started_at"));
   let started=0,rebuilt=0,unchanged=0,failed=0,neverBuilt=true;
   const work=async()=>{

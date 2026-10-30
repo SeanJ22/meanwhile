@@ -176,6 +176,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "SPN-01E_old_pages_contract": { phase: "contract", why: "Drops the retired rebuild queue and page-dependency tables, the ZIP pages that readers no longer read, and the page columns nothing writes, once every page has taken its marks and dependencies and a snapshot is held.",
+    contractStatementTimeoutMs: 120_000 },
   "SPN-01E_page_marks": { phase: "expand", why: "A place page carries its own rebuild mark, lease, priority and the entities it shows, so the rebuild queue and the dependency table can go once readers and writers use them.", lockFirst: ["place_page"] },
   "SPN-01D_place_slice": { phase: "expand", why: "Adds the table that holds one small slice per card per place; nothing reads it until readers switch." },
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",

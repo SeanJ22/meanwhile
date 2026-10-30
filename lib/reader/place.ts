@@ -10,7 +10,6 @@ import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { buildPlacePackage } from "./place-builder.ts";
-import { readStoredZipPage } from "./stored-zip-page.ts";
 import { mergePlaceRows } from "./place-compose.ts";
 import { currentPlaceRow,type BodyHeaders } from "./place-identity.ts";
 import { unpackPlaceContextRow } from "./place-ready.ts";
@@ -19,7 +18,7 @@ import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
 export const identityCtes = `page_dependencies AS MATERIALIZED (
-  SELECT s.id AS page_id,d.entity_id FROM selected s JOIN place_page p ON p.place_id=s.id CROSS JOIN LATERAL unnest(coalesce(p.depends,ARRAY(SELECT o.entity_id FROM place_page_dependency o WHERE o.page_id=p.place_id))) AS d(entity_id)
+  SELECT s.id AS page_id,d.entity_id FROM selected s JOIN place_page p ON p.place_id=s.id CROSS JOIN LATERAL unnest(p.depends) AS d(entity_id)
   UNION SELECT id,id FROM selected
 ), page_headers AS MATERIALIZED (
   SELECT d.page_id,b.id AS original,c.id,c.name FROM page_dependencies d JOIN entity b ON b.id=d.entity_id AND b.kind='body'
@@ -31,10 +30,7 @@ export const identityCtes = `page_dependencies AS MATERIALIZED (
 export const identityHeaders=(page?:string)=>`coalesce((SELECT jsonb_object_agg(original,jsonb_build_object('id',id,'name',name))
   FROM page_headers${page?` WHERE page_id=${page}`:''}),'{}'::jsonb)`;
 
-/**
- * Every selection of places and boards is composed from their saved pages and the identity aliases they depend on. A page whose marks have not
- * been carried onto it yet (depends is null) is still marked, and still depends on what it did, in the old queue and dependency table.
- */
+/** Every selection of places and boards is composed from their saved pages and the identity aliases they depend on. */
 export const PLACE_SELECTION = `WITH requested_bodies AS (
   SELECT coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=id),id) AS id
     FROM unnest($3::text[]) AS requested(id)
@@ -51,9 +47,7 @@ export const PLACE_SELECTION = `WITH requested_bodies AS (
     (SELECT id FROM requested_bodies UNION SELECT id FROM state_bodies)
     AND EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=x.value
       AND p.context ? CASE WHEN $7::boolean THEN 'history' ELSE 'current' END)
-    AND CASE WHEN EXISTS(SELECT 1 FROM place_page q WHERE q.place_id=x.entity_id AND q.depends IS NOT NULL)
-      THEN EXISTS(SELECT 1 FROM place_page q WHERE q.place_id=x.entity_id AND q.stale_at IS NOT NULL)
-      ELSE EXISTS(SELECT 1 FROM rebuild_queue q WHERE q.place_id=x.entity_id AND (q.built_generation IS NULL OR q.generation>q.built_generation)) END
+    AND EXISTS(SELECT 1 FROM place_page q WHERE q.place_id=x.entity_id AND q.stale_at IS NOT NULL)
   UNION SELECT id FROM entity WHERE kind='place' AND (state=$1::char(2) OR $1='US' AND id='ocd-division/country:us')
     AND id ~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$'
     AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
@@ -181,12 +175,9 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
   const withRows=rows.map(row=>row.held?{...row,row:heldRows.get(rowKey(row))}:row);
   // The national routing record is held once in this server's memory, not in each saved page.
   const routing=()=>input.bodyFactsOnly||input.meetingIds!==undefined?null:nationalEverydayRouting().catch(error=>{console.error("READER_ROUTING_UNAVAILABLE",error);return null;});
-  // A selection with a place that has no saved content yet is answered as it was before saved pages: a ZIP by its own stored page while it
-  // has one (nothing writes that page now), anything else assembled live from the fact store. This goes when every place is built.
+  // A selection with a place that has no saved content yet is assembled live from the fact store, as it was before saved pages. This goes when every place is built.
   if(withRows.some(row=>!row.row)) {
-    const zip=input.placeId?.startsWith("zip:")&&!input.includeHistory&&!input.includeAgenda&&!input.bodyFactsOnly&&!input.meetingIds&&!input.allBodies;
-    const stored=zip?await readStoredZipPage(input.placeId!,query):null;
-    const place=stored??{...await buildPlacePackage({...input,includeAgenda:input.includeAgenda??false},query),everydayRouting:await routing()};
+    const place={...await buildPlacePackage({...input,includeAgenda:input.includeAgenda??false},query),everydayRouting:await routing()};
     pageIds.set(place,rows.map(row=>row.page_id));
     return place;
   }

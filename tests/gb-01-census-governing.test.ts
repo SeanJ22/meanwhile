@@ -15,7 +15,7 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { queueUnbuiltPlacePages } from "../scripts/prepare-place-pages.mts";
+import { queueUnbuiltPlacePages } from "../lib/reader/cache.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";

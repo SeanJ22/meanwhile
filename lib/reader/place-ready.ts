@@ -1,12 +1,9 @@
 import { Buffer } from "node:buffer";
 import { brotliCompressSync, brotliDecompressSync, constants, gunzipSync } from "node:zlib";
-import type { PlacePackage } from "./place-types.ts";
-import type { BodyTerritorySelection } from "../registry/body-territory.ts";
 
 interface PackedReadyPlace {
   readonly encoding: "br-json-v1" | "gzip-json-v1";
   readonly data: string;
-  readonly territory?: PackedReadyPlace;
 }
 
 function pack(page: unknown): PackedReadyPlace {
@@ -19,20 +16,6 @@ function unpack<T>(page: unknown): T {
     throw new Error("PLACE_PAGE_ENCODING_INVALID");
   const bytes=Buffer.from(page.data,"base64");
   return JSON.parse((page.encoding==="br-json-v1"?brotliDecompressSync(bytes):gunzipSync(bytes)).toString("utf8")) as T;
-}
-
-/** Compress the complete JSON response before it crosses the database connection. */
-export function packReadyPlace(page: PlacePackage,territory?:BodyTerritorySelection|null): PackedReadyPlace {
-  return {...pack(page),...(territory===undefined?{}:{territory:pack(territory)})};
-}
-
-/** Previously built uncompressed pages remain readable until their next rebuild. */
-export function unpackReadyPlace(page: unknown): PlacePackage { return unpack(page); }
-
-/** Undefined is a legacy page; null is a saved selection with no territory geometry. */
-export function unpackReadyTerritory(page:unknown):BodyTerritorySelection|null|undefined {
-  return page && typeof page==='object' && 'encoding' in page && 'territory' in page
-    ? unpack<BodyTerritorySelection|null>(page.territory) : undefined;
 }
 
 type Row = Record<string,unknown>;

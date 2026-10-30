@@ -26,8 +26,8 @@ export async function readOldest(sql: Sql,at=new Date().toISOString()): Promise<
 /** The page queue is held on the reader database; only grouped ages leave it. */
 export async function readRebuildWaiting(sql: Sql): Promise<OldestWaiting[]> {
   const rows = await query(sql,"oldest-place-pages",`SELECT coalesce(e.state,'US') AS state,
-    count(*)::int AS count,min(q.queued_at) AS oldest_at FROM rebuild_queue q
-    JOIN entity e ON e.id=q.place_id GROUP BY coalesce(e.state,'US') ORDER BY state`);
+    count(*)::int AS count,min(q.stale_at) AS oldest_at FROM place_page q
+    JOIN entity e ON e.id=q.place_id WHERE q.stale_at IS NOT NULL GROUP BY coalesce(e.state,'US') ORDER BY state`);
   return rows.map(r=>({state:String(r.state),family:"Place pages",stage:"rebuilt",count:Number(r.count),
     oldestAt:r.oldest_at?countTimestamp(r.oldest_at):null,owner:"the page builder"}));
 }

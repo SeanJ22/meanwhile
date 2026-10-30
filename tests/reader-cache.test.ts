@@ -116,21 +116,20 @@ test("publication tags follow state scopes and encoded body partitions", () => {
 test("a body calendar queues its actual place consumers while retaining its state's other saved pages", async t => {
   const db = await factDb();
   t.after(() => db.pg.close());
-  const root = "ocd-division/country:us/state:az", other = "zip:85001", own = "zip:85701";
+  const root = "ocd-division/country:us/state:az", other = "ocd-division/country:us/state:az/place:other-zip", own = "ocd-division/country:us/state:az/place:own-zip";
   await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),
     ($2,'place','Tucson','AZ',$1),($3,'body','Council','AZ',$2),($4,'place','Own ZIP','AZ',$1),($5,'place','Other ZIP','AZ',$1)`,
     [root,PLACE,BODY,own,other]);
   await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)",[BODY,PLACE]);
   await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias','legacy-council')",[BODY]);
-  await db.query("INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id",[[own,other]]);
-  await db.query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$3),($2,$3),($1,$4),($1,$5)",[own,other,root,PLACE,BODY]);
+  await db.query("INSERT INTO place_page(place_id,depends) VALUES($1,ARRAY[$3,$4,$5]),($2,ARRAY[$3])",[own,other,root,PLACE,BODY]);
   const purge = async (tags: readonly string[]) => {assert.deepEqual(tags,["reader-state:AZ"]);return{purged:true};};
   for(const id of [BODY,"legacy-council"]){
     const scope=readerCacheScopeForPublication(`source:ical:body:${encodeURIComponent(id)}`,{readModels:[{bodyId:BODY}]});
     await invalidateReaderCache(scope,purge,db.query);
-    const pages=(await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=ANY($1::text[]) ORDER BY place_id",[[own,other]])).map(row=>row.place_id);
+    const pages=(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=ANY($1::text[]) ORDER BY place_id",[[own,other]])).map(row=>row.place_id);
     assert.deepEqual(pages,[own],"a state tag and a body alias do not fan out to unrelated ZIP pages");
-    await db.query("DELETE FROM rebuild_queue");
+    await db.query("UPDATE place_page SET stale_at=NULL");
   }
 });
 
@@ -222,14 +221,13 @@ test("both Postgres nothing-changed paths purge nothing today and on tomorrow's 
 test("an empty calendar's new source check queues its consuming place without rereading payloads", async () => {
   const db = await factDb();
   try {
-    const root = "ocd-division/country:us/state:az", own = "zip:85701", unrelated = "zip:85001";
+    const root = "ocd-division/country:us/state:az", own = "ocd-division/country:us/state:az/place:own-zip", unrelated = "ocd-division/country:us/state:az/place:other-zip";
     await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),
       ($2,'place','Tucson','AZ',$1),($3,'body','Council','AZ',$2),($4,'place','Own ZIP','AZ',$1),($5,'place','Other ZIP','AZ',$1)`,
       [root,PLACE,BODY,own,unrelated]);
     await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)",[BODY,PLACE]);
     await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias','legacy-empty-council')",[BODY]);
-    await db.query("INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id",[[own,unrelated]]);
-    await db.query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$3),($2,$3),($1,$4),($1,$5)",[own,unrelated,root,PLACE,BODY]);
+    await db.query("INSERT INTO place_page(place_id,depends) VALUES($1,ARRAY[$3,$4,$5]),($2,ARRAY[$3])",[own,unrelated,root,PLACE,BODY]);
     const scope = "source:ical:body:legacy-empty-council", id = "empty-calendar-version";
     await publishMoneyFixture(db, { sourceId: "empty-calendar", recordClass: "MEETING", scope, id,
       payload: {formatVersion:1,generatedAt:NOW.toISOString(),meetings:[],agendaDocuments:[],sources:[],counts:{fresh:0,carried:0,total:0}} });
@@ -248,13 +246,13 @@ test("an empty calendar's new source check queues its consuming place without re
         rawHash: "b".repeat(64), retrievedAt: NOW.toISOString() } };
     const observedAt = new Date(NOW.getTime() + 1_000).toISOString();
     assert.equal((await store.confirmUnchanged(input,observedAt)).kind,"CONFIRMED");
-    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=ANY($1::text[])",[[own,unrelated]])).map(row=>row.place_id),[own]);
+    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=ANY($1::text[])",[[own,unrelated]])).map(row=>row.place_id),[own]);
     assert.ok(statements.every(text=>!text.includes("reader_payload_node")&&!text.includes("civic_data_payload_parts")),
       "the canonical body alias supplies the queue footprint even when the confirmed calendar is empty");
-    await db.query("DELETE FROM rebuild_queue");
+    await db.query("UPDATE place_page SET stale_at=NULL");
     for(const recordClass of ["CURATED_READER_RECORD","REGISTRATION","FEDERAL_MONEY"] as const)
       assert.equal((await store.confirmUnchanged({...input,recordClass},observedAt)).kind,"CONFIRMED");
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],"other source confirmations do not change place-package metadata");
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"),[],"other source confirmations do not change place-package metadata");
   } finally { await db.pg.close(); }
 });
 
@@ -409,12 +407,11 @@ test("one committee's funding changes queue its consuming roster pages and prese
   t.after(() => db.pg.close());
   const root = "ocd-division/country:us/state:wa";
   const oldPerson = "funded-old-person", newPerson = "funded-new-person";
-  const oldPage = "zip:98101", newPage = "zip:98402", unrelated = "zip:99201";
+  const oldPage = "ocd-division/country:us/state:wa/place:old-roster", newPage = "ocd-division/country:us/state:wa/place:new-roster", unrelated = "ocd-division/country:us/state:wa/place:unrelated";
   await db.query(`INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Washington','WA'),
     ($2,'place','Old roster','WA'),($3,'place','New roster','WA'),($4,'place','Unrelated','WA'),
     ($5,'person','Anita Crawford-Willis','WA'),($6,'person','Anita Crawford-Willis','WA')`, [root,oldPage,newPage,unrelated,oldPerson,newPerson]);
-  await db.query(`INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id`, [[oldPage,newPage,unrelated]]);
-  await db.query(`INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$4),($2,$4),($3,$4),($1,$5),($2,$6)`,
+  await db.query(`INSERT INTO place_page(place_id,depends) VALUES($1,ARRAY[$4,$5]),($2,ARRAY[$4,$6]),($3,ARRAY[$4])`,
     [oldPage,newPage,unrelated,root,oldPerson,newPerson]);
   const resource = campaignFinanceSource("WA").resources[0];
   const [raw] = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/wa-native-excerpt.json", import.meta.url), "utf8"));
@@ -422,19 +419,19 @@ test("one committee's funding changes queue its consuming roster pages and prese
     byteLength: 100, retrievedAt: NOW.toISOString(), publicationDate: null }),
     person: { id: oldPerson, name: "Anita Crawford-Willis", seat: "test-house-seat", sourceUrl: "https://www.seattle.gov/courts" } };
   const purge = async (tags: readonly string[]) => { assert.deepEqual(tags,["reader-state:WA"]);return {purged:true}; };
-  const queued = async () => (await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=ANY($1::text[]) ORDER BY place_id", [[oldPage,newPage,unrelated]])).map(row => row.place_id);
+  const queued = async () => (await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=ANY($1::text[]) ORDER BY place_id", [[oldPage,newPage,unrelated]])).map(row => row.place_id);
   await fileCampaignMoneyFacts(db,"WA",[record],NOW.toISOString(),{purge});
   assert.deepEqual(await queued(),[oldPage],"one raw committee queues its actual roster consumer, without the other Washington ZIPs");
-  await db.query("DELETE FROM rebuild_queue");
+  await db.query("UPDATE place_page SET stale_at=NULL");
   await rebuildCampaignCycles(db,"WA",[oldPerson],NOW.toISOString(),purge);
   assert.ok((await db.query("SELECT id FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%' AND status='live'",[oldPerson])).length);
   assert.deepEqual(await queued(),[oldPage],"cycle and donor changes retain the same bounded footprint");
-  await db.query("DELETE FROM rebuild_queue");
+  await db.query("UPDATE place_page SET stale_at=NULL");
   await rebuildCampaignCycles(db,"WA",[oldPerson],NOW.toISOString(),purge);
-  assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],"an unchanged cycle queues nothing");
+  assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"),[],"an unchanged cycle queues nothing");
   await fileCampaignMoneyFacts(db,"WA",[{...record,person:{...record.person,id:newPerson}}],NOW.toISOString(),{purge});
   assert.deepEqual(await queued(),[newPage,oldPage].sort(),"a moved committee refreshes both old and new person's consumers");
-  await db.query("DELETE FROM rebuild_queue");
+  await db.query("UPDATE place_page SET stale_at=NULL");
   await rebuildCampaignCycles(db,"WA",[oldPerson,newPerson],NOW.toISOString(),purge);
   assert.deepEqual(await queued(),[newPage,oldPage].sort(),"removing the old cycle and adding the new one queues both consumers");
 });

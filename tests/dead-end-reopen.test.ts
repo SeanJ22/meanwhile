@@ -172,18 +172,17 @@ test("a hunt that leaves a blank open names what would unlock it, the list's clo
   assert.deepEqual([dead.status, (dead.unlock as Unlock).kind, (dead.unlock as Unlock).name, dead.dead_since !== null], ["done", "parser", "ecode360", true]);
   assert.match((dead.unlock as Unlock).text, /meeting_times: Their agendas/);
 
-  // Nothing new happens, so the next turn within the clock's interval and the days after leave it alone.
+  // A reader for ecode360 is installed. The list's clock last ran at the start; until its next turn (five minutes on) the dead end waits.
+  tick(2 * 60_000);
+  await log.record([{ kind: "parser", name: "ecode360", platform: "ecode360", because: "a new reader for ecode360", version: "abc" }], at());
   tick(60_000);
   await claims.select(["ma"], false);
   assert.equal((await rowOf(query, `${place}#board`)).status, "done");
-
-  // A reader for ecode360 is installed: on the list's next turn the dead end is back, in its tier, with the reason.
-  tick(9 * 60_000);
-  await log.record([{ kind: "parser", name: "ecode360", platform: "ecode360", because: "a new reader for ecode360", version: "abc" }], at());
+  tick(2 * 60_000);
   await claims.select(["ma"], false);
   const back = await rowOf(query, `${place}#board`);
-  assert.deepEqual([back.status, back.tier], ["waiting", "reader"]);
-  const items = await readReopenedItems(query, iso(T0 + 11 * 60_000));
+  assert.deepEqual([back.status, back.tier], ["waiting", "reader"], "on the next turn it is back, in its tier");
+  const items = await readReopenedItems(query, at());
   assert.equal(items.length, 1);
   assert.equal(items[0]!.cause, "Reopened — unlocked by a new reader for ecode360");
   assert.equal(items[0]!.next, "Back on the work list, waiting its turn.");
@@ -193,7 +192,7 @@ test("a hunt that leaves a blank open names what would unlock it, the list's clo
   // Claimed and finished again, Admin follows the same row.
   const queued = await claims.claim(true);
   assert.equal(queued?.taskIds.length, 1);
-  assert.equal((await readReopenedItems(query, iso(T0 + 12 * 60_000)))[0]!.next, "Back on the list and being worked now.");
+  assert.equal((await readReopenedItems(query, at()))[0]!.next, "Back on the list and being worked now.");
 });
 
 test("Admin lists only the dead ends reopened in the last week, a few at a time", async t => {

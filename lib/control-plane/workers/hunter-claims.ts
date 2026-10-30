@@ -1,4 +1,4 @@
-import { reopenDeadEnds, type CapabilityLog, type Unlock } from "../../core/capability.ts";
+import { REOPEN_BATCH, reopenDeadEnds, type CapabilityLog, type Unlock } from "../../core/capability.ts";
 import type { WorkList, WorkRow } from "../../core/work.ts";
 import { plannedTaskOf, taskOfRow } from "../../hunt/work-hunt.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -43,6 +43,7 @@ export function hunterClaims(deps: {
     try {
       const reopened = await reopenDeadEnds(deps.list, deps.capabilities, await deps.deadEndMs(), deps.now());
       if (reopened) deps.log(`hunter lane: ${reopened} dead end(s) went back on the work list`);
+      if (reopened >= REOPEN_BATCH) clockedAt = 0;
     } catch (error) { deps.log(`hunter lane: dead ends could not be reopened this turn (${error instanceof Error ? error.message : String(error)})`); }
   };
   return {

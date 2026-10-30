@@ -15,7 +15,6 @@ import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
 const NOW = "2026-09-25T12:00:00.000Z";
 const PAST = "2026-09-18T12:00:00.000Z";
-const OB = "freshness:candidate-enrichment:nj:2026:poe-pat#candidate-authored-awaits-site";
 
 /* ------------------------------------------------------------ routine reads */
 

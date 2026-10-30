@@ -72,7 +72,6 @@ const RUNTIME_OWNED = [
 
   "absentUntil",
   "absenceUnlock",
-  "absenceReopened",
 
   "materializedBy",
 

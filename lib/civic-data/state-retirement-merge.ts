@@ -377,8 +377,3 @@ export async function reconcileRetirementStateInput(input: RetirementInput) {
     return { family: prepared.family, state: prepared.state, status: prepared.candidate ? "PUBLISHED" as const : "CURRENT" as const, currentSelections: prepared.currentSelections };
   });
 }
-
-/** Stops before the publisher; production read-only roles are sufficient for every database operation. */
-export async function previewRetirementStateInput(input: RetirementInput) {
-  return withRetirementStateInput(input, async prepared => ({ ...prepared, status: prepared.candidate ? "PREVIEW" as const : "CURRENT" as const }));
-}

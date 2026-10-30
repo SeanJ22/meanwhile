@@ -19,7 +19,6 @@ export interface OwnerAssignmentRow {
 export interface OwnerAssignmentHead {
   readonly id: string;
   readonly state: string;
-  readonly members: readonly string[];
   readonly clause: string | null;
   readonly subjectId: string | null;
   readonly versions: Readonly<Record<string, string>>;
@@ -91,7 +90,7 @@ const fieldsOf = (row: OwnerAssignmentRow): Record<string, unknown> => ({
   a: row.indexSegments.map(segment => segment.lastActivityAt), c: row.part,
 });
 export function ownerAssignmentHeadOf(row: OwnerAssignmentRow): OwnerAssignmentHead {
-  return {id:row.id,state:row.state,members:row.group.members,clause:row.group.clause,subjectId:row.group.obligation?.subjectId??null,
+  return {id:row.id,state:row.state,clause:row.group.clause,subjectId:row.group.obligation?.subjectId??null,
     versions:Object.fromEntries(Object.entries(fieldsOf(row)).map(([key,value])=>[key,digest(value)]))};
 }
 export function ownerAssignmentContributions(rows: readonly OwnerAssignmentRow[]): ReadonlyMap<string,AssignmentPart> {
@@ -114,7 +113,7 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
     read: async ids => ids.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`, [ids]) : [],
     async heads(ids) {
       if (!ids.length) return [];
-      return await sql.query(`SELECT id,state_code AS state,members,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
+      return await sql.query(`SELECT id,state_code AS state,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
         jsonb_build_object('g',md5(((value->'group')-'members'-'publications'-'usd'-'items'-'scoutKeys')::text),'m',md5(members::text),
           'p',md5((value #> '{group,publications}')::text),'s',md5((SELECT jsonb_agg(segment-'lastActivityAt'-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount' ORDER BY ordinal)
             FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),

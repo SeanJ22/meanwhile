@@ -891,7 +891,7 @@ export class OwnerSnapshotFold {
     for (const row of await this.#repos.ownerAssignmentRows.heads(unique(ids).filter(id => !this.#priorRows.has(id)))) {
       await this.#load(row.state);
       this.#priorRows.set(row.id,row);
-      this.#setGroup(row.state,row.id,{members:row.members,clause:row.clause,obligation:null,publications:[]});
+      this.#setGroup(row.state,row.id,{members:[],clause:row.clause,obligation:null,publications:[]});
     }
   }
 
@@ -968,7 +968,7 @@ export class OwnerSnapshotFold {
       const produced=new Map([...derived].map(([id,entry])=>[id,{...entry,members:src.members.get(id)??[]}]));
       const items=new Map(src.workItems.map(w=>[w.id,w]));
       const stateOfEntry=(id:string,entry:{index:{kind:string}})=>entry.index.kind==="WORK_ITEM"?homeOf(id,items.get(id)):stateOf(id);
-      const owners=await this.#repos.ownerAssignmentRows.find({members:unique([...src.members.values()].flat())});
+      const owners=src.owners;
       await this.#loadRows(unique([...owners,...produced.keys()]));
       const added=unique([...owners,...produced.keys()]).filter(id=>!ids.has(id));
       if(added.length){for(const id of added)ids.add(id);continue;}

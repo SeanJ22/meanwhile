@@ -7,7 +7,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { buildCostPanel, NO_MODEL_KEY, PROD_ASK_KEY } from "../lib/control-plane/cost-panel.ts";
 import { buildFleetView, dispatchHistory, whereOf } from "../lib/control-plane/fleet-view.ts";
 import type { RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import { validateIntentNote } from "../lib/control-plane/research-view.ts";
@@ -187,51 +186,6 @@ test("ADM-7: the five groups cover the roles, with counts that carry denominator
 /* ================================================================== *
  * cost with numbers
  * ================================================================== */
-
-test("ADM-6: the ledger rolls up by role and by model with measured/unmeasured beside every row; the reader path is one short gap", () => {
-  const costs = [
-    { attemptId: "a1", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "SCOUT" as const, cost: { inputTokens: 10, outputTokens: 5, usd: 0.5, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
-    { attemptId: "a2", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "SCOUT" as const, cost: { inputTokens: 10, outputTokens: 5, usd: 0.25, durationMs: 1, bytesFetched: null, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
-    { attemptId: "a3", workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: "ACQUIRER" as const, cost: { inputTokens: null, outputTokens: null, usd: null, durationMs: 4, bytesFetched: 9, requestCount: 1, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: NOW },
-  ];
-  const panel = buildCostPanel({
-    costs,
-    attempts: [
-      { id: "a1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-      { id: "a2", worker: { version: "claude-opus-5", provider: "anthropic" } },
-      { id: "a3", worker: { version: "deterministic-walker", provider: "we-the-people" } },
-    ],
-    cacheByRole: [{ role: "SCOUT", cacheRead: 800, cacheWrite: 100, uncachedInput: 100, hitRate: 0.8, repeatedPrefixTurns: null, repeatedPrefixMisses: null, attempts: 2, denominator: "d" }],
-    share: { thisCycle: { deterministic: 7, model: 3, modelShare: 0.3 }, window: { deterministic: 7, model: 3, modelShare: 0.3, cycles: 1, since: NOW }, delta: 0 },
-    verifiedRecords: 3,
-  });
-  const scout = panel.costByRole.find((r) => r.key === "SCOUT")!;
-  assert.ok(scout.usd.held && scout.usd.value.value === 0.75 && scout.usd.value.denominator === 0.75);
-  assert.equal(scout.attemptsMeasured, 2);
-  const acq = panel.costByRole.find((r) => r.key === "ACQUIRER")!;
-  // A role whose attempts all ran without a paid model is $0 by design, not a gap.
-  assert.equal(acq.kind, "FREE_BY_DESIGN");
-  assert.ok(acq.usd.held && acq.usd.value.value === 0);
-  assert.equal(acq.attemptsUnmeasured, 1);
-  assert.deepEqual(panel.costByModel.map((r) => r.key), ["claude-opus-5", NO_MODEL_KEY]);
-  const cache = panel.cacheHitRateByCaller.find((r) => r.callerKey.startsWith("SCOUT"))!;
-  assert.ok(cache.hitRate.held && cache.hitRate.value.value === 800 && cache.hitRate.value.denominator === 1000);
-  const ask = panel.cacheHitRateByCaller.find((r) => r.callerKey === PROD_ASK_KEY)!;
-  assert.ok(!ask.hitRate.held && ask.hitRate.gap.says.length < 120, "one short line, not a paragraph");
-  assert.ok(panel.deterministicShare.held && panel.deterministicShare.value.value === 7 && panel.deterministicShare.value.denominator === 10);
-  assert.ok(panel.costPerVerifiedRecord.held && panel.costPerVerifiedRecord.value.value === 0.25 && panel.costPerVerifiedRecord.value.denominator === 3);
-  assert.equal(panel.summary.measuredUsd, 0.75);
-  assert.equal(panel.summary.attemptsUnmeasured, 1);
-});
-
-test("ADM-6: nothing measured is a gap in every row, never a zero", () => {
-  const panel = buildCostPanel({ costs: [], attempts: [], cacheByRole: null, share: null, verifiedRecords: null });
-  assert.deepEqual(panel.costByRole, []);
-  assert.ok(!panel.deterministicShare.held);
-  assert.ok(!panel.costPerVerifiedRecord.held);
-  assert.equal(panel.summary.measuredUsd, null);
-  assert.match(src("scripts/publish-owner-snapshot.mts"), /costPanelOf\(/);
-});
 
 /* ================================================================== *
  * the header acknowledges a choice at once and carries the theme switch

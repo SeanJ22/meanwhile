@@ -2,10 +2,9 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { readDecisionCards, readSnapshot, SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
+import { SNAPSHOT_ID } from "../lib/control-plane/admin-data.ts";
 import { ADMIN_V6_CAPABILITY_REVISION } from "../lib/control-plane/admin-view/v6-capabilities.ts";
 import { PULSE_CONFIG_REVISION_FIELDS, PULSE_RESEARCH_FIELDS, PULSE_SNAPSHOT_FIELDS, readPulse } from "../lib/control-plane/gateway/pulse-read.ts";
 import type { OwnerSnapshot } from "../lib/control-plane/owner-surface.ts";
@@ -207,17 +206,3 @@ test("the pulse reads the snapshot and the research state only narrowed, and onl
 
 /* ------------------------------------------------------------------ Fleet · Now's cards */
 
-test("Fleet · Now's decision cards are the snapshot's, in the snapshot read's words when there is none", async () => {
-  const repos = await publishedWorld();
-  const whole = await readSnapshot(repos);
-  const cards = await readDecisionCards(repos);
-  assert.equal(cards.kind, "HELD");
-  assert.deepEqual(cards.kind === "HELD" ? cards.value : null, whole.kind === "HELD" ? { decisionCards: whole.value.decisionCards } : null);
-
-  const empty = createMemoryRepositories();
-  assert.deepEqual(await readDecisionCards(empty), await readSnapshot(empty), "NOT_RECORDED says the same thing either way");
-
-  const src = readFileSync("app/(admin)/admin/page.tsx", "utf8");
-  assert.doesNotMatch(src, /readDecisionCards\(/, "the home screen no longer reads the old tracker's decision cards");
-  assert.doesNotMatch(src, /readSnapshot\(/, "the page never reads the whole snapshot");
-});

@@ -82,72 +82,11 @@ export function gap<T>(whose: GapOwner, says: string): Held<T> {
   return { held: false, gap: { whose, says } };
 }
 
-export interface CountClaim {
-
-  readonly label: string;
-  readonly stated: number;
-  readonly rendered: number;
-}
-
-export interface StatedEqualsRenderedVerdict {
-  readonly ok: boolean;
-  readonly mismatches: readonly CountClaim[];
-  readonly detail: string;
-}
-
-export function checkStatedEqualsRendered(
-  claims: readonly CountClaim[],
-): StatedEqualsRenderedVerdict {
-  const mismatches = claims.filter((c) => c.stated !== c.rendered);
-  return {
-    ok: mismatches.length === 0,
-    mismatches,
-    detail:
-      mismatches.length === 0
-        ? `${claims.length} count claim(s) checked; every stated number equals its rendered row count`
-        : mismatches
-            .map((m) => `${m.label}: stated ${m.stated}, rendered ${m.rendered}`)
-            .join("; "),
-  };
-}
-
 export interface RenderedNumber {
   readonly label: string;
   readonly value: number;
   readonly denominator: number | null;
   readonly contract: string | null;
-}
-
-export interface RenderAuditVerdict {
-  readonly ok: boolean;
-  readonly offenders: readonly string[];
-  readonly detail: string;
-  readonly checked: number;
-}
-
-export function auditRenderedNumbers(numbers: readonly RenderedNumber[]): RenderAuditVerdict {
-  const offenders = numbers
-    .filter(
-      (n) =>
-        n.denominator === null ||
-        n.denominator === undefined ||
-        n.contract === null ||
-        (typeof n.contract === "string" && n.contract.trim() === ""),
-    )
-    .map((n) =>
-      n.denominator === null || n.denominator === undefined
-        ? `${n.label} (no denominator)`
-        : `${n.label} (no interpretation contract)`,
-    );
-  return {
-    ok: offenders.length === 0,
-    offenders,
-    checked: numbers.length,
-    detail:
-      offenders.length === 0
-        ? `${numbers.length} rendered number(s) checked; each carries a denominator and an interpretation contract`
-        : `refusing to render: ${offenders.join("; ")}`,
-  };
 }
 
 export const FORBIDDEN_RECORD_FIELDS: readonly string[] = [
@@ -960,8 +899,6 @@ export interface FreshnessCycleOutcome {
 
 export type CacheObservationState = "OBSERVED" | "NOT_YET_OBSERVED" | "RECORDING_NOT_WIRED";
 
-export const ORGANIC_PROD_ASK_NOT_YET = "organic prod-ask cache read: not yet observed";
-
 export interface CacheObservationRecord {
   readonly formatVersion: number;
   readonly state: CacheObservationState;
@@ -972,32 +909,6 @@ export interface CacheObservationRecord {
   readonly cacheCreationInputTokens: number | null;
 
   readonly recorderLastSeenAt: string | null;
-}
-
-export function renderCacheObservation(record: CacheObservationRecord | null): {
-  state: CacheObservationState;
-  says: string;
-} {
-  if (!record || record.state === "RECORDING_NOT_WIRED") {
-    return {
-      state: "RECORDING_NOT_WIRED",
-      says:
-        "organic prod-ask cache read: we cannot tell — production is not yet recording cache " +
-        "observations to the control plane, so this is a gap in our instrumentation and not a " +
-        "statement about whether a reader request has happened.",
-    };
-  }
-  if (record.state === "NOT_YET_OBSERVED") {
-    return { state: "NOT_YET_OBSERVED", says: ORGANIC_PROD_ASK_NOT_YET };
-  }
-  const read = record.cacheReadInputTokens ?? 0;
-  const created = record.cacheCreationInputTokens ?? 0;
-  return {
-    state: "OBSERVED",
-    says:
-      `organic prod-ask cache read: first observed ${record.firstObservedAt ?? "at an unrecorded time"} ` +
-      `(${read} cache-read input tokens, ${created} cache-creation input tokens)`,
-  };
 }
 
 export type OwnerDecisionState =
@@ -1164,27 +1075,6 @@ export interface OwnerSnapshot {
 
 export type HealthLevel = "GREEN" | "AMBER" | "RED" | "UNKNOWN";
 
-export interface ContractCard {
-  readonly contract: string;
-  readonly level: HealthLevel;
-
-  readonly headline: string;
-
-  readonly denominator: Held<Measured>;
-
-  readonly proofAge: string;
-
-  readonly reason: string;
-
-  readonly nextAction: string | null;
-}
-
-export interface PilotHealthView {
-  readonly overall: HealthLevel;
-  readonly reason: string;
-  readonly cards: readonly ContractCard[];
-}
-
 export function contractHealthLevel(state: string): HealthLevel {
   switch (state) {
     case "GREEN":
@@ -1199,84 +1089,3 @@ export function contractHealthLevel(state: string): HealthLevel {
   }
 }
 
-function contractHeadline(state: string): string {
-  switch (state) {
-    case "GREEN":
-      return "Met";
-    case "RED":
-      return "Failing";
-    case "NOT_READY":
-      return "Not yet proven";
-    case "AWAITING_OWNER_DATA":
-      return "Awaiting owner data";
-    default:
-      return "Unknown";
-  }
-}
-
-function contractNextAction(state: string, contract: string): string | null {
-  switch (state) {
-    case "GREEN":
-      return null;
-    case "RED":
-      return `Investigate: the ${contract} bar is measurably not met (see reason).`;
-    case "NOT_READY":
-      return `Reproduce the ${contract} instrument to move it out of NOT_READY (see reason).`;
-    case "AWAITING_OWNER_DATA":
-      return "Load the owner corpus / answer key this contract measures against.";
-    default:
-      return null;
-  }
-}
-
-function proofAgeText(runAt: string | null, nowIso: string): string {
-  if (!runAt) return "no run recorded";
-  const then = Date.parse(runAt);
-  const now = Date.parse(nowIso);
-  if (!Number.isFinite(then) || !Number.isFinite(now)) return "proof date unreadable";
-  const hours = Math.max(0, Math.floor((now - then) / 3_600_000));
-  if (hours < 1) return "proof under an hour old";
-  if (hours < 48) return `proof ${hours}h old`;
-  return `proof ${Math.floor(hours / 24)}d old`;
-}
-
-export function pilotHealthView(snapshot: OwnerSnapshot | null, nowIso: string): PilotHealthView {
-  if (!snapshot) {
-    return {
-      overall: "UNKNOWN",
-      reason: "No pilot-health snapshot has been published yet — nothing has been measured.",
-      cards: [],
-    };
-  }
-  const cards: ContractCard[] = snapshot.contracts.map((c) => ({
-    contract: c.contract,
-    level: contractHealthLevel(c.state),
-    headline: contractHeadline(c.state),
-    denominator: c.denominator,
-    proofAge: proofAgeText(c.runAt, nowIso),
-    reason: c.reason,
-    nextAction: contractNextAction(c.state, c.contract),
-  }));
-  const anyRed = cards.some((c) => c.level === "RED");
-  const anyAmber = cards.some((c) => c.level === "AMBER" || c.level === "UNKNOWN");
-  const overall: HealthLevel =
-    snapshot.pilotGreen === true
-      ? "GREEN"
-      : snapshot.pilotGreen === null
-        ? "UNKNOWN"
-        : anyRed
-          ? "RED"
-          : anyAmber
-            ? "AMBER"
-            : "RED";
-  const blockers = cards
-    .filter((c) => c.level !== "GREEN")
-    .map((c) => `${c.contract} ${c.headline.toLowerCase()}`);
-  const reason =
-    overall === "GREEN"
-      ? "All three contracts are met, each on its own denominator."
-      : overall === "UNKNOWN"
-        ? "No pilot-health verdict is recorded — the runner has not published one."
-        : `Not green — ${blockers.join("; ")}.`;
-  return { overall, reason, cards };
-}

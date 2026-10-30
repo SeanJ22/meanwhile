@@ -28,8 +28,6 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { askGapsProvider, type AskGapHoldings, type CarrierClock } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import { planSupersededRetirement, standing, supersededRetirementReason } from "../lib/control-plane/scheduler/durable.ts";
-import { askGapCountWords, askGapRenderedNumbers, assignmentCountClaims, buildAssignments, buildAssignmentView, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
-import { auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import type { AgendaDocumentLike } from "../lib/routing/agenda-search.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
@@ -64,7 +62,6 @@ function holdings(over: { meetings?: AskGapMeeting[] } = {}): AskGapHoldings {
 type Observed = Awaited<ReturnType<typeof readAskGapObservations>>;
 const enumerate = (h: AskGapHoldings, observed?: Observed) =>
   buildRegistry([askGapsProvider({ holdings: () => h, ...(observed ? { observations: () => observed } : {}) })], { root: ".", nowIso: NOW_ISO });
-
 
 /** Install an in-memory observation store for one test, on the pinned clock. */
 function observationStore() {
@@ -227,46 +224,3 @@ test("CREATES: a body readers were told we hold no meeting of gets its own work,
   }
 });
 
-function sources(obligations: AssignmentSources["obligations"], askGapObservations: AssignmentSources["askGapObservations"]): AssignmentSources {
-  return {
-    nowIso: NOW_ISO, obligations, occurrences: [], workItems: [], routeTasks: [], attempts: [], debts: [], leases: [], dispositions: null,
-    artifacts: [], costs: [], scoutResults: [], workerResults: [], pipeline: [], activation: null, servedReader: null, pilotZips: ["85701"],
-    ...(askGapObservations !== undefined ? { askGapObservations } : {}),
-  };
-}
-
-test("ADMIN: Work states how often readers were told each open Ask gap — per body and gap — and every number it draws carries its denominator", () => {
-  const rows: AskGapObservation[] = [
-    { ...askGapObservation({ bodyId: PIMA_BOARD, code: "AGENDA_NOT_HELD" }, NOW_ISO), count: 3 },
-    { ...askGapObservation({ bodyId: PIMA_BOARD, code: "AGENDA_NOT_HELD" }, "2026-09-20T12:00:00.000Z"), count: 1 },
-    askGapObservation({ bodyId: MARANA, code: "MEETINGS_NOT_HELD" }, NOW_ISO),
-  ];
-  const pass = enumerate(holdings(), { rows, source: "fixture rows" });
-  const obligations = pass.units.map((u) => standing(u.obligation, NOW_ISO));
-  const view = buildAssignmentView(sources(obligations, rows));
-  const counted = view.summary.askGaps;
-  assert.ok(counted?.held);
-  if (!counted?.held) return;
-  assert.equal(counted.value.told?.gaps.value, 2, "two open gaps were told to a reader");
-  assert.equal(counted.value.told?.gaps.denominator, counted.value.open);
-  assert.deepEqual(counted.value.told?.mostTold.map((t) => [t.bodyId, t.code, t.asks.value, t.asks.denominator, t.lastDay]), [
-    [PIMA_BOARD, "AGENDA_NOT_HELD", 4, 5, DAY],
-    [MARANA, "MEETINGS_NOT_HELD", 1, 5, DAY],
-  ]);
-  const words = askGapCountWords(view);
-  assert.match(words, /meetings not held 1\./);
-  assert.match(words, /Readers were told 2 of them in the last 30 days; most told: Pima County — Governing, agenda not held — 4 of 5 tellings, latest 2026-09-24 · Marana — Governing, meetings not held — 1 of 5 tellings, latest 2026-09-24\.$/);
-  assert.ok(auditRenderedNumbers(askGapRenderedNumbers(view)).ok);
-  assert.ok(checkStatedEqualsRendered(assignmentCountClaims(view)).ok);
-
-  // The row itself says it, in the obligation's own words.
-  const row = buildAssignments(sources(obligations, rows)).find((r) => r.id === `freshness:ask-gap:${PIMA_BOARD}#AGENDA_NOT_HELD`);
-  assert.match(row?.what.why.says ?? "", /Readers were told this 4 times on 2 days in the last 30 days, most recently 2026-09-24\.$/);
-  const untold = buildAssignments(sources(obligations, rows)).find((r) => r.id === `freshness:ask-gap:${PIMA_BOARD}#CALENDAR_STALE`);
-  assert.match(untold?.what.why.says ?? "", /No reader was told it in the last 30 days\.$/);
-
-  // Not read is said as not read — never as nobody told.
-  const unread = buildAssignmentView(sources(obligations, null));
-  assert.match(askGapCountWords(unread), /How often readers were told them is not on this list: the Ask-gap observations were not read for it\./);
-  assert.doesNotMatch(buildAssignments(sources(obligations, null)).find((r) => r.id === `freshness:ask-gap:${PIMA_BOARD}#AGENDA_NOT_HELD`)?.what.why.says ?? "", /Readers were told|No reader/);
-});

@@ -17,8 +17,6 @@ import {
 } from "../lib/control-plane/plain-words.ts";
 import { stateCodeOf, unitBelongsToState } from "../lib/control-plane/unit-state.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { spendWindowRows } from "../lib/control-plane/cost-panel.ts";
-import { FLEET_SAFETY_BOUNDS, type FleetSafetySnapshot } from "../lib/control-plane/fleet-safety.ts";
 
 /* ------------------------------------------------------- machine codes */
 
@@ -156,56 +154,9 @@ test("ADM-29 · the dispatch matcher and the attribution agree, by construction"
 
 /* ------------------------------------------------------ spend windows */
 
-const SAFETY: FleetSafetySnapshot = {
-  formatVersion: 1,
-  status: "ACTIVE",
-  bounds: FLEET_SAFETY_BOUNDS,
-  cycle: { startedAt: "2026-09-07T04:24:00.000Z", modelUsd: 0, requests: 0, payloadBytes: 0, dispatches: 0, elapsedMs: 720_000 },
-  operationalNight: { active: false, start: "", end: "", startsOnSaturday: false, modelUsd: 0 },
-  rolling24Hours: { modelUsd: 0.4394, asOf: "2026-09-07T04:36:00.000Z" },
-  stoppedBecause: [
-    "CYCLE_DEFERRED: the cycle's dispatch budget was spent at 2026-09-07T04:31:00.000Z before this item was reached",
-    "WALL_CLOCK_CEILING: insufficient cycle wall time remained; work remains owed",
-  ],
-  deferred: [
-    { work: "a", code: "CYCLE_DEFERRED", why: "budget" },
-    { work: "b", code: "CYCLE_DEFERRED", why: "budget" },
-    { work: "c", code: "WALL_CLOCK_CEILING", why: "time" },
-  ],
-  providerCircuits: [],
-  lastSuccessfulActivity: "2026-09-06T22:26:00.000Z",
-};
-
 test("a cycle-time stop never borrows the paid-pause timestamp or claims a dollar limit", () => {
   assert.equal(plainCode("CYCLE_DEFERRED"), "Cycle time used");
   assert.match(plainMeaning("CYCLE_DEFERRED")!, /not a dollar spending limit/);
-});
-
-/** The cost panel owns the three windows; the runner card renders the same rows. */
-const windowsOf = (safety: FleetSafetySnapshot) =>
-  spendWindowRows({
-    cycleUsd: safety.cycle.modelUsd,
-    operationalNightUsd: safety.operationalNight.modelUsd,
-    rolling24HourUsd: safety.rolling24Hours.modelUsd,
-    ceilings: { rolling24HourModelUsd: safety.bounds.rolling24HourModelUsd },
-  });
-
-test("ADM-26 · the spend windows are a three-row table to the cent, each framed against the one daily ceiling", () => {
-  const rows = windowsOf(SAFETY);
-  assert.equal(rows.length, 3);
-  // Every window is framed against the single rolling daily ceiling, read from the constant.
-  const ceiling = usdCents(FLEET_SAFETY_BOUNDS.rolling24HourModelUsd);
-  assert.equal(rows[0].shown, `$0.00 of ${ceiling}`);
-  assert.equal(rows[1].shown, `$0.00 of ${ceiling}`);
-  assert.equal(rows[2].shown, `$0.44 of ${ceiling}`);
-  assert.ok(rows[1].defines?.toLowerCase().includes("overnight"), "an operational night must be defined");
-  for (const r of rows) assert.ok(!/\.\d{3}/.test(r.shown), `four decimal places survived: ${r.shown}`);
-});
-
-test("an unmeasured window says so instead of showing $0.00", () => {
-  const rows = windowsOf({ ...SAFETY, cycle: { ...SAFETY.cycle, modelUsd: null } });
-  assert.match(rows[0].shown, /not measured/);
-  assert.equal(rows[0].unmeasured, true);
 });
 
 /* -------------------------------------------------------- the dictionary */

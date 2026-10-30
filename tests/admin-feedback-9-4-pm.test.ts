@@ -10,7 +10,6 @@ import test from "node:test";
 
 import { codeOf, sourceFilesUnder } from "./read-code.ts";
 import { consoleReturnPath, isConsolePath } from "../lib/control-plane/console-paths.ts";
-import { buildCostPanel, costRowKind } from "../lib/control-plane/cost-panel.ts";
 import { LEVEL_CLASS, displayNameOf, words } from "../lib/control-plane/display-name.ts";
 import { easternize, formatCalendarDate, formatEastern, formatEasternDate, formatEasternSpan, NO_STAMP, BAD_STAMP } from "../lib/control-plane/eastern-time.ts";
 import { buildFleetView } from "../lib/control-plane/fleet-view.ts";
@@ -23,7 +22,7 @@ import {
   fixSubjectId,
   parseFixField,
 } from "../lib/control-plane/fix-queue.ts";
-import { held, measured, type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
+import { type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
 import { normalize, toCsv, type AcsFetch } from "../lib/sources/census-acs-population/index.ts";
 
 const ROOT = process.cwd();
@@ -203,49 +202,6 @@ test("ADM-19: a gap of ours reads 'not measured', never OUR GAP, on every consol
  * free by design is not a gap; time, requests and bytes are measured
  * ================================================================== */
 
-test("ADM-17: a role whose attempts all ran without a paid model is $0 by design with its non-dollar measures; a model role with no dollars is unmeasured", () => {
-  const entry = (attemptId: string, role: string, usd: number | null, extra: Partial<{ durationMs: number; bytesFetched: number; requestCount: number }> = {}) => ({
-    attemptId, workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: role as never,
-    cost: { inputTokens: null, outputTokens: null, usd, durationMs: extra.durationMs ?? null, bytesFetched: extra.bytesFetched ?? null, requestCount: extra.requestCount ?? null, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: "2026-09-05T02:00:00.000Z",
-  });
-  const panel = buildCostPanel({
-    costs: [
-      entry("s1", "SCOUT", 0.5),
-      entry("s2", "SCOUT", null),
-      entry("a1", "ACQUIRER", null, { durationMs: 4000, bytesFetched: 2_097_152, requestCount: 3 }),
-      entry("a2", "ACQUIRER", null, { durationMs: 2000, bytesFetched: 1024, requestCount: 1 }),
-      entry("d1", "DETECTIVE", null),
-    ],
-    attempts: [
-      { id: "s1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-      { id: "s2", worker: { version: "claude-opus-5", provider: "anthropic" } },
-      { id: "a1", worker: { version: "deterministic-walker", provider: "we-the-people" } },
-      { id: "a2", worker: { version: "deterministic-walker", provider: "we-the-people" } },
-      { id: "d1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-    ],
-    cacheByRole: null,
-    share: null,
-    verifiedRecords: null,
-  });
-  const acq = panel.costByRole.find((r) => r.key === "ACQUIRER")!;
-  assert.equal(acq.kind, "FREE_BY_DESIGN");
-  assert.ok(acq.usd.held && acq.usd.value.value === 0);
-  assert.deepEqual(acq.nonDollar, { requests: 4, bytes: 2_098_176, durationMs: 6000, entries: 2 });
-  assert.match(acq.meaning ?? "", /\$0 by design — 2 attempts ran deterministic code/);
-  const det = panel.costByRole.find((r) => r.key === "DETECTIVE")!;
-  assert.equal(det.kind, "UNMEASURED");
-  assert.ok(!det.usd.held && /^1 model attempt of 1 reported no dollar cost\.$/.test(det.usd.gap.says), "the label says 'not measured'; the sentence does not repeat it");
-  // A snapshot published before the kind existed is read by its own sentence.
-  assert.equal(costRowKind({ usd: { held: false, gap: { whose: "OURS", says: "not measured — 1322 attempts, none reported a dollar cost (this work runs without a paid model)." } } }), "FREE_BY_DESIGN");
-  assert.equal(costRowKind({ usd: { held: false, gap: { whose: "OURS", says: "3 model attempts of 3 reported no dollar cost." } } }), "UNMEASURED");
-  assert.equal(costRowKind({ usd: held(measured(1, 2, "c", "s")) }), "MEASURED");
-  assert.equal(costRowKind({ kind: "UNMEASURED", usd: held(measured(1, 2, "c", "s")) }), "UNMEASURED", "a published kind wins");
-  const scout = panel.costByRole.find((r) => r.key === "SCOUT")!;
-  assert.equal(scout.kind, "MEASURED");
-  assert.match(scout.meaning ?? "", /1 of 2 attempts reported a dollar cost; 1 reported none/);
-  assert.match(src("scripts/publish-owner-snapshot.mts"), /spendByDay: spendByDay\(reads\)/);
-});
-
 /* ================================================================== *
  * The population adapter
  * ================================================================== */
@@ -258,7 +214,6 @@ test("the ACS adapter normalizes rows, leaves an unstated margin empty, and refu
   assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", "-1", "0", "00001"]] }), /not a count/);
   assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", null, "0", "00001"]] }), /not a count/);
 });
-
 
 /* ================================================================== *
  * Lumen Edge on the admin only, with the reader legend's colours

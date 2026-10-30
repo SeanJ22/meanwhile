@@ -20,19 +20,6 @@ export interface AssignmentReadBase {
   readonly pilotZips: readonly string[];
 }
 
-export const ASSIGNMENT_ATTEMPT_PROJECTION = {
-  id: true, routeTaskId: true, workItemId: true, worker: ["role", "provider", "version"],
-  leaseId: true, startedAt: true, endedAt: true, outcome: true, abortReason: true, artifactIds: true,
-  cost: ["durationMs"],
-} satisfies RecordProjection;
-
-export const ASSIGNMENT_OBLIGATION_PROJECTION = {
-  id: true, recordClass: true, subjectId: true, routeId: true, active: true, readerImpactAt: true,
-  meetingStartsAt: true, observedChangeRateHours: true, declaredCycleHours: true, lastWorkedAt: true,
-  absentUntil: true, absenceUnlock: true, assignments: true, nextDueAt: true, occurrenceCount: true, openOccurrenceId: true,
-  retiredAt: true, retirementReason: true,
-} satisfies RecordProjection;
-
 /** At most this many targeted reads are in flight at once, so one drilldown never floods the store. */
 const READ_CONCURRENCY = 16;
 const MAX_INHERITED_ORIGIN_REFERENCES = 32;
@@ -83,8 +70,6 @@ async function leasesFor(repos: ControlPlaneRepositories, attempts: readonly Att
 }
 
 export const ASSIGNMENT_LOG_FIELDS = {
-  artifacts: { artifactId:true, workItemId:true, attemptId:true, recordedAt:true, canonicalUrl:true, byteLength:true, contentType:true, partial:true },
-  costs: { attemptId:true, workItemId:true, routeId:true, role:true, cost:["usd","requestCount","bytesFetched","durationMs"] },
   scoutResults: { attemptId:true, workItemId:true, recordClass:true, outcome:true, recordedAt:true, refusal:true, candidates:true, findings:true,
     distinctEvidenceRungs:true, worker:["modelReported"], rungs:{count:true}, nextRungs:{count:true} },
   workerResults: { id:true, attemptId:true, workItemId:true, endedAt:true, modelReview:["model","escalation","validationError"],

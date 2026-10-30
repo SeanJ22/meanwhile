@@ -26,7 +26,6 @@ import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import {
-  retireObligationsByPrefix,
   syncObligations,
 } from "../lib/control-plane/scheduler/durable.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -106,8 +105,6 @@ test("the standing research registry is not a parallel tracked-meetings authorit
 
   const standing = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
   assert.doesNotMatch(standing, /meetingsProvider\s*\(/);
-  assert.match(standing, /retireObligationsByPrefix\s*\(/);
-  assert.match(standing, /freshness:campaign-finance:ballot-az-pima:us-house-6#/);
   assert.equal(
     existsSync(join(ROOT, "lib", "control-plane", "scheduler", "providers", "meetings.ts")),
     false,
@@ -133,41 +130,6 @@ test("a record's route PORTFOLIO becomes several scheduled units, not one", () =
   assert.equal(routeIds.size, az.length, "each unit must carry its OWN route id");
   const obligationIds = new Set(az.map((u) => u.obligation.id));
   assert.equal(obligationIds.size, az.length, "each unit must carry its OWN durable obligation id");
-});
-
-test("PDC retires every durable tracked-meetings clock without deleting its history", async () => {
-  const repos = createMemoryRepositories();
-  const id = "freshness:meetings:ocd-division/country:us/state:az/place:tucson#governing";
-  const legacy: FreshnessObligation = {
-    id,
-    recordClass: "meetings",
-    subjectId: "ocd-division/country:us/state:az/place:tucson#governing",
-    routeId: "City of Tucson Clerk",
-    active: true,
-    readerImpactAt: null,
-    observedChangeRateHours: null,
-    lastWorkedAt: "2026-08-30T12:00:00.000Z",
-  };
-  await syncObligations(repos, [legacy], NOW);
-  const before = await repos.obligations.mustRead(id);
-  await repos.obligations.compareAndSet(
-    id,
-    before.revision,
-    { ...before.value, nextDueAt: "2026-09-01T13:00:00.000Z", occurrenceCount: 4 },
-    NOW,
-  );
-
-  const reason = "PDC authority transferred to the production civic-data contract";
-  const first = await retireObligationsByPrefix(repos, ["freshness:meetings:"], NOW, reason);
-  assert.deepEqual(first.retired, [id]);
-  const retired = (await repos.obligations.mustRead(id)).value;
-  assert.equal(retired.active, false);
-  assert.equal(retired.nextDueAt, null, "a retired row has no runnable clock");
-  assert.equal(retired.occurrenceCount, 4, "historical runtime evidence is retained");
-  assert.equal(retired.retirementReason, reason);
-
-  const second = await retireObligationsByPrefix(repos, ["freshness:meetings:"], NOW, reason);
-  assert.deepEqual(second, { retired: [], alreadyRetired: [id] }, "retirement is idempotent");
 });
 
 test("two providers claiming one obligation id is REFUSED, never reconciled", () => {

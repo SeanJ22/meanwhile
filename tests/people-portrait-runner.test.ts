@@ -17,7 +17,7 @@ import { storeVerifiedPortrait } from "../lib/photos/store.ts";
 import type { KnownReleaseOptions, KnownRelease } from "../lib/sources/known-release.ts";
 import { verifiedPresident, ADMINISTRATION_URL } from "../lib/sources/white-house/president.ts";
 import { publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
-import { liveNationalExecutiveRoster, readNationalPresident } from "../lib/reader/national.ts";
+import { liveNationalExecutiveRoster, loadNationalPresident } from "../lib/reader/national.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -112,7 +112,7 @@ test("the national portrait job reaches National cards and its next admitted run
     acquire:async options=>{acquired++;return page(options,'<h1>Jordan Example</h1><img alt="Jordan Example" src="/jordan.png">');}}});
   assert.ok("outcome" in first);
   assert.ok(first.outcome.promoted);
-  const shown=liveNationalExecutiveRoster(await readNationalPresident(async()=>store));
+  const shown=liveNationalExecutiveRoster(await loadNationalPresident(async()=>store));
   const portrait=shown?.officeholders[0].photo;
   assert.ok(portrait);
   assert.ok(portrait.url.startsWith('/api/portraits/officials/'));

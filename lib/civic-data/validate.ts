@@ -359,7 +359,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     const checked = sourceChecks.some(check => check.passed &&
       check.consumer === `${VOTING_SOURCE_REPLACEMENT_VERIFIER} (source-scoped pre-promotion)`);
     const keys = new Set(evidence.map(row => row.key));
-    const current = (candidate.readModel as VotingSitesFile).jurisdictions?.find(row => row.ocdId === proof?.jurisdictionId);
+    const current = (candidate.readModel as VotingSitesFile | null)?.jurisdictions?.find(row => row.ocdId === proof?.jurisdictionId);
     // The change set, built from the held prior, carries each removed site and any changed jurisdiction metadata
     // exactly; metadata it leaves out has the same facts as the current jurisdiction. A held state's index has no payload.
     const metadataKey = `jurisdiction:${proof?.jurisdictionId}`, changes = candidate.changeSet;

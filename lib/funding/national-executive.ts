@@ -1,4 +1,4 @@
-import { readNationalPresident } from "../reader/national.ts";
+import { nationalPresident } from "../reader/national.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import type { FundingAnswer, FundingDisplayData } from "./display.ts";
@@ -40,7 +40,7 @@ export function nationalExecutiveFundingAnswer(target: string, roster: Officehol
   return { kind: "funding", data };
 }
 
-/** Reuses the same cold-read promise and resident value every place page uses. */
-export async function readNationalExecutiveFunding(target: string, read = readNationalPresident): Promise<FundingAnswer> {
+/** The President, Vice President and Cabinet as this server holds them. */
+export async function readNationalExecutiveFunding(target: string, read = nationalPresident): Promise<FundingAnswer> {
   return nationalExecutiveFundingAnswer(target, await read());
 }

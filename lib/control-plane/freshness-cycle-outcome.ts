@@ -329,29 +329,6 @@ export function routineCivicDataSupervisorOutcome(
   return outcome;
 }
 
-export function routineSupervisorCycleIsolationIssue(
-  outcome: RoutineCivicDataSupervisorOutcome,
-): string | null {
-  if (outcome.state !== "SUCCEEDED" || outcome.failures.length !== 0) return "SUPERVISOR_CYCLE_NOT_SUCCESSFUL";
-  if (outcome.taskReceiptEvidence !== "EXACT") return "EXACT_TASK_RECEIPTS_UNAVAILABLE";
-  const taskIds = outcome.taskReceipts.map(({ taskId }) => taskId);
-  const candidateIds = outcome.taskReceipts.map(({ receipt }) => receipt.candidateId);
-  if (new Set(taskIds).size !== taskIds.length) return "DUPLICATE_TASK_RECEIPT";
-  if (new Set(candidateIds).size !== candidateIds.length) return "DUPLICATE_CANDIDATE_RECEIPT";
-  if (outcome.taskReceipts.some((row) => row.taskId !== row.receipt.source)) return "TASK_RECEIPT_ID_MISMATCH";
-  const successes = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_SUCCESS");
-  const failures = outcome.taskReceipts.filter(({ classification }) => classification === "VERIFIED_SOURCE_FAILURE");
-  if (successes.length !== outcome.verifiedSourceSuccesses || failures.length !== outcome.verifiedSourceFailures) {
-    return "TASK_RECEIPT_COUNT_MISMATCH";
-  }
-  if (outcome.taskReceipts.length !== outcome.attemptedTasks) return "ATTEMPTED_TASK_RECEIPTS_INCOMPLETE";
-  const acquisitionFailure = failures.find(({ receipt }) => !receipt.acquisitionSucceeded);
-  if (!acquisitionFailure) return "NO_SOURCE_ACQUISITION_FAILURE_RECEIPT";
-  const unaffectedSuccess = successes.find(({ sourceId }) => sourceId !== acquisitionFailure.sourceId);
-  if (!unaffectedSuccess) return "NO_UNAFFECTED_SOURCE_SUCCESS_RECEIPT";
-  return null;
-}
-
 export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk" | "incidents">;
 
 export async function readLatestFreshnessCycleOutcome(

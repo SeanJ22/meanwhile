@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { FactDb, Query } from "./publish.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, type ReaderCachePurger } from "../reader/cache.ts";
+import { markSlices, slicesOf } from "../core/slice-marks.ts";
 
 export interface FactConfirmation {
   readonly copyId: number;
@@ -64,8 +65,9 @@ async function saveConfirmations(db: FactDb, confirmations: readonly FactConfirm
     for (const confirmation of confirmations) for (const id of await recordFactConfirmation(query,confirmation)) entities.add(id);
     if (entities.size) await enqueueReaderPlaces({entities:[...entities]},query);
     const states = entities.size ? await query("SELECT DISTINCT state FROM entity WHERE id=ANY($1::text[]) AND state IS NOT NULL",[[...entities]]) : [];
-    return {entities:[...entities],states:states.map(row=>String(row.state))};
+    return {entities:[...entities],states:states.map(row=>String(row.state)),marks:entities.size ? await slicesOf(query,[...entities]) : []};
   });
+  await markSlices(affected.marks);
   if (affected.entities.length) await invalidateReaderCache({states:affected.states.filter(state=>state!=="US"),
     nationalPeople:affected.states.includes("US")},purge,null);
 }

@@ -1,4 +1,5 @@
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
+import { SLICE_JOB, slicesLane } from "../lib/reader/slice-lane.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
@@ -14,6 +15,11 @@ import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents } from "../lib/control-plane/repository/pg-store.ts";
 import { JobRunBook } from "../lib/control-plane/job-runs.ts";
+import { REOPEN_BATCH, reopenDeadEnds } from "../lib/core/capability.ts";
+import { DEAD_END_CLOCK_MS } from "../lib/control-plane/workers/hunter-claims.ts";
+import { controlPlaneQuery, workList } from "../lib/core/work.ts";
+import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
+import { installedParsers } from "./lib/installed-parsers.mts";
 import { runResearchLoop } from "../lib/control-plane/scheduler/research-loop.ts";
 import { formatEastern } from "../lib/control-plane/eastern-time.ts";
 import {
@@ -1090,6 +1096,7 @@ function holdForRestart(targetSha: string): void {
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
   drainMemberLane();
+  drainSliceLane();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
@@ -1233,7 +1240,24 @@ const honorFailurePrinted = new Set<string>();
 
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 let hunterLaneChild: ChildProcess | null = null;
+let parsersAnnounced = false, deadEndsAt = 0;
+/**
+ * Dead ends go back on the work list when a reader of their kind of website is new or changed, or their free try came due.
+ * That needs no paid model, so it runs here whenever the standing hunter lane is not doing it.
+ */
+async function keepDeadEnds(): Promise<void> {
+  if (Date.now() - deadEndsAt < DEAD_END_CLOCK_MS) return;
+  const repos = await ownerRepositories();
+  if (repos === null || repos.capabilities === undefined) return;
+  deadEndsAt = Date.now();
+  const at = new Date().toISOString();
+  if (!parsersAnnounced) { await repos.capabilities.record(await installedParsers(), at); parsersAnnounced = true; }
+  const reopened = await reopenDeadEnds(workList(controlPlaneQuery(), { owner: "dead-ends" }), repos.capabilities, await deadEndWaitMs(repos), at);
+  if (reopened) console.log(`  dead ends: ${reopened} went back on the work list`);
+  if (reopened >= REOPEN_BATCH) deadEndsAt = 0;
+}
 async function runHunterLane(deadlineMs: number): Promise<void> {
+  if (!CONTINUOUS_HUNTERS && !canary && !runtimeAdmissionsHeld) await keepDeadEnds();
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
   if (!jobLaunchAllowed("hunter-lane")) return;
   const [run] = await runRuntimeChildren([{
@@ -1278,6 +1302,21 @@ async function runMemberLane(deadlineMs: number): Promise<void> {
 }
 function drainMemberLane():void {
   if(memberLaneChild?.connected)memberLaneChild.send({kind:"RUNTIME_RELEASE_DRAIN"},error=>{if(error)console.error("Legistar member drain failed",error);});
+}
+
+let sliceLaneChild: ChildProcess | null = null;
+async function runSliceLane(deadlineMs: number): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(SLICE_JOB.id)) return;
+  const [run] = await runRuntimeChildren([{ id: SLICE_JOB.id, databaseBytesPerRun: SLICE_JOB.databaseBytesPerRun, executable: process.execPath,
+    args: [...TS_CHILD, "scripts/slice-lane.mts"], env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
+    cwd: CODE_ROOT, env: process.env, deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
+    onStarted: (_id, child) => { sliceLaneChild = child; } });
+  sliceLaneChild = null;
+  if (!run || run.status !== 0) throw Error("Slices stopped; marked slices stay waiting");
+}
+function drainSliceLane(): void {
+  if (sliceLaneChild?.connected) sliceLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error("Slice lane drain failed", error); });
 }
 
 const auditPasses = auditPassClock({
@@ -1368,6 +1407,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "legistar-members", everyMs: 60_000, budgetMs: 55*60_000, run: runMemberLane },
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   placePagesLane(runPlacePages),
+  slicesLane(runSliceLane),
   publishNowLane(runPublishNow),
   placeMapsLane(deadlineMs => runRoutineLane("place-maps", deadlineMs)),
   votingSitesLane(deadlineMs => runRoutineLane("voting-sites", deadlineMs)),

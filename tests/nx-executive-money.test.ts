@@ -7,7 +7,7 @@ import { nationalExecutiveFundingAnswer, readNationalExecutiveFunding } from "..
 import { presidentialFecMoney, resolvePresidentialFecIdentity } from "../lib/sources/white-house/presidential-records.ts";
 import { ADMINISTRATION_URL, verifiedWhiteHouseOfficial } from "../lib/sources/white-house/president.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../lib/officials/people-sources.ts";
-import { readNationalPresident } from "../lib/reader/national.ts";
+import { refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 import { activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
@@ -56,47 +56,49 @@ test("money stays bound to the current presidency and the independently sourced 
   assert.equal(nationalExecutiveFundingAnswer(president.id, null).kind, "none");
 });
 
-test("the funding route confirms current President money on every read without upstream requests", async () => {
-  installPromotedValue({ recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources"),
-    sourceId: "statewide-executive-sources", versionId: "test:nx-president-money", retrievedAt: NOW,
-    value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", term: "current", generatedAt: NOW, roster } });
+test("the funding route serves the President from this server's memory, reads again only when the stored rows change, and keeps what it holds when a check fails", async () => {
+  const pointer = { recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources"),
+    sourceId: "statewide-executive-sources", versionId: "test:nx-president-money", retrievedAt: NOW };
+  const publish = (held: typeof roster) => installPromotedValue({ ...pointer, value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", term: "current", generatedAt: NOW, roster: held } });
+  publish(roster);
   activateCanonicalFixture("default");
-  const primed = await readNationalPresident();
-  assert.equal(primed?.officeholders[0].id, president.id);
   const canonical = readerDatabaseQuery();
   assert.ok(canonical);
   let databaseReads = 0, upstreamRequests = 0, unavailable = false;
   const originalFetch = globalThis.fetch;
   installReaderDatabaseQuery(async statements => { databaseReads++; if (unavailable) throw new Error("current national read unavailable"); return canonical(statements); });
   globalThis.fetch = (async () => { upstreamRequests++; throw new Error("upstream request on reader path"); }) as typeof fetch;
+  const receipts = async () => {
+    const response = await GET(new Request(`http://localhost/api/funding/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ target: president.id }) });
+    assert.equal(response.status, 200);
+    const answer = await response.json();
+    assert.equal(answer.kind, "funding");
+    assert.equal(answer.holdingStatus, "PARTIAL", "totals do not claim complete contributor coverage");
+    return answer.data.totals.receipts;
+  };
   try {
     const started = performance.now();
-    for (let index = 0; index < 2; index++) {
-      const response = await GET(new Request(`http://localhost/api/funding/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ target: president.id }) });
-      assert.equal(response.status, 200);
-      const answer = await response.json();
-      assert.equal(answer.kind, "funding");
-      assert.equal(answer.data.totals.receipts, 29133.95);
-      assert.equal(answer.holdingStatus, "PARTIAL", "totals do not claim complete contributor coverage");
-      assert.equal(databaseReads, index + 1, "each independent request confirms the stored rows");
-    }
+    assert.equal(await receipts(), 29133.95);
+    const loaded = databaseReads;
+    assert.ok(loaded > 0);
+    assert.equal(await receipts(), 29133.95);
+    assert.equal((await readNationalExecutiveFunding(president.id)).kind, "funding");
+    assert.equal(databaseReads, loaded, "once loaded, further requests read nothing");
     assert.ok(performance.now() - started < 3000);
     assert.equal(upstreamRequests, 0);
-    assert.equal((await readNationalExecutiveFunding(president.id)).kind, "funding");
-    assert.equal(databaseReads, 3);
+
+    await refreshNationalShelf();
+    assert.equal(databaseReads, loaded + 1, "a check of an unchanged President is one small version read");
     const changed = structuredClone(roster);
     changed.officeholders[0].executive!.money!.totals.receipts = 40000;
-    installPromotedValue({ recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources"),
-      sourceId: "statewide-executive-sources", versionId: "test:nx-president-money", retrievedAt: NOW,
-      value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", term: "current", generatedAt: NOW, roster: changed } });
-    const updated = await GET(new Request(`http://localhost/api/funding/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ target: president.id }) });
-    assert.equal(updated.status, 200);
-    assert.equal((await updated.json()).data.totals.receipts, 40000, "same-pointer changes reach the next request");
+    publish(changed);
+    assert.equal(await receipts(), 29133.95, "the held President is served until the next check sees a change");
+    await refreshNationalShelf();
+    assert.equal(await receipts(), 40000, "same-pointer changes reach the next check");
+
     unavailable = true;
-    const failed = await GET(new Request(`http://localhost/api/funding/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ target: president.id }) });
-    assert.equal(failed.status, 503, "a failed current read cannot serve the earlier funding body");
-    assert.equal((await failed.json()).holdingStatus, "HOLDING_UNAVAILABLE");
-    assert.equal(databaseReads, 5);
+    await assert.rejects(refreshNationalShelf(), /current national read unavailable/);
+    assert.equal(await receipts(), 40000, "a failed check keeps serving what is held");
     assert.equal(upstreamRequests, 0);
   } finally {
     globalThis.fetch = originalFetch;

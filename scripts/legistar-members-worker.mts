@@ -9,7 +9,8 @@ import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { legistarMemberWork,seedLegistarMemberWork } from "../lib/sources/legistar/members-queue.ts";
 import { loadLegistarMemberTenant,type MemberRecordWork } from "../lib/sources/legistar/members-loader.ts";
 import { legistarMemberPublisher } from "../lib/sources/legistar/members-worker.ts";
-import { runLegistarMemberWorkers } from "../lib/sources/legistar/members-work.ts";
+import { HICCUPS_BEFORE_STOPPING,runLegistarMemberWorkers } from "../lib/sources/legistar/members-work.ts";
+import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { withFactConfirmations } from "../lib/facts/confirmation.ts";
 import { controlPlaneQuery } from "../lib/core/work.ts";
 
@@ -45,7 +46,8 @@ try {
     await Promise.all([
       runLegistarMemberWorkers({list,kind:"load",concurrency:2,stopRequested,sleep:ms=>new Promise(done=>setTimeout(done,ms)),log:console.error,
         run:async(claim,signal)=>{await loadLegistarMemberTenant({facts,doors:query,work:list,vault,slug:claim.subjectId!.slice("legistar-members:".length),now:new Date().toISOString(),signal});}}),
-      (async()=>{while(!stopRequested()){
+      (async()=>{let hiccups=0;while(!stopRequested()){
+        try {
         // Each saved response shares one check time in this turn, so unchanged fields
         // are confirmed together rather than opening one confirmation transaction per record.
         const checkedAt=new Map<string,string>();
@@ -56,7 +58,14 @@ try {
             if(!checkedAt.has(key))checkedAt.set(key,new Date().toISOString());
             return publish(value,checkedAt.get(key)!);
           }}));
+        hiccups=0;
         if(!stats.claimed)await new Promise(done=>setTimeout(done,5_000));
+        } catch(error) {
+          // One failed batch is logged and the turn goes on; the list still holds whatever is owed.
+          console.error(sanitizedErrorDiagnostic(error));
+          if(++hiccups>=HICCUPS_BEFORE_STOPPING)throw error;
+          await new Promise(done=>setTimeout(done,5_000));
+        }
       }})(),
     ]);
   }finally{clearInterval(heartbeat);clearInterval(seed);}

@@ -91,11 +91,11 @@ test("the scheduled job reads a known HTML list before discovery and keeps it on
   try {
     let yesterday: string[] = [], clock = Date.parse(now);
     t.mock.method(Date, "now", () => clock);
+    const run = (at: string, fetch = fetchSource) => refreshVotingSources({ state: "ND", store, context: { repos }, now: () => at,
+      deadlineMs: Date.now() + 10_000, fetch, geocode: async () => null, registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [door] });
     for (const at of [now, "2026-10-24T08:00:00.000Z"]) {
       clock = Date.parse(at);
-      const report = await refreshVotingSources({ state: "ND", store, context: { repos }, now: () => at,
-        deadlineMs: Date.now() + 10_000, fetch: fetchSource, geocode: async () => null,
-        registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [door] });
+      const report = await run(at);
       assert.ok(report.terminal?.acquisitionSucceeded);
       assert.equal(report.attemptedSourceIds[0], door.id);
       const reader = await readVotingSitesProjection("ND", { store, now: at });
@@ -109,6 +109,9 @@ test("the scheduled job reads a known HTML list before discovery and keeps it on
       yesterday = ids;
     }
     assert.equal(requests[1], door.url);
+    const printed = t.mock.method(console, "log"); clock = Date.parse("2026-10-25T08:00:00.000Z");
+    await assert.rejects(run("2026-10-25T08:00:00.000Z", (async () => new Response(null, { status: 404 })) as typeof fetch), /No official voting-source result/);
+    assert.deepEqual(printed.mock.calls.flatMap(call => /^RCD_RECEIPT=(.*)/.exec(String(call.arguments[0]))?.[1] ?? []).map(line => (({ acquisitionSucceeded, promotedVersion }) => [acquisitionSucceeded, promotedVersion])(JSON.parse(line) as Record<string, unknown>)), [[false, null]], "a read that finds nothing is held over the published list and still prints its one receipt");
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
@@ -155,13 +158,6 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
     deadlineMs: at === "2026-10-24T08:00:00.000Z" ? deadline : clock + 10_000,
     fetch: fetchSource, geocode: async () => null, registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [source, second] });
   let bytesRead = 0;
-  // As PostgresRoutineDataStore.readVersioned: a proven read is reused until its pointer moves.
-  const versioned = new Map<string, { version: string; value: unknown }>();
-  Object.assign(store, { readVersioned: async (namespace: string, recordClass: "REGISTRATION", scope: string, read: () => Promise<unknown>) => {
-    const version = JSON.stringify(await store.readPromotionIdentity(recordClass, scope));
-    if (versioned.get(namespace + scope)?.version !== version) versioned.set(namespace + scope, { version, value: await read() });
-    return versioned.get(namespace + scope)!.value;
-  } });
   for (const name of Object.getOwnPropertyNames(MemoryRoutineDataStore.prototype).filter(name => /^read|^eventObservedAt$/.test(name))) {
     const original = (store as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[name]!.bind(store);
     t.mock.method(store as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>, name, async (...args: unknown[]) => {

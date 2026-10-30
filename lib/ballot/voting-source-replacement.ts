@@ -60,7 +60,9 @@ export async function verifyVotingSourceReplacement(candidate: RoutineCandidate,
       resolveCountyFips: (name: string, state: string) => {
         const door = proof.doors.find(door => door.scope.state === state &&
           door.scope.name.replace(/\s+county$/i, "").toLowerCase() === name.replace(/\s+county$/i, "").toLowerCase());
-        return door?.scope.countyFips ?? null;
+        // A statewide file names its counties; the live read matched each name to the registry, as its sites hold.
+        const held = new Set([...previous.sites, ...current.sites].filter(site => site.countyName === name && site.countyFips).map(site => site.countyFips));
+        return door?.scope.countyFips ?? (held.size === 1 ? [...held][0]! : null);
       } };
     const reads = [];
     for (const door of proof.doors) {

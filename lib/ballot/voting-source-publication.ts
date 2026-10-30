@@ -147,13 +147,15 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
   read = sourceTextWithoutNuls(read);
   if (prior) read = { ...read, sites: retainVotingSourceSiteIds(prior, door, read) };
   const currentUrls = new Set([door.url, ...read.sources.map(sourceKey), ...(door.supersedes ?? [])]);
+  // Rows of this list also cite the election page that dates it; that page's own rows belong to another source.
+  const own = (url: string) => door.supersedes?.includes(url) || pageAddress(url)?.url === pageAddress(door.url)?.url;
   const sourceSucceeded = read.rawBodies.length > 0 && !read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction");
   const previousSites = (prior?.sites ?? []).flatMap(previous => {
     const site = previous.sources?.length || !prior ? previous : { ...previous,
       sources: [{ publisher: prior.sourceOrg, url: prior.sourceUrl, checkedAt: prior.collectedAt }] };
     const replaces = sourceSucceeded && (read.sites.some(next => next.id === site.id) || complete(read) && read.sites.length > 0);
     if (sourceSucceeded && door.publication?.status === "NO_GENERAL_ELECTION" && site.electionDate === door.electionDate) return [];
-    if (!replaces || !site.sources?.some(source => currentUrls.has(source.url))) return [site];
+    if (!replaces || !site.sources?.some(source => own(source.url))) return [site];
     // A shared facility can retain a different publisher's drop box or early-voting service.
     const sources = site.sources.filter(source => !currentUrls.has(source.url));
     if (!sources.length) return [];

@@ -124,6 +124,12 @@ export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
     why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0036 inserts into cp_field_manual_entries, which the reader " +
       "database does not have. The same rows are now seeded through the control-plane repository (lib/control-plane/playbook-seed.ts).",
   },
+  {
+    idx: 78, tag: "SPN-01A_merge_people", when: 1792834201100,
+    sha256: "93bc5da86d8e60fb98bcc4dfb6832c1d9f70b42a467e75c739232430fd8b8479", retractedOn: "2026-10-30",
+    why: "Never applied (its one transaction ran past its 60 s budget on every attempt and rolled back, so no journal row was ever written). " +
+      "SPN-01A_people_merged does the same merge in about fifteen seconds.",
+  },
 ];
 const retractedTag = (tag: string | null): RetractedMigration | undefined => RETRACTED_MIGRATIONS.find((r) => r.tag === tag);
 
@@ -221,7 +227,10 @@ export function evaluateMigrationImmutability(
 
       if (sqlTag !== null || fromSqlTag !== null) {
         const tag = fromSqlTag ?? sqlTag;
-        if (change.status === "renamed" || change.status === "copied") {
+        if (change.status === "renamed" && fromSqlTag !== null && retractedTag(fromSqlTag) !== undefined && sqlTag !== null && retractedTag(sqlTag) === undefined && input.headJournal.some((entry) => entry.tag === sqlTag)) {
+          // Git reads a retracted file and its replacement as one rename when their text is alike; it is still a retraction and an addition.
+          checked.push(`${fromSqlTag} was deleted as a retracted, never-applied migration (RETRACTED_MIGRATIONS), and ${sqlTag} added`);
+        } else if (change.status === "renamed" || change.status === "copied") {
           violations.push({
             rule: "migration-renamed",
             path: change.from ?? change.path,

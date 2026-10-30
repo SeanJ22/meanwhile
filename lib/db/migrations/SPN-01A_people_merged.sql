@@ -1,10 +1,15 @@
+-- Deleting an entity checks every table that points at it; the check on place_boundary.host_county_id could not use its partial index and read the whole table once for each of the 7,800 records removed, which alone took three minutes. This index lets that check, here and in every later merge, find nothing at once.
+DO $$ BEGIN
+  IF to_regclass('place_boundary') IS NOT NULL THEN CREATE INDEX IF NOT EXISTS place_boundary_host_county_fk ON place_boundary (host_county_id); END IF;
+END $$;
+--> statement-breakpoint
 -- Duplicate records proven to be one thing become one, and every old id stays as an alias of the survivor.
 -- People: the same Open States id in any of its spellings (ocd-person/<uuid>, plural:<uuid>, plural:<st>:<uuid>, person:<st>:<uuid>), or one
 -- record listing another's id as a key it is known by. A name is never used. Two records tied together that hold different Open States ids are
 -- two people until a detective settles it, so they get a blank and stay as they are.
 -- Governing boards: a government's records of its own governing board when each is provably that board. The record carrying the most facts,
 -- children and keys survives. A board with any other name stays, and the government gets a blank.
-DROP TABLE IF EXISTS spn01a_key, spn01a_edge, spn01a_group, spn01a_clean, spn01a_move;
+DROP TABLE IF EXISTS spn01a_key, spn01a_edge, spn01a_group, spn01a_clean, spn01a_move, spn01a_member;
 --> statement-breakpoint
 CREATE TEMP TABLE spn01a_key (entity_id text NOT NULL, key text NOT NULL);
 --> statement-breakpoint
@@ -103,19 +108,24 @@ UPDATE fact SET status = 'superseded' WHERE id IN (SELECT id FROM live WHERE pla
 --> statement-breakpoint
 UPDATE fact SET entity_id = m.survivor FROM spn01a_move m WHERE fact.entity_id = m.loser;
 --> statement-breakpoint
--- A body lists its members by person id in the field name; the same rule decides a seat that both ids held.
+-- A body lists its members by person id in the field name. Those rows are read once, through the index on member fields, and the same rule decides a seat that both ids held.
+CREATE TEMP TABLE spn01a_member AS
+SELECT f.id, f.entity_id, f.status, f.provenance_kind, f.source_copy_id, f.checked_at, substr(f.field, 8) AS person FROM fact f WHERE f.field LIKE 'member:%';
+--> statement-breakpoint
+CREATE INDEX ON spn01a_member (person);
+--> statement-breakpoint
 WITH renamed AS (
-  SELECT f.id, f.entity_id, 'member:' || m.survivor AS field FROM fact f JOIN spn01a_move m ON f.field = 'member:' || m.loser
-  UNION ALL SELECT f.id, f.entity_id, f.field FROM fact f WHERE f.status = 'live' AND f.field IN (SELECT 'member:' || survivor FROM spn01a_move)
+  SELECT t.id, t.entity_id, m.survivor AS person FROM spn01a_member t JOIN spn01a_move m ON m.loser = t.person
+  UNION ALL SELECT t.id, t.entity_id, t.person FROM spn01a_member t WHERE t.status = 'live' AND t.person IN (SELECT survivor FROM spn01a_move)
 ), live AS (
-  SELECT f.id, row_number() OVER (PARTITION BY r.entity_id, r.field ORDER BY
-    CASE f.provenance_kind WHEN 'OWNER' THEN 0 WHEN 'OFFICIAL' THEN 1 WHEN 'FILING' THEN 1 WHEN 'REFERENCE' THEN 2 WHEN 'NEWS' THEN 3 WHEN 'CAMPAIGN' THEN 4 ELSE 5 END,
-    coalesce(s.fetched_at, f.checked_at) DESC, f.id DESC) AS place
-  FROM fact f JOIN renamed r ON r.id = f.id LEFT JOIN source_copy s ON s.id = f.source_copy_id WHERE f.status = 'live'
+  SELECT t.id, row_number() OVER (PARTITION BY r.entity_id, r.person ORDER BY
+    CASE t.provenance_kind WHEN 'OWNER' THEN 0 WHEN 'OFFICIAL' THEN 1 WHEN 'FILING' THEN 1 WHEN 'REFERENCE' THEN 2 WHEN 'NEWS' THEN 3 WHEN 'CAMPAIGN' THEN 4 ELSE 5 END,
+    coalesce(s.fetched_at, t.checked_at) DESC, t.id DESC) AS place
+  FROM spn01a_member t JOIN renamed r ON r.id = t.id LEFT JOIN source_copy s ON s.id = t.source_copy_id WHERE t.status = 'live'
 )
 UPDATE fact SET status = 'superseded' WHERE id IN (SELECT id FROM live WHERE place > 1);
 --> statement-breakpoint
-UPDATE fact SET field = 'member:' || m.survivor FROM spn01a_move m WHERE fact.field = 'member:' || m.loser;
+UPDATE fact SET field = 'member:' || m.survivor FROM spn01a_member t JOIN spn01a_move m ON m.loser = t.person WHERE fact.id = t.id;
 --> statement-breakpoint
 INSERT INTO entity_place (entity_id, place_id, boundary_year, placement_basis)
 SELECT m.survivor, p.place_id, p.boundary_year, p.placement_basis FROM entity_place p JOIN spn01a_move m ON m.loser = p.entity_id
@@ -184,4 +194,4 @@ SELECT e.id, clock_timestamp(), e.page_priority FROM entity e WHERE e.id IN (
 ON CONFLICT (place_id) DO UPDATE SET generation = rebuild_queue.generation + 1
 WHERE rebuild_queue.built_generation = rebuild_queue.generation;
 --> statement-breakpoint
-DROP TABLE spn01a_key, spn01a_edge, spn01a_group, spn01a_clean, spn01a_move;
+DROP TABLE spn01a_key, spn01a_edge, spn01a_group, spn01a_clean, spn01a_move, spn01a_member;

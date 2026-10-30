@@ -7,6 +7,8 @@ import { boundedQuery } from "./request-bounds.ts";
 import { ownerReadbackItem, ownerReadbackWhere } from "./owner-assignment-rows.ts";
 
 const ATTEMPT_FIELDS="id routeTaskId workItemId leaseId startedAt endedAt outcome abortReason";
+const HEAD_FIELDS="obligation debt item proof live latest laneRole pendingTaskId publication occurrenceCount openRound lastActivityAt";
+const COUNT_OBLIGATION_FIELDS="recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason";
 const OBLIGATION_FIELDS="id recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason openOccurrenceId";
 const projection=(fields:string):RecordProjection=>Object.fromEntries(fields.split(" ").map(field=>[field,true]));
 
@@ -63,11 +65,15 @@ export function storedOwnerAssignmentHeads(get: () => ControlPlaneRepositories):
 }
 
 const pick = (value: string, fields: string): string => `jsonb_strip_nulls(jsonb_build_object(${fields.split(" ").flatMap(field => [`'${field}'`, `${value}->'${field}'`]).join(",")}))`;
+const tuple = (value:string,fields:string):string => `jsonb_build_array(${fields.split(" ").map(field=>`${value}->'${field}'`).join(",")})`;
+const object = (value:readonly unknown[]|undefined,fields:string):Record<string,unknown>|undefined => value?Object.fromEntries(fields.split(" ").flatMap((key,i)=>value[i]===null?[]:[[key,value[i]]])):undefined;
 const timestamp = (value: string): string => `CASE WHEN pg_input_is_valid(${value},'timestamptz') THEN (${value})::timestamptz END`;
-const attempt = (v: string): string => `${pick(v,"id routeTaskId leaseId startedAt endedAt outcome abortReason")}||jsonb_build_object('role',${v}#>'{worker,role}')`;
+const normalized = (value:string):string => `btrim(regexp_replace(${value},'${String.raw`[\u0009-\u000D\u0020\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]+`}',' ','g'))`;
+const clipped = (value:string):string => `left(${normalized(value)},161)`;
+const attempt = (v: string): string => `${pick(v,"id routeTaskId leaseId startedAt endedAt outcome")}||jsonb_strip_nulls(jsonb_build_object('role',${v}#>'{worker,role}','abortReason',${clipped(`${v}->>'abortReason'`)}))`;
 const lease = (v: string): string => pick(v,"id released expiresAt");
-const item = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_build_object('lastTransitionAt',${v}#>'{transitions,-1,at}','manualSourceGap',${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")})`;
-const routing = (v: string): string => `${pick(v,"id subject obligation")}||CASE WHEN ${ownerReadbackWhere(v)} THEN
+const item = (v: string): string => `${pick(v,"id project subject state createdAt")}||jsonb_build_object('obligation',${clipped(`${v}->>'obligation'`)},'lastTransitionAt',${v}#>'{transitions,-1,at}','manualSourceGap',${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")})`;
+const routing = (v: string): string => `${pick(v,"id subject")}||jsonb_build_object('obligation',CASE WHEN ${v}->>'obligation' ~ '${String.raw`^[^\u000A\u000D\u2028\u2029]*#[0-9]+$`}' THEN ${v}->>'obligation' ELSE '' END)||CASE WHEN ${ownerReadbackWhere(v)} THEN
   ${pick(v,"autonomousPlan")}||jsonb_build_object('publicationOutcome',${pick(`${v}->'publicationOutcome'`,"status versionId workerResultId acceptedRecordIds")}) ELSE '{}'::jsonb END`;
 
 const workFields = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_strip_nulls(jsonb_build_object(
@@ -198,29 +204,29 @@ activity AS MATERIALIZED (
 SELECT g.id,CASE WHEN row_number() OVER(ORDER BY g.id)=1 THEN ARRAY(SELECT id FROM old_owners ORDER BY id) END AS owners,
   coalesce((SELECT jsonb_agg(m.member ORDER BY m.ordinal) FROM members m WHERE m.id=g.id),'[]'::jsonb) AS members,
   coalesce((SELECT jsonb_agg(${routing("i.value")} ORDER BY i.ordinal) FROM items i WHERE i.id=g.id AND i.value IS NOT NULL AND (i.member=g.id OR (${ownerReadbackWhere("i.value")}))),'[]'::jsonb) AS items,
-  jsonb_strip_nulls(jsonb_build_object(
-    'obligation',CASE WHEN o.id IS NOT NULL THEN ${pick("o.value",OBLIGATION_FIELDS.replace("id ","").replace(" openOccurrenceId",""))} END,
-    'debt',CASE WHEN d.id IS NOT NULL THEN ${pick("d.value","cause consecutiveFailures firstFailedAt retryAt")} END,
-    'item',CASE WHEN o.id IS NULL AND NOT EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN (SELECT ${item("i.value")} FROM items i WHERE i.id=g.id AND i.value IS NOT NULL ORDER BY i.ordinal LIMIT 1) END,
-    'proof',CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,
-    'live',coalesce((SELECT jsonb_agg(jsonb_build_object('attempt',${attempt("a.value")},'lease',${lease("le.value")}) ORDER BY a.ordering,a.started_at,a.activity_at,a.attempt)
+  jsonb_build_array(
+    CASE WHEN o.id IS NOT NULL THEN ${tuple("o.value",COUNT_OBLIGATION_FIELDS)} END,
+    CASE WHEN d.id IS NOT NULL THEN ${tuple("d.value","cause consecutiveFailures firstFailedAt retryAt")} END,
+    CASE WHEN o.id IS NULL AND NOT EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN (SELECT ${item("i.value")} FROM items i WHERE i.id=g.id AND i.value IS NOT NULL ORDER BY i.ordinal LIMIT 1) END,
+    CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,
+    coalesce((SELECT jsonb_agg(jsonb_build_object('attempt',${attempt("a.value")},'lease',${lease("le.value")}) ORDER BY a.ordering,a.started_at,a.activity_at,a.attempt)
       FROM attempts a JOIN cp_leases le ON le.id=a.task WHERE a.id=g.id AND a.value->'outcome' IS NULL
         AND le.value->>'id'=a.value->>'leaseId' AND NOT(le.value->>'released')::boolean AND ${timestamp("le.value->>'expiresAt'")}>$3::timestamptz),'[]'::jsonb),
-    'latest',CASE WHEN l.attempt IS NOT NULL THEN jsonb_strip_nulls(jsonb_build_object('attempt',${attempt("l.value")},'leaseRead',true,
-      'lease',CASE WHEN le.id IS NOT NULL THEN ${lease("le.value")} END,
+    CASE WHEN l.attempt IS NOT NULL THEN jsonb_strip_nulls(jsonb_build_object(
+      'attempt',CASE WHEN r.value->'disposition' IS NULL AND r.value->'policyDenial' IS NULL THEN ${attempt("l.value")} END,
+      'lease',CASE WHEN r.value->'disposition' IS NULL AND r.value->'policyDenial' IS NULL AND l.value->'outcome' IS NULL AND le.id IS NOT NULL THEN ${lease("le.value")} END,
       'disposition',CASE WHEN r.value->'disposition' IS NOT NULL AND r.value->'disposition'<>'null'::jsonb THEN
-        ${pick("r.value->'disposition'","disposition at note")}||jsonb_build_object('artifactCount',r.value#>'{disposition,artifactCount}') END,
+        ${pick("r.value->'disposition'","disposition at")}||jsonb_build_object('note',CASE WHEN g.id LIKE 'freshness:ask-gap:%' THEN r.value#>>'{disposition,note}' WHEN r.value#>>'{disposition,disposition}' IN('INGESTED','DISCOVERED','POINTER_ONLY','WALKED_NO_YIELD','NOT_APPLICABLE','RECHECK_DUE') THEN '' ELSE ${clipped("r.value#>>'{disposition,note}'")} END,'artifactCount',r.value#>'{disposition,artifactCount}') END,
       'policyDenial',CASE WHEN r.value->>'state'='POLICY_DENIED' THEN r.value->'policyDenial' END,
       'scout',CASE WHEN s.attempt IS NOT NULL THEN ${pick("s.record","outcome recordedAt distinctEvidenceRungs refusal candidateCount findingCount rungs nextRungs")} END,
-      'worker',CASE WHEN w.attempt IS NOT NULL THEN ${pick("w.record","endedAt result")} END)) END,
-    'laneRole',(SELECT a.value#>'{worker,role}' FROM attempts a WHERE a.id=g.id ORDER BY a.started_at DESC NULLS LAST,a.activity_at DESC NULLS LAST,a.attempt DESC LIMIT 1),
-    'pendingTaskId',(SELECT r.task FROM rounds r WHERE r.id=g.id AND r.value->>'state' IN('PENDING','RECLAIMABLE') AND NOT EXISTS(SELECT 1 FROM attempts a WHERE a.id=r.id AND a.task=r.task) ORDER BY r.ordering LIMIT 1),
-    'publication',(SELECT ${pick("i.value->'publicationOutcome'","status at code recovery")} FROM items i WHERE i.id=g.id AND i.value->'publicationOutcome' IS NOT NULL AND i.value->'publicationOutcome'<>'null'::jsonb ORDER BY i.value#>>'{publicationOutcome,at}' DESC,i.ordinal LIMIT 1),
-    'occurrenceCount',(SELECT nullif(count(*),0) FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id),
-    'openRound',(SELECT jsonb_build_object('id',c.id,'sequence',c.value->'sequence','openedAt',c.value->'openedAt','dueAt',c.value->'dueAt',
-      'reached',EXISTS(SELECT 1 FROM attempts a WHERE a.id=g.id AND a.task=c.value#>>'{routeTaskId}')) FROM occurrences c WHERE c.id=o.value->>'openOccurrenceId' AND c.value->'closedAt' IS NULL LIMIT 1),
-    'lastActivityAt',(SELECT at FROM activity WHERE id=g.id AND pg_input_is_valid(at,'timestamptz') ORDER BY at::timestamptz DESC,priority LIMIT 1)
-  )) AS head
+      'worker',CASE WHEN r.value->'disposition' IS NULL AND r.value->'policyDenial' IS NULL AND w.attempt IS NOT NULL THEN ${pick("w.record","endedAt result")} END)) END,
+    (SELECT a.value#>'{worker,role}' FROM attempts a WHERE a.id=g.id ORDER BY a.started_at DESC NULLS LAST,a.activity_at DESC NULLS LAST,a.attempt DESC LIMIT 1),
+    (SELECT r.task FROM rounds r WHERE r.id=g.id AND r.value->>'state' IN('PENDING','RECLAIMABLE') AND NOT EXISTS(SELECT 1 FROM attempts a WHERE a.id=r.id AND a.task=r.task) ORDER BY r.ordering LIMIT 1),
+    (SELECT ${pick("i.value->'publicationOutcome'","status at code recovery")} FROM items i WHERE i.id=g.id AND i.value->'publicationOutcome' IS NOT NULL AND i.value->'publicationOutcome'<>'null'::jsonb ORDER BY i.value#>>'{publicationOutcome,at}' DESC,i.ordinal LIMIT 1),
+    (SELECT nullif(count(*),0) FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id),
+    (SELECT ${tuple("c.value","sequence openedAt")} FROM occurrences c WHERE c.id=o.value->>'openOccurrenceId' AND c.value->'closedAt' IS NULL LIMIT 1),
+    (SELECT at FROM activity WHERE id=g.id AND pg_input_is_valid(at,'timestamptz') ORDER BY at::timestamptz DESC,priority LIMIT 1)
+  ) AS head
 FROM groups g LEFT JOIN LATERAL (SELECT id,${pick("value",OBLIGATION_FIELDS)} AS value FROM cp_obligations WHERE id=g.id LIMIT 1) o ON true
 LEFT JOIN LATERAL (SELECT id,${pick("value","cause consecutiveFailures firstFailedAt retryAt")} AS value FROM cp_debts WHERE id=g.id LIMIT 1) d ON true
 LEFT JOIN latest l ON l.id=g.id LEFT JOIN outcome_tasks r ON r.id=l.id AND r.task=l.task
@@ -231,12 +237,14 @@ export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {
   return { async read(seeds, now) {
     if (!(seeds.groups.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [], owners: [] };
     const rows = await boundedQuery(sql,{operation:"cp_owner_assignment_rows.heads",callClass:"PAGE"},OWNER_ASSIGNMENT_HEADS_SQL, [seeds.groups,seeds.workItems,now]) as {
-      id: string; members: string[]; items: WorkItem[]; head: Partial<AssignmentHead>; owners: string[] | null;
+      id: string; members: string[]; items: WorkItem[]; head: readonly unknown[]; owners: string[] | null;
     }[];
     const hydrateAttempt = (value: AssignmentHead["live"][number]["attempt"]) => Object.assign({endedAt:null,outcome:null,abortReason:null},value);
-    const heads = rows.map(({id,head}) => {
-      const latest = head.latest ? Object.assign({lease:null,disposition:null,policyDenial:null,scout:null,worker:null},head.latest,{
-        attempt:hydrateAttempt(head.latest.attempt),scout:head.latest.scout?Object.assign({refusal:null},head.latest.scout):null}) : null;
+    const heads = rows.map(({id,head:wire}) => {
+      const decoded=object(wire,HEAD_FIELDS)!;
+      const head={...decoded,obligation:object(decoded.obligation as unknown[],COUNT_OBLIGATION_FIELDS),debt:object(decoded.debt as unknown[],"cause consecutiveFailures firstFailedAt retryAt"),openRound:object(decoded.openRound as unknown[],"sequence openedAt")} as Partial<AssignmentHead>;
+      const latest = head.latest ? Object.assign({lease:null,leaseRead:true,disposition:null,policyDenial:null,scout:null,worker:null},head.latest,{
+        ...(head.latest.attempt?{attempt:hydrateAttempt(head.latest.attempt)}:{}),scout:head.latest.scout?Object.assign({refusal:null},head.latest.scout):null}) : null;
       return Object.assign({id,kind:head.obligation||head.occurrenceCount?"STANDING_OBLIGATION":"WORK_ITEM",obligation:null,debt:null,item:null,proof:false,laneRole:null,pendingTaskId:null,publication:null,
         occurrenceCount:0,openRound:null,lastActivityAt:null},head,{latest,
         obligation:head.obligation?Object.assign({id,routeId:null,readerImpactAt:null,nextDueAt:null,absentUntil:null,absenceUnlock:null,assignments:[],retiredAt:null,retirementReason:null},head.obligation):null,

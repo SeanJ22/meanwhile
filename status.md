@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 152 (main 74e1fc2). 153 in wt-fold153 (river-next-153 0fcdce106 = river f99e41498 + main + SPN-01 4a87fb4b7; code 690,151 → 682,210, −7,941); pnpm gates running (8 GB heap). KB-01 e6bb68f38 conflicts with CX-MAP's map path → builder rebasing on stream/kb-01-153. Ship 153 before Nov 1 ET.
+build_state: LIVE: release 152 (main 74e1fc2). 153 = SPN-01 only (wt-fold153 0fcdce106, −7,941 lines), pnpm gates in tests; ships before Nov 1 ET. KB-01 held: Keys box lacks WTP_ADMIN_SESSION_KEY/WTP_ADMIN_SECRET (+ GitHub, Netlify, PRL S3, staging, feedback keys) — Sean must save them. VIP live-fallback hotfix on stream/river-vip-154.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-30T01:20:00Z
+heartbeat: 2026-10-30T05:00:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -215,6 +215,7 @@ heartbeat: 2026-10-30T01:20:00Z
 - 8:20 PM EDT Oct 29: 152 numbers: facts before 8,510 (new count); reads before 4.45 GB/h; ZIPs 43/48/49 → 46/48/47 (desktop −2: 58049 ND 4.8 s, 05736 VT 3.0 s); code 691,176 → 690,151. CI all green (local gates 5/9: tsc/builds OOM at default heap, 1 read-order test under load). Open: facts+reads after (24 h) for 150/151/152; runner switch to 152; MT/RI/WI Cloudflare route (Sean); 6 keys not working; line keeper blind to overdue obligations (asked Sean); KB-01 held until it deletes old readers + ledger.
 - 8:45 PM EDT Oct 29, Sean: fold SPN-01 4a87fb4b + KB-01 e6bb68f3 into 153, ship before Nov 1 ET (candidate merges ahead of election); post live time + numbers on Spine Tracker; re-test the 6 keys after 153 deploys; line-keeper overdue-work check is parked on the Spine Tracker (rulings §2, How It Works §11); MT/RI/WI: no Cloudflare bypass — fill from VIP via Google voterInfo API (GOOGLE_CIVIC_VOTERINFO), official pages replace those values when readable → builder stream/river-vip-154. KB-01 fold conflict: its /api/maptiler proxy undoes CX-MAP's direct map path; builder told to inline the public map key from the Keys store at build time instead, and to verify every key the new code reads exists in cp_keys.
 - 9:20 PM EDT Oct 29, Sean: MT/RI/WI — no Cloudflare bypass; go to the poll runners (MT counties, RI cities/towns, WI municipal clerks; WEC GIS hub check), biggest first; doors as data, not tied to 153; VIP via Google voterinfo meanwhile; verify 5 ZIPs per state live + Admin counts; post counts+sources on Spine Tracker; stop when every county/town has sites or a named reason. Found: (a) Google VIP answers may not be stored (field-manual terms) — live reader fallback only; (b) live address lookups fall to ZIP precision everywhere (Census geocoder ~10 s / 502 vs 2.2 s timeout), so the Google fallback never runs → builder fixing on stream/river-vip-154 (hotfix release). 3 door builders → /home/user/doors-voting/<ST>/; River inserts cp_doors rows and sets readNow on feed:voting-sites:<ST>.
+- 1:00 AM EDT Oct 30, Sean: River does only the statewide VIP fill for MT/RI/WI; Codex lanes CX-VS-MT/RI/WI add county/town doors; River adds none. Before that order River had inserted 33 WI cp_doors rows (35 official sources, 465 sites; md5-verified vs saveVotingSourceDoor output) and reopened feed:voting-sites:WI (OPEN, readNow). Sean: keep them, hand to CX-VS-WI. MT (18) and RI (24) door drafts NOT inserted. Hand-off branch handoff/cx-vs-doors a2e6afd36; Spine Tracker row r-voting-cf. Disk filled at ~12:30 AM (old worktrees); removed 20 worktrees, 20 GB free.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

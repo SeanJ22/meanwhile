@@ -94,22 +94,22 @@ export async function POST(request: Request): Promise<Response> {
             return { match: !!place.states.length, point: area?.point ?? null, precision: "ZIP", jurisdictions: [], outsideCoverage: true,
               pollingLookups: await linksFor(place.states) };
           }
-          // Start loading the optional live provider while Census resolves the address.
+          // Google geocodes the typed street itself, so its request runs beside Census, not after it.
           const live = import("@/lib/ballot/voting-sites-live");
           void live.catch(() => {});
+          const google = live.then(module => module.startGoogleVotingLookup(address, { signal }));
+          void google.catch(() => {});
+          // The ZIP's places are ready if Census cannot place the street.
+          const zipMembership = zipInput ? readZipPlace(zipInput).catch(error => { recordVotingFailure({ stage: "zip-membership" }, error); return null; }) : null;
           stage = "geocode";
-          const located = await censusVotingAddress(address);
-          if (!located && zipInput) {
-            stage = "zip-membership";
-            const zip = await readZipPlace(zipInput);
-            place = votingPlaceFromZip(zip?.ids ?? []);
-            if (!place.states.length && state) place.states = [state];
-            await countLookup(request, zipInput, place.divisionIds);
-            return { match: !!place.states.length, point: area?.point ?? null, precision: "ZIP", jurisdictions: [], outsideCoverage: true,
-              pollingLookups: await linksFor(place.states) };
-          } else if (located) {
+          // Census stops early enough to leave the held read and Google's answer inside the reader deadline.
+          const located = await censusVotingAddress(address, Math.max(1, deadline - Date.now() - 700));
+          if (located) {
             place = addCensusVotingGeographies({ precision: "ADDRESS", point: located.point, divisionIds: [], states: [], countyFips: [], countyNames: [],
               countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] }, located.payload);
+          } else if (zipMembership) {
+            stage = "zip-membership";
+            place = votingPlaceFromZip((await zipMembership)?.ids ?? []);
           } else {
             place = votingPlaceFromZip([]);
             place.precision = "ADDRESS";
@@ -138,11 +138,11 @@ export async function POST(request: Request): Promise<Response> {
             stage = "precinct-match";
             const answer = await answerVotingSites(file, selectedPlace);
             stage = "google-fallback";
-            return (await live).fillVotingSitesAnswer(answer, address, selectedPlace, { signal });
+            return (await live).fillVotingSitesAnswer(answer, address, selectedPlace, { signal, lookup: google });
           });
           const [answer] = await Promise.all([result, counted]);
           const states = [...new Set([...place.states, ...answer.jurisdictions.map(j => j.state)])];
-          return { ...answer, pollingLookups: await linksFor(states) };
+          return { ...answer, point: answer.point ?? area?.point ?? null, pollingLookups: await linksFor(states) };
         } catch (error) {
           recordVotingFailure({ stage }, error, address);
           return { match: !!state, point: place?.point ?? null, precision: /^\d{5}$/.test(address) ? "ZIP" : "ADDRESS",

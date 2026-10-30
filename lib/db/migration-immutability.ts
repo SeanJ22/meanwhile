@@ -95,7 +95,8 @@ export const JOURNAL_PATH = "lib/db/migrations/meta/_journal.json";
 /**
  * A migration that reached main and was never applied anywhere, retracted by name. This is a reviewed list in code,
  * not a switch: it excuses exactly one `.sql` deletion and one journal entry (idx, tag AND `when` must all match) per row,
- * and nothing else — a modified or renamed file, or any other tag, is still refused. Each row states why it was never applied.
+ * and nothing else — a modified file, a file renamed with its SQL intact, or any other tag, is still refused. A rename whose
+ * SQL changed is how git reports that deletion beside the corrected migration that replaces it, so it is excused too. Each row states why it was never applied.
  * If a database ever reports applying one, `checksumViolations` refuses it as `retracted-migration-applied`. The
  * applied row is the retracted migration only when its `when` AND the sha256 of the retracted file both match, because
  * River numbers the next migration into a freed slot and may hand it the same `when`.
@@ -123,6 +124,13 @@ export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
     sha256: "32d72554c769aa3f6711b5071b53a7486ecfea86900b5b25dc37424fb7e63ea3", retractedOn: "2026-10-13",
     why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0036 inserts into cp_field_manual_entries, which the reader " +
       "database does not have. The same rows are now seeded through the control-plane repository (lib/control-plane/playbook-seed.ts).",
+  },
+  {
+    idx: 78, tag: "SPN-01A_merge_people", when: 1792834201100,
+    sha256: "93bc5da86d8e60fb98bcc4dfb6832c1d9f70b42a467e75c739232430fd8b8479", retractedOn: "2026-10-30",
+    why: "Never applied (production reader journal ends at RB-A9_legistar_members as of 2026-10-30). Every runner attempt from 08:22Z hit the " +
+      "60-second contract budget and rolled back: deleting 7,853 entities read all of place_boundary once each for its host-county reference, and " +
+      "the fact updates read the whole table. RIVER-MERGEFIX-159_merge_people makes the same merge by index.",
   },
 ];
 const retractedTag = (tag: string | null): RetractedMigration | undefined => RETRACTED_MIGRATIONS.find((r) => r.tag === tag);
@@ -221,7 +229,9 @@ export function evaluateMigrationImmutability(
 
       if (sqlTag !== null || fromSqlTag !== null) {
         const tag = fromSqlTag ?? sqlTag;
-        if (change.status === "renamed" || change.status === "copied") {
+        if (change.status === "renamed" && retractedTag(fromSqlTag) !== undefined && sqlTag !== null && sqlTag !== fromSqlTag && /^R0\d\d\t/.test(change.raw)) {
+          checked.push(`${fromSqlTag} was retracted as never applied, and ${sqlTag} is changed SQL under a new tag (RETRACTED_MIGRATIONS)`);
+        } else if (change.status === "renamed" || change.status === "copied") {
           violations.push({
             rule: "migration-renamed",
             path: change.from ?? change.path,

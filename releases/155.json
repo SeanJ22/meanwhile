@@ -30,7 +30,7 @@
     "before": 690151,
     "after": 690145
   },
-  "updated_at": "2026-10-30T05:06:49.315575+00:00",
+  "updated_at": "2026-10-30T05:10:51.871347+00:00",
   "ci_run": 41005805432,
   "before": {
     "owner_peak_hour": "2026-10-29T20:00:00Z",
@@ -45,5 +45,14 @@
       "tablet": 48,
       "desktop": 47
     }
-  }
+  },
+  "preview": {
+    "at": "2026-10-30T05:10:24Z",
+    "url": "https://deploy-preview-872--sparkwtp.netlify.app",
+    "status": 404,
+    "body": "Netlify Site not found",
+    "production_database_reachable": false,
+    "auth_or_settings_changed": false
+  },
+  "smoke_plan": "Standing board/river README release step4 live fallback within five minutes of production deploy; observer and Chromium smoke ready."
 }

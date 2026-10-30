@@ -135,7 +135,7 @@ export async function readLead(deps: LeadDeps, claim: WorkRow): Promise<LeadResu
 
   const found = [...new Set(parsed.links.flatMap(href => absolute(href, copy.finalUrl) ?? []))].filter(url => url !== claim.url && url !== copy.finalUrl).slice(0, MAX_LINKS);
   const links = await deps.list.ensure(found.map((url): WorkInput => ({ kind: "lead", tier: claim.tier, state: claim.state, placeId: claim.placeId!, subjectId: claim.subjectId!, url,
-    value: platformOf(url) === null ? null : { platform: platformOf(url) }, priority: newestFirst(at), origin: { from: "loader", workId: claim.id },
+    value: { platform: platformOf(url) }, priority: newestFirst(at), origin: { from: "loader", workId: claim.id },
     source: { source: `Found on a ${platform} page`, foundOn: copy.finalUrl } })));
   // Every fact left without a body to hold it means the government is not in the store yet; the link is read again once it is.
   return parsed.facts.length > 0 && unmatched.count === parsed.facts.length ? { again: "SUBJECT_NOT_FOUND" } : { read: true, ...tally, links };

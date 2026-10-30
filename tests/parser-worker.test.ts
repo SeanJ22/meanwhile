@@ -140,10 +140,11 @@ test("every installed parser is found by its folder, and a link's kind of websit
     "https://files.thrillshare.com/documents/a.pdf?x=1", "https://city.gov/AgendaCenter/ViewFile/Agenda/1", "https://city.gov/events.ics", "https://city.gov/about"];
   const inDatabase = PLATFORM_PATTERNS.map(([platform, pattern]) => `WHEN u ~* ${`'${pattern.replaceAll("'", "''")}'`} THEN '${platform}'`).join(" ");
   for (const url of samples) {
-    const [row] = await facts.query(`SELECT CASE ${inDatabase} END AS platform FROM (SELECT $1::text AS u) s`, [url]);
-    assert.equal(row!.platform ?? null, platformOf(url), url);
+    const [row] = await facts.query(`SELECT CASE ${inDatabase} ELSE 'own-site' END AS platform FROM (SELECT $1::text AS u) s`, [url]);
+    assert.equal(row!.platform, platformOf(url), url);
   }
   assert.equal(platformOf("https://files.thrillshare.com/documents/a.pdf?x=1"), "pdf", "a file's own type wins over its host");
+  assert.equal(platformOf("https://city.gov/about"), "own-site", "a government's own page is read by the own-site parser");
 });
 
 test("a person on a page is the one person the matcher finds, in the seat the page gives them, and is not made twice", async t => {

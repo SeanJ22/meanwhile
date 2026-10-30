@@ -14,8 +14,8 @@ const stateOf = (id: string): string => {
 
 const leadOf = (link: BoxLink): WorkInput | null => {
   if (!/^https?:\/\//i.test(link.url) || !URL.canParse(link.url)) return null;
-  const placeId = link.governmentId ?? splitSubject(link.subjectId).root, platform = platformOf(link.url);
-  return { kind: "lead", state: stateOf(placeId), placeId, subjectId: link.subjectId, url: link.url, value: platform === null ? null : { platform }, priority: newestFirst(link.foundAt),
+  const placeId = link.governmentId ?? splitSubject(link.subjectId).root;
+  return { kind: "lead", state: stateOf(placeId), placeId, subjectId: link.subjectId, url: link.url, value: { platform: platformOf(link.url) }, priority: newestFirst(link.foundAt),
     dueAt: link.foundAt, origin: { from: "loader" }, source: { source: "Found by a hunter", foundOn: link.foundOn, boxId: link.id } };
 };
 

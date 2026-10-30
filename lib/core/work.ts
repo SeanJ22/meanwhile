@@ -79,6 +79,9 @@ export interface ClaimWhere {
 }
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
+/** The column that holds a hunt's work item, task, lease and attempts on its own row; added after the table, so it is its own statement. */
+export const WORK_RUN_DDL = [`ALTER TABLE work ADD COLUMN IF NOT EXISTS run jsonb NOT NULL DEFAULT '{}'::jsonb`] as const;
+
 export const WORK_DDL = [
   `CREATE OR REPLACE FUNCTION work_tier_rank(tier text) RETURNS smallint LANGUAGE sql IMMUTABLE AS $$
     SELECT CASE tier WHEN 'clock' THEN 0 WHEN 'order' THEN 1 WHEN 'reader' THEN 2 ELSE 3 END::smallint $$`,
@@ -363,6 +366,17 @@ export interface ReopenInput {
 }
 
 /** Each transition and its hourly count commit together. */
+/** What a hunt row keeps of its own hunt: the work item, the route task and the lease are one each; attempts are kept by id. */
+export type RunPart = "item" | "task" | "lease" | "attempt";
+
+/** Saves one part of a hunt on the row it ran from. */
+export async function saveRun(query: Query, rowId: string, part: RunPart, key: string, value: unknown): Promise<void> {
+  await query(part === "attempt"
+    ? `UPDATE work SET run = jsonb_set(CASE WHEN run ? 'attempts' THEN run ELSE run || '{"attempts":{}}'::jsonb END, ARRAY['attempts', $2::text], $3::jsonb) WHERE id = $1`
+    : `UPDATE work SET run = run || jsonb_build_object($2::text, $3::jsonb) WHERE id = $1`,
+  [rowId, part === "attempt" ? key : part, canonicalJson(value)]);
+}
+
 /** The attempt reports a row keeps besides its first. */
 export const ATTEMPT_REPORTS_KEPT = 20;
 

@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { CAPABILITY_DDL, capabilityLog, reopenDeadEnds } from "../lib/core/capability.ts";
 import { LEAD_DDL, WORK_DDL, newestFirst, workList, type WorkInput } from "../lib/core/work.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { workWaiting } from "../lib/core/work-counts.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -45,7 +46,7 @@ async function setup(pages: Record<string, string> = PAGES, parsers?: ReadonlyMa
 }
 
 test("a link goes from the work list through its parser and the Slide, and each new link is read next, once", async t => {
-  const { facts, list, requests, run } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
+  const { facts, list, deps, requests, run } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
   t.after(() => facts.pg.close());
   await list.ensure([productionLead()]);
 
@@ -56,6 +57,8 @@ test("a link goes from the work list through its parser and the Slide, and each 
   assert.deepEqual({ entity: fact!.entity_id, field: fact!.field, by: fact!.produced_by, status: fact!.status, url: fact!.url },
     { entity: "ocd-division/country:us/state:az/county:pima#governing", field: "agenda_url", by: "parser:legistar-insite", status: "live", url: URL_OF_LEAD });
   assert.ok(String(fact!.quote).includes("Calendar.aspx"), "the fact keeps the exact line of the saved page");
+  const bank = (await readFieldManual(deps.repos)).store.entries.filter(entry => entry.kind === "PAGE_READ");
+  assert.deepEqual(bank.map(entry => [entry.platforms[0], entry.states[0], entry.outcome, (entry.payload as { published: number }).published]), [["legistar-insite", "az", "YIELDED", 1]], "the win is saved by platform and state");
   assert.equal(first.links, 8, "the board's page and each public sitting's page became leads");
 
   const waiting = await facts.query(`SELECT url, tier, value->>'platform' AS platform, reports->0->>'foundOn' AS found_on FROM work WHERE kind = 'lead' AND status = 'waiting' ORDER BY url`);

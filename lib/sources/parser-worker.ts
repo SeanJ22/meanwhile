@@ -11,6 +11,7 @@ import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { ProbeFetch } from "../doors/probe.ts";
+import { newFieldManualEntry, writeFieldManual, type FieldManualOutcome } from "../control-plane/field-manual.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import type { Lead, ParsedFact, PlatformParser } from "./parser-hook.ts";
@@ -28,7 +29,7 @@ const LINKING_PAGE_WINDOW_HOURS = 30 * 24;
 export interface LeadDeps {
   readonly list: WorkList;
   readonly facts: FactDb & { readonly query: Query };
-  readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
+  readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl" | "fieldManual" | "capabilities">;
   readonly vault: EvidenceStore;
   readonly fetch: ProbeFetch;
   readonly clocks: Clocks;
@@ -145,6 +146,12 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
   readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void }) {
   const { deps } = input, platforms = [...deps.parsers.keys()];
   const stats = { claimed: 0, read: 0, published: 0, links: 0, again: 0, refused: 0, failed: 0 };
+  // What worked and what failed, by kind of website and state, for the Knowledge Bank the hunters and the next parser read first.
+  const learned = new Map<string, { platform: string; state: string; outcome: FieldManualOutcome; count: number; published: number; links: number; reason: string | null; url: string | null }>();
+  const learn = (claim: WorkRow, platform: string, outcome: FieldManualOutcome, said: { published?: number; links?: number; reason?: string }) => {
+    const key = `${platform}:${claim.state}:${outcome}`, held = learned.get(key) ?? { platform, state: claim.state, outcome, count: 0, published: 0, links: 0, reason: null, url: null };
+    learned.set(key, { ...held, count: held.count + 1, published: held.published + (said.published ?? 0), links: held.links + (said.links ?? 0), reason: said.reason ?? held.reason, url: claim.url });
+  };
   let reserved = 0;
   const results = await runBoundedWorkPool(Array.from({ length: input.concurrency }, (_, index) => index), input.concurrency, async () => {
     while (!input.stopRequested() && reserved < (input.maxClaims ?? Infinity)) {
@@ -165,12 +172,13 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
         const result = await readLead(deps, claim);
         controller.signal.throwIfAborted();
         const unlock = (kind: Unlock["kind"], text: string): Unlock => ({ kind, platform: platform ?? undefined, text });
-        if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; }
-        else if ("again" in result && claim.attempts >= LEAD_ATTEMPTS) { await deps.list.refuse(claim, result.again, unlock("method", result.again)); stats.refused++; }
+        if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; learn(claim, platform!, "FAILED", { reason: result.broke }); }
+        else if ("again" in result && claim.attempts >= LEAD_ATTEMPTS) { await deps.list.refuse(claim, result.again, unlock("method", result.again)); stats.refused++; learn(claim, platform!, "BLOCKED", { reason: result.again }); }
         else if ("again" in result) { await deps.list.later(claim, result.again); stats.again++; }
         else {
           if (!await deps.list.finish(claim)) throw new Error("WORK_LEASE_LOST");
           stats.read++; stats.published += result.published; stats.links += result.links;
+          learn(claim, platform!, result.published || result.links ? "YIELDED" : "ZERO", result);
         }
       } catch (error) {
         stats.failed++;
@@ -181,5 +189,9 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
     }
   });
   for (const result of results) if (!result.ok) throw new Error(result.error);
+  const at = deps.now().toISOString();
+  await writeFieldManual(deps.repos, [...learned.values()].map(row => newFieldManualEntry("parser-lane", `${row.platform}:${row.state}:${row.outcome}`, {
+    role: "PARSER", kind: "PAGE_READ", outcome: row.outcome, title: `${row.platform} pages in ${row.state}`, states: [row.state.toLowerCase()], platforms: [row.platform], url: row.url, observedAt: at,
+    summary: `${row.count} page(s) read: ${row.published} fact(s) published, ${row.links} link(s) found${row.reason ? `; ${row.reason}` : ""}`, payload: { count: row.count, published: row.published, links: row.links, reason: row.reason } })), at);
   return stats;
 }

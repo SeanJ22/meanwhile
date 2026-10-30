@@ -16,6 +16,7 @@ import {
 import {
   ROUTINE_SOURCE_TASKS,
   routineFailureDomainFrontier,
+  routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
   type RoutineSourceTask,
@@ -130,7 +131,7 @@ test("controlled clock: a request brings a cold partition's read forward; the pa
   assert.equal(routineDueRequestState(request, clock, NOW_MS), "WAITING");
   assert.equal(routineDueRequestFor(partition, clock, NOW_MS + 10 * MIN - 1, [request]), null);
   assert.equal(routineDueRequestFor(partition, clock, NOW_MS + 10 * MIN, [request]), request);
-  assert.equal(routineDueRequestDeadlineMs(routineTaskDeadlineMs(partition, clock, false), request), NOW_MS + 10 * MIN);
+  assert.equal(routineDueRequestDeadlineMs(routineTaskDeadlineMs(partition, clock, false), request), Number.NEGATIVE_INFINITY);
   for (const other of ROUTINE_SOURCE_TASKS.filter(({ id }) => id !== partition.id).slice(0, 40)) {
     assert.equal(routineDueRequestFor(other, clock, NOW_MS + 10 * MIN, [request]), null);
   }
@@ -149,7 +150,7 @@ test("controlled clock: a request brings a cold partition's read forward; the pa
   assert.equal(routineDueRequestFor(partition, clock, NOW_MS + 10 * MIN, [withdrawn]), null);
 });
 
-test("a request only brings a read forward: on its lane it goes by deadline, never ahead of a read owed sooner", () => {
+test("a request is read now: on its lane it goes ahead of every owed read and never waits behind its own deadline", () => {
   const lanes = new Map<string, RoutineSourceTask[]>();
   for (const row of ROUTINE_SOURCE_TASKS.filter((candidate) => candidate.recordClass === "MEETING" && candidate.contract.schedule?.kind === "SITTING_WINDOW")) {
     lanes.set(row.acquisitionFailureDomain, [...(lanes.get(row.acquisitionFailureDomain) ?? []), row]);
@@ -161,7 +162,7 @@ test("a request only brings a read forward: on its lane it goes by deadline, nev
     dueAt: NOW, expiresAt: iso(NOW_MS + HOUR), reason: "check", withdrawnAt: null,
   };
   const deadline = routineDueRequestDeadlineMs(routineTaskDeadlineMs(requested, coldClock(NOW_MS - HOUR), false), request);
-  assert.equal(deadline, NOW_MS);
+  assert.equal(deadline, Number.NEGATIVE_INFINITY);
   const admitted = routineFailureDomainFrontier([
     { task: requested, lastConsideredAt: iso(NOW_MS - HOUR), deadlineMs: deadline },
     { task: overdue, lastConsideredAt: iso(NOW_MS - 2 * HOUR), deadlineMs: NOW_MS - 5 * MIN },
@@ -170,7 +171,8 @@ test("a request only brings a read forward: on its lane it goes by deadline, nev
     { task: latest, lastConsideredAt: iso(NOW_MS - 30 * MIN), deadlineMs: NOW_MS + 25 * MIN },
   ]);
   assert.deepEqual(admitted.map(({ task: row }) => row.id).sort(), [requested.id, overdue.id, soon.id].sort());
-  assert.equal(routineDueRequestDeadlineMs(NOW_MS - HOUR, request), NOW_MS - HOUR);
+  assert.equal(routinePassLaunchOrder(admitted, NOW_MS)[0]!.task.id, requested.id);
+  assert.equal(routineDueRequestDeadlineMs(NOW_MS - HOUR, request), Number.NEGATIVE_INFINITY);
   assert.equal(routineDueRequestDeadlineMs(NOW_MS + HOUR, null), NOW_MS + HOUR);
 });
 
@@ -182,7 +184,7 @@ test("the runner honours a request only in its ordinary pass: the same due check
   assert.match(runner, /const cadenceDue = routineTaskDue\(task, durableClock, admissionNowMs, sittingHot, observedEveryMs\);/);
   assert.match(runner, /if \(!FORCE && !taskDue && !inputDue && dueRequest === null/);
   assert.match(runner, /deadlineMs: routineDueRequestDeadlineMs\(\s+routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/);
-  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\) pendingRuns\.push/);
+  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: shutFeedsLast\(dueRequestsFirstInClass\(electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\), new Set\(honouredDueRequests\.keys\(\)\)\), shutDoors\)\) pendingRuns\.push/);
   assert.match(runner, /\.\.\.input\.dueRequestLines,/);
   assert.match(runner, /admitted by this ordinary pass/);
   const source = readFileSync("lib/civic-data/routine-due-request.ts", "utf8");

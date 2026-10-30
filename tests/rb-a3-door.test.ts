@@ -16,12 +16,19 @@ import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plan
 const now = new Date("2026-10-24T08:00:00Z");
 const clocks = factClocks(null);
 const purge = async () => ({ purged: true });
-const input = (over: Partial<PublishInput> = {}): PublishInput => ({
-  entity: { id: "az:city:example#governing", fullName: "Example City Council", stateName: "Arizona", hosts: [], externalIds: [] },
-  field: "office_phone", fieldKind: "contact", value: "520-555-0100", valueText: "520-555-0100",
-  quote: "", provenance: "OFFICIAL", producedBy: "rb-a9", costUsd: 0,
-  copy: { id: 1, finalUrl: "https://example.gov/council", text: "", fetchedAt: now, isArchive: false }, ...over,
-});
+/** Every claim is checked: its saved copy shows the value on a line of its own, unless the test gives its own text. */
+const DEFAULT_TEXT = "Example City Council Arizona\noffice_phone: 520-555-0100\n";
+const input = (over: Partial<PublishInput> = {}): PublishInput => {
+  const claim: PublishInput = {
+    entity: { id: "az:city:example#governing", fullName: "Example City Council", stateName: "Arizona", hosts: [], externalIds: [] },
+    field: "office_phone", fieldKind: "contact", value: "520-555-0100", valueText: "520-555-0100",
+    quote: "", provenance: "OFFICIAL", producedBy: "rb-a9", costUsd: 0,
+    copy: { id: 1, finalUrl: "https://example.gov/council", text: "", fetchedAt: now, isArchive: false }, ...over,
+  };
+  const quote = claim.quote || String(claim.valueText);
+  const own = claim.copy.text && claim.copy.text !== DEFAULT_TEXT;
+  return { ...claim, quote, copy: { ...claim.copy, text: own ? claim.copy.text : `${claim.entity.fullName} ${claim.entity.stateName}\n${claim.field}: ${quote}\n` } };
+};
 
 async function seeded(withHourlyCounts = false) {
   const db = await factDb({ withHourlyCounts });
@@ -119,10 +126,10 @@ test("an existing canonical id wins over another source's alias without merging 
   } finally { await db.pg.close(); }
 });
 
-test("an official field publishes without reading or searching the page text, and an exact repeat changes nothing", async () => {
+test("an official field publishes checked on its saved line, and an exact repeat changes nothing", async () => {
   const db = await seeded(true);
   try {
-    const claim = input({ copy: { ...input().copy, get text(): string { throw new Error("official lane searched the source"); } } });
+    const claim = input();
     assert.deepEqual(await door(db, claim, clocks, now, { purge }), { decision: "PUBLISH", factId: 1 });
     const snapshot = () => db.query(`SELECT jsonb_build_object('facts',(SELECT jsonb_agg(f) FROM fact f),
       'watermarks',(SELECT jsonb_agg(w) FROM fact_watermark w),'sources',(SELECT jsonb_agg(s) FROM source_copy s),
@@ -131,7 +138,7 @@ test("an official field publishes without reading or searching the page text, an
     const before = await snapshot();
     assert.deepEqual(await door(db, claim, clocks, new Date(now.getTime() + 3_600_000), { purge }), { decision: "CONFIRM", factId: 1 });
     assert.deepEqual(await snapshot(), before);
-    assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
+    assert.notEqual((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null, "the quote was found on the saved copy");
     assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id"), [{ place_id: input().entity.id }, { place_id: "place-one" }, { place_id: "place-two" }]);
     assert.deepEqual(await db.query(`SELECT state,sum(n)::int AS n FROM count_hour
       WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
@@ -139,17 +146,15 @@ test("an official field publishes without reading or searching the page text, an
   } finally { await db.pg.close(); }
 });
 
-test("a portal linked by a registered government site uses the official lane", async () => {
+test("a portal linked by a registered government site is official", async () => {
   const db = await seeded();
   try {
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'government.example.org')", [input().entity.id]);
-    const claim = input({ copy: { ...input().copy, finalUrl: "https://portal.example/meetings/1",
-      get text(): string { throw Error("The government's linked portal searched a quote"); } } });
+    const claim = input({ copy: { ...input().copy, finalUrl: "https://portal.example/meetings/1" } });
     const outcome = await door(db, { ...claim, linkingPage: { url: "https://government.example.org/meetings",
       html: '<a href="https://portal.example/meetings">Public meetings</a>' } }, clocks, now, { purge });
     assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
     assert.deepEqual(await db.query("SELECT provenance_kind FROM fact"), [{ provenance_kind: "OFFICIAL" }]);
-    assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
   } finally { await db.pg.close(); }
 });
 
@@ -158,12 +163,11 @@ test("a government's CivicClerk embed delegates only its named tenant", async ()
   try {
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'government.example.org')", [input().entity.id]);
     const linkingPage = { url: "https://government.example.org/meetings", html: '<script>window.clerkEmbedProps = {"tenant":"example"};</script><script src="https://civicclerkcdn.azureedge.net/publicportal-live/embed.js"></script>' };
-    const claim = input({ copy: { ...input().copy, finalUrl: "https://example.portal.civicclerk.com/event/1",
-      get text(): string { throw Error("The government's embedded portal searched a quote"); } } });
+    const claim = input({ copy: { ...input().copy, finalUrl: "https://example.portal.civicclerk.com/event/1" } });
     const outcome = await door(db, { ...claim, linkingPage }, clocks, now, { purge });
     assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
-    const refused = await door(db, { ...input({ field: "office_email", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), linkingPage }, clocks, now, { purge });
-    assert.deepEqual(refused, { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+    await door(db, { ...input({ field: "office_email", provenance: "OTHER", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), linkingPage }, clocks, now, { purge });
+    assert.deepEqual(await db.query("SELECT field,provenance_kind FROM fact ORDER BY field"), [{ field: "office_email", provenance_kind: "OTHER" }, { field: "office_phone", provenance_kind: "OFFICIAL" }]);
   } finally { await db.pg.close(); }
 });
 
@@ -171,11 +175,10 @@ test("a registered government API and its portal keep the same CivicClerk tenant
   const db = await seeded();
   try {
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'example.api.civicclerk.com/v1')", [input().entity.id]);
-    const outcome = await door(db, input({ copy: { ...input().copy, finalUrl: "https://example.portal.civicclerk.com/event/1",
-      get text(): string { throw Error("The held government's portal searched a quote"); } } }), clocks, now, { purge });
+    const outcome = await door(db, input({ copy: { ...input().copy, finalUrl: "https://example.portal.civicclerk.com/event/1" } }), clocks, now, { purge });
     assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
-    assert.deepEqual(await door(db, input({ field: "office_email", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), clocks, now, { purge }),
-      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+    await door(db, input({ field: "office_email", provenance: "OTHER", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), clocks, now, { purge });
+    assert.deepEqual(await db.query("SELECT field,provenance_kind FROM fact ORDER BY field"), [{ field: "office_email", provenance_kind: "OTHER" }, { field: "office_phone", provenance_kind: "OFFICIAL" }]);
   } finally { await db.pg.close(); }
 });
 
@@ -184,14 +187,13 @@ test("a registered Legistar API keeps its tenant's portal and document delivery 
   try {
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'webapi.legistar.com/v1/example')", [input().entity.id]);
     for (const [index, url] of ["https://example.legistar.com/MeetingDetail.aspx?ID=1", "https://example.legistar1.com/example/meetings/2026/agenda.pdf", "https://legistar2.granicus.com/example/meetings/2026/agenda.pdf"].entries()) {
-      const result = await door(db, input({ field: `document_${index}`, copy: { ...input().copy, finalUrl: url,
-        get text(): string { throw Error("The held government's document searched a quote"); } } }), clocks, now, { purge });
+      const result = await door(db, input({ field: `document_${index}`, copy: { ...input().copy, finalUrl: url } }), clocks, now, { purge });
       assert.equal("decision" in result && result.decision, "PUBLISH");
     }
-    assert.deepEqual(await door(db, input({ field: "wrong_tenant", copy: { ...input().copy, finalUrl: "https://other.legistar1.com/other/agenda.pdf" } }), clocks, now, { purge }),
-      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
-    assert.deepEqual(await door(db, input({ field: "wrong_granicus_tenant", copy: { ...input().copy, finalUrl: "https://legistar2.granicus.com/other/meetings/2026/agenda.pdf" } }), clocks, now, { purge }),
-      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+    await door(db, input({ field: "wrong_tenant", provenance: "OTHER", copy: { ...input().copy, finalUrl: "https://other.legistar1.com/other/agenda.pdf" } }), clocks, now, { purge });
+    await door(db, input({ field: "wrong_granicus_tenant", provenance: "OTHER", copy: { ...input().copy, finalUrl: "https://legistar2.granicus.com/other/meetings/2026/agenda.pdf" } }), clocks, now, { purge });
+    assert.deepEqual(await db.query("SELECT field,provenance_kind FROM fact WHERE field LIKE 'wrong%' ORDER BY field"),
+      [{ field: "wrong_granicus_tenant", provenance_kind: "OTHER" }, { field: "wrong_tenant", provenance_kind: "OTHER" }]);
   } finally { await db.pg.close(); }
 });
 
@@ -199,8 +201,7 @@ test("a registered government site keeps its www spelling official", async () =>
   const db = await seeded();
   try {
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'www.example.org')", [input().entity.id]);
-    const result = await door(db, input({ copy: { ...input().copy, finalUrl: "https://www.example.org/council",
-      get text(): string { throw Error("The registered government site searched a quote"); } } }), clocks, now, { purge });
+    const result = await door(db, input({ copy: { ...input().copy, finalUrl: "https://www.example.org/council" } }), clocks, now, { purge });
     assert.equal("decision" in result && result.decision, "PUBLISH");
   } finally { await db.pg.close(); }
 });
@@ -221,7 +222,7 @@ test("a checked sidebar preserves the agenda while an official API field publish
     assert.equal("decision" in checked && checked.decision, "KEEP_CURRENT");
     const document = "https://documents.example/files/session-2026.pdf";
     const published = await door(db, input({ field: "agenda_url", fieldKind: "agenda", value: document, valueText: document,
-      copy: { id: 4, finalUrl: api, fetchedAt: latest, get text(): string { throw Error("The API field searched a quote"); }, isArchive: false } }), clocks, latest, { purge });
+      copy: { id: 4, finalUrl: api, fetchedAt: latest, text: `Example City Council Arizona\nagenda_url: ${document}\n`, isArchive: false } }), clocks, latest, { purge });
     assert.equal("decision" in published && published.decision, "PUBLISH");
     assert.deepEqual(await db.query("SELECT value FROM fact WHERE field='agenda_url' AND status='live'"), [{ value: document }]);
   } finally { await db.pg.close(); }
@@ -243,7 +244,7 @@ test("a newer official value replaces OTHER and a repeat of a losing fact create
   } finally { await db.pg.close(); }
 });
 
-test("Open States and Legistar API fields, and a portal linked by government, use the fast lane", async () => {
+test("Open States and Legistar API fields, and a portal linked by government, are checked like any other official source", async () => {
   const db = await seeded();
   try {
     for (const url of ["https://v3.openstates.org/people/123", "https://webapi.legistar.com/v1/pima/Bodies", "https://api.legiscan.com/?op=getBill"]) {
@@ -295,7 +296,7 @@ test("nonofficial claims use clocks.ts; a failed quote leaves the old caller its
 test("a hunter's claim is checked against its saved copy even when it cites a government page", async () => {
   const db = await seeded();
   try {
-    const claim = input({ acquisition: "hunter", quote: "invented words" });
+    const claim = input({ acquisition: "hunter", quote: "invented words", copy: { ...input().copy, text: "Example City Council Arizona unrelated words" } });
     assert.deepEqual(await door(db, claim, clocks, now), { refused: "QUOTE_NOT_ON_SAVED_COPY" });
     assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 0);
   } finally { await db.pg.close(); }
@@ -369,7 +370,7 @@ test("an API and a government-linked portal can name an unheld board through the
         [source, url, now.toISOString(), "c".repeat(64)]);
       const { entity: _entity, ...claim } = input();
       const name = index === 0 ? "API Planning Commission" : "Portal Planning Commission";
-      const outcome = await door(db, { ...claim, subjectId: `unheld-${index}`, copy: { ...claim.copy, id: source, finalUrl: url },
+      const outcome = await door(db, { ...claim, subjectId: `unheld-${index}`, copy: { ...claim.copy, id: source, finalUrl: url, text: `${name} of Example City, Arizona\noffice_phone: 520-555-0100\n` },
         board: { governmentId: "az:city:example", name },
         ...(index === 1 ? { linkingPage: { url: "https://example.gov/", html: '<a href="https://portal.example/council">Council</a>' } } : {}) }, clocks, now, { purge });
       assert.equal((outcome as { decision: string }).decision, "PUBLISH");

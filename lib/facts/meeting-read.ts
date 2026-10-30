@@ -13,7 +13,7 @@ const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.f
   WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND (f.status = 'live'
     OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')`;
 
-const FIELD = { title: "title", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
+const FIELD = { title: "title", status: "status", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
 
 function publishedLocation(meeting: Meeting, value: unknown, source: Provenance, currentText?:string|null): Partial<Meeting> {
   let location = value as { name: string; address: string | null; lat?: number; lng?: number };
@@ -32,6 +32,43 @@ export interface SittingFact {
   readonly value: unknown;
   readonly source: Provenance;
   readonly withdrawn?: boolean;
+}
+
+/** Every live fact of the sittings under the given bodies that start at or after `$2`, with the saved page each was found on. */
+export const MEETING_FACT_ROWS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.field, f.value, f.quote, f.checked_at, f.status,
+  (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url
+  FROM entity m JOIN checked_fact f ON f.entity_id = m.id
+  WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND (f.status = 'live'
+    OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')
+    AND EXISTS (SELECT 1 FROM fact t WHERE t.entity_id = m.id AND t.field = 'starts_at' AND t.status = 'live'
+      AND t.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND (t.value->>'startsAt')::timestamptz >= $2::timestamptz)`;
+
+export interface MeetingBodyHeader { readonly name: string; readonly ocdId: string | null; readonly jurisdiction: string }
+
+/**
+ * The sittings the fact store holds for some bodies: each one that has a live title and start, with every other live fact laid over it.
+ * A sitting is concluded once it has started; a canceled one says so in its own fact.
+ */
+export function meetingsFromFactRows(rows: readonly Record<string, unknown>[], header: (bodyId: string) => MeetingBodyHeader, now: Date): Meeting[] {
+  const byEntity = new Map<string, Map<string, Record<string, unknown>>>();
+  for (const row of rows) {
+    if (row.status !== "live") continue;
+    const own = byEntity.get(String(row.entity_id)) ?? new Map<string, Record<string, unknown>>();
+    own.set(String(row.field), row);
+    byEntity.set(String(row.entity_id), own);
+  }
+  const bases: Meeting[] = [];
+  for (const [entityId, own] of byEntity) {
+    const title = own.get("title"), start = own.get("starts_at");
+    if (!title || !start) continue;
+    const date = start.value as { startsAt: string; timeZone: string; precision?: "DAY" | "MINUTE" };
+    const bodyId = String(title.body_id), body = header(bodyId), sourceUrl = String(title.url), at = new Date(title.checked_at as string).toISOString();
+    bases.push({ id: entityId.slice("meeting:".length), bodyId, bodyName: body.name, ocdId: body.ocdId, title: String(title.value), startsAt: date.startsAt,
+      timeZone: date.timeZone, ...(date.precision === "DAY" ? { startPrecision: "DAY" as const } : {}), location: null, agendaUrl: null, jurisdiction: body.jurisdiction,
+      status: Date.parse(date.startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED",
+      provenance: { sourceUrl, sourceOrg: new URL(sourceUrl).hostname, collectedAt: at, verifiedAt: at } });
+  }
+  return withSittingFacts(bases, [...sittingFactsFromRows(rows).values()].flat());
 }
 
 /** The current fields and exact office withdrawals for each given body's sittings. */

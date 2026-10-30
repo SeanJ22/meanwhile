@@ -70,7 +70,7 @@ test("the motion hold is scoped to a software rasteriser, not every renderer", (
     CANVAS.indexOf("const enterMotionDegrade"),
     CANVAS.indexOf("const onPresentationIdle"),
   );
-  assert.match(enter, /if \(!degradeInMotion\) return;/, "enterMotionDegrade must no-op off a software rasteriser");
+  assert.match(enter, /if \(!degradeInMotion \|\| !presented\) return;/, "motion hiding begins only after the complete first map, on a software rasteriser");
 
   assert.match(CANVAS, /map\.on\("idle", onPresentationIdle\);/);
   const idle = CANVAS.slice(CANVAS.indexOf("const onPresentationIdle"), CANVAS.indexOf('map.on("idle", onPresentationIdle)'));

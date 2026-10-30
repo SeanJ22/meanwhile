@@ -95,6 +95,9 @@ export interface RoutineSourceTask {
     /** The work items a publication serves. */
     readonly workItemIds?: readonly string[];
   };
+  /** A standing obligation owns this task's timing: the task is offered only while that obligation is due, and its
+   * clock is the obligation's last work, never the clock of the state contract it publishes through. */
+  readonly obligation?: { readonly lastWorkedAt: string | null };
 }
 
 export function routineTaskFromContract(contract: RoutineSourceContract): RoutineSourceTask {
@@ -576,6 +579,8 @@ export async function readRoutineTaskClocks(
   concurrency: number = ROUTINE_CLOCK_READ_CONCURRENCY,
 ): Promise<readonly RoutineTaskClockRead[]> {
   const reads = await runBoundedWorkPool(tasks, concurrency,async task=>{
+    const worked=task.obligation?.lastWorkedAt;
+    if(task.obligation)return worked?{lastAttemptedAt:worked,lastSucceededAt:worked,lastSucceededObservedAt:worked}:undefined;
     const clock=await readClock(task);
     return task.recordClass==="MEETING"&&await meetingSourceContinuationPending(task.scope)?{...clock,continuationPending:true}:clock;
   });
@@ -694,6 +699,7 @@ export function routineTaskNextDueMs(
   sittingHot?: boolean,
   observedEveryMs?: number,
 ): number {
+  if (task.obligation) return nowMs;
   const defaults = factRefreshBounds(task);
   const continuationPending = clock?.continuationPending === true && (Number.isFinite(Date.parse(clock.lastCompletedAt ?? "")) || ["MEETING", "MEETING_OUTCOME", "STATE_BILL", "CURATED_READER_RECORD"].includes(task.recordClass) || task.recordClass === "FEDERAL_MONEY" &&
     task.contract.fanOut !== undefined && task.scope === `${task.sourceId}:US`);

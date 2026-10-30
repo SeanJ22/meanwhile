@@ -61,6 +61,7 @@ import { FLEET_SPEND_CEILING_MAX_USD, resolveRollingCeiling } from "../fleet-saf
 import {
   SCOPE_TYPE_WORDS,
   expansionScopesOf,
+  isHunt,
   scopeKeyOf,
   validateScopeBudget,
   validateScopeGeography,
@@ -1089,7 +1090,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         readBackAt: "/admin/work",
         undo:
           previous === null
-            ? "Remove this geography from the expansion list."
+            ? "Stop this hunt."
             : `Set it back to priority ${previous.priority} with $${previous.budgetUsd.toFixed(2)}.`,
       };
     },
@@ -1098,8 +1099,8 @@ const REGISTRY: readonly RegisteredAction[] = [
   {
     definition: {
       type: "expansion.scope.remove",
-      label: "Remove this geography from expansion",
-      does: "Asks the runner to stop this hunt in its next planning round.",
+      label: "Stop this hunt",
+      does: "Asks the runner to end this hunt's paid hunter work in its next planning round. Free sources for the place keep running.",
       doesNot: "Keeps acquired facts and work already in flight.",
       authority: "OWNER_DECISION_REQUIRED",
       subjectKind: "a geography on your expansion list",
@@ -1120,7 +1121,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       try {
         const lookupKey=key;
         const held=await deps.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:place?{where:{path:["geography","geoid"],value:key.split(".").at(-1)!}}:{ids:[lookupKey]}});
-        const scope=expansionScopesOf(held?.value??null).scopes.find(scope=>scope.key===lookupKey || huntPlaceKey(scope)===key);
+        const scope=expansionScopesOf(held?.value??null).scopes.find(scope=>(scope.key===lookupKey || huntPlaceKey(scope)===key) && isHunt(scope));
         const state=place?.[1]??scope?.geography.stateAbbr.toLowerCase();
         if(!state) return refuse("INVALID_INPUT","That hunt could not be found.");
         await requestHuntStop(deps.repos,{receiptId:context.receiptId,state,scopeKey:scope?.key??key,at:context.at,actor:context.request.actorRef});
@@ -1129,7 +1130,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
   {
-    definition:{type:"expansion.scope.stopAll",label:"Stop every hunt",does:"Asks the runner to stop every current hunt in this state or the whole system.",
+    definition:{type:"expansion.scope.stopAll",label:"Stop every hunt",does:"Asks the runner to end the paid hunter work of every current hunt in this state or the whole system. Free sources and standing work keep running.",
       doesNot:"Keeps acquired facts and work already in flight.",authority:"OWNER_DECISION_REQUIRED",subjectKind:"hunts",requiresStateVersion:false,refusals:["INVALID_INPUT","DOWNSTREAM_REFUSED"]},
     validate(input) {
       const state=typeof input.state==="string"?input.state.toLowerCase():null;

@@ -1,3 +1,6 @@
+export const BOUNDARY_ARCHIVE_FALLBACK = "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
+export const BOUNDARY_ARCHIVE_URL = (typeof process === "undefined" ? undefined : process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL) || BOUNDARY_ARCHIVE_FALLBACK;
+
 /** Byte ranges for the immutable national PMTiles file. No whole-archive reads. */
 export function boundaryRange(value: string | null): { start: number; end: number } | null {
   const match = /^bytes=(\d+)-(\d+)$/.exec(value ?? "");

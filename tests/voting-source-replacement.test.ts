@@ -12,6 +12,10 @@ import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
+import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 
 const directory = "tests/fixtures/voting-sources/vs-07/";
 const door = (JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[])
@@ -60,6 +64,30 @@ test("a complete native current-map replay retires only the 19 out-of-filter Pim
   assert.equal(second.candidate.candidate.changeSet?.removed.length, 19);
   assert.ok(second.candidate.receipt?.checks.some(check => check.code === "OFFICIAL_VOTING_SOURCE_REPLACED" && check.verdict === "PASS"));
   assert.equal(candidate.horizon.claimsComplete, false, "the whole state remains an open fact set");
+});
+
+// Production, Oct 24-29: every voting-site removal in DE, MA, OR, AZ, WA and KY was held as VOTING_SOURCE_REPLACEMENT_UNPROVEN.
+// The voting job remembers its held state, so the production adapter hands validation the prior's member index, not its payload.
+test("on the production adapter, the voting job's own held read lets a complete official replacement retire its old rows", async () => {
+  await withMigratedRoutineStore("voting-sites:AZ", async store => {
+    (store as unknown as { writeAuthority: Record<string, unknown> }).writeAuthority.capability = "MANUAL_CONTRACT";
+    const { previous } = await setup();
+    assert.ok((await processRegisteredManualCandidate(store, "voting-sites:AZ", previous, beforeAt)).promoted);
+    const held = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", "US-AZ:voting-sites", { store, now: at });
+    assert.equal(held.kind, "PROMOTED");
+    if (held.kind !== "PROMOTED") return;
+    rememberStatePublicationPrior(store, held.projection);
+    const read = await readVotingSource(door, { fetch: fetchNative, now: () => at });
+    const next = replaceVotingJurisdiction(held.value, mergeVotingSourceRead(held.value.jurisdictions[0], door, read, at), at);
+    const candidate = votingSitesCandidate({ state: "AZ", current: next, prior: held.value, failures: [], acquisition: await holdVotingRawEvidence(read),
+      successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at, carriedFromVersionId: previous.id,
+      sourceReplacementDoors: [door] });
+    const outcome = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, at, previous.id);
+    assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the complete current list replaces its own rows");
+    assert.ok(outcome.candidate.receipt?.checks.some(check => check.code === "OFFICIAL_VOTING_SOURCE_REPLACED" && check.verdict === "PASS"));
+    const after = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", "US-AZ:voting-sites", { store, now: at });
+    assert.equal(after.kind === "PROMOTED" && after.value.jurisdictions[0]!.sites.length, 129);
+  });
 });
 
 test("removal cannot be authorized by self-asserted checks, missing bytes, an omitted current row or a different publisher", async () => {

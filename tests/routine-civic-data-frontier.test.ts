@@ -5,10 +5,8 @@ import test from "node:test";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_TASKS,
-  routineFailureDomainCount,
   routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
-  routineFrontierPassBound,
   routinePassLaunchOrder,
   routineBaselineOwed,
   routineCodeChangeRetryTaskIds,
@@ -32,11 +30,7 @@ import {
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
 } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
-import {
-  ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_CHILD_TIMEOUT_MS,
-  routineChildPassWorstCaseMs,
-} from "../lib/civic-data/bounded-child-pass.ts";
+import { ROUTINE_CHILD_CONCURRENCY } from "../lib/civic-data/bounded-child-pass.ts";
 
 function largestRealDomain(): readonly RoutineSourceTask[] {
   const grouped = new Map<string, RoutineSourceTask[]>();

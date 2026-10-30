@@ -13,12 +13,9 @@ type CopyBody = string | AsyncIterable<Uint8Array>;
 /** One writer owns the entire disposable directory, including old database
  * namespaces. Reserve space before writing each chunk; oldest copies go first. */
 export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX_BYTES, maxCopyBytes = CIVIC_READ_COPY_MAX_BYTES) {
-  if (!Number.isSafeInteger(maxBytes) || maxBytes <= 0 || !Number.isSafeInteger(maxCopyBytes) || maxCopyBytes <= 0) {
-    throw new Error("CIVIC_READ_CACHE_LIMIT_INVALID");
-  }
+  if (!Number.isSafeInteger(maxBytes) || maxBytes <= 0 || !Number.isSafeInteger(maxCopyBytes) || maxCopyBytes <= 0) throw new Error("CIVIC_READ_CACHE_LIMIT_INVALID");
   const entries = new Map<string, { size: number; at: number }>();
-  let used = 0;
-  let queue = Promise.resolve();
+  let used = 0, queue = Promise.resolve();
   const makeRoom = async (bytes: number): Promise<void> => {
     if (used + bytes <= maxBytes) return;
     for (const [path, entry] of entries) {
@@ -95,8 +92,7 @@ export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX
 const stores = new Map<string, ReturnType<typeof civicReadCopyStore>>();
 /** Only the supervisor touches disposable files; source doors stay off disk. */
 export async function saveCivicReadCopy(root: string, key: string, saved: string): Promise<void> {
-  let store = stores.get(root);
-  if (!store) { store = civicReadCopyStore(root); stores.set(root, store); }
+  const store = stores.get(root) ?? stores.set(root, civicReadCopyStore(root)).get(root)!;
   try { await store.write(key, saved); } catch { /* A disposable copy cannot fail the actual database read. */ }
 }
 
@@ -116,13 +112,15 @@ export async function startCivicReadCacheHost(options: { readonly maxBytes?: num
     }
     const key = namespace + request.url!;
     try {
+      const file = join(root, key + ".json");
+      if (request.method === "GET") {
+        await stat(file);
+        if (!request.url!.startsWith("/checkpoint/")) store.touch(key);
+        response.writeHead(200, { "content-type": "application/json" });
+        await pipeline(createReadStream(file), response); return;
+      }
       if (request.url!.startsWith("/checkpoint/")) {
         // Continuations survive ordinary copy eviction and host restarts. They are not facts or a receipt.
-        const file = join(root, key + ".json");
-        if (request.method === "GET") {
-          await stat(file); response.writeHead(200, { "content-type": "application/json" });
-          await pipeline(createReadStream(file), response); return;
-        }
         await mkdir(dirname(file), { recursive: true });
         const temporary = file + "." + randomUUID() + ".tmp", held = await open(temporary, "wx", 0o600);
         let bytes = 0;
@@ -136,17 +134,8 @@ export async function startCivicReadCacheHost(options: { readonly maxBytes?: num
         } catch (error) { await held.close().catch(() => {}); await unlink(temporary).catch(() => {}); throw error; }
         response.writeHead(204).end(); return;
       }
-      if (request.method === "GET") {
-        const file = join(root, key + ".json");
-        await stat(file);
-        store.touch(key);
-        response.writeHead(200, { "content-type": "application/json" });
-        await pipeline(createReadStream(file), response); return;
-      }
       const length = Number(request.headers["content-length"]);
-      if (length > Math.min(options.maxBytes ?? CIVIC_READ_CACHE_MAX_BYTES, options.maxCopyBytes ?? CIVIC_READ_COPY_MAX_BYTES)) {
-        response.writeHead(413).end(); request.resume(); return;
-      }
+      if (length > Math.min(options.maxBytes ?? CIVIC_READ_CACHE_MAX_BYTES, options.maxCopyBytes ?? CIVIC_READ_COPY_MAX_BYTES)) { response.writeHead(413).end(); request.resume(); return; }
       await store.write(key, request);
       response.writeHead(204).end();
     } catch {

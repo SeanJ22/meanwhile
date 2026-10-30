@@ -95,7 +95,7 @@
       "file": "lib/civic-data/store.ts",
       "kind": "readCandidate",
       "fingerprint": "85d10c08f9d5b0b2c59eab1a3895a504ab31eb61bdfdb76ae85657a674ed2c1d",
-      "line": 2559
+      "line": 2556
     },
     {
       "file": "lib/control-plane/operator-chat/contract.ts",

@@ -2125,11 +2125,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const candidate=this.justWrittenBills.get(candidateId);if(!candidate)return undefined;
     // Replace the old whole-row read with the same persisted state/proof metadata.
     const record=await this.readPublishedCandidateMetadata(candidateId);if(!record)return null;
-    if(record.candidate.id!==candidate.id||record.candidate.sourceId!==candidate.sourceId||
-      record.candidate.recordClass!==candidate.recordClass||record.candidate.scope!==candidate.scope||
-      record.candidate.retrieval.rawHash!==candidate.retrieval.rawHash||
-      record.candidate.normalization.normalizedHash!==candidate.normalization.normalizedHash||
-      record.candidate.normalization.normalizedPayloadHash!==candidate.normalization.normalizedPayloadHash)
+    const identity=(c:PublishedCandidateMetadata["candidate"])=>[c.id,c.sourceId,c.recordClass,c.scope,c.retrieval.rawHash,c.normalization.normalizedHash,c.normalization.normalizedPayloadHash];
+    if(identity(record.candidate).some((value,index)=>value!==identity(candidate)[index]))
       throw Error(`CANDIDATE_OWNED_BILL_ENVELOPE_MISMATCH:${candidateId}`);
     return{...record,candidate};
   }

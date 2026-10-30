@@ -225,9 +225,16 @@ test("a copy that was read outlives older copies nobody read when the cache is f
   const root = await scratch(t), store = civicReadCopyStore(root, 24);
   await store.ready;
   for (const key of ["a", "b", "c"]) await store.write(key, "12345678");
-  store.touch("a");
-  await store.write("d", "12345678");
+  store.touch("a"); await store.write("d", "12345678");
   assert.deepEqual((await readdir(root)).sort(), ["a.json", "c.json", "d.json"]);
+});
+
+test("a hash the database does not yet hold is never remembered as absent", async t => {
+  const root = await scratch(t), db = new Map<string, { hash: string }>(), input = { namespace: "payload-part", keys: ["h1"], keyOf: (row: { hash: string }) => row.hash,
+    versions: async (keys: readonly string[]) => keys.map(key => ({ key, etag: `part-v1/${key}` })), values: async (keys: readonly string[]) => keys.flatMap(key => db.get(key) ?? []) };
+  assert.deepEqual(await cache(root).rows(input), []);
+  db.set("h1", { hash: "h1" });
+  assert.deepEqual(await cache(root).rows(input), [{ hash: "h1" }]);
 });
 
 test("seventeen concurrent uploads do not accumulate complete copies in the supervisor", async t => {

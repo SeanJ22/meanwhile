@@ -5,7 +5,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "officials", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
+  "places", "hunts", "national", "results", "officials", "stuck", "sameCause", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -39,7 +39,7 @@ export interface SectionPage {
   readonly prevCursor: string | null;
 }
 
-export const PAGED_SECTIONS: readonly SectionId[] = ["workRows", "history", "checklist", "fixes"];
+export const PAGED_SECTIONS: readonly SectionId[] = ["history", "checklist", "fixes"];
 export const PAGE_LIMIT = 50;
 
 const SAME_ORIGIN_PATH = /^\/api\/admin\/[A-Za-z0-9/_\-.]+$/;

@@ -4,6 +4,9 @@ import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meeting
 import { FEDERAL_MONEY_SOURCES, compareFederalMoneyActions, federalMoneyActionDate, type FederalMoneyFact, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
 import { FederalMoneyIndex, FEDERAL_MONEY_ACTION_ORDER_BASE, federalMoneyArtifactHash, federalMoneyArtifactKey, readFederalMoneyJson, type FederalMoneyIndexEntry, FEDERAL_MONEY_PAGE_SIZE, federalMoneyPlaceKey, federalMoneyStatusKey, federalMoneyTargetPlaces, type FederalMoneyPlaceIndex, type FederalMoneyPlacePage, type FederalMoneyPlaceSnapshot, type FederalMoneySegmentArtifact, type FederalMoneyStateStatus } from "./edge.ts";
 import { federalMoneyRows, federalMoneyStateDivision, type FederalMoneyTarget } from "./view.ts";
+import { factReader } from "../facts/db.ts";
+import { readFederalAwardsView } from "../funding/money-read.ts";
+import type { FederalAwardsView } from "../funding/money-card-view.ts";
 
 function record(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === "object" && !Array.isArray(value); }
 function text(value: unknown): value is string { return typeof value === "string" && value.trim().length > 0; }
@@ -12,6 +15,7 @@ export interface FederalMoneyPlaceRead {
   readonly division: string;
   readonly bodyId: string | null;
   readonly recipientIds?: readonly string[];
+  readonly awards?: FederalAwardsView;
   readonly nextCursor: string | null;
   readonly sources: readonly {
     readonly source: FederalMoneySource;
@@ -22,6 +26,18 @@ export interface FederalMoneyPlaceRead {
     readonly coverageComplete?: boolean;
     readonly moreRecords?: boolean;
   }[];
+}
+/** The body's or government's awards rebuilt by recipient; absent until the Slide has filed any. */
+async function readAwards(bodyIds: readonly string[]): Promise<{ readonly awards: FederalAwardsView } | undefined> {
+  const query = factReader();
+  if (!query || !bodyIds.length) return undefined;
+  try {
+    const awards = await readFederalAwardsView(query, bodyIds, new Date());
+    return awards ? { awards } : undefined;
+  } catch (error) {
+    console.error("Federal awards by recipient are unavailable", error);
+    return undefined;
+  }
 }
 export interface FederalMoneyReadOptions {
   readonly artifactStore?: ReaderArtifactStore | null;
@@ -68,7 +84,8 @@ export async function readFederalMoneyForPlace(target: FederalMoneyTarget, optio
   const cursor = decodeCursor(options.cursor, targetId);
   const backing = options.artifactStore === undefined ? resolveReaderArtifactStore() : options.artifactStore;
   const unavailable = (source: FederalMoneySource): FederalMoneyPlaceRead["sources"][number] => ({ source, status: "UNAVAILABLE", records: [], versionId: null, checkedAt: null });
-  if (!backing) return { division: target.divisionId, bodyId: target.bodyId ?? null, recipientIds, nextCursor: null, sources: FEDERAL_MONEY_SOURCES.map(unavailable) };
+  const awardsRead = cursor ? Promise.resolve(undefined) : readAwards(recipientIds);
+  if (!backing) return { division: target.divisionId, bodyId: target.bodyId ?? null, recipientIds, nextCursor: null, sources: FEDERAL_MONEY_SOURCES.map(unavailable), ...await awardsRead };
   // Index seeks share immutable pages within this one request, including seeks
   // for overlapping recipient aliases. No reader state or source bytes persist.
   const bytes = new Map<string, ReturnType<ReaderArtifactStore["readBytes"]>>();
@@ -234,5 +251,5 @@ export async function readFederalMoneyForPlace(target: FederalMoneyTarget, optio
   }));
   const sources = results.map((result, index) => result.status === "fulfilled" ? result.value : unavailable(FEDERAL_MONEY_SOURCES[index]));
   const nextCursor = sources.some(source => source.moreRecords) ? Buffer.from(JSON.stringify({ formatVersion: 2, target: targetId, snapshots, positions })).toString("base64url") : null;
-  return { division: target.divisionId, bodyId: target.bodyId ?? null, recipientIds, nextCursor, sources };
+  return { division: target.divisionId, bodyId: target.bodyId ?? null, recipientIds, nextCursor, sources, ...await awardsRead };
 }

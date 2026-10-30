@@ -192,23 +192,6 @@ export interface SameCause {
   readonly action?: ActionRef;
 }
 
-export type WorkStage = "waiting" | "stuck" | "retrying" | "done" | "retired";
-
-export interface WorkRow {
-  readonly id: string;
-  readonly stage: WorkStage;
-  readonly title: string;
-  readonly placeKey: string;
-  readonly age: string;
-  readonly link?: { readonly type: "stuck" | "result"; readonly id: string };
-}
-
-export interface WorkStageTotal {
-  readonly stage: WorkStage;
-
-  readonly total: number | null;
-}
-
 export type WorkerStage = "finding" | "collecting" | "extracting" | "checking" | "publishing";
 export const WORKER_STAGE_WORDS: Readonly<Record<WorkerStage, string>> = {
   finding: "Finding sources",
@@ -538,6 +521,7 @@ export interface ReachedView {
 export interface SpendView {
   readonly modelSpend?: import("../../../../lib/control-plane/admin-view/model-spend.ts").ModelSpendView | null;
   readonly huntCost?: import("../../../../lib/hunt/cost-per-fact.ts").HuntCostView | null;
+  readonly byWorkKind?: readonly { readonly kind: string; readonly label: string; readonly usd: number | null }[] | null;
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
@@ -827,7 +811,6 @@ export interface AdminV6Data {
   readonly officials?: Sourced<import("@/lib/control-plane/admin-view/officials-results.ts").OfficialsResults>;
   readonly stuck: Sourced<readonly StuckItem[]>;
   readonly sameCause: Sourced<readonly SameCause[]>;
-  readonly workRows: Sourced<{ readonly rows: readonly WorkRow[]; readonly totals: readonly WorkStageTotal[] }>;
   readonly history: Sourced<readonly UiReceipt[]>;
   readonly workers: Sourced<{ readonly status: WorkerStatus; readonly jobs: readonly WorkerJob[] | null; readonly running?: WorkersRunning | null; readonly waiting: readonly WaitingItem[] | null; readonly events: readonly WorkerEvent[] | null; readonly update: UpdateCard | null; readonly next: readonly string[] | null }>;
   readonly checklist: Sourced<ChecklistView>;

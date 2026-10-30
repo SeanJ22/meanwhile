@@ -807,7 +807,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   // It gets its own ten minutes: about 81,000 board facts would otherwise take two days of one-minute maintenance budgets.
   const governingDeadlineMs = Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 10 * 60_000);
   const governingBoards = routineJob(ROUTINE_JOBS.censusGoverningBodies,
-    () => makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), more: () => Date.now() < governingDeadlineMs }), null)
+    () => makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), more: () => Date.now() < governingDeadlineMs }), null)
     .then(report => {
       if (report?.states.length) console.log(`RCD_TASK census-governing-bodies: ${report.states.join(", ")}: ${report.live} board facts live, ` +
         `${report.confirmed} confirmed, ${report.held} held, ${report.unheld} governments not yet held on a place` +

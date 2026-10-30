@@ -27,8 +27,8 @@ export async function requestedStateMoneySubjects(question: string, states: read
         SELECT e.id FROM entity e WHERE e.state=$2 AND e.kind='person' AND e.name=p.name
           AND (e.id=p.id OR p.aliases?e.id OR EXISTS(SELECT 1 FROM entity_external_id x WHERE x.entity_id=e.id
             AND x.scheme='campaign-person:'||$2 AND (x.value=p.id OR p.aliases?x.value)))
-          AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.field LIKE 'campaign-cycle:%' AND f.status='live'
-            AND f.value#>>'{person,name}'=p.name AND (f.value->>'cycle')::int>=2020)
+          AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.status='live' AND (f.field LIKE 'money-campaign:%'
+            OR f.field LIKE 'campaign-cycle:%' AND f.value#>>'{person,name}'=p.name AND (f.value->>'cycle')::int>=2020))
         ORDER BY e.id LIMIT 1
       ) m ON true WHERE regexp_split_to_array(lower(p.name),'[^[:alnum:]]+') && $3::text[]`,[`US-${state}`,state,tokens]);
     for(const row of rows){

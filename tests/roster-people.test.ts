@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import test from "node:test";
-import { namesAgree, nameParts } from "../lib/ballot/incumbency.ts";
+import { samePerson } from "../lib/identity/match-person.ts";
+import { nameParts } from "../lib/identity/name-parts.ts";
 import { rosterPeople, sameRosterPerson, withRosterPeople } from "../lib/registry/roster-people.ts";
 import { earlierRosterHoldersForBody, rosterHoldersForBody, divisionOcdIdForRosterHolder, type BodyRoster, type RosterMember } from "../lib/registry/body-rosters.ts";
 import { getRegistryRuntimeReadModel, withRegistryRuntimeProjection, currentRosterMemberReaderDisposition } from "../lib/registry/runtime-read-model.ts";
@@ -62,11 +63,12 @@ test("six Pima source rows become five people, retaining both Heinz IDs, contact
   assert.equal(JSON.stringify(held), original);
 });
 
-test("the ballot's shared name comparison supplies middle-name matching and strips only published titles", () => {
+test("the one person matcher supplies middle-name matching and strips only published titles", () => {
   const examples = [["Matt J.", "Matt James", true], ["Matt", "Matt James", true],
     ["Matt James", "Matt Karl", false], ["Matthew", "Matt", false]] as const;
   for (const [a, b, expected] of examples) {
-    assert.equal(namesAgree(nameParts(a, "Heinz"), nameParts(b, "Heinz")), expected);
+    const seat = ["this seat"];
+    assert.equal(samePerson({ id: "a", name: nameParts(a, "Heinz"), seats: seat }, { id: "b", name: nameParts(b, "Heinz"), seats: seat }), expected);
     assert.equal(sameRosterPerson(member("a", `Dr. ${a} Heinz`), member("b", `${b} Heinz`), division), expected);
   }
 });

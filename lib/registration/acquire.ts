@@ -41,7 +41,7 @@ export function heldRegistrationReceipt(): RegistrationSourceReceipt {
 }
 
 async function heldRelease(signal: AbortSignal): Promise<KnownRelease | null> {
-  const index = await indexVault(join(process.cwd(), ...VAULT_DIR), `${READ_ONLY_VAULT_PROJECT}/source/census-governments-registration`, { signal });
+  const index = await indexVault(join(/* turbopackIgnore: true */ process.cwd(), ...VAULT_DIR), `${READ_ONLY_VAULT_PROJECT}/source/census-governments-registration`, { signal });
   const source = [...index.byHash.values()].filter(row => row.canonicalUrl === REGISTRATION_SOURCE_URL && (row.httpStatus === undefined || row.httpStatus === 200) && row.retrievedAt && row.tier !== "RESTRICTED_RAW")
     .sort((a, b) => (b.retrievedAt ?? "").localeCompare(a.retrievedAt ?? ""))[0];
   if (!source?.retrievedAt) return null;
@@ -61,7 +61,7 @@ export async function acquireRegistrationSource(options: {
   try {
     const release = await acquireKnownRelease({
       sourceId: "census-governments-registration", releaseId: "cog-2022", url: REGISTRATION_SOURCE_URL,
-      parserVersion: REGISTRATION_PARSER_VERSION, signal: options.signal, maxBytes: 64 * 1024 * 1024, checkAfterMs: 90 * 24 * 60 * 60 * 1000,
+      parserVersion: REGISTRATION_PARSER_VERSION, signal: options.signal, maxBytes: 64 * 1024 * 1024, checkAfterMs: 15 * 24 * 60 * 60 * 1000,
       fetchImpl: options.fetchImpl, now: options.now ? () => options.now!().toISOString() : undefined,
       store: options.store, locks: options.locks, readHeld: options.readHeld ?? (() => heldRelease(options.signal)),
       validate: validateGovernmentRelease,

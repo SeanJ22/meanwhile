@@ -487,6 +487,8 @@ export interface ControlPlaneRepositories {
   readonly fieldManual: FieldManualRepository;
 
   readonly fixMap: FixMapRepository;
+  /** The events that tell dead ends something new can be done. */
+  readonly capabilities?: import("../../core/capability.ts").CapabilityLog;
 
   readonly websitePacing: WebsitePacing;
   /** The job transfer breaker's last saved check: each job's normal and its slow-downs this week. */

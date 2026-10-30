@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createFileRepositories, fileAggregateRepository, fileAppendOnlyRepository } from "../lib/control-plane/repository/file-store.ts";
 import { PGlite } from "@electric-sql/pglite";
-import { MODEL_CHARGES_DDL, pgSpendRepository } from "../lib/control-plane/repository/model-charges.ts";
+import { MODEL_CHARGES_DDL, MODEL_CHARGE_KIND_DDL, pgSpendRepository } from "../lib/control-plane/repository/model-charges.ts";
 import type { SpendHold } from "../lib/control-plane/budget.ts";
 import assert from "node:assert/strict";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
@@ -98,7 +98,7 @@ async function database() {
     statements.push(text);
     return (await db.query(text, params ? [...params] : undefined)).rows;
   } };
-  for (const ddl of MODEL_CHARGES_DDL) await sql.query(ddl);
+  for (const ddl of [...MODEL_CHARGES_DDL, ...MODEL_CHARGE_KIND_DDL]) await sql.query(ddl);
   await sql.query("CREATE TABLE cp_log_scout_results (log_key text, position bigint, record jsonb)");
   return { db, sql, statements, spend: pgSpendRepository(sql) };
 }

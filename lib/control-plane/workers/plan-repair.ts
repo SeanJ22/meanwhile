@@ -5,4 +5,3 @@ export interface PlanRepairLink {
   readonly retainedEvidenceIds: readonly string[]; readonly admittedAt: string;
   readonly authority: "WORK_INSTRUCTIONS_ONLY"; readonly unresolved: readonly string[];
 }
-export interface RepairObservation { readonly parentWorkItemId: string; readonly scoutAttemptId: string; readonly code: string; readonly successorWorkItemId: string | null; readonly detail: string; }

@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 /** A federal member, or a state legislator as the legislature's own roster names them (`<state>-legislature:<id>`). */
-const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+|plural:(?:[a-z]{2}:)?[a-f0-9-]+|ocd-person\/[a-f0-9-]+)$/;
+const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+|(?:plural|person):(?:[a-z]{2}:)?[a-f0-9-]+|ocd-person\/[a-f0-9-]+)$/;
 
 export const GET = readerRoute("/api/directory", async function GET(request: Request) {
   const params = new URL(request.url).searchParams;

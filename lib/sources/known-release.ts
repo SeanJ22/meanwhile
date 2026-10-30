@@ -85,6 +85,17 @@ function requestedSourceCheckAfter(): string | undefined {
   return value && Number.isFinite(Date.parse(value)) ? value : undefined;
 }
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
+type ReleaseName = Pick<KnownReleaseOptions, "sourceId" | "releaseId" | "url">;
+const releaseIdentity = (release: ReleaseName) => hash(`${release.sourceId}\n${release.releaseId}\n${release.url}`);
+export const releaseManifestKey = (release: ReleaseName) => `project/freshness/source/${release.sourceId}/releases/${releaseIdentity(release)}/manifest.json`;
+
+/** What the vault knows of a release: the fingerprint the publisher confirmed and when it last did, from the manifest each check writes. */
+export async function readReleaseCheck(store: Pick<EvidenceStore, "get">, release: ReleaseName): Promise<{ readonly sha256: string; readonly checkedAt: string } | null> {
+  const held = await store.get(releaseManifestKey(release));
+  const manifest = held ? JSON.parse(new TextDecoder().decode(held.bytes)) as Record<string, unknown> : null;
+  return manifest?.requestedUrl === release.url && typeof manifest.sha256 === "string" && /^[a-f0-9]{64}$/.test(manifest.sha256)
+    && typeof manifest.checkedAt === "string" && Number.isFinite(Date.parse(manifest.checkedAt)) ? { sha256: manifest.sha256, checkedAt: manifest.checkedAt } : null;
+}
 const pending = new WeakMap<EvidenceStore, Map<string, Promise<KnownRelease>>>();
 let runtime: Promise<{ store: EvidenceStore; locks: LockManager; repos: ControlPlaneRepositories }> | undefined;
 function runtimeContext() {
@@ -162,8 +173,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
   }
   const defaults = options.store && options.locks ? null : await runtimeContext();
   const store = options.store ?? defaults!.store, locks = options.locks ?? defaults!.locks;
-  const identity = hash(`${options.sourceId}\n${options.releaseId}\n${options.url}`);
-  const key = `project/freshness/source/${options.sourceId}/releases/${identity}/manifest.json`;
+  const identity = releaseIdentity(options), key = releaseManifestKey(options);
   let inflight = pending.get(store); if (!inflight) { inflight = new Map(); pending.set(store, inflight); }
   const waiting = inflight.get(identity);
   // The first caller shares transport; each caller still checks its own

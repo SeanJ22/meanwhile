@@ -2,6 +2,7 @@ import { strict as assert } from "node:assert";
 import { test } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { lockKey, unlockKey } from "../lib/core/keys-crypto.ts";
+import { CAPABILITY_DDL } from "../lib/core/capability.ts";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
@@ -17,6 +18,7 @@ async function fixture(t: { after: (fn: () => Promise<void>) => void }) {
   const db = new PGlite();
   t.after(async () => { await db.close(); });
   await db.exec(KEYS_DDL);
+  for (const ddl of CAPABILITY_DDL) await db.exec(ddl);
   const store = keysStore(async (text, params) => (await db.query<Record<string, unknown>>(text, params ? [...params] : [])).rows, MASTER);
   return { db, store };
 }

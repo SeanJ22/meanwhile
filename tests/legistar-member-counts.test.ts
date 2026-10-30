@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {readFileSync} from "node:fs";
 import {factDb} from "./helpers/fact-db.ts";
-import {memberCore,memberMigrationSql,publishLegistarFixture} from "./helpers/legistar-core.ts";
+import {memberCore,memberCountsSql,publishLegistarFixture} from "./helpers/legistar-core.ts";
 import {rawFor,wiring,storeMemberFixtures,NOW} from "./helpers/legistar-member-fixtures.ts";
 import {MemoryEvidenceStore} from "../lib/control-plane/evidence/store.ts";
 import {COUNT_HOUR_SQL} from "../lib/counts/hour.ts";
@@ -13,11 +13,11 @@ import {saveCaptureCopy} from "../lib/facts/source-copy.ts";
 
 test("Legistar hourly Admin rows equal SQL transitions and publication counts",async t=>{
   const db=await factDb({withHourlyCounts:true});t.after(()=>db.pg.close());
-  await memberCore(db,()=>new Date());await db.pg.exec(memberMigrationSql());
+  await memberCore(db,()=>new Date());await db.pg.exec(memberCountsSql());
   await db.pg.exec(readFileSync(new URL("../lib/db/migrations/RB-A9_legistar_members.sql",import.meta.url),"utf8").replaceAll("--> statement-breakpoint",""));
   const raw=rawFor("pima"),vault=new MemoryEvidenceStore();await storeMemberFixtures(vault,raw);
   await publishLegistarFixture({facts:db,raw,rows:wiring(raw,"AZ","America/Phoenix"),vault,clocks:factClocks(null),now:NOW,purge:async()=>({purged:true})});
-  const [expected]=await db.query("SELECT count(*)::int n FROM work_row WHERE kind='check' AND status='done'");
+  const [expected]=await db.query("SELECT count(*)::int n FROM work WHERE kind='check' AND status='done'");
   const [published]=await db.query("SELECT count(*)::int n FROM fact WHERE status='live' AND produced_by='legistar-members:pima'");
   const at=new Date(),hour=new Date(Math.floor(at.getTime()/3600000)*3600000),through=new Date(hour.getTime()+3600000);
   const admin=(await db.query(COUNT_HOUR_SQL,[hour.toISOString(),through.toISOString(),new Date(through.getTime()-1).toISOString()])).filter(row=>row.family==='Legistar members');
@@ -40,11 +40,11 @@ test("the door refuses a value supplied under a different saved JSON field",asyn
 
 test("a page pointer change retains unchanged work; one changed record alone becomes ready",async t=>{
   const db=await factDb();t.after(()=>db.pg.close());const work=await memberCore(db,()=>new Date());
-  const input={kind:'check' as const,state:'AZ',placeId:'place',subjectId:'legistar-members:pima',field:'member:1',source:{source:'Legistar members'},
+  const input={kind:'check' as const,state:'AZ',placeId:'place',subjectId:'legistar-members:pima',field:'member:1',source:{source:'Legistar members'},origin:{from:'loader' as const},
     sources:['source_copy:1'],value:{$sourceFingerprint:'a'.repeat(64),source:{copyId:1}}};
   await work.addMany([input]);const [claim]=await work.claim('check',1,'legistar-members:');await work.finish(claim);
   await work.addMany([{...input,sources:['source_copy:2'],value:{...input.value,source:{copyId:2}}}]);assert.equal((await work.claim('check',1,'legistar-members:')).length,0);
-  assert.deepEqual((await db.query('SELECT sources FROM work_row'))[0].sources,['source_copy:2']);
+  assert.deepEqual((await db.query('SELECT sources FROM work'))[0].sources,['source_copy:2']);
   await work.addMany([{...input,state:'WA',placeId:'corrected-place',value:{$sourceFingerprint:'b'.repeat(64),source:{copyId:3}}}]);
   const [changed]=await work.claim('check',1,'legistar-members:');assert.equal(changed.state,'WA');assert.equal(changed.placeId,'corrected-place');
 });
@@ -52,8 +52,8 @@ test("a page pointer change retains unchanged work; one changed record alone bec
 test("a bounded worker turn finishes its claims and leaves later rows ready, without leased rows waiting for a worker",async t=>{
   const {runLegistarMemberWorkers}=await import("../lib/sources/legistar/members-work.ts");
   const db=await factDb();t.after(()=>db.pg.close());const list=await memberCore(db,()=>new Date());
-  await list.addMany(Array.from({length:103},(_,i)=>({kind:'check' as const,state:'AZ',placeId:'place',subjectId:'legistar-members:pima',field:`member:${i}`,source:{source:'Legistar members'},value:{id:i}})));
+  await list.addMany(Array.from({length:103},(_,i)=>({kind:'check' as const,state:'AZ',placeId:'place',subjectId:'legistar-members:pima',field:`member:${i}`,source:{source:'Legistar members'},origin:{from:'loader' as const},value:{id:i}})));
   const result=await runLegistarMemberWorkers({list,kind:'check',concurrency:4,maxClaims:100,stopRequested:()=>false,run:async()=>({})});
   assert.equal(result.done,100);
-  assert.deepEqual(await db.query("SELECT status,count(*)::int n FROM work_row GROUP BY status ORDER BY status"),[{status:'done',n:100},{status:'ready',n:3}]);
+  assert.deepEqual(await db.query("SELECT status,count(*)::int n FROM work GROUP BY status ORDER BY status"),[{status:'done',n:100},{status:'waiting',n:3}]);
 });

@@ -1,7 +1,5 @@
-import { readFileSync } from "node:fs";
-import { SHARED_WORK_DDL } from "../../lib/control-plane/repository/migrations/RB-A1.ts";
-import { workMigrationDefinition } from "../../lib/control-plane/repository/migrations/RB-A5.ts";
-import { workList } from "../../lib/core/work.ts";
+import { LEGISTAR_COUNTS_DDL } from "../../lib/control-plane/repository/migrations/SPN-01B.ts";
+import { WORK_DDL, workList } from "../../lib/core/work.ts";
 import { enqueueLegistarMemberRecords } from "../../lib/sources/legistar/members-loader.ts";
 import { legistarMemberPublisher } from "../../lib/sources/legistar/members-worker.ts";
 import { legistarMembersPackage } from "../../lib/sources/legistar/members-publication.ts";
@@ -11,7 +9,7 @@ type Db=Awaited<ReturnType<typeof factDb>>;
 const ready=new WeakMap<Db,Promise<void>>();
 export async function memberCore(db:Db,now:()=>Date) {
   let installed=ready.get(db);
-  if(!installed){installed=(async()=>{for(const ddl of SHARED_WORK_DDL)await db.pg.exec(ddl);await db.pg.exec(workMigrationDefinition().replaceAll("--> statement-breakpoint",""));})();ready.set(db,installed);}
+  if(!installed){installed=(async()=>{for(const ddl of WORK_DDL)await db.pg.exec(ddl);})();ready.set(db,installed);}
   await installed;
   return workList(db.query,{owner:"member-test",leaseMs:300_000,now});
 }
@@ -25,4 +23,4 @@ export async function publishLegistarFixture(input:Omit<Parameters<typeof enqueu
       if(out.refused){held++;await work.refuse(claim,out.refused);}else await work.finish(claim);}}
   return {...loaded,members:legistarMembersPackage(input.raw,input.rows,input.now).members,held,live};
 }
-export const memberMigrationSql=()=>readFileSync(new URL("../../lib/control-plane/repository/migrations/RB-A9.sql",import.meta.url),"utf8").replaceAll("--> statement-breakpoint", "");
+export const memberCountsSql=()=>LEGISTAR_COUNTS_DDL.join(";\n");

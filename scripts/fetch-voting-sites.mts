@@ -23,7 +23,7 @@ import { cycleVault, VAULT_DIR, type CycleVault } from "../lib/control-plane/sch
 import { pageAddress } from "../lib/doors/page-doors.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction,
-  saveVotingSourceDoor, holdVotingRawEvidence, combineVotingSourceReads } from "../lib/ballot/voting-source-publication.ts";
+  saveVotingSourceDoor, holdVotingRawEvidence, combineVotingSourceReads, votingSourceReadOrder } from "../lib/ballot/voting-source-publication.ts";
 import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
@@ -40,7 +40,6 @@ import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publicat
 import { recordVotingFailure } from "../lib/ballot/voting-errors.ts";
 import { votingBoundaryBlanks } from "../lib/ballot/voting-source-boundaries.ts";
 import { sourceTextWithoutNuls } from "../lib/doors/source-text.ts";
-import { votingSourceReadOrder } from "../lib/ballot/voting-source-publication.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, ROUTINE_SOURCE_SETTLEMENT_BUDGET_MS } from "../lib/sources/acquisition-deadline.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";

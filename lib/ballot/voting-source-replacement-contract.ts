@@ -24,9 +24,8 @@ export interface VotingSourceReplacement {
   readonly replaceSourceUrls: readonly string[];
 }
 
-/** What a source group re-reads: its own documents, those it supersedes, and the verified official election page every row also cites. */
-export const votingSourceGroupUrls = (doors: readonly VotingSourceDoor[]): string[] => [...new Set(doors.flatMap(door =>
-  [door.url, ...(door.supersedes ?? []), ...(door.electionAssociationVerified ? [door.electionPageUrl] : [])]))];
+/** A group re-reads its documents, those it supersedes, and the verified election page each of its rows also cites. */
+export const votingSourceGroupUrls = (doors: readonly VotingSourceDoor[]): string[] => [...new Set(doors.flatMap(door => [door.url, ...(door.supersedes ?? []), ...(door.electionAssociationVerified ? [door.electionPageUrl] : [])]))];
 
 export function votingSourceReplacement(value: unknown): VotingSourceReplacement | null {
   if (!value || typeof value !== "object") return null;

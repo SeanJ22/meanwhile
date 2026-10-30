@@ -65,7 +65,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher, ownerCountsReady } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, ownerCountsReady, ownerSnapshotContinues } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
@@ -653,8 +653,7 @@ function deliver(body: string, headline: string): { readonly where: string } {
 
 const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; readonly name: string; readonly args: readonly string[] }[] = [
 
-  // CP-01 full production-copy publisher: 4,657,448 cold bytes; 452,484 steady; 452,413 after a lease heartbeat and five minutes.
-  // Reserve the observed cold run; source fingerprints keep a cold-plus-eleven-pass hour under 0.01 GB.
+  // Compact changed inputs and durable count checkpoints; the deployed hourly meter verifies the budget.
   { databaseBytesPerRun: 5_000_000, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
@@ -730,6 +729,10 @@ async function publishConsoleChildren(): Promise<boolean> {
       continue;
     }
     succeeded = false;
+    if(ownerSnapshotContinues(run.status,`${run.stdout}\n${run.stderr}`)){
+      console.log(`  console publish: ${publisher.name} checkpoint saved (${seconds}s); the next pass continues`);
+      continue;
+    }
     const last = childStderrCause(run.stderr ?? "") ?? run.errorMessage ?? "(nothing on stderr)";
     const exit = run.status === null ? `signal ${run.signal ?? "none"}` : String(run.status);
     console.error(`  console publish: ${publisher.name} FAILED exit ${exit} — ${last}`);

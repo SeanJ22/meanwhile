@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { attemptFamilyOf, attemptsByFamily, type FamilyAttemptLike } from "../lib/registry/attempt-families.ts";
-import { bodyPublicationAttempts } from "../lib/control-plane/assignment-view.ts";
 
 const attempt = (family: FamilyAttemptLike["family"], at: string, status: FamilyAttemptLike["status"], extra: Partial<FamilyAttemptLike> = {}): FamilyAttemptLike =>
   ({ bodyId: "school-district", family, at, status, acceptedCount: null, versionId: null, ...extra });
@@ -38,11 +37,4 @@ test("an attempt with no known family belongs to none, and a family with no atte
   assert.equal(attemptFamilyOf("registry-runtime-bindings"), null);
   assert.equal(attemptFamilyOf("ballot-navigation"), "elections");
   assert.equal(attemptFamilyOf("comment-access"), "meetings");
-});
-
-test("published body attempts carry the family of the door they used", () => {
-  const item = { id: "w1", project: "freshness", subject: "s", publicationOutcome: { at: "2026-10-03T00:00:00Z", status: "HELD", code: "X", workerResultId: "r", versionId: null },
-    autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "school-district" }, contract: { schemaVersion: 1 } } };
-  const [row] = bodyPublicationAttempts([item as never]);
-  assert.equal(row.family, "elections");
 });

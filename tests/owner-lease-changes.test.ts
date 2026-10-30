@@ -35,6 +35,7 @@ test("native assignment changes deduplicate source slots and retain semantic lea
     const next=await read(),latest=next.cursors.leases.held.filter(([id])=>id==="lease").at(-1)!;
     assert.equal(latest[1],++version,`${path} changes the semantic version`);assert.ok(latest[2]>first[2]);assert.deepEqual(next.groups,[{id:"assignment",state:"az"}]);
   }
+  await db.exec("INSERT INTO cp_owner_assignment_rows VALUES('old-other-group','nj','[\"wi\"]')");
   const stamp=previous.through;
   await db.query("INSERT INTO cp_log_artifacts SELECT 'wi',n,$1,jsonb_build_object('workItemId','wi') FROM generate_series(1,400) n",[stamp]);
   await db.query("INSERT INTO cp_log_artifacts VALUES('receipts',1,$1,'{\"workItemId\":\"unowned-receipt\"}')",[stamp]);
@@ -45,13 +46,13 @@ test("native assignment changes deduplicate source slots and retain semantic lea
   for(const[name,key,record]of[["worker_results","wi",{workItemId:"wi"}],["scout_results","scout",{attemptId:"attempt"}]]as const)
     await db.query(`INSERT INTO cp_log_${name} VALUES($1,1,$2,$3::jsonb)`,[key,stamp,JSON.stringify(record)]);
   const batch=await read();
-  assert.deepEqual(batch.groups.map(row=>row.id).sort(),["assignment","from-debt","from-occurrence","freshness:ask-gap:body#CALENDAR_STALE","late-ob"].sort());
+  assert.deepEqual(batch.groups.map(row=>row.id).sort(),["assignment","old-other-group","from-debt","from-occurrence","freshness:ask-gap:body#CALENDAR_STALE","late-ob"].sort());
   assert.deepEqual(batch.items,["clause-wi","occ-wi"],"held assignments and receipt-only keys do not become probes");assert.deepEqual(batch.changedAttempts,["attempt"]);
   assert.deepEqual(batch.links,[{id:"clause-wi",parent:null},{id:"wi",parent:"parent"}]);
   assert.equal(batch.cursors.artifacts.held.length,401,"all slots are acknowledged while only one affected assignment crosses the connection");
   assert.deepEqual((await read()).groups,[],"the overlapping window excludes slots already folded");
   await db.query("INSERT INTO cp_log_artifacts VALUES('wi',401,$1,'{\"workItemId\":\"wi\"}')",[stamp]);
-  assert.deepEqual((await read()).groups,[{id:"assignment",state:"az"}],"a late slot inside the held window is still folded");
+  assert.deepEqual((await read()).groups,[{id:"assignment",state:"az"},{id:"old-other-group",state:"nj"}],"a late slot reaches every prior owner, including a member moving between states");
   await db.query("UPDATE cp_work_items_history SET revision=2,value='{\"id\":\"wi\"}' WHERE id='wi'");
   assert.deepEqual((await read()).links,[{id:"wi",parent:null}],"a fresh revision with the same change timestamp remains visible");
   assert.deepEqual((await read()).groups,[]);

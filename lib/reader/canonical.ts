@@ -2,6 +2,7 @@ import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { ReadOnlyQuery, Statement, Row } from "../control-plane/admin-view/promoted-slices.ts";
 import { readerDatabaseQuery } from "./database.ts";
+import { currentReaderRoute, withReaderRoute } from "../db/reader-route.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
@@ -9,6 +10,7 @@ import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 import { serverReaderValue } from "./memory.ts";
 import { createHash } from "node:crypto";
 
+const refuse = (reason: string) => async (): Promise<never> => { throw new Error(reason); };
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
 type Additional = Statement & { readonly canonicalKeys?: true;
   readonly sharedSources?: { readonly keys: readonly string[]; readonly translations: string } };
@@ -126,8 +128,7 @@ export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], q
       if (!read) throw new Error("READER_GROUP_NOT_SELECTED");
       return read;
     },
-    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    readPromotion: refuse("READER_USES_CANONICAL_ENTRY"), readCandidate: refuse("READER_USES_CANONICAL_ENTRY"),
     async readPromotedEntry(recordClass, scope) {
       const read = stores.get(`${recordClass}:${scope}`);
       if (!read) throw new Error(`READER_SCOPE_NOT_SELECTED:${recordClass}:${scope}`);
@@ -189,7 +190,10 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
 export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): Promise<CivicDataReadStore & { additionalRows: readonly Row[]; additionalEntries: readonly Pointer[] }> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
-  const [loaded] = await ((query as PublishedQuery).canonicalBody ?? query)([canonicalStatement(keys,additional)]);
+  // A read outside any reader route names the kinds of record it takes, so the meter shows who is reading.
+  const read = () => ((query as PublishedQuery).canonicalBody ?? query)([canonicalStatement(keys,additional)]);
+  const [loaded] = await (currentReaderRoute() === "unattributed"
+    ? withReaderRoute(`shelf:${[...new Set(entries.map(entry => entry.recordClass))].join("+")}`, read) : read());
   const additionalRows = loaded.find(row => row.row_kind === "additional")?.part_payload as readonly Row[] | undefined;
   const additionalEntries: Pointer[] = additional?.canonicalKeys ? [...new Set((additionalRows ?? []).flatMap(row => row.canonical_keys as readonly string[] ?? []))]
     .map(key => { const colon = key.indexOf(":"); return { recordClass: key.slice(0, colon) as RoutineRecordClass, scope: key.slice(colon + 1) }; }) : [];
@@ -197,11 +201,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   const rows = loaded.filter(row => row.row_kind === "promotion");
   const preloaded = Object.fromEntries(loaded.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row.part_payload]));
   if (rows.some(row => row.published !== true)) throw new Error("READER_PUBLISHED_POINTER_INVALID");
-  const parts = new CivicPayloadParts({
-    async existing() { throw new Error("READER_IS_READ_ONLY"); },
-    async write() { throw new Error("READER_IS_READ_ONLY"); },
-    async read() { throw new Error("READER_PARTS_MISSING"); },
-  });
+  const parts = new CivicPayloadParts({ existing: refuse("READER_IS_READ_ONLY"), write: refuse("READER_IS_READ_ONLY"), read: refuse("READER_PARTS_MISSING") });
   const values = await parts.loadOwned(rows, preloaded) as typeof rows;
   const decoded: { root: PromotedEdgeEntry }[] = values.map(row => ({ root: { kind: "PROMOTED", projection: {
     key: String(row.key), recordClass: row.record_class as RoutineRecordClass, scope: String(row.scope), sourceId: String(row.source_id),
@@ -223,8 +223,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   registerIntegrityCheckedEdgeEntries([...held.values()]);
   return {
     additionalRows: additionalRows ?? [], additionalEntries,
-    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    readPromotion: refuse("READER_USES_CANONICAL_ENTRY"), readCandidate: refuse("READER_USES_CANONICAL_ENTRY"),
     async readPromotedEntry(recordClass, scope) {
       const key = `${recordClass}:${scope}`;
       if (!keys.includes(key)) throw new Error(`READER_SCOPE_NOT_SELECTED:${key}`);

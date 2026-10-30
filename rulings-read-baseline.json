@@ -1122,18 +1122,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "scripts/state-votes-check.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/state-votes-check.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/state-votes-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "scripts/verify-federal-zips.mts",
       "table": "civic_data_promotions"
     }

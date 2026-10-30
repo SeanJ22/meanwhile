@@ -1,12 +1,16 @@
 import { readGoogleVotingAnswer } from "../sources/google-civic/reader-lookup.ts";
 import type { CivicReadOptions } from "../sources/google-civic/acquisition.ts";
+import type { CivicLookup } from "../sources/google-civic/model.ts";
+export { startGoogleVotingLookup } from "../sources/google-civic/reader-lookup.ts";
 import type { VotingReaderPlace } from "./voting-answer.ts";
 import { hasElectionDaySites, modelSentence, narrowingFor, type VotingSitesAnswer } from "./voting-sites.ts";
 
 /** Held Election Day locations win. Early voting alone leaves Election Day owed.
- * Google answers live only for this request and in the open panel. */
-export async function fillVotingSitesAnswer(held: VotingSitesAnswer, address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<VotingSitesAnswer> {
-  if (place.precision === "ZIP" || hasElectionDaySites(held) || held.jurisdictions.some(j => j.publication?.status === "NO_GENERAL_ELECTION")) return held;
+ * Google answers live only for this request and in the open panel. A bare ZIP never goes to Google;
+ * a street Census could not place still does, with held sites matched by its ZIP. */
+export async function fillVotingSitesAnswer(held: VotingSitesAnswer, address: string, place: VotingReaderPlace,
+  options: CivicReadOptions & { lookup?: Promise<CivicLookup> } = {}): Promise<VotingSitesAnswer> {
+  if (/^\d{5}(?:-\d{4})?$/.test(address.trim()) || hasElectionDaySites(held) || held.jurisdictions.some(j => j.publication?.status === "NO_GENERAL_ELECTION")) return held;
   const { jurisdictions, electionOffices, reason } = await readGoogleVotingAnswer(address, place, options);
   const combined = [...held.jurisdictions, ...jurisdictions.map(j => ({ ...j,
     modelSentence: modelSentence(j), refusalLine: null,

@@ -28377,5 +28377,624 @@
       "url": "https://www.townofwarren-ri.gov/Warrant%20General%20Election%20-%2011032026.docx?t=202610271648530"
     },
     "discoveredFrom": "https://www.townofwarren-ri.gov/Warrant%20General%20Election%20-%2011032026.docx?t=202610271648530"
+  },
+  {
+    "id": "ri-coventry-polling-places-2026",
+    "publisher": "Coventry Board of Canvassers",
+    "url": "https://coventryri.gov/sites/coventryri.gov/files/attachments/2026%20Polling%20Locations.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:kent/place:coventry_town",
+      "name": "Coventry town",
+      "countyFips": "44003",
+      "countySubdivisionGeoid": "4400318640",
+      "population": 35688
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://coventryri.gov/sites/coventryri.gov/files/attachments/2026%20Polling%20Locations.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Coventry November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "DISTRICT\\s+[1-5][A-E]\\s+.*?(?=\\s+DISTRICT\\s+[1-5][A-E]|$)",
+        "fields": {
+          "name": {
+            "pattern": "^DISTRICT\\s+[1-5][A-E]\\s+(.+?)\\s+06\\d{2}\\s+",
+            "group": 1
+          },
+          "precinct": {
+            "pattern": "\\s+(06\\d{2})\\s+",
+            "group": 1
+          },
+          "street": {
+            "pattern": "\\s+06\\d{2}\\s+(.+)$",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, Coventry, RI"
+      },
+      "constants": {
+        "town": "Coventry"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.514777+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Coventry Board of Canvassers",
+      "url": "https://coventryri.gov/sites/coventryri.gov/files/attachments/2026%20Polling%20Locations.pdf"
+    },
+    "discoveredFrom": "https://coventryri.gov/sites/coventryri.gov/files/attachments/2026%20Polling%20Locations.pdf"
+  },
+  {
+    "id": "ri-east-greenwich-polling-places-2026",
+    "publisher": "East Greenwich Board of Canvassers",
+    "url": "https://www.eastgreenwichri.gov/DocumentCenter/View/9044/Warning-for-Town-Meeting-General-Election-November-3-2026-PDF",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:kent/place:east_greenwich_town",
+      "name": "East Greenwich town",
+      "countyFips": "44003",
+      "countySubdivisionGeoid": "4400322240",
+      "population": 14312
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.eastgreenwichri.gov/DocumentCenter/View/9044/Warning-for-Town-Meeting-General-Election-November-3-2026-PDF",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "East Greenwich November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "PRECINCT\\s+[1-5]\\s+\u2013\\s+.*?(?=\\s+PRECINCT\\s+[1-5]|$)",
+        "fields": {
+          "precinct": {
+            "pattern": "^PRECINCT\\s+([1-5])",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^PRECINCT\\s+[1-5]\\s+\u2013\\s+(.+?),",
+            "group": 1
+          },
+          "street": {
+            "pattern": ",\\s*(.+)$",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "qualified electors:\\s*([\\s\\S]*?)\\s*Whereas, the following state referenda",
+          "group": 1
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, East Greenwich, RI"
+      },
+      "constants": {
+        "town": "East Greenwich"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.516787+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "East Greenwich Board of Canvassers",
+      "url": "https://www.eastgreenwichri.gov/DocumentCenter/View/9044/Warning-for-Town-Meeting-General-Election-November-3-2026-PDF"
+    },
+    "discoveredFrom": "https://www.eastgreenwichri.gov/DocumentCenter/View/9044/Warning-for-Town-Meeting-General-Election-November-3-2026-PDF"
+  },
+  {
+    "id": "ri-westerly-polling-places-2026",
+    "publisher": "Westerly Board of Canvassers",
+    "url": "https://www.westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+      "name": "Westerly town",
+      "countyFips": "44009",
+      "countySubdivisionGeoid": "4400977000",
+      "population": 23359
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Westerly November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "360[1-7]\\s+\u2013\\s+.*?(?=\\s+360[1-7]|$)",
+        "fields": {
+          "precinct": {
+            "pattern": "^(360[1-7])",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^360[1-7]\\s+\u2013\\s+(.+?),",
+            "group": 1
+          },
+          "street": {
+            "pattern": ",\\s*(.+)$",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "Polling locations for the November 3, 2026 General Election\\s+([\\s\\S]*?)\\s*Please visit",
+          "group": 1
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, RI"
+      },
+      "constants": {
+        "town": "Westerly"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:27.363664+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Westerly Board of Canvassers",
+      "url": "https://www.westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions"
+    },
+    "discoveredFrom": "https://www.westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions"
+  },
+  {
+    "id": "ri-woonsocket-polling-places-2026",
+    "publisher": "Woonsocket Board of Canvassers",
+    "url": "https://www.woonsocketri.gov/DocumentCenter/View/2192/November-3-Polling-Locations",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city",
+      "name": "Woonsocket city",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400780780",
+      "population": 43240
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.woonsocketri.gov/DocumentCenter/View/2192/November-3-Polling-Locations",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Woonsocket November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "39\\d{2}\\s+[\\s\\S]*?\\s+1\\s+(?:20|24)\\s+(?:49|50|51)(?=\\s|$)",
+        "fields": {
+          "precinct": {
+            "pattern": "^(39\\d{2})",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^39\\d{2}\\s+(.+?)\\s+(?=\\d+\\s)",
+            "group": 1
+          },
+          "street": {
+            "pattern": "^39\\d{2}\\s+.+?\\s+(\\d+\\s+.+?)\\s+1\\s+(?:20|24)\\s+(?:49|50|51)$",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "PRECINCT\\s+POLLING\\s+PLACE\\s+NAME\\s+ADDRESS\\s+CD\\s+SEN\\s+REP\\s+([\\s\\S]*?)\\s*If you are not sure",
+          "group": 1
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, Woonsocket, RI"
+      },
+      "constants": {
+        "town": "Woonsocket"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:27.562098+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Woonsocket Board of Canvassers",
+      "url": "https://www.woonsocketri.gov/DocumentCenter/View/2192/November-3-Polling-Locations"
+    },
+    "discoveredFrom": "https://www.woonsocketri.gov/DocumentCenter/View/2192/November-3-Polling-Locations"
+  },
+  {
+    "id": "ri-north-providence-polling-places-2026",
+    "publisher": "North Providence Board of Canvassers",
+    "url": "https://northprovidenceri.gov/wp-content/uploads/2026/09/2022MASTER-POLLING-PLACES.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+      "name": "North Providence town",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400751760",
+      "population": 34114
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://northprovidenceri.gov/attention-north-providence-voters-north-providence-midterm-primary-and-general-election-information/",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "North Providence November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "24\\d{2}\\s+[\\s\\S]*?029(?:04|11)\\s+1\\s+\\d{1,2}\\s+\\d{1,2}\\s+[1-3]\\s+[A-E]\\s+[\\d,]+\\s+[\\d,]+\\s+[\\d,]+",
+        "fields": {
+          "precinct": {
+            "pattern": "^(24\\d{2})",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^24\\d{2}\\s+(.+?)[,\\s-]*(?=\\d+\\s)",
+            "group": 1
+          },
+          "street": {
+            "pattern": "^24\\d{2}\\s+.+?\\s*(\\d+\\s+.+?)[*,\\s]*(029(?:04|11))\\s+1\\s+\\d{1,2}\\s+\\d{1,2}\\s+[1-3]\\s+[A-E]",
+            "group": 1
+          },
+          "postal": {
+            "pattern": "(029(?:04|11))\\s+1\\s+\\d{1,2}\\s+\\d{1,2}\\s+[1-3]\\s+[A-E]",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, North Providence, RI {postal}"
+      },
+      "constants": {
+        "town": "North Providence"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:59:02.091948+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "North Providence Board of Canvassers",
+      "url": "https://northprovidenceri.gov/attention-north-providence-voters-north-providence-midterm-primary-and-general-election-information/"
+    },
+    "discoveredFrom": "https://northprovidenceri.gov/attention-north-providence-voters-north-providence-midterm-primary-and-general-election-information/"
+  },
+  {
+    "id": "ri-cranston-polling-places-2026",
+    "publisher": "Cranston Board of Canvassers",
+    "url": "https://www.cranstonri.gov/_resources/common/userfiles/file/Board%20of%20Canvassers/11-3-2026%20General%20Warrant.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "name": "Cranston city",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400719180",
+      "population": 82934
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.cranstonri.gov/_resources/common/userfiles/file/Board%20of%20Canvassers/11-3-2026%20General%20Warrant.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Cranston November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "[1-6]-[1-6]\\s+07(?!27)\\d{2}\\s+[\\s\\S]*?(?=\\s+[1-6]-[1-6]\\s+07\\d{2}|$)",
+        "fields": {
+          "precinct": {
+            "pattern": "^[1-6]-[1-6]\\s+(07\\d{2})",
+            "group": 1
+          },
+          "ward": {
+            "pattern": "^([1-6]-[1-6])",
+            "group": 1
+          },
+          "location": {
+            "pattern": "^[1-6]-[1-6]\\s+07\\d{2}\\s+2\\s+\\d{2}\\s+\\d{2}\\s+(.+?)\\s+(?=\\d+\\s+(?:[A-Z]|\\d+[A-Z]))",
+            "group": 1
+          },
+          "street": {
+            "pattern": "(\\d+\\s+(?:[A-Z]|\\d+[A-Z])[A-Z0-9 ]+)$",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "Ward-District\\s+Precinct\\s+Cong\\.\\s+Sen\\.\\s+Rep\\.\\s+Polling Location\\s+Address\\s+([\\s\\S]*?)\\s*_{5}",
+          "group": 1
+        }
+      },
+      "columns": {
+        "precinct": "precinct",
+        "ward": "ward",
+        "name": "location"
+      },
+      "transforms": {
+        "room": {
+          "column": "location",
+          "pattern": "\\s[\u2013-]\\s(.+)$",
+          "group": 1
+        }
+      },
+      "templates": {
+        "address": "{street}, Cranston, RI"
+      },
+      "constants": {
+        "town": "Cranston"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.515396+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Cranston Board of Canvassers",
+      "url": "https://www.cranstonri.gov/_resources/common/userfiles/file/Board%20of%20Canvassers/11-3-2026%20General%20Warrant.pdf"
+    },
+    "discoveredFrom": "https://www.cranstonri.gov/_resources/common/userfiles/file/Board%20of%20Canvassers/11-3-2026%20General%20Warrant.pdf"
+  },
+  {
+    "id": "ri-barrington-polling-places-2026",
+    "publisher": "Barrington Board of Canvassers",
+    "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+      "name": "Barrington town",
+      "countyFips": "44001",
+      "countySubdivisionGeoid": "4400105140",
+      "population": 17153
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Barrington November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "Precinct #10[2-6]\\s+[\\s\\S]*?(?=\\s+Precinct #10[2-7])",
+        "fields": {
+          "precinct": {
+            "pattern": "Precinct #(10[2-6])",
+            "group": 1
+          },
+          "name": {
+            "pattern": "Vote at (.+?),",
+            "group": 1
+          },
+          "street": {
+            "pattern": "(\\d+\\s+(?:Middle Highway|Nayatt Road|New Meadow Road|Sowams Road|County Road))",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, Barrington, RI"
+      },
+      "constants": {
+        "town": "Barrington"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.514000+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Barrington Board of Canvassers",
+      "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
+    },
+    "discoveredFrom": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
+  },
+  {
+    "id": "ri-barrington-polling-places-2026-precinct-101",
+    "publisher": "Barrington Board of Canvassers",
+    "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+      "name": "Barrington town",
+      "countyFips": "44001",
+      "countySubdivisionGeoid": "4400105140",
+      "population": 17153
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Barrington November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "ATTENTION PRECINCT #101[\\s\\S]*?Vote at [^,]+,\\s*\\d+ Middle Highway",
+        "fields": {
+          "precinct": {
+            "pattern": "PRECINCT #(101)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "Vote at (.+?),",
+            "group": 1
+          },
+          "street": {
+            "pattern": "(\\d+ Middle Highway)",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, Barrington, RI"
+      },
+      "constants": {
+        "town": "Barrington"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.514000+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Barrington Board of Canvassers",
+      "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
+    },
+    "discoveredFrom": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
+  },
+  {
+    "id": "ri-barrington-polling-places-2026-limited-ballot",
+    "publisher": "Barrington Board of Canvassers",
+    "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+      "name": "Barrington town",
+      "countyFips": "44001",
+      "countySubdivisionGeoid": "4400105140",
+      "population": 17153
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Barrington November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "Precinct #107[\\s\\S]*?Vote at Barrington Town Hall",
+        "fields": {
+          "precinct": {
+            "pattern": "Precinct #(107)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "Vote at (.+)$",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "(Limited ballot \\(Statewide races only\\) and same-day registration)",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "([\\s\\S]+)",
+          "group": 1,
+          "fields": {
+            "street": {
+              "pattern": "Barrington Town Hall,\\s*(283 County Road)",
+              "group": 1
+            }
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct",
+        "locationNotes": "locationNotes"
+      },
+      "templates": {
+        "address": "{street}, Barrington, RI"
+      },
+      "constants": {
+        "town": "Barrington"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.514000+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Barrington Board of Canvassers",
+      "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
+    },
+    "discoveredFrom": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
   }
 ]

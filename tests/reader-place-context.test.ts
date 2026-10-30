@@ -43,7 +43,7 @@ test("the real worker transfers only the requested compressed context and keeps 
         officialPhotos:{photos:[]},rosterPhotos:{}}});
     await publish({id:"registration",recordClass:"REGISTRATION",scope:"US-AZ:registration:v1",sourceId:"fixture",at:AT,
       value:{formatVersion:1,state:"AZ",governments:[],divisions:[{ocdId:ROOT,label:"Arizona"},{ocdId:CITY,label:"Wire fixture"}]}});
-    await query("INSERT INTO rebuild_queue(place_id) VALUES($1),($2)",[ROOT,CITY]);
+    await query("INSERT INTO place_page(place_id,stale_at) VALUES($1,clock_timestamp()),($2,clock_timestamp()) ON CONFLICT(place_id) DO UPDATE SET stale_at=clock_timestamp()",[ROOT,CITY]);
     assert.deepEqual(await rebuildPlacePages({db,limit:2,concurrency:1,purge:async()=>({purged:true})}),{rebuilt:2,failed:0,remaining:0});
     const stored=await query("SELECT place_id,context FROM place_page ORDER BY place_id");
     const contexts=new Map(stored.map(row=>[String(row.place_id),row.context as Record<string,Record<string,unknown>>]));

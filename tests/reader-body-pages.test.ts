@@ -3,16 +3,15 @@ import test from "node:test";
 import { readMeetingBodies, readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { snapshotCounts } from "../lib/meetings/snapshot.ts";
-import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, placePageCacheIds } from "../lib/reader/place.ts";
+import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
+import { unpackPlaceContextRow } from "../lib/reader/place-ready.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
-import { readerCacheTags } from "../lib/reader/cache.ts";
 
 const AT = "2026-10-24T12:00:00.000Z", AZ = "ocd-division/country:us/state:az", CA = "ocd-division/country:us/state:ca";
 const FIRST = `${AZ}/place:example#council`, SECOND = `${AZ}/place:example#planning`, FOREIGN = `${CA}/place:example#council`;
@@ -67,142 +66,6 @@ test("state jobs list IDs once per state and defer each bounded page read until 
   assert.equal(foreign.value!.bodyId, FOREIGN);
   assert.equal(calls.length, 4, "the next state's ID list is read after this state's IDs are consumed");
   await iterator.return(undefined);
-});
-
-test("state selection reads individual body contexts and direct pages select separate current/history answers", async () => {
-  const { pg, publish } = await migratedReaderDb();
-  const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
-  const current = meeting(FIRST, "current", AT), other = meeting(SECOND, "other", AT), past = meeting(FIRST, "past", "2020-01-01T12:00:00Z");
-  try {
-    await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ'),($2,'body','Council','AZ'),($3,'body','Planning','AZ'),($4,'body','Elsewhere','CA')", [AZ, FIRST, SECOND, FOREIGN]);
-    await query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias','former-council-id')", [FIRST]);
-    for (const [id, scope, meetings] of [["current", "source:derived:family:US-AZ", [current, other]], ["history", "source:derived:family:US-AZ:history", [past]]] as const) {
-      await publish({ id, recordClass: "MEETING", scope, sourceId: "fixture", at: AT,
-        value: { formatVersion: 1, generatedAt: AT, meetings, sources: [], agendaDocuments: [], counts: snapshotCounts(meetings, 0) } });
-    }
-    await seedPlacePages(query, { state: "AZ", divisionIds: [], bodyIds: [FIRST, SECOND] });
-    let reads = 0;
-    const state = await readPlacePackage({ state: "AZ", divisionIds: [], allBodies: true }, async (text, params) => {
-      reads++;
-      assert.equal(text, PLACE_PAGES_SQL);
-      const rows = await query(text, params);
-      assert.deepEqual(rows.map(row => row.page_id), [FIRST, SECOND]);
-      for (const row of rows) assert.deepEqual((unpackPlaceContextRow(row.row).entities as { id: string }[]).map(body => body.id), [row.page_id]);
-      return rows;
-    });
-    assert.equal(reads, 1);
-    assert.deepEqual(placePageCacheIds(state),[FIRST,SECOND]);
-    assert.deepEqual(state.meetings.map(row => row.id).sort(), [current.id, other.id].sort());
-    await seedPlacePages(query, { state: "WA", divisionIds: [] });
-    const empty = await readPlacePackage({ state: "WA", divisionIds: [], allBodies: true }, async (text, params) => {
-      const rows = await query(text, params);
-      assert.deepEqual(rows.map(row => row.page_kind), ["empty"], "a state with no bodies uses only its saved empty shell");
-      return rows;
-    });
-    assert.deepEqual(empty.bodies, []);
-    assert.equal(empty.snapshotHeldAt, null);
-    const alias = await readPlacePackage({ state: "AZ", divisionIds: [], bodyIds: ["former-council-id"] }, query);
-    assert.deepEqual(alias.bodies.map(body => body.id), [FIRST]);
-    assert.deepEqual(alias.meetings.map(row => row.id), [current.id]);
-    assert.deepEqual(placePageCacheIds(alias),[FIRST],"cache tags use the selected canonical page instead of its requested alias");
-    for (const includeHistory of [false, true]) {
-      const ready = await readPlacePackage({ state: "AZ", placeId: FIRST, divisionIds: [], includeHistory }, async (text, params) => {
-        assert.equal(text, READY_PLACE_SQL);
-        return query(text, params);
-      });
-      assert.deepEqual(ready.meetings.map(row => row.id).sort(), (includeHistory ? [past.id, current.id] : [current.id]).sort());
-      assert.deepEqual(placePageCacheIds(ready),[FIRST]);
-    }
-    const zip = "zip:85701";
-    await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Fixture ZIP','AZ')", [zip]);
-    await query(`INSERT INTO place_page(place_id,body,history_body,context)
-      SELECT $1,body,'{}'::jsonb,'{"formatVersion":1}'::jsonb FROM place_page WHERE place_id=$2`, [zip, FIRST]);
-    for (const includeHistory of [false, true]) {
-      let zipReads = 0;
-      const selected = await readPlacePackage({ state: "AZ", placeId: zip, divisionIds: [], bodyIds: [FIRST], includeHistory }, async (text, params) => {
-        zipReads++;
-        assert.equal(text, includeHistory ? PLACE_PAGES_SQL : READY_PLACE_SQL, "ZIP history uses the existing bounded place/body context");
-        return query(text, params);
-      });
-      assert.equal(zipReads, 1);
-      assert.deepEqual(selected.meetings.map(row => row.id).sort(), (includeHistory ? [past.id, current.id] : [current.id]).sort());
-    }
-    const [stored] = await query("SELECT body->>'encoding' AS direct_current,history_body->>'encoding' AS direct_history,context ? 'current' AS raw_current FROM place_page WHERE place_id=$1", [FIRST]);
-    assert.deepEqual(stored, { direct_current: "br-json-v1", direct_history: "br-json-v1", raw_current: true });
-  } finally { await pg.close(); }
-});
-
-test("the real worker stores agenda-free ready body pages and preserves full current and permanent history agendas in context", async t => {
-  t.mock.method(globalThis, "fetch", async () => { throw new Error("The body-page fixture must stay local"); });
-  const { pg, publish } = await migratedReaderDb();
-  const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
-  const db: FactDb = { transaction: run => pg.transaction(tx => run(async (text, params = []) =>
-    (await tx.query<Record<string, unknown>>(text, [...params])).rows)) };
-  const old = meeting(FIRST, "old", "2020-01-01T12:00:00Z"), soon = meeting(FIRST, "soon", "2026-10-27T12:00:00Z");
-  const future = meeting(FIRST, "far-future", "2028-01-01T12:00:00Z");
-  const currentDocument = { id: "document:current", meetingId: soon.id, text: "CURRENT SOURCE AGENDA: public hearing and budget consideration.\n".repeat(300) };
-  const pastDocument = { id: "document:past", meetingId: old.id, text: "PERMANENT SOURCE AGENDA: land use hearing and recorded decisions.\n".repeat(300) };
-  try {
-    await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'body','Council','AZ',$1)", [AZ, FIRST]);
-    for (const [id, meetings, agendaDocuments, history] of [
-      ["current", [soon, future], [currentDocument], false], ["past", [old], [pastDocument], true],
-    ] as const) {
-      await publish({ id, recordClass: "MEETING", scope: `source:fixture:body:${encodeURIComponent(FIRST)}${history ? ":history" : ""}`, sourceId: "fixture", at: AT,
-        value: { formatVersion: 1, generatedAt: AT, meetings, agendaDocuments, sources: [], counts: snapshotCounts(meetings, 0) } });
-    }
-    await query("INSERT INTO rebuild_queue(place_id) VALUES($1)", [FIRST]);
-    assert.deepEqual(await rebuildPlacePages({ db, limit: 1, concurrency: 1, purge: async () => ({ purged: true }) }),
-      { rebuilt: 1, failed: 0, remaining: 0 });
-    const [stored] = await query("SELECT body,history_body,context FROM place_page WHERE place_id=$1", [FIRST]);
-    for (const ready of [stored!.body, stored!.history_body]) assert.equal((ready as { encoding: string }).encoding, "br-json-v1");
-    const readyWire = JSON.stringify([unpackReadyPlace(stored!.body), unpackReadyPlace(stored!.history_body)]);
-    assert.equal(readyWire.includes("SOURCE AGENDA"), false, "neither ready encoding stores source agenda text");
-    const context = stored!.context as { current: {full:unknown}; history: {full:unknown} };
-    const documents = (row:unknown) => (unpackPlaceContextRow(row).meeting_rows as {payload:{agendaDocuments:unknown[]}}[]).flatMap(partition=>partition.payload.agendaDocuments);
-    assert.deepEqual(documents(context.current.full), [currentDocument]);
-    assert.deepEqual(documents(context.history.full).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
-      [currentDocument, pastDocument].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))));
-    let pageReads = 0, compactWire = "", uncompressedBytes = 0;
-    const compactQuery: Query = async (text, params = []) => {
-      if (!text.startsWith("SELECT id FROM entity")) {
-        assert.equal(text, READY_PLACE_SQL);
-        assert.deepEqual(params, [FIRST, true]);
-        pageReads++;
-      }
-      const rows = await query(text, params);
-      if (text === READY_PLACE_SQL) {
-        compactWire = JSON.stringify(rows);
-        uncompressedBytes = Buffer.byteLength(JSON.stringify(rows.map(row => ({ ...row, page: unpackReadyPlace(row.page) }))));
-      }
-      return rows;
-    };
-    const iterator = readMeetingBodies({ states: ["AZ"], includeAgenda: false, window: "HELD", now: AT, settings: meetingSettingsFromValues(), query: compactQuery });
-    const body = await iterator.next();
-    if (body.done) throw new Error("The held body was not listed");
-    assert.equal(pageReads, 0);
-    const loaded = await body.value.load();
-    assert.equal(pageReads, 1);
-    assert.deepEqual(loaded?.snapshot.meetings.map(row => row.id), [old.id, soon.id]);
-    assert.deepEqual(loaded?.snapshot.agendaDocuments, []);
-    assert.equal(compactWire.includes("SOURCE AGENDA"), false, "the actual compact SELECT transfers no agenda text");
-    await iterator.return(undefined);
-    const selected = { state: "AZ", placeId: FIRST, divisionIds: [], bodyIds: [FIRST], includeHistory: true };
-    const defaultRead = await readPlacePackage(selected, compactQuery);
-    assert.deepEqual(defaultRead.snapshot.agendaDocuments, [], "omitting the agenda flag retains the existing compact default");
-    let agendaWire = "";
-    const opened = await readPlacePackage({ ...selected, includeAgenda: true }, async (text, params) => {
-      assert.equal(text, PLACE_PAGES_SQL);
-      const rows = await query(text, params);
-      agendaWire = JSON.stringify(rows);
-      return rows;
-    });
-    assert.deepEqual(opened.meetings.map(row => row.id), [old.id, soon.id, future.id]);
-    assert.deepEqual([...opened.snapshot.agendaDocuments].sort((a, b) => a.id.localeCompare(b.id)), [currentDocument, pastDocument]);
-    const compactBytes = Buffer.byteLength(compactWire), agendaBytes = Buffer.byteLength(agendaWire);
-    assert.ok(compactBytes < uncompressedBytes / 3, `gzip transferred ${compactBytes} bytes versus ${uncompressedBytes} as complete JSON`);
-    assert.ok(compactBytes < agendaBytes, `the compact read was ${compactBytes} bytes versus ${agendaBytes} with compressed source agendas`);
-    t.diagnostic(JSON.stringify({ compactBytes, uncompressedBytes, agendaBytes, sourceAgendaBytes: Buffer.byteLength(currentDocument.text + pastDocument.text) }));
-  } finally { await pg.close(); }
 });
 
 test("an explicit state resolves a short body alias for current and held agendas without opening a phantom national page", async () => {
@@ -317,8 +180,8 @@ test("saved division contexts read current alias pointers without storing a seco
     await query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)",[body,alias]);
     for(const [suffix,sitting,history] of [['current',current,false],['past',past,true]] as const)await publish({id:`transient-${suffix}`,recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(alias)}${history?':history':''}`,sourceId:'fixture',at:AT,
       value:{formatVersion:1,generatedAt:AT,meetings:[sitting],sources:[],counts:snapshotCounts([sitting],0),agendaDocuments:[]}});
-    await query('DELETE FROM rebuild_queue');
-    await query('INSERT INTO rebuild_queue(place_id) VALUES($1)',[division]);
+    await query('UPDATE place_page SET stale_at=NULL');
+    await query('INSERT INTO place_page(place_id,stale_at) VALUES($1,clock_timestamp()) ON CONFLICT(place_id) DO UPDATE SET stale_at=clock_timestamp()',[division]);
     assert.equal((await rebuildPlacePages({db,limit:1,concurrency:1,purge:async()=>({purged:true})})).rebuilt,1);
     const [saved]=await query('SELECT context FROM place_page WHERE place_id=$1',[division]);
     for(const key of ['current','history'])for(const mode of ['full','brief','facts'])
@@ -338,63 +201,3 @@ test("saved division contexts read current alias pointers without storing a seco
   }finally{await pg.close();}
 });
 
-test("a queued body fold immediately corrects ready ZIP and saved contexts before their rebuild",async()=>{
-  const {pg,publish}=await migratedReaderDb();
-  const query:Query=async(text,params=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
-  const db={query,transaction:<T>(work:(q:Query)=>Promise<T>)=>pg.transaction(tx=>work(async(text,params=[])=>(await tx.query<Record<string,unknown>>(text,[...params])).rows))};
-  const division=`${AZ}/place:queued-example`,body=`${division}#governing`,alias=`${division}#body:special-meeting`,zip='zip:85701';
-  const current={...meeting(alias,'queued-current',AT),bodyName:'Special Meeting'};
-  const past={...meeting(alias,'queued-past','2020-01-01T12:00:00Z'),bodyName:'Special Meeting'};
-  const normal={...meeting(body,'queued-normal',AT),bodyName:'City Council'};
-  const fresh={...meeting(body,'queued-duplicate','2026-10-25T16:00:00Z'),bodyName:'City Council',status:'CANCELED' as const,
-    provenance:{...normal.provenance,collectedAt:'2026-10-25T12:00:00Z'}};
-  const older={...fresh,bodyId:alias,bodyName:'Special Meeting',startsAt:AT,status:'SCHEDULED' as const,
-    agendaUrl:'https://example.gov/held-agenda',provenance:normal.provenance};
-  try {
-    await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Example','AZ',NULL),($2,'body','City Council','AZ',$1),($3,'body','Special Meeting','AZ',$1),($4,'place','Fixture ZIP','AZ',NULL)",[division,body,alias,zip]);
-    await query('INSERT INTO entity_place(entity_id,place_id) VALUES($1,$3),($2,$3)',[body,alias,division]);
-    for(const [suffix,sitting,history] of [['current',current,false],['past',past,true]] as const)await publish({id:`queued-${suffix}`,recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(alias)}${history?':history':''}`,sourceId:'fixture',at:AT,
-      value:{formatVersion:1,generatedAt:AT,meetings:history?[sitting]:[sitting,older],sources:[],counts:snapshotCounts(history?[sitting]:[sitting,older],0),agendaDocuments:[]}});
-    await publish({id:'queued-normal',recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(body)}`,sourceId:'fixture',at:AT,
-      value:{formatVersion:1,generatedAt:AT,meetings:[normal,fresh],sources:[],counts:snapshotCounts([normal,fresh],0),agendaDocuments:[]}});
-    await query('DELETE FROM rebuild_queue');
-    await query('INSERT INTO rebuild_queue(place_id) SELECT unnest($1::text[])',[[division,body,alias]]);
-    assert.equal((await rebuildPlacePages({db,limit:3,concurrency:1,purge:async()=>({purged:true})})).rebuilt,3);
-    // A ZIP's ready payload is the same composed answer stored by the worker, without source contexts.
-    await query(`INSERT INTO place_page(place_id,body,history_body,context) SELECT $1,body,history_body,'{"formatVersion":1}'::jsonb FROM place_page WHERE place_id=$2`,[zip,division]);
-    await query('INSERT INTO place_page_dependency(page_id,entity_id) SELECT $1,entity_id FROM place_page_dependency WHERE page_id=$2',[zip,division]);
-    const old=await readPlacePackage({state:'AZ',placeId:zip,divisionIds:[]},query);
-    assert.ok(old.bodies.some(row=>row.name==='Special Meeting'),'the cached fixture starts with the reported defect');
-    const {foldPortalBodyLabels}=await import('../lib/facts/portal-publication.ts');
-    const purged:string[]=[];
-    assert.equal((await foldPortalBodyLabels(db,'AZ',async tags=>{purged.push(...tags);return {purged:true};})).folded,1);
-    assert.ok(readerCacheTags({places:[zip,division,body,alias]}).every(tag=>purged.includes(tag)),'cached ZIP, division and body responses are purged before queued rebuilds');
-    assert.equal(purged.includes('reader-settings'),false);
-    assert.ok(Number((await query('SELECT count(*) AS n FROM rebuild_queue'))[0]?.n)>0,'replacement pages are still queued');
-    for(const selected of [
-      {state:'AZ',placeId:zip,divisionIds:[]},
-      {state:'AZ',divisionIds:[division]},
-      {state:'AZ',placeId:alias,divisionIds:[],bodyIds:[alias]},
-      {state:'AZ',placeId:body,divisionIds:[],bodyIds:[body]},
-    ])for(const includeHistory of [false,true]) {
-      const input=selected.placeId===zip&&includeHistory?{...selected,divisionIds:[division],includeHistory}:{...selected,includeHistory};
-      const place=await readPlacePackage(input,query);
-      assert.deepEqual(place.bodies.map(row=>[row.id,row.name]),[[body,'City Council']]);
-      assert.deepEqual(place.meetings.map(row=>row.id).sort(),(includeHistory?[current.id,past.id,normal.id,fresh.id]:[current.id,normal.id,fresh.id]).sort());
-      assert.ok(place.meetings.every(row=>row.bodyId===body&&row.bodyName==='City Council'));
-      const duplicate=place.meetings.find(row=>row.id===fresh.id)!;
-      assert.equal(duplicate.status,'CANCELED');assert.equal(duplicate.startsAt,fresh.startsAt);
-      assert.equal(duplicate.agendaUrl,older.agendaUrl,'the newer cancellation retains its earlier published agenda link');
-    }
-    // Fresh geographic updates are claimed before body work; hold the other rows so this turn rebuilds the body alone.
-    await query("UPDATE rebuild_queue SET lease_until=clock_timestamp()+interval '1 hour' WHERE place_id<>$1",[body]);
-    assert.equal((await rebuildPlacePages({db,limit:1,concurrency:1,purge:async()=>({purged:true})})).rebuilt,1);
-    assert.equal((await query('SELECT 1 FROM rebuild_queue WHERE place_id=$1',[body])).length,0);
-    assert.ok((await query('SELECT 1 FROM rebuild_queue WHERE place_id=$1',[alias])).length>0);
-    for(const includeHistory of [false,true]) {
-      const place=await readPlacePackage({state:'AZ',placeId:alias,divisionIds:[],includeHistory},query);
-      assert.deepEqual(place.meetings.map(row=>row.id).sort(),(includeHistory?[normal.id,current.id,past.id,fresh.id]:[normal.id,current.id,fresh.id]).sort());
-      assert.deepEqual(placePageCacheIds(place),[body],'an old alias URL uses the rebuilt canonical page while other rebuilds remain queued');
-    }
-  }finally{await pg.close();}
-});

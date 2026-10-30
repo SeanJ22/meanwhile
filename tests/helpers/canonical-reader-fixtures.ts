@@ -22,10 +22,7 @@ import { isCensusPlaceholderDivision } from "../../lib/registry/census-placehold
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../../lib/routing/everyday-data-plane.ts";
-import { PLACE_PAGES_SQL, READY_PLACE_SQL } from "../../lib/reader/place.ts";
-import { composePlaceRow } from "../../lib/reader/place-decode.ts";
-import { placeBuildInput } from "../../lib/reader/place-builder.ts";
-import { fixturePostalArea } from "./zip-location.ts";
+import { PLACE_PAGES_SQL } from "../../lib/reader/place.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
@@ -250,14 +247,13 @@ export function activateCanonicalFixture(key: string): void {
     return [{division_ids:divisions,registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
   };
   const pages = new Map<string,Promise<Record<string,unknown>[]>>();
-  const savedRows = (input: PlaceInput,ready: boolean): Promise<Record<string,unknown>[]> => {
-    const key=JSON.stringify([input,ready]);
+  const savedRows = (input: PlaceInput): Promise<Record<string,unknown>[]> => {
+    const key=JSON.stringify(input);
     let saved=pages.get(key);
     if(!saved){
       saved=(async()=>{
         const [row]=await fixturePlaceRow([input.state,input.divisionIds,input.bodyIds??[],`ocd-division/country:us/state:${input.state.toLowerCase()}`,
           input.allBodies??false,input.includeHistory??false,true,null,input.neighbors??false,input.namedDivisionIds??[]]);
-        if(ready)return [{page:await composePlaceRow(input,row),version:1}];
         return [{page_id:input.divisionIds[0]??input.bodyIds?.[0]??`ocd-division/country:us/state:${input.state.toLowerCase()}`,
           page_kind:input.bodyIds?.length?"body":input.divisionIds.length?"place":"empty",built_at:new Date().toISOString(),body_ids:input.bodyIds??[],row}];
       })();
@@ -266,14 +262,8 @@ export function activateCanonicalFixture(key: string): void {
     return saved.then(rows=>structuredClone(rows));
   };
   const readFacts: Query = async (sql,params=[]) => {
-    if(sql===READY_PLACE_SQL){
-      const id=String(params[0]),state=id.startsWith("zip:")?fixturePostalArea(id.slice(4))?.state:meetingStateOf(id);
-      if(!state)throw new Error("The fixture page must name a held state");
-      const input=await placeBuildInput(id,id.startsWith("zip:") || id.startsWith("ocd-division/") && !id.includes("#")?"place":"body",state);
-      return savedRows({...input,includeHistory:params[1]===true},true);
-    }
     if(sql===PLACE_PAGES_SQL)return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
-      namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true},false);
+      namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true});
     if(sql.includes("AS registration_held") || sql.includes("WITH RECURSIVE ancestors AS"))return fixturePlaceRow(params);
     const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
     const registries=values.filter(p=>p.recordClass==="REGISTRY_RUNTIME_BINDING").map(p=>p.payload as RegistryRuntimeReadModel);

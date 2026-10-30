@@ -59,14 +59,14 @@ test('an identical saved fact can file a newly served city and refresh its reade
     const served={...input,places:[{placeId:city,boundaryYear:2025,basis:'SERVICE_AREA' as const}]};
     assert.equal((await door(db,served,factClocks(null),now,options) as {decision:string}).decision,'CONFIRM');
     assert.ok(purges>before);
-    assert.deepEqual(await db.query('SELECT place_id FROM rebuild_queue ORDER BY place_id'),[city,id].sort().map(place_id=>({place_id})));
+    assert.deepEqual(await db.query('SELECT place_id FROM place_page WHERE stale_at IS NOT NULL ORDER BY place_id'),[city,id].sort().map(place_id=>({place_id})));
     assert.equal((await db.query('SELECT count(*)::int AS n FROM fact'))[0]!.n,1);
     assert.deepEqual(await db.query(`SELECT state,sum(n)::int AS n FROM count_hour
       WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
         AND substring(step FROM 4)::jsonb->>2='in' GROUP BY state`),[{state:'AZ',n:1}]);
-    const after=purges;await db.query('DELETE FROM rebuild_queue');
+    const after=purges;await db.query('UPDATE place_page SET stale_at=NULL');
     await door(db,served,factClocks(null),now,options);
-    assert.equal(purges,after);assert.deepEqual(await db.query('SELECT * FROM rebuild_queue'),[]);
+    assert.equal(purges,after);assert.deepEqual(await db.query('SELECT * FROM place_page WHERE stale_at IS NOT NULL'),[]);
   } finally {await db.pg.close();}
 });
 

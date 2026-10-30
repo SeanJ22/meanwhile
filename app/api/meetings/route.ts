@@ -5,7 +5,7 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
-import { placePageCacheIds, placePageTerritory, readPlacesForStates } from "@/lib/reader/place";
+import { placePageCacheIds, readPlacesForStates } from "@/lib/reader/place";
 import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
@@ -55,17 +55,14 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     // ZIP entry already starts its independent state endpoint before this read.
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const fringe = zipRead.value ? location.fringe : [];
-    // A crossing ZIP reads each touched state's pages; its saved ZIP page holds one state.
-    const readyZip = location.states.length<=1 && zipPoint?.lat === lat && zipPoint?.lng === lng ? zipRead.value : null;
-    const territoryRead = readyZip ? null : readerTerritory(location.state);
+    const territoryRead = readerTerritory(location.state);
     const placeRead = timing.time("place", async () => readPlacesForStates(location.states, { divisionIds: location.divisionIds,
-      ...(readyZip ? {placeId:`zip:${readyZip}`} : {bodyIds:territoryBodies(lat,lng,await territoryRead!)}),namedDivisionIds:fringe }));
+      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe }));
     const [state, place, settings] = await Promise.all([
       stateRead, placeRead, readReaderMeetingSettings(),
     ]);
     if (!place.registry) throw new Error("The place's government records could not be loaded");
-    const selectedTerritory = readyZip ? placePageTerritory(place) : undefined;
-    const territory = selectedTerritory!==undefined ? selectedTerritory : await (territoryRead ?? readerTerritory(location.state));
+    const territory = await territoryRead;
     const ids = location.divisionIds;
     const divisionIds = new Set(ids);
     const registry = place.registry;
@@ -86,7 +83,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
     const listingIdentity = withRegistryRuntimeProjection(registry, location.states, () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
     const pageIds = placePageCacheIds(place);
-    const cachePlaces = readyZip ? [`zip:${readyZip}`] : pageIds.length ? pageIds : [...ids, ...fringe, ...territoryBodyIds];
+    const cachePlaces = pageIds.length ? pageIds : [...ids, ...fringe, ...territoryBodyIds];
     const stateAnswer = await stateAnswerRead;
     return await compressedJson(request, {
       ...result, coverage, listingIdentity, ...(stateAnswer ? {stateResponse:stateAnswer} : {}),

@@ -1383,8 +1383,8 @@ function measureNotes(record) {
 /** Facts that reached readers with live_at in [from, until): current, a new value for their thing and field, and on a reader's page. */
 const readerFacts = (from, until) => `FROM fact f JOIN entity e ON e.id = f.entity_id WHERE f.status = 'live' AND f.live_at >= ${from} AND f.live_at < ${until}
   AND NOT EXISTS (SELECT 1 FROM fact p WHERE p.entity_id = f.entity_id AND p.field = f.field AND p.id <> f.id AND p.live_at < f.live_at AND p.value_text = f.value_text)
-  AND CASE WHEN e.kind = 'meeting' THEN EXISTS (SELECT 1 FROM place_page_dependency d WHERE d.entity_id = e.parent_id)
-    ELSE EXISTS (SELECT 1 FROM place_page_dependency d JOIN place_page pg ON pg.place_id = d.page_id WHERE d.entity_id = f.entity_id AND pg.built_at >= f.live_at) END`;
+  AND CASE WHEN e.kind = 'meeting' THEN EXISTS (SELECT 1 FROM place_page d WHERE d.depends @> ARRAY[e.parent_id])
+    ELSE EXISTS (SELECT 1 FROM place_page pg WHERE pg.depends @> ARRAY[f.entity_id] AND pg.built_at >= f.live_at) END`;
 
 /** The reader-database SQL River runs for facts and reads (`at` is the deploy, or the runner switch for reads after). */
 export function measureSql(at, after) {

@@ -229,6 +229,7 @@ test("the next map refresh uses the current point boundary and retains unreplace
     await db.exec(placeBoundaryMigration());
     await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(readFileSync("lib/db/migrations/ZP-01_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
+    await db.exec(readFileSync("lib/db/migrations/SPN-01E_page_marks.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(zipLocationMigration());
     const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});
     const map = (year:number,west:number,east:number,zip:string):StatePlaceMap => ({

@@ -1,6 +1,3 @@
-import type { VersionedRowRetention } from "../db/versioned-query.ts";
-import { sharedPlaceBuildRead, type PlaceBuildTransfer } from "./place-build-transfer.ts";
-import { readPlaceBuild, reusePlaceBuild, type PlaceBuildRead } from "./place-build-reuse.ts";
 import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
@@ -11,15 +8,12 @@ import type { Query } from "../facts/publish.ts";
 import { ROSTER_PERSON_FIELDS } from "../facts/roster-read.ts";
 import type { PlaceInput } from "./place-types.ts";
 import type { FactDb } from "../facts/publish.ts";
-import { preparedStatement, readerFactDb } from "../facts/db.ts";
+import { preparedStatement, readPassCursor, readerFactDb, writePassCursor } from "../facts/db.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
-import { packPlaceContext, packReadyPlace, unpackPlaceContextRow } from "./place-ready.ts";
-import type { PlacePackage } from "./place-types.ts";
-import { readZipLocation } from "../place-map/locations.ts";
-import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
-import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/body-territory.ts";
+import { packPlaceContext, unpackPlaceContextRow } from "./place-ready.ts";
+import type {} from "./place-types.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const rosterPersonFieldsSql = ROSTER_PERSON_FIELDS.map(field => `'${field}'`).join(",");
@@ -508,8 +502,6 @@ const PLACE_PAGE_BUILD = createHash("sha256").update(PLACE_PACKAGE_SQL).update(P
  * and returns the body only when that version is not the one already held.
  */
 export interface PlaceTurnReads {
-  transfers?: Map<string, PlaceBuildTransfer>;
-  retention?: VersionedRowRetention;
   everydayRouting?: { readonly version: string; readonly value: unknown };
 }
 
@@ -585,42 +577,14 @@ export async function buildPlacePackage(input: PlaceInput, query: Query) {
   return composePlaceRow(input, (await readPlaceRow(input,query)).row!);
 }
 
-/** Until its first page is built, a place is composed from the same fact-store selection the builder reads, as before ready pages. */
-export async function composeUnbuiltPlace(input:PlaceInput,query:Query):Promise<{place:PlacePackage;territory?:BodyTerritorySelection|null}> {
-  const flags={...input,includeAgenda:input.includeAgenda ?? false};
-  if(!input.placeId || !/^zip:\d{5}$/.test(input.placeId))return {place:await buildPlacePackage(flags,query)};
-  const {input:selected,territory}=await placeBuildSelection(input.placeId,'place',input.state.toUpperCase());
-  return {place:await buildPlacePackage({...flags,...selected},query),territory};
-}
-
 export interface StoredPlacePage {
   readonly formatVersion: 1;
   readonly current: Record<string,unknown>;
   readonly history?: Record<string,unknown>;
   readonly emptyCurrent?: Record<string,unknown>;
   readonly emptyHistory?: Record<string,unknown>;
-  readonly readyCurrent: PlacePackage;
-  readonly readyHistory?: PlacePackage;
-  readonly territory?: BodyTerritorySelection|null;
   /** What this page was built from; saved with its context so the next rebuild can tell what changed. */
   readonly prints?: PlacePagePrints;
-}
-
-/** A ZIP page selects from the shared place map, the same selection used by the public endpoint. */
-export async function placeBuildInput(id:string,kind:string,state:string):Promise<PlaceInput> {
-  return (await placeBuildSelection(id,kind,state)).input;
-}
-
-async function placeBuildSelection(id:string,kind:string,state:string):Promise<{input:PlaceInput;territory?:BodyTerritorySelection|null}> {
-  if (/^zip:\d{5}$/.test(id)) {
-    const zip=id.slice(4),point=await readZipLocation(zip);
-    if(!point)throw new Error(`Place geometry is missing for ZIP ${zip}`);
-    const location=await readerLocation(point.lat,point.lng,zip);
-    const territory=selectBodyTerritory([point.lng,point.lat],await readerTerritory(state));
-    return {input:{state,placeId:id,divisionIds:location.divisionIds,namedDivisionIds:location.fringe,
-      bodyIds:territoryBodies(point.lat,point.lng,territory)},territory};
-  }
-  return {input:{state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]}};
 }
 
 export async function buildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads):Promise<StoredPlacePage> {
@@ -633,18 +597,16 @@ export async function buildPageBody(id:string,kind:string,state:string,query:Que
  */
 export async function rebuildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads,
   held?:HeldPlacePage):Promise<StoredPlacePage|UnchangedPlacePage> {
-  const {input:selected,territory}=await placeBuildSelection(id,kind,state),zip=/^zip:\d{5}$/.test(id);
-  const input:PlaceInput=zip?{...selected,includeAgenda:false}:selected;
+  const input:PlaceInput={state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]};
   const stateRoot=kind==='place' && /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id);
-  const frame={build:PLACE_PAGE_BUILD,input:createHash("sha256").update(JSON.stringify({input,territory:territory ?? null})).digest("hex").slice(0,32)};
+  const frame={build:PLACE_PAGE_BUILD,input:createHash("sha256").update(JSON.stringify({input})).digest("hex").slice(0,32)};
   const same=held?.prints.build===frame.build && held.prints.input===frame.input ? held : undefined;
-  // A ZIP page keeps no saved rows, so its reads are all or nothing.
-  const reads:[string,PlaceInput][]=zip?[["current",input]]:[["history",{...input,includeHistory:true}],
+  const reads:[string,PlaceInput][]=[["history",{...input,includeHistory:true}],
     ...(stateRoot?[["emptyHistory",{...input,divisionIds:[],includeHistory:true}] as [string,PlaceInput]]:[])];
   const prints:Record<string,ReadPrints>={},rows=new Map<string,Record<string,unknown>|null>();
   for(const [key,read] of reads) {
     const prior=same?.prints.reads[key];
-    const out=await readPlaceRow(read,query,shared,prior?{prints:prior,...(zip?{}:{stored:()=>same!.row(key)})}:undefined,!zip);
+    const out=await readPlaceRow(read,query,shared,prior?{prints:prior,stored:()=>same!.row(key)}:undefined,true);
     prints[key]=out.prints;
     rows.set(key,out.row);
   }
@@ -653,14 +615,10 @@ export async function rebuildPageBody(id:string,kind:string,state:string,query:Q
   // A read that printed nothing leaves the page without prints; its next rebuild reads it whole.
   const kept=Object.values(prints).every(read=>Object.keys(read).length>0);
   for(const [key,read] of reads) if(rows.get(key)===null)
-    rows.set(key,(zip?null:await same!.row(key)) ?? (await readPlaceRow(read,query,shared)).row);
-  const history=zip?undefined:rows.get("history")!;
-  const current=history?currentPlaceRow(history):rows.get("current")!;
+    rows.set(key,(await same!.row(key)) ?? (await readPlaceRow(read,query,shared)).row);
+  const history=rows.get("history")!;
   const emptyHistory=stateRoot?rows.get("emptyHistory")!:undefined;
-  const readyCurrent=await composePlaceRow(input,structuredClone(current));
-  return {formatVersion:1,current,readyCurrent,
-    ...(zip?{territory}:{}),
-    ...(history?{history,readyHistory:await composePlaceRow({...input,includeHistory:true},structuredClone(history))}:{}),
+  return {formatVersion:1,current:currentPlaceRow(history),history,
     ...(emptyHistory?{emptyCurrent:currentPlaceRow(emptyHistory),emptyHistory}:{}),...(kept?{prints:printed}:{})};
 }
 
@@ -680,22 +638,14 @@ export interface RebuildOptions {
   readonly buildRevision?: string;
 }
 
-const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
-  SELECT n FROM generate_series(1,4) AS n WHERE NOT EXISTS (
-    SELECT 1 FROM rebuild_queue q WHERE q.lease_slot=n AND q.lease_until>=clock_timestamp()
-  ) ORDER BY n LIMIT 1
-), next AS (
-  SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
-  WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp())
-    AND NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id AND p.built_at>=$2::timestamptz)
-  ORDER BY (q.next_queued_at IS NOT NULL AND q.place_id ~ '^ocd-division/country:us/(state|territory|district):[a-z]{2}/' AND q.place_id NOT LIKE '%#%') DESC,
-    q.priority DESC,(q.next_queued_at IS NOT NULL) DESC,
-    (q.next_queued_at IS NOT NULL AND q.place_id NOT LIKE 'zip:%') DESC,
-    q.next_queued_at DESC NULLS LAST,q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
-) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
-  FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
-  RETURNING q.place_id,q.generation,q.built_generation,e.kind,e.state,
-    EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) AS has_page`;
+/** Takes the most urgent marked page nobody holds. The mark it took comes back, so a mark made while the page builds survives. */
+const CLAIM_PAGE_SQL = `WITH next AS (
+  SELECT p.place_id FROM place_page p
+  WHERE p.stale_at IS NOT NULL AND (p.lease_until IS NULL OR p.lease_until<clock_timestamp()) AND (NOT p.context ? 'formatVersion' OR p.built_at<$2::timestamptz)
+  ORDER BY p.priority DESC,p.stale_at,p.place_id FOR UPDATE SKIP LOCKED LIMIT 1
+) UPDATE place_page p SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes'
+  FROM next,entity e WHERE p.place_id=next.place_id AND e.id=p.place_id
+  RETURNING p.place_id,p.stale_at::text AS marked,e.kind,e.state,p.context ? 'formatVersion' AS has_page`;
 
 /** The stored page's prints, and its saved rows by context key when a changed group needs the unchanged rest. */
 async function heldPlacePage(id:string,query:Query):Promise<HeldPlacePage|undefined> {
@@ -708,119 +658,100 @@ async function heldPlacePage(id:string,query:Query):Promise<HeldPlacePage|undefi
   }};
 }
 
+const ADOPT_CURSOR = "place-pages:adopt";
+const ADOPT_PAGES = 500;
+
+/**
+ * Carries the retired queue's marks and each page's dependencies onto the page rows themselves, a few hundred pages a step in
+ * place order, from the old tables' own rows. A page keeps what it was built with; only marks and dependencies move.
+ */
+async function adoptHeldPages(db: FactDb, deadline: number): Promise<void> {
+  while (Date.now()<deadline) {
+    const finished=await db.transaction(async query=>{
+      const after=await readPassCursor(query,ADOPT_CURSOR) ?? "";
+      if(after==="done")return true;
+      const [chunk]=await query(`WITH chunk AS (SELECT place_id FROM place_page WHERE place_id>$1 AND place_id NOT LIKE 'zip:%' ORDER BY place_id LIMIT $2),
+        moved AS (UPDATE place_page p SET depends=ARRAY(SELECT d.entity_id FROM place_page_dependency d WHERE d.page_id=p.place_id ORDER BY 1),
+          stale_at=coalesce(p.stale_at,q.queued_at),priority=coalesce(q.priority,p.priority) FROM chunk
+          LEFT JOIN rebuild_queue q ON q.place_id=chunk.place_id AND (q.built_generation IS NULL OR q.generation>q.built_generation)
+          WHERE p.place_id=chunk.place_id AND p.depends IS NULL RETURNING p.place_id)
+        SELECT (SELECT count(*)::int FROM chunk) AS n,(SELECT max(place_id) FROM chunk) AS last`,[after,ADOPT_PAGES]);
+      const last=Number(chunk?.n)===ADOPT_PAGES ? String(chunk!.last) : null;
+      await query(`INSERT INTO place_page(place_id,stale_at,priority) SELECT q.place_id,q.queued_at,q.priority FROM rebuild_queue q
+        JOIN entity e ON e.id=q.place_id WHERE q.place_id>$1 AND ($2::text IS NULL OR q.place_id<=$2) AND q.place_id NOT LIKE 'zip:%'
+          AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) ON CONFLICT DO NOTHING`,[after,last]);
+      await writePassCursor(query,ADOPT_CURSOR,last ?? "done");
+      return false;
+    });
+    if(finished)return;
+  }
+}
+
 export interface RebuildTurn { readonly rebuilt:number; readonly failed:number; readonly remaining:number; readonly unchanged?:number }
 
-/** Leases separate slow building and CDN work from writers' short fact transactions. */
+/** Takes marked pages in order of urgency and builds each from a single snapshot; a page marked again while it builds stays marked. */
 export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<RebuildTurn> {
   const db=options.db ?? readerFactDb(),purge=options.purge ?? purgeReaderCacheTags;
   const limit=Math.max(1,options.limit ?? 128),concurrency=Math.max(1,Math.min(options.concurrency ?? 4,limit));
   const deadline=Date.now()+(options.timeBudgetMs ?? 240_000);
   // One turn builds hundreds of pages; a record every page carries crosses the connection once per version.
   const shared:PlaceTurnReads={};
-  // Use the database clock for both ends of the pass, including a place deleted from the queue and requeued by a writer.
+  await adoptHeldPages(db,Date.now()+Math.floor((deadline-Date.now())/4));
   const [pass]=await db.transaction(query=>query("SELECT clock_timestamp()::text AS started_at"));
   let started=0,rebuilt=0,unchanged=0,failed=0;
   const work=async()=>{
     while(started<limit && Date.now()<deadline) {
       started++;
       const token=randomUUID();
-      const claim=await db.transaction(async query=>{
-        await query("SELECT pg_advisory_xact_lock(hashtextextended('place-page-rebuild-slots',0))");
-        await query(`UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=NULL
-          WHERE lease_slot IS NOT NULL AND lease_until<clock_timestamp()`);
-        return (await query(CLAIM_PAGE_SQL,[token,pass!.started_at]))[0];
-      });
+      const claim=(await db.transaction(query=>query(CLAIM_PAGE_SQL,[token,pass!.started_at])))[0];
       if(!claim)return;
       const id=String(claim.place_id),state=String(claim.state ?? "US");
-      let built=claim.has_page===true && claim.built_generation!=null && String(claim.built_generation)===String(claim.generation);
       try {
-        if(!built) {
-          const prepared=await db.transaction<{body?:StoredPlacePage|UnchangedPlacePage;read?:PlaceBuildRead}>(async query=>{
-            await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
-            await query("SET LOCAL plan_cache_mode=force_custom_plan");
-            if (!/^zip:\d{5}$/.test(id)) {
-              const held=claim.has_page===true?await heldPlacePage(id,query):undefined;
-              return {body:await rebuildPageBody(id,String(claim.kind),state,query,shared,held)};
-            }
-            const {input:selected,territory}=await placeBuildSelection(id,String(claim.kind),state);
-            const input={...selected,includeAgenda:false};
-            const stateRoot=input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
-            shared.transfers ??= new Map();
-            let transfer=shared.transfers.get(state);
-            if(!transfer){
-              shared.retention ??= {rows:new Map(),bytes:0};
-              transfer=sharedPlaceBuildRead(`${randomUUID()}:${state}`,shared.retention);shared.transfers.set(state,transfer);
-            }
-            const read=await readPlaceBuild((text,params=[])=>transfer!(query,text,params),PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
-              false,false,false,null,false,input.namedDivisionIds ?? [],null,null,false],territory,options.buildRevision,id);
-            if (read.reused) return {read};
-            const current=await expandPlaceBuildRow(read.row!);
-            const readyCurrent=await composePlaceRow(input,structuredClone(current));
-            return {read,body:{formatVersion:1,current,readyCurrent,territory}};
-          });
-          // Writers can queue a newer generation while the snapshot is being read.
-          // Lock its lease only after leaving that snapshot, in this short transaction.
-          await db.transaction(async query=>{
-            // A worker whose lease expired cannot replace a newer worker's page.
-            const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
-            if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
-            if (prepared.read?.reused) {
-              await reusePlaceBuild(query,id,prepared.read.reused,prepared.read.fingerprint);
-            } else if(prepared.body && "unchanged" in prepared.body) {
-              await query("UPDATE place_page SET built_at=clock_timestamp() WHERE place_id=$1",[id]);
-            } else {
-              const {readyCurrent,readyHistory,territory,prints,...rawContext}=prepared.body as StoredPlacePage;
-              const context={...(/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext)),...(prints?{prints}:{})};
-              await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context,build_fingerprint)
-                VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb,$5)
-                ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-                  body=excluded.body,history_body=excluded.history_body,context=excluded.context,build_fingerprint=excluded.build_fingerprint`,
-              [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),prepared.read?.fingerprint ?? null]);
-              const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
-                !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
-              const dependencies=new Set<string>([id,...rows.flatMap(row=>[
-                ...row.division_ids as string[] ?? [],
-                ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
-                ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
-                  [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
-                    .filter((value):value is string=>typeof value==='string')),
-                ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
-              ])]);
-              await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
-              await query(`INSERT INTO place_page_dependency(page_id,entity_id)
-                SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
-            }
-            await query(`UPDATE rebuild_queue q SET built_generation=$3::bigint,priority=e.page_priority
-              FROM entity e WHERE q.place_id=$1 AND q.lease_token=$2 AND e.id=q.place_id`,[id,token,claim.generation]);
-            await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
-          });
-          built=true;
-          if(prepared.body && "unchanged" in prepared.body)unchanged++;
-          rebuilt++;
-        }
+        const body=await db.transaction(async query=>{
+          await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
+          await query("SET LOCAL plan_cache_mode=force_custom_plan");
+          const held=claim.has_page===true?await heldPlacePage(id,query):undefined;
+          return rebuildPageBody(id,String(claim.kind),state,query,shared,held);
+        });
+        await db.transaction(async query=>{
+          // A worker whose lease expired cannot replace a newer worker's page.
+          const [lease]=await query("SELECT place_id FROM place_page WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
+          if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
+          if("unchanged" in body) await query("UPDATE place_page SET built_at=clock_timestamp() WHERE place_id=$1",[id]);
+          else {
+            const {prints,...rawContext}=body;
+            const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
+              !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
+            const dependencies=new Set<string>([id,...rows.flatMap(row=>[
+              ...row.division_ids as string[] ?? [],
+              ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
+              ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
+                [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
+                  .filter((value):value is string=>typeof value==='string')),
+              ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
+            ])]);
+            await query(`UPDATE place_page SET version=version+1,built_at=clock_timestamp(),context=$2::jsonb,
+              depends=ARRAY(SELECT id FROM entity WHERE id=ANY($3::text[]) ORDER BY id) WHERE place_id=$1`,
+            [id,JSON.stringify({...packPlaceContext(rawContext),...(prints?{prints}:{})}),[...dependencies]]);
+          }
+          await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
+        });
         const purged=await purge(readerCacheTags({places:[id]}));
         if(!purged.purged)throw new Error(purged.detail ?? "Place page cache purge failed");
-        await db.transaction(async query=>{
-          await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
-          // A later generation waits from its own first arrival, so a hot place
-          // cannot repeatedly take the oldest slot ahead of untouched places.
-          await query(`UPDATE rebuild_queue SET queued_at=coalesce(next_queued_at,queued_at),
-            lease_token=NULL,lease_slot=NULL,lease_until=NULL,next_queued_at=NULL
-            WHERE place_id=$1 AND lease_token=$2`,[id,token]);
-        });
+        await db.transaction(query=>query(`UPDATE place_page p SET stale_at=CASE WHEN p.stale_at=$3::timestamptz THEN NULL ELSE p.stale_at END,
+          priority=e.page_priority,lease_token=NULL,lease_until=NULL FROM entity e WHERE p.place_id=$1 AND p.lease_token=$2 AND e.id=p.place_id`,[id,token,claim.marked]));
+        if("unchanged" in body)unchanged++;
+        rebuilt++;
       } catch(error) {
         failed++;
         console.error("Place page rebuild failed",{place:id,detail:error instanceof Error?error.message:String(error)});
-        // A failed build retains the ready page; a failed purge leaves its built replacement queued.
-        await db.transaction(query=>query(`UPDATE rebuild_queue SET
-          queued_at=CASE WHEN $3::boolean THEN coalesce(next_queued_at,queued_at) ELSE queued_at END,
-          next_queued_at=CASE WHEN $3::boolean THEN NULL ELSE next_queued_at END,
-          lease_token=NULL,lease_slot=NULL,lease_until=clock_timestamp()+interval '1 minute'
-          WHERE place_id=$1 AND lease_token=$2`,[id,token,built]));
+        // A failed build keeps the page it had; either way the mark stays and the page is tried again in a minute.
+        await db.transaction(query=>query(`UPDATE place_page SET lease_token=NULL,lease_until=clock_timestamp()+interval '1 minute'
+          WHERE place_id=$1 AND lease_token=$2`,[id,token]));
       }
     }
   };
   await Promise.all(Array.from({length:concurrency},work));
-  const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
-  return {rebuilt,failed,remaining:Number(remaining?.n ?? 0),...(unchanged?{unchanged}:{})};
+  const [more]=await db.transaction(query=>query("SELECT EXISTS(SELECT 1 FROM place_page WHERE stale_at IS NOT NULL AND (lease_until IS NULL OR lease_until<clock_timestamp())) AS more"));
+  return {rebuilt,failed,remaining:more?.more===true?1:0,...(unchanged?{unchanged}:{})};
 }

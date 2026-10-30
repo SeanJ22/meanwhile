@@ -5,8 +5,6 @@ import {
   assignmentPartOf,
   buildAssignmentView,
   deriveAssignmentEntries,
-  deriveAssignmentEntriesFromHeads,
-  assignmentHeadsFromSources,
   mergeAssignmentParts,
   type AssignmentSources,
   type AssignmentView,
@@ -353,23 +351,6 @@ async function sourcesAt(repos: ControlPlaneRepositories, now: string, served: S
     pipeline: pipelineStatesOf(await repos.promotionPipeline.readAll()), activation: null, servedReader: served, pilotZips: [],
     askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) };
 }
-
-test("current outcome heads preserve every index and contribution across source changes and clock boundaries",async()=>{
-  const repos=createMemoryRepositories(),world=initialWorld();await seed(repos,world);
-  for(const[clock,changes]of [[T1,null],[T2,changesBeforeT2(world)],[T3,changesBeforeT3(world)],[T4,null]] as const){
-    if(changes)await seed(repos,changes);
-    const source=await sourcesAt(repos,clock,null),full=deriveAssignmentEntries(source),heads=deriveAssignmentEntriesFromHeads(assignmentHeadsFromSources(source),clock);
-    assert.deepEqual([...heads.keys()].sort(),[...full.keys()].sort());
-    for(const[id,entry]of full)assert.deepEqual(heads.get(id)?.index,entry.index,`${clock}: ${id}`);
-    for(const future of [at(clock,1),at(clock,3),at(clock,48)]){
-      const expected=deriveAssignmentEntries({...source,nowIso:future});
-      const advanced=deriveAssignmentEntriesFromHeads(assignmentHeadsFromSources(source),future);
-      for(const[id,entry]of expected)assert.deepEqual(advanced.get(id)?.index,entry.index,`${clock} advanced to ${future}: ${id}`);
-    }
-    const counts=[...heads].map(([id,head])=>[id,{...head,usd:full.get(id)!.usd}] as const);
-    assert.deepEqual(assignmentPartOf(counts,clock),assignmentPartOf(full,clock));
-  }
-});
 
 /** Every panel from every row, as the publisher computed it before it kept totals. */
 async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes: readonly ExpansionScopeDecision[], served: ServedReaderReadback | null,

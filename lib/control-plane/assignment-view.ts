@@ -5,7 +5,6 @@ import {
   askedGapKey,
   askedWords,
   foldAskGapObservations,
-  observationDayStart,
   type AskedGap,
   type AskGapObservation,
 } from "./ask-gap-observations.ts";
@@ -13,7 +12,7 @@ import type { Attempt, ExecutionLease, WorkerRef } from "./attempt.ts";
 import { isProofProject, type CostEntry } from "./cost.ts";
 import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
 import { displayNameOf, words } from "./display-name.ts";
-import { SERVED_READER_MAX_AGE_MS, servedWitness } from "./served-reader.ts";
+import { servedWitness } from "./served-reader.ts";
 import { addExact, exactSum, exactValue, mergeExact, type ExactSum } from "./exact-sum.ts";
 import {
   gap,
@@ -520,7 +519,7 @@ export interface AssignmentHead {
     readonly scout:AssignmentHeadScout|null;readonly worker:{readonly endedAt:string;readonly result:OutcomeWorker<AssignmentWorkerResult["result"]>}|null;
   }|null;
   readonly laneRole:WorkerRef["role"]|null;readonly pendingTaskId:string|null;
-  readonly publication:Pick<NonNullable<WorkItem["publicationOutcome"]>,"status"|"at"|"code"|"recovery">|null;
+  readonly publication:Pick<NonNullable<WorkItem["publicationOutcome"]>,"status"|"at"|"code"|"recovery"> & {readonly detail?:string} |null;
   readonly occurrenceCount:number;
   readonly openRound:{readonly id:string;readonly sequence:number;readonly openedAt:string;readonly dueAt:string;readonly reached:boolean}|null;
   readonly lastActivityAt:string|null;
@@ -532,8 +531,6 @@ export interface AssignmentBuildOptions {
   readonly listClip?: number;
   readonly costDenominatorUsd?: number | null;
 }
-
-const HOUR_MS = 3_600_000;
 
 function ms(iso: string | null | undefined): number {
   if (typeof iso !== "string") return Number.NaN;
@@ -1241,13 +1238,10 @@ interface Clips {
   readonly list: number;
 }
 
-function laneOf(g: Gathered): AssignmentLane {
-  if (isProofRecord({ obligationId: g.members.obligationId, project: g.workItems[0]?.project ?? null })) return "PROOF";
-  if (g.workItems.some((w) => isProofRecord({ project: w.project }))) return "PROOF";
-  if (g.members.kind === "WORK_ITEM") return "CREATED";
-  const last = g.attempts.at(-1);
-  if (!last) return "UNASSIGNED";
-  return last.worker.role === "SCOUT" ? "SCOUT" : "ROUTINE";
+function laneOf(head: AssignmentHead): AssignmentLane {
+  if (head.proof || isProofRecord({ obligationId: head.kind === "STANDING_OBLIGATION" ? head.id : null, project: head.item?.project ?? null })) return "PROOF";
+  if (head.kind === "WORK_ITEM") return "CREATED";
+  return head.laneRole === null ? "UNASSIGNED" : head.laneRole === "SCOUT" ? "SCOUT" : "ROUTINE";
 }
 
 function workersOf(g: Gathered): Held<readonly AssignmentWorker[]> {
@@ -2303,23 +2297,15 @@ function attributedUsd(all: Iterable<ExactSum | null>): number | null {
 
 function buildRow(g: Gathered, idx: Index, src: AssignmentSummarySources, clips: Clips, denominatorUsd: number | null): AssignmentRow {
   const what = g.members.kind === "STANDING_OBLIGATION" ? whatOfStanding(g, idx, src, clips) : whatOfWorkItem(g, clips);
-  const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(headOf(g,idx), idx.now, what.why.band?.band??null, clips) : deriveWorkItem(headOf(g,idx), idx.now, clips);
-  const publication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
-    .sort((left, right) => right.at.localeCompare(left.at))[0];
-  const derived: Derived = publication && publication.status !== "PUBLISHED" && baseDerived.state !== "WORKING"
-    ? { state: "WAITING", stateSays: `${publication.code}: ${publication.detail}`,
-      waiting: { ...baseDerived.waiting, waiting: true, since: publication.at, owner: "FLEET",
-        blocker: { kind: "NAMED", says: publication.code },
-        nextAction: publication.recovery === "PUBLISHER" ? "The existing publisher retries with retained verified evidence; no new research or owner approval is needed."
-          : "The worker receives the exact failed check and continues verification or source repair automatically." } }
-    : baseDerived;
+  const head = headOf(g, idx);
+  const derived = deriveHead(head, idx.now, what.why.band?.band ?? null, clips);
   return {
     id: g.members.id,
     kind: g.members.kind,
-    lane: laneOf(g),
+    lane: laneOf(head),
     state: derived.state,
     stateSays: clip(derived.stateSays, clips.text),
-    lastActivityAt: lastActivityOf(g),
+    lastActivityAt: head.lastActivityAt,
     what,
     discovery: discoveryOf(g, clips),
     parsing: parsingOf(g, clips),
@@ -2333,7 +2319,6 @@ function buildRow(g: Gathered, idx: Index, src: AssignmentSummarySources, clips:
 
 interface Built {
   readonly idx: Index;
-  readonly memberships: Map<string, Members>;
   readonly gathered: ReadonlyMap<string, Gathered>;
   readonly rows: AssignmentRow[];
 }
@@ -2345,7 +2330,7 @@ function buildAll(src: AssignmentSummarySources, options: AssignmentBuildOptions
   const gathered = new Map([...memberships.values()].map((m) => [m.id, gather(m, idx)] as const));
   const denominatorUsd = options.costDenominatorUsd !== undefined ? options.costDenominatorUsd : attributedUsd([...gathered.values()].map((g) => groupUsd(g, idx)));
   const rows = [...gathered.values()].map((g) => buildRow(g, idx, src, clips, denominatorUsd)).sort((a, b) => a.id.localeCompare(b.id));
-  return { idx, memberships, gathered, rows };
+  return { idx, gathered, rows };
 }
 
 export function buildAssignments(src: AssignmentSummarySources, options: AssignmentBuildOptions = {}): AssignmentRow[] {
@@ -2500,28 +2485,14 @@ export interface AssignmentClock {
   readonly assignments: readonly ObligationAssignment[];
 }
 
-/** The instants at which a lease, a due time, a backoff, an argued absence, a public readback or a reader's telling could change the row on its own. */
-function horizonOf(g: Gathered, idx: Index, src: AssignmentSummarySources): string | null {
-  const at: number[] = [];
-  for (const a of g.attempts) at.push(ms(idx.leases?.get(a.routeTaskId)?.expiresAt));
-  at.push(ms(g.obligation?.nextDueAt), ms(g.obligation?.absentUntil), ms(g.debt?.retryAt));
-  const items = new Set([...g.pipeline.map((s) => s.itemId), ...g.workItems.map((w) => w.id)]);
-  for (const w of src.servedReader?.witnesses ?? []) if (items.has(w.itemId)) at.push(ms(w.checkedAt), ms(w.checkedAt) + SERVED_READER_MAX_AGE_MS + 1);
-  /* A day's tellings count from its first instant until the window has passed it. */
-  const askGap = g.obligation === null ? null : parseAskGapObligationId(g.obligation.id);
-  for (const o of src.askGapObservations ?? []) {
-    if (askGap !== null && o.bodyId === askGap.bodyId && o.code === askGap.code) at.push(ms(observationDayStart(o.day)), ms(observationDayStart(o.day)) + ASK_GAP_OBSERVATION_WINDOW_DAYS * 24 * HOUR_MS);
-  }
-  const next = Math.min(...at.filter((t) => Number.isFinite(t) && t > idx.now));
-  return Number.isFinite(next) ? new Date(next).toISOString() : null;
-}
-
-function clockOf(g: Gathered): AssignmentClock | null {
-  const ob = g.obligation;
-  if (ob === null) return null;
-  const failing = (g.debt?.consecutiveFailures ?? 0) > 0;
-  return { active: ob.active, eligibleAt: eligibleAtOf(ob.nextDueAt ?? null, failing ? g.debt!.retryAt : null), backoff: failing,
-    subjectId: ob.subjectId, assignments: ob.assignments ?? [] };
+function deriveHead(head: AssignmentHead, now: number, band: 1 | 2 | 3 | null, clips: Clips): Derived {
+  const base = head.kind === "STANDING_OBLIGATION" ? deriveStanding(head, now, band, clips) : deriveWorkItem(head, now, clips);
+  const publication = head.publication;
+  if (!publication || publication.status === "PUBLISHED" || base.state === "WORKING") return base;
+  return { state: "WAITING", stateSays: `${publication.code}: ${publication.detail ?? ""}`,
+    waiting: { ...base.waiting, waiting: true, since: publication.at, owner: "FLEET", blocker: { kind: "NAMED", says: publication.code },
+      nextAction: publication.recovery === "PUBLISHER" ? "The existing publisher retries with retained verified evidence; no new research or owner approval is needed."
+        : "The worker receives the exact failed check and continues verification or source repair automatically." } };
 }
 
 export type AssignmentHeadEntry = Pick<AssignmentEntry,"index"|"horizon"|"obligation">;
@@ -2531,12 +2502,7 @@ export function deriveAssignmentEntriesFromHeads(heads:readonly AssignmentHead[]
   for(const head of heads){
     const ob=head.obligation,item=head.item,standing=head.kind==="STANDING_OBLIGATION";
     const band=ob?bandFor({id:ob.id,subjectId:ob.subjectId,readerImpactAt:ob.readerImpactAt,providerId:providerOfObligation(ob.id),nextDueAt:ob.nextDueAt??""},{pilotZips:[]}).band:null;
-    let derived=standing?deriveStanding(head,now,band,clips):deriveWorkItem(head,now,clips);
-    const publication=head.publication;
-    if(publication&&publication.status!=="PUBLISHED"&&derived.state!=="WORKING")derived={state:"WAITING",stateSays:publication.code,
-      waiting:{...derived.waiting,waiting:true,since:publication.at,owner:"FLEET",blocker:{kind:"NAMED",says:publication.code},
-        nextAction:publication.recovery==="PUBLISHER"?"The existing publisher retries with retained verified evidence; no new research or owner approval is needed."
-          :"The worker receives the exact failed check and continues verification or source repair automatically."}};
+    const derived = deriveHead(head, now, band, clips);
     const ask=ob?parseAskGapObligationId(ob.id):null,subject=standing?ob?.subjectId??null:item?.subject??null,where=whereOf(subject);
     const title=standing?ob?(ask?`${askGapTitle(ask.code)} — ${displayNameOf(ask.bodyId).short}`:`${sentenceCase(ob.recordClass)} via ${ob.routeId===null?"no route named yet":words(ob.routeId)}`)
       :`Standing obligation ${head.id}`:item?item.obligation:`Work item ${head.id}`;
@@ -2546,8 +2512,7 @@ export function deriveAssignmentEntriesFromHeads(heads:readonly AssignmentHead[]
     const instructionStates:Record<string,AssignmentState>={};
     for(const mark of refs)instructionStates[instructionReceiptKey(mark.key,mark.ref)]=refs.some(other=>other.key===mark.key&&other.ref!==mark.ref)?"UNKNOWN":derived.state;
     const w=derived.waiting;
-    const lane:AssignmentLane=isProofRecord({obligationId:standing?head.id:null,project:item?.project??null})||head.proof?"PROOF":!standing?"CREATED":head.laneRole===null?"UNASSIGNED":head.laneRole==="SCOUT"?"SCOUT":"ROUTINE";
-    const index:AssignmentIndexRow={id:head.id,kind:head.kind,lane,state:derived.state,label:clip(title,clips.text),subjectName:subject===null?null:displayNameOf(subject).short,
+    const index:AssignmentIndexRow={id:head.id,kind:head.kind,lane:laneOf(head),state:derived.state,label:clip(title,clips.text),subjectName:subject===null?null:displayNameOf(subject).short,
       stateCode:where.held?STATE_CODE_BY_NAME.get(where.value.state??"")??null:null,assignmentKeys:[...new Set(refs.map(mark=>mark.key))],instructionStates,
       lastActivityAt:head.lastActivityAt,band,overdue:w.overdue,waitingSince:w.since,eligibleAt:w.eligibleAt,
       blocker:w.blocker.kind==="NONE"?null:clip(w.blocker.kind==="NAMED"?w.blocker.says:w.blocker.gap.says,clips.text),owner:w.owner,nextAction:clip(w.nextAction,clips.text)};
@@ -2560,43 +2525,25 @@ export function deriveAssignmentEntriesFromHeads(heads:readonly AssignmentHead[]
 }
 
 /** The memory adapter joins source records; the native reader supplies these heads directly. */
-export function assignmentHeadsFromSources(src:AssignmentSummarySources):AssignmentHead[]{
-  const idx=indexSources(src);
-  return [...members(idx).values()].map(member=>headOf(gather(member,idx),idx));
+export function assignmentHeadBatchFromSources(src: AssignmentSummarySources): { readonly heads: AssignmentHead[]; readonly members: Map<string, string[]> } {
+  const idx = indexSources(src), grouped = members(idx);
+  return { heads: [...grouped.values()].map(member => headOf(gather(member, idx), idx)),
+    members: new Map([...grouped].map(([id, member]) => [id, [...member.workItemIds]])) };
+}
+export function assignmentHeadsFromSources(src: AssignmentSummarySources): AssignmentHead[] {
+  return assignmentHeadBatchFromSources(src).heads;
 }
 
 /** Every assignment `src` holds whole, or only those named in `only`, as the snapshot carries it. */
 export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: ReadonlySet<string>): Map<string, AssignmentEntry> {
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP, costDenominatorUsd: null });
-  const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
-    ? [[item.id, item.manualSourceGap] as const] : []));
-  const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
+  const heads = deriveAssignmentEntriesFromHeads([...built.gathered.values()].map(g => headOf(g, built.idx)), src.nowIso);
   const out = new Map<string, AssignmentEntry>();
   for (const row of built.rows) {
     if (only !== undefined && !only.has(row.id)) continue;
-    const listed = listRowOf(row);
-    const manualGap = manualGapByItem.get(row.id);
-    const membership = built.memberships.get(row.id);
-    const workIds = membership?.workItemIds ?? new Set<string>();
-    const assignmentRefs = [...(row.what.assignments??[]).map(mark=>({key:mark.assignmentKey,ref:mark.ref,at:mark.at})),
-      ...(manualGap?.assignmentKey ? [{key:manualGap.assignmentKey,ref:manualGap.instructionReceipt,at:workById.get(row.id)?.createdAt??src.nowIso}] : [])];
-    const instructionStates: Record<string,AssignmentState> = {};
-    for (const mark of assignmentRefs) {
-      const sameKey=assignmentRefs.filter(other=>other.key===mark.key);
-      instructionStates[instructionReceiptKey(mark.key,mark.ref)] = sameKey.some(other=>other.ref!==mark.ref)
-        ? "UNKNOWN" : listed.state;
-    }
-    const index: AssignmentIndexRow = { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
-      label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
-      assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualGap?.assignmentKey ? [manualGap.assignmentKey] : [])])],
-      instructionStates,
-      lastActivityAt: listed.lastActivityAt,
-      band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,
-      eligibleAt: listed.waiting.eligibleAt, blocker: listed.waiting.blocker,
-      owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };
     const g = built.gathered.get(row.id)!;
-    out.set(row.id, { members: [...workIds], index, list: listed, usd: groupUsd(g, built.idx), horizon: horizonOf(g, built.idx, src),
-      items: g.pipeline.map((s) => s.itemId), obligation: clockOf(g) });
+    out.set(row.id, { ...heads.get(row.id)!, members: [...g.members.workItemIds], list: listRowOf(row), usd: groupUsd(g, built.idx),
+      items: g.pipeline.map(s => s.itemId) });
   }
   return out;
 }

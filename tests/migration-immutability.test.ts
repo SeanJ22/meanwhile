@@ -551,9 +551,9 @@ function retractionVerdict(head: JournalEntry[], onDisk: string[], changes: Chan
   return evaluateMigrationImmutability({ changes, baseDescription: "a fixture merge base", baseJournal: base, headJournal: head, sqlTagsOnDisk: onDisk });
 }
 
-test("the two retracted PB-01 migrations are on the list with their reason, and nothing else is", () => {
-  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]), [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when]]);
-  for (const row of RETRACTED_MIGRATIONS) {
+test("the retracted migrations are on the list with their reason, and nothing else is", () => {
+  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]), [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when], [78, "SPN-01A_merge_people", 1792834201100]]);
+  for (const row of RETRACTED_MIGRATIONS.slice(0, 2)) {
     assert.match(row.why, /never applied/i);
     assert.match(row.why, /ends at 0034 as of 2026-10-13/);
     assert.match(row.why, /cp_field_manual_entries/);
@@ -570,6 +570,15 @@ test("a retracted slot may be reused by the next migration", () => {
   const next: JournalEntry = { idx: 35, when: 1_790_900_000_000, tag: "0035_something_new" };
   const verdict = retractionVerdict([...established, next], ["0000_alpha", "0001_beta", "0035_something_new"], [del(PB_RETIRE.tag), del(PB_SEED.tag)]);
   assert.equal(verdict.verdict, "pass", verdict.failures.join("\n"));
+});
+
+test("a retracted file that git reads as renamed to its replacement still passes, and a rename of anything else is refused", () => {
+  const ren = (from: string, to: string): ChangedEntry => ({ status: "renamed", path: `lib/db/migrations/${to}.sql`, from: `lib/db/migrations/${from}.sql`, raw: `R90\tlib/db/migrations/${from}.sql\tlib/db/migrations/${to}.sql` });
+  const next: JournalEntry = { idx: 35, when: 1_790_900_000_000, tag: "0035_something_new" };
+  const ok = retractionVerdict([...established, next], ["0000_alpha", "0001_beta", next.tag], [ren(PB_RETIRE.tag, next.tag), del(PB_SEED.tag)]);
+  assert.equal(ok.verdict, "pass", ok.failures.join("\n"));
+  const refused = retractionVerdict([...established, PB_RETIRE, PB_SEED], ["0000_alpha", "0001_beta", PB_RETIRE.tag, PB_SEED.tag], [ren("0001_beta", "0001_gamma")]);
+  assert.deepEqual(refused.violations.map((v) => v.rule), ["migration-renamed"]);
 });
 
 test("the retraction excuses nothing else: another established migration is still refused", () => {

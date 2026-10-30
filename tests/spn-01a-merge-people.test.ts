@@ -8,7 +8,7 @@ import { resolveId } from "../lib/core/resolve.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
-const MIGRATION = readFileSync(join(import.meta.dirname, "..", "lib", "db", "migrations", "SPN-01A_merge_people.sql"), "utf8").replaceAll("--> statement-breakpoint", "");
+const MIGRATION = readFileSync(join(import.meta.dirname, "..", "lib", "db", "migrations", "SPN-01A_people_merged.sql"), "utf8").replaceAll("--> statement-breakpoint", "");
 const UUID = "d3f48e28-4ee5-4027-9670-0d617ca6048e";
 const STATE = "ocd-division/country:us/state:tn";
 const DISTRICT = `${STATE}/sldu:31`;

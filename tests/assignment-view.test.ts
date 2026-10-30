@@ -25,10 +25,6 @@ import {
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
-import { jsonTextAtPath, type AggregateRepository, type AppendOnlyRepository } from "../lib/control-plane/repository/types.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readAssignmentSubset } from "../lib/control-plane/assignment-read.ts";
-import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import type { RouteDisposition, RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
@@ -606,57 +602,6 @@ function rowOf(rows: readonly AssignmentRow[], idPart: string): AssignmentRow {
   assert.ok(row, `no assignment matching ${idPart}`);
   return row;
 }
-
-test("projected publisher listings retain the full assignment view and named gaps", async () => {
-  const original = world();
-  const scope = { key: "exact-send", receiptId: "receipt" } as ExpansionScopeDecision;
-  const source = { ...original,
-    obligations: [...original.obligations, obligation("timed-obligation", { subjectId: "timed-subject",
-      assignments: [{ assignmentKey: scope.key, ref: scope.receiptId, relation: "CREATED" as const, at: PAST }] })],
-    occurrences: [...original.occurrences, occurrence("timed-obligation", 1, "timed-work", "timed-route")],
-    workItems: [...original.workItems, workItem("timed-work", { subject: "timed-subject", createdAt: PAST,
-      autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, ownerInstructions: [scope.receiptId] } as never })],
-    attempts: [...original.attempts, attempt("timed-attempt", "timed-route", "timed-work", {
-      startedAt: NOW, endedAt: NOW, cost: { ...original.attempts[0].cost, durationMs: 43131 } })],
-  };
-  const repos = createMemoryRepositories();
-  const seed = async <T,>(repo: AggregateRepository<T>, rows: readonly T[], id: (row: T) => string) => {
-    for (const row of rows) await repo.put(id(row), row, NOW);
-  };
-  await seed(repos.obligations, source.obligations, row => row.id);
-  await seed(repos.occurrences, source.occurrences, row => row.id);
-  await seed(repos.workItems, source.workItems, row => row.id);
-  await seed(repos.routeTasks, source.routeTasks, row => row.id);
-  await seed(repos.attempts, source.attempts, row => row.id);
-  await seed(repos.debts, source.debts, row => row.obligationId);
-  await seed(repos.leases, source.leases ?? [], row => row.routeTaskId);
-  for (const [i, row] of source.artifacts.entries()) await repos.artifacts.append(row.workItemId, `artifact-${i}`, row, NOW);
-  for (const [i, row] of source.scoutResults.entries()) await repos.scoutResults.append(row.workItemId, `scout-${i}`, row, NOW);
-  for (const [i, row] of source.workerResults.entries()) await repos.workerResults.append(row.workItemId, `worker-${i}`, row, NOW);
-  for (const [i, row] of source.costs.entries()) await repos.costs.append(row.workItemId, `cost-${i}`, row, NOW);
-  const full = <T,>(repo: AggregateRepository<T>): AggregateRepository<T> => ({ ...repo,
-    readManyNarrowed: async (ids) => (await repo.list()).filter(row => ids.includes(row.id)),
-    listWhereIn: async (path, values) => (await repo.list()).filter(row => values.includes(jsonTextAtPath(row.value, path) ?? "")) });
-  const fullLog = <T,>(repo: AppendOnlyRepository<T>): AppendOnlyRepository<T> => ({ ...repo,
-    readKeys: async keys => new Map(await Promise.all(keys.map(async key => [key, await repo.read(key)] as const))) });
-  const fullRepos = { ...repos, obligations: full(repos.obligations), occurrences: full(repos.occurrences),
-    workItems: full(repos.workItems), routeTasks: full(repos.routeTasks), attempts: full(repos.attempts), debts: full(repos.debts),
-    artifacts: fullLog(repos.artifacts), costs: fullLog(repos.costs), scoutResults: fullLog(repos.scoutResults),
-    workerResults: fullLog(repos.workerResults), promotionPipeline: fullLog(repos.promotionPipeline) };
-  const base = { nowIso: NOW, activation: source.activation, pilotZips: source.pilotZips, servedReader: null, askGapObservations: null, pipeline: false };
-  const scoutKeys = await repos.scoutResults.keys();
-  const seeds = { obligations: source.obligations.map(o => o.id), workItems: source.workItems.map(w => w.id), context: () => [], scoutKeys: () => scoutKeys, pipelineItems: () => [] };
-  const before = await readAssignmentSubset(fullRepos, base, seeds);
-  const after = await readAssignmentSubset(repos, base, seeds);
-  assert.deepEqual(buildAssignments(after), buildAssignments(before));
-  assert.deepEqual(buildAssignmentView(after), buildAssignmentView(before));
-  assert.ok(Buffer.byteLength(JSON.stringify(after)) < Buffer.byteLength(JSON.stringify(before)),
-    "unused replay and task fields no longer reach the publisher");
-  assert.ok(after.attempts.every(row => !("usd" in row.cost) && !("policyVersion" in row)));
-  assert.ok(after.scoutResults.length > 0 && after.scoutResults.every(row => typeof row.rungs === "number" && typeof row.nextRungs === "number"));
-  assert.ok(after.workerResults.every(row => !("completion" in row) && !("records" in row.result) && !("spans" in row.result)));
-  assert.ok((await repos.attempts.list()).every(row => "cost" in row.value && "policyVersion" in row.value));
-});
 
 test("succeeded (plain code, INGESTED with a document): downloads counted, the parse gap named, the cost plain code — never $0", () => {
   const rows = buildAssignments(world());

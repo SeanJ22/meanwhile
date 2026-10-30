@@ -2,11 +2,11 @@
 import type { Attempt, ExecutionLease } from "./attempt.ts";
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import { parseAskGapObligationId } from "./ask-gap-id.ts";
-import type { AssignmentSources, AssignmentSummarySources, AssignmentArtifact, AssignmentCostHead, AssignmentScout, AssignmentWorkerResult } from "./assignment-view.ts";
+import type { AssignmentSources } from "./assignment-view.ts";
 import type { CostEntry } from "./cost.ts";
 import { deriveItemState, isPipelineRecord, methodCandidateItemId, scoutResultItemId } from "./promotion/pipeline.ts";
 import type { ActivationGateReading, PipelineItemState, PromotionPipelineRecord } from "./promotion/types.ts";
-import type { AggregateRepository, AppendOnlyRepository, ArtifactRecord, ControlPlaneRepositories, DispositionCommit, Persisted, RecordProjection } from "./repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories, DispositionCommit, Persisted, RecordProjection } from "./repository/types.ts";
 import type { RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import { occurrenceId, type FreshnessOccurrence, type StandingObligation } from "./scheduler/durable.ts";
@@ -31,25 +31,6 @@ export const ASSIGNMENT_OBLIGATION_PROJECTION = {
   meetingStartsAt: true, observedChangeRateHours: true, declaredCycleHours: true, lastWorkedAt: true,
   absentUntil: true, absenceUnlock: true, assignments: true, nextDueAt: true, occurrenceCount: true, openOccurrenceId: true,
   retiredAt: true, retirementReason: true,
-} satisfies RecordProjection;
-
-const WORK_ITEM_PROJECTION = {
-  id: true, project: true, subject: true, obligation: true, why: true, question: true, state: true,
-  dependencies: true, routeTaskIds: true, escalations: true, createdAt: true, transitions: true,
-  directoryParent: true, manualSourceGap: true, publicationOutcome: true, planRepair: true,
-  autonomousPlan: ["publication", "contract", "ownerInstructions"],
-} satisfies RecordProjection;
-const ROUTE_TASK_PROJECTION = {
-  id: true, workItemId: true, routeId: true, state: true, disposition: true, attemptIds: true,
-  createdAt: true, policyDenial: true, workerTask: ["contract"],
-} satisfies RecordProjection;
-const OCCURRENCE_PROJECTION = {
-  id: true, obligationId: true, sequence: true, dueAt: true, workItemId: true, routeTaskId: true,
-  openedAt: true, closedAt: true, unresolvedReason: true,
-} satisfies RecordProjection;
-const DEBT_PROJECTION = {
-  obligationId: true, cause: true, consecutiveFailures: true, detail: true, firstFailedAt: true,
-  lastFailedAt: true, retryAt: true,
 } satisfies RecordProjection;
 
 /** At most this many targeted reads are in flight at once, so one drilldown never floods the store. */
@@ -101,45 +82,6 @@ async function leasesFor(repos: ControlPlaneRepositories, attempts: readonly Att
   return values(await inBatches(open, (id) => repos.leases.read(id)));
 }
 
-/** The records of a batch of assignments: their standing obligations, their work items, and work items read only as context. */
-export interface AssignmentSeeds {
-  readonly obligations: readonly string[];
-  readonly workItems: readonly string[];
-  /** Given every work item the batch owns, the parents and dependency neighbours read as rows, never for their own rounds. */
-  readonly context: (owned: readonly string[]) => readonly string[];
-  /** The Scout-result log keys and promotion-pipeline items that name these work items or attempts. */
-  readonly scoutKeys: (owned: readonly string[], attempts: readonly string[]) => readonly string[];
-  readonly pipelineItems: (owned: readonly string[], attempts: readonly string[]) => readonly string[];
-}
-
-/** What the whole-plane read joins to each assignment, read for the seeds alone. */
-export interface AssignmentSubsetBase extends AssignmentReadBase {
-  readonly servedReader: AssignmentSources["servedReader"];
-  readonly askGapObservations: AssignmentSources["askGapObservations"];
-  /** False when the promotion pipeline is not read on this publish. */
-  readonly pipeline: boolean;
-}
-
-const byId = <T extends { readonly id: string }>(a: T, b: T): number => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
-
-function uniqueRows<T extends { readonly id: string }>(rows: readonly (readonly Persisted<unknown>[])[]): Persisted<T>[] {
-  return [...new Map(rows.flat().map((row) => [row.id, row as Persisted<T>])).values()].sort(byId);
-}
-
-function needs<T>(repo: T | undefined, name: string): T {
-  if (repo === undefined) throw new Error(`the control-plane store has no ${name}, so an assignment's records cannot be read by id`);
-  return repo;
-}
-
-/** Ids per statement: an `= ANY` over a few hundred stays an index lookup; thousands make each keyset page rescan them. */
-const IDS_PER_READ = 100;
-
-async function inChunks<T>(ids: readonly string[], read: (chunk: string[]) => Promise<readonly T[]>): Promise<T[]> {
-  const chunks: string[][] = [];
-  for (let at = 0; at < ids.length; at += IDS_PER_READ) chunks.push(ids.slice(at, at + IDS_PER_READ));
-  return (await Promise.all(chunks.map(read))).flat();
-}
-
 export const ASSIGNMENT_LOG_FIELDS = {
   artifacts: { artifactId:true, workItemId:true, attemptId:true, recordedAt:true, canonicalUrl:true, byteLength:true, contentType:true, partial:true },
   costs: { attemptId:true, workItemId:true, routeId:true, role:true, cost:["usd","requestCount","bytesFetched","durationMs"] },
@@ -149,85 +91,8 @@ export const ASSIGNMENT_LOG_FIELDS = {
     result:["role","verdict","blockers","findings","warnings","actualRowCount","sourceRowCount","declaredRowCount","validatedRecordCount","survivingRecordCount","conclusion","nextAction"] },
   promotionPipeline: { formatVersion:true, recordId:true, itemId:true, at:true, stage:true, source:true, recordClass:true, subjectId:true, atStage:true, reasons:true },
 } as const satisfies Readonly<Record<string, RecordProjection>>;
-async function recordsUnder<T, R>(log: AppendOnlyRepository<T>, keys: readonly string[], fields: RecordProjection): Promise<R[]> {
-  if (!keys.length) return [];
-  const lists = await needs(log.readKeys, "projected log read by key")(unique(keys), fields);
-  return [...lists].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).flatMap(([, records]) => records) as unknown as R[];
-}
-
 /** A clause `<obligation>#<round>` names the obligation a round's work item was opened against. */
 export const clauseObligation = (clause: string): string | null => /^(.*)#(\d+)$/.exec(clause)?.[1] ?? null;
-
-/**
- * Every record the whole-plane join gives the seeded assignments, in the order a whole-table read returns it, so
- * `deriveAssignmentEntries` answers for them exactly as it would over every record.
- */
-export async function readAssignmentSubset(repos: ControlPlaneRepositories, base: AssignmentSubsetBase, seeds: AssignmentSeeds): Promise<AssignmentSummarySources> {
-  const narrowed = <T>(repo: { readonly readManyNarrowed?: AggregateRepository<T>["readManyNarrowed"] }, name: string, ids: readonly string[], projection: RecordProjection) =>
-    inChunks(unique(ids), (chunk) => needs(repo.readManyNarrowed, name)(chunk, projection));
-  const where = <T>(repo: { readonly listWhereIn?: AggregateRepository<T>["listWhereIn"] }, name: string, path: readonly string[], ids: readonly string[], projection: RecordProjection) =>
-    inChunks(unique(ids), (chunk) => needs(repo.listWhereIn, name)(path, chunk, projection));
-  const occurrences = uniqueRows<FreshnessOccurrence>(await Promise.all([
-    where(repos.occurrences, "occurrence read by obligation", ["obligationId"], seeds.obligations, OCCURRENCE_PROJECTION),
-    where(repos.occurrences, "occurrence read by work item", ["workItemId"], seeds.workItems, OCCURRENCE_PROJECTION),
-  ])).map((r) => r.value);
-  const owned = unique([...seeds.workItems, ...occurrences.map((o) => o.workItemId)]);
-  const ownedSet = new Set(owned);
-  const items = new Map<string, WorkItem>();
-  for (let wanted = unique([...owned, ...seeds.context(owned)]); wanted.length > 0;) {
-    for (const row of await narrowed(repos.workItems, "work-item read by id", wanted, WORK_ITEM_PROJECTION)) items.set(row.id, row.value as WorkItem);
-    const asked = new Set(wanted);
-    wanted = unique([...items.values()].flatMap((w) => [w.directoryParent?.workItemId,
-      (w as WorkItem & { planRepair?: { parentWorkItemId: string } }).planRepair?.parentWorkItemId])).filter((id) => !items.has(id) && !asked.has(id));
-  }
-  const workItems = [...items.values()].sort(byId);
-  const obligationIds = unique([...seeds.obligations, ...occurrences.map((o) => o.obligationId), ...workItems.map((w) => clauseObligation(w.obligation))]);
-  const [obligationRows, debtRows, taskRows, attemptRows, artifacts, costs, workerResults] = await Promise.all([
-    narrowed(repos.obligations, "obligation read by id", obligationIds, ASSIGNMENT_OBLIGATION_PROJECTION),
-    narrowed(repos.debts, "debt read by id", obligationIds, DEBT_PROJECTION),
-    where(repos.routeTasks, "route-task read by work item", ["workItemId"], owned, ROUTE_TASK_PROJECTION),
-    where(repos.attempts, "attempt read by work item", ["workItemId"], owned, ASSIGNMENT_ATTEMPT_PROJECTION),
-    recordsUnder<ArtifactRecord, AssignmentArtifact>(repos.artifacts, owned, ASSIGNMENT_LOG_FIELDS.artifacts).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
-    recordsUnder<CostEntry, AssignmentCostHead>(repos.costs, owned, ASSIGNMENT_LOG_FIELDS.costs).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
-    recordsUnder<WorkerResultRecord, AssignmentWorkerResult>(repos.workerResults, owned, ASSIGNMENT_LOG_FIELDS.workerResults).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
-  ]);
-  const heldTasks = new Set(taskRows.map((t) => t.id));
-  const roundTasks = occurrences.map((o) => o.routeTaskId).filter((id) => !heldTasks.has(id));
-  const routeTasks = uniqueRows<RouteTask>([taskRows, await narrowed(repos.routeTasks, "route-task read by id", roundTasks, ROUTE_TASK_PROJECTION)]).map((r) => r.value);
-  const heldAttempts = new Set(attemptRows.map((a) => a.id));
-  /* A round's attempts, a charge's attempt and a disposition's attempt are joined by id wherever their work item is. */
-  const moreAttempts = unique([...routeTasks.flatMap((t) => [...t.attemptIds, t.disposition?.attemptId]), ...costs.map((c) => c.attemptId)]).filter((id) => !heldAttempts.has(id));
-  const attempts = uniqueRows<Attempt>([attemptRows, await narrowed(repos.attempts, "attempt read by id", moreAttempts, ASSIGNMENT_ATTEMPT_PROJECTION)]).map((r) => r.value);
-  const attemptIds = attempts.map((a) => a.id);
-  const attemptSet = new Set(attemptIds);
-  const open = unique(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
-  const [scoutResults, pipelineRecords, leases] = await Promise.all([
-    recordsUnder<ScoutResult, AssignmentScout>(repos.scoutResults, seeds.scoutKeys(owned, attemptIds), ASSIGNMENT_LOG_FIELDS.scoutResults).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId) || attemptSet.has(r.attemptId))),
-    base.pipeline ? recordsUnder(repos.promotionPipeline, seeds.pipelineItems(owned, attemptIds), ASSIGNMENT_LOG_FIELDS.promotionPipeline) : null,
-    inChunks(open, (chunk) => needs(repos.leases.readMany, "lease read by route task")(chunk)),
-  ]);
-  return {
-    nowIso: base.nowIso,
-    obligations: obligationRows.map((r) => r.value as StandingObligation).sort(byId),
-    occurrences,
-    workItems,
-    routeTasks,
-    attempts,
-    debts: debtRows.sort(byId).map((r) => r.value as FreshnessDebt),
-    leases: leases.sort(byId).map((r) => r.value),
-    // The applied disposition rides on each RouteTask; the commit log is read by the drilldown only.
-    dispositions: null,
-    artifacts,
-    costs,
-    scoutResults,
-    workerResults,
-    pipeline: pipelineRecords === null ? null : pipelineStatesOf(pipelineRecords),
-    activation: base.activation,
-    servedReader: base.servedReader,
-    pilotZips: base.pilotZips,
-    askGapObservations: base.askGapObservations,
-  };
-}
 
 function pipelineItemIdsOf(results: readonly ScoutResult[]): string[] {
   const ids: string[] = [];

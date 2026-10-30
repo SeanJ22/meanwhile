@@ -1,15 +1,14 @@
-import { readAssignmentSubset } from "../../lib/control-plane/assignment-read.ts";
+import { pipelineStatesOf } from "../../lib/control-plane/assignment-read.ts";
 import type { AssignmentSummarySources } from "../../lib/control-plane/assignment-view.ts";
 import type { ControlPlaneRepositories } from "../../lib/control-plane/repository/types.ts";
 
-/** The publisher's read of every standing obligation and work item the store holds, as one batch. */
+/** The complete memory fixture, independent of the publisher's compact current-head read. */
 export async function readEveryAssignmentSource(repos: ControlPlaneRepositories, nowIso: string): Promise<AssignmentSummarySources> {
-  const [scoutKeys, pipelineItems] = await Promise.all([repos.scoutResults.keys(), repos.promotionPipeline.keys()]);
-  return readAssignmentSubset(repos, { nowIso, activation: null, pilotZips: [], servedReader: null, askGapObservations: null, pipeline: true }, {
-    obligations: (await repos.obligations.list()).map((row) => row.id),
-    workItems: (await repos.workItems.list()).map((row) => row.id),
-    context: () => [],
-    scoutKeys: () => scoutKeys,
-    pipelineItems: () => pipelineItems,
-  });
+  const [obligations, occurrences, workItems, routeTasks, attempts, debts, leases, artifacts, costs, scoutResults, workerResults, pipeline] = await Promise.all([
+    repos.obligations.list(), repos.occurrences.list(), repos.workItems.list(), repos.routeTasks.list(), repos.attempts.list(), repos.debts.list(), repos.leases.list(),
+    repos.artifacts.readAll(), repos.costs.readAll(), repos.scoutResults.readAll(), repos.workerResults.readAll(), repos.promotionPipeline.readAll(),
+  ]);
+  return { nowIso, obligations: obligations.map(row => row.value), occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
+    routeTasks: routeTasks.map(row => row.value), attempts: attempts.map(row => row.value), debts: debts.map(row => row.value), leases: leases.map(row => row.value),
+    artifacts, costs, scoutResults, workerResults, pipeline: pipelineStatesOf(pipeline), dispositions: null, activation: null, pilotZips: [], servedReader: null, askGapObservations: null };
 }

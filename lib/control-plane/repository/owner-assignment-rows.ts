@@ -1,5 +1,5 @@
-import type { AssignmentCandidate, AssignmentPart, BodyPublicationAttempt, IndexSegment } from "../assignment-view.ts";
-import type { GroupTotals, TimedList, StateTotals } from "../owner-snapshot-totals.ts";
+import type { AssignmentCandidate, AssignmentPart, IndexSegment } from "../assignment-view.ts";
+import type { GroupTotals, StateTotals } from "../owner-snapshot-totals.ts";
 import type { Sql } from "./pg-store.ts";
 import type { WorkItem } from "../work-item.ts";
 
@@ -10,8 +10,6 @@ export interface OwnerAssignmentRow {
   readonly builtAt: string;
   readonly group: GroupTotals;
   readonly indexSegments: readonly IndexSegment[];
-  readonly list: TimedList | null;
-  readonly bodyAttempts: readonly BodyPublicationAttempt[];
   readonly part: AssignmentPart;
   readonly nextAt: string | null;
 }
@@ -58,8 +56,7 @@ const parse = (value: unknown): OwnerAssignmentRow => (typeof value === "string"
 const groups = ["WORKING", "BLOCKED", "FAILED", "WAITING", "SUCCEEDED", "RETIRED", "UNKNOWN"];
 const lanes = ["SCOUT", "ROUTINE", "CREATED", "UNASSIGNED", "PROOF"];
 const ROW_FIELDS = `jsonb_build_object('id',id,'state',state_code,'builtAt',value->'builtAt',
-  'group',value->'group','indexSegments',index_segments,'list',value->'list',
-  'bodyAttempts',value->'bodyAttempts','part',value->'part','nextAt',value->'nextAt')`;
+  'group',value->'group','indexSegments',index_segments,'part',value->'part','nextAt',value->'nextAt')`;
 
 export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
   const rows = async (text: string, args: readonly unknown[]) =>

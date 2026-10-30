@@ -39,6 +39,7 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-worker.mts": 512,
   "slice-lane.mts": 192,
+  "parser-worker.mts": 512,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,
   "fetch-congress-legislators.mts": 384,

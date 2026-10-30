@@ -149,13 +149,6 @@ export function buildLearningTrends(rows: readonly WeekLearningRow[], nowIso: st
   };
 }
 
-export function pointWords(unit: LearningSeries["unit"], p: SeriesPoint): string | null {
-  if (p.value === null) return null;
-  if (unit === "share") return `${Math.round(p.value * 100)}% of ${p.of?.toLocaleString("en-US") ?? "?"}`;
-  if (unit === "usd") return `${p.floor ? "at least " : ""}$${p.value.toFixed(2)} over ${p.of?.toLocaleString("en-US") ?? "?"}`;
-  return p.value.toLocaleString("en-US");
-}
-
 /** Decode each Scout's summary fields once, then derive all three exact aggregate views from them. */
 export const SCOUT_LEARNING_SQL = `WITH scouts AS MATERIALIZED (
   SELECT r."startedAt" AS started_at,r."inheritedFieldManual" AS inherited,

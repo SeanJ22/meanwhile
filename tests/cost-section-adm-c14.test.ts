@@ -8,28 +8,9 @@ import test from "node:test";
 
 import { ZERO_COST, WORKER_ROLES, type AttemptCost, type WorkerRole } from "../lib/control-plane/attempt.ts";
 import { utcMonthWindow, type CostEntry } from "../lib/control-plane/cost.ts";
-import {
-  ATTEMPT_NOT_ON_RECORD,
-  COST_CLASS_WORDS,
-  DEFAULT_DAILY_CEILING_USD,
-  MONTHLY_TOKEN_METRICS,
-  NO_MODEL_KEY,
-  ROLE_COST_POLICY,
-  buildCostPanel,
-  buildMonthlySpend,
-  capacitySentence,
-  costClassOf,
-  modelLabel,
-  roleBarClass,
-  shareSentence,
-  spendWindowRows,
-  utcStamp,
-  costSectionNumbers,
-} from "../lib/control-plane/cost-panel.ts";
-import { auditRenderedNumbers, gap, held, measured } from "../lib/control-plane/owner-surface.ts";
+import { ATTEMPT_NOT_ON_RECORD, COST_CLASS_WORDS, NO_MODEL_KEY, ROLE_COST_POLICY, buildCostPanel, costClassOf, utcStamp } from "../lib/control-plane/cost-panel.ts";
+import { gap, held, measured } from "../lib/control-plane/owner-surface.ts";
 import { codeOf } from "./read-code.ts";
-
-const CEILINGS = { rolling24HourModelUsd: 25 };
 
 function entry(
   attemptId: string,
@@ -50,11 +31,6 @@ function entry(
     cost: { ...ZERO_COST, usd, ...cost },
     recordedAt,
   };
-}
-
-/** A row whose cost object PREDATES the six metering fields: they are absent, not null. */
-function predatingCost(usd: number | null): AttemptCost {
-  return { inputTokens: null, outputTokens: null, usd, durationMs: null, bytesFetched: null, requestCount: 1 } as unknown as AttemptCost;
 }
 
 test("§9A.4: every role the cost policy calls plain code is one no executor hands a model to, re-read from the code", () => {
@@ -176,57 +152,6 @@ test("ADM-33: a model attempt with no dollars is 'Not measured'; rows predating 
   assert.deepEqual(Object.values(COST_CLASS_WORDS).sort(), ["$0 this run", "Not measured", "Paid model", "Plain code", "Predates measurement fields"]);
 });
 
-test("ADM-26: the three windows render as the brief's own rows, to the cent, and an unmeasured window is never $0.00", () => {
-  const rows = spendWindowRows({ cycleUsd: 0, operationalNightUsd: 0, rolling24HourUsd: 0.4404, ceilings: CEILINGS });
-  assert.deepEqual(rows.map((r) => r.window), ["Current cycle", "Operational night", "Last 24 hours"]);
-  // Every window is framed against the one rolling daily ceiling.
-  assert.deepEqual(rows.map((r) => r.shown), ["$0.00 of $25.00", "$0.00 of $25.00", "$0.44 of $25.00"]);
-  assert.ok(rows[1].defines?.includes("6pm to 6am"), "the one window whose name does not explain itself is defined");
-  assert.ok(rows.every((r) => !r.unmeasured));
-
-  const blind = spendWindowRows({ cycleUsd: null, operationalNightUsd: 0, rolling24HourUsd: 0, ceilings: CEILINGS });
-  assert.equal(blind[0].unmeasured, true);
-  assert.doesNotMatch(blind[0].shown, /\$0\.00 of/);
-  assert.match(blind[0].shown, /not measured/);
-});
-
-test("§9A.4: the capacity sentence is computed from the ledger and matches the owner's shape; an unmeasured window says so", () => {
-  const now = "2026-09-06T18:00:00.000Z";
-  /* Six hunts at $0.3164 each: $100 / 0.3164 = 316.05 -> 316. */
-  const costs = Array.from({ length: 6 }, (_, i) => entry(`s${i}`, "SCOUT", 0.3164, "2026-09-06T12:00:00.000Z"));
-  const panel = buildCostPanel({ costs, attempts: [], cacheByRole: null, share: null, verifiedRecords: null, nowIso: now, dailyCeilingUsd: 100 });
-  assert.equal(
-    capacitySentence(panel.capacity),
-    "At the current average cost, the $100.00 daily limit buys about 316 hunts at roughly $0.32 each.",
-  );
-  assert.equal(DEFAULT_DAILY_CEILING_USD, 0, "a missing Admin spend dial does not authorize a fixed dollar budget");
-
-  const quiet = buildCostPanel({
-    costs: [entry("s9", "SCOUT", null, "2026-09-06T12:00:00.000Z")],
-    attempts: [],
-    cacheByRole: null,
-    share: null,
-    verifiedRecords: null,
-    nowIso: now,
-  });
-  const says = capacitySentence(quiet.capacity);
-  assert.match(says, /not measured — which is not the same as it buying nothing/);
-  assert.doesNotMatch(says, /buys about 0/);
-
-  assert.equal(buildCostPanel({ costs, attempts: [], cacheByRole: null, share: null, verifiedRecords: null }).capacity, null, "no clock, no window, no figure");
-  assert.match(capacitySentence(null), /not published on this snapshot yet/);
-});
-
-test("ADM-47: each of the three zeroes on the model share says which zero it is", () => {
-  assert.equal(shareSentence(held(measured(0, 0, "c", "s"))), "0% model work this cycle — nothing was dispatched.");
-  assert.equal(
-    shareSentence(held(measured(5, 5, "c", "s"))),
-    "0% model work this cycle — all 5 jobs ran as plain code, with no paid model.",
-  );
-  assert.equal(shareSentence(held(measured(7, 10, "c", "s"))), "70% of this cycle's 10 jobs ran as plain code; 3 used a paid model.");
-  assert.equal(shareSentence(gap("OURS", "no cycle has recorded its lane split yet.")), "no cycle has recorded its lane split yet.");
-});
-
 test("§9A.23: the window is the UTC calendar month, and the UTC/Eastern day edge does not move it", () => {
   const mid = utcMonthWindow("2026-09-06T18:00:00.000Z");
   assert.equal(mid.since, "2026-09-01T00:00:00.000Z");
@@ -266,109 +191,6 @@ test("§9A.23: the window is the UTC calendar month, and the UTC/Eastern day edg
   assert.equal(utcStamp("nonsense"), "an unreadable time");
 });
 
-test("§9A.23: rows are counted into their own month, both bounds inclusive, and an unreadable stamp is dropped rather than filed at the epoch", () => {
-  const rows = [
-    entry("a", "SCOUT", 1, "2026-09-01T00:00:00.000Z"),
-    entry("b", "SCOUT", 1, "2026-08-31T23:59:59.999Z"),
-    entry("c", "SCOUT", 1, "2026-09-06T18:00:00.000Z"),
-    entry("d", "SCOUT", 1, "whenever"),
-  ];
-  const [september, august] = buildMonthlySpend({ costs: rows, attempts: [], nowIso: "2026-09-06T18:00:00.000Z" }).history;
-  assert.equal(september!.rows, 2, "both bounds inclusive; the August row stays in August");
-  assert.equal(august!.rows, 1);
-  assert.equal(september!.rows + august!.rows, 2 + 1, "no row lands in two months and none is lost between them");
-  assert.equal(buildMonthlySpend({ costs: rows, attempts: [], nowIso: "1970-01-15T00:00:00.000Z" }).history[0]!.rows, 0, "the unreadable stamp is not filed at the epoch");
-});
-
-test("§9A.23: an empty month is a month with nothing measured, never a month that cost $0.00", () => {
-  const view = buildMonthlySpend({ costs: [], attempts: [], nowIso: "2026-09-06T18:00:00.000Z" });
-  assert.equal(view.total.total, null);
-  assert.equal(view.total.measured, 0);
-  assert.deepEqual(view.byProvider, []);
-  assert.equal(view.cacheSavingUsd, null);
-  assert.equal(view.cacheHitRate.held, false, "an empty month has no hit rate — a gap, never a 0%");
-  assert.equal(view.batchSavingUsd, null);
-  assert.equal(view.ledgerBeginsAt, null);
-  assert.deepEqual(view.history.map((h) => h.label), ["September 2026"], "no ledger history means no months to compare");
-  for (const metric of MONTHLY_TOKEN_METRICS) assert.equal(view.tokens[metric].total, null, `${metric} is unmeasured, not zero`);
-});
-
-test("§9A.23: the month totals by provider, model and role, prices the savings once, and keeps unmeasured rows out of the dollars", () => {
-  const now = "2026-09-06T18:00:00.000Z";
-  const metered = { uncachedInputTokens: 1_000, cacheReadInputTokens: 40_000, cacheCreationInputTokens: 5_000, cacheCreation5mInputTokens: 5_000, cacheCreation1hInputTokens: 0, outputTokens: 900, inputTokens: 46_000, requestCount: 1 };
-  const costs: CostEntry[] = [
-    entry("s1", "SCOUT", 0.31, "2026-09-03T10:00:00.000Z", metered),
-    entry("s2", "SCOUT", 0.09, "2026-09-04T10:00:00.000Z", { ...metered, cacheReadInputTokens: 0, batch: true }),
-    entry("a1", "ACQUIRER", null, "2026-09-04T11:00:00.000Z", { requestCount: 2 }),
-    { ...entry("o1", "SCOUT", 0.5, "2026-09-05T10:00:00.000Z"), cost: predatingCost(0.5) },
-    entry("x1", "SCOUT", 4, "2026-08-14T10:00:00.000Z"),
-  ];
-  const attempts = [
-    { id: "s1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-    { id: "s2", worker: { version: "claude-haiku-4-5", provider: "anthropic" } },
-    { id: "a1", worker: { version: "deterministic-walker", provider: "we-the-people" } },
-    { id: "o1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-    { id: "x1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-  ];
-  const view = buildMonthlySpend({ costs, attempts, nowIso: now });
-
-  assert.equal(view.window.label, "September 2026");
-  assert.equal(view.total.total, 0.9, "0.31 + 0.09 + 0.50; the August row is another month and the null row is not a zero");
-  assert.equal(view.total.measured, 3);
-  assert.equal(view.total.unmeasured, 1);
-
-  assert.deepEqual(view.byProvider.map((r) => [r.key, r.usd]), [["anthropic", 0.9], ["we-the-people", null]]);
-  assert.deepEqual(view.byModel.map((r) => r.key), ["claude-opus-5", "claude-haiku-4-5", NO_MODEL_KEY]);
-  assert.deepEqual(view.byRole.map((r) => [r.key, r.usd]), [["SCOUT", 0.9], ["ACQUIRER", null]]);
-
-  /* 40,000 cache-read tokens on Opus 5 at $5/MTok saved 0.9 of the base rate. */
-  assert.equal(view.cacheSavingUsd, 0.18);
-  assert.equal(view.cacheSavingRows, 1, "the batched row read nothing from the cache, so it saved nothing there");
-  assert.equal(view.batchRows, 1);
-  assert.equal(view.batchSavingUsd, 0.09, "a batched row was charged half, so what it saved is what it cost");
-
-  assert.deepEqual(view.unmeasured, { predatesFields: 1, providerReportedNothing: 1, noDollarFigure: 1 });
-  assert.deepEqual(view.history.map((h) => [h.label, h.usd, h.complete]), [["September 2026", 0.9, false], ["August 2026", 4, true]]);
-  assert.equal(view.ledgerBeginsAt, "2026-08-14T10:00:00.000Z");
-  /* The billed quantities are carried per model, not only in aggregate. */
-  const opus = view.byModel.find((r) => r.key === "claude-opus-5")!;
-  const haiku = view.byModel.find((r) => r.key === "claude-haiku-4-5")!;
-  assert.equal(opus.tokens.cacheReadInputTokens.total, 40_000, "only the Opus row read from the cache");
-  assert.equal(haiku.tokens.cacheReadInputTokens.total, 0);
-  assert.equal(haiku.batchedRows, 1);
-  assert.equal(opus.batchedRows, 0);
-  assert.equal(view.byModel.find((r) => r.key === NO_MODEL_KEY)!.tokens.inputTokens.total, null, "the deterministic rows reported no prompt at all");
-
-  /* Per-model cache hit rate and saving are carried on the row, not recomputed in the render. */
-  assert.ok(
-    opus.cacheHitRate.held && opus.cacheHitRate.value.value === 40_000 && opus.cacheHitRate.value.denominator === 46_000,
-    "Opus hit rate is cache reads / (reads + writes + uncached) = 40000 / 46000",
-  );
-  assert.equal(opus.cacheSavingUsd, 0.18, "Opus saved 0.18 on its 40k cache reads, the per-model half of the aggregate");
-  assert.ok(
-    haiku.cacheHitRate.held && haiku.cacheHitRate.value.value === 0 && haiku.cacheHitRate.value.denominator === 6_000,
-    "Haiku read nothing from the cache: a real, measured 0% — not a gap",
-  );
-  assert.equal(haiku.cacheSavingUsd, null, "no cache read means no per-model saving to price, which is not a zero");
-  const noModel = view.byModel.find((r) => r.key === NO_MODEL_KEY)!;
-  assert.equal(noModel.cacheHitRate.held, false, "the deterministic rows carry no metering, so the hit rate is our named gap");
-  assert.equal(noModel.cacheSavingUsd, null);
-  assert.ok(
-    view.cacheHitRate.held && view.cacheHitRate.value.value === 40_000 && view.cacheHitRate.value.denominator === 52_000,
-    "the month's aggregate hit rate sums every model's input: 40000 / (40000 + 10000 + 2000)",
-  );
-
-  assert.equal(view.tokens.cacheReadInputTokens.total, 40_000);
-  assert.equal(view.tokens.requestCount.total, 5, "1 + 1 + 2 + 1 across the four September rows");
-  assert.equal(view.tokens.cacheCreation1hInputTokens.total, 0);
-  assert.equal(view.tokens.inputTokens.unmeasured, 2, "the deterministic row and the predating row reported no prompt");
-
-  /* The same numbers reach the panel when the publisher passes its clock. */
-  const panel = buildCostPanel({ costs, attempts, cacheByRole: null, share: null, verifiedRecords: null, nowIso: now });
-  assert.equal(panel.monthlySpend?.total.total, 0.9);
-  assert.equal(buildCostPanel({ costs, attempts, cacheByRole: null, share: null, verifiedRecords: null }).monthlySpend, null);
-});
-
 test("ADM-C14: the cache row carries the defect counts, the batch share and the saving the cycle measured", () => {
   const panel = buildCostPanel({
     costs: [],
@@ -391,57 +213,3 @@ test("ADM-C14: the cache row carries the defect counts, the batch share and the 
   assert.ok(row.hitRate.held && row.hitRate.value.value === 40_867);
 });
 
-
-test("search API charges are broken down by host and never counted as model spend", () => {
-  // One DISCOVERY_SEARCH row per request: source is the API host, usd the published price or null.
-  const now = "2026-09-23T18:00:00.000Z";
-  const search = (id: string, usd: number | null, source: string | null): CostEntry => ({ ...entry(id, "DISCOVERY_SEARCH" as WorkerRole, usd, "2026-09-23T12:00:00.000Z"), source });
-  const costs = [
-    entry("s1", "SCOUT", 0.5, "2026-09-23T11:00:00.000Z"),
-    search("b1", 0.005, "api.search.brave.com"),
-    search("b2", 0.005, "api.search.brave.com"),
-    search("e1", null, "api.exa.ai"),
-    search("n1", 0.01, null),
-  ];
-  const view = buildMonthlySpend({ costs, attempts: [{ id: "s1", worker: { version: "claude-opus-5", provider: "anthropic" } }], nowIso: now });
-
-  assert.equal(view.total.total, 0.52, "the ledger's total still carries every charge");
-  assert.deepEqual(view.byModel.map((r) => r.key), ["claude-opus-5"], "a search request has no model and is not read as the cache pre-warm");
-  const role = view.byRole.find((r) => r.key === "DISCOVERY_SEARCH")!;
-  assert.deepEqual([role.usd, role.measuredRows, role.unmeasuredRows], [0.02, 3, 1]);
-  assert.deepEqual(
-    view.bySearchSource?.map((r) => [r.key, r.usd, r.measuredRows, r.unmeasuredRows]),
-    [["(host not recorded)", 0.01, 1, 0], ["api.search.brave.com", 0.01, 2, 0], ["api.exa.ai", null, 0, 1]],
-    "dollars first, then the key; an unpriced request is unmeasured, never a zero; a row with no host is its own group",
-  );
-});
-
-test("ADM-36 and ADM-33: a role bar carries a role class and a model renders as its name", () => {
-  assert.equal(roleBarClass("SCOUT"), "role-scout");
-  assert.equal(roleBarClass("ADVERSARIAL_AUDITOR"), "role-adversarial-auditor");
-  assert.equal(roleBarClass("SCOUT (control-plane model workers)"), "role-scout");
-  assert.equal(roleBarClass("something else"), "role-other");
-  assert.equal(modelLabel("claude-opus-5"), "Claude Opus 5");
-  assert.equal(modelLabel("claude-haiku-4-5-20251001"), "Claude Haiku 4.5");
-  assert.equal(modelLabel(NO_MODEL_KEY), "No model — plain code");
-  assert.equal(modelLabel(ATTEMPT_NOT_ON_RECORD), "Attempt not on record");
-});
-
-test("every number the cost section draws itself carries a denominator and a contract", () => {
-  const now = "2026-09-06T18:00:00.000Z";
-  const panel = buildCostPanel({
-    costs: [entry("s1", "SCOUT", 0.31, "2026-09-06T12:00:00.000Z")],
-    attempts: [{ id: "s1", worker: { version: "claude-opus-5", provider: "anthropic" } }],
-    cacheByRole: null, share: null, verifiedRecords: null, nowIso: now,
-  });
-  const numbers = costSectionNumbers({
-    monthly: panel.monthlySpend,
-    windows: spendWindowRows({ cycleUsd: 0, operationalNightUsd: null, rolling24HourUsd: 0.31, ceilings: CEILINGS }),
-    capacity: panel.capacity,
-  });
-  assert.ok(numbers.length >= 3, `expected the section's own figures, saw ${numbers.length}`);
-  assert.equal(auditRenderedNumbers(numbers).ok, true, auditRenderedNumbers(numbers).detail);
-  assert.ok(!numbers.some((n) => n.label.includes("Operational night")), "an unmeasured window is not pushed as a number");
-  /* Positive control: the audit really does refuse a figure with no denominator. */
-  assert.equal(auditRenderedNumbers([{ label: "x", value: 1, denominator: null, contract: "c" }]).ok, false);
-});

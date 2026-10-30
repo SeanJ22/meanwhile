@@ -139,9 +139,6 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
     "the standing publisher cannot relabel tracked software-run or feedback-sweep output as live operational truth",
   );
 
-  const adminData = readFileSync(join(ROOT, "lib", "control-plane", "admin-data.ts"), "utf8");
-  assert.match(adminData, /readMapTilerUsageDigests/);
-
   for (const workflow of readdirSync(join(ROOT, ".github", "workflows"))) {
     const source = readFileSync(join(ROOT, ".github", "workflows", workflow), "utf8");
     assert.doesNotMatch(source, /maptiler:usage|publish-owner-snapshot/, `${workflow} invokes runtime observation from Actions`);

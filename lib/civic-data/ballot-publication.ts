@@ -37,11 +37,11 @@ const publicationLogKey = (state: BallotState, family: BallotPublicationFamily =
   family === "ballot-navigation" ? `ballot-navigation-publication:${requireBallotState(state)}` : `ballot-publication:${requireBallotState(state)}`;
 
 /**
- * Due state ballot files lead the pass because they already hold their source evidence. The national bill fan-out comes
- * next: it runs one child at a time in its own lane, so it asks for memory before long reads fill it. Voting sites,
- * measure explainers and the remaining work then take turns, retaining the order of how long each family's work is owed.
- * A child can hold memory until the pass deadline, so each family needs its turn before another fills the existing
- * worker pool.
+ * The order inside each class; dueRequestsFirstInClass then puts §4 clock work (voting sites, sitting-window meetings)
+ * ahead of the rest. Due state ballot files lead the rest because they already hold their source evidence. The national
+ * bill fan-out comes next: it runs one child at a time in its own lane, so it asks for memory before long reads fill it.
+ * Voting sites, measure explainers and the remaining work then take turns, retaining how long each family's work is owed.
+ * A child can hold memory until the pass deadline, so each family needs its turn before another fills the worker pool.
  */
 export function electionLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
   const family = (job: T) => parseStateBallotContractId(job.task.id)?.family;

@@ -10,7 +10,6 @@ import {
   routineDueRequestDeadlineMs,
   routineDueRequestFor,
   routineDueRequestState,
-  withdrawRoutineDue,
   type RoutineDueRequest,
 } from "../lib/civic-data/routine-due-request.ts";
 import {
@@ -68,13 +67,12 @@ test("a due request names one registered meeting partition with a sitting window
     [[`--contract=${NEWBURY_ENERGY}`, "--expires-in-minutes=121"], /OUT_OF_RANGE:expires-in-minutes/],
     [[`--contract=${NEWBURY_ENERGY}`, "--due-in-minutes=30", "--expires-in-minutes=30"], /EXPIRES_BEFORE_DUE/],
     [[`--contract=${NEWBURY_ENERGY}`, "--reason="], /REASON_INVALID/],
-    [["--withdraw=routine-due:not-an-id"], /WITHDRAW_EXACT_ID_REQUIRED/],
-    [["--withdraw=routine-due:00000000-0000-4000-8000-000000000000", `--contract=${NEWBURY_ENERGY}`], /WITHDRAW_EXACT_ID_REQUIRED/],
+    [["--withdraw=routine-due:00000000-0000-4000-8000-000000000000"], /EXACT_ARGUMENTS_REQUIRED/],
   ];
   for (const [args, expected] of refused) assert.throws(() => routineDueCommand(args), expected, args.join(" "));
 });
 
-test("one open request at a time per partition; withdrawn and expired ones stay as inert history", async () => {
+test("one open request at a time per partition; replaced and expired ones stay as inert history", async () => {
   const repos = await fixtureRepositories();
   const first = await requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`, "--expires-in-minutes=30"], NOW);
   assert.match(first.id, /^routine-due:[0-9a-f-]{36}$/);
@@ -84,10 +82,6 @@ test("one open request at a time per partition; withdrawn and expired ones stay 
   });
   await assert.rejects(requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`], iso(NOW_MS + 29 * MIN)), /ALREADY_OPEN/);
   const second = await requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`], iso(NOW_MS + 30 * MIN));
-  const withdrawn = await withdrawRoutineDue(repos, [`--withdraw=${second.id}`], iso(NOW_MS + 31 * MIN));
-  assert.equal(withdrawn.withdrawnAt, iso(NOW_MS + 31 * MIN));
-  assert.deepEqual(await withdrawRoutineDue(repos, [`--withdraw=${second.id}`], iso(NOW_MS + 40 * MIN)), withdrawn);
-  await assert.rejects(withdrawRoutineDue(repos, ["--withdraw=routine-due:00000000-0000-4000-8000-000000000000"], NOW), /UNKNOWN/);
   const stored = (await repos.adminConfig.mustRead("current", { routineDueRequests: true })).value;
   assert.deepEqual(stored.routineDueRequests?.map(({ id }) => id), [first.id, second.id]);
   assert.equal(stored.apiFallback.enabled, false, "nothing else on the row moves");

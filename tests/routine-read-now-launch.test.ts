@@ -91,3 +91,33 @@ test("a request goes first only in its own class: clock work (§4) stays ahead o
   assert.deepEqual(marked.filter(id => !clockWork.includes(id) && id !== "congress-rollcalls"), plain.filter(id => !clockWork.includes(id) && id !== "congress-rollcalls"),
     "every other task keeps its order");
 });
+
+/** Controlled clock: a day of passes 30 minutes apart, each launching the first `launches` of the order. Voting is hourly in
+ * the final week; `meetings` sitting-window lanes are owed every pass; one state ballot file is owed from the first pass. */
+function day(launches: number, meetings: number) {
+  const voting = AUTOMATIC_REFRESH_TASKS.filter(task => task.id.startsWith("voting-sites:")), contests = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:AZ")!;
+  const lanes = [...new Map(ROUTINE_SOURCE_TASKS.filter(task => task.contract.schedule?.kind === "SITTING_WINDOW").map(task => [task.acquisitionFailureDomain, task])).values()].slice(0, meetings);
+  const last = new Map<string, number>(), order: string[][] = [];
+  let contestsPass: number | null = null, votingLate = 0;
+  for (let pass = 0; pass < 48; pass += 1) {
+    const now = NOW_MS + pass * HOUR / 2, owed = (id: string) => (last.get(id) ?? NOW_MS - HOUR) + HOUR;
+    const launched = dueRequestsFirstInClass(electionLaunchOrder(routinePassLaunchOrder([
+      ...voting.filter(task => owed(task.id) <= now).map(task => ({ task, lastConsideredAt: null, owedAtMs: owed(task.id) })),
+      ...lanes.map(task => ({ task, lastConsideredAt: null, deadlineMs: now - HOUR })),
+      ...(contestsPass === null ? [{ task: contests, lastConsideredAt: null, owedAtMs: NOW_MS - 10 * HOUR }] : []),
+    ], now)), new Set()).slice(0, launches);
+    for (const { task } of launched) { last.set(task.id, now); if (task.id === contests.id) contestsPass = pass; }
+    votingLate += voting.filter(task => now - (last.get(task.id) ?? NOW_MS - HOUR) > 90 * 60_000).length;
+    order.push(launched.map(({ task }) => task.id));
+  }
+  return { contestsPass, votingLate, first: order[0]! };
+}
+
+test("§4 clock work launches first, and a state ballot file keeps its daily turn only while a pass launches more than the clock work it owes", () => {
+  const ran = (launches: number, meetings: number) => { const { contestsPass, votingLate } = day(launches, meetings); return { contestsPass, votingLate }; };
+  assert.equal(day(100, 30).first.indexOf("ballot-contests:AZ"), 56 + 30, "all 56 voting reads and 30 owed meeting lanes launch before the ballot file");
+  // About 28 hourly voting reads fall due each half hour, plus the owed meeting lanes.
+  assert.deepEqual(ran(60, 30), { contestsPass: 1, votingLate: 0 }, "60 launches a pass, 30 lanes: the ballot file waits one pass, no voting read runs late");
+  assert.deepEqual(ran(40, 10), { contestsPass: 1, votingLate: 0 }, "40 launches a pass, 10 lanes: the same");
+  assert.deepEqual(ran(40, 30), { contestsPass: null, votingLate: 0 }, "40 launches a pass, 30 lanes: voting keeps its hour; the ballot file waits past its day");
+});

@@ -5,6 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import sharp from "sharp";
+import { PGlite } from "@electric-sql/pglite";
+import { LEAD_DDL, WORK_DDL, workList } from "../lib/core/work.ts";
+import { moveBoxLinks } from "../lib/sources/box-links.ts";
 import { publishCandidateFindings, type CandidateFindingSubject } from "../lib/civic-data/candidate-profile-findings.ts";
 import { runCandidateProfileFindingsJob } from "../lib/civic-data/candidate-profile-findings-job.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -44,24 +47,34 @@ async function setup(pages: Readonly<Record<string, string>>) {
       retrievalUrl: url, retrievedAt: SAVED, httpStatus: 200, sourceId: new URL(url).hostname, workItemId: "wi-packet", attemptId: "at-packet",
       methodRouteId: "scout:fetch_public", permission: "ALLOWED", bodyPath, bodySha256: `sha256-${sha}` });
   }
-  const repos = createMemoryRepositories();
+  const repos = createMemoryRepositories(), pg = new PGlite();
+  for (const ddl of [...WORK_DDL, ...LEAD_DDL]) await pg.exec(ddl);
+  const sql = async (text: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
+  const list = workList(sql, { owner: "profiles", leaseMs: 300_000, now: () => new Date(NOW) });
   let index = 0;
   const report = async (subjectId: string, field: string, value: string, sentence: string, sourceUrl: string) => {
     const row = await indexReportedFinding(repos.boxFindings, { workItemId: "wi-packet", attemptId: "at-packet", obligationId: "hunt:packet:ocd-division/country:us/state:oh/place:columbus",
       missionPart: null, finding: { subjectId, field, value, exactQuote: sentence, sourceUrl, artifactIds: [artifacts.get(sourceUrl)!.id], subjectHint: null, index: index++ } }, NOW);
     await holdBoxFinding(repos.boxFindings, row.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: slotVersion("candidates") }, NOW);
+    await handOff();
+  };
+  /** The Box hands findings on to the work list; these fixtures' ballot-shaped subjects name their state in the word after "ballot-". */
+  const handOff = async () => {
+    await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date(NOW) });
+    await sql(`UPDATE work SET state = upper(coalesce(substring(subject_id from '^ballot-([a-z]{2})'), 'us'))`);
   };
   const stored = new Map<string, Uint8Array>();
   const portrait = { read: async () => png(), put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } };
   const store = new MemoryRoutineDataStore();
-  const run = (extra: Partial<Parameters<typeof publishCandidateFindings>[0]> = {}) => publishCandidateFindings({ boxFindings: repos.boxFindings,
+  const run = async (extra: Partial<Parameters<typeof publishCandidateFindings>[0]> = {}) => publishCandidateFindings({ list,
+    claims: await list.claim("fact", 500, { platform: "candidate-profile", subjects: [JANE.candidacyId, ...JANE.readerKeys] }),
     held: async id => [...artifacts.values()].find(row => row.id === id) ?? null, store, subjects: [JANE],
     campaignHosts: new Map([[JANE.candidacyId, ["janedoeforcouncil.com"]]]), clocks: factClocks(null), now: NOW, portrait, ...extra });
   const card = async () => {
     const read = await readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, { store, now: NOW });
     return read.kind === "PROMOTED" ? read.value.cards.cards[JANE.candidacyId] : undefined;
   };
-  return { repos, report, run, card, stored, artifacts, store };
+  return { repos, report, run, card, stored, artifacts, store, list, sql, handOff };
 }
 
 test("a hunter's bio, campaign phone and campaign-site portrait publish on the candidate's card once each holds on its saved page", async () => {
@@ -87,8 +100,8 @@ test("a hunter's bio, campaign phone and campaign-site portrait publish on the c
   assert.equal(card.photoVerification?.basis, "OWN_PAGE");
   assert.ok(portraitBindingMatches(JANE.candidacyId, { url: card.photoUrl!, sourceUrl: card.photoVerification!.imageUrl, verification: card.photoVerification }, "candidates"));
   assert.equal(s.stored.size, 1, "the portrait's bytes are saved");
-  const states = (await s.repos.boxFindings.list()).map(row => row.value.state).sort();
-  assert.deepEqual(states, ["built", "built", "built", "refused", "waiting"]);
+  const states = (await s.sql("SELECT status FROM work WHERE kind = 'fact' ORDER BY status")).map(row => row.status);
+  assert.deepEqual(states, ["done", "done", "done", "refused", "waiting"]);
 });
 
 test("a Commons file publishes on its own when its description names the candidate and its author and free license are on record", async () => {
@@ -131,6 +144,7 @@ test("a Scout's saved candidate finding, named in its own words, publishes the s
   await s.repos.scoutResults.append(result.obligationId, result.attemptId, result, NOW);
   const [row] = await indexScoutFindings(s.repos.boxFindings, result, NOW);
   await holdBoxFinding(s.repos.boxFindings, row!.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: slotVersion("candidates") }, NOW);
+  await s.handOff();
   assert.deepEqual((await s.run()).published, { "CAN-16": 1 });
   assert.equal((await s.card())!.bio, "Jane Doe has taught in Columbus schools since 2004.");
 });
@@ -163,11 +177,8 @@ test("the state profile job publishes waiting findings through its exact manual 
     payload: { cards: { curatedAt: SAVED, note: "", cards: earlierCards, hunts: [] }, links: { curatedAt: SAVED, note: "", links: earlierLinks, hunts: [] } } });
   const priorPublication = await processRegisteredManualCandidate(s.store, "candidate-profiles:OH", prior, SAVED);
   assert.ok(priorPublication.promoted, priorPublication.candidate.failureDetail ?? "fixture profiles must publish");
-  const own = (await s.repos.boxFindings.list()).find(row => row.value.subjectId === JANE.candidacyId)!.value;
-  const args = { state: "OH", store: s.store, repos: s.repos, now: NOW,
-    query: async (sql: string) => sql.includes("FROM bound") ? [{ id: own.id, subject: own.subjectId }]
-      : sql.includes("SELECT value") ? [{ value: own }]
-        : [{ candidacy_id: "oh:2026:state-oh-place-columbus:city-council:doe-jane", host: "janedoeforcouncil.com" }],
+  const args = { state: "OH", store: s.store, repos: s.repos, list: s.list, now: NOW,
+    query: async () => [{ candidacy_id: "oh:2026:state-oh-place-columbus:city-council:doe-jane", host: "janedoeforcouncil.com" }],
     readHeld: async () => async (id: string) => [...s.artifacts.values()].find(row => row.id === id) ?? null };
   const result = await runCandidateProfileFindingsJob(args);
   assert.deepEqual(result.report.published, { "CAN-16": 1 });
@@ -182,7 +193,7 @@ test("the state profile job publishes waiting findings through its exact manual 
   assert.deepEqual(successor.retrieval.manualSourceReceipt!.sources.find(source => source.finalUrl === earlierUrl), prior.retrieval.manualSourceReceipt!.sources[0]);
   assert.deepEqual(successor.excludedFacts, [], "unchanged cards and links are present, never repeated as rejected removals");
   assert.equal(successor.normalization.droppedRecords, 0, "canonical and ballot reader aliases both bind to their own state");
-  assert.equal((await s.repos.boxFindings.list()).find(row => row.value.subjectId.startsWith("ballot-il"))?.value.state, "waiting");
+  assert.equal((await s.sql("SELECT status FROM work WHERE subject_id LIKE 'ballot-il%'"))[0]!.status, "waiting");
 });
 
 test("canonical profile identities must agree with the declared state and their OCD state", () => {
@@ -210,18 +221,19 @@ test("a derived child cannot enter the profile job, and read failures never refu
   try {
     for (const key of keys) if (env[key] === undefined) delete process.env[key]; else process.env[key] = env[key];
     let reads = 0;
-    const args = { state: "OH", store: Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore, repos: s.repos, now: NOW,
+    const args = { state: "OH", store: Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore, repos: s.repos, list: s.list, now: NOW,
       query: async () => { reads++; return []; }, readHeld: async () => async () => null };
     await assert.rejects(runCandidateProfileFindingsJob(args), /capability or contract does not match/);
     assert.equal(reads, 0);
     process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY = "MANUAL_CONTRACT";
     process.env.WTP_RUNTIME_AUTHORITY_CONTRACT = "candidate-profiles:OH";
-    assert.equal((await runCandidateProfileFindingsJob(args)).receipt, null);
-    assert.equal(reads, 1);
+    await assert.rejects(runCandidateProfileFindingsJob(args), /CANDIDATE_FINDINGS_BALLOT_UNAVAILABLE/);
+    assert.equal(reads, 0, "a ballot that cannot be read stops the job before any other read");
+    assert.deepEqual(await s.sql("SELECT status FROM work WHERE kind = 'fact'"), [{ status: "waiting" }], "and the finding waits as if never taken");
     await assert.rejects(s.run({ store: new Proxy(s.store, { get(target, key) {
       if (key === "readPromotion") return async () => { throw new Error("profile database unavailable"); };
       const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
     } }) }), /BASE_UNAVAILABLE/);
-    assert.ok((await s.repos.boxFindings.list()).every(row => row.value.state === "waiting"));
+    assert.ok((await s.sql("SELECT status FROM work WHERE kind = 'fact'")).every(row => row.status === "waiting"));
   } finally { for (const [key, value] of before) if (value === undefined) delete process.env[key]; else process.env[key] = value; }
 });

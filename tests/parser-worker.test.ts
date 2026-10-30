@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { CAPABILITY_DDL, capabilityLog, reopenDeadEnds } from "../lib/core/capability.ts";
 import { LEAD_DDL, WORK_DDL, newestFirst, workList, type WorkInput } from "../lib/core/work.ts";
+import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { workWaiting } from "../lib/core/work-counts.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -45,7 +46,7 @@ async function setup(pages: Record<string, string> = PAGES, parsers?: ReadonlyMa
 }
 
 test("a link goes from the work list through its parser and the Slide, and each new link is read next, once", async t => {
-  const { facts, list, requests, run } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
+  const { facts, list, deps, requests, run } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
   t.after(() => facts.pg.close());
   await list.ensure([productionLead()]);
 
@@ -56,6 +57,8 @@ test("a link goes from the work list through its parser and the Slide, and each 
   assert.deepEqual({ entity: fact!.entity_id, field: fact!.field, by: fact!.produced_by, status: fact!.status, url: fact!.url },
     { entity: "ocd-division/country:us/state:az/county:pima#governing", field: "agenda_url", by: "parser:legistar-insite", status: "live", url: URL_OF_LEAD });
   assert.ok(String(fact!.quote).includes("Calendar.aspx"), "the fact keeps the exact line of the saved page");
+  const bank = (await readFieldManual(deps.repos)).store.entries.filter(entry => entry.kind === "PAGE_READ");
+  assert.deepEqual(bank.map(entry => [entry.platforms[0], entry.states[0], entry.outcome, (entry.payload as { published: number }).published]), [["legistar-insite", "az", "YIELDED", 1]], "the win is saved by platform and state");
   assert.equal(first.links, 8, "the board's page and each public sitting's page became leads");
 
   const waiting = await facts.query(`SELECT url, tier, value->>'platform' AS platform, reports->0->>'foundOn' AS found_on FROM work WHERE kind = 'lead' AND status = 'waiting' ORDER BY url`);
@@ -137,8 +140,30 @@ test("every installed parser is found by its folder, and a link's kind of websit
     "https://files.thrillshare.com/documents/a.pdf?x=1", "https://city.gov/AgendaCenter/ViewFile/Agenda/1", "https://city.gov/events.ics", "https://city.gov/about"];
   const inDatabase = PLATFORM_PATTERNS.map(([platform, pattern]) => `WHEN u ~* ${`'${pattern.replaceAll("'", "''")}'`} THEN '${platform}'`).join(" ");
   for (const url of samples) {
-    const [row] = await facts.query(`SELECT CASE ${inDatabase} END AS platform FROM (SELECT $1::text AS u) s`, [url]);
-    assert.equal(row!.platform ?? null, platformOf(url), url);
+    const [row] = await facts.query(`SELECT CASE ${inDatabase} ELSE 'own-site' END AS platform FROM (SELECT $1::text AS u) s`, [url]);
+    assert.equal(row!.platform, platformOf(url), url);
   }
   assert.equal(platformOf("https://files.thrillshare.com/documents/a.pdf?x=1"), "pdf", "a file's own type wins over its host");
+  assert.equal(platformOf("https://city.gov/about"), "own-site", "a government's own page is read by the own-site parser");
+});
+
+test("a person on a page is the one person the matcher finds, in the seat the page gives them, and is not made twice", async t => {
+  const roster = (name: string) => `<html><body><h1>Board of Supervisors</h1><p>${name}, Chair</p></body></html>`;
+  const people: PlatformParser = { platform: "legistar-insite", parse: page => {
+    const name = /<p>(.*), Chair<\/p>/.exec(page.raw)![1]!, quote = `${name}, Chair`, who = { name, ids: [["legistar:pima", "77"] as const] };
+    return { links: [], facts: [
+      { subjectHint: null, person: who, on: "body", field: "member:{person}", fieldKind: "officeholder", value: { name, office: "Chair" }, valueText: name, quote },
+      { subjectHint: null, person: who, field: "name", fieldKind: "officeholder", value: name, valueText: name, quote },
+      { subjectHint: null, person: who, field: "office:{body}", fieldKind: "officeholder", value: "Chair", valueText: "Chair", quote },
+    ] };
+  } };
+  const pages = { [GOVERNMENT_PAGE]: PAGES[GOVERNMENT_PAGE]!.replace("Calendar.aspx", "a").replace(URL_OF_LEAD, "https://pima.legistar.com/a") + `<a href="https://pima.legistar.com/b">b</a>`,
+    "https://pima.legistar.com/a": roster("Jane Roe"), "https://pima.legistar.com/b": roster("Jane Roe") };
+  const { facts, list, run } = await setup(pages, new Map([[people.platform, people]]));
+  t.after(() => facts.pg.close());
+  await list.ensure([productionLead({ url: "https://pima.legistar.com/a" }), productionLead({ url: "https://pima.legistar.com/b" })]);
+  assert.equal((await run()).published, 3, "the second page only confirms what the first said");
+  const rows = await facts.query(`SELECT e.kind, f.field, f.status FROM fact f JOIN entity e ON e.id = f.entity_id ORDER BY e.kind, f.field`);
+  assert.deepEqual(rows.map(row => `${row.kind}:${String(row.field).replace(/:.*/, "")}:${row.status}`), ["body:member:live", "person:name:live", "person:office:live"]);
+  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM entity WHERE id LIKE 'person:az:legistar-pima%'`))[0]!.n), 1, "the same person on two pages is one person");
 });

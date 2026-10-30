@@ -26,8 +26,6 @@ export interface SiteWalkInput {
   /** The existing request/time allowance determines when this pass yields. */
   canRead:()=>boolean;
   frontier?:readonly Frontier[];
-  /** Pages hunters found linked from this government's own pages; they are read before anything else. */
-  leads?:readonly Frontier[];
   saveFrontier:(rows:readonly Frontier[],read:readonly Frontier[])=>Promise<void>;
   plan?:Awaited<ReturnType<typeof planPlaceHunt>>;
 }
@@ -51,9 +49,8 @@ export async function walkPlaceBlanks(input:SiteWalkInput) {
   });
   const families=new Set(blanks.map(blank=>blank.checklistId.split('-')[0]!));
   if(!blanks.length)return {read:0,findings:0,remaining:0,plan};
-  // Pages hunters found precede the homepage, which precedes an interrupted frontier.
+  // The homepage precedes an interrupted frontier.
   const queue=new Map<string,Frontier>();
-  for(const row of input.leads??[])if(!queue.has(row.url))queue.set(row.url,row);
   if(!queue.has(scope.website))queue.set(scope.website,{url:scope.website});
   for(const row of input.frontier??[])if(!queue.has(row.url))queue.set(row.url,row);
   const seen=new Set<string>(),read:Frontier[]=[],failed:Frontier[]=[];

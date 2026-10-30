@@ -16,6 +16,11 @@ import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents } from "../lib/control-plane/repository/pg-store.ts";
 import { JobRunBook } from "../lib/control-plane/job-runs.ts";
+import { REOPEN_BATCH, reopenDeadEnds } from "../lib/core/capability.ts";
+import { DEAD_END_CLOCK_MS } from "../lib/control-plane/workers/hunter-claims.ts";
+import { controlPlaneQuery, workList } from "../lib/core/work.ts";
+import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
+import { installedParsers } from "./lib/installed-parsers.mts";
 import { runResearchLoop } from "../lib/control-plane/scheduler/research-loop.ts";
 import { formatEastern } from "../lib/control-plane/eastern-time.ts";
 import {
@@ -1234,7 +1239,24 @@ const honorFailurePrinted = new Set<string>();
 
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 let hunterLaneChild: ChildProcess | null = null;
+let parsersAnnounced = false, deadEndsAt = 0;
+/**
+ * Dead ends go back on the work list when a reader of their kind of website is new or changed, or their free try came due.
+ * That needs no paid model, so it runs here whenever the standing hunter lane is not doing it.
+ */
+async function keepDeadEnds(): Promise<void> {
+  if (Date.now() - deadEndsAt < DEAD_END_CLOCK_MS) return;
+  const repos = await ownerRepositories();
+  if (repos === null || repos.capabilities === undefined) return;
+  deadEndsAt = Date.now();
+  const at = new Date().toISOString();
+  if (!parsersAnnounced) { await repos.capabilities.record(await installedParsers(), at); parsersAnnounced = true; }
+  const reopened = await reopenDeadEnds(workList(controlPlaneQuery(), { owner: "dead-ends" }), repos.capabilities, await deadEndWaitMs(repos), at);
+  if (reopened) console.log(`  dead ends: ${reopened} went back on the work list`);
+  if (reopened >= REOPEN_BATCH) deadEndsAt = 0;
+}
 async function runHunterLane(deadlineMs: number): Promise<void> {
+  if (!CONTINUOUS_HUNTERS && !canary && !runtimeAdmissionsHeld) await keepDeadEnds();
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
   if (!jobLaunchAllowed("hunter-lane")) return;
   const [run] = await runRuntimeChildren([{

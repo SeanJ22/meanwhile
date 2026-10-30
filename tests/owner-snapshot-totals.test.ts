@@ -757,5 +757,8 @@ test("native assignment heads match full indexes through archive joins, renewed 
     const cold=await reader.read({groups:wanted,workItems:[]},T1),actual=deriveAssignmentEntriesFromHeads(cold.heads,T1);
     assert.deepEqual([...actual.keys()].sort(),[...wanted].sort(),"cold group reads find their saved members beside the source rows");
     for(const id of wanted)assert.deepEqual(actual.get(id),((entry)=>({index:entry.index,horizon:entry.horizon,obligation:entry.obligation}))(expected.get(id)!));
+    assert.deepEqual(cold.owners,[],"requested owners are already held by the fold");
+    await db.query("INSERT INTO cp_owner_assignment_rows(id,members) VALUES('prior-other-state',$1::jsonb)",[JSON.stringify([expected.get(wanted[0])!.members[0]])]);
+    assert.deepEqual((await reader.read({groups:wanted,workItems:[]},T1)).owners,["prior-other-state"],"the database returns additional prior owners once, across every head's membership");
   }finally{await db.close();}
 });

@@ -14,7 +14,7 @@ export interface AssignmentHeadSeeds {
   readonly groups: readonly string[];
   readonly workItems: readonly string[];
 }
-export type AssignmentHeadBatch=Readonly<ReturnType<typeof assignmentHeadBatchFromSources>>&{readonly workItems:readonly WorkItem[]};
+export type AssignmentHeadBatch=Readonly<ReturnType<typeof assignmentHeadBatchFromSources>>&{readonly workItems:readonly WorkItem[];readonly owners:readonly string[]};
 export interface OwnerAssignmentHeads {
   read(seeds: AssignmentHeadSeeds, now: string): Promise<AssignmentHeadBatch>;
 }
@@ -57,7 +57,8 @@ export function storedOwnerAssignmentHeads(get: () => ControlPlaneRepositories):
       workerResults:workerResults.filter(row=>ownedSet.has(row.workItemId)),scoutResults:scoutResults.filter(row=>ownedSet.has(row.workItemId)||attemptSet.has(row.attemptId)),
       dispositions:null,pipeline:null,activation:null,servedReader:null,pilotZips:[],askGapObservations:null});
     const created=new Set(batch.heads.filter(head=>head.kind==="WORK_ITEM").map(head=>head.id));
-    return {...batch,workItems:workItems.filter(row=>created.has(row.id)||ownerReadbackItem(row))};
+    return {...batch,workItems:workItems.filter(row=>created.has(row.id)||ownerReadbackItem(row)),
+      owners:(await repos.ownerAssignmentRows.find({members:[...batch.members.values()].flat()})).filter(id=>!seeds.groups.includes(id))};
   } };
 }
 
@@ -149,6 +150,8 @@ member_keys AS MATERIALIZED (SELECT id,member FROM resolved UNION SELECT value#>
 occurrence_members AS MATERIALIZED (SELECT value#>>'{obligationId}' AS id,value#>>'{workItemId}' AS member,min((value->>'sequence')::int) AS sequence FROM occurrences GROUP BY 1,2),
 members AS MATERIALIZED (SELECT m.id,m.member,row_number() OVER(PARTITION BY m.id ORDER BY o.sequence NULLS LAST,m.member) AS ordinal
   FROM member_keys m LEFT JOIN occurrence_members o USING(id,member)),
+old_owners AS MATERIALIZED (SELECT r.id FROM cp_owner_assignment_rows r
+  WHERE r.members ?| ARRAY(SELECT DISTINCT member FROM members) AND NOT r.id=ANY($1::text[])),
 items AS MATERIALIZED (SELECT m.id,m.member,m.ordinal,w.value FROM members m LEFT JOIN LATERAL
   (SELECT ${workFields("value")} AS value FROM cp_work_items_history WHERE id=m.member ORDER BY revision DESC LIMIT 1) w ON true),
 tasks AS MATERIALIZED (SELECT DISTINCT ON(m.id,t.id) m.id,t.id AS task,t.value,m.ordinal FROM members m
@@ -192,7 +195,7 @@ activity AS MATERIALIZED (
   UNION ALL SELECT m.id,s.at,1 FROM members m CROSS JOIN LATERAL (SELECT record->>'recordedAt' AS at FROM cp_log_scout_results WHERE record#>>'{workItemId}'=m.member OFFSET 0) s
   UNION ALL SELECT a.id,s.at,1 FROM attempts a CROSS JOIN LATERAL (SELECT record->>'recordedAt' AS at FROM cp_log_scout_results WHERE record->>'attemptId'=a.attempt OFFSET 0) s
 )
-SELECT g.id,
+SELECT g.id,CASE WHEN row_number() OVER(ORDER BY g.id)=1 THEN ARRAY(SELECT id FROM old_owners ORDER BY id) END AS owners,
   coalesce((SELECT jsonb_agg(m.member ORDER BY m.ordinal) FROM members m WHERE m.id=g.id),'[]'::jsonb) AS members,
   coalesce((SELECT jsonb_agg(${routing("i.value")} ORDER BY i.ordinal) FROM items i WHERE i.id=g.id AND i.value IS NOT NULL AND (i.member=g.id OR (${ownerReadbackWhere("i.value")}))),'[]'::jsonb) AS items,
   jsonb_strip_nulls(jsonb_build_object(
@@ -226,9 +229,9 @@ LEFT JOIN workers w ON w.attempt=l.attempt ORDER BY g.id`;
 
 export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {
   return { async read(seeds, now) {
-    if (!(seeds.groups.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [] };
+    if (!(seeds.groups.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [], owners: [] };
     const rows = await boundedQuery(sql,{operation:"cp_owner_assignment_rows.heads",callClass:"PAGE"},OWNER_ASSIGNMENT_HEADS_SQL, [seeds.groups,seeds.workItems,now]) as {
-      id: string; members: string[]; items: WorkItem[]; head: Partial<AssignmentHead>;
+      id: string; members: string[]; items: WorkItem[]; head: Partial<AssignmentHead>; owners: string[] | null;
     }[];
     const hydrateAttempt = (value: AssignmentHead["live"][number]["attempt"]) => Object.assign({endedAt:null,outcome:null,abortReason:null},value);
     const heads = rows.map(({id,head}) => {
@@ -240,7 +243,7 @@ export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {
         debt:head.debt?Object.assign({detail:""},head.debt):null,
         live:(head.live??[]).map(row=>({...row,attempt:hydrateAttempt(row.attempt)}))}) as AssignmentHead;
     });
-    return { heads,
+    return { heads, owners:rows.flatMap(row=>row.owners??[]),
       members: new Map(rows.map(row => [row.id,row.members])), workItems: [...new Map(rows.flatMap(row => row.items).map(item => [item.id,item])).values()] };
   } };
 }

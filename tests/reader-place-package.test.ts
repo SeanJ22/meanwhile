@@ -18,6 +18,7 @@ import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { installKeyedRows } from "./helpers/keyed-rows.ts";
+import { insertMeetingFacts } from "./helpers/meeting-fact-rows.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
@@ -98,14 +99,17 @@ async function agendaFixture(t: TestContext) {
   await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Mayor and Council','AZ')",[BODY]);
   await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,$1,$1,$2,$3,'agenda-source')",[SOURCE,AT,"a".repeat(64)]);
   const publish = async(meetings: readonly Meeting[],agendaDocuments: readonly unknown[] = []) => {
-    const payload = {formatVersion:1,generatedAt:AT,meetings,agendaDocuments,sources:[],counts:{fresh:meetings.length,carried:0,total:meetings.length}};
+    const payload = {formatVersion:1,generatedAt:AT,meetings,agendaDocuments:agendaDocuments.map(document=>({ocdId:CITY,...document as object})),sources:[],counts:{fresh:meetings.length,carried:0,total:meetings.length}};
     const encoded = partitionCivicPayload(payload),scope = derivedMeetingFamilyScope("US-AZ");
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'agenda-version') ON CONFLICT(key) DO UPDATE SET payload=excluded.payload",
       [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
+    await db.query(`UPDATE fact SET status='superseded' WHERE status='live' AND entity_id=ANY($1::text[])`,[meetings.map(row=>`meeting:${row.id}`)]);
+    await insertMeetingFacts(db.query,[...new Map(meetings.filter(row=>row.bodyId===BODY).map(row=>[row.id,row])).values()]);
   };
   const fact = async(id: string,field: string,value: unknown,quote = "Saved official page") => {
     await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'meeting','Public hearing','AZ',$2) ON CONFLICT DO NOTHING",[`meeting:${id}`,BODY]);
+    await db.query("UPDATE fact SET status='superseded' WHERE entity_id=$1 AND field=$2 AND status='live'",[`meeting:${id}`,field]);
     await db.query("INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by) VALUES($1,$2,$3,'saved','live','OFFICIAL',1,$4,$5,'fixture')",
       [`meeting:${id}`,field,JSON.stringify(value),quote,AT]);
   };

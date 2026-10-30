@@ -106,28 +106,11 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     rosterPhotos: agendaOnly ? {} : Object.assign({}, ...registries.map(({ value }) => record(value.rosterPhotos))),
   } : null;
 
-  const meetingRows = new Map<string, { header: Row; payload: Row; meetings: Row[]; documents: Row[]; members: Row[]; links: Row[] }>();
-  for (const page of ordered) for (const partition of records(page.row.meeting_rows)) {
-    const source = record(restoreAgendaText(partition.payload, strings(page.row.agenda_texts)));
-    const meetings = records(source.meetings).filter(meeting => meeting.bodyId ? owns(page, meeting.bodyId) : selected.has(String(meeting.ocdId))
-      && strings(page.row.division_ids).includes(String(meeting.ocdId))).map(meeting=>canonicalRow(meeting));
-    const members = records(source.derivedMembers).filter(member => owns(page, member.bodyId)).map(member=>canonicalRow(member));
-    const bodyScope = /^source:[^:]+:body:([^:]+)(?::|$)/.exec(String(partition.scope));
-    const body = bodyScope ? decodeURIComponent(bodyScope[1]!) : null;
-    if (!meetings.length && !members.length && !(body && owns(page, body)) && !String(partition.scope).startsWith("source:derived:family:")) continue;
-    const scope = String(partition.scope), held = meetingRows.get(scope);
-    const ids = new Set(meetings.map(meeting => String(meeting.id)));
-    const docs = input.includeAgenda ? records(source.agendaDocuments).filter(document => ids.has(String(document.meetingId))) : [];
-    const links = input.includeAgenda ? records(source.agendaDocumentLinks).filter(link => ids.has(String(link.meetingId))) : [];
-    if (!held) meetingRows.set(scope, { header: partition, payload: source, meetings, documents: docs, members, links });
-    else {
-      held.header = partition; held.payload = source;
-      held.meetings.push(...meetings); held.documents.push(...docs); held.members.push(...members); held.links.push(...links);
-    }
-  }
-
-  const archivedByPage = new Map(ordered.map(page => [page, records(page.row.archived_meetings).filter(meeting => owns(page, meeting.bodyId)).map(meeting=>canonicalRow(meeting))]));
-  const archived = [...archivedByPage.values()].flat();
+  // A sitting belongs to the page that owns its body; the agenda documents follow the sittings that page holds.
+  const ownedMeetings = ordered.map(page => new Set(records(page.row.sittings).filter(row => owns(page, row.body_id)).map(row => String(row.entity_id).slice("meeting:".length))));
+  const documents = input.includeAgenda ? ordered.flatMap((page, index) => records(restoreAgendaText(page.row.agenda_documents, strings(page.row.agenda_texts)))
+    .filter(row => ownedMeetings[index]!.has(String(row.meetingId)))) : [];
+  const links = input.includeAgenda ? ordered.flatMap(page => records(page.row.agenda_document_links)) : [];
   const last = latest(active)!;
   const allDivisions = unique(pages.flatMap(page => records(page.row.divisions)), row => String(row.ocdId));
   return {
@@ -143,27 +126,8 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     rosters: agendaOnly ? [] : ownRows("rosters", "body_id"),
     comments: ownRows("comments", "entity_id"),
     sittings: ownRows("sittings", "body_id"),
-    meeting_rows: [...meetingRows.values()].map(({ header, payload, meetings, documents, members, links }) => ({
-      ...header,
-      payload: {
-        ...payload,
-        meetings,
-        agendaDocuments: unique(documents, document => String(document.id)),
-        ...(Object.hasOwn(payload, "derivedMembers") ? { derivedMembers: unique(members, member => JSON.stringify([
-          member.bodyId, member.source, member.outcome, member.status, member.id,
-        ])) } : {}),
-        ...(links.length ? { agendaDocumentLinks: unique(links, link => JSON.stringify([link.meetingId, link.documentUrl])) } : {}),
-      },
-    })),
-    archived_meetings: unique(archived, meeting => String(meeting.id)),
-    archived_documents: input.includeAgenda ? unique(ordered.flatMap(page => {
-      const ids = new Set((archivedByPage.get(page) ?? []).map(meeting => String(meeting.id)));
-      return records(restoreAgendaText(page.row.archived_documents, strings(page.row.agenda_texts))).filter(document => ids.has(String(document.meetingId)));
-    }), document => String(document.id)) : [],
-    archived_document_links: input.includeAgenda ? unique(ordered.flatMap(page => {
-      const ids = new Set((archivedByPage.get(page) ?? []).map(meeting => String(meeting.id)));
-      return records(page.row.archived_document_links).filter(link => ids.has(String(link.meetingId)));
-    }), link => JSON.stringify([link.meetingId, link.documentUrl])) : [],
+    agenda_documents: unique(documents, document => String(document.id)),
+    agenda_document_links: unique(links, link => JSON.stringify([link.meetingId, link.documentUrl])),
     agenda_texts: [],
     parts: {},
   };

@@ -12,7 +12,7 @@ import { factDb } from "./helpers/fact-db.ts";
 const NOW = "2026-10-26T06:30:00.000Z", STATE = "AZ";
 const PLACE = "ocd-division/country:us/state:az/school_district:sunnyside_unified_district";
 const GOVERNMENT = "az:school:sunnyside-unified", BODY = `${PLACE}#board`;
-const ADDRESS = "2238 E. Ginter Road, Tucson, AZ 85706";
+const ADDRESS = "2238 E GINTER RD, TUCSON, AZ, 85706";
 const SOURCE = "https://nces.ed.gov/ccd/Data/zip/ccd_lea_029_2324.zip";
 const provenance = { sourceUrl: SOURCE, sourceOrg: "National Center for Education Statistics", collectedAt: NOW, verifiedAt: null };
 
@@ -25,10 +25,10 @@ async function setup(address = ADDRESS) {
   await installKeyedRows(db.pg);
   await db.query("INSERT INTO civic_data_promotions(key,record_class,payload) VALUES($1,'REGISTRATION',$2)", ["REGISTRATION:US-AZ:registration:v1", JSON.stringify({ governments: [{
     id: "government:US-AZ:nces:0408170", jurisdictionId: GOVERNMENT, state: STATE,
-    aliases: [GOVERNMENT], bodyIds: [BODY], name: "Sunnyside Unified School District", officeAddress: address,
+    aliases: [GOVERNMENT], bodyIds: [BODY], name: "Sunnyside Unified School District", officeAddress: address, nativeIds: { nces_leaid: "0408170" },
     mailingAddress: "PO Box 123, Tucson, AZ 85706", website: null, provenance,
   }] })]);
-  const hash = "a".repeat(64), releaseId = SOURCE.split("/").at(-1)!;
+  const hash = "376539484b400c0c6d72d100766dc7acacc8725f464556062e2920b3a9b6a64c", releaseId = SOURCE.split("/").at(-1)!;
   const identity = createHash("sha256").update(`nces-ccd\n${releaseId}\n${SOURCE}`).digest("hex");
   const prefix = `project/freshness/source/nces-ccd/releases/${identity}`, key = `${prefix}/${hash}.bin`;
   const body = new TextEncoder().encode("the existing immutable source archive");
@@ -51,8 +51,7 @@ test("held national physical office fields publish to the owning government thro
     assert.equal(copy.url, SOURCE); assert.ok(String(copy.blob_key).startsWith("release:nces-ccd-directory:")); assert.equal(new Date(String(copy.fetched_at)).toISOString(), NOW);
     assert.ok(reads.every(read => read.endsWith("manifest.json")), "only the manifest, never source archive bytes, leaves the vault");
     const blank = (await db.query("SELECT entity_id,field,next_try_at FROM blank WHERE entity_id=$1",[BODY]))[0]!;
-    // This fixture's archive is not the NCES file the repo keeps, so no row of it can be quoted: the address publishes and a detective gets the reason.
-    assert.deepEqual(await db.query("SELECT entity_id,reason FROM blank WHERE entity_id=$1",[GOVERNMENT]), [{ entity_id: GOVERNMENT, reason: "CHECK_FAILED:NO_EXACT_LINE" }]);
+    assert.deepEqual(await db.query("SELECT entity_id,reason FROM blank WHERE entity_id=$1",[GOVERNMENT]), [], "the address is quoted from the file's own row, so nothing is owed");
     assert.equal(blank.entity_id, BODY); assert.equal(blank.field, "office_address");
     assert.ok(Date.parse(String(blank.next_try_at)) > Date.now());
     const next = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
@@ -139,7 +138,8 @@ test("the supplied NCES directory's exact native row can publish with its origin
     const source = { ...provenance, sourceUrl: "https://nces.ed.gov/ccd/files.asp", collectedAt: NOW };
     await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(jsonb_set(payload,'{governments,0,provenance}',$1),
       '{governments,0,nativeIds}', '{"nces_leaid":"0408170"}')`, [JSON.stringify(source)]);
-    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
+    const week = "2026-08-26T00:00:00.000Z";
+    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: week, clock: () => Date.parse(week), bodyIds: [BODY], more: () => true });
     assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
     assert.equal((await db.query("SELECT value FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]))[0]!.value, address);
     const copy = (await db.query("SELECT url,sha256,blob_key,fetched_at FROM source_copy"))[0]!;
@@ -217,7 +217,7 @@ for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exa
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'sunnyside.example.gov')", [GOVERNMENT]);
     await db.query("UPDATE civic_data_promotions SET payload=$1", [JSON.stringify({ governments: [
       { id: "government:US-AZ:nces:0408170", jurisdictionId: GOVERNMENT, state: STATE, aliases: [GOVERNMENT, `${PLACE}${suffix}`],
-        bodyIds: [subbody], name: "Sunnyside Unified School District", officeAddress: ADDRESS, website: homepage, provenance },
+        bodyIds: [subbody], name: "Sunnyside Unified School District", officeAddress: ADDRESS, website: homepage, provenance, nativeIds: { nces_leaid: "0408170" } },
       { id: neighbor, jurisdictionId: neighbor, state: STATE, aliases: [neighbor], bodyIds: [], name: "Neighbor School District",
         officeAddress: "88 Neighbor Street, Tucson, AZ 85706", website: "https://neighbor.example.gov/", provenance },
     ] })]);

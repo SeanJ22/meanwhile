@@ -2,20 +2,16 @@ import { federalMoneyGovernmentDivision } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { factCommentAccessFromRows } from "../facts/comment-read.ts";
-import { sittingFactsFromRows, withSittingFacts } from "../facts/meeting-read.ts";
+import { meetingsFromFactRows, sittingFactsFromRows } from "../facts/meeting-read.ts";
 import { bodyFieldsFromRows, type BodyFacts } from "../facts/registry-overlay.ts";
 import { factRostersFromRows } from "../facts/roster-read.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "../meetings/sitting-merge.ts";
-import { applyPartitionFreshCheck, confirmationCheckedAt, meetingVersionReadsASource } from "../meetings/fresh-checks.ts";
-import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
-import { stampMeetingDoor } from "../civic-data/fact-door.ts";
-import { accountCarriedCollapses, snapshotCounts, type MeetingsSnapshot, type SnapshotSourceReport } from "../meetings/snapshot.ts";
+import { snapshotCounts, type MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { Division } from "../registry/types.ts";
-import { carriedFromAnswer } from "../meetings/carry-forward.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import type { PublicBodyAttempt } from "../registry/body-attempt-read.ts";
@@ -87,28 +83,11 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
-  const decoded = await parts.loadOwned({rows:row.meeting_rows,archived:row.archived_meetings ?? [],documents:row.archived_documents ?? []},row.parts as Record<string, unknown>) as {
-    rows:{scope: string; payload: MeetingsSnapshot & {agendaDocumentLinks?: AgendaDocumentLink[]}; current_version_id: string; confirmation: string | null}[];
-    archived:Meeting[];documents:MeetingsSnapshot["agendaDocuments"];
-  };
-  const rows = decoded.rows;
+  const decoded = await parts.loadOwned({documents:row.agenda_documents ?? []},row.parts as Record<string, unknown>) as {documents:MeetingsSnapshot["agendaDocuments"]};
   const aliases = row.body_aliases as Record<string,string> | undefined ?? {};
-  const foldedTargets=new Set(Object.values(aliases));
-  const canonicalMeeting = (meeting: Meeting): Meeting => {
-    const id = meeting.bodyId && (aliases[meeting.bodyId] ?? meeting.bodyId);
-    if(!id)return meeting;
-    const bodyName=foldedTargets.has(id) ? names.get(id) ?? meeting.bodyName : canonicalName(id,meeting.bodyName) ?? meeting.bodyName;
-    return id!==meeting.bodyId || bodyName!==meeting.bodyName ? {...meeting,bodyId:id,bodyName} : meeting;
-  };
-  for (const source of rows) {
-    source.payload.meetings = source.payload.meetings.map(canonicalMeeting);
-    if(source.payload.derivedMembers)source.payload.derivedMembers=source.payload.derivedMembers.map(member=>
-      aliases[member.bodyId] ? {...member,bodyId:aliases[member.bodyId]!} : member);
-  }
-  decoded.archived = decoded.archived.map(canonicalMeeting);
   // This response's dictionary shares bytes only; every document regains its exact text before composition.
   const agendaTexts = row.agenda_texts as readonly string[] | undefined ?? [];
-  for (const document of [...rows.flatMap(row => row.payload.agendaDocuments),...decoded.documents]) {
+  for (const document of decoded.documents) {
     const text = document.text as unknown;
     if (!text || typeof text !== "object" || !("$readerAgendaText" in text)) continue;
     const index = (text as { $readerAgendaText: unknown }).$readerAgendaText;
@@ -116,73 +95,25 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
       throw new Error("READER_AGENDA_TEXT_MISSING");
     document.text = agendaTexts[index];
   }
-  if (!input.includeAgenda) {
-    for (const r of rows) r.payload.agendaDocuments = [];
-    decoded.documents = [];
-  }
-  const selected = new Set(entities.map(e => String(e.id))), scopes = new Set(rows.map(r => r.scope));
-  const byBody = new Map<string, MeetingsSnapshot[]>();
-  const agendaDocumentLinks: AgendaDocumentLink[] = [];
-  const snapshots = rows.flatMap(r => {
-    const retired = RETIRED_MEETING_ROUTES.find(route => r.scope === `source:${encodeURIComponent(route.meetingSource)}:body:${encodeURIComponent(route.bodyId)}`);
-    if (retired && (retired.successorAlreadyWired || scopes.has(`source:${encodeURIComponent(retired.replacedBy)}:body:${encodeURIComponent(retired.bodyId)}`))) return [];
-    const family = r.scope.startsWith("source:derived:family:");
-    const owned = r.payload.meetings.filter(m => (m.bodyId && selected.has(m.bodyId)) || (!m.bodyId && m.ocdId && divisionIds.includes(m.ocdId)));
-    const ids = new Set(owned.map(m => m.id));
-    agendaDocumentLinks.push(...r.payload.agendaDocumentLinks?.filter(link => ids.has(link.meetingId)) ?? []);
-    const confirmation = r.confirmation ? parseUnchangedConfirmation(r.confirmation) : null;
-    const checked = confirmationCheckedAt(confirmation,r.current_version_id,meetingVersionReadsASource(r.payload.sources));
-    const scope = /^source:([^:]+):body:([^:]+)(:route:[a-f0-9]{16})?(?::history)?$/.exec(r.scope);
-    const sources = family ? familySources(r.payload,owned,selected) : r.payload.sources;
-    const own = {...r.payload,sources,meetings:owned,agendaDocuments:r.payload.agendaDocuments.filter(d => ids.has(d.meetingId))};
-    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}${scope[3] ?? ""}` : r.scope,derivedFamily:family||scope?.[1]?.startsWith("derived~") ? state : null},applyPartitionFreshCheck(own,checked));
-    const owners = family ? [...new Set([...owned.flatMap(m => m.bodyId ?? []),...r.payload.derivedMembers?.filter(m => selected.has(m.bodyId)).map(m => m.bodyId) ?? []])]
-      : scope ? [decodeURIComponent(scope[2]!)] : [];
-    for (const bodyId of owners) {
-      const meetings = stamped.meetings.filter(m => m.bodyId === bodyId), ids = new Set(meetings.map(m => m.id));
-      const source = {...stamped,meetings,sources:family ? familySources(r.payload,meetings,new Set([bodyId])) : stamped.sources,
-        agendaDocuments:stamped.agendaDocuments.filter(d => ids.has(d.meetingId))};
-      byBody.set(bodyId,[...byBody.get(bodyId) ?? [],source]);
-    }
-    return [stamped];
-  });
-  const liveIds = new Set(snapshots.flatMap(s => s.meetings.flatMap(m => [m.id,...m.mergedMeetingIds ?? []])));
-  const archived = decoded.archived.filter(m => !liveIds.has(m.id));
-  if (archived.length) {
-    const ids = new Set(archived.map(m => m.id));
-    agendaDocumentLinks.push(...((row.archived_document_links ?? []) as AgendaDocumentLink[]).filter(link => ids.has(link.meetingId)));
-    const snapshot: MeetingsSnapshot = {formatVersion:1,generatedAt:archived.map(m => m.provenance.collectedAt).sort().at(-1)!,
-      meetings:archived,agendaDocuments:decoded.documents.filter(d => ids.has(d.meetingId)),sources:[],counts:snapshotCounts(archived,0)};
-    snapshots.push(snapshot);
-    for (const bodyId of new Set(archived.flatMap(m => m.bodyId ?? []))) {
-      const meetings = archived.filter(m => m.bodyId === bodyId), ids = new Set(meetings.map(m => m.id));
-      byBody.set(bodyId,[...byBody.get(bodyId) ?? [],{...snapshot,meetings,agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}]);
-    }
-  }
-  const exact = collapseDuplicateSittings(snapshots.flatMap(s => s.meetings),mergeDuplicateSittingFields);
+  if (!input.includeAgenda) decoded.documents = [];
+  const agendaDocumentLinks = (row.agenda_document_links ?? []) as AgendaDocumentLink[];
+  const bodyOf = new Map(bodies.map(body => [body.id,body]));
+  const held = meetingsFromFactRows(rawSittings, id => {
+    const body = bodyOf.get(id);
+    return { name: names.get(id) ?? body?.name ?? id, ocdId: body?.division.startsWith("ocd-division/") ? body.division : null, jurisdiction: body?.government ?? "Local" };
+  }, new Date());
+  const hiddenRetired = (meeting: Meeting) => RETIRED_MEETING_ROUTES.some(route => meeting.bodyId === route.bodyId && meeting.id.startsWith(`${route.meetingSource}:`)
+    && (route.successorAlreadyWired || held.some(other => other.bodyId === route.bodyId && other.id.startsWith(`${route.replacedBy}:`))));
+  const exact = collapseDuplicateSittings(held.filter(meeting => !hiddenRetired(meeting)),mergeDuplicateSittingFields);
   const merged = mergeReaderSittings(exact.rows), meetings = merged.rows;
-  const heldIds = new Set(meetings.flatMap(m => [m.id,...m.mergedMeetingIds ?? []]));
-  // An independently published sitting is visible even before its calendar's next refresh.
-  const fresh = new Map<string, Row[]>();
-  for (const fact of rawSittings) {
-    const id = String(fact.entity_id).slice("meeting:".length);
-    if (!heldIds.has(id)) fresh.set(id,[...fresh.get(id) ?? [],fact]);
-  }
-  for (const [id,facts] of fresh) {
-    const title = facts.find(f => f.field === "title"), start = facts.find(f => f.field === "starts_at");
-    if (!title || !start) continue;
-    const date = start.value as { startsAt: string; timeZone: string; precision?: "DAY" | "MINUTE" };
-    const sourceUrl = String(title.url), at = new Date(title.checked_at as string).toISOString();
-    meetings.push({ id,bodyId: String(title.body_id),bodyName: String(title.body_name),ocdId: String(title.body_id).startsWith("ocd-division/") ? String(title.body_id).split("#")[0]! : null,
-      title: String(title.value),startsAt: date.startsAt,timeZone: date.timeZone,...(date.precision ? { startPrecision: date.precision } : {}),location: null,agendaUrl: null,
-      jurisdiction: "Local",status: "SCHEDULED",provenance: { sourceUrl,sourceOrg: new URL(sourceUrl).hostname,collectedAt: at,verifiedAt: at } });
-  }
-  const overlaid = withSittingFacts(meetings,[...sittings.values()].flat()).sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
-  const accounting = accountCarriedCollapses(snapshots,snapshots.flatMap(s => s.sources),[...exact.dropped,...merged.dropped]);
-  const snapshotHeldAt = snapshots.map(s => s.generatedAt).sort().at(-1) ?? null;
+  const overlaid = meetings.sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
+  const heldAt = rawSittings.filter(fact => fact.field === "title").map(fact => new Date(fact.checked_at as string).toISOString()).sort().at(-1) ?? null;
+  const agendaDocuments = decoded.documents.map(d => ({...d,meetingId:merged.aliases.get(d.meetingId) ?? d.meetingId}));
+  const duplicates = exact.dropped.length + merged.dropped.length;
+  const snapshotHeldAt = heldAt;
   // The placeholder only satisfies the snapshot shape for the search; readers get `snapshotHeldAt`.
   const snapshot: MeetingsSnapshot = { formatVersion: 1,generatedAt: snapshotHeldAt ?? new Date(0).toISOString(),
-    counts: snapshotCounts(overlaid,accounting.freshCollapsed),sources: [...accounting.sources],meetings: overlaid,agendaDocuments: snapshots.flatMap(s => s.agendaDocuments).map(d => ({...d,meetingId:merged.aliases.get(d.meetingId) ?? d.meetingId})) };
+    counts: snapshotCounts(overlaid,duplicates),sources: [],meetings: overlaid,agendaDocuments };
   // A published calendar names its body independently of the reviewed registry.
   // Use that source only where an independently published body-name fact is absent.
   for (const body of bodies) {
@@ -202,10 +133,10 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
       ocdId:named.ocdId ?? (body.division.startsWith("ocd-division/") ? body.division : null)});
   }
   const bodySnapshots = Object.fromEntries(bodies.map(body => {
-    const meetings = overlaid.filter(m => m.bodyId === body.id), ids = new Set(meetings.map(m => m.id)), sources = byBody.get(body.id) ?? [];
-    const accounting = accountCarriedCollapses(sources,sources.flatMap(s => s.sources),[...exact.dropped,...merged.dropped].filter(m => m.bodyId === body.id));
-    return [body.id,{...snapshot,generatedAt:sources.map(s => s.generatedAt).sort().at(-1) ?? snapshot.generatedAt,meetings,
-      counts:snapshotCounts(meetings,accounting.freshCollapsed),sources:[...accounting.sources],agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
+    const meetings = overlaid.filter(m => m.bodyId === body.id), ids = new Set(meetings.map(m => m.id));
+    const checked = rawSittings.filter(fact => fact.body_id === body.id && fact.field === "title").map(fact => new Date(fact.checked_at as string).toISOString()).sort().at(-1);
+    return [body.id,{...snapshot,generatedAt:checked ?? snapshot.generatedAt,meetings,
+      counts:snapshotCounts(meetings,[...exact.dropped,...merged.dropped].filter(m => m.bodyId === body.id).length),agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
   return { registry,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
@@ -214,23 +145,4 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     agendaDocumentLinks:agendaDocumentLinks.map(link => ({...link,meetingId:merged.aliases.get(link.meetingId) ?? link.meetingId})),
     governments,
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };
-}
-
-/** A state family's source outcomes are attributed only to the bodies this place includes. */
-function familySources(snapshot: MeetingsSnapshot,meetings: readonly Meeting[],bodyIds: ReadonlySet<string>): SnapshotSourceReport[] {
-  const members = snapshot.derivedMembers?.filter(m => bodyIds.has(m.bodyId));
-  if (!members) return meetings.length ? snapshot.sources : [];
-  return members.flatMap(member => {
-    const own = meetings.filter(m => m.bodyId === member.bodyId && (m.carried?.source ?? m.id.split(":")[0]) === member.source);
-    const fresh = own.filter(m => !m.carried).length;
-    const answered = own.filter(m => m.carried && carriedFromAnswer(m.carried.reason)).length;
-    const walled = own.filter(m => m.carried && !carriedFromAnswer(m.carried.reason)).length;
-    const drops = {placeless:0,unknownVenue:0,unplaceableInTime:0,notConfigured:0};
-    return [
-      ...(member.outcome === "FRESH" || fresh || answered ? [{source:member.source,ok:true,error:null,fetched:fresh,normalized:fresh,drops,...(answered ? {carriedForward:answered} : {})}] : []),
-      ...(member.outcome !== "FRESH" || walled ? [{source:member.source,ok:false,error:member.detail ?? `${member.bodyId}: the last verified sittings are held`,failure:"WALL" as const,
-        fetched:0,normalized:0,drops,...(walled ? {carriedForward:walled} : {}),
-        unreachableOcdIds:[...new Set([...own.flatMap(m => m.ocdId ?? []),...(member.bodyId.startsWith("ocd-division/") ? [member.bodyId.split("#")[0]!] : [])])]}] : []),
-    ];
-  });
 }

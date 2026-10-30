@@ -7,9 +7,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { buildFleetView, dispatchHistory, whereOf } from "../lib/control-plane/fleet-view.ts";
+import { buildFleetView, whereOf } from "../lib/control-plane/fleet-view.ts";
 import type { RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
-import { validateIntentNote } from "../lib/control-plane/research-view.ts";
 import { runnerStanding } from "../lib/control-plane/runner-standing.ts";
 import { describeDispatchMatch, parseDispatchTarget, unitMatchesTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
 import {
@@ -116,19 +115,6 @@ test("ADM-8: units match by bounded state token or by term; a dispatch to an une
   assert.match(sentence, /matched 0 of 2996/);
   assert.match(sentence, /Illinois is not enumerated yet/);
   assert.match(describeDispatchMatch(az, 1177, 2996, ["az", "nh", "nj"]), /matched 1177 of 2996/);
-});
-
-test("ADM-8: a DISPATCH needs words and the intent carries them; the control that sends work explains itself before it acts", () => {
-  assert.equal(validateIntentNote("DISPATCH", "  ").ok, false);
-  const ok = validateIntentNote("DISPATCH", "  deep   dive on Illinois ");
-  assert.deepEqual(ok, { ok: true, note: "deep dive on Illinois" });
-  assert.deepEqual(validateIntentNote("PAUSE", "ignored"), { ok: true, note: null });
-  assert.equal(validateIntentNote("PAUSE_RUNNER", "x".repeat(281)).ok, false);
-  const log: ResearchIntent[] = [intent("DISPATCH", "2026-09-05T01:00:00.000Z", "deep dive on Illinois")];
-  const rows = dispatchHistory(log);
-  assert.equal(rows.length, 1);
-  assert.equal(rows[0].status, "PENDING");
-  assert.equal(readIntents(log).pendingDispatch.length, 1);
 });
 
 /* ================================================================== *

@@ -5,16 +5,7 @@
  * gap, and their prose is reachable only through `readNonAuthoritativeProse()`.
  */
 
-import {
-  CLAIM_CLASS_LETTER,
-  currentTruthFor,
-  findClaim,
-  staleDependents,
-  type ClaimClass,
-  type ClaimProvenance,
-  type ClaimValidation,
-  type MethodClaim,
-} from "./claims.ts";
+import { CLAIM_CLASS_LETTER, currentTruthFor, staleDependents, type ClaimClass, type ClaimProvenance, type ClaimValidation, type MethodClaim } from "./claims.ts";
 import {
   applicableRoutesUnprojected,
   type MethodKnowledge,
@@ -302,80 +293,3 @@ export function projectMethodFor(k: MethodKnowledge, j: Jurisdiction): MethodPro
   };
 }
 
-/** Every substantive sentence a worker inheriting this projection may act on. */
-export function substantiveAssertions(p: MethodProjection): ProjectedAssertion[] {
-  return p.routes.flatMap((r) => r.substantive);
-}
-
-/** Does this projection offer this route at all? */
-export function projectionHasRoute(p: MethodProjection, routeId: string): boolean {
-  return p.routes.some((r) => r.identity.id === routeId);
-}
-
-/** The routes whose substantive prose nobody has classified, with the named gap. */
-export function legacyUnclassifiedRoutes(
-  p: MethodProjection,
-): Array<{ id: string; namedGap: string }> {
-  return p.routes
-    .filter((r) => r.legacyUnclassified)
-    .map((r) => ({ id: r.identity.id, namedGap: r.namedGap as string }));
-}
-
-/** The prose, which is not authority: for classifying a legacy entry, quoting a route, or an audit. */
-export interface NonAuthoritativeProse {
-  routeId: string;
-  /** Literal `false`. It is a field so that a consumer can be made to see it. */
-  authoritative: false;
-  warning: string;
-  applicabilityNote: string;
-  origin: string;
-  outcomeNotes: string[];
-  subBranchReasons: string[];
-  retiredReason: string | null;
-}
-
-export function readNonAuthoritativeProse(
-  k: MethodKnowledge,
-  routeId: string,
-): NonAuthoritativeProse | null {
-  const r = k.routes.find((x) => x.id === routeId);
-  if (!r) return null;
-  return {
-    routeId,
-    authoritative: false,
-    warning:
-      "NOT AUTHORITY. This is unclassified free text from the method store. It may hold a " +
-      "coverage claim or a conclusion about a government that nobody declared, evidenced or " +
-      "retracted. Classify it before any later session is allowed to act on it.",
-    applicabilityNote: r.applicability.note,
-    origin: r.origin,
-    outcomeNotes: r.outcomes.map((o) => o.note ?? "").filter((n) => n.length > 0),
-    subBranchReasons: r.subBranches.map((b) => b.reason),
-    retiredReason: r.retiredReason ?? null,
-  };
-}
-
-/** What a consumer is handed when it asks about one assertion by id: the current truth for it. */
-export function inheritedTruthFor(
-  k: MethodKnowledge,
-  id: string,
-): { id: string; inheritable: boolean; currentStatement: string | null; why: string } {
-  const t = currentTruthFor(k, id);
-  const located = findClaim(k, id);
-  const stale = new Set(staleDependents(k).map((f) => f.dependent));
-
-  if (t.status === "CURRENT" && located) {
-    const refusal = SUBSTANTIVE_CLASSES.includes(located.claim.class)
-      ? withholdingReason(located.claim, stale)
-      : null;
-    if (refusal) {
-      return { id, inheritable: false, currentStatement: null, why: `${refusal.reason}: ${refusal.why}` };
-    }
-  }
-  return {
-    id,
-    inheritable: t.status === "CURRENT" && Boolean(t.claim),
-    currentStatement: t.claim?.statement ?? null,
-    why: t.why,
-  };
-}

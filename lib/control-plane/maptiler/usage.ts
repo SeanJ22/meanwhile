@@ -1,4 +1,3 @@
-import { KEY_MATRIX, type KeyIdentityName } from "../../map/key-matrix.ts";
 import type { MapTilerClassifier, MapTilerGroup } from "./types.ts";
 import { DEFAULT_MAPTILER_ALLOWANCE, MAPTILER_USAGE_FORMAT_VERSION, type MapTilerUsageDay, type MapTilerUsageSnapshot } from "./types.ts";
 import type { MapTilerTimeline } from "./client.ts";
@@ -64,87 +63,6 @@ export function normalizeTimeline(input: {
     throw new Error("MAPTILER_TIMELINE_EMPTY: no day row was measured or estimated");
   }
   return rows;
-}
-
-export type KeyExpectation =
-  | "PUBLIC_PRODUCTION"
-  | "OWNER_MANUAL_STAGING"
-  | "BOUNDED_SMOKE"
-  | "UNCLASSIFIED";
-
-const EXPECTATION_BY_IDENTITY: Readonly<Record<string, KeyExpectation>> = {
-  "meanwhile-prod-browser": "PUBLIC_PRODUCTION",
-  "meanwhile-staging-browser": "OWNER_MANUAL_STAGING",
-  "meanwhile-synthetic-provider-smoke": "BOUNDED_SMOKE",
-};
-
-/** Exact, case-insensitive match on the identity name; deliberately not fuzzy. Anything unrecognised is UNCLASSIFIED. */
-export function classifyKeyLabel(label: string): {
-  readonly identity: KeyIdentityName | "UNCLASSIFIED";
-  readonly expectation: KeyExpectation;
-} {
-  const normalized = label.trim().toLowerCase();
-  for (const identity of KEY_MATRIX) {
-    if (identity.name === "none") continue;
-    if (identity.name.toLowerCase() === normalized) {
-      return { identity: identity.name, expectation: EXPECTATION_BY_IDENTITY[identity.name] };
-    }
-  }
-  return { identity: "UNCLASSIFIED", expectation: "UNCLASSIFIED" };
-}
-
-export interface BurnReading {
-  /** Mean requests per day over the window below. */
-  readonly perDay: number;
-  readonly windowDays: number;
-  readonly windowSince: string;
-  readonly windowUntil: string;
-  /** The date the allowance runs out at this rate, or null when it does not. */
-  readonly exhaustionDate: string | null;
-  readonly says: string;
-}
-
-function addDays(iso: string, days: number): string {
-  const date = new Date(`${iso}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + days);
-  return date.toISOString().slice(0, 10);
-}
-
-/** Measured days only: the provider's projection must not be an input to itself. */
-export function burnFrom(input: {
-  readonly days: readonly MapTilerUsageDay[];
-  readonly remaining: number | null;
-  readonly windowDays: number;
-}): BurnReading | null {
-  const byDate = new Map<string, number>();
-  for (const day of input.days) {
-    if (day.classifier !== "api_keys" || day.group !== "request" || day.estimated) continue;
-    byDate.set(day.date, (byDate.get(day.date) ?? 0) + day.count);
-  }
-  const dates = [...byDate.keys()].sort();
-  if (dates.length === 0) return null;
-
-  const window = dates.slice(-input.windowDays);
-  const total = window.reduce((n, d) => n + (byDate.get(d) ?? 0), 0);
-  const perDay = total / window.length;
-  const windowSince = window[0];
-  const windowUntil = window[window.length - 1];
-
-  let exhaustionDate: string | null = null;
-  if (input.remaining !== null && perDay > 0) {
-    exhaustionDate = addDays(windowUntil, Math.max(0, Math.floor(input.remaining / perDay)));
-  }
-
-  const says =
-    perDay === 0
-      ? `No measured requests in the ${window.length} day(s) to ${windowUntil}.`
-      : `${Math.round(perDay).toLocaleString("en-US")} request(s) a day over the ${window.length} ` +
-        `day(s) to ${windowUntil}` +
-        (exhaustionDate === null
-          ? ", with no confirmed allowance to run out of."
-          : `. At that rate the allowance runs out on ${exhaustionDate}.`);
-
-  return { perDay, windowDays: window.length, windowSince, windowUntil, exhaustionDate, says };
 }
 
 function measuredSnapshotIssue(snapshot: MapTilerUsageSnapshot): string | null {

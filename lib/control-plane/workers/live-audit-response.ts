@@ -3,9 +3,7 @@
  */
 import { newFieldManualEntry, type FieldManualEntry } from "../field-manual.ts";
 import type { AuditCorrection } from "../admin-view/v6-audit-read.ts";
-import type { WorkItem } from "../work-item.ts";
 import type { LiveAuditResult } from "./live-audit.ts";
-import type { WorkerResultRecord } from "./types.ts";
 
 /** Where a published fact came from: the work that owns it and the extraction that produced it. */
 export interface FactOrigin {
@@ -100,30 +98,3 @@ export function fixedAfterReaudit(corrections: readonly AuditCorrection[], resul
   return out;
 }
 
-/**
- * Trace a published reader member back to the work item and extraction that published it, from the
- * publication outcomes the work items already carry (`recordChanges` ties each reader ID to its
- * extraction record). Null when no work item admitted that member.
- */
-export function originFromPublications(input: {
-  readonly items: readonly WorkItem[];
-  readonly parsers: readonly WorkerResultRecord[];
-  /** The published reader member ID (the part of the fact ID after the family). */
-  readonly memberId: string;
-  readonly host: string;
-  readonly platform: string | null;
-}): FactOrigin | null {
-  for (const item of input.items) {
-    const outcome = item.publicationOutcome;
-    const changes = outcome?.recordChanges?.filter((c) => c.readerId === input.memberId) ?? [];
-    if (!outcome || outcome.status === "HELD" || changes.length === 0) continue;
-    const parser = input.parsers.find((r) => r.id === outcome.workerResultId && r.result.role === "PARSER");
-    if (!parser || parser.result.role !== "PARSER") continue;
-    const plan = item.autonomousPlan;
-    return { workItemId: item.id, parserResultId: parser.id, parserAttemptId: parser.result.attemptId,
-      extractionRecordIds: changes.map((c) => c.recordId), platform: input.platform,
-      recordClass: plan?.contract.recordClass ?? "UNKNOWN",
-      state: plan?.contract.schemaVersion === 2 ? plan.contract.jurisdiction.state : null, host: input.host };
-  }
-  return null;
-}

@@ -5,7 +5,6 @@ import { receiptIdFor, type ActionReceipt } from "../gateway/contract.ts";
 import { canonicalJson } from "../repository/types.ts";
 
 export const ACTION_HISTORY_PROJECTION_VERSION = 1 as const;
-export const ACTION_HISTORY_MAX_PAGE = 50;
 export type ProjectedActionKind = "global-runner-pause" | "global-runner-resume";
 export type UnmappedReason = "VALIDATED_ACTION_UNAVAILABLE" | "LEGACY_ACTION_UNCLASSIFIED" |
   "SCOPE_SET_V6_KIND_UNPROVEN";
@@ -72,46 +71,3 @@ export function prepareActionHistoryProjection(input: CommittedReceiptEvidence):
     scopeRefs: [], targetRef: null, targetLabel: null };
 }
 
-export type ProjectionReadiness = { readonly status: "READY" | "INCOMPLETE";
-  readonly throughPosition: number; readonly sourceCount: number; readonly projectedCount: number;
-  readonly sourceSetHash: string };
-export type ProjectionPageQuery = { readonly scopeKey: string; readonly instructionReceiptId?: string | null;
-  readonly afterPosition?: number | null; readonly limit?: number };
-export type ProjectionPage = { readonly available: boolean; readonly reason: string | null;
-  readonly rows: readonly ActionHistoryProjection[]; readonly nextPosition: number | null;
-  /** Null while any source receipt lacks a provable scope, even if the source window itself is complete. */
-  readonly total: number | null };
-
-export function actionHistorySourceSetHash(rows: readonly Pick<ActionHistoryProjection, "sourcePosition" | "gatewayReceiptId">[]): string {
-  const pairs = rows.map(row => [row.sourcePosition, row.gatewayReceiptId] as const)
-    .sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));
-  return createHash("sha256").update(JSON.stringify(pairs)).digest("hex");
-}
-
-/** Pure reader for a proven complete source window. Never turns missing rows into a zero total. */
-export function selectActionHistoryProjection(
-  rows: readonly ActionHistoryProjection[], readiness: ProjectionReadiness | null, query: ProjectionPageQuery,
-): ProjectionPage {
-  if (!readiness || readiness.status !== "READY" || readiness.sourceCount !== readiness.projectedCount ||
-    !Number.isSafeInteger(readiness.throughPosition) || readiness.throughPosition < 0 ||
-    readiness.projectedCount !== rows.length || new Set(rows.map(row => row.gatewayReceiptId)).size !== rows.length ||
-    new Set(rows.map(row => row.sourcePosition)).size !== rows.length ||
-    readiness.sourceSetHash !== actionHistorySourceSetHash(rows))
-    return { available: false, reason: "PROJECTION_NOT_COMPLETE", rows: [], nextPosition: null, total: null };
-  if (!validId(query.scopeKey) || (query.instructionReceiptId !== undefined && query.instructionReceiptId !== null &&
-    !validId(query.instructionReceiptId)) || (query.afterPosition !== undefined && query.afterPosition !== null &&
-    (!Number.isSafeInteger(query.afterPosition) || query.afterPosition < -1))) throw new Error("INVALID_HISTORY_PROJECTION_QUERY");
-  if (query.scopeKey !== "us" && !query.instructionReceiptId) throw new Error("INSTRUCTION_RECEIPT_REQUIRED");
-  const limit = Number.isInteger(query.limit) ? Math.max(1, Math.min(ACTION_HISTORY_MAX_PAGE, query.limit!)) : ACTION_HISTORY_MAX_PAGE;
-  const matching = rows.filter(row => row.sourcePosition <= readiness.throughPosition &&
-    row.scopeRefs.some(ref => ref.scopeKey === query.scopeKey &&
-      (query.instructionReceiptId === undefined || query.instructionReceiptId === null ||
-        ref.instructionReceiptId === query.instructionReceiptId)))
-    .sort((a, b) => a.sourcePosition - b.sourcePosition || a.gatewayReceiptId.localeCompare(b.gatewayReceiptId));
-  const after = query.afterPosition ?? -1;
-  const visible = matching.filter(row => row.sourcePosition > after);
-  const page = visible.slice(0, limit);
-  return { available: true, reason: null, rows: page,
-    nextPosition: visible.length > page.length ? page.at(-1)!.sourcePosition : null,
-    total: rows.some(row => row.scopeRefs.length === 0) ? null : matching.length };
-}

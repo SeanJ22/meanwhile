@@ -1,6 +1,8 @@
 import { normalizeText, type Claim, type FieldKind, type SavedCopy } from "./check.ts";
-import { door, type Decision, type DoorInput, type DoorOutcome } from "../core/door.ts";
-import { enqueueReaderPlaces, type ReaderCachePurger } from "../reader/cache.ts";
+import { door, holdUnchecked, type Decision, type DoorInput, type DoorOutcome } from "../core/door.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
+import { resolveId } from "../core/resolve.ts";
+import { canonicalSubject } from "./entities.ts";
 import { recordFactConfirmation } from "./confirmation.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
@@ -49,37 +51,46 @@ const failureDetail = (c: Pick<PublishInput, "copy" | "fieldKind" | "provenance"
   JSON.stringify({ sourceUrl: c.copy.finalUrl, copyId: c.copy.id, fieldKind: c.fieldKind, provenance: c.provenance,
     value: c.value, valueText: c.valueText, quote: c.quote, producedBy: c.producedBy });
 
+/**
+ * A fact that failed its check never goes live: its blank opens with the reason for a detective. A fact checked on a saved line
+ * (`checked`) also moves this producer's live fact for the field that was published unchecked to held with the reason, so readers
+ * stop seeing it; it stays in history.
+ */
+async function failedCheck(db: FactDb, input: DoorInput, reason: string, clocks: Clocks, checked: boolean, purge?: ReaderCachePurger): Promise<void> {
+  let changed: ReaderCacheScope | undefined;
+  await db.transaction(async query => {
+    const requested = input.entity?.id ?? input.subjectId!;
+    const entityId = await resolveId(requested, query) ?? await canonicalSubject(query, requested);
+    if (!(await query("SELECT 1 FROM entity WHERE id=$1", [entityId])).length) return;
+    await openBlank(query, { entityId, field: input.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
+      detail: failureDetail(input), retryMinutes: clocks.retryMinutes(input.fieldKind) });
+    if (!checked || !await holdUnchecked(query, { entityId, field: input.field, producedBy: input.producedBy, reason: `CHECK_FAILED:${reason}` })) return;
+    await enqueueReaderPlaces({ entities: [entityId] }, query);
+    changed = await readerCacheScopeForEntity(query, entityId);
+  });
+  if (changed) await invalidateReaderCache(changed, purge, null);
+}
+
+/** A fact checked on a saved line is tried twice before it goes to a detective; any other is tried once. */
+async function settle(db: FactDb, input: DoorInput, run: () => Promise<DoorOutcome>, checked: boolean, clocks: Clocks, purge?: ReaderCachePurger): Promise<DoorOutcome> {
+  let outcome: DoorOutcome = { refused: "NO_EXACT_LINE" };
+  for (let attempt = 0; attempt < (checked ? 2 : 1) && "refused" in outcome && outcome.refused !== "SUBJECT_NOT_FOUND"; attempt++) outcome = await run();
+  if ("refused" in outcome) await failedCheck(db, input, outcome.refused, clocks, checked, purge);
+  return outcome;
+}
+
 /** Older callers retain their blank result; every fact is written by the same door. */
 export async function publishClaim(db: FactDb, input: PublishInput, clocks: Clocks, now = new Date(),
   options: { readonly purge?: ReaderCachePurger } = {}): Promise<PublishOutcome> {
-  const outcome = await door(db, input, clocks, now, { ...options, refusal: async (claim, reason) => {
-    if (reason === "SUBJECT_NOT_FOUND") return;
-    await db.transaction(query => openBlank(query, { entityId: claim.entity.id, field: claim.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
-      detail: failureDetail(claim), retryMinutes: clocks.retryMinutes(claim.fieldKind) }));
-  } });
+  const outcome = await settle(db, input, () => door(db, input, clocks, now, options), input.acquisition === "checked", clocks, options.purge);
   return "refused" in outcome ? { blank: outcome.refused } : outcome;
 }
 
-/**
- * A loader's fact is checked at `line`, the text of its saved copy that shows the value. A fact whose line cannot be found, or that
- * the check refuses, still publishes as the loader sends it (no loader stops), and its blank opens with the reason so a detective sees it.
- */
-export async function publishLoaded(db: FactDb, input: DoorInput, line: { readonly quote: string; readonly valueText: string } | null,
+/** A switched loader's fact is checked at the line of its saved copy that `find` returns, and never goes live unchecked: the lookup and the check run once more, then a detective gets it. */
+export function publishLoaded(db: FactDb, input: DoorInput, find: () => { readonly quote: string; readonly valueText: string } | null,
   clocks: Clocks, now: Date, options: { readonly purge?: ReaderCachePurger } = {}): Promise<DoorOutcome> {
-  let reason = "NO_EXACT_LINE";
-  if (line) {
-    const checked = await door(db, { ...input, ...line, acquisition: "checked" }, clocks, now, options);
-    if (!("refused" in checked)) return checked;
-    reason = checked.refused;
-  }
-  const outcome = await door(db, { ...input, acquisition: "loader" }, clocks, now, options);
-  if ("refused" in outcome || outcome.factId === null) return outcome;
-  await db.transaction(async query => {
-    const [fact] = await query("SELECT entity_id,field FROM fact WHERE id=$1", [outcome.factId]);
-    await openBlank(query, { entityId: String(fact!.entity_id), field: String(fact!.field), stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
-      detail: failureDetail(input), retryMinutes: clocks.retryMinutes(input.fieldKind) });
-  });
-  return outcome;
+  return settle(db, input, async () => { const line = find(); return line ? door(db, { ...input, ...line, acquisition: "checked" }, clocks, now, options) : { refused: "NO_EXACT_LINE" }; },
+    true, clocks, options.purge);
 }
 
 /** A source recheck records its exact live fact versions together. */

@@ -139,7 +139,7 @@ export async function makeCensusGoverningBodies(input: {
             if (written === null) continue;
             const outcome = await publishLoaded(db, { subjectId: board.subject, field, fieldKind: "contact", value: written, valueText: written, quote: row!,
               provenance: "OFFICIAL", producedBy: `census-governing:${state.toUpperCase()}`, costUsd: 0, copy },
-            { quote: row!, valueText: written }, input.clocks, new Date(), { purge });
+            () => ({ quote: row!, valueText: written }), input.clocks, new Date(), { purge });
             if ("refused" in outcome) report.refused[outcome.refused] = (report.refused[outcome.refused] ?? 0) + 1;
             else if (outcome.decision === "PUBLISH") report.live++;
             else if (outcome.decision === "CONFIRM") report.confirmed++;

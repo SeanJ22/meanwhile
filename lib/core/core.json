@@ -13,6 +13,7 @@
     "blank": {
       "writers": [
         "lib/core/door.ts",
+        "lib/db/move-blanks-up.ts",
         "lib/facts/publish.ts"
       ],
       "bypass": [

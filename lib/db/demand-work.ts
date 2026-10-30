@@ -1,6 +1,7 @@
 import { controlPlaneQuery, workList, type WorkList } from "../core/work.ts";
 import { neon } from "./client.ts";
-import { moveBlanksUp, type Query } from "../facts/publish.ts";
+import type { Query } from "../facts/publish.ts";
+import { moveBlanksUp } from "./move-blanks-up.ts";
 import type { DemandSubjectType } from "./demand-signal.ts";
 import type { RunMarker } from "./run-marker.ts";
 import { assertWriteAllowed } from "./write-guard.ts";

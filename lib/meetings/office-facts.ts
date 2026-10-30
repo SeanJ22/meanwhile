@@ -7,7 +7,7 @@ import { visibleText } from "../extract/visible-text.ts";
 import { captureProvenance } from "../facts/capture.ts";
 import { csvCells, csvWritten, isOfficialUrl, isOwnUrl, type SavedCopy } from "../facts/check.ts";
 import { readCheckEntity, siteUrl, stateName } from "../facts/entity-read.ts";
-import { openBlank, publishClaim, publishLoaded, type Clocks, type FactDb, type PublishOutcome, type Query } from "../facts/publish.ts";
+import { openBlank, publishClaim, publishLoaded, STALE, type Clocks, type FactDb, type PublishOutcome, type Query } from "../facts/publish.ts";
 import { pageCopy, saveCaptureCopy, saveReleaseCopy, saveSourceReference } from "../facts/source-copy.ts";
 import { censusAddressQuery } from "../geo/address-query.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
@@ -232,6 +232,12 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
         const outcome = await publishLoaded(input.facts, { entity, field: "office_address", fieldKind: "contact", value: address,
           valueText: address, quote: address, provenance: "OFFICIAL", copy, producedBy: "held-office-addresses", costUsd: 0 },
         () => copy.text && held?.written && held.address === address ? { quote: held.row, valueText: held.written } : null, input.clocks, checkedNow());
+        if ("refused" in outcome && outcome.refused === STALE) {
+          // Nothing changes for readers; the file not being re-checked is one piece of fix work.
+          const days = Math.floor((checkedNow().getTime() - copy.fetchedAt.getTime()) / 86_400_000), note = `The NCES file hasn't been re-checked in ${days} days`;
+          if (!report.failures.includes(note)) report.failures.push(note);
+          return;
+        }
         await count(id, "refused" in outcome ? { blank: outcome.refused } : outcome);
         return;
       }

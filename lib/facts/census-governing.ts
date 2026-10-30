@@ -13,7 +13,8 @@ import { withFactConfirmations } from "./confirmation.ts";
 import { csvWritten } from "./check.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
 import type { Registration } from "./entities.ts";
-import { publishLoaded, type Clocks, type FactDb, type Query } from "./publish.ts";
+import { retireRenamed } from "../core/door.ts";
+import { publishLoaded, STALE, type Clocks, type FactDb, type Query } from "./publish.ts";
 import { saveReleaseCopy } from "./source-copy.ts";
 
 export const CENSUS_GOVERNING_CURSOR = "census-governing-bodies";
@@ -128,9 +129,10 @@ export async function makeCensusGoverningBodies(input: {
       if (!input.more()) { finished = false; break; }
       const batch = boards.slice(start, start + BATCH);
       const governments = await heldGovernments(db.query, batch.map(board => board.government));
-      const queue = [...batch];
+      const queue = [...batch], verified: number[] = [], failed: string[] = [];
       // Governments go through the door side by side; one government's fields stay in order, so its board is made once.
-      await withBatchedReaderInvalidation(purge => withFactConfirmations(db, () => Promise.all(Array.from({ length: PARALLEL }, async () => {
+      await withBatchedReaderInvalidation(async purge => {
+        await withFactConfirmations(db, () => Promise.all(Array.from({ length: PARALLEL }, async () => {
         for (let board = queue.shift(); board; board = queue.shift()) {
           const row = rows.get(board.record.nativeIds.census_pid6 ?? "");
           if (!governments.has(board.government)) { report.unheld++; continue; }
@@ -140,13 +142,17 @@ export async function makeCensusGoverningBodies(input: {
             const outcome = await publishLoaded(db, { subjectId: board.subject, field, fieldKind: "contact", value: written, valueText: written, quote: row!,
               provenance: "OFFICIAL", producedBy: `census-governing:${state.toUpperCase()}`, costUsd: 0, copy },
             () => ({ quote: row!, valueText: written }), input.clocks, new Date(), { purge });
+            if (field === "mailing_address") { if ("refused" in outcome) { if (outcome.refused !== STALE) failed.push(board.subject); } else if (outcome.factId !== null) verified.push(outcome.factId); }
             if ("refused" in outcome) report.refused[outcome.refused] = (report.refused[outcome.refused] ?? 0) + 1;
             else if (outcome.decision === "PUBLISH") report.live++;
             else if (outcome.decision === "CONFIRM") report.confirmed++;
             else report.held++;
           }
         }
-      })), purge), input.purge);
+        })), purge);
+        // The Census's address was filed as office_address before mailing_address: the old name leaves once the new one is verified, and is held when it fails.
+        await retireRenamed(db, { verified, failed, from: "office_address", producedBy: `census-governing:${state.toUpperCase()}`, reason: "CHECK_FAILED:RENAMED_FIELD", purge });
+      }, input.purge);
       after = batch.at(-1)!.government;
       await writePassCursor(db.query, CENSUS_GOVERNING_CURSOR, JSON.stringify({ version, state, after, done: false } satisfies Cursor));
     }

@@ -295,3 +295,26 @@ export async function holdUnchecked(query: Query, input: { readonly entityId: st
     RETURNING f.id`, [input.entityId, input.field, input.reason, input.producedBy]);
   return held.length > 0;
 }
+
+/**
+ * A source filed a fact under the name `from` before it filed it under the current one. Once the current name's fact is verified (`verified`, fact ids)
+ * the old name's live fact moves to history; where the current one failed its check (`failed`, subjects) the old one is held. A value Sean typed stays.
+ */
+export async function retireRenamed(db: FactDb, input: { readonly verified: readonly number[]; readonly failed: readonly string[]; readonly from: string;
+  readonly producedBy: string; readonly reason: string; readonly purge?: ReaderCachePurger }): Promise<void> {
+  const scopes: ReaderCacheScope[] = [];
+  await db.transaction(async query => {
+    const moved = input.verified.length ? await query(`UPDATE fact o SET status='superseded',held_reason='RENAMED_FIELD' FROM checked_fact m
+      WHERE m.id=ANY($1::bigint[]) AND m.status='live' AND m.quote_start IS NOT NULL AND o.entity_id=m.entity_id AND o.field=$2 AND o.status='live'
+      AND o.provenance_kind<>'OWNER' AND o.produced_by=$3 RETURNING o.entity_id`, [input.verified, input.from, input.producedBy]) : [];
+    const entities = moved.map(row => String(row.entity_id));
+    for (const subject of input.failed) {
+      const entityId = await resolveId(subject, query);
+      if (entityId && await holdUnchecked(query, { entityId, field: input.from, producedBy: input.producedBy, reason: input.reason })) entities.push(entityId);
+    }
+    if (!entities.length) return;
+    await enqueueReaderPlaces({ entities }, query);
+    for (const id of entities) scopes.push(await readerCacheScopeForEntity(query, id));
+  });
+  for (const scope of scopes) await invalidateReaderCache(scope, input.purge, null);
+}

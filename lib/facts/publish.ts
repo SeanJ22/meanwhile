@@ -71,11 +71,14 @@ async function failedCheck(db: FactDb, input: DoorInput, reason: string, clocks:
   if (changed) await invalidateReaderCache(changed, purge, null);
 }
 
+/** A copy past its window means its source was not re-checked: nothing changes for readers and the loader raises fix work for the source. */
+export const STALE = "COPY_OUTSIDE_FRESHNESS_WINDOW";
+
 /** A fact checked on a saved line is tried twice before it goes to a detective; any other is tried once. */
 async function settle(db: FactDb, input: DoorInput, run: () => Promise<DoorOutcome>, checked: boolean, clocks: Clocks, purge?: ReaderCachePurger): Promise<DoorOutcome> {
   let outcome: DoorOutcome = { refused: "NO_EXACT_LINE" };
-  for (let attempt = 0; attempt < (checked ? 2 : 1) && "refused" in outcome && outcome.refused !== "SUBJECT_NOT_FOUND"; attempt++) outcome = await run();
-  if ("refused" in outcome) await failedCheck(db, input, outcome.refused, clocks, checked, purge);
+  for (let attempt = 0; attempt < (checked ? 2 : 1) && "refused" in outcome && outcome.refused !== "SUBJECT_NOT_FOUND" && outcome.refused !== STALE; attempt++) outcome = await run();
+  if ("refused" in outcome && !(checked && outcome.refused === STALE)) await failedCheck(db, input, outcome.refused, clocks, checked, purge);
   return outcome;
 }
 

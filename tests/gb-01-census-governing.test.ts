@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import type { PGlite } from "@electric-sql/pglite";
+import { retireRenamed } from "../lib/core/door.ts";
 import { CENSUS_GOVERNING_CURSOR, censusBoards, censusGoverningOrder, makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { REGISTRATION_SOURCE_SHA256 } from "../lib/registration/publication.ts";
@@ -173,6 +174,30 @@ test("a release nobody has re-checked lately is fix work and changes nothing; ea
     assert.deepEqual([confirmed.live, confirmed.confirmed, confirmed.refused], [0, 5, {}]);
     assert.deepEqual(await db.query("SELECT id FROM fact ORDER BY id"), before, "the same facts, no second rows");
     assert.equal((await db.query("SELECT count(*)::int n FROM checked_fact WHERE checked_at > now() - interval '1 day'"))[0]!.n, 5, "their last-checked date is the release's latest check");
+  } finally { await db.pg.close(); }
+});
+
+test("an address the Census filed as office_address leaves once the mailing address is verified, is held when that fails, and Sean's value stays", async () => {
+  const db = await factDb();
+  try {
+    await seedGovernments(db.query);
+    const run = async (vault: MemoryEvidenceStore) => makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault, purge, more: () => true });
+    await run(await censusVault(new Date(Date.now() - 20 * 86_400_000).toISOString()));
+    const [copy] = await db.query("SELECT id FROM source_copy ORDER BY id LIMIT 1");
+    const old = (entity: string, provenance: string, checked: boolean) => db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,quote_start,checked_at,produced_by)
+      VALUES($1,'office_address','"PO BOX 1"','PO BOX 1','live',$2,$3,'PO BOX 1',$4,now(),'census-governing:OR')`, [entity, provenance, provenance === "OWNER" ? null : copy!.id, checked ? 0 : null]);
+    const board = (name: string) => `or:${name}`;
+    await old(board("county:county-of-multnomah#governing"), "OFFICIAL", false);
+    await old(board("city:city-of-portland#governing"), "OWNER", false);
+    assert.deepEqual((await run(await censusVault())).refused, {});
+    await old(board("school:portland-sch-dist-1j#board"), "OFFICIAL", false);
+    await retireRenamed(db, { verified: [], failed: [board("school:portland-sch-dist-1j#board")], from: "office_address",
+      producedBy: "census-governing:OR", reason: "CHECK_FAILED:RENAMED_FIELD", purge });
+    assert.deepEqual(await db.query("SELECT entity_id,status,held_reason FROM fact WHERE field='office_address' ORDER BY entity_id"), [
+      { entity_id: board("city:city-of-portland#governing"), status: "live", held_reason: null },
+      { entity_id: board("county:county-of-multnomah#governing"), status: "superseded", held_reason: "RENAMED_FIELD" },
+      { entity_id: board("school:portland-sch-dist-1j#board"), status: "held", held_reason: "CHECK_FAILED:RENAMED_FIELD" },
+    ]);
   } finally { await db.pg.close(); }
 });
 

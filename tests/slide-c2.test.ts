@@ -56,6 +56,26 @@ test("a source read at any of its addresses retires what none of them shows", as
   } finally { await db.pg.close(); }
 });
 
+test("a source copy past its window holds nothing and opens no blank; a current copy with a different value holds the unchecked fact", async () => {
+  const db = await factDb();
+  try {
+    const id = "az:city:example#governing", text = '{\n  "Phone": "520-555-0100"\n}';
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Example City Council','AZ')", [id]);
+    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov/api','https://example.gov/api',$1,$2,'k')", [before.toISOString(), "a".repeat(64)]);
+    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'office_phone','"520-555-9999"','520-555-9999','live','OFFICIAL',1,'520-555-9999',$2,'loader-c2')`, [id, before.toISOString()]);
+    const claim = (fetchedAt: Date) => ({ subjectId: id, field: "office_phone", fieldKind: "contact" as const, value: "520-555-0100", valueText: "520-555-0100", quote: "520-555-0100",
+      provenance: "OFFICIAL" as const, producedBy: "loader-c2", costUsd: 0, copy: { id: 1, finalUrl: "https://example.gov/api", text, fetchedAt, isArchive: false } });
+    const line = () => ({ quote: exactLine(text, "Phone", "520-555-0100")!, valueText: "520-555-0100" });
+    const stale = await publishLoaded(db, claim(new Date(now.getTime() - 800 * 3_600_000)), line, clocks, now, { purge });
+    assert.deepEqual(stale, { refused: "COPY_OUTSIDE_FRESHNESS_WINDOW" });
+    assert.deepEqual(await db.query("SELECT status FROM fact"), [{ status: "live" }], "readers keep the last value");
+    assert.deepEqual(await db.query("SELECT field FROM blank"), []);
+    await publishLoaded(db, { ...claim(now), value: "520-555-0200", valueText: "520-555-0200", quote: "520-555-0200" }, () => ({ quote: '"Phone": "520-555-0200"', valueText: "520-555-0200" }), clocks, now, { purge });
+    assert.deepEqual(await db.query("SELECT status,held_reason FROM fact"), [{ status: "held", held_reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
+  } finally { await db.pg.close(); }
+});
+
 test("a switched loader's fact that fails is retried once, never goes live and opens its blank; its unchecked live fact moves to held; Sean's value and an old-path loader are untouched", async () => {
   const db = await factDb();
   try {

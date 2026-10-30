@@ -156,6 +156,20 @@ test("an NCES address absent from the file's native row never goes live; the one
   } finally { await db.pg.close(); }
 });
 
+test("an NCES file nobody has re-checked lately holds nothing, keeps the last address up and raises one piece of fix work", async () => {
+  const { db, vault } = await setup();
+  try {
+    const [copy] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
+      VALUES($1,$1,$2,$3,'old-nces') RETURNING id`, [SOURCE, NOW, "f".repeat(64)]);
+    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'office_address','"99 Old Street, Tucson, AZ 85706"','99 Old Street, Tucson, AZ 85706','live','OFFICIAL',$2,'99 Old Street, Tucson, AZ 85706',$3,'held-office-addresses')`, [GOVERNMENT, copy!.id, NOW]);
+    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true, clock: () => Date.parse(NOW) + 40 * 86_400_000 });
+    assert.deepEqual(report.failures, ["The NCES file hasn't been re-checked in 40 days"]);
+    assert.deepEqual(await db.query("SELECT status FROM fact"), [{ status: "live" }]);
+    assert.deepEqual(await db.query("SELECT reason FROM blank WHERE entity_id=$1", [GOVERNMENT]), []);
+  } finally { await db.pg.close(); }
+});
+
 test("sharing a place does not give a board either neighboring government's office", async () => {
   const { db, vault } = await setup();
   try {

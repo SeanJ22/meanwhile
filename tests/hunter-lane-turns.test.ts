@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { hunterLane } from "../lib/control-plane/workers/hunter-lane.ts";
+import { capabilityLog } from "../lib/core/capability.ts";
 import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
 import type { ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { dispatchAutonomousTask, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
@@ -60,7 +61,7 @@ test("the hunter lane works each claimed row once through the daily-pot dispatch
         usage: { input_tokens: 2000, output_tokens: 500 } };
     } }, item, task) } as unknown as AutonomousCoordinatorRuntime;
 
-  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, log: () => {} });
+  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
   const armed = { closed: null, armedAt: now(), fleetSafety: null, guards: { openJobs: () => [] } as never, arming: null,
     spendHolds: { settle: async () => null } as never, ceilingUsd: 100, discoverySearchOn: false } as ArmedHunterLane;
   let clock = at.getTime();

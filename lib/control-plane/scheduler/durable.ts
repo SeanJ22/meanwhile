@@ -11,9 +11,7 @@ import type { FreshnessDebt } from "./debt.ts";
 import { DISCHARGING_DISPOSITIONS } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 import { runPool } from "./shadow-loop.ts";
-import { absenceHold } from "./absence-hold.ts";
 import { planningStateOf } from "./state-planning.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 
 export const FRESHNESS_PROJECT = "freshness";
 
@@ -861,28 +859,6 @@ export async function recordNextDue(
     row.id,
     row.revision,
     { ...row.value, nextDueAt: input.nextDueAt, updatedAt: input.now },
-    input.now,
-  );
-}
-
-export async function recordArguedAbsence(
-  repos: ControlPlaneRepositories,
-  input: { readonly obligationId: string; readonly absentUntil: string; readonly now: string; readonly unlockWhen?: import("./absence.ts").AbsenceUnlock },
-): Promise<void> {
-  const row = await repos.obligations.mustRead(input.obligationId);
-
-  const configRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null);
-  const hold = absenceHold(row.value, input.now, configRow && isAdminConfig(configRow.value) ? configRow.value : null);
-  const absentUntil = hold.until < input.absentUntil ? hold.until : input.absentUntil;
-  if (row.value.absentUntil === absentUntil && row.value.nextDueAt === absentUntil) return;
-
-  const unlock = input.unlockWhen === undefined ? undefined : { ...input.unlockWhen, recordedAt: input.now,
-    triggers: input.unlockWhen.triggers.map((t) => (t.kind === "DATE" ? { ...t, at: absentUntil } : t)) };
-  await repos.obligations.compareAndSet(
-    row.id,
-    row.revision,
-
-    { ...row.value, absentUntil, ...(unlock !== undefined ? { absenceUnlock: unlock } : {}), nextDueAt: absentUntil, updatedAt: input.now },
     input.now,
   );
 }

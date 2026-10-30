@@ -6,6 +6,7 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { installFactReader } from "../lib/facts/db.ts";
+import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { readCardMemberOffices, readOfficialActionIdentityAuthorities } from "../lib/officials/card-authorities-read.ts";
 import { statePeopleSourcePointers } from "../lib/officials/people-identity.ts";
 import { currentOfficialIdentity } from "../lib/funding/campaign-money.ts";
@@ -22,10 +23,13 @@ type Entry = Extract<PromotedEdgeEntry, {kind: "PROMOTED"}>;
 function withCanonical(entries: readonly Entry[], run: (reads: readonly (readonly string[])[]) => Promise<void>) {
   const byKey = new Map(entries.map(entry => [entry.projection.key, entry]));
   const reads: string[][] = [];
+  forgetNationalShelf();
   installFactReader(async () => []);
   installReaderDatabaseQuery(async statements => statements.map(statement => {
     const keys = statement.params[0] as string[];
     assert.ok(Array.isArray(keys), "these routes need only their batched canonical authorities");
+    // A held national part asks only for the version of its entries.
+    if (statement.text.includes("p.xmin::text")) return [{value: "a".repeat(64)}];
     reads.push(keys);
     if (statement.text.includes("r.collection='memberOffices'")) {
       const entry = entries.find(entry => entry.projection.recordClass === "CURATED_READER_RECORD" && keys.includes(entry.projection.scope));

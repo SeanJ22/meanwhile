@@ -3,7 +3,8 @@ import test from "node:test";
 import { GET } from "../app/api/directory/route.ts";
 import { federalDirectoryForState } from "../lib/officials/federal-directory-data-plane.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
-import { readNationalShelf } from "../lib/reader/national.ts";
+import { nationalCongress, nationalFederalState } from "../lib/reader/national.ts";
+import { refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { installFederalDirectory, syntheticFederalDirectory, registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
@@ -30,20 +31,22 @@ test("held vacancies and chamber offices survive state and national composition 
   const combined = await readFederalDirectoryProjection(states);
   assert.ok(combined.kind === "PROMOTED" || combined.kind === "BOOTSTRAP");
   assert.deepEqual(combined.value.vacancies, vacancies);
-  const shelf = await readNationalShelf();
+  const shelf = await nationalCongress();
   assert.deepEqual([...shelf.congress.vacancies ?? []].sort((a, b) => a.ocdId.localeCompare(b.ocdId)), vacancies);
   const updatedName = "Newly Published Directory Name";
   await installFederalDirectory({ ...model, roster: { ...model.roster,
     officeholders: model.roster.officeholders.map(holder => holder.id === member.id ? { ...holder, name: updatedName } : holder) } });
   activateCanonicalFixture("default");
-  assert.equal((await readNationalShelf()).congress.roster.officeholders.find(holder => holder.id === member.id)?.name, updatedName,
-    "an independent national composition reads the newly confirmed directory without a TTL");
+  await refreshNationalShelf();
+  assert.equal((await nationalCongress()).congress.roster.officeholders.find((holder: { id: string }) => holder.id === member.id)?.name, updatedName,
+    "the next check reads the newly confirmed directory without a TTL");
   const runtime = registryTransferImport().projection.payload;
   const division: Division = { ...runtime.registry.divisions[0], ocdId: vacancies[0].ocdId,
     divisionType: "cd", tier: "national", state: states[0], label: "Vacant House district" };
   const coverage = stateCoverage({ state: states[0], version: "held-vacancy", federal: federalDirectoryForState(model, states[0]),
     registry: { ...runtime, registry: { ...runtime.registry, bodies: [], divisions: [division] } } }, [division.ocdId], 0, 0);
   assert.deepEqual(coverage.seats[0].vacancy, vacancies[0], "state and place composition retain the sourced vacancy");
+  assert.equal((await nationalFederalState(member.state!))?.roster.officeholders.find(holder => holder.id === member.id)?.name, updatedName);
   let queries = 0;
   installReaderDatabaseQuery(async () => { queries++; throw new Error("The held national directory must not query again"); });
   try {
@@ -55,8 +58,8 @@ test("held vacancies and chamber offices survive state and national composition 
     assert.deepEqual(body.officeDetails[0], { officeKind: "CAPITOL", sourceUrl, sourceOrg: "House Clerk", collectedAt: at, official: true });
     assert.equal(body.officeDetails.length, body.districtOffices.length);
     assert.equal(queries, 0);
-    await assert.rejects(readNationalShelf(), /The held national directory must not query again/,
-      "an independent national read cannot substitute a prior shelf when its current version query fails");
-    assert.equal(queries, 2, "the independent Congress and President sources both try the current store");
+    await assert.rejects(refreshNationalShelf(), /The held national directory must not query again/, "a check whose version read fails says so");
+    assert.equal(queries, 2, "each part held, Congress and the member's state, tries the current store once");
+    assert.equal((await GET(new Request(`https://meanwhile.example/api/directory?member=${encodeURIComponent(member.id)}&state=${member.state}`))).status, 200, "and the held copy is still served");
   } finally { installReaderDatabaseQuery(undefined); }
 });

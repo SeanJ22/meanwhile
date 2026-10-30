@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
-import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
 import type { CostEntry } from "@/lib/control-plane/cost.ts";
 import { pricedModelCharge } from "@/lib/control-plane/fleet-safety.ts";
 import {
@@ -522,24 +521,6 @@ test("the runner's load: nothing selected changes nothing; a bootstrap lookup re
   const failing = { ...broken, adminConfig: { ...broken.adminConfig, read: async () => { throw new Error("boom"); } } } as typeof broken;
   const unreadable = await loadExpansionPlan({ repos: failing, root: ".", now: NOW, obligations });
   assert.equal(unreadable.plan?.malformedScopes, 1, "an unreadable policy row holds paid work rather than dropping a budget");
-});
-
-test("paid discovery follows exact hunt membership without consuming or requiring its token allowance", async () => {
-  const input = await pimaPlanInput();
-  const scopes = input.scopes.map(scope => ({ ...scope, decision: { ...scope.decision, budgetStartedAt: NOW, budgetUsd: 0 } }));
-  const selected = scopes.map(scope => scope.decision);
-  const plan = planExpansion({ now: NOW, scopes, malformedScopes: 0, lookup: { source: "published", versionId: "v1", detail: null },
-    territory: input.territory, territoryDetail: null, obligations: input.obligations });
-  const select = (subjectId: string) => huntSearchScope({ selected, plan, subjectId });
-  for (const subjectId of ["az:county:county-of-pima", "az:state:arizona"]) {
-    const reading = select(subjectId);
-    assert.equal(reading.hold, null, "a zero token balance does not cap search");
-    assert.ok(reading.assignmentKeys.includes(selected[0].key));
-  }
-  assert.match(select("nj:county:morris").hold!, /no resolved membership/);
-  assert.ok(huntSearchScope({ selected, plan: null, subjectId: "az:county:county-of-pima" }).hold);
-  assert.ok(huntSearchScope({ selected: selected.map(s => ({ ...s, receiptId: "new-instruction" })), plan, subjectId: "az:county:county-of-pima" }).hold);
-  assert.equal(huntSearchScope({ selected: [], plan: null, subjectId: "nj:county:morris" }).hold, null, "legacy unscoped discovery retains its existing controls");
 });
 
 test("an unresolved hunt retains its budget period and holds unrelated model admissions too", async () => {

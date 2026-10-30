@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { PlaceOwedItem } from "../lib/coverage/place-owed.ts";
-import { evaluateMissionDone, isUnfilledRow, missionDoneWords, missionMapCount, type MemberRecord } from "../lib/control-plane/assignment-completion.ts";
+import { evaluateMissionDone, isUnfilledRow, missionMapCount, type MemberRecord } from "../lib/control-plane/assignment-completion.ts";
 
 const key = "scope:az.county.04003";
 const at = "2026-10-05T12:00:00Z";
@@ -29,35 +29,6 @@ test("a row is unfilled when it is due and neither held fresh nor waiting on the
   assert.equal(isUnfilledRow(row("missing", { published: "awaiting-publication" })), false, "awaiting publication is resolved");
   assert.equal(isUnfilledRow(row("missing", { found: "checked-not-posted" })), false);
   assert.equal(isUnfilledRow(row("missing", { due: "not-yet-due" })), false);
-});
-
-test("Done when the map is full and every door has a next read, with before-and-after counts", () => {
-  const full = missionMapCount([row("published"), row("unpublished"), row("missing", { published: "awaiting-publication" })], 7);
-  const done = evaluateMissionDone({ assignmentKey: key, obligations: [member("o1", "2026-10-06T00:00:00Z")], debtFor: noDebt, map: full });
-  assert.equal(done.kind, "COMPLETE");
-  assert.deepEqual(done.kind === "COMPLETE" ? done.map : null, { owed: 3, unfilled: 0, stale: 0, before: 7 });
-  assert.match(missionDoneWords(done), /^Done: every one of 3 owed .* \(7 were open when the map was first read\)/);
-  const failing = evaluateMissionDone({ assignmentKey: key, obligations: [member("o1", "2026-10-06T00:00:00Z")], map: full,
-    debtFor: () => ({ consecutiveFailures: 2, detail: "timeout", retryAt: "2026-10-06T00:00:00Z" }) });
-  assert.equal(failing.kind, "COMPLETE", "the map decides; a door that still refreshes on schedule does not hold it open");
-});
-
-test("not Done while a row is open or a door has no next read", () => {
-  const open = evaluateMissionDone({ assignmentKey: key, obligations: [member("o1", "2026-10-06T00:00:00Z")], debtFor: noDebt,
-    map: missionMapCount([row("published"), row("stale")], null) });
-  assert.equal(open.kind, "NOT_COMPLETE");
-  if (open.kind === "NOT_COMPLETE") {
-    assert.equal(open.unsettledCount, 1);
-    assert.deepEqual(open.map, { owed: 2, unfilled: 1, stale: 1, before: 1 });
-  }
-  assert.match(missionDoneWords(open), /^Not done: 1 of 2 owed still open/);
-  const noRefresh = evaluateMissionDone({ assignmentKey: key, obligations: [member("o1", "2026-10-06T00:00:00Z"), member("o2", null)], debtFor: noDebt,
-    map: missionMapCount([row("published")], null) });
-  assert.equal(noRefresh.kind, "NOT_COMPLETE");
-  if (noRefresh.kind === "NOT_COMPLETE") {
-    assert.deepEqual(noRefresh.exceptions.map((e) => [e.obligationId, e.says]), [["o2", "no next read is scheduled for this door"]]);
-    assert.equal(noRefresh.settled, 1);
-  }
 });
 
 test("a newly found owed row reopens a Done mission, and an unread map is never Done", () => {

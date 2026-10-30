@@ -12,6 +12,7 @@ import {fileEntityPlaces, type EntityPlace} from "../facts/entity-places.ts";
 import { resolveId } from "./resolve.ts";
 import { sendToDetective } from "../facts/identity-blank.ts";
 import { confirmFactSource, type FactConfirmation } from "../facts/confirmation.ts";
+import { markSlices, slicesOf, type SliceMark } from "./slice-marks.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
 
@@ -127,6 +128,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   options: DoorOptions = {}): Promise<DoorOutcome> {
   let changed: ReaderCacheScope | undefined;
   let confirmation: FactConfirmation | undefined;
+  let marks: readonly SliceMark[] = [], removed: readonly string[] = [];
   const outcome = await db.transaction<DoorOutcome>(async (query) => {
     const requested = input.subjectId ?? input.entity!.id;
     const subjectId = await resolveId(requested, query) ?? await canonicalSubject(query, requested);
@@ -202,8 +204,11 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       return { refused: verdict.reason };
     }
     const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
-    if(await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null)) {
+    const filed=await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null);
+    if(filed.moved) {
+      removed=filed.removed;
       changed=await readerCacheScopeForEntity(query,entity.id);
+      marks=await slicesOf(query,[entity.id],removed);
     }
     if (repeated) return {decision:"CONFIRM",factId:Number(row!.id)};
     // Sean removed this value; the same words from a source do not put it back, a different value does.
@@ -246,11 +251,13 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
       await enqueueReaderPlaces({ entities: [entity.id] }, query);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
+      marks = await slicesOf(query, [entity.id], removed);
     }
     return { decision, factId };
   });
   if (confirmation) await confirmFactSource(db,confirmation,options.purge);
   if (changed) await invalidateReaderCache(changed, options.purge, null);
+  await markSlices(marks);
   return outcome;
 }
 
@@ -266,6 +273,7 @@ export async function retireAbsent(db: FactDb, input: {
   readonly stillShown: readonly string[]; readonly at: Date; readonly purge?: ReaderCachePurger;
 }): Promise<number> {
   let changed: ReaderCacheScope | undefined;
+  let marks: readonly SliceMark[] = [];
   const count = await db.transaction(async query => {
     const subjectId = await resolveId(input.subjectId, query) ?? input.subjectId;
     const [copy] = input.copyId === undefined ? [] : await query("SELECT url,http_status,is_archive FROM source_copy WHERE id=$1", [input.copyId]);
@@ -281,10 +289,12 @@ export async function retireAbsent(db: FactDb, input: {
     if (gone.length) {
       await enqueueReaderPlaces({ entities: [subjectId] }, query);
       changed = await readerCacheScopeForEntity(query, subjectId);
+      marks = await slicesOf(query, [subjectId]);
     }
     return gone.length;
   });
   if (changed) await invalidateReaderCache(changed, input.purge, null);
+  await markSlices(marks);
   return count;
 }
 
@@ -303,6 +313,7 @@ export async function holdUnchecked(query: Query, input: { readonly entityId: st
 export async function retireRenamed(db: FactDb, input: { readonly verified: readonly number[]; readonly failed: readonly string[]; readonly from: string;
   readonly producedBy: string; readonly reason: string; readonly purge?: ReaderCachePurger }): Promise<void> {
   const scopes: ReaderCacheScope[] = [];
+  let marks: readonly SliceMark[] = [];
   await db.transaction(async query => {
     const moved = input.verified.length ? await query(`UPDATE fact o SET status='superseded',held_reason='RENAMED_FIELD' FROM checked_fact m
       WHERE m.id=ANY($1::bigint[]) AND m.status='live' AND m.quote_start IS NOT NULL AND o.entity_id=m.entity_id AND o.field=$2 AND o.status='live'
@@ -315,6 +326,8 @@ export async function retireRenamed(db: FactDb, input: { readonly verified: read
     if (!entities.length) return;
     await enqueueReaderPlaces({ entities }, query);
     for (const id of entities) scopes.push(await readerCacheScopeForEntity(query, id));
+    marks = await slicesOf(query, entities);
   });
   for (const scope of scopes) await invalidateReaderCache(scope, input.purge, null);
+  await markSlices(marks);
 }

@@ -81,7 +81,7 @@ test("replacing a bare state association queues the old root and newly served lo
     assert.ok(queued.has(SECOND_PAGE),"the newly served city's existing ZIP page is replaced");
     assert.ok(queued.has(FIRST_PAGE),"previous state-wide consumers lose the old blanket association");
     await db.query("DELETE FROM rebuild_queue");
-    assert.equal(await db.transaction(query=>fileEntityPlaces(query,BODY,[served(SECOND)],GOVERNMENT)),false);
+    assert.equal(await db.transaction(query=>fileEntityPlaces(query,BODY,[served(SECOND)],GOVERNMENT).then(filed=>filed.moved)),false);
     assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],"unchanged source territory leaves the queue empty");
   }finally{await db.pg.close();}
 });

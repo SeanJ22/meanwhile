@@ -4,6 +4,7 @@ import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, 
 import { resolveId } from "../core/resolve.ts";
 import { canonicalSubject } from "./entities.ts";
 import { recordFactConfirmation } from "./confirmation.ts";
+import { markSlices, slicesOf, type SliceMark } from "../core/slice-marks.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -52,6 +53,7 @@ const failureDetail = (c: Pick<PublishInput, "copy" | "fieldKind" | "provenance"
  */
 async function failedCheck(db: FactDb, input: DoorInput, reason: string, clocks: Clocks, checked: boolean, purge?: ReaderCachePurger): Promise<void> {
   let changed: ReaderCacheScope | undefined;
+  let marks: readonly SliceMark[] = [];
   await db.transaction(async query => {
     const requested = input.entity?.id ?? input.subjectId!;
     const entityId = await resolveId(requested, query) ?? await canonicalSubject(query, requested);
@@ -61,8 +63,10 @@ async function failedCheck(db: FactDb, input: DoorInput, reason: string, clocks:
     if (!checked || !await holdUnchecked(query, { entityId, field: input.field, producedBy: input.producedBy, reason: `CHECK_FAILED:${reason}` })) return;
     await enqueueReaderPlaces({ entities: [entityId] }, query);
     changed = await readerCacheScopeForEntity(query, entityId);
+    marks = await slicesOf(query, [entityId]);
   });
   if (changed) await invalidateReaderCache(changed, purge, null);
+  await markSlices(marks);
 }
 
 /** A copy past its window means its source was not re-checked: nothing changes for readers and the loader raises fix work for the source. */
@@ -95,7 +99,8 @@ export async function restampFacts(db: FactDb, facts: readonly { readonly id: nu
   copy: Pick<SavedCopy, "id" | "text" | "fetchedAt">): Promise<number> {
   if (!facts.length) return 0;
   const page = normalizeText(copy.text);
-  return db.transaction(async query => {
+  let marks: readonly SliceMark[] = [];
+  const restamped = await db.transaction(async query => {
     const receipts = Object.fromEntries(facts.map(fact => {
       const start = fact.quote ? page.indexOf(normalizeText(fact.quote)) : -1;
       return [String(fact.id),{quote_start:start<0?null:start}];
@@ -110,7 +115,10 @@ export async function restampFacts(db: FactDb, facts: readonly { readonly id: nu
       await query(`DELETE FROM blank b USING unnest($1::text[],$2::text[]) f(entity_id,field)
         WHERE b.entity_id=f.entity_id AND b.field=f.field`,[eligible.map(row=>row.entity_id),eligible.map(row=>row.field)]);
       await enqueueReaderPlaces({entities:changed},query);
+      marks = await slicesOf(query, changed);
     }
     return changed.length ? eligible.length : 0;
   });
+  await markSlices(marks);
+  return restamped;
 }

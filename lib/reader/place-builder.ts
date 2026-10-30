@@ -207,8 +207,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     WHERE $8::text[] IS NULL AND (header.value->>'officeholderId' IN (SELECT id FROM runtime_people UNION SELECT holder->>'id' FROM runtime_candidacies)
       OR header.value->>'personId' IN (SELECT id FROM runtime_people))
 ), agenda_starts AS MATERIALIZED (
-  SELECT substr(e.id,9) AS id,e.parent_id,(t.value->>'startsAt')::timestamptz AS at
-    FROM bodies b JOIN entity e ON e.parent_id=b.id AND e.kind='meeting'
+  SELECT substr(e.id,9) AS id,b.id AS parent_id,(t.value->>'startsAt')::timestamptz AS at
+    FROM bodies b JOIN entity e ON e.kind='meeting' AND (e.parent_id=b.id OR e.parent_id IN (SELECT x.value FROM entity_external_id x WHERE x.entity_id=b.id AND x.scheme='body-alias'))
     JOIN fact t ON t.entity_id=e.id AND t.field='starts_at' AND t.status='live'
     WHERE $8::text[] IS NOT NULL AND t.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
 ), agenda_relevant_ids AS MATERIALIZED (
@@ -218,10 +218,11 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   UNION SELECT unnest($8::text[])
 ), sittings AS MATERIALIZED (
   SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,f.status,s.url
-    FROM bodies b CROSS JOIN LATERAL (SELECT e.id FROM entity e WHERE e.parent_id=b.id AND e.kind='meeting'
+    FROM bodies b CROSS JOIN LATERAL (SELECT e.id FROM entity e WHERE e.kind='meeting'
+      AND (e.parent_id=b.id OR e.parent_id IN (SELECT x.value FROM entity_external_id x WHERE x.entity_id=b.id AND x.scheme='body-alias'))
       AND ($8::text[] IS NULL OR substr(e.id,9) IN (SELECT id FROM agenda_relevant_ids))
-      AND ($6::boolean OR EXISTS (SELECT 1 FROM fact t WHERE t.entity_id=e.id AND t.field='starts_at' AND t.status='live'
-        AND t.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND (t.value->>'startsAt')::timestamptz>=now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS}))) OFFSET 0) m
+      AND EXISTS (SELECT 1 FROM fact t WHERE t.entity_id=e.id AND t.field='starts_at' AND t.status='live'
+        AND t.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND ($6::boolean OR (t.value->>'startsAt')::timestamptz>=now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS}))) OFFSET 0) m
     CROSS JOIN LATERAL (SELECT field,value,quote,checked_at,source_copy_id,status,held_reason FROM checked_fact WHERE entity_id=m.id AND (status='live'
       OR field='map_pin' AND status='pulled' AND held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED') OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
@@ -230,6 +231,10 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     JOIN civic_data_promotions p ON p.key=d.promotion_key AND p.current_version_id=d.version_id
     WHERE $7::boolean AND d.record_class='MEETING' AND d.collection='agendaDocuments' AND d.body_id IN (SELECT id FROM bodies
       UNION SELECT x.value FROM entity_external_id x JOIN bodies b ON b.id=x.entity_id WHERE x.scheme='body-alias')
+      AND ($6::boolean OR reader_payload_node(d.value)->>'meetingId' IN (SELECT substr(e.id,9) FROM bodies b JOIN entity e ON e.kind='meeting'
+        AND (e.parent_id=b.id OR e.parent_id IN (SELECT x.value FROM entity_external_id x WHERE x.entity_id=b.id AND x.scheme='body-alias'))
+        JOIN fact t ON t.entity_id=e.id AND t.field='starts_at' AND t.status='live' AND t.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
+        WHERE (t.value->>'startsAt')::timestamptz>=now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS})))
 ), agenda_full AS MATERIALIZED (
   SELECT ordinal_index,item FROM agenda_rows WHERE $8::text[] IS NULL OR reader_payload_node(item)->>'meetingId' IN (SELECT id FROM agenda_relevant_ids)
 ), agenda_full_urls AS MATERIALIZED (

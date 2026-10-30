@@ -15,8 +15,8 @@ async function queuedPlace() {
   const wrapped: FactDb = { transaction: run => db.transaction(query => run(async (text, params) => {
     if (text !== PLACE_PACKAGE_SQL) return query(text, params);
     reads++;
-    return [{ division_ids: [PLACE], entities: [], fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [],
-      archived_meetings: [], archived_documents: [], parts: {}, registry: null, governments: [], divisions: [] }];
+    return [{ division_ids: [PLACE], entities: [], fields: [], rosters: [], comments: [], sittings: [], agenda_documents: [], agenda_document_links: [],
+      parts: {}, registry: null, governments: [], divisions: [] }];
   })) };
   return { db, wrapped, sourceReads: () => reads };
 }

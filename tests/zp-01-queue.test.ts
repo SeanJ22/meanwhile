@@ -9,7 +9,7 @@ import type { FactDb } from '../lib/facts/publish.ts';
 const root='ocd-division/country:us/state:az';
 // Held 2020 Census residents of each ZCTA, as the deployment seeds them into page_priority.
 const residents:Record<string,number>={'85003':11042,'85701':5132,'86001':37093,'85004':8833,'85301':67380,'85302':41369};
-const raw={division_ids:[],entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],archived_meetings:[],archived_documents:[],parts:{},registry:null,governments:[],divisions:[]};
+const raw={division_ids:[],entities:[],fields:[],rosters:[],comments:[],sittings:[],agenda_documents:[],agenda_document_links:[],parts:{},registry:null,governments:[],divisions:[]};
 
 test('pending publications do no row updates; an in-flight page retains exactly one later generation',async()=>{
   const db=await factDb({withHourlyCounts:true});

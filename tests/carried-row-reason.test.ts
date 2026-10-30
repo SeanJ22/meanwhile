@@ -1,21 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { installFactReader } from "../lib/facts/db.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
 import { CARRIED_ROW_CLAUSE, carriedRowClause, type CarriedReason } from "../lib/meetings/freshness.ts";
-import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
-import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
-import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { promoteMeetingPartitions } from "../scripts/ingest.ts";
-import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 
 const ROOT = process.cwd();
 
@@ -33,7 +25,6 @@ const ROCKAWAY = MEETING_PARTITION_CONTRACTS.find((partition) =>
 const ICAL_URL = "https://www.rockawaytownship.org/common/modules/iCalendar/iCalendar.aspx?catID=25&feed=calendar";
 const ARCHIVE_URL = "https://www.rockawaytownship.org/AgendaCenter";
 const LAST_HELD = "2026-09-23T03:47:06.886Z";
-const NO_LONGER_HELD = "2026-09-23T16:45:32.674Z";
 
 const MUNICIPAL_BUILDING = {
   lat: 40.912595,
@@ -74,26 +65,6 @@ function archiveListing(collectedAt: string): Meeting {
     jurisdiction: "Rockaway Township, NJ",
     status: "CONCLUDED",
     provenance: { sourceUrl: ARCHIVE_URL, sourceOrg: "Rockaway Township", collectedAt, verifiedAt: null },
-  };
-}
-
-function answered(version: string): ChildRunReport {
-  const bytes = `civicplus:${version}`;
-  return {
-    source: "civicplus",
-    ok: true,
-    error: null,
-    fetched: 1,
-    normalized: 1,
-    drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-    acquisitions: [{
-      source: "civicplus",
-      requestedUrl: ICAL_URL,
-      finalUrl: ICAL_URL,
-      httpStatus: 200,
-      rawHash: createHash("sha256").update(bytes).digest("hex"),
-      byteCount: Buffer.byteLength(bytes),
-    }],
   };
 }
 
@@ -226,73 +197,6 @@ test("a calendar that answered is never called unreachable, and its answer is ne
     "the unit that left the answer is the LISTING: at Rockaway the same sitting was in the same answer as a second listing",
   );
   assert.match(clause, /^our latest check\b/, "the clause is about our check, whose it is");
-});
-
-test("the reason survives its writer, the body's record, the edge, the wire and the route's search", async (t) => {
-  assert.ok(ROCKAWAY, "the Rockaway Township council partition is registered");
-  const store = new MemoryRoutineDataStore();
-
-  const [seeded] = await promoteMeetingPartitions({
-    store,
-    partitions: [ROCKAWAY],
-    meetings: [icalListing(LAST_HELD), archiveListing(LAST_HELD)],
-    agendaDocuments: [],
-    reports: [answered(LAST_HELD)],
-    generatedAt: LAST_HELD,
-  });
-  assert.equal(seeded?.outcome.candidate.state, "PROMOTED");
-
-  const [next] = await promoteMeetingPartitions({
-    store,
-    partitions: [ROCKAWAY],
-    meetings: [archiveListing("2026-09-23T16:45:28.015Z")],
-    agendaDocuments: [],
-    reports: [answered(NO_LONGER_HELD)],
-    generatedAt: NO_LONGER_HELD,
-  });
-  assert.equal(next?.outcome.candidate.state, "PROMOTED");
-
-  const expected = { source: "civicplus", lastFreshAt: LAST_HELD, reason: "UNEXPLAINED_DISAPPEARANCE" };
-
-  const factReads: string[] = [];
-  installFactReader(async text => {
-    factReads.push(text);
-    assert.fail("published meeting composition must not query facts");
-  });
-  t.after(() => installFactReader(undefined));
-  const edge = freshEdge();
-  await publishPass(store, edge, NO_LONGER_HELD);
-  const read = await readPlace(edge, store, [ROCKAWAY.ocdId!], NO_LONGER_HELD);
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
-  assert.equal(read.kind, "PROMOTED");
-  if (read.kind !== "PROMOTED") return;
-  const served = JSON.parse(JSON.stringify(read.value)) as typeof read.value;
-  assert.deepEqual(served.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);
-  assert.equal(
-    served.meetings.find((row) => row.id === "civicplus:rockaway_township:archive:2026-09-22")?.carried,
-    undefined,
-    "the archive listing was read fresh by the same check",
-  );
-
-  const divisions = new Set([ROCKAWAY.ocdId!]);
-  const result = await searchMeetings(
-    MUNICIPAL_BUILDING.lat,
-    MUNICIPAL_BUILDING.lng,
-    25,
-    new Date(NO_LONGER_HELD),
-    divisions,
-    snapshotSourceFor(served),
-    undefined,
-    meetingBodyIds([{ id: ROCKAWAY.bodyId, ocdId: ROCKAWAY.ocdId, alsoServesOcdIds: [] }], divisions),
-  );
-  const wire = JSON.parse(JSON.stringify(result)) as { meetings: Meeting[] };
-  const listed = wire.meetings.find((row) => row.id === "civicplus:rockaway_township:1824");
-  assert.deepEqual(listed?.carried, expected);
-  assert.ok(
-    wire.meetings.some((row) => row.id === "civicplus:rockaway_township:archive:2026-09-22" && !row.carried),
-    "the fresh archive listing of the same sitting is served beside it",
-  );
-  assert.equal(carriedRowClause(listed?.carried), "our latest check of this calendar didn't find this listing");
 });
 
 test("the venue card renders the decided clause for every reason, and never calls an answering calendar unreachable", () => {

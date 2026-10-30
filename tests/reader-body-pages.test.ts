@@ -3,6 +3,7 @@ import test from "node:test";
 import { readMeetingBodies, readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { snapshotCounts } from "../lib/meetings/snapshot.ts";
+import { sittingRows } from "./helpers/meeting-fact-rows.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, placePageCacheIds } from "../lib/reader/place.ts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
@@ -27,9 +28,8 @@ function bodyRow(bodyId: string, meetings: Meeting[]) {
   const state = bodyId.includes("state:az") ? "AZ" : "CA";
   return { page_id: bodyId, page_kind: "body", built_at: AT, body_ids: [bodyId], row: {
     division_ids: [], entities: [{ id: bodyId, kind: "body", state, division: bodyId.split("#")[0] }],
-    fields: [], rosters: [], comments: [], sittings: [], governments: [], divisions: [], registration_held: false, parts: {},
-    meeting_rows: [{ scope: `source:fixture:body:${encodeURIComponent(bodyId)}`, current_version_id: bodyId, confirmation: null,
-      payload: { formatVersion: 1, generatedAt: AT, meetings, sources: [], agendaDocuments: [], counts: snapshotCounts(meetings, 0) } }],
+    fields: [], rosters: [], comments: [], sittings: sittingRows(meetings), governments: [], divisions: [], registration_held: false, parts: {},
+    agenda_documents: [], agenda_document_links: [], agenda_texts: [],
   } };
 }
 
@@ -140,8 +140,8 @@ test("the real worker stores agenda-free ready body pages and preserves full cur
     (await tx.query<Record<string, unknown>>(text, [...params])).rows)) };
   const old = meeting(FIRST, "old", "2020-01-01T12:00:00Z"), soon = meeting(FIRST, "soon", "2026-10-27T12:00:00Z");
   const future = meeting(FIRST, "far-future", "2028-01-01T12:00:00Z");
-  const currentDocument = { id: "document:current", meetingId: soon.id, text: "CURRENT SOURCE AGENDA: public hearing and budget consideration.\n".repeat(300) };
-  const pastDocument = { id: "document:past", meetingId: old.id, text: "PERMANENT SOURCE AGENDA: land use hearing and recorded decisions.\n".repeat(300) };
+  const currentDocument = { id: "document:current", meetingId: soon.id, ocdId: AZ + "/place:example", text: "CURRENT SOURCE AGENDA: public hearing and budget consideration.\n".repeat(300) };
+  const pastDocument = { id: "document:past", meetingId: old.id, ocdId: AZ + "/place:example", text: "PERMANENT SOURCE AGENDA: land use hearing and recorded decisions.\n".repeat(300) };
   try {
     await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'body','Council','AZ',$1)", [AZ, FIRST]);
     for (const [id, meetings, agendaDocuments, history] of [
@@ -158,7 +158,7 @@ test("the real worker stores agenda-free ready body pages and preserves full cur
     const readyWire = JSON.stringify([unpackReadyPlace(stored!.body), unpackReadyPlace(stored!.history_body)]);
     assert.equal(readyWire.includes("SOURCE AGENDA"), false, "neither ready encoding stores source agenda text");
     const context = stored!.context as { current: {full:unknown}; history: {full:unknown} };
-    const documents = (row:unknown) => (unpackPlaceContextRow(row).meeting_rows as {payload:{agendaDocuments:unknown[]}}[]).flatMap(partition=>partition.payload.agendaDocuments);
+    const documents = (row:unknown) => unpackPlaceContextRow(row).agenda_documents as {meetingId:string}[];
     assert.deepEqual(documents(context.current.full), [currentDocument]);
     assert.deepEqual(documents(context.history.full).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
       [currentDocument, pastDocument].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))));

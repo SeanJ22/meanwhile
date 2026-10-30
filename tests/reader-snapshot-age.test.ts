@@ -2,13 +2,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { heldSnapshot, snapshotInView, wireSnapshot } from "../lib/meetings/freshness.ts";
 import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
-import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { sittingRows } from "./helpers/meeting-fact-rows.ts";
+import type { Meeting } from "../lib/sources/types.ts";
 
 const EPOCH = "1970-01-01T00:00:00.000Z", AT = "2026-10-21T12:00:00.000Z";
 
-const placeRow = (state: string, meetingRows: unknown[]) => [{
+const placeRow = (state: string, sittings: unknown[]) => [{
   page_id: `ocd-division/country:us/state:${state.toLowerCase()}`, page_kind: "place", built_at: AT, body_ids: [],
-  row: { division_ids: [], entities: [], fields: [], rosters: [], comments: [], sittings: [], meeting_rows: meetingRows, parts: {}, governments: [], divisions: [], registration_held: false },
+  row: { division_ids: [], entities: [], fields: [], rosters: [], comments: [], sittings, agenda_documents: [], agenda_document_links: [], agenda_texts: [], parts: {}, governments: [], divisions: [], registration_held: false },
 }];
 
 test("a place with no held calendar has no snapshot date, and the wire says so instead of 1970", async () => {
@@ -21,10 +22,12 @@ test("a place with no held calendar has no snapshot date, and the wire says so i
 });
 
 test("a place with a held calendar keeps its real snapshot date", async () => {
-  const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: AT, sources: [], counts: snapshotCounts([], 0), meetings: [], agendaDocuments: [] };
+  const sitting = { id: "ical:one", bodyId: "ocd-division/country:us/state:az#council", bodyName: "Council", ocdId: null, title: "Council", startsAt: "2026-10-22T12:00:00Z", timeZone: "UTC",
+    location: null, agendaUrl: null, jurisdiction: "Local", status: "SCHEDULED", provenance: { sourceUrl: "https://example.gov/calendar", sourceOrg: "Example", collectedAt: AT, verifiedAt: AT } } as Meeting;
   const held = await readPlacePackage({ state: "AZ", divisionIds: [] }, async sql => {
     assert.equal(sql, PLACE_PAGES_SQL);
-    return placeRow("AZ", [{ scope: "source:derived:family:US-AZ", payload: snapshot, current_version_id: "v-1", confirmation: null }]);
+    return [{ ...placeRow("AZ", sittingRows([sitting]))[0]!, row: { ...placeRow("AZ", sittingRows([sitting]))[0]!.row,
+      entities: [{ id: sitting.bodyId, name: "Council", division: "ocd-division/country:us/state:az" }] } }];
   });
   assert.equal(held.snapshotHeldAt, AT);
   assert.deepEqual(wireSnapshot(held.snapshotHeldAt, held.snapshot.sources), { version: 2, generatedAt: AT, failed: [] });

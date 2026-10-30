@@ -246,7 +246,7 @@ test("the place read returns every group, only changed groups, or nothing, by th
   try {
     const params = (held: unknown, partial: boolean) => ["AZ", [place(4)], [], STATE, false, true, true, null, false, [], null, held === null ? null : JSON.stringify(held), partial];
     const groups = ["registration_held", "division_ids", "agenda_texts", "everyday_routing", "publication_attempts", "registry", "governments", "divisions",
-      "entities", "fields", "rosters", "comments", "sittings", "meeting_rows", "archived_meetings", "archived_documents", "archived_document_links", "parts"];
+      "entities", "fields", "rosters", "comments", "sittings", "agenda_documents", "agenda_document_links", "parts"];
     const [whole] = await query(PLACE_PACKAGE_SQL, params(null, true));
     assert.equal(whole!.unchanged, false);
     assert.deepEqual(whole!.omitted, []);

@@ -32,13 +32,18 @@ export async function insertMeetingFacts(query: Query, meetings: readonly Meetin
     if (!meeting.bodyId) continue;
     const url = meeting.provenance.sourceUrl ?? "https://example.gov/calendar";
     const [held] = await query("SELECT id FROM source_copy WHERE url=$1 ORDER BY id LIMIT 1", [url]);
-    const [copy] = held ? [held] : await query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key) VALUES($1,$1,$2,$3,$4) RETURNING id`,
+    const [copy] = held ? [held] : await query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key)
+        SELECT coalesce(max(id),9999999)+1,$1,$1,$2,$3,$4 FROM source_copy WHERE id>=10000000 RETURNING id`,
       [url, meeting.provenance.collectedAt, createHash("sha256").update(url).digest("hex"), `fixture:${url}`]);
     await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'meeting',$2,$3,$4) ON CONFLICT DO NOTHING",
-      [`meeting:${meeting.id}`, meeting.bodyName, state, meeting.bodyId]);
+      [`meeting:${meeting.id}`, meeting.bodyName, /\/state:([a-z]{2})/.exec(meeting.bodyId)?.[1]?.toUpperCase() ?? state, meeting.bodyId]);
     for (const [field, value] of meetingFactFields(meeting)) {
+      // The newer read of a field wins, as the Slide decides it; an older read never replaces it.
+      const [live] = await query("SELECT id,checked_at FROM fact WHERE entity_id=$1 AND field=$2 AND status='live'", [`meeting:${meeting.id}`, field]);
+      if (live && Date.parse(String(live.checked_at)) >= Date.parse(meeting.provenance.collectedAt)) continue;
+      if (live) await query("UPDATE fact SET status='superseded' WHERE id=$1", [live.id]);
       await query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
-        VALUES($1,$2,$3,'saved','live','OFFICIAL',$4,'Saved official page',$5,'fixture')`,
+        VALUES($1,$2,$3,'saved','live','OFFICIAL',$4,'Saved official page',$5,'fixture') ON CONFLICT DO NOTHING`,
       [`meeting:${meeting.id}`, field, JSON.stringify(value), copy!.id, meeting.provenance.collectedAt]);
     }
   }

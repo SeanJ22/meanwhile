@@ -7,7 +7,7 @@ import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
 import {PLACE_PAGES_SQL,READY_PLACE_SQL,placePageCacheIds,readPlacePackage} from "../lib/reader/place.ts";
 import {PLACE_PACKAGE_SQL} from "../lib/reader/place-builder.ts";
 import {readerCacheTags} from "../lib/reader/cache.ts";
-import {snapshotCounts} from "../lib/meetings/snapshot.ts";
+import {sittingRows} from "./helpers/meeting-fact-rows.ts";
 import type {Query} from "../lib/facts/publish.ts";
 import type {Meeting} from "../lib/sources/types.ts";
 import type {RegistryRuntimeReadModel} from "../lib/registry/runtime-data-plane.ts";
@@ -20,12 +20,10 @@ const registry:RegistryRuntimeReadModel={formatVersion:1,registry:{generatedAt:A
   bodyOrigin:"SOURCED",coverageStatus:"LIVE",agendaSourceType:"NONE",agendaSourceRef:null,meetingCadence:null,homepageUrl:source.sourceUrl,demandCount:0,
   sourceDataset:"GOV_DIRECTORY",provenance:source}]},bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],
   officialCandidacies:{formatVersion:1,rule:"EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE",rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}};
-const snapshot={formatVersion:1 as const,generatedAt:AT,meetings:[meeting],agendaDocuments:[],sources:[],counts:snapshotCounts([meeting],0)};
 /** One fact-store row, as the pre-page reader read it and as the page builder reads it. */
 const raw=(divisionIds:readonly string[])=>({division_ids:divisionIds,registry,everyday_routing:null,registration_held:true,governments:[],divisions:[],
-  entities:[{id:BODY,division:CITY,kind:"body",state:"AZ"}],fields:[],rosters:[],comments:[],sittings:[],
-  meeting_rows:[{scope:`source:fixture:body:${encodeURIComponent(BODY)}`,payload:snapshot,current_version_id:"fixture",confirmation:null}],
-  archived_meetings:[],archived_documents:[],archived_document_links:[],agenda_texts:[],parts:{}});
+  entities:[{id:BODY,division:CITY,kind:"body",state:"AZ"}],fields:[],rosters:[],comments:[],sittings:sittingRows([meeting]),
+  agenda_documents:[],agenda_document_links:[],agenda_texts:[],parts:{}});
 
 test("a body whose first page is still queued is composed from the fact store with one more read",async()=>{
   const reads:string[]=[];

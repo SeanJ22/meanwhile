@@ -145,7 +145,7 @@ test("runtime-only bodies get their existing canonical IDs without overwriting h
 });
 
 const rawPage=(id:string)=>({division_ids:[id],entities:[],fields:[],rosters:[],comments:[],sittings:[],
-  meeting_rows:[],archived_meetings:[],archived_documents:[],parts:{},registry:null,governments:[],divisions:[]});
+  agenda_documents:[],agenda_document_links:[],parts:{},registry:null,governments:[],divisions:[]});
 
 test("a state-root rebuild never loads the statewide meeting corpus",async()=>{
   const state='ocd-division/country:us/state:az';

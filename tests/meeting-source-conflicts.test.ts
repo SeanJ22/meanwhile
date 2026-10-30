@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { sittingRows } from "./helpers/meeting-fact-rows.ts";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
 import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
@@ -30,13 +31,12 @@ test("CP-18: a body's composition retains both source ids and an agenda belongin
   const owned = { bodyId: PIMA.bodyId, ocdId: PIMA.ocdId };
   const old = meeting("calendar:1", owned);
   const fresh = meeting("portal:1", { ...owned, startsAt: "2026-10-06T19:00:00Z", provenance: { ...old.provenance, collectedAt: "2026-10-05T13:00:00Z" } });
-  const report = (source: string) => ({ source, ok: true, error: null, fetched: 1, normalized: 1, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } });
-  const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: at, sources: [report("calendar"), report("portal")], counts: snapshotCounts([old, fresh], 0), meetings: [old, fresh], agendaDocuments: [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]] };
+  const documents = [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]];
   const held = await readPlacePackage({state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true},async sql=>{
     assert.equal(sql,PLACE_PAGES_SQL);
     return [{page_id:PIMA.bodyId,page_kind:"body",built_at:at,body_ids:[PIMA.bodyId],row:{
-      division_ids:[PIMA.ocdId],entities:[{id:PIMA.bodyId,division:PIMA.ocdId}],fields:[],rosters:[],comments:[],sittings:[],
-      meeting_rows:[{scope:PIMA.scope,payload:snapshot,current_version_id:"v-1",confirmation:null}],parts:{},governments:[],divisions:[],registration_held:false,
+      division_ids:[PIMA.ocdId],entities:[{id:PIMA.bodyId,division:PIMA.ocdId}],fields:[],rosters:[],comments:[],sittings:sittingRows([old, fresh]),
+      agenda_documents:documents,agenda_document_links:[],agenda_texts:[],parts:{},governments:[],divisions:[],registration_held:false,
     }}];
   });
   const result = held.snapshot;

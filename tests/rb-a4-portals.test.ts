@@ -13,6 +13,7 @@ import {readPlatformGovernment} from '../lib/control-plane/discovery/platform-go
 import {platformRegistrationNeed,platformRegistrationBinding,type PlatformRegistrationPage} from '../lib/control-plane/discovery/platform-registration.ts';
 import {seedPlacePages} from './helpers/place-pages.ts';
 import {readReaderEdgeMeetings} from '../lib/meetings/edge-serving.ts';
+import {insertMeetingFacts} from './helpers/meeting-fact-rows.ts';
 
 test('an unconfirmed portal keeps every verified fact, host, calendar and agenda while its CHECK retry stays open',async()=>{
   const {pg,publish}=await migratedReaderDb();
@@ -38,9 +39,12 @@ test('an unconfirmed portal keeps every verified fact, host, calendar and agenda
     const door=(await repos.doors.mustRead(draft.doorId)).value,partition=meetingPartitionOfId(door.doorId)!;
     const sitting=(id:string,startsAt:string,sourceUrl=portal)=>({id,bodyId:body,bodyName:'Metro',ocdId:division,title:`Meeting ${id}`,startsAt,timeZone:'America/Los_Angeles',location:null,
       agendaUrl:`${sourceUrl}/agenda/${id}`,jurisdiction:'Local',status:'SCHEDULED',provenance:{sourceUrl,sourceOrg:'Metro',collectedAt:at,verifiedAt:at}});
-    const save=async(id:string,scope:string,row:ReturnType<typeof sitting>,retrievedAt=at)=>publish({id,recordClass:'MEETING',scope,sourceId:'fixture',at:retrievedAt,
-      value:{formatVersion:1,generatedAt:retrievedAt,meetings:[row],agendaDocuments:[{id:`document:${row.id}`,meetingId:row.id,documentUrl:row.agendaUrl,text:`Exact text ${row.id}`}],sources:[],counts:{}}});
-    await save('portal-archived',partition.scope,sitting('portal:archived','2020-01-01T18:00:00.000Z'),'2020-01-01T00:00:00.000Z');
+    const save=async(id:string,scope:string,row:ReturnType<typeof sitting>,retrievedAt=at)=>{
+      await publish({id,recordClass:'MEETING',scope,sourceId:'fixture',at:retrievedAt,
+        value:{formatVersion:1,generatedAt:retrievedAt,meetings:[row],agendaDocuments:[{id:`document:${row.id}`,meetingId:row.id,ocdId:division,documentUrl:row.agendaUrl,text:`Exact text ${row.id}`}],sources:[],counts:{}}});
+      await insertMeetingFacts(query,[row as never],'OR');
+    };
+    await save('portal-archived',`source:portal-old:body:${encodeURIComponent(body)}`,sitting('portal:archived','2020-01-01T18:00:00.000Z'),'2020-01-01T00:00:00.000Z');
     await save('portal-history',`${partition.scope}:history`,sitting('portal:history','2020-02-01T18:00:00.000Z'));
     await save('portal-calendar',partition.scope,sitting('portal:event',at));
     await save('independent-calendar',`source:independent:body:${encodeURIComponent(body)}`,sitting('independent:event','2026-10-25T18:00:00.000Z','https://oregonmetro.gov/council'));

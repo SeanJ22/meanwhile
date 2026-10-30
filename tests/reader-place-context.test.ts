@@ -69,9 +69,8 @@ test("the real worker transfers only the requested compressed context and keeps 
           assert.equal((row as {encoding:string}).encoding,"br-json-v1");
           const decoded=unpackPlaceContextRow(row);
           if(!input.includeAgenda) {
-            assert.deepEqual(decoded.archived_documents,[]);
+            assert.deepEqual(decoded.agenda_documents,[]);
             assert.deepEqual(decoded.agenda_texts,[]);
-            for(const partition of decoded.meeting_rows as {payload:{agendaDocuments:unknown[]}}[])assert.deepEqual(partition.payload.agendaDocuments,[]);
             if(input.bodyFactsOnly) {
               assert.equal(decoded.registry,null);assert.equal(decoded.everyday_routing,null);
               assert.equal(decoded.registration_held,false);assert.deepEqual(decoded.governments,[]);assert.deepEqual(decoded.divisions,[]);
@@ -86,7 +85,7 @@ test("the real worker transfers only the requested compressed context and keeps 
         assert.equal(actual.bodies[0]!.roster!.members[0]!.name,"Exact member — é");
         assert.ok(actual.meetings.some(row=>row.id==="fixture:fact-only"));
         assert.equal(actual.snapshot.agendaDocuments.length,input.includeAgenda?(input.includeHistory?2:1):0);
-      }else assert.equal(actual.snapshotHeldAt,AT,"the empty family's checked time stays visible");
+      }else assert.equal(actual.snapshotHeldAt,null,"a place with no sittings has no checked time to show");
       readings.push({mode:label,compressedBytes:bytes.get(label)!});
     }
     for(const [id,context] of contexts) {

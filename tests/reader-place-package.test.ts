@@ -276,7 +276,7 @@ test("ambiguous native/alias identities and invalid source dates retain the comp
   } finally { await db.pg.close(); }
 });
 
-test("an independently published target keeps raw-calendar listing collisions before its first calendar refresh", async t => {
+test("two listings of the same sitting published as facts stay recorded on the one merged sitting", async t => {
   const {db,publish,fact,meeting} = await agendaFixture(t);
   try {
     const raw = {...meeting,agendaUrl:null};
@@ -285,10 +285,10 @@ test("an independently published target keeps raw-calendar listing collisions be
       await fact(id,"title",raw.title);
       await fact(id,"starts_at",{startsAt:raw.startsAt,timeZone:raw.timeZone});
     }
-    const answer = await sameAgendaAnswer(db,"fresh-target");
-    const identity = answer.listingIdentity as {groups:{sourceIds:string[]}[]};
-    assert.ok(identity.groups.some(group=>group.sourceIds.includes(raw.id)&&group.sourceIds.includes("fresh-target")),
-      "the fresh target's effective time retains an otherwise unselected calendar listing");
+    const page = await buildPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[BODY],includeAgenda:true},db.query);
+    assert.equal(page.meetings.length,1);
+    assert.deepEqual([...page.meetings[0]!.mergedMeetingIds ?? []].sort(),["fresh-target",raw.id].sort(),"both listings stay named on the merged sitting");
+    await sameAgendaAnswer(db,"fresh-target");
   } finally { await db.pg.close(); }
 });
 
@@ -328,18 +328,22 @@ test("the page builder joins local facts and complete calendars from every held 
     await fact("meeting:new","starts_at",{startsAt:"2026-10-20T19:00:00-07:00",timeZone:"America/Phoenix",precision:"MINUTE"});
     await fact("meeting:existing","title","Current title");
     await fact("meeting:existing","title","Held title","held");
-    const held: Meeting = { id:"existing",bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Older title",startsAt:"2026-10-19T19:00:00-07:00",timeZone:"America/Phoenix",
-      location:{name:"City Hall",address:"255 W Alameda",lat:32.22,lng:-110.97},agendaUrl:"https://tucsonaz.gov/agenda",videoUrl:"https://tucsonaz.gov/video",jurisdiction:"Tucson, AZ",status:"CANCELED",
-      provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT,doorId:`meetings:new-custom-source:${encodeURIComponent(BODY)}`},mergedMeetingIds:["other"],publicationConflicts:[] };
-    const snapshot = {formatVersion:1,generatedAt:AT,counts:{fresh:1,carried:0,total:1,duplicatesCollapsed:0},sources:[],meetings:[held],agendaDocuments:[{id:"agenda",meetingId:"existing",text:"x".repeat(40_000)}]};
+    await fact("meeting:existing","starts_at",{startsAt:"2026-10-19T19:00:00-07:00",timeZone:"America/Phoenix",precision:"MINUTE"});
+    await fact("meeting:existing","agenda_url","https://tucsonaz.gov/agenda");
+    await entity("meeting:past-sitting","meeting","Council",BODY);
+    await fact("meeting:past-sitting","title","Older sitting");
+    await fact("meeting:past-sitting","starts_at",{startsAt:"2020-01-01T19:00:00-07:00",timeZone:"America/Phoenix",precision:"MINUTE"});
+    const held = { agendaUrl:"https://tucsonaz.gov/agenda" };
+    // The acquisition working copy still names each sitting's body, which is how an agenda document finds its body.
+    const workingCopy = {id:"existing",bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Older title",startsAt:"2026-10-19T19:00:00-07:00",timeZone:"America/Phoenix",
+      location:null,jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
+    const snapshot = {formatVersion:1,generatedAt:AT,counts:{fresh:1,carried:0,total:1,duplicatesCollapsed:0},sources:[],meetings:[workingCopy],agendaDocuments:[{id:"agenda",meetingId:"existing",ocdId:CITY,text:"x".repeat(40_000)}]};
     const row = snapshot;
     const encoded = partitionCivicPayload(row);
     assert.ok(encoded.parts.length > 0,"canonical meeting metadata exercises nested payload parts");
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     const scope = meetingPartitionScope("new-custom-source",BODY);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'version')",[`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'history-version')",
-      [`MEETING:${scope}:history`,`${scope}:history`,JSON.stringify({...snapshot,meetings:[{...held,id:"past-sitting"}],agendaDocuments:[]}),AT]);
     const inventory = [
       {id:"government:US-AZ:cog:city",state:"AZ",name:"City of Tucson",associations:[{divisionId:CITY}],officePhone:"520-555-0111",officeAddress:"City Hall",nativeIds:{census_pid6:"1"}},
       {id:"government:US-AZ:cog:pima",state:"AZ",name:"County of Pima",associations:[{divisionId:COUNTY}]},
@@ -374,7 +378,8 @@ test("the page builder joins local facts and complete calendars from every held 
     assert.equal(council.roster?.members[0]?.phone,"520-555-0101");
     assert.equal(council.comment?.signup,"Sign up at the door");
     const old = result.meetings.find(m => m.id === "existing")!;
-    assert.deepEqual({...old,title:held.title,fieldSources:undefined},{...held,fieldSources:undefined});
+    assert.equal(old.startsAt,"2026-10-19T19:00:00-07:00");
+    assert.equal(old.agendaUrl,held.agendaUrl);
     assert.equal(old.title,"Current title");
     assert.equal(result.meetings.find(m => m.id === "new")?.title,"New public hearing");
     assert.deepEqual(result.snapshot.agendaDocuments,snapshot.agendaDocuments);
@@ -403,35 +408,26 @@ test("the page builder joins local facts and complete calendars from every held 
   } finally { await db.pg.close(); }
 });
 
-test("canonical state-family scopes preserve meetings and venue details independently of partial sitting facts", async () => {
+test("sittings published as facts keep their cancellation, links, online access and venue text in every state", async () => {
   const db = await factDb();
   try {
     await canonicalTables(db);
-    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,$1,$1,$2,$3,'family-source')",[SOURCE,AT,"b".repeat(64)]);
     for (const state of ["AZ","NH","NJ"] as const) {
       const division = `ocd-division/country:us/state:${state.toLowerCase()}/place:example`;
       const bodyId = `${division}#planning-board`;
       await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Planning Board',$2)",[bodyId,state]);
-      await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'meeting','Public Hearing',$2,$3)",[`meeting:ical:${state}:1`,state,bodyId]);
-      await db.query("INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by) VALUES($1,'title',$2,'Public Hearing','live','OFFICIAL',1,'Public Hearing',$3,'fixture')",
-        [`meeting:ical:${state}:1`,JSON.stringify("Public Hearing"),AT]);
-      const gap: Meeting = { id:`ical:${state}:1`,bodyId,ocdId:division,bodyName:"Planning Board",title:"Public Hearing",startsAt:"2026-10-21T18:00:00-04:00",timeZone:"America/New_York",
+      const gap: Meeting = { id:`ical:${state}:1`,bodyId,ocdId:division,bodyName:"Planning Board",title:"Public Hearing",startsAt:"2026-10-31T18:00:00-04:00",timeZone:"America/New_York",
         location:null,venueGap:{kind:"STATED_NOT_PLACED",publishedText:"Library meeting room",publisher:"Town Clerk"},agendaUrl:"https://example.gov/agenda",videoUrl:"https://example.gov/video",
-        status:"CANCELED",jurisdiction:`Example, ${state}`,provenance:{kind:"OFFICIAL",sourceUrl:SOURCE,sourceOrg:"Town Clerk",collectedAt:AT,verifiedAt:AT},mergedMeetingIds:[`ical:${state}:prior-id`] };
-      const online: Meeting = {...gap,id:`ical:${state}:2`,startsAt:"2026-11-04T18:00:00-05:00",status:"SCHEDULED",venueGap:undefined,mergedMeetingIds:[],online:{label:"Video meeting",joinUrl:"https://example.gov/join"}};
-      const sibling: Meeting = {...gap,id:`ical:${state}:sibling`,bodyId:`${division}#unrelated-body`,mergedMeetingIds:[]};
-      const snapshot = {formatVersion:1,generatedAt:AT,meetings:[gap,online,sibling],agendaDocuments:[],sources:[],counts:{fresh:3,carried:0,total:3,duplicatesCollapsed:0},
-        derivedMembers:[{id:`ical:${bodyId}`,source:"ical",bodyId,status:"ACTIVE",outcome:"FRESH"}]};
-      const scope = derivedMeetingFamilyScope(`US-${state}`);
-      await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,$5)",[`MEETING:${scope}`,scope,JSON.stringify(snapshot),AT,`family-${state}`]);
+        status:"CANCELED",jurisdiction:`Example, ${state}`,provenance:{kind:"OFFICIAL",sourceUrl:SOURCE,sourceOrg:"Town Clerk",collectedAt:AT,verifiedAt:AT} };
+      const online: Meeting = {...gap,id:`ical:${state}:2`,startsAt:"2026-11-14T18:00:00-05:00",status:"SCHEDULED",venueGap:undefined,online:{label:"Video meeting",joinUrl:"https://example.gov/join"}};
+      await insertMeetingFacts(db.query,[gap,online],state);
       const result = await buildPlacePackage({state,divisionIds:[],bodyIds:[bodyId]},db.query);
       assert.deepEqual(result.meetings.map(m => m.id),[gap.id,online.id]);
       const held = result.meetings[0]!;
-      assert.deepEqual(held.venueGap,gap.venueGap);
+      assert.equal(held.venueGap?.kind === "STATED_NOT_PLACED" && held.venueGap.publishedText,"Library meeting room");
       assert.equal(held.status,"CANCELED");
       assert.equal(held.agendaUrl,gap.agendaUrl);
       assert.equal(held.videoUrl,gap.videoUrl);
-      assert.deepEqual(held.mergedMeetingIds,gap.mergedMeetingIds);
       assert.deepEqual(result.meetings[1]!.online,online.online);
       assert.deepEqual(result.bodySnapshots[bodyId].meetings,result.meetings);
       assert.equal(result.bodies[0].fields.name,"Planning Board","a canonical calendar supplies its independently named body");
@@ -454,40 +450,31 @@ test("canonical state-family scopes preserve meetings and venue details independ
   } finally { await db.pg.close(); }
 });
 
-test("held history reads retain verified old calendar rows and agenda text from canonical source versions", async () => {
+test("held history reads retain old sittings and their agenda text, and a cold map load does not", async () => {
   const db = await factDb();
   try {
     await canonicalTables(db);
     const bodyId = `${CITY}#historic-board`, scope = meetingPartitionScope("ical",bodyId);
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Board','AZ')",[bodyId]);
     const old: Meeting = {id:"ical:retained-old-calendar",bodyId,ocdId:CITY,bodyName:"Board",title:"Public hearing",startsAt:"2020-06-18T20:00:00Z",timeZone:"UTC",
       location:null,venueGap:{kind:"STATED_NOT_PLACED",publisher:"Town Clerk",publishedText:"Library room"},agendaUrl:null,status:"CONCLUDED",jurisdiction:"Town",
       provenance:{sourceUrl:SOURCE,sourceOrg:"Town Clerk",collectedAt:AT,verifiedAt:AT}};
-    const live = {...old,id:"ical:still-held",title:"Current verified title"};
-    const document = {id:"past-agenda",meetingId:old.id,text:"Meeting agenda ".repeat(3000)};
-    const prior = {formatVersion:1,generatedAt:AT,meetings:[old,{...live,title:"Older title"},{...old,id:"ical:elsewhere",bodyId:"another-body"}],agendaDocuments:[document],sources:[],counts:{fresh:3,carried:0,total:3,duplicatesCollapsed:0}};
-    const current = {...prior,meetings:[live],agendaDocuments:[]};
-    const encoded = partitionCivicPayload(prior);
-    for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
-    const candidate = async (id: string,payload: unknown,state = "PROMOTED") => {
-      const receipt = {decision:"GOOD",candidateId:id,recordClass:"MEETING",scope,sourceId:"meeting-source"};
-      await db.query("INSERT INTO civic_data_candidates VALUES($1,'MEETING',$2,'meeting-source',$3,$4,$5,true,$1,$1,$6,$7)",
-        [id,scope,AT,JSON.stringify({readModel:payload}),state,canonicalCivicDataHash(id === "old-version" ? prior : current),JSON.stringify(receipt)]);
-    };
-    await candidate("old-version",encoded.value);
-    await candidate("current-version",current);
-    await candidate("never-published",{...prior,meetings:[{...old,id:"ical:not-verified"}]},"VALIDATED");
+    const live = {...old,id:"ical:still-held",title:"Current verified title",startsAt:"2026-11-20T20:00:00Z",status:"SCHEDULED" as const};
+    const document = {id:"past-agenda",meetingId:old.id,ocdId:CITY,text:"Meeting agenda ".repeat(3000)};
+    const current = {formatVersion:1,generatedAt:AT,meetings:[old,live],agendaDocuments:[document],sources:[],counts:{fresh:2,carried:0,total:2,duplicatesCollapsed:0}};
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'current-version')",[`MEETING:${scope}`,scope,JSON.stringify(current),AT]);
+    await insertMeetingFacts(db.query,[old,live]);
     const shown = await buildPlacePackage({state:"AZ",divisionIds:[],bodyIds:[bodyId]},db.query);
-    assert.deepEqual(shown.meetings.map(m => m.id),[live.id],"cold map loads do not scan historical candidates");
+    assert.deepEqual(shown.meetings.map(m => m.id),[live.id],"cold map loads show only the sittings still held");
     let calls = 0;
     const held = await buildPlacePackage({state:"AZ",divisionIds:[],bodyIds:[bodyId],includeHistory:true,includeAgenda:true},async(sql,params) => {calls++;return db.query(sql,params);});
     assert.equal(calls,1);
     assert.deepEqual(held.meetings.map(m => m.id).sort(),[old.id,live.id].sort());
-    assert.deepEqual(held.meetings.find(m => m.id === old.id),old);
-    assert.equal(held.meetings.find(m => m.id === live.id)?.title,live.title,"live source rows take precedence over prior versions");
+    assert.equal(held.meetings.find(m => m.id === old.id)?.startsAt,old.startsAt);
+    assert.equal(held.meetings.find(m => m.id === live.id)?.title,live.title);
     assert.deepEqual(held.snapshot.agendaDocuments,[document]);
     const selected = await readReadyPackage(db,{state:"AZ",divisionIds:[],bodyIds:[bodyId],includeHistory:true,includeAgenda:true,meetingIds:[old.id]});
-    assert.deepEqual(selected.snapshot.agendaDocuments,[document],"targeted reads retain full text from archived canonical versions");
+    assert.deepEqual(selected.snapshot.agendaDocuments,[document],"targeted reads retain the full agenda text");
   } finally { await db.pg.close(); }
 });
 
@@ -531,6 +518,9 @@ test("an opened ready agenda keeps exact documents, neighbour URL ownership and 
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'agenda-version')",
       [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
+    for (const [id,name] of [[BODY,"Mayor and Council"],[COUNTY_BODY,"Supervisors"]]) await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body',$2,'AZ') ON CONFLICT DO NOTHING",[id,name]);
+    // Each listing of the sitting, including the one the reader named by its former ID, is its own published sitting.
+    await insertMeetingFacts(db.query,[meeting,{...meeting,id:"alias:target"},peer,neighbor,neighborPeer,foreign,future]);
     const input = {state:"AZ",divisionIds:[CITY,COUNTY],bodyIds:[BODY,COUNTY_BODY],includeAgenda:true};
     let fullBytes = 0,compactBytes = 0;
     const full = await buildPlacePackage(input,async(sql,params) => {const rows=await db.query(sql,params);fullBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
@@ -579,59 +569,6 @@ test("an opened ready agenda keeps exact documents, neighbour URL ownership and 
   } finally { installMeetingDoors(previousDoors); await db.pg.close(); }
 });
 
-test("archive recovery keeps every document revision and neighbour identity across large prior calendar versions", async () => {
-  const db = await factDb();
-  try {
-    await canonicalTables(db);
-    const bodyId = `${CITY}#archive-board`,scope = meetingPartitionScope("ical",bodyId);
-    const old = {id:"ical:archive-target",bodyId,ocdId:CITY,bodyName:"Archive Board",title:"Original title",startsAt:"2020-06-18T20:00:00Z",
-      timeZone:"UTC",location:null,agendaUrl:"https://example.gov/shared-archive",jurisdiction:"Tucson, AZ",status:"CONCLUDED",
-      provenance:{sourceUrl:SOURCE,sourceOrg:"Town Clerk",collectedAt:AT,verifiedAt:AT}};
-    const neighbor = {...old,id:"ical:archive-neighbor",startsAt:"2020-06-25T20:00:00Z"};
-    const latest = {...old,title:"Revised historical title"};
-    const current = {...old,id:"ical:current",startsAt:"2026-10-22T20:00:00Z",title:"Current source title"};
-    const originalDocument = {id:"archive-original",meetingId:old.id,documentUrl:old.agendaUrl,text:"Original verified agenda"};
-    const revisedDocument = {...originalDocument,id:"archive-revised",documentUrl:"https://example.gov/archive-part-url",text:"Revised verified agenda"};
-    const neighborDocument = {...originalDocument,id:"archive-neighbor",meetingId:neighbor.id,documentUrl:revisedDocument.documentUrl,text:"NEIGHBOUR ARCHIVE TEXT ".repeat(4000)};
-    const neighborRefetch = {...neighborDocument,id:"archive-neighbor-refetch",text:null};
-    const unrelatedDocument = {...neighborDocument,id:"archive-unrelated",documentUrl:"https://example.gov/unopened-archive",text:null};
-    const hugeUnowned = Array.from({length:12},(_,index)=>({...old,id:`ical:unowned:${index}`,bodyId:"another-body",title:"UNOWNED RECORD ".repeat(1000)}));
-    const snapshot = (meetings:unknown[],agendaDocuments:unknown[]) => ({formatVersion:1,generatedAt:AT,meetings,agendaDocuments,sources:[],counts:{fresh:meetings.length,carried:0,total:meetings.length}});
-    const encodedUrl = partitionCivicPayload({url:revisedDocument.documentUrl},undefined,["url"]);
-    assert.ok(encodedUrl.value && typeof encodedUrl.value==="object" && "url" in encodedUrl.value);
-    const urlReference = encodedUrl.value.url;
-    for (const part of encodedUrl.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
-    const candidate = async(id:string,at:string,payload:ReturnType<typeof snapshot>,promoted = true) => {
-      const receipt = {decision:"GOOD",candidateId:id,recordClass:"MEETING",scope,sourceId:"archive-source"};
-      const encoded = partitionCivicPayload({...payload,agendaDocuments:payload.agendaDocuments.map(document=>document && typeof document==="object" &&
-        "documentUrl" in document && document.documentUrl===revisedDocument.documentUrl ? {...document,documentUrl:urlReference} : document)});
-      for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
-      await db.query("INSERT INTO civic_data_candidates VALUES($1,'MEETING',$2,'archive-source',$3,$4,$5,true,$1,$1,$6,$7)",
-        [id,scope,at,JSON.stringify({readModel:encoded.value}),promoted?"PROMOTED":"VALIDATED",canonicalCivicDataHash(payload),JSON.stringify(receipt)]);
-    };
-    await candidate("archive-first","2026-10-15T12:00:00Z",snapshot([old,neighbor,...hugeUnowned],[originalDocument,neighborDocument,neighborRefetch,unrelatedDocument]));
-    await candidate("archive-next","2026-10-16T12:00:00Z",snapshot([latest,neighbor,...hugeUnowned],[originalDocument,revisedDocument,neighborDocument,neighborRefetch,unrelatedDocument]));
-    await candidate("archive-unpublished",AT,snapshot([{...old,id:"ical:unpublished"}],[]),false);
-    const live = snapshot([current],[]);
-    await candidate("archive-live",AT,live);
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'archive-live')",[`MEETING:${scope}`,scope,JSON.stringify(live),AT]);
-    const input = {state:"AZ",divisionIds:[],bodyIds:[bodyId],includeHistory:true,includeAgenda:true};
-    let calls = 0;
-    const full = await buildPlacePackage(input,async(sql,params) => {calls++;const rows=await db.query(sql,params);
-      assert.equal(JSON.stringify(rows).includes("UNOWNED RECORD"),false);return rows;});
-    assert.equal(calls,1);
-    assert.deepEqual(full.meetings.map(row=>row.id).sort(),[old.id,neighbor.id,current.id].sort());
-    assert.equal(full.meetings.find(row=>row.id===old.id)?.title,latest.title,"the newest verified historical record wins");
-    assert.deepEqual(full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id).sort((a,b)=>a.id.localeCompare(b.id)),
-      [originalDocument,revisedDocument].sort((a,b)=>a.id.localeCompare(b.id)),"distinct verified document versions remain available");
-    const compact = await readReadyPackage(db,{...input,meetingIds:[old.id]});
-    assert.deepEqual(compact.meetings,full.meetings,"the ready page retains current and historical identity context");
-    assert.deepEqual(compact.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id),full.snapshot.agendaDocuments.filter(doc=>doc.meetingId===old.id));
-    assert.equal(compact.snapshot.agendaDocuments.some(doc=>doc.id===neighborDocument.id),true);
-    assert.deepEqual(compact.agendaDocumentLinks,[],"complete ready documents carry their own historical URL ownership");
-  } finally { await db.pg.close(); }
-});
-
 test("ready agendas restore every document, alias and extraction variant from inline and partitioned source text", async () => {
   const db = await factDb();
   try {
@@ -654,6 +591,8 @@ test("ready agendas restore every document, alias and extraction variant from in
       for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
       await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,$5)",[`MEETING:${scope}`,scope,JSON.stringify(snapshot),AT,source]);
     }
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Mayor and Council','AZ') ON CONFLICT DO NOTHING",[BODY]);
+    await insertMeetingFacts(db.query,[meeting,other,{...meeting,id:"alias:opened-agenda"}]);
     const input = {state:"AZ",divisionIds:[CITY],bodyIds:[BODY],includeAgenda:true};
     let fullBytes = 0,compactBytes = 0;
     const full = await buildPlacePackage(input,async(sql,params)=>{const rows=await db.query(sql,params);fullBytes=Buffer.byteLength(JSON.stringify(rows));return rows;});
@@ -684,12 +623,12 @@ test("a cold visit reads a compact ready page and opens its exact encoded agenda
       jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT},
       carried:{source:"ical",lastFreshAt:AT}};
     const unowned = {...held,id:"ical:elsewhere",bodyId:siblingBody,title:"ELSEWHERE ".repeat(6000)};
-    const document = {id:"own-agenda",meetingId:held.id,text:"OWN AGENDA ".repeat(6000)};
+    const document = {id:"own-agenda",meetingId:held.id,ocdId:CITY,text:"OWN AGENDA ".repeat(6000)};
     const sources = [{source:"ical",ok:false,error:"Calendar unavailable",failure:"WALL",fetched:0,normalized:0,
       drops:{placeless:0,unknownVenue:0,unplaceableInTime:0,notConfigured:0},carriedForward:2}];
     const member = {id:`ical:${BODY}`,source:"ical",bodyId:BODY,status:"ACTIVE",outcome:"HELD",detail:"Calendar unavailable"};
     const family = {formatVersion:1,generatedAt:AT,meetings:[held,unowned],agendaDocuments:[document,
-      {id:"elsewhere-agenda",meetingId:unowned.id,text:"ELSEWHERE AGENDA ".repeat(6000)}],sources,
+      {id:"elsewhere-agenda",meetingId:unowned.id,ocdId:CITY,text:"ELSEWHERE AGENDA ".repeat(6000)}],sources,
       counts:{fresh:0,carried:2,total:2,duplicatesCollapsed:0},carriedSummary:{count:2,lastFreshAt:AT},
       derivedMembers:[member,{...member,id:`ical:${siblingBody}`,bodyId:siblingBody,detail:"ELSEWHERE MEMBER ".repeat(6000)}]};
     const scope = derivedMeetingFamilyScope("US-AZ");
@@ -698,6 +637,8 @@ test("a cold visit reads a compact ready page and opens its exact encoded agenda
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'family-version')",
       [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
+    for (const id of [BODY,siblingBody]) await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Board','AZ') ON CONFLICT DO NOTHING",[id]);
+    await insertMeetingFacts(db.query,[held,unowned]);
     let wire = "", calls = 0;
     const cold = await readReadyPackage(db,{state:"AZ",placeId:BODY,divisionIds:[],bodyIds:[BODY]},async(sql,params) => {
       assert.equal(sql,READY_PLACE_SQL);
@@ -710,10 +651,7 @@ test("a cold visit reads a compact ready page and opens its exact encoded agenda
     assert.equal(wire.includes("ELSEWHERE"),false,"unrelated meeting, agenda and source-member parts stay at the database");
     assert.equal(wire.includes("OWN AGENDA"),false,"even an encoded root does not transfer agenda text before it is opened");
     assert.deepEqual(cold.meetings.map(meeting => meeting.id),[held.id]);
-    assert.deepEqual(cold.meetings[0].carried,held.carried);
     assert.deepEqual(cold.snapshot.agendaDocuments,[]);
-    assert.equal(cold.snapshot.sources[0].error,member.detail);
-    assert.equal(cold.snapshot.sources[0].carriedForward,1);
     const opened = await readReadyPackage(db,{state:"AZ",divisionIds:[],bodyIds:[BODY],includeAgenda:true},async(sql,params) => {
       const rows = await db.query(sql,params);
       assert.equal(JSON.stringify(rows).includes("ELSEWHERE"),false,"opening an agenda still reads only this body");
@@ -766,6 +704,8 @@ test("one place query preserves source-only bodies, local runtime records and th
     const scope = derivedMeetingFamilyScope("US-AZ");
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'family-version')",
       [`MEETING:${scope}`,scope,JSON.stringify(family),AT]);
+    for (const id of [BODY,SPECIAL,elsewhereBody]) await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Board','AZ') ON CONFLICT DO NOTHING",[id]);
+    await insertMeetingFacts(db.query,family.meetings as Meeting[]);
     let calls = 0;
     const result = await buildPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL]},async(sql,params) => {
       calls++;const rows = await db.query(sql,params);
@@ -809,7 +749,7 @@ test("the map and ballot reuse one place read for their request, and a later req
     reads++;
     if (reads === 1) await new Promise<void>(resolve => { release = resolve; });
     return [[{page_id:CITY,page_kind:"place",built_at:AT,body_ids:[BODY],row:{ division_ids:[CITY,COUNTY],registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
-      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }}]];
+      agenda_documents: [], agenda_document_links: [], parts: {} }}]];
   });
   try {
     let first: Awaited<ReturnType<typeof readPlacePackage>> | undefined;
@@ -904,41 +844,4 @@ test("a special district's board on a city's territory reads under the district,
     assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["City of Mobile Council", "Mobile city"], ["Mobile Housing Authority Board of Commissioners", "Mobile Housing Authority"]]);
     assert.equal(coverage.bodies.find(b=>b.bodyId===board)?.bodyClass,"GOVERNING");
   } finally { await db.pg.close(); }
-});
-
-
-test("derived body pointer cutover keeps other governments and historical agendas while an empty body edition cannot revive legacy sittings",async()=>{
-  const db=await factDb();
-  try{
-    await canonicalTables(db);
-    const first=BODY,second=COUNTY_BODY;
-    for(const id of [first,second])await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body',$1,'AZ')",[id]);
-    const meeting=(id:string,bodyId:string,startsAt:string):Meeting=>({id,bodyId,ocdId:bodyId.split("#")[0]!,bodyName:bodyId,title:id,startsAt,timeZone:"America/Phoenix",location:null,
-      agendaUrl:`https://example.gov/${id}`,jurisdiction:"Held government",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Government",collectedAt:AT,verifiedAt:AT,doorId:`ical:${bodyId}`}});
-    const a=meeting("ical:first-live",first,"2026-10-22T17:00:00Z"),b=meeting("ical:second-live",second,"2026-10-23T17:00:00Z");
-    const oldA=meeting("ical:first-history",first,"2020-10-22T17:00:00Z"),oldB=meeting("ical:second-history",second,"2020-10-23T17:00:00Z");
-    const doc=(row:Meeting)=>({id:`agenda:${row.id}`,meetingId:row.id,documentUrl:row.agendaUrl,text:`All original agenda words for ${row.id} α𐐀`,sourceOrg:"Government",extraction:"html",collectedAt:AT,retrievedAt:AT});
-    const snapshot=(rows:Meeting[])=>({formatVersion:1,generatedAt:AT,meetings:rows,agendaDocuments:rows.map(doc),sources:[],counts:{fresh:rows.length,carried:0,total:rows.length},
-      derivedMembers:[first,second].map(bodyId=>({id:`ical:${bodyId}`,source:"ical",bodyId,status:"ACTIVE",outcome:"FRESH"}))});
-    let serial=0;
-    const put=async(scope:string,value:unknown)=>{const encoded=partitionCivicPayload(value);for(const part of encoded.parts)await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
-      await db.query(`INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,$5) ON CONFLICT(key) DO UPDATE SET payload=excluded.payload,current_version_id=excluded.current_version_id`,
-        [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT,`body-version-${++serial}`]);};
-    const family=derivedMeetingFamilyScope("US-AZ"),bodyScope=meetingPartitionScope("derived~US-AZ",first);
-    await put(family,snapshot([a,b]));await put(`${family}:history`,snapshot([oldA,oldB]));
-    const input={state:"AZ",divisionIds:[],bodyIds:[first,second],includeHistory:true,includeAgenda:true};
-    const baseline=await buildPlacePackage(input,db.query);
-    assert.deepEqual(baseline.meetings.map(row=>row.id).sort(),[a.id,b.id,oldA.id,oldB.id].sort());
-    const changed={...a,title:"New verified first-body title"},own={...snapshot([changed]),derivedMembers:snapshot([changed]).derivedMembers.filter(member=>member.bodyId===first)};
-    await put(bodyScope,own);
-    const after=await buildPlacePackage(input,db.query);
-    assert.equal(after.meetings.find(row=>row.id===a.id)?.title,changed.title);
-    assert.deepEqual(after.bodySnapshots[second].meetings,baseline.bodySnapshots[second].meetings,"another government's meetings stay exactly as shown before cutover");
-    assert.deepEqual(after.snapshot.agendaDocuments.map(row=>[row.id,row.text]).sort(),baseline.snapshot.agendaDocuments.map(row=>[row.id,row.text]).sort());
-    assert.deepEqual(after.meetings.find(row=>row.id===a.id)?.provenance,a.provenance,"native member source/door evidence stays attached");
-    await put(bodyScope,{...own,meetings:[],agendaDocuments:[],counts:{fresh:0,carried:0,total:0}});
-    const empty=await buildPlacePackage(input,db.query);
-    assert.equal(empty.meetings.some(row=>row.id===a.id),false,"an accepted empty body edition overrides the old live family body");
-    assert.deepEqual(empty.meetings.map(row=>row.id).sort(),[b.id,oldA.id,oldB.id].sort(),"all independently held historical facts and other bodies remain visible");
-  }finally{await db.pg.close();}
 });

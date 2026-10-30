@@ -77,8 +77,8 @@ test("context modes preserve exact source JSON and omit only the data their read
   const row={division_ids:[meeting.ocdId],entities:[{id:BODY}],fields:[{entity_id:BODY,value:false}],rosters:[{body_id:BODY,person_id:"person:exact"}],
     comments:[{entity_id:BODY,value:"Public comment — 予算"}],sittings:[{body_id:BODY,entity_id:`meeting:${meeting.id}`}],
     registry:{future:{glyph:"é",blank:"",absent:null}},everyday_routing:{kept:true},registration_held:true,governments:[{id:"government:exact"}],divisions:[{ocdId:meeting.ocdId}],
-    meeting_rows:[{scope:"source:exact",payload:snapshot}],archived_meetings:[meeting],archived_documents:snapshot.agendaDocuments,
-    archived_document_links:[{meetingId:meeting.id,documentUrl:meeting.agendaUrl}],agenda_texts:["Exact — educación"],parts:{},futureRows:{enabled:false,absent:null}};
+    agenda_documents:snapshot.agendaDocuments,
+    agenda_document_links:[{meetingId:meeting.id,documentUrl:meeting.agendaUrl}],agenda_texts:["Exact — educación"],parts:{},futureRows:{enabled:false,absent:null}};
   const packed=packPlaceContext({formatVersion:1,current:row,history:row,emptyCurrent:row,emptyHistory:row});
   for(const key of ["current","history","emptyCurrent","emptyHistory"]) {
     const modes=packed[key] as Record<string,unknown>;
@@ -90,12 +90,10 @@ test("context modes preserve exact source JSON and omit only the data their read
       assert.deepEqual(selected.fields,row.fields);
       assert.deepEqual(selected.comments,row.comments);
       assert.deepEqual(selected.sittings,row.sittings);
-      assert.deepEqual(selected.archived_meetings,row.archived_meetings);
       assert.deepEqual(selected.futureRows,row.futureRows);
-      assert.deepEqual(selected.archived_documents,[]);
+      assert.deepEqual(selected.agenda_documents,[]);
+      assert.deepEqual(selected.agenda_document_links,[]);
       assert.deepEqual(selected.agenda_texts,[]);
-      assert.deepEqual((selected.meeting_rows as {payload:{meetings:unknown;agendaDocuments:unknown[]}}[])[0]!.payload.meetings,snapshot.meetings);
-      assert.deepEqual((selected.meeting_rows as {payload:{agendaDocuments:unknown[]}}[])[0]!.payload.agendaDocuments,[]);
     }
     assert.deepEqual(brief.registry,row.registry);
     assert.deepEqual(brief.everyday_routing,row.everyday_routing);

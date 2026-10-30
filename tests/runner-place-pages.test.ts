@@ -30,7 +30,7 @@ function runnerFunction(name: string): string {
 }
 
 const rawPage = (id: string) => ({ division_ids: [id], entities: [], fields: [], rosters: [], comments: [], sittings: [],
-  meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {}, registry: null, governments: [], divisions: [] });
+  agenda_documents: [], agenda_document_links: [], parts: {}, registry: null, governments: [], divisions: [] });
 
 /** The runner's own place-page functions over a fixture database; only the turn process is run in this process. */
 async function placePageRunner(options: { readonly turnMs: number }) {

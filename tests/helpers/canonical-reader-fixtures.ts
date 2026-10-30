@@ -1,7 +1,8 @@
 import {PEOPLE_SOURCE_IDS,peopleSourceRecordClass,peopleSourceScope} from "../../lib/officials/people-sources.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore, type RoutineDataStore } from "../../lib/civic-data/store.ts";
 import { clearPromotedReadModelCache, type PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
-import { serializeUnchangedConfirmation } from "../../lib/civic-data/unchanged-confirmation.ts";
+import { sittingRows } from "./meeting-fact-rows.ts";
+import { MEETING_HELD_LOOKBACK_DAYS } from "../../lib/meetings/constants.ts";
 import { canonicalCivicDataHash } from "../../lib/civic-data/canonical-hash.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../../lib/civic-data/types.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
@@ -236,13 +237,16 @@ export function activateCanonicalFixture(key: string): void {
     const every = new Map<string,{id:string;kind:string;name:string;state:string;parent_id:string|null}>();
     for (const body of registries.flatMap(r => r.registry.bodies)) every.set(body.id,{id:body.id,kind:"body",name:body.name ?? body.id,state:meetingStateOf(body.id),parent_id:body.ocdId});
     for (const p of pointers) for (const m of p.payload.meetings) if (m.bodyId) every.set(m.bodyId,{id:m.bodyId,kind:"body",name:m.bodyName,state:meetingStateOf(m.bodyId),parent_id:m.ocdId});
-    const entities = [...every.values()].filter(b => b.state === state && (all || named.includes(b.id) || divisions.some(d => b.id.split("#")[0] === d || b.parent_id === d || b.parent_id?.startsWith(`${d}/`))));
+    const entities = [...every.values()].filter(b => b.state === state && (all || named.includes(b.id) || divisions.some(d => b.id.split("#")[0] === d || b.parent_id === d || b.parent_id?.startsWith(`${d}/`))))
+      .map(b => ({...b, division: b.parent_id ?? b.id.split("#")[0], divisions: [b.parent_id ?? b.id.split("#")[0]]}));
     const ids = entities.map(e => e.id);
-    const meeting_rows = pointers.filter(p => (params[5] || !p.scope.endsWith(":history")) && p.payload.meetings.some(m => m.bodyId && ids.includes(m.bodyId)))
-      .map(p => ({scope:p.scope,payload:structuredClone(p.payload),current_version_id:p.versionId,confirmation:p.latestConfirmation ? serializeUnchangedConfirmation(p.latestConfirmation) : null}));
+    const inPage = new Map(pointers.flatMap(p => p.payload.meetings).filter(m => m.bodyId && ids.includes(m.bodyId)
+      && (params[5] || Date.parse(m.startsAt) >= Date.now() - MEETING_HELD_LOOKBACK_DAYS * 86_400_000)).map(m => [m.id, m] as const));
+    const sittings = sittingRows([...inPage.values()]);
+    const agenda_documents = pointers.flatMap(p => p.payload.agendaDocuments).filter(document => inPage.has(document.meetingId));
     const registry = registries.find(value => value.registry.bodies.some(body => meetingStateOf(body.id) === state)) ?? null;
     const everydayRouting = values.find(p => p.recordClass === EVERYDAY_ROUTING_POINTER.recordClass && p.scope === EVERYDAY_ROUTING_POINTER.scope)?.payload ?? null;
-    return [{division_ids:divisions,registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
+    return [{division_ids:divisions,registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings,agenda_documents:structuredClone(agenda_documents),agenda_document_links:[],agenda_texts:[],parts:{}}];
   };
   const pages = new Map<string,Promise<Record<string,unknown>[]>>();
   const savedRows = (input: PlaceInput,ready: boolean): Promise<Record<string,unknown>[]> => {

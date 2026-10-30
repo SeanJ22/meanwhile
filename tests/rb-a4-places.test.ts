@@ -51,8 +51,8 @@ test('an identical saved fact can file a newly served city and refresh its reade
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Regional Board','AZ'),($2,'place','Served','AZ')",[id,city]);
     await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov/board','https://example.gov/board',$1,$2,'source')",[now.toISOString(),'a'.repeat(64)]);
-    const input={subjectId:id,field:'office_phone',fieldKind:'contact' as const,value:'520-555-0100',valueText:'520-555-0100',quote:'',provenance:'OFFICIAL' as const,producedBy:'fixture',costUsd:0,
-      copy:{id:1,finalUrl:'https://example.gov/board',text:'',fetchedAt:now,isArchive:false}};
+    const input={subjectId:id,field:'office_phone',fieldKind:'contact' as const,value:'520-555-0100',valueText:'520-555-0100',quote:'Phone 520-555-0100',provenance:'OFFICIAL' as const,producedBy:'fixture',costUsd:0,
+      copy:{id:1,finalUrl:'https://example.gov/board',text:'Phone 520-555-0100',fetchedAt:now,isArchive:false}};
     let purges=0;const options={purge:async()=>{purges++;return {purged:true};}};
     assert.equal((await door(db,input,factClocks(null),now,options) as {decision:string}).decision,'PUBLISH');
     const before=purges;

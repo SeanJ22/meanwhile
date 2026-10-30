@@ -44,7 +44,7 @@ test("a place's existing parent and native ids carry recipient aliases to its bo
   const row = { registration_held: true, registry: runtime, governments: [government], divisions: [],
     entities: runtime.registry.bodies.map(body => ({ id: body.id, name: body.name, placed: true, division: COUNTY,
       parent_id: body.id === BOARD ? GOVERNMENT : COUNTY })), fields: [], rosters: [], comments: [], sittings: [],
-    meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} };
+    agenda_documents: [], agenda_document_links: [], parts: {} };
   let reads = 0;
   const place = await buildPlacePackage({ state: "WI", divisionIds: [COUNTY] }, async () => {
     reads++;
@@ -95,7 +95,7 @@ test("a nested city board reads its own source-coded city area, including receip
     governmentClass: "MUNICIPAL", recipientNameUnique: true, associations: [{ divisionId: canonical, layer: "place", geoid: "5553000", basis: "SOURCE_CODE" }] };
   const row = { registration_held: true, registry: runtime, governments: [government], divisions: [],
     entities: [{ id: bodyId, name: definition.name, placed: true, division: nested, parent_id: governmentAlias }],
-    fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} };
+    fields: [], rosters: [], comments: [], sittings: [], agenda_documents: [], agenda_document_links: [], parts: {} };
   const place = await buildPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [row]);
   const coverage = stateCoverage({ state: "WI", registry: runtime, version: "city" }, [nested], 0, 0, [], place.bodies);
   const city = coverage.bodies[0];

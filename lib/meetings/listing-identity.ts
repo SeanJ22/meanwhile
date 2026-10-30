@@ -59,7 +59,7 @@ export function meetingListingIdentity(meetings: readonly Meeting[], resolveBody
     if (!Number.isFinite(instant) || meeting.startPrecision === "DAY") { unresolvedTimeSourceIds.add(meeting.id); continue; }
     if (!meeting.id || duplicates.has(meeting.id)) continue;
     const startsAt = new Date(instant).toISOString();
-    const { id: _id, provenance, carried: _carried, ...civic } = meeting;
+    const { id: _id, provenance, carried: _carried, fieldSources: _fieldSources, ...civic } = meeting;
     const { sourceUrl: _sourceUrl, collectedAt: _collectedAt, verifiedAt: _verifiedAt, ...sourceAuthority } = provenance;
     // Only record identity and read-history fields are removed. Titles, status,
     // venue/online access, geography, agenda URL/absence observation, acting-body

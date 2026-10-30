@@ -28996,5 +28996,285 @@
       "url": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
     },
     "discoveredFrom": "https://www.barrington.ri.gov/DocumentCenter/View/2978/BOC-Booklet-Questions-Info-revised-10-6"
+  },
+  {
+    "id": "ri-glocester-polling-places-2026",
+    "publisher": "Glocester Board of Canvassers",
+    "url": "https://glocesterri.gov/2026-VotingLocations.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "name": "Glocester town",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400730340",
+      "population": 9974
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://glocesterri.gov/2026-VotingLocations.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Glocester November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "130[1-3]\\s+\u2013\\s+[\\s\\S]*?(?=\\s+130[1-4])",
+        "fields": {
+          "precinct": {
+            "pattern": "^(130[1-3])",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^130[1-3]\\s+\u2013\\s+([^,]+)",
+            "group": 1
+          },
+          "address": {
+            "pattern": ",\\s*(\\d+ Putnam Pike)",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "General Election\\s*\u2013([\\s\\S]*?)\\s*POLLS OPEN",
+          "group": 1
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct",
+        "address": "address"
+      },
+      "constants": {}
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.521257+00:00",
+      "detail": "Current 2026 PDF visually checked: precincts 1301 (Ponaganset Middle School) and 1302 (Ponaganset High School) omit street addresses. The configured reader leaves those two rows open as missing-sites; 1303 is readable. Damaged font encoding in 1304/1305 is handled from the same PDF by the companion mappings."
+    },
+    "office": {
+      "name": "Glocester Board of Canvassers",
+      "url": "https://glocesterri.gov/2026-VotingLocations.pdf"
+    },
+    "discoveredFrom": "https://glocesterri.gov/2026-VotingLocations.pdf"
+  },
+  {
+    "id": "ri-glocester-polling-places-2026-precinct-1304",
+    "publisher": "Glocester Board of Canvassers",
+    "url": "https://glocesterri.gov/2026-VotingLocations.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "name": "Glocester town",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400730340",
+      "population": 9974
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://glocesterri.gov/2026-VotingLocations.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Glocester November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "1304\\s+--\\s+Fogarty[\\s\\S]*?(?=\\s+1305)",
+        "fields": {
+          "precinct": {
+            "pattern": "^(1304)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^1304\\s+--\\s+(.+?),",
+            "group": 1
+          },
+          "road": {
+            "pattern": "\\b(Road)\\s*$",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "([\\s\\S]+)",
+          "group": 1,
+          "fields": {
+            "street": {
+              "pattern": "(736 Snake Hill)\\s+1305",
+              "group": 1
+            }
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street} {road}, Glocester, RI"
+      },
+      "constants": {
+        "town": "Glocester"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.521257+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Glocester Board of Canvassers",
+      "url": "https://glocesterri.gov/2026-VotingLocations.pdf"
+    },
+    "discoveredFrom": "https://glocesterri.gov/2026-VotingLocations.pdf"
+  },
+  {
+    "id": "ri-glocester-polling-places-2026-precinct-1305",
+    "publisher": "Glocester Board of Canvassers",
+    "url": "https://glocesterri.gov/2026-VotingLocations.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "name": "Glocester town",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400730340",
+      "population": 9974
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://glocesterri.gov/2026-VotingLocations.pdf",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Glocester November 3, 2026 polling places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "1305\\s+\u2013\\s+West Glocester[\\s\\S]*?(?=\\s+POLLS OPEN)",
+        "fields": {
+          "precinct": {
+            "pattern": "^(1305)",
+            "group": 1
+          },
+          "nameStart": {
+            "pattern": "1305\\s+\u2013\\s+(West Glocester Elem\\.)",
+            "group": 1
+          },
+          "schoolA": {
+            "pattern": "\\b(Scho)\\s+ol\\b",
+            "group": 1
+          },
+          "schoolB": {
+            "pattern": "\\bScho\\s+(ol)\\b",
+            "group": 1
+          }
+        },
+        "within": {
+          "pattern": "([\\s\\S]+)",
+          "group": 1,
+          "fields": {
+            "street": {
+              "pattern": "West Glocester Elem\\. School,\\s*(111 Reynolds Rd)",
+              "group": 1
+            }
+          }
+        }
+      },
+      "columns": {
+        "precinct": "precinct"
+      },
+      "templates": {
+        "name": "{nameStart} {schoolA}{schoolB}",
+        "address": "{street}, Glocester, RI"
+      },
+      "constants": {
+        "town": "Glocester"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:57:26.521257+00:00",
+      "detail": "Saved native town response; configured fields replayed through readVotingSource. Original bytes and source-row evidence retained for the runner."
+    },
+    "office": {
+      "name": "Glocester Board of Canvassers",
+      "url": "https://glocesterri.gov/2026-VotingLocations.pdf"
+    },
+    "discoveredFrom": "https://glocesterri.gov/2026-VotingLocations.pdf"
+  },
+  {
+    "id": "ri-burrillville-polling-places-2026",
+    "publisher": "Burrillville Board of Canvassers",
+    "url": "https://www.burrillville.org/elections",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "RI",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:burrillville_town",
+      "name": "Burrillville town",
+      "countyFips": "44007",
+      "countySubdivisionGeoid": "4400711800",
+      "population": 16158
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.burrillville.org/elections",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "TOWN",
+    "title": "Burrillville November 3, 2026 polling places",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "<tr\\b[^>]*>(?=(?:(?!</tr>)[\\s\\S])*?030[1-6])(?:(?!</tr>)[\\s\\S])*?</tr>",
+        "fields": {
+          "precinct": {
+            "pattern": "\\b(030[1-6])",
+            "group": 1
+          },
+          "name": {
+            "pattern": "</td>\\s*<td>([\\s\\S]*?)<br\\s*/?>",
+            "group": 1
+          },
+          "street": {
+            "pattern": "<br\\s*/?>([\\s\\S]*?)</td>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, RI"
+      },
+      "constants": {
+        "town": "Burrillville"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-30T04:56:22.569174+00:00",
+      "detail": "Native current-election table parses all six precincts. Authority-data blocker: the runner must save the RI.gov Burrillville directory page (which links www.burrillville.org) through saveLinkingCopy and attach its returned linkingPage reference to this mapping. No unavailable sourceCopyId is asserted. Until that existing authority data is installed, the runner keeps an official-link blank and does not replace the VIP value."
+    },
+    "office": {
+      "name": "Burrillville Board of Canvassers",
+      "url": "https://www.burrillville.org/elections"
+    },
+    "discoveredFrom": "https://www.ri.gov/towns/view/burrillville/"
   }
 ]

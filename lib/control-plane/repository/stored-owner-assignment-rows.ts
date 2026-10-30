@@ -1,5 +1,4 @@
-import { mergeAssignmentParts } from "../assignment-view.ts";
-import type { OwnerAssignmentRow, OwnerAssignmentRows } from "./owner-assignment-rows.ts";
+import { ownerReadbackItem, ownerAssignmentHeadOf, ownerAssignmentContributions, type OwnerAssignmentRow, type OwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import type { AggregateRepository } from "./types.ts";
 import type { StateTotals } from "../owner-snapshot-totals.ts";
 
@@ -16,11 +15,13 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
       const rows = store.readMany ? await store.readMany(ids) : (await Promise.all(ids.map(id => store.read(id)))).filter(row => row !== null);
       return rows.flatMap(row => row.value ? [row.value] : []).sort((a, b) => a.id.localeCompare(b.id));
     },
+    async heads(ids) { return (await this.read(ids)).map(ownerAssignmentHeadOf); },
+    async contributions(ids) { return ownerAssignmentContributions(await this.read(ids)); },
     async find(input) {
       const members = new Set(input.members), clauses = new Set(input.clauses);
       return (await values()).filter(row => row.group.members.some(id => members.has(id)) ||
         (row.group.clause !== null && clauses.has(row.group.clause)) ||
-        (input.dueAt !== undefined && row.nextAt !== null && row.nextAt <= input.dueAt));
+        (input.dueAt !== undefined && row.nextAt !== null && row.nextAt <= input.dueAt)).map(row => row.id);
     },
     async save(rows, removed, states = []) {
       const now = rows[0]?.builtAt ?? new Date().toISOString();
@@ -31,10 +32,6 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
         else await stateTotals.compareAndSet(state.id, state.expectedRevision, state.value, state.value.builtAt);
       }
     },
-    async candidates(state, nowIso, excluding = []) {
-      const excluded = new Set(excluding);
-      return mergeAssignmentParts((await values()).filter(row => row.state === state && !excluded.has(row.id)).map(row => row.part), nowIso).candidates;
-    },
     async scopeMembers(identities) {
       const out = new Map<string,string[]>();
       for (const row of await values()) for (const mark of row.group.obligation?.assignments ?? []) {
@@ -44,11 +41,9 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
       }
       return out;
     },
-    async publications(readbackOnly = false) {
+    async publications() {
       const items = (await values()).flatMap(row => row.group.publications);
-      return items.filter(item => !readbackOnly || (item.publicationOutcome?.status !== 'HELD' && (
-        ['official-filings','comment-access','everyday-routing','ballot-navigation'].includes(item.autonomousPlan?.publication?.contractId ?? '') ||
-        (/^registry-runtime:[A-Z]{2}$/.test(item.autonomousPlan?.publication?.contractId ?? '') && item.autonomousPlan?.contract?.recordClass === 'OFFICIAL_ROSTER'))))
+      return items.filter(ownerReadbackItem)
         .sort((a,b) => a.id.localeCompare(b.id));
     },
     async clear() {

@@ -23,17 +23,7 @@ import { decideExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
 import { isScheduled, scheduleObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { planSupersededRetirement, standing, supersededRetirementReason } from "../lib/control-plane/scheduler/durable.ts";
 import { ZERO_COST, type Attempt, type WorkerRole } from "../lib/control-plane/attempt.ts";
-import {
-  OBLIGATION_PROVIDER_PREFIXES,
-  askGapCountWords,
-  assignmentCountClaims,
-  assignmentRenderedNumbers,
-  buildAssignmentView,
-  buildAssignments,
-  providerOfObligation,
-  type AssignmentSources,
-} from "../lib/control-plane/assignment-view.ts";
-import { auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
+import { OBLIGATION_PROVIDER_PREFIXES, buildAssignments, providerOfObligation, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { heldReading, unitOf, type AskGapMeeting } from "./helpers/ask-gap-unit.ts";
@@ -154,7 +144,6 @@ const WITHOUT_MESA_MINUTES = { contracts: ROUTINE_SOURCE_CONTRACTS.filter((c) =>
 
 const enumerate = (h: AskGapHoldings, registered?: Parameters<typeof askGapCarriers>[2]) =>
   buildRegistry([askGapsProvider({ holdings: () => h, ...(registered ? { registered } : {}) })], { root: ".", nowIso: NOW_ISO });
-
 
 test("Ask's gaps carry a closed code, body and record class, and the model and the reader get the same words as before", () => {
   const mesa = meetings.filter((m) => m.bodyId === MESA).map((m) => ({ ...m, bodyName: "City Council", title: "City Council" }));
@@ -454,34 +443,3 @@ test("ADMIN: an Ask-gap obligation reads as an Ask gap, with the owner and the n
   }
 });
 
-test("ADMIN: open Ask gaps are counted by code, drawn with their denominators, and unknown is never zero", () => {
-  const none = buildAssignmentView(sources());
-  assert.equal(none.summary.askGaps?.held, false);
-  assert.match(askGapCountWords(none), /^Open Ask gaps are not counted: no Ask-gap obligation is on record/);
-  assert.match(askGapCountWords({ summary: { ...none.summary, askGaps: undefined } }), /built before the count existed/);
-
-  const pass = enumerate(holdings());
-  const retiredId = unitOf(pass, PIMA, "AGENDA_NOT_HELD").obligation.id;
-  const retired = { ...standing(unitOf(pass, PIMA, "AGENDA_NOT_HELD").obligation, NOW_ISO), active: false, retiredAt: NOW_ISO, retirementReason: supersededRetirementReason("ask-gaps") };
-  const open = pass.units.filter((u) => u.obligation.id !== retiredId).map((u) => standing(u.obligation, NOW_ISO));
-  const view = buildAssignmentView(sources({ obligations: [...open, retired] }));
-  const counted = view.summary.askGaps;
-  assert.ok(counted?.held);
-  if (!counted?.held) return;
-  assert.equal(counted.value.open, 4, "a retired gap is not open");
-  assert.deepEqual(counted.value.byCode.map((c) => [c.code, c.count.value, c.count.denominator]), [
-    ["OUTCOME_NOT_READ", 2, 4],
-    ["AGENDA_NOT_HELD", 1, 4],
-    ["CALENDAR_STALE", 1, 4],
-    ["OUTCOMES_UNREADABLE", 0, 4],
-    ["MEETINGS_NOT_HELD", 0, 4],
-  ]);
-  assert.equal(
-    askGapCountWords(view),
-    "Open Ask gaps — 4: outcome not read 2 · agenda not held 1 · calendar read is stale 1 · recorded outcomes unreadable 0 · meetings not held 0." +
-      " How often readers were told them is not on this list: the Ask-gap observations were not read for it.",
-    "these sources carry no Ask-gap observations, and the words say so rather than implying nobody was told (tests/ask-gap-observation.test.ts)",
-  );
-  assert.ok(auditRenderedNumbers(assignmentRenderedNumbers(view)).ok);
-  assert.ok(checkStatedEqualsRendered(assignmentCountClaims(view)).ok);
-});

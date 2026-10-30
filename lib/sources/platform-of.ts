@@ -2,8 +2,11 @@
  * Which kind of website an address is on. The parser worker reads a link with the reader of its kind, so every link on the
  * work list is tagged with it when it is made. A file's own type wins over its host (a PDF on a vendor's host is read as a PDF).
  * The patterns use only what JavaScript and PostgreSQL both read the same way, so a database statement can tag rows too.
- * An address on a body's own site names no vendor, and has no kind until a lane adds one here.
+ * An address no pattern matches is on a government's own site: its kind is "own-site", read by the parser in lib/sources/official-page-events/.
  */
+/** The kind of every address no pattern names. */
+export const OWN_SITE = "own-site";
+
 export const PLATFORM_PATTERNS: readonly (readonly [platform: string, pattern: string])[] = [
   ["pdf", "\\.pdf([?#]|$)"],
   ["ical", "\\.ics([?#]|$)|^webcal:|/ical([/?]|$)|format=ical"],
@@ -31,7 +34,7 @@ export const PLATFORM_PATTERNS: readonly (readonly [platform: string, pattern: s
 
 const COMPILED = PLATFORM_PATTERNS.map(([platform, pattern]) => [platform, new RegExp(pattern, "i")] as const);
 
-/** The kind of website an address is on, or null when it names none. */
-export function platformOf(url: string): string | null {
-  return COMPILED.find(([, pattern]) => pattern.test(url))?.[0] ?? null;
+/** The kind of website an address is on. */
+export function platformOf(url: string): string {
+  return COMPILED.find(([, pattern]) => pattern.test(url))?.[0] ?? OWN_SITE;
 }

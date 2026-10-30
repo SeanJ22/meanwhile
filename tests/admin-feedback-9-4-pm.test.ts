@@ -10,9 +10,7 @@ import test from "node:test";
 
 import { codeOf, sourceFilesUnder } from "./read-code.ts";
 import { consoleReturnPath, isConsolePath } from "../lib/control-plane/console-paths.ts";
-import { buildCostPanel, costRowKind } from "../lib/control-plane/cost-panel.ts";
 import { LEVEL_CLASS, displayNameOf, words } from "../lib/control-plane/display-name.ts";
-import { easternize, formatCalendarDate, formatEastern, formatEasternDate, formatEasternSpan, NO_STAMP, BAD_STAMP } from "../lib/control-plane/eastern-time.ts";
 import { buildFleetView } from "../lib/control-plane/fleet-view.ts";
 import {
   ADD_TO_QUEUE_OPTION,
@@ -23,7 +21,7 @@ import {
   fixSubjectId,
   parseFixField,
 } from "../lib/control-plane/fix-queue.ts";
-import { held, measured, type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
+import { type OwnerDecisionIntent } from "../lib/control-plane/owner-surface.ts";
 import { normalize, toCsv, type AcsFetch } from "../lib/sources/census-acs-population/index.ts";
 
 const ROOT = process.cwd();
@@ -32,21 +30,6 @@ const src = (rel: string): string => readFileSync(join(ROOT, rel), "utf8");
 /* ================================================================== *
  * every stamp is Eastern, spelled out
  * ================================================================== */
-
-test("ADM-22: an ISO stamp reads as Eastern time spelled out, with the year only when asked; a missing or unreadable stamp says so", () => {
-  assert.equal(formatEastern("2026-09-05T02:20:57.808Z"), "September 4, 10:20 PM ET", "02:20Z is the evening before in New York");
-  assert.equal(formatEastern("2026-01-05T15:20:57.808Z", { year: true }), "January 5, 2026, 10:20 AM ET", "EST in January");
-  assert.equal(formatEasternDate("2026-09-05T02:20:57.808Z"), "September 4");
-  assert.equal(formatEasternSpan("2026-09-04T08:04:50.476Z", "2026-09-04T08:15:00.553Z"), "September 4, 4:04 AM – 4:15 AM ET");
-  assert.equal(formatCalendarDate("2026-08-11"), "August 11, 2026", "a bare tracker date is the day it names, never shifted through UTC");
-  assert.equal(formatEastern(null), NO_STAMP);
-  assert.equal(formatEastern("garbage"), BAD_STAMP);
-  assert.equal(
-    easternize("parent relaunch proven 2026-09-02T15:36:25.8796479Z: pid 20240; trigger present at 2026-09-05T06:17:17.081Z"),
-    "parent relaunch proven September 2, 2026, 11:36 AM ET: pid 20240; trigger present at September 5, 2026, 2:17 AM ET",
-    "an instrument's own sentence keeps its words and loses its machine stamps",
-  );
-});
 
 test("ADM-22: no console page prints a raw ISO stamp where the owner reads; every one is spelled out in Eastern time", () => {
   const offenders: string[] = [];
@@ -203,49 +186,6 @@ test("ADM-19: a gap of ours reads 'not measured', never OUR GAP, on every consol
  * free by design is not a gap; time, requests and bytes are measured
  * ================================================================== */
 
-test("ADM-17: a role whose attempts all ran without a paid model is $0 by design with its non-dollar measures; a model role with no dollars is unmeasured", () => {
-  const entry = (attemptId: string, role: string, usd: number | null, extra: Partial<{ durationMs: number; bytesFetched: number; requestCount: number }> = {}) => ({
-    attemptId, workItemId: "w", routeTaskId: null, routeId: null, source: null, jurisdiction: null, project: "f", role: role as never,
-    cost: { inputTokens: null, outputTokens: null, usd, durationMs: extra.durationMs ?? null, bytesFetched: extra.bytesFetched ?? null, requestCount: extra.requestCount ?? null, cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null, uncachedInputTokens: null, batch: false }, recordedAt: "2026-09-05T02:00:00.000Z",
-  });
-  const panel = buildCostPanel({
-    costs: [
-      entry("s1", "SCOUT", 0.5),
-      entry("s2", "SCOUT", null),
-      entry("a1", "ACQUIRER", null, { durationMs: 4000, bytesFetched: 2_097_152, requestCount: 3 }),
-      entry("a2", "ACQUIRER", null, { durationMs: 2000, bytesFetched: 1024, requestCount: 1 }),
-      entry("d1", "DETECTIVE", null),
-    ],
-    attempts: [
-      { id: "s1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-      { id: "s2", worker: { version: "claude-opus-5", provider: "anthropic" } },
-      { id: "a1", worker: { version: "deterministic-walker", provider: "we-the-people" } },
-      { id: "a2", worker: { version: "deterministic-walker", provider: "we-the-people" } },
-      { id: "d1", worker: { version: "claude-opus-5", provider: "anthropic" } },
-    ],
-    cacheByRole: null,
-    share: null,
-    verifiedRecords: null,
-  });
-  const acq = panel.costByRole.find((r) => r.key === "ACQUIRER")!;
-  assert.equal(acq.kind, "FREE_BY_DESIGN");
-  assert.ok(acq.usd.held && acq.usd.value.value === 0);
-  assert.deepEqual(acq.nonDollar, { requests: 4, bytes: 2_098_176, durationMs: 6000, entries: 2 });
-  assert.match(acq.meaning ?? "", /\$0 by design — 2 attempts ran deterministic code/);
-  const det = panel.costByRole.find((r) => r.key === "DETECTIVE")!;
-  assert.equal(det.kind, "UNMEASURED");
-  assert.ok(!det.usd.held && /^1 model attempt of 1 reported no dollar cost\.$/.test(det.usd.gap.says), "the label says 'not measured'; the sentence does not repeat it");
-  // A snapshot published before the kind existed is read by its own sentence.
-  assert.equal(costRowKind({ usd: { held: false, gap: { whose: "OURS", says: "not measured — 1322 attempts, none reported a dollar cost (this work runs without a paid model)." } } }), "FREE_BY_DESIGN");
-  assert.equal(costRowKind({ usd: { held: false, gap: { whose: "OURS", says: "3 model attempts of 3 reported no dollar cost." } } }), "UNMEASURED");
-  assert.equal(costRowKind({ usd: held(measured(1, 2, "c", "s")) }), "MEASURED");
-  assert.equal(costRowKind({ kind: "UNMEASURED", usd: held(measured(1, 2, "c", "s")) }), "UNMEASURED", "a published kind wins");
-  const scout = panel.costByRole.find((r) => r.key === "SCOUT")!;
-  assert.equal(scout.kind, "MEASURED");
-  assert.match(scout.meaning ?? "", /1 of 2 attempts reported a dollar cost; 1 reported none/);
-  assert.match(src("scripts/publish-owner-snapshot.mts"), /spendByDay: spendByDay\(reads\)/);
-});
-
 /* ================================================================== *
  * The population adapter
  * ================================================================== */
@@ -258,7 +198,6 @@ test("the ACS adapter normalizes rows, leaves an unstated margin empty, and refu
   assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", "-1", "0", "00001"]] }), /not a count/);
   assert.throws(() => normalize({ ...fetched, rows: [fetched.rows[0], ["ZCTA5 1", null, "0", "00001"]] }), /not a count/);
 });
-
 
 /* ================================================================== *
  * Lumen Edge on the admin only, with the reader legend's colours

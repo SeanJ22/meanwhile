@@ -1,7 +1,8 @@
 import { newestFirst, type WorkInput, type WorkList, type WorkRow } from "../core/work.ts";
 import type { Unlock } from "../core/capability.ts";
 import { captureProvenance, receiptCapture } from "../facts/capture.ts";
-import { bodyNamed, learnDoorChannel, splitSubject } from "../facts/entities.ts";
+import { bodyNamed, canonicalSubject, ensureGoverningBody, learnDoorChannel, resolvePerson, splitSubject } from "../facts/entities.ts";
+import { nameKey } from "../facts/roster-facts.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { withFactConfirmations } from "../facts/confirmation.ts";
 import { publishLoaded, type Clocks, type FactDb, type Query } from "../facts/publish.ts";
@@ -10,9 +11,10 @@ import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { ProbeFetch } from "../doors/probe.ts";
+import { newFieldManualEntry, writeFieldManual, type FieldManualOutcome } from "../control-plane/field-manual.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import type { Lead, PlatformParser } from "./parser-hook.ts";
+import type { Lead, ParsedFact, PlatformParser } from "./parser-hook.ts";
 import { platformOf } from "./platform-of.ts";
 
 /** A link that could not be read this many times goes to a detective. */
@@ -27,7 +29,7 @@ const LINKING_PAGE_WINDOW_HOURS = 30 * 24;
 export interface LeadDeps {
   readonly list: WorkList;
   readonly facts: FactDb & { readonly query: Query };
-  readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
+  readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl" | "fieldManual" | "capabilities">;
   readonly vault: EvidenceStore;
   readonly fetch: ProbeFetch;
   readonly clocks: Clocks;
@@ -83,14 +85,45 @@ export async function readLead(deps: LeadDeps, claim: WorkRow): Promise<LeadResu
     if (!bodies.has(name)) bodies.set(name, deps.facts.transaction(query => bodyNamed(query, lead.subjectId, null, name)).then(body => body?.id ?? null));
     return bodies.get(name)!;
   };
+  // A person on the page is the one person the matcher finds in the seat the page puts them in; two equal matches wait for a detective.
+  const bodyHeld = async (id: string) => {
+    const subject = await canonicalSubject(deps.facts.query, id);
+    const [body] = await deps.facts.query("SELECT id, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [subject]);
+    const made = body ? null : await ensureGoverningBody(deps.facts.query, subject);
+    return body ? { id: String(body.id), state: body.state as string | null, parentId: body.parent_id as string | null } : made;
+  };
   const provenance = captureProvenance(capture, []);
   const linkingPage = parsed.facts.length ? await officialLinkingPage(deps, lead) : null;
   if (linkingPage) await deps.facts.transaction(query => learnDoorChannel(query, splitSubject(lead.subjectId).root, lead.url));
+  const people = new Map<string, Promise<{ body: string; person: string } | null>>();
+  const personOf = (fact: ParsedFact, bodyId: string) => {
+    const key = JSON.stringify([bodyId, fact.person]);
+    if (!people.has(key)) people.set(key, (async () => {
+      const body = await bodyHeld(bodyId);
+      if (!body) return null;
+      const places = (await deps.facts.query("SELECT place_id, boundary_year, placement_basis FROM entity_place WHERE entity_id = $1", [body.id]))
+        .map(row => ({ placeId: String(row.place_id), boundaryYear: Number(row.boundary_year), basis: row.placement_basis as "SERVICE_AREA" | "HOST_COUNTY" }));
+      const { name, ids = [] } = fact.person!;
+      const found = await resolvePerson(deps.facts, { name, state: body.state, places, placeId: places.length ? null : body.parentId,
+        externalIds: [...ids, [`roster-name:${body.id}`, nameKey(name)]] }, deps.clocks.retryMinutes("officeholder"));
+      if (typeof found !== "string") return null;
+      // A roster on the government's own page is the person's official page too.
+      if (linkingPage) await deps.facts.transaction(query => learnDoorChannel(query, found, lead.url));
+      return { body: body.id, person: found };
+    })());
+    return people.get(key)!;
+  };
   await withBatchedReaderInvalidation(purge => withFactConfirmations(deps.facts, async () => {
     for (const fact of parsed.facts) {
-      const subjectId = await subjectOf(fact.subjectHint);
+      let subjectId = await subjectOf(fact.subjectHint), field = fact.field;
       if (subjectId === null) { unmatched.count++; continue; }
-      const outcome = await publishLoaded(deps.facts, { subjectId, field: fact.field, fieldKind: fact.fieldKind, value: fact.value, valueText: fact.valueText,
+      if (fact.person) {
+        const seated = await personOf(fact, subjectId);
+        if (!seated) { tally.held++; continue; }
+        field = field.replaceAll("{person}", seated.person).replaceAll("{body}", seated.body);
+        subjectId = fact.on === "body" ? seated.body : seated.person;
+      }
+      const outcome = await publishLoaded(deps.facts, { subjectId, field, fieldKind: fact.fieldKind, value: fact.value, valueText: fact.valueText,
         quote: fact.quote, provenance, copy, linkingPage, producedBy: `parser:${platform}`, costUsd: 0 },
       () => ({ quote: fact.quote, valueText: fact.valueText }), deps.clocks, deps.now(), { purge });
       if ("refused" in outcome) { if (outcome.refused === "SUBJECT_NOT_FOUND") unmatched.count++; else tally.refused++; }
@@ -102,7 +135,7 @@ export async function readLead(deps: LeadDeps, claim: WorkRow): Promise<LeadResu
 
   const found = [...new Set(parsed.links.flatMap(href => absolute(href, copy.finalUrl) ?? []))].filter(url => url !== claim.url && url !== copy.finalUrl).slice(0, MAX_LINKS);
   const links = await deps.list.ensure(found.map((url): WorkInput => ({ kind: "lead", tier: claim.tier, state: claim.state, placeId: claim.placeId!, subjectId: claim.subjectId!, url,
-    value: platformOf(url) === null ? null : { platform: platformOf(url) }, priority: newestFirst(at), origin: { from: "loader", workId: claim.id },
+    value: { platform: platformOf(url) }, priority: newestFirst(at), origin: { from: "loader", workId: claim.id },
     source: { source: `Found on a ${platform} page`, foundOn: copy.finalUrl } })));
   // Every fact left without a body to hold it means the government is not in the store yet; the link is read again once it is.
   return parsed.facts.length > 0 && unmatched.count === parsed.facts.length ? { again: "SUBJECT_NOT_FOUND" } : { read: true, ...tally, links };
@@ -113,6 +146,12 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
   readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void }) {
   const { deps } = input, platforms = [...deps.parsers.keys()];
   const stats = { claimed: 0, read: 0, published: 0, links: 0, again: 0, refused: 0, failed: 0 };
+  // What worked and what failed, by kind of website and state, for the Knowledge Bank the hunters and the next parser read first.
+  const learned = new Map<string, { platform: string; state: string; outcome: FieldManualOutcome; count: number; published: number; links: number; reason: string | null; url: string | null }>();
+  const learn = (claim: WorkRow, platform: string, outcome: FieldManualOutcome, said: { published?: number; links?: number; reason?: string }) => {
+    const key = `${platform}:${claim.state}:${outcome}`, held = learned.get(key) ?? { platform, state: claim.state, outcome, count: 0, published: 0, links: 0, reason: null, url: null };
+    learned.set(key, { ...held, count: held.count + 1, published: held.published + (said.published ?? 0), links: held.links + (said.links ?? 0), reason: said.reason ?? held.reason, url: claim.url });
+  };
   let reserved = 0;
   const results = await runBoundedWorkPool(Array.from({ length: input.concurrency }, (_, index) => index), input.concurrency, async () => {
     while (!input.stopRequested() && reserved < (input.maxClaims ?? Infinity)) {
@@ -133,12 +172,13 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
         const result = await readLead(deps, claim);
         controller.signal.throwIfAborted();
         const unlock = (kind: Unlock["kind"], text: string): Unlock => ({ kind, platform: platform ?? undefined, text });
-        if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; }
-        else if ("again" in result && claim.attempts >= LEAD_ATTEMPTS) { await deps.list.refuse(claim, result.again, unlock("method", result.again)); stats.refused++; }
+        if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; learn(claim, platform!, "FAILED", { reason: result.broke }); }
+        else if ("again" in result && claim.attempts >= LEAD_ATTEMPTS) { await deps.list.refuse(claim, result.again, unlock("method", result.again)); stats.refused++; learn(claim, platform!, "BLOCKED", { reason: result.again }); }
         else if ("again" in result) { await deps.list.later(claim, result.again); stats.again++; }
         else {
           if (!await deps.list.finish(claim)) throw new Error("WORK_LEASE_LOST");
           stats.read++; stats.published += result.published; stats.links += result.links;
+          learn(claim, platform!, result.published || result.links ? "YIELDED" : "ZERO", result);
         }
       } catch (error) {
         stats.failed++;
@@ -149,5 +189,9 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
     }
   });
   for (const result of results) if (!result.ok) throw new Error(result.error);
+  const at = deps.now().toISOString();
+  await writeFieldManual(deps.repos, [...learned.values()].map(row => newFieldManualEntry("parser-lane", `${row.platform}:${row.state}:${row.outcome}`, {
+    role: "PARSER", kind: "PAGE_READ", outcome: row.outcome, title: `${row.platform} pages in ${row.state}`, states: [row.state.toLowerCase()], platforms: [row.platform], url: row.url, observedAt: at,
+    summary: `${row.count} page(s) read: ${row.published} fact(s) published, ${row.links} link(s) found${row.reason ? `; ${row.reason}` : ""}`, payload: { count: row.count, published: row.published, links: row.links, reason: row.reason } })), at);
   return stats;
 }

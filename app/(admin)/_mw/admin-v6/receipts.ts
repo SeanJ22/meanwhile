@@ -107,7 +107,7 @@ export function confirmationOf(body: unknown): Confirmation | null {
   return okState && typeof x.words === "string" ? { state: x.state as Confirmation["state"], at: typeof x.at === "string" ? x.at : null, words: x.words,
     ...(x.change && typeof x.change === "object" ? { change: x.change } : {}),
     ...(x.plan && typeof x.plan === "object" ? { plan: x.plan } : {}), ...(x.progress && typeof x.progress === "object" ? { progress: x.progress } : {}),
-    ...(Array.isArray(x.items) ? { items: x.items } : {}) } : null;
+    ...(Array.isArray(x.items) ? { items: x.items } : {}), ...(Array.isArray(x.steps) ? { steps: x.steps } : {}) } : null;
 }
 
 /** An order's parts as the receipt lists them. */
@@ -121,7 +121,13 @@ function itemsOf(c: Pick<Confirmation, "items">): Pick<UiReceipt, "items"> | Rec
  * saying what it is waiting on, until the runner's own record names it. A final
  * state is never overwritten.
  */
+const withSteps = (receipt: UiReceipt, c: Confirmation | null): UiReceipt => c?.steps ? { ...receipt, orderSteps: c.steps } : receipt;
+
 export function applyConfirmation(prev: UiReceipt, c: Confirmation, at: string): UiReceipt {
+  return withSteps(foldConfirmation(prev, c, at), c);
+}
+
+function foldConfirmation(prev: UiReceipt, c: Confirmation, at: string): UiReceipt {
   if (prev.status !== "queued" && prev.status !== "read" && prev.status !== "running") return prev;
   if (c.state === "in-progress") return { ...prev, status: "running", statusWords: "In progress", says: c.words, notPickedUp: false,
     ...(c.plan ? { plan: c.plan } : {}), ...(c.progress ? { progress: c.progress } : {}), ...(c.change ? { change: c.change } : {}),
@@ -154,6 +160,10 @@ export function isOpen(r: Pick<UiReceipt, "status">): boolean {
 }
 
 export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: number | null, body: unknown, at: string): UiReceipt {
+  return withSteps(fromReply(prev, def, httpStatus, body, at), confirmationOf(body));
+}
+
+function fromReply(prev: UiReceipt, def: ActionDef, httpStatus: number | null, body: unknown, at: string): UiReceipt {
   const step = (label: string) => [...prev.steps, { label, at }];
   if (httpStatus === 401 || httpStatus === 403) {
     return { ...prev, status: "failed", statusWords: STATUS_WORDS.failed, steps: step("Failed"),
@@ -203,21 +213,6 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
     return confirmation === null ? saved : applyConfirmation(saved, confirmation, at);
   }
   return { ...prev, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
-}
-
-export const ORDER_STEPS = ["Received", "Accepted", "Scheduled", "In progress", "Done"] as const;
-
-/**
- * How far an order has got, as the count of steps reached (0 to 5), from the receipt's own status and plan.
- * Accepted needs a plan; Scheduled needs a time the work is due; In progress needs the work to have started.
- */
-export function orderStepsReached(r: Pick<UiReceipt, "status" | "plan" | "lifecycle">): number {
-  if (r.status === "refused" || r.status === "failed") return 0;
-  if (r.status === "done" || r.status === "partial") return 5;
-  if (r.status === "running" || r.lifecycle.workStarted) return 4;
-  if (r.plan?.resultsBy) return 3;
-  if (r.plan) return 2;
-  return r.lifecycle.saved || r.status === "queued" || r.status === "read" ? 1 : 0;
 }
 
 export function acceptedLine(r: Pick<UiReceipt, "plan" | "scopeName" | "level">, format: (iso: string) => string): string | null {

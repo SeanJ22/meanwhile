@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { publishedBodyLabel } from "../lib/civic-data/published-body-name.ts";
 import { ensureEntity } from "../lib/facts/entities.ts";
-import { foldPortalBodyLabels } from "../lib/facts/portal-publication.ts";
+import { placeBodies } from "../lib/facts/portal-publication.ts";
 import { resolveId } from "../lib/core/resolve.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -34,8 +34,8 @@ test("every writer reuses the real body; held meetings and evidence survive a la
       VALUES($1,'member:person-1','{}','Council member','live','OFFICIAL',1,'Council member',now(),'calendar'),
       ($1,'name','"Special Meeting"','Special Meeting','live','OFFICIAL',1,'Special Meeting',now(),'calendar')`,[`${place}#body:special-meeting`]);
     const before=await db.query("SELECT id FROM entity WHERE kind='meeting' ORDER BY id");
-    const report=await foldPortalBodyLabels(db,"AZ",async()=>({purged:true}));
-    assert.equal(report.before,3);assert.equal(report.folded,3);assert.equal(report.meetings,3);assert.deepEqual(report.unresolved,[]);
+    const report=await placeBodies(db,"AZ",async()=>({purged:true}));
+    assert.equal(report.merged,3);assert.equal(report.asked,0);
     assert.deepEqual(await db.query("SELECT id FROM entity WHERE kind='meeting' ORDER BY id"),before);
     assert.equal((await db.query("SELECT count(*) AS n FROM entity m JOIN entity b ON b.id=m.parent_id WHERE m.kind='meeting' AND b.kind='body' AND b.id=$1",[board]))[0]?.n,3);
     assert.equal(await resolveId(`${place}#body:notice`,db.query),board,"even a held original entity resolves through its alias");
@@ -45,7 +45,7 @@ test("every writer reuses the real body; held meetings and evidence survive a la
       {entity_id:board,field:'name',status:'superseded',source_copy_id:1},
     ]);
     assert.equal((await db.query("SELECT count(*) AS n FROM source_copy"))[0]?.n,1,"reconciliation neither downloads nor copies a source");
-    assert.equal((await foldPortalBodyLabels(db,"AZ",async()=>({purged:true}))).folded,0,"a second pass changes nothing");
+    assert.equal((await placeBodies(db,"AZ",async()=>({purged:true}))).merged,0,"a second pass changes nothing");
   }finally{await db.pg.close();}
 });
 

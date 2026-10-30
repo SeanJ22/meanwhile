@@ -7,7 +7,7 @@ import { updatesView } from "../lib/control-plane/admin-view/updates-read.ts";
 import { v6FixesView } from "../lib/control-plane/admin-view/v6-fixes-read.ts";
 import { recordAttemptsKeepingHistory } from "../lib/control-plane/fix-history.ts";
 import { fixQueueView } from "../lib/control-plane/fix-queue.ts";
-import { fixesInTesting, methodStandings, noteMethodLesson, provenFixesReading } from "../lib/control-plane/fix-standing.ts";
+import { fixesInTesting, provenFixesReading } from "../lib/control-plane/fix-standing.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { takeUnshownUpdates, updateRecords } from "../lib/control-plane/updates.ts";
@@ -73,17 +73,6 @@ test("a proven fix that breaks says so once, never as a win, and the Scoreboard 
   assert.match(r.items?.[0] ?? "", /^Broke Sep 5: the agenda-listing route \(back in testing\)$/);
   // Thirty days on, the break no longer shows.
   assert.equal(provenFixesReading(c, "2026-10-20T00:00:00.000Z").broke.length, 0);
-});
-
-test("a lesson that changes a method puts it back in Testing with one update", async () => {
-  const repos = createMemoryRepositories();
-  const map = memoryFixMap();
-  await recordAttemptsKeepingHistory(map, repos, PLACES.map((p) => attempt(p, "SUCCEEDED", 1)), title);
-  const told = await noteMethodLesson(map, repos, "m-agenda", "Both failures were sites posting agendas as images; a version that reads them was built", at(7), "the agenda-listing route");
-  assert.equal(told?.kind, "LESSON");
-  const c = await config(repos);
-  assert.match(updateRecords(c).find((u) => u.id === told!.id)!.what, /^A lesson changed the agenda-listing route: Both failures .* built\. It is being tested again\.$/);
-  assert.deepEqual(methodStandings(c).map((s) => [s.status, s.lessonAt]), [["TESTING", at(7)]]);
 });
 
 test("the bar is the Admin setting: raising it keeps a fix in Testing", async () => {

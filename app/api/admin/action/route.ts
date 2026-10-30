@@ -20,7 +20,7 @@ import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { consoleReturnPath } from "@/lib/control-plane/console-paths.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
-import { confirmReceipt } from "@/lib/control-plane/gateway/confirmation.ts";
+import { confirmReceipt, liveOrderBook } from "@/lib/control-plane/gateway/confirmation.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import { readPulse } from "@/lib/control-plane/gateway/pulse-read.ts";
 import { wakeHintWriterFromEnv } from "@/lib/control-plane/gateway/wake-hint.ts";
@@ -177,7 +177,7 @@ async function post(request: NextRequest): Promise<NextResponse> {
 
   if (wantsJson(request)) {
     /* The answer also says whether the runner has picked the action up, from the runner's own records. */
-    const confirmation = outcome.ok ? await confirmReceipt(opened.repos, outcome.receipt) : null;
+    const confirmation = outcome.ok ? await confirmReceipt(opened.repos, outcome.receipt, Date.now(), undefined, liveOrderBook()) : null;
     return NextResponse.json({ ...outcome, confirmation }, { status: 200 });
   }
 

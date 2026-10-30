@@ -9,10 +9,10 @@ import {
   type ReactionTargetType,
   type ScaleVersion,
 } from "../signal/reactions.ts";
-import { organicDenominatorSentence, type RunClassCensus } from "../signal/search-log-reads.ts";
+import { type RunClassCensus } from "../signal/search-log-reads.ts";
 /* The read-outcome shape is shared with the control-plane read model; nothing else crosses over. */
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
-import { assertAggregateOnly, gap, held, measured, type Held, type Measured, type RenderedNumber, type CountClaim } from "./owner-surface.ts";
+import { assertAggregateOnly, type RenderedNumber } from "./owner-surface.ts";
 import { plainCode } from "./plain-words.ts";
 
 export type ReaderRunClass = "ORGANIC" | "AUTHOR" | "SYNTHETIC" | "UNKNOWN";
@@ -24,32 +24,10 @@ export const READER_RUN_CLASSES: readonly ReaderRunClass[] = [
   "UNKNOWN",
 ];
 
-/** The class every view starts in. Never widened by anything a request says. */
-export const DEFAULT_READER_RUN_CLASS: ReaderRunClass = "ORGANIC";
-
-/** The windows the page offers. Bounded by construction: there is no "all time". */
-export const READER_WINDOW_CHOICES: readonly number[] = [7, 30, 90];
-
 export const DEFAULT_READER_WINDOW_DAYS = 30;
 
 /** How many rows a "top" list shows. Every such list also states how many exist. */
 export const READER_TOP_N = 8;
-
-/** Anything unrecognised resolves to ORGANIC, never widened. */
-export function readerRunClassFromParam(raw: string | string[] | undefined): ReaderRunClass {
-  const one = Array.isArray(raw) ? raw[0] : raw;
-  const wanted = (one ?? "").trim().toUpperCase();
-  const found = READER_RUN_CLASSES.find((c) => c === wanted);
-  return found === undefined ? DEFAULT_READER_RUN_CLASS : found;
-}
-
-/** The window a request asked for, or the default. Only the offered spans are honoured. */
-export function readerWindowDaysFromParam(raw: string | string[] | undefined): number {
-  const one = Array.isArray(raw) ? raw[0] : raw;
-  const wanted = Number.parseInt((one ?? "").trim(), 10);
-  const found = READER_WINDOW_CHOICES.find((d) => d === wanted);
-  return found === undefined ? DEFAULT_READER_WINDOW_DAYS : found;
-}
 
 /** The span every panel on one render describes. Half-open: `[from, to)`. */
 export interface ReaderWindow {
@@ -168,15 +146,6 @@ export function readerWord(key: string | null | undefined): ReaderWord {
   if (entry !== undefined) return entry;
   return { label: plainCode(raw), means: "" };
 }
-
-/** Detail keys the browser writes; the SQL CASE below mirrors these pairs and a test asserts they agree. */
-export const DETAIL_KEY_BY_EVENT: Readonly<Partial<Record<SearchLogEventType, string>>> = {
-  BODY_OPENED: "venueKey",
-  MEETING_OPENED: "meetingId",
-  OFFICIAL_OPENED: "officialId",
-  FILTER_APPLIED: "filter",
-  QUESTION_ASKED: "topic",
-};
 
 /** Named so a failure can say which handle is missing without printing its value. */
 export const READER_STORE_URL_VAR = "DATABASE_URL";
@@ -766,45 +735,6 @@ export async function readReaderIntel(
   return intel;
 }
 
-export function scopeSentence(runClass: ReaderRunClass, census: RunClassCensus): string {
-  if (runClass === "ORGANIC") return organicDenominatorSentence(census);
-  const counted = censusCountFor(census, runClass);
-  const words = readerWord(runClass);
-  return (
-    `You are looking at ${counted} of ${census.total} rows in this window, and they are not readers: ` +
-    `${words.label.toLowerCase()} — ${words.means} Nothing on this screen is a demand figure while ` +
-    "this class is selected."
-  );
-}
-
-/** The window in the owner's own words, so the span is on the face and not implied. */
-export function windowSentence(window: ReaderWindow): string {
-  return `Everything below counts the last ${window.days} days only. Nothing on this page reads the whole history.`;
-}
-
-/** A zero denominator renders as a named gap, never as a percentage. */
-export function share(
-  value: number,
-  denominator: number,
-  contract: string,
-  denominatorSource: string,
-): Held<Measured> {
-  if (denominator <= 0) {
-    return gap(
-      "OURS",
-      `Not measured: ${denominatorSource} holds no rows in this window, so there is nothing to be a share of.`,
-    );
-  }
-  if (value > denominator) {
-    return gap(
-      "OURS",
-      `Not measured: ${value} was counted out of ${denominator}, which means the two came from ` +
-        "different populations. A percentage from them would be a confident sentence about nothing.",
-    );
-  }
-  return held(measured(value, denominator, contract, denominatorSource));
-}
-
 /** `measured()` throws on these; the page refuses them instead of failing with a 500. */
 export function impossibleNumbersIn(numbers: readonly RenderedNumber[]): string[] {
   return numbers
@@ -935,67 +865,3 @@ export function renderedNumbersOf(intel: ReaderIntel): RenderedNumber[] {
   return out;
 }
 
-/** `stated` comes from the reading's totals and `rendered` from the array the page maps over. */
-export function countClaimsOf(intel: ReaderIntel, topN: number = READER_TOP_N): CountClaim[] {
-  const claims: CountClaim[] = [];
-  /* Only claims whose two halves come from different places; a number compared to itself cannot fail. */
-  if (intel.activity.kind === "HELD") {
-    const a = intel.activity.value;
-    claims.push({
-      label: "Event kinds listed",
-      stated: SEARCH_LOG_EVENT_TYPES.length,
-      rendered: a.byEvent.length,
-    });
-    const lists: [string, TopList][] = [
-      ["Top ZIPs", a.topZips],
-      ["Top ZIP areas", a.topZipAreas],
-      ["Top districts", a.topDivisions],
-      ["Top bodies", a.topBodies],
-      ["Top meetings", a.topMeetings],
-      ["Top officials", a.topOfficials],
-      ["Filters used", a.topFilters],
-      ["Question topics", a.topAskTopics],
-    ];
-    for (const [label, list] of lists) {
-      claims.push({
-        label,
-        stated: Math.min(list.distinct, topN),
-        rendered: list.rows.length,
-      });
-    }
-  }
-  if (intel.reactions.kind === "HELD") {
-    const r = intel.reactions.value;
-    claims.push({
-      label: "Reaction standings listed",
-      stated: VERIFICATION_TIERS.length,
-      rendered: r.byTier.length,
-    });
-    for (const group of r.topTargets) {
-      claims.push({
-        label: `Most answered — ${readerWord(group.targetType).label}`,
-        stated: Math.min(group.list.distinct, topN),
-        rendered: group.list.rows.length,
-      });
-    }
-  }
-  if (intel.demand.kind === "HELD") {
-    const d = intel.demand.value;
-    claims.push({
-      label: "Subjects wanted sooner",
-      stated: Math.min(d.topSubjects.distinct, topN),
-      rendered: d.topSubjects.rows.length,
-    });
-  }
-  return claims;
-}
-
-/** A top list always says how many were left out. */
-export function topListSentence(list: TopList, one: string, many: string): string {
-  if (list.distinct === 0) return `No ${one} was named by any event in this window.`;
-  const named = list.distinct === 1 ? one : many;
-  const events = list.keyed === 1 ? "event" : "events";
-  const tail = `named in this window, out of ${list.keyed} ${events} that named one.`;
-  if (list.distinct <= list.rows.length) return `All ${list.distinct} ${named} ${tail}`;
-  return `The top ${list.rows.length} of ${list.distinct} ${named} ${tail}`;
-}

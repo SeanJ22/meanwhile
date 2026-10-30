@@ -286,20 +286,6 @@ export function count(value: number): string {
   return Number.isFinite(value) ? value.toLocaleString("en-US") : "—";
 }
 
-/** `1 document`, `2 documents`. */
-export function plainCount(value: number, one: string, many: string): string {
-  return `${count(value)} ${value === 1 ? one : many}`;
-}
-
-/** Milliseconds in, seconds out: `1552` is `1.6 seconds`. */
-export function plainDuration(ms: number): string {
-  if (!Number.isFinite(ms) || ms < 0) return "—";
-  if (ms < 1000) return `${(ms / 1000).toFixed(1)} seconds`;
-  if (ms < 60_000) return `${(ms / 1000).toFixed(1)} seconds`;
-  const minutes = ms / 60_000;
-  return minutes < 60 ? `${minutes.toFixed(1)} minutes` : `${(minutes / 60).toFixed(1)} hours`;
-}
-
 /** Hours in, words out: `577` is `24 days`. */
 export function ageWords(hours: number): string {
   if (!Number.isFinite(hours) || hours < 0) return "an unknown time";

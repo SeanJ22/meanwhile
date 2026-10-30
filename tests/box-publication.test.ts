@@ -1,3 +1,5 @@
+import { LEAD_DDL, WORK_DDL, workList } from "../lib/core/work.ts";
+import { moveBoxLinks } from "../lib/sources/box-links.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -54,6 +56,12 @@ async function setup() {
     return artifact.id;
   };
   return { facts, repos, vault, hold };
+}
+
+/** The work list the Box hands findings to, on the fact database. */
+async function handedList(facts: Awaited<ReturnType<typeof factDb>>) {
+  for (const ddl of [...WORK_DDL, ...LEAD_DDL]) await facts.pg.exec(ddl);
+  return { list: workList(facts.query, { owner: "campaign-sites", leaseMs: 300_000, now: () => new Date(NOW) }), sql: facts.query };
 }
 
 const B15 = readFileSync(join(ROOT, "tests", "fixtures", "clerksboards", "b15.html"), "utf8");
@@ -287,11 +295,12 @@ test("each checklist id goes where its record publishes: body links, the agenda 
   const page = (artifact: { readonly canonicalUrl: string }) => ({ requestedUrl: artifact.canonicalUrl, finalUrl: artifact.canonicalUrl, httpStatus: 200, contentType: "text/html",
     body: "<html><body><h1>Katie Hobbs for Governor</h1><p>Katie Hobbs is running for Governor of Arizona. Visit https://hobbs-for-governor.example.com/</p></body></html>",
     sha256: "0".repeat(64), retrievedAt: "2026-09-01T15:00:00.000Z", permissions: [], redirects: [] });
-  const chain = await projectCampaignSiteChains(repos, { subjects: new Map([[hobbs.candidacyId, hobbs]]), readLead: unread, recordRead: unread,
+  const { list, sql } = await handedList(facts);
+  assert.ok(await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date(NOW) }) > 0, "the handoffs leave the Box for the work list");
+  const chain = await projectCampaignSiteChains(repos, { subjects: new Map([[hobbs.candidacyId, hobbs]]), list, readLead: unread, recordRead: unread,
     heldPage: async artifact => page(artifact), now: NOW, maxReads: 0 });
   assert.ok(chain.offers.some(offer => offer.stage === "SCOUTED" && offer.accepted), JSON.stringify(chain.offers));
-  const lead = (await repos.boxFindings.list()).find(row => row.value.subjectId === hobbs.candidacyId)!.value;
-  assert.equal(lead.state, "built", "the campaign-site chain took the checked lead");
+  assert.equal((await sql("SELECT status FROM work WHERE kind = 'fact' AND subject_id = $1", [hobbs.candidacyId]))[0]!.status, "done", "the campaign-site chain took the checked lead");
 });
 
 test("the campaign-site check holds a hunter's lead to the freshness clock Admin sets", async () => {
@@ -307,11 +316,13 @@ test("the campaign-site check holds a hunter's lead to the freshness clock Admin
   const hobbs: CampaignSiteSubject = { candidacyId: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs", officeTitle: "Governor",
     ocdId: "ocd-division/country:us/state:az", stateCode: "AZ", cycle: 2026, readerKeys: [], filingDomains: [] };
   const unread = async (): Promise<never> => { throw new Error("no lead is read in this pass"); };
-  await projectCampaignSiteChains(repos, { subjects: new Map([[hobbs.candidacyId, hobbs]]), readLead: unread, recordRead: unread, now: NOW, maxReads: 0,
+  const { list, sql } = await handedList(facts);
+  await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date(NOW) });
+  await projectCampaignSiteChains(repos, { subjects: new Map([[hobbs.candidacyId, hobbs]]), list, readLead: unread, recordRead: unread, now: NOW, maxReads: 0,
     heldPage: async artifact => ({ requestedUrl: artifact.canonicalUrl, finalUrl: artifact.canonicalUrl, httpStatus: 200, contentType: "text/html", body: html,
       sha256: "0".repeat(64), retrievedAt: "2026-09-01T15:00:00.000Z", permissions: [], redirects: [] }) });
-  const lead = (await repos.boxFindings.list())[0]!.value;
-  assert.deepEqual([lead.state, lead.refusal], ["refused", "COPY_OUTSIDE_FRESHNESS_WINDOW"], "a week-old page is past Admin's one-hour clock");
+  const [lead] = await sql("SELECT status, refusal FROM work WHERE kind = 'fact'");
+  assert.deepEqual([lead!.status, lead!.refusal], ["refused", "COPY_OUTSIDE_FRESHNESS_WINDOW"], "a week-old page is past Admin's one-hour clock");
 });
 
 test("a name joins a council only when its own words name the seat: staff and bare names wait, two holders of one ward go to Sean, an older seat with no title is flagged", async () => {

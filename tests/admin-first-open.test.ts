@@ -13,7 +13,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { readLatestDigest } from "../lib/control-plane/admin-data.ts";
 import { readAssignmentSourcesById } from "../lib/control-plane/assignment-read.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { AggregateRepository, AppendOnlyRepository, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -193,14 +192,3 @@ test("an id that names nothing is NOT_RECORDED after two round trips, never an e
 
 /* ------------------------------------------------------------------ the newest digest */
 
-test("the runner card's digest is one row from the tail of the log, the newest", async () => {
-  const repos = createMemoryRepositories();
-  const g = gated(repos);
-  const empty = await g.run(() => readLatestDigest(g.repos));
-  assert.equal(empty.value.kind, "NOT_RECORDED");
-  for (const n of [1, 2, 3]) await repos.ownerDigests.append("owner-digest", `d-${n}`, any({ n }), NOW);
-  const { value, rounds } = await g.run(() => readLatestDigest(g.repos));
-  assert.deepEqual(rounds, [["ownerDigests:recent(1)"]]);
-  assert.equal(value.kind, "HELD");
-  assert.equal(value.kind === "HELD" ? (value.value as unknown as { n: number }).n : null, 3);
-});

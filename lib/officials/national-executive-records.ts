@@ -2,13 +2,13 @@ import type { Officeholder, OfficeholderSet } from "./types.ts";
 import type { ReaderOfficialAction, ReaderOfficialActions } from "./reader-actions.ts";
 import type { SourcedExecutiveRecord } from "../sources/white-house/presidential-records.ts";
 import type { RollCallVote, VotePosition } from "../votes/types.ts";
-import { readNationalPresident } from "../reader/national.ts";
+import { nationalPresident } from "../reader/national.ts";
 import { whiteHouseOffice } from "./white-house-offices.ts";
 
 export interface NationalExecutiveRecordReaders {
   readonly roster: () => Promise<OfficeholderSet | null>;
 }
-const resident: NationalExecutiveRecordReaders = { roster: readNationalPresident };
+const resident: NationalExecutiveRecordReaders = { roster: nationalPresident };
 const country = "ocd-division/country:us";
 function currentPerson(subject: string, roster: OfficeholderSet | null): Officeholder | null {
   if (!/^white-house:[a-z0-9-]+$/.test(subject) || !roster) return null;

@@ -1,4 +1,6 @@
-import { findingFact, finishBoxFinding, takeBoxFinding, type BoxFinding } from "../control-plane/box.ts";
+import { findingFact, type BoxFinding } from "../control-plane/box.ts";
+import type { WorkList } from "../core/work.ts";
+import { findingOf } from "../sources/handoff.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { heldCaptureReader } from "../civic-data/worker-publication-context.ts";
@@ -8,14 +10,10 @@ import { captureProvenance } from "./capture.ts";
 import { boardFor } from "./box-publication.ts";
 import { canonicalSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { COMMENT_SUMMARY_LEAD } from "./finding-slots.ts";
 import { publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import type { ReaderCachePurger } from "../reader/cache.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-
-const BUILDER = "comment-summary";
-const LEASE_MS = 30 * 60_000;
 
 /** The board's comment rule, written in plain English from the page: each sentence carries the passage of the page it came from, and the checker model has confirmed each one. The page is its source. */
 export async function publishCommentSummary(input: {
@@ -40,22 +38,20 @@ export async function publishCommentSummary(input: {
 
 /** Long participation pages that hunters handed off become checked plain-English comment rules. The caller's transport is the paid-work guard: it refuses when Admin has paused or capped model spending, and then the page waits. */
 export async function summarizeCommentPages(input: {
-  readonly repos: ControlPlaneRepositories; readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore;
+  readonly repos: ControlPlaneRepositories; readonly list: WorkList; readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore;
   readonly clocks: Clocks; readonly now: string; readonly limit: number;
   readonly transportFor: Parameters<typeof translateText>[0]["transportFor"];
   readonly purge?: ReaderCachePurger;
 }) {
   const report = { looked: 0, published: 0, held: {} as Record<string, number> };
-  const now = new Date(input.now), end = new Date(now.getTime() + LEASE_MS).toISOString();
+  const now = new Date(input.now);
   const readHeld = heldCaptureReader(input.vault);
   const hold = (reason: string) => { report.held[reason] = (report.held[reason] ?? 0) + 1; };
-  for (const row of await input.repos.boxFindings.waitingFor(COMMENT_SUMMARY_LEAD, input.limit)) {
+  for (const claim of await input.list.claim("fact", input.limit, { platform: "comment-summary" })) {
     report.looked++;
-    const fact = findingFact(row);
-    if (!fact || typeof fact.value !== "string") { hold("PAGE_NOT_NAMED"); continue; }
-    const claim = await takeBoxFinding(input.repos.boxFindings, row.id, BUILDER, input.now, end);
-    if (!claim) continue;
-    const fail = async (reason: string) => { hold(reason); await finishBoxFinding(input.repos.boxFindings, row.id, claim.token, { state: "failed", reason }, input.now); };
+    const row = findingOf(claim), fact = findingFact(row);
+    const fail = async (reason: string) => { hold(reason); await input.list.later(claim, reason); };
+    if (!fact || typeof fact.value !== "string") { await fail("PAGE_NOT_NAMED"); continue; }
     try {
       const capture = await savedPage(input.repos, readHeld, fact.origin, fact.value, input.clocks, now);
       if (!capture) { await fail("PAGE_NOT_SAVED_INSIDE_ITS_CLOCK"); continue; }
@@ -67,7 +63,7 @@ export async function summarizeCommentPages(input: {
         subject: { kind: "COMMENT_RULES", subjectId: `comment_rules:${board.body.id}`, label: row.exactQuote ?? "", ocdId, state: usps } });
       const outcome = await publishCommentSummary({ facts: input.facts, record, entityId: board.body.id, capture, clocks: input.clocks, now, purge: input.purge });
       if ("blank" in outcome) { await fail(outcome.blank); continue; }
-      await finishBoxFinding(input.repos.boxFindings, row.id, claim.token, { state: "built", buildResultId: `comment-summary:${record.id}` }, input.now);
+      await input.list.finish(claim);
       report.published++;
     } catch (error) {
       await fail(error instanceof Error ? error.message.slice(0, 160) : "SUMMARY_FAILED");

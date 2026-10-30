@@ -4,7 +4,6 @@ import { measured, type Measured } from "./owner-surface.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { RouteTask } from "./route-task.ts";
 import { stateOfSubjectPlace } from "./unit-state.ts";
-import type { ResearchIntent } from "./scheduler/research-policy.ts";
 import type { WorkItem } from "./work-item.ts";
 
 export type FleetGroupKey = "hunters" | "detectives" | "verifiers" | "auditors" | "engineers";
@@ -188,34 +187,3 @@ export function buildFleetView(input: FleetViewInput): FleetView {
   };
 }
 
-export interface DeploymentRow {
-  readonly intentId: string;
-  readonly requestedAt: string;
-  readonly target: string;
-  readonly by: string;
-  readonly status: "HONORED" | "PENDING";
-  readonly honoredAt: string | null;
-  readonly honoredBy: string | null;
-  readonly detail: string | null;
-}
-
-export function dispatchHistory(log: readonly ResearchIntent[]): DeploymentRow[] {
-  const honored = new Map<string, Extract<ResearchIntent, { readonly kind: "HONORED" }>>();
-  for (const r of log) if (r.kind === "HONORED") honored.set(r.honors, r);
-  return log
-    .filter((r): r is Extract<ResearchIntent, { readonly kind: "INTENT" }> => r.kind === "INTENT" && r.action === "DISPATCH")
-    .map((i): DeploymentRow => {
-      const h = honored.get(i.intentId) ?? null;
-      return {
-        intentId: i.intentId,
-        requestedAt: i.requestedAt,
-        target: i.note ?? "",
-        by: i.actor,
-        status: h ? "HONORED" : "PENDING",
-        honoredAt: h?.honoredAt ?? null,
-        honoredBy: h?.honoredBy ?? null,
-        detail: h?.detail ?? null,
-      };
-    })
-    .sort((a, b) => (a.requestedAt < b.requestedAt ? 1 : a.requestedAt > b.requestedAt ? -1 : 0));
-}

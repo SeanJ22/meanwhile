@@ -19,6 +19,14 @@
  *                       body or government the lead was found under. The worker matches it to the one body in the store under
  *                       that government (and makes it when the page names one we do not hold); two equal matches go to a
  *                       detective. Never put an id here.
+ *          person       set when the fact is about a person on the page: { name, ids? }, ids being [scheme, value] pairs the page
+ *                       prints (`legistar:<tenant>`, `openstates`, ...). The worker matches the person with the one person
+ *                       matcher (an id, or the same name in a seat the person already holds; a name alone is never a match, and
+ *                       two equal matches go to a detective), and makes the person when nobody holds them. The seat the page
+ *                       puts them in is the body subjectHint names. `on` says who carries the fact: "person" (the default) or
+ *                       the body. In `field`, `{person}` and `{body}` stand for the ids the matcher found, so a membership is
+ *                       `{ person, on: "body", field: "member:{person}", value: { name, office } }` and a title is
+ *                       `{ person, field: "office:{body}", value: "Chair" }`.
  *          field        the fact store's field name, such as `agenda_url`, `meeting_cadence`, `office_phone`.
  *          fieldKind    the freshness kind of the field (lib/facts/check.ts FieldKind).
  *          value        the value to store. valueText is the value exactly as the page writes it.
@@ -57,6 +65,8 @@ export interface Page {
 
 export interface ParsedFact {
   readonly subjectHint: string | null;
+  readonly person?: { readonly name: string; readonly ids?: readonly (readonly [scheme: string, value: string])[] };
+  readonly on?: "person" | "body";
   readonly field: string;
   readonly fieldKind: FieldKind;
   readonly value: unknown;

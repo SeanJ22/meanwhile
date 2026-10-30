@@ -1,24 +1,7 @@
-import { readFileSync } from "node:fs";
-import { Worker } from "node:worker_threads";
 
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import {
-  MAIN_THREAD_BLOCKED_AFTER_MS,
-  RECORD_CLAIM,
-  STORE_CALLS_SHOWN,
-  allocateStallBuffer,
-  claimRecord as casRecordClaim,
-  pingMainThread,
-  recordClaim,
-  waitWhileClaim,
-  writePendingSnapshot,
-  type PendingSnapshot,
-  type PendingStep,
-  type StallDiagnosticBlock,
-} from "./cycle-stall-report.ts";
+import { STORE_CALLS_SHOWN, allocateStallBuffer, writePendingSnapshot, type PendingSnapshot, type PendingStep, type StallDiagnosticBlock } from "./cycle-stall-report.ts";
 
-/** The diagnostic fires this long before the supervisor's wall. */
-export const CYCLE_STALL_LEAD_MS = 90_000;
 export const MAIN_THREAD_PING_MS = 5_000;
 
 export class PendingOperations {
@@ -172,74 +155,3 @@ export interface CycleStallDiagnostic {
   readonly stop: () => Promise<void>;
 }
 
-export function startCycleStallDiagnostic(input: {
-  readonly pending: PendingOperations;
-  readonly fireAtMs: number;
-  readonly processStartedMs: number;
-  readonly wallAtMs: number;
-  readonly recordPath: string;
-  readonly startedAt: string;
-  readonly cycleId: string;
-  readonly testedSha: string | null;
-  readonly stdoutFd?: number;
-  readonly stderrFd?: number;
-  readonly pingMs?: number;
-  readonly blockedAfterMs?: number;
-}): CycleStallDiagnostic {
-  const sab = input.pending.sab;
-  pingMainThread(sab, Date.now());
-  const pinger = setInterval(() => pingMainThread(sab, Date.now()), input.pingMs ?? MAIN_THREAD_PING_MS);
-  pinger.unref();
-
-  let worker: Worker | null = null;
-  try {
-    worker = new Worker(new URL("./cycle-stall-worker.ts", import.meta.url), {
-      execArgv: ["--experimental-strip-types"],
-      workerData: {
-        sab,
-        fireAtMs: input.fireAtMs,
-        processStartedMs: input.processStartedMs,
-        wallAtMs: input.wallAtMs,
-        recordPath: input.recordPath,
-        startedAt: input.startedAt,
-        cycleId: input.cycleId,
-        testedSha: input.testedSha,
-        stdoutFd: input.stdoutFd ?? 1,
-        stderrFd: input.stderrFd ?? 2,
-        blockedAfterMs: input.blockedAfterMs ?? MAIN_THREAD_BLOCKED_AFTER_MS,
-      },
-    });
-    /* A pending diagnostic never holds the cycle open, and a dead one never takes it down. */
-    worker.unref();
-    worker.on("error", (error) => {
-      console.error(`freshness:shadow · the stall diagnostic stopped: ${error instanceof Error ? error.message : String(error)}`);
-    });
-  } catch (error) {
-    console.error(`freshness:shadow · the stall diagnostic could not start: ${error instanceof Error ? error.message : String(error)}`);
-  }
-
-  return {
-    claimRecord: () => {
-      const was = casRecordClaim(sab, RECORD_CLAIM.ARMED, RECORD_CLAIM.FINALIZED);
-      if (was === RECORD_CLAIM.ARMED || was === RECORD_CLAIM.FINALIZED) return null;
-      /* The diagnostic fired: let its write finish, then carry its block forward. */
-      if (was === RECORD_CLAIM.STALL_WRITING) waitWhileClaim(sab, RECORD_CLAIM.STALL_WRITING, 5_000);
-      try {
-        const held = JSON.parse(readFileSync(input.recordPath, "utf8")) as { stallDiagnostic?: StallDiagnosticBlock };
-        return held.stallDiagnostic ?? null;
-      } catch {
-        return null;
-      } finally {
-        casRecordClaim(sab, recordClaim(sab), RECORD_CLAIM.FINALIZED);
-      }
-    },
-    stop: async () => {
-      clearInterval(pinger);
-      try {
-        await worker?.terminate();
-      } catch {
-        /* already gone */
-      }
-    },
-  };
-}

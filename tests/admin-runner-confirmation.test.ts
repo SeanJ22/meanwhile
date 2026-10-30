@@ -10,6 +10,7 @@ import type { GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
 import { RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
 import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "@/lib/control-plane/owner-surface.ts";
 import { RESEARCH_FORMAT_VERSION, RESEARCH_INTENT_LOG_KEY } from "@/lib/control-plane/scheduler/research-policy.ts";
+import { openOrderBook } from "./helpers/order-book.ts";
 import { projectV6History, readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.ts";
 import { applyConfirmation, applyGatewayReply, startReceipt } from "../app/(admin)/_mw/admin-v6/receipts.ts";
 import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
@@ -71,6 +72,27 @@ test("a pause is waiting until the runner honors it, then done, on the same rece
   assert.equal(after.state, "applied");
   assert.equal(after.at, "2026-09-30T18:00:30.000Z");
   assert.match(after.words, /^Paused\./);
+});
+
+test("an order is a row on the work list: each step is stored once as it is reached, and a refused request is no order", async t => {
+  const repos = createMemoryRepositories();
+  const { pg, book } = await openOrderBook();
+  t.after(() => pg.close());
+  const out = await submit(ask("runner.pause", "pause-key-000010", { note: "testing" }), deps(repos));
+  const names = (confirmation: { readonly steps?: readonly { readonly step: string }[] }) => confirmation.steps?.map(step => step.step);
+  assert.deepEqual(names(await confirmReceipt(repos, out.receipt, SOON, undefined, book)), ["Received", "Accepted"], "saved, and the runner has not named a round yet");
+  await repos.runnerHeartbeat.put(RUNNER_ID, { formatVersion: OWNER_SURFACE_FORMAT_VERSION, beatAt: T0, lastCycleStartedAt: T0, lastCycleFinishedAt: T0,
+    nextCycleDueAt: "2026-09-30T19:00:00.000Z", lastCycleOk: true, testedSha: null, host: "test" }, T0);
+  assert.deepEqual(names(await confirmReceipt(repos, out.receipt, SOON, undefined, book)), ["Received", "Accepted", "Scheduled"], "a round is due");
+  assert.deepEqual(names(await confirmReceipt(repos, out.receipt, SOON, undefined, book)), ["Received", "Accepted", "Scheduled"], "asking again stores nothing twice");
+  await runnerHonors(repos, out.receipt.subject, "PAUSE_RUNNER", "2026-09-30T18:00:30.000Z");
+  const done = await confirmReceipt(repos, out.receipt, SOON, undefined, book);
+  assert.deepEqual(names(done), ["Received", "Accepted", "Scheduled", "Done"]);
+  assert.deepEqual((await book.readOrder(out.receipt.receiptId))!.final, { words: done.words });
+
+  const refused = await submit(ask("runner.pause", "pause-key-000011", { note: "x".repeat(400) }), deps(repos));
+  assert.equal((await confirmReceipt(repos, refused.receipt, SOON, undefined, book)).steps, undefined);
+  assert.equal(await book.readOrder(refused.receipt.receiptId), null);
 });
 
 test("a record that honors a DIFFERENT intent does not confirm this one (the plant)", async () => {
@@ -324,7 +346,7 @@ test("paid research can be paused and resumed, and each is Done only when the ru
   assert.equal((await confirmReceipt(repos, paused.receipt, SOON)).state, "waiting", "the pause is a different intent and is still waiting");
 });
 
-import { acceptedLine, orderStepsReached } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+import { acceptedLine } from "../app/(admin)/_mw/admin-v6/receipts.ts";
 import { orderPlan, orderProgress } from "../lib/control-plane/gateway/confirmation.ts";
 
 test("BR-12: an order is Accepted with a plan, then a progress bar; the five steps and the one line", () => {
@@ -333,12 +355,6 @@ test("BR-12: an order is Accepted with a plan, then a progress bar; the five ste
   assert.deepEqual(plan, { who: "Runner", change: "Send agents here", affects: "Send agents here", creates: 2, resultsBy: "2026-10-05T18:00:00Z" });
   const line = acceptedLine({ plan, scopeName: "Sierra Vista", level: "local" }, () => "2:00 PM ET");
   assert.equal(line, "Accepted · Runner · creates 2 items in Sierra Vista · first results by 2:00 PM ET");
-  const lifecycle = { saved: "x", workersReceived: null, workStarted: null, workFinished: null, factsChecked: null, published: null, checkedOnPublicPage: null };
-  assert.equal(orderStepsReached({ status: "queued", plan: undefined, lifecycle }), 1, "received only");
-  assert.equal(orderStepsReached({ status: "queued", plan: { ...plan, resultsBy: null }, lifecycle }), 2, "accepted with a plan");
-  assert.equal(orderStepsReached({ status: "queued", plan, lifecycle }), 3, "scheduled for a round");
-  assert.equal(orderStepsReached({ status: "running", plan, lifecycle }), 4);
-  assert.equal(orderStepsReached({ status: "done", plan, lifecycle }), 5);
   assert.deepEqual(orderProgress(receipt, { state: "waiting" }), { done: 0, of: 2 });
   assert.deepEqual(orderProgress(receipt, { state: "applied" }), { done: 2, of: 2 });
   assert.deepEqual(orderProgress({ type: "config.setSetting", openedWork: [] }, { state: "applied" }), { done: 1, of: 1 });

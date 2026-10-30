@@ -79,13 +79,13 @@ test('an explicit service area replaces an inherited host-county marker and refr
     await db.query("INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis) VALUES($1,$3,2025,'HOST_COUNTY'),($2,$3,2025,'HOST_COUNTY')",[government,body,city]);
     await db.query("INSERT INTO place_page_dependency VALUES('zip:85701',$1)",[city]);
     const places=[{placeId:city,boundaryYear:2025,basis:'SERVICE_AREA' as const}];
-    assert.equal(await fileEntityPlaces(db.query,body,places,government),true);
+    assert.equal(await fileEntityPlaces(db.query,body,places,government).then(filed=>filed.moved),true);
     assert.deepEqual(await db.query('SELECT placement_basis FROM entity_place WHERE entity_id=$1',[body]),[{placement_basis:'SERVICE_AREA'}]);
     assert.ok((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id='zip:85701'")).length);
     await db.query('DELETE FROM rebuild_queue');
-    assert.equal(await fileEntityPlaces(db.query,body,places,government),false);
+    assert.equal(await fileEntityPlaces(db.query,body,places,government).then(filed=>filed.moved),false);
     assert.deepEqual(await db.query('SELECT * FROM rebuild_queue'),[]);
-    assert.equal(await fileEntityPlaces(db.query,body,[],government),false,'a later inherited host filing cannot erase the source-established service area');
+    assert.equal(await fileEntityPlaces(db.query,body,[],government).then(filed=>filed.moved),false,'a later inherited host filing cannot erase the source-established service area');
     assert.deepEqual(await db.query('SELECT placement_basis FROM entity_place WHERE entity_id=$1',[body]),[{placement_basis:'SERVICE_AREA'}]);
   }finally{await db.pg.close();}
 });

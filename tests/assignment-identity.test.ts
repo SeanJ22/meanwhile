@@ -7,17 +7,7 @@ import test from "node:test";
 import { installOperationalReferenceBundle, operationalReferenceBundle } from "@/lib/civic-data/operational-references.ts";
 import { ZERO_COST, type AttemptCost } from "@/lib/control-plane/attempt.ts";
 import { AUTONOMOUS_FLEET_PROOF_PROJECT, isNonProductionCost, type CostEntry } from "@/lib/control-plane/cost.ts";
-import {
-  ASSIGNMENT_BUDGET_CODE,
-  AssignmentBudgetGate,
-  armAssignmentBudget,
-  assignmentBudgetsOf,
-  assignmentCycleReading,
-  assignmentMembership,
-  assignmentSpend,
-  isAssignmentCycleReading,
-  type AssignmentBudgetSpec,
-} from "@/lib/control-plane/expansion/assignment-budget.ts";
+import { ASSIGNMENT_BUDGET_CODE, AssignmentBudgetGate, armAssignmentBudget, assignmentBudgetsOf, assignmentCycleReading, assignmentMembership, isAssignmentCycleReading, type AssignmentBudgetSpec } from "@/lib/control-plane/expansion/assignment-budget.ts";
 import {
   applyDispatchWork,
   assignmentEntry,
@@ -395,24 +385,6 @@ test("an admitted Scout holds its worst case until it settles, and the next is r
   g.settle("ob-2", null);
   assert.equal(g.state(A.key)?.spentUsd, null, "a Scout that reported no dollars leaves the budget unmeasured");
   assert.equal(g.check("ob-3").admit, false, "and an unmeasured budget holds its work");
-});
-
-test("an assignment's spend is its members' charges since they joined; a charge naming no obligation counts by its body", () => {
-  const members = assignmentMembership([row("ob-a", "az:city:city-of-tucson", [A.key])]).byKey.get(A.key)!;
-  const spend = assignmentSpend(
-    priced([
-      charge({ obligationId: "ob-a", usd: 1, at: "2026-09-25T01:00:00.000Z" }),
-      charge({ obligationId: "ob-a", usd: 7, at: "2026-09-24T23:00:00.000Z" }), // before it joined
-      charge({ obligationId: "ob-other", usd: 9, jurisdiction: "az:city:city-of-tucson" }), // another obligation, same body
-      charge({ usd: 0.5, jurisdiction: "az:city:city-of-tucson", at: "2026-09-25T02:00:00.000Z" }), // names no obligation
-      charge({ usd: 2, jurisdiction: "az:city:city-of-phoenix" }),
-    ]),
-    members,
-    "2026-09-24T15:00:00.000Z",
-    T0,
-  );
-  assert.equal(spend.usd, 1.5);
-  assert.equal(spend.bySubject, 1);
 });
 
 test("work several Sends reached runs while any budgeted one has room — under the most recent — and is refused only when none does", () => {

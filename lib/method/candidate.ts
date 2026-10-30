@@ -4,9 +4,6 @@
  * close it; nothing here holds a lock. No function here reads a clock.
  */
 
-import { mkdirSync, renameSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
-
 import { fingerprint } from "../control-plane/ids.ts";
 import { validateClaims } from "./claims.ts";
 import {
@@ -278,12 +275,3 @@ export function introducedIssues(
   return { introduced: all.filter((i) => !baseline.has(issueKey(i))), preExisting: baseline.size };
 }
 
-/** Write a JSON document by temp file and rename, so a reader never sees half a document. The pid keeps racing writers' temp paths apart. */
-export function atomicWriteJson(path: string, value: unknown): number {
-  const body = `${JSON.stringify(value, null, 2)}\n`;
-  mkdirSync(dirname(path), { recursive: true });
-  const tmp = `${path}.${process.pid}.tmp`;
-  writeFileSync(tmp, body, "utf8");
-  renameSync(tmp, path);
-  return Buffer.byteLength(body, "utf8");
-}

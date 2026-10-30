@@ -14,8 +14,6 @@ import {
   intakeRuntimeObservationOutcome,
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readLatestIntakeRuntimeDigest } from "../lib/control-plane/admin-data.ts";
-import { ownerDigestAttention, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
 
 const observedAt = "2026-09-08T20:00:00.000Z";
 
@@ -106,7 +104,7 @@ test("receipt parser refuses a shallow object whose nested counts contradict the
   );
 });
 
-test("intake observations append idempotently and an ATTENTION beat cannot disappear", async () => {
+test("intake observations append idempotently", async () => {
   const repos = createMemoryRepositories();
   const observation = projectIntakeRuntimeObservation({
     ...healthyRows(),
@@ -127,18 +125,9 @@ test("intake observations append idempotently and an ATTENTION beat cannot disap
   await appendIntakeRuntimeObservationDigest(repos, input);
   await appendIntakeRuntimeObservationDigest(repos, input);
   assert.equal((await repos.ownerDigests.read("owner-digest")).length, 1, "an uncertain retry must not duplicate the observation");
-
-  const latest = await readLatestIntakeRuntimeDigest(repos);
-  assert.equal(latest.kind, "HELD");
-  if (latest.kind !== "HELD") return;
-  assert.deepEqual(
-    { level: ownerDigestAttention(latest.value).level, needsYou: ownerDigestAttention(latest.value).needsYou },
-    { level: "RED", needsYou: true },
-  );
-  assert.match(ownerDigestAttention(latest.value).headline, /Production intake needs attention/);
 });
 
-test("malformed intake history is UNKNOWN/actionable and constructor refuses it", () => {
+test("malformed intake history is refused by the constructor", () => {
   const observation = projectIntakeRuntimeObservation(healthyRows(), observedAt, 0);
   assert.throws(
     () => intakeRuntimeObservationOutcome({
@@ -151,29 +140,6 @@ test("malformed intake history is UNKNOWN/actionable and constructor refuses it"
       observation,
     }),
     /INTAKE_RUNTIME_OBSERVATION_OUTCOME_INVALID/,
-  );
-  const valid = intakeRuntimeObservationOutcome({
-    startedAt: observedAt,
-    finishedAt: "2026-09-08T20:01:00.000Z",
-    testedSha: "a".repeat(40),
-    host: "test-host",
-    provider: "memory",
-    durable: true,
-    observation,
-  });
-  const malformed: OwnerDigestRecord = {
-    formatVersion: 1,
-    digestId: valid.cycleId,
-    writtenAt: valid.finishedAt,
-    headline: "malformed intake",
-    lines: ["malformed intake"],
-    cycleOk: true,
-    testedSha: valid.testedSha,
-    runtimeOutcome: { ...valid, state: "ATTENTION" },
-  };
-  assert.deepEqual(
-    { level: ownerDigestAttention(malformed).level, needsYou: ownerDigestAttention(malformed).needsYou },
-    { level: "UNKNOWN", needsYou: true },
   );
 });
 

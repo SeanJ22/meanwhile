@@ -51,20 +51,3 @@ export function parseScope(raw: string | string[] | undefined | null): MwScope {
   return SCOPE_ALL;
 }
 
-export function withScope(path: string, scope: MwScope, extra?: Readonly<Record<string, string | null | undefined>>): string {
-  // A fragment belongs after the query, where the browser reads it: split it off first and put it back last.
-  const hashAt = path.indexOf("#");
-  const fragment = hashAt < 0 ? "" : path.slice(hashAt);
-  const beforeHash = hashAt < 0 ? path : path.slice(0, hashAt);
-  const [base, query = ""] = beforeHash.split("?");
-  const params = new URLSearchParams(query);
-  const s = scopeParam(scope);
-  if (s !== null) params.set("scope", s);
-  else params.delete("scope");
-  for (const [k, v] of Object.entries(extra ?? {})) {
-    if (v === null || v === undefined || v === "") params.delete(k);
-    else params.set(k, v);
-  }
-  const q = params.toString();
-  return `${q === "" ? base : `${base}?${q}`}${fragment}`;
-}

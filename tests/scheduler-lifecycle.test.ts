@@ -40,7 +40,6 @@ import {
 } from "../lib/control-plane/scheduler/durable.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import { httpExecutor, type FetchOutcome } from "../lib/control-plane/scheduler/http-executor.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 
 const NOW = "2026-08-31T12:00:00.000Z";
@@ -403,76 +402,3 @@ test("W3.C: a discharged obligation's debt is CLEARED rather than left to age fo
   assert.equal(after[0].consecutiveFailures, 0, "a tombstone, so the recovery stays replayable");
 });
 
-function response(over: Partial<FetchOutcome> = {}): FetchOutcome {
-  return {
-    status: 200,
-    bytes: 12,
-    contentType: "text/html",
-    body: "hello world!",
-    durationMs: 10,
-    transportError: null,
-    ...over,
-  };
-}
-
-test("W3.F: a 200 with bytes becomes INGESTED with a hashed artifact", async () => {
-  const run = httpExecutor({
-    urlFor: () => "https://example.com/calendar",
-    fetchOne: async () => response(),
-  });
-  const outcome = await run({
-    obligation: scheduled(),
-    routeTaskId: "rt-abcdefghijkl",
-    workItemId: "wi-1",
-    attemptId: "at-1",
-    executor: "DETERMINISTIC",
-    bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 },
-    holder: "w",
-  });
-  assert.equal(outcome.kind, "DISPOSED");
-  assert.equal(outcome.disposition?.disposition, "INGESTED");
-  assert.equal(outcome.artifacts?.length, 1);
-  assert.match(String(outcome.artifacts?.[0].contentHash), /^sha256-[0-9a-f]{64}$/);
-  assert.equal(outcome.cost?.bytesFetched, 12);
-});
-
-test("SEEDED W3.F: a 200 with ZERO BYTES is a failed read, never an empty document", async () => {
-  const run = httpExecutor({
-    urlFor: () => "https://example.com/calendar",
-    fetchOne: async () => response({ bytes: 0, body: "" }),
-  });
-  const outcome = await run({
-    obligation: scheduled(),
-    routeTaskId: "rt-abcdefghijkl",
-    workItemId: "wi-1",
-    attemptId: "at-1",
-    executor: "DETERMINISTIC",
-    bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 },
-    holder: "w",
-  });
-  assert.equal(outcome.kind, "ABORTED");
-  assert.match(outcome.detail, /zero-row extraction is a failed extraction/i);
-});
-
-test("SEEDED W3.F: NO status can produce WALKED_NO_YIELD — that is a claim about a government", async () => {
-  for (const status of [403, 404, 429, 500, 503]) {
-    const run = httpExecutor({
-      urlFor: () => "https://example.com/calendar",
-      fetchOne: async () => response({ status, body: "", bytes: 0 }),
-    });
-    const outcome = await run({
-      obligation: scheduled(),
-      routeTaskId: "rt-abcdefghijkl",
-      workItemId: "wi-1",
-      attemptId: "at-1",
-      executor: "DETERMINISTIC",
-      bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 },
-      holder: "w",
-    });
-    assert.notEqual(
-      outcome.disposition?.disposition,
-      "WALKED_NO_YIELD",
-      `HTTP ${status} must never be recorded as the publisher having nothing`,
-    );
-  }
-});

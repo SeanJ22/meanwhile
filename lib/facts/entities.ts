@@ -9,7 +9,7 @@ import type { FactDb, Query } from "./publish.ts";
 import { hostOf, isOfficialUrl } from "./check.ts";
 import { siteUrl } from "./entity-read.ts";
 import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
-import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
+import { governingBoardName, governingContext, type GoverningContext } from "../civic-data/governing-board-name.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import { fileEntityPlaces, type EntityPlace } from "./entity-places.ts";
 import type { Entity } from "../core/shapes.ts";
@@ -671,8 +671,7 @@ export async function canonicalSubject(query: Query, subjectId: string): Promise
 /** What the fact store says kind of government this is and what it is called, for reading a body's name against it. */
 async function governmentContext(query: Query, id: string): Promise<GoverningContext> {
   const [row] = await query("SELECT name FROM entity WHERE id = $1", [id]);
-  return { name: row ? String(row.name) : null,
-    school: /:(?:school|depschool):|school_district:|:nces:/.test(id), special: /:special:/.test(id), county: /:county:|\/county:[^/]+$/.test(id) };
+  return governingContext(id, row ? String(row.name) : null);
 }
 
 export async function placeBody(query: Query, id: string, place: string): Promise<void> {

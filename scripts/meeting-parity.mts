@@ -2,17 +2,18 @@
  * Compares the meetings the live meeting API returns for 50 random ZIPs, one in each of 50 states, with the meetings the fact store holds
  * for the same bodies. Reads only: the API over HTTP and the fact store through the read-only connection.
  *
- *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/meeting-parity.mts [--site=https://meanwhileusa.com] [--zips=50] [--seed=1]
+ *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/meeting-parity.mts [--zips=50] [--seed=1]
  *
  * The window is 90 days back and 90 days ahead. A meeting the API shows that the fact store lacks, or holds with another date, time,
  * place, point or agenda link, is a difference; one only the fact store holds is an addition.
  */
 import { MEETING_FACT_ROWS_SQL, meetingsFromFactRows } from "../lib/facts/meeting-read.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 const args = new Map(process.argv.slice(2).map(arg => { const [key, value] = arg.replace(/^--/, "").split("="); return [key!, value ?? "true"] as const; }));
-const SITE = args.get("site") ?? "https://meanwhileusa.com", COUNT = Number(args.get("zips") ?? 50), SEED = args.get("seed") ?? "1";
+const SITE = args.get("site") ?? PUBLIC_SITE_ORIGIN, COUNT = Number(args.get("zips") ?? 50), SEED = args.get("seed") ?? "1";
 const DAY = 86_400_000, NOW = new Date(), FROM = NOW.getTime() - 90 * DAY, TO = NOW.getTime() + 90 * DAY;
 const URL_READ = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
 if (!URL_READ) throw new Error("WTP_PRODUCTION_DATABASE_URL_READONLY is not set");

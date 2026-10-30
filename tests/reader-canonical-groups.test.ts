@@ -4,7 +4,6 @@ import {readCanonicalPackages} from "../lib/reader/canonical.ts";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
 import {readStatePackage} from "../lib/reader/state.ts";
-import {nationalPresidentPointers} from "../lib/reader/national.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
 
 test("one migrated canonical batch preserves state geography and extra pointers when another group's proof fails",async()=>{
@@ -36,14 +35,16 @@ test("one migrated canonical batch preserves state geography and extra pointers 
   }finally{await pg.close();}
 });
 
-test("a cold state schedules its President pointers in the same query and keeps a transport failure failed",async()=>{
+test("a cold state reads its own pointers in one query, without the President's, and keeps a transport failure failed",async()=>{
   let reads=0;
   const failure=new Error("The first combined read failed");
   installReaderDatabaseQuery(async statements=>{
-    reads++;assert.equal(statements.length,1);
+    assert.equal(statements.length,1);
     const keys=statements[0].params[0]as string[];
-    assert.ok(keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:US-AZ:")));
-    for(const pointer of nationalPresidentPointers())assert.ok(keys.includes(`${pointer.recordClass}:${pointer.scope}`),"the President must not open another initial connection");
+    if(keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:US-AZ:"))){
+      reads++;
+      assert.ok(!keys.some(key=>key.includes("US:people:")),"the President is held in memory, not read with each state");
+    }
     throw failure;
   });
   try{

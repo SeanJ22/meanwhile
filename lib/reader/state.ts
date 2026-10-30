@@ -26,7 +26,7 @@ import { statePeopleWithLegislativeAuthority } from "./state-people.ts";
 import { readCuratedReaderProjection, type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
 import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
-import { readNationalPresident, nationalPresidentPointers } from "./national.ts";
+import { nationalPresident } from "./national.ts";
 import { readZipPlace } from "../place-map/reader.ts";
 import type { MemberOfficeRecord } from "../officials/member-offices.ts";
 import type { Division } from "../registry/types.ts";
@@ -142,11 +142,7 @@ function selectedZipStore(state: string, canonical: Awaited<ReturnType<typeof re
 
 async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, composition: StateComposition, ballotOnly: boolean): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
-  let needsPresident = false;
-  const presidentRead = zip ? Promise.resolve(null) : readNationalPresident(() => {
-    needsPresident = true;
-    return groupsRead.then(groups => groups.readGroup(1));
-  }).catch(() => null);
+  const presidentRead = zip ? Promise.resolve(null) : nationalPresident().catch(() => null);
   const entries = [
     ...(!zip ? [{ recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: stateRegistryRuntimeScope(state) }] : []),
     ...(!zip ? [{ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) }] : []),
@@ -170,7 +166,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
       { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
       { recordClass: geography.params[0], scope: geography.params[1] },
       { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
-    return readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: {
+    return readCanonicalPackages([entries], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: {
       keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
       translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%`,
     } } : {}) });

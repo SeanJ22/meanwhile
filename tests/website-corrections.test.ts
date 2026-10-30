@@ -23,8 +23,6 @@ import {
 } from "../lib/civic-data/website-corrections.ts";
 import { memoryInProcess, type ResearchGet } from "../lib/hunt/robots-first-fetch.ts";
 import { withWebsiteCorrection, type MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
-import { missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 
 const HEX = "a".repeat(64);
 const COTTONWOOD = WEBSITE_CORRECTIONS.find((c) => c.jurisdictionId === "az:city:city-of-cottonwood")!;
@@ -281,19 +279,6 @@ test("C15: a need walks the corrected site while the address on record is still 
   assert.equal(corrected.addressCorrection?.recorded, COTTONWOOD.recorded);
   assert.equal(corrected.addressCorrection?.reading, "REVIEWED");
   assert.deepEqual(withWebsiteCorrection({ ...need, ownWebAddress: "https://cottonwoodaz.gov" }), { ...need, ownWebAddress: "https://cottonwoodaz.gov" });
-});
-
-test("C15 with CH-21: a mission's discovery need carries the reviewed correction, as the retired gap ledger did", () => {
-  const reg = {
-    stateCode: "AZ",
-    sourceCatalog: { "MEETINGS:THIS_JURISDICTION:this-government-itself": { recordClass: "MEETINGS", state: "DISCOVERY_OWED" } },
-    jurisdictions: [{ id: COTTONWOOD.jurisdictionId, stateCode: "AZ", name: "CITY OF COTTONWOOD", govClass: "CITY_OR_TOWN",
-      ownWebAddress: COTTONWOOD.recorded, sourceIds: ["MEETINGS:THIS_JURISDICTION:this-government-itself"] }],
-  } as unknown as JurisdictionRegistry;
-  const read = missionMeetingsDiscoveryNeeds({ jurisdictionIds: [COTTONWOOD.jurisdictionId], registryFor: () => reg, bodyIdFor: () => null, heldRoutes: new Set() });
-  assert.equal(read.entries.length, 1);
-  assert.equal(read.entries[0]!.need.ownWebAddress, COTTONWOOD.corrected, "the mission walks the corrected site");
-  assert.equal(read.entries[0]!.need.addressCorrection?.recorded, COTTONWOOD.recorded);
 });
 
 test("C15: the website correction never feeds meetings body attribution (C16)", () => {

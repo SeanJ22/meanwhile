@@ -277,6 +277,10 @@ const UPSERT_SQL = `ON CONFLICT (id) DO UPDATE SET
     refusal = CASE WHEN ${VALUE_CHANGED_SQL} THEN NULL ELSE work.refusal END,
     url = EXCLUDED.url,
     value = EXCLUDED.value, quote = EXCLUDED.quote`;
+/** A row asked for again: one that is finished or refused waits again, due now; one being worked is done once more after; one already waiting is left as it is. */
+const TOUCH_SQL = `ON CONFLICT (id) DO UPDATE SET content_version = work.content_version + 1,
+    status = CASE WHEN work.status = 'taken' THEN 'taken' ELSE 'waiting' END,
+    due_at = EXCLUDED.due_at, refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting'`;
 const ADD_WORK_SQL = `INSERT INTO work (${COLUMNS})
   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,jsonb_build_array($10::jsonb),$11::jsonb,$12::jsonb,$13,$14::timestamptz,$15::timestamptz,$16::jsonb,
     ${RECEIVED_STEP("$3::text", "$15::timestamptz")},NULL)
@@ -389,6 +393,13 @@ export function workList(query: Query, options: { readonly owner: string; readon
       if (inputs.some(input => !input.field?.trim() || input.series !== undefined)) throw new Error("WORK_INVALID_INPUT");
       const at = timestamp();
       return (await query(`INSERT INTO work (${COLUMNS}) ${SELECT_RECORDS} WHERE true ${UPSERT_SQL} RETURNING id`, [records(inputs, at), at])).length;
+    },
+    /** Each row is made to wait again, due now, whatever it was; rows already waiting are not written. */
+    async touch(inputs: readonly WorkInput[]): Promise<number> {
+      if (!inputs.length) return 0;
+      if (inputs.some(input => !input.field?.trim() || input.series !== undefined)) throw new Error("WORK_INVALID_INPUT");
+      const at = timestamp(), unique = new Map(inputs.map(input => [workId(input), input]));
+      return (await query(`INSERT INTO work (${COLUMNS}) ${SELECT_RECORDS} WHERE true ${TOUCH_SQL} RETURNING id`, [records([...unique.values()], at), at])).length;
     },
     /** Rows that are not there yet; a job already live in its series, or waiting to repeat, is left as it is. */
     async ensure(inputs: readonly WorkInput[]): Promise<number> {

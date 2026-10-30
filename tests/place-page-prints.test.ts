@@ -263,7 +263,8 @@ test("the place read returns every group, only changed groups, or nothing, by th
     assert.equal(partial!.unchanged, false);
     assert.deepEqual(partial!.omitted, Object.keys(prints).filter(group => group !== "rosters").sort());
     for (const column of groups) assert.equal(partial![column] === null, column !== "rosters" && column !== "everyday_routing", column);
-    assert.deepEqual(partial!.rosters, whole!.rosters);
+    assert.deepEqual(partial!.rosters, [], "rows the stored page holds stay behind");
+    assert.deepEqual((await query(PLACE_PACKAGE_SQL, params({ ...moved, "rosters[]": (prints["rosters[]"] as unknown as string[]).slice(1) }, true)))[0]!.rosters, (whole!.rosters as unknown[]).slice(0, 1), "only the missing row is sent");
 
     // A ZIP page keeps no saved rows: one changed group returns the whole read.
     const [zip] = await query(PLACE_PACKAGE_SQL, params(moved, false));

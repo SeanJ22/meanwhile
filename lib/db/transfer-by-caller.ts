@@ -225,7 +225,8 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
     const job = route.startsWith("admin:") ? route
       : socket?.job ?? callerState.job.getStore() ?? process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
     const file = site.match(/ ← ((?:lib|scripts|app|netlify|tests)\/.+?):\d+$/)?.[1]
-      ?? (process.argv[1] ?? "").match(/(?:^|\/)((?:scripts|netlify)\/.+)$/)?.[1];
+      ?? (process.argv[1] ?? "").match(/(?:^|\/)((?:scripts|netlify)\/.+)$/)?.[1]
+      ?? (route === "unattributed" || route.startsWith("admin:") ? undefined : route); // Bundled site code has no source paths: its route names it.
     const read = `${database}\t${job}\t${table ?? site.match(/(?:^|\s)query:([^ ←]+)/)?.[1] ?? site.split(/[. ]/)[0]}${file ? `\t${file}` : ""}`;
     const held = bucket.reads.get(read) ?? [0, 0, 0];
     bucket.reads.set(read, [held[0] + sent.requests, held[1] + sent.bytes, held[2] + bytes]);

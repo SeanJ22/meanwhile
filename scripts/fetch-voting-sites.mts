@@ -7,7 +7,6 @@ import { pathToFileURL } from "node:url";
 import { assignment } from "./cli-args.mts";
 import { REFERENCE_DIR } from "../lib/reference/index.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { REGISTRATION_RECORD_CLASS, registrationTarget } from "../lib/registration/publication.ts";
 import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
@@ -32,7 +31,7 @@ import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-da
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { isOfficialVotingSource, openLinkingCopy } from "../lib/facts/linking-copy.ts";
-import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { routineReceiptFields, successfulRoutineRunnerReceiptIssue, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
@@ -270,11 +269,8 @@ export async function refreshVotingSources(input: {
       heldLoaded = true;
       return held;
     };
-    // Registration changes about weekly: its pointer version, a small keyed read, decides whether the copy held since the last pass still stands.
-    const loadRegistration = async () => { const read = await readRegistrationProjection(state, { store });
-      if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") throw new Error(`${state} registration is unavailable; prior facts are retained.`);
-      return read.kind === "PROMOTED" ? { divisions: read.value.divisions, bodies: read.value.bodies } : { divisions: [], bodies: [] }; };
-    const registration = await (store.readVersioned?.("voting-registration-v1", REGISTRATION_RECORD_CLASS, registrationTarget(state).scope, loadRegistration) ?? loadRegistration());
+    // Scopes need only the registration's divisions and bodies, never its governments; the copy is kept by pointer version.
+    const registration = { divisions: [], bodies: [], ...await store.readPromotionPayloadFields(REGISTRATION_RECORD_CLASS, registrationTarget(state).scope, ["divisions", "bodies"]) } as Pick<Registry, "divisions" | "bodies">;
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
     const registered = await votingSourceReadOrder(context.repos.doors, state,
       currentVotingSourceDoors(seeds, savedDoors));
@@ -482,10 +478,7 @@ export async function refreshVotingSources(input: {
             await acquire(target, [...linkingCaptures, ...(capture ? [capture] : [])], false);
           }
         }
-        if (capture && disposition.kind !== "DOOR") {
-          for (const old of stateDoors.filter(old => pageAddress(old.url)?.url === url)) doors.delete(old.id);
-
-        }
+        if (capture && disposition.kind !== "DOOR") for (const old of stateDoors.filter(old => pageAddress(old.url)?.url === url)) doors.delete(old.id);
       };
       const walk = async (root: VotingSourceDoor) => {
         if (Date.now() >= deadlineMs) return;
@@ -580,7 +573,7 @@ export async function refreshVotingSources(input: {
     }
     throw error;
   } finally {
-    // Source publications are already durable. The supervisor requires exactly one terminal receipt.
+    // Source publications are already durable. The supervisor requires exactly one terminal receipt, and main's exit agrees with it.
     if (terminal) console.log("RCD_RECEIPT=" + JSON.stringify(terminal));
   }
 }
@@ -599,7 +592,7 @@ async function main() {
     if (!await printWorkerPublicationReceipt(store, votingSitesContract(state).id, report, null, at)) throw new Error("No registered polling worker result reached the reader.");
     return;
   }
-  await refreshVotingSources({ state, store, context });
+  if (successfulRoutineRunnerReceiptIssue((await refreshVotingSources({ state, store, context })).terminal!)) process.exitCode = 2;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch((error: unknown) => {

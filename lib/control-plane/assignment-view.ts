@@ -43,7 +43,7 @@ import { DISCHARGING_DISPOSITIONS } from "./scheduler/dispatch.ts";
 import { instructionReceiptKey, isScheduled, scheduleObligation, type ObligationAssignment } from "./scheduler/obligation.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
-import { isTerminalState, type WorkItem, type WorkItemState } from "./work-item.ts";
+import type { WorkItem, WorkItemState } from "./work-item.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
@@ -496,6 +496,35 @@ export type AssignmentSummarySources = Omit<AssignmentSources, "artifacts" | "co
   readonly artifacts: readonly AssignmentArtifact[]; readonly costs: readonly AssignmentCostHead[];
   readonly scoutResults: readonly AssignmentScout[]; readonly workerResults: readonly AssignmentWorkerResult[];
   readonly pipeline: readonly AssignmentPipeline[] | null };
+
+export type AssignmentHeadAttempt = Pick<Attempt,"id"|"routeTaskId"|"leaseId"|"startedAt"|"endedAt"|"outcome"|"abortReason"> & {readonly role:WorkerRef["role"]};
+export type AssignmentHeadLease = Pick<ExecutionLease,"id"|"released"|"expiresAt">;
+export type AssignmentHeadDisposition = Pick<RouteDisposition,"disposition"|"at"|"note"> & {readonly artifactCount:number};
+export type AssignmentHeadScout = Pick<AssignmentScout,"outcome"|"recordedAt"|"distinctEvidenceRungs"> & {
+  readonly refusal:readonly {readonly code:string;readonly detail?:string}[]|null;
+  readonly candidateCount:number;readonly findingCount:number;readonly rungs:number;readonly nextRungs:number;
+};
+type OutcomeWorker<T> = T extends {readonly role:string} ? Pick<T,Extract<keyof T,
+  "role"|"verdict"|"actualRowCount"|"validatedRecordCount"|"survivingRecordCount"|"conclusion"|"nextAction">> & {
+    readonly blockers?:readonly {readonly description:string}[];readonly findings?:readonly {readonly detail:string}[];
+  } : never;
+export interface AssignmentHead {
+  readonly id:string;readonly kind:"STANDING_OBLIGATION"|"WORK_ITEM";
+  readonly obligation:Pick<StandingObligation,"id"|"recordClass"|"subjectId"|"routeId"|"active"|"readerImpactAt"|"nextDueAt"|"absentUntil"|"absenceUnlock"|"assignments"|"retiredAt"|"retirementReason">|null;
+  readonly debt:Pick<FreshnessDebt,"cause"|"consecutiveFailures"|"detail"|"firstFailedAt"|"retryAt">|null;
+  readonly item:(Pick<WorkItem,"id"|"project"|"subject"|"obligation"|"state"|"createdAt"> & {readonly lastTransitionAt:string|null;readonly manualSourceGap?:Pick<NonNullable<WorkItem["manualSourceGap"]>,"assignmentKey"|"instructionReceipt">})|null;
+  readonly proof:boolean;
+  readonly live:readonly {readonly attempt:AssignmentHeadAttempt;readonly lease:AssignmentHeadLease}[];
+  readonly latest:{readonly attempt:AssignmentHeadAttempt;readonly lease:AssignmentHeadLease|null;readonly leaseRead:boolean;
+    readonly disposition:AssignmentHeadDisposition|null;readonly policyDenial:RouteTask["policyDenial"]|null;
+    readonly scout:AssignmentHeadScout|null;readonly worker:{readonly endedAt:string;readonly result:OutcomeWorker<AssignmentWorkerResult["result"]>}|null;
+  }|null;
+  readonly laneRole:WorkerRef["role"]|null;readonly pendingTaskId:string|null;
+  readonly publication:Pick<NonNullable<WorkItem["publicationOutcome"]>,"status"|"at"|"code"|"recovery">|null;
+  readonly occurrenceCount:number;
+  readonly openRound:{readonly id:string;readonly sequence:number;readonly openedAt:string;readonly dueAt:string;readonly reached:boolean}|null;
+  readonly lastActivityAt:string|null;
+}
 const countOf = (value: number | readonly unknown[]): number => typeof value === "number" ? value : value.length;
 
 export interface AssignmentBuildOptions {
@@ -892,9 +921,9 @@ function leaseLive(attempt: Attempt, idx: Index): boolean | null {
   return lease.id === attempt.leaseId && !lease.released && ms(lease.expiresAt) > idx.now;
 }
 
-function fromDisposition(d: RouteDisposition, clipAt: number): RoundOutcome {
+function fromDisposition(d: RouteDisposition | AssignmentHeadDisposition, clipAt: number): RoundOutcome {
   const note = clip(d.note, clipAt);
-  const count = d.artifactIds.length;
+  const count = "artifactCount" in d ? d.artifactCount : d.artifactIds.length;
   switch (d.disposition) {
     case "INGESTED":
       return { state: "SUCCEEDED", code: d.disposition, says: `A record was acquired (${plural(count, "document")} vaulted).`, at: d.at, owner: "RUNNER", nextAction: "" };
@@ -955,7 +984,7 @@ function fromDisposition(d: RouteDisposition, clipAt: number): RoundOutcome {
   }
 }
 
-function fromScout(s: AssignmentScout, clipAt: number): RoundOutcome {
+function fromScout(s: AssignmentScout | AssignmentHeadScout, clipAt: number): RoundOutcome {
   if (s.refusal !== null && s.refusal.length > 0) {
     const codes = s.refusal.map((r) => r.code);
     const transport = codes.includes("SCOUT_TRANSPORT_FAILED");
@@ -973,9 +1002,9 @@ function fromScout(s: AssignmentScout, clipAt: number): RoundOutcome {
   const walked = `${plural(countOf(s.rungs), "rung")} walked, ${plural(s.distinctEvidenceRungs, "rung")} backed by evidence`;
   switch (s.outcome) {
     case "ROUTE_CANDIDATE":
-      return { state: "SUCCEEDED", code: s.outcome, says: `The hunter proposed ${plural(s.candidates.length, "route")} to the record, each backed by evidence it downloaded (${walked}).`, at: s.recordedAt, owner: "RUNNER", nextAction: "" };
+      return { state: "SUCCEEDED", code: s.outcome, says: `The hunter proposed ${plural("candidateCount" in s ? s.candidateCount : s.candidates.length, "route")} to the record, each backed by evidence it downloaded (${walked}).`, at: s.recordedAt, owner: "RUNNER", nextAction: "" };
     case "EVIDENCE_FOUND":
-      return { state: "SUCCEEDED", code: s.outcome, says: `The hunter found evidence of the record itself (${plural(s.findings.length, "finding")}; ${walked}).`, at: s.recordedAt, owner: "RUNNER", nextAction: "" };
+      return { state: "SUCCEEDED", code: s.outcome, says: `The hunter found evidence of the record itself (${plural("findingCount" in s ? s.findingCount : s.findings.length, "finding")}; ${walked}).`, at: s.recordedAt, owner: "RUNNER", nextAction: "" };
     case "NO_PROGRESS":
       return {
         state: "FAILED",
@@ -1016,7 +1045,7 @@ function fromScout(s: AssignmentScout, clipAt: number): RoundOutcome {
   }
 }
 
-function fromWorkerResult(r: AssignmentWorkerResult, clipAt: number): RoundOutcome {
+function fromWorkerResult(r: AssignmentWorkerResult | NonNullable<NonNullable<AssignmentHead["latest"]>["worker"]>, clipAt: number): RoundOutcome {
   const result = r.result;
   const finding = (): string => {
     const f = (result as { readonly findings?: readonly { readonly detail: string }[] }).findings?.[0]?.detail ?? "";
@@ -1025,7 +1054,7 @@ function fromWorkerResult(r: AssignmentWorkerResult, clipAt: number): RoundOutco
   const at = r.endedAt;
   switch (result.role) {
     case "ACQUIRER": {
-      const blocker = result.blockers[0]?.description ?? "";
+      const blocker = result.blockers?.[0]?.description ?? "";
       if (result.verdict === "BLOCKED") {
         return {
           state: "BLOCKED",
@@ -1068,40 +1097,14 @@ function fromWorkerResult(r: AssignmentWorkerResult, clipAt: number): RoundOutco
   }
 }
 
-function roundOutcome(round: Round, idx: Index, clipAt: number): RoundOutcome | null {
-  if (round.attempts.length === 0) return null;
-  for (const a of round.attempts) {
-    if (a.outcome === null && leaseLive(a, idx) === true) {
-      return {
-        state: "WORKING",
-        code: "IN_FLIGHT",
-        says: `${plainCode(a.worker.role)} ${a.id} is on it now (started ${a.startedAt}).`,
-        at: a.startedAt,
-        owner: a.worker.role === "SCOUT" ? "SCOUT_LANE" : "RUNNER",
-        nextAction: "Let it finish; its lease is renewed while it works.",
-      };
-    }
-  }
-  const d = round.routeTask?.disposition ?? null;
-  if (d) {
-        /* A Scout's own typed outcome says more than the disposition it was mapped to, so it leads. */
-    const scout = idx.scoutByAttempt.get(d.attemptId);
-    if (scout && (scout.refusal === null || scout.refusal.length === 0)) return fromScout(scout, clipAt);
-    return fromDisposition(d, clipAt);
-  }
-  if (round.routeTask?.state === "POLICY_DENIED" && round.routeTask.policyDenial) {
-    return {
-      state: "BLOCKED",
-      code: "POLICY_DENIED",
-      says: `Our own policy refused a capability this route needs: ${clip(round.routeTask.policyDenial.reason, clipAt)}`,
-      at: round.routeTask.policyDenial.at,
-      owner: "ENGINEERING",
-      nextAction: clip(round.routeTask.policyDenial.requiredChange, clipAt),
-    };
-  }
-  const last = [...round.attempts].sort((a, b) => attemptTime(a) - attemptTime(b)).at(-1) as Attempt;
+function outcomeFromHead(head: NonNullable<AssignmentHead["latest"]>, now: number, clipAt: number): RoundOutcome {
+  const d=head.disposition;
+  if(d){if(head.scout&&(head.scout.refusal===null||head.scout.refusal.length===0))return fromScout(head.scout,clipAt);return fromDisposition(d,clipAt);}
+  if(head.policyDenial)return {state:"BLOCKED",code:"POLICY_DENIED",says:`Our own policy refused a capability this route needs: ${clip(head.policyDenial.reason,clipAt)}`,
+    at:head.policyDenial.at,owner:"ENGINEERING",nextAction:clip(head.policyDenial.requiredChange,clipAt)};
+  const last=head.attempt;
   if (last.outcome === null) {
-    const live = leaseLive(last, idx);
+    const live = !head.leaseRead ? null : head.lease !== null && head.lease.id === last.leaseId && !head.lease.released && ms(head.lease.expiresAt) > now;
     return live === null
       ? {
           state: "UNKNOWN",
@@ -1120,9 +1123,9 @@ function roundOutcome(round: Round, idx: Index, clipAt: number): RoundOutcome | 
           nextAction: "The expired lease is closed and the route task reclaimed; a replacement attempt starts fresh.",
         };
   }
-  const scout = idx.scoutByAttempt.get(last.id);
+  const scout = head.scout;
   if (scout) return fromScout(scout, clipAt);
-  const worker = idx.workerResultByAttempt.get(last.id);
+  const worker = head.worker;
   if (worker) return fromWorkerResult(worker, clipAt);
   if (last.outcome === "COMPLETED") {
     return {
@@ -1922,7 +1925,37 @@ function latestWorkedRound(g: Gathered): Round | null {
   return best;
 }
 
-function backoffOf(debt: FreshnessDebt | null, clipAt: number): AssignmentWaiting["backoff"] {
+const attemptHead=(a:Attempt):AssignmentHeadAttempt=>({id:a.id,routeTaskId:a.routeTaskId,leaseId:a.leaseId,startedAt:a.startedAt,endedAt:a.endedAt,outcome:a.outcome,abortReason:a.abortReason,role:a.worker.role});
+const scoutHead=(s:AssignmentScout):AssignmentHeadScout=>({outcome:s.outcome,recordedAt:s.recordedAt,distinctEvidenceRungs:s.distinctEvidenceRungs,
+  refusal:s.refusal?.map((r,i)=>({code:r.code,...(i===0?{detail:r.detail}:{})}))??null,candidateCount:s.candidates.length,findingCount:s.findings.length,rungs:countOf(s.rungs),nextRungs:countOf(s.nextRungs)});
+function roundHead(round:Round,last:Attempt,idx:Index):NonNullable<AssignmentHead["latest"]>{
+  const d=round.routeTask?.disposition??null,scout=idx.scoutByAttempt.get(d?.attemptId??last.id),worker=idx.workerResultByAttempt.get(last.id);
+  return {attempt:attemptHead(last),lease:idx.leases?.get(last.routeTaskId)??null,leaseRead:idx.leases!==null,
+    disposition:d?{disposition:d.disposition,at:d.at,note:d.note,artifactCount:d.artifactIds.length}:null,
+    policyDenial:round.routeTask?.state==="POLICY_DENIED"?round.routeTask.policyDenial??null:null,
+    scout:scout?scoutHead(scout):null,worker:worker?{endedAt:worker.endedAt,result:worker.result}:null};
+}
+function headOf(g:Gathered,idx:Index):AssignmentHead{
+  const round=latestWorkedRound(g),last=round?[...round.attempts].sort((a,b)=>attemptTime(a)-attemptTime(b)).at(-1):null;
+  const item=g.workItems[0]??null,occ=g.occurrences.find(o=>o.id===g.obligation?.openOccurrenceId&&o.closedAt===null);
+  const publication=g.workItems.flatMap(item=>item.publicationOutcome?[item.publicationOutcome]:[]).sort((a,b)=>b.at.localeCompare(a.at))[0]??null;
+  return {id:g.members.id,kind:g.members.kind,obligation:g.obligation,debt:g.debt,item:item?{...item,lastTransitionAt:item.transitions.at(-1)?.at??null}:null,
+    proof:g.workItems.some(item=>isProofRecord({project:item.project})),live:g.rounds.flatMap(round=>round.attempts.filter(a=>a.outcome===null&&leaseLive(a,idx)===true).map(a=>({attempt:attemptHead(a),lease:idx.leases!.get(a.routeTaskId)!}))),
+    latest:round&&last?roundHead(round,last,idx):null,laneRole:g.attempts.at(-1)?.worker.role??null,
+    pendingTaskId:g.rounds.find(r=>r.attempts.length===0&&r.routeTask!==null&&["PENDING","RECLAIMABLE"].includes(r.routeTask.state))?.routeTaskId??null,
+    publication,occurrenceCount:g.occurrences.length,
+    openRound:occ?{id:occ.id,sequence:occ.sequence,openedAt:occ.openedAt,dueAt:occ.dueAt,reached:(idx.attemptsByRouteTask.get(occ.routeTaskId)??[]).length>0}:null,
+    lastActivityAt:lastActivityOf(g)};
+}
+function liveOutcome(head:AssignmentHead,now:number):RoundOutcome|null{
+  const live=head.live.find(({attempt,lease})=>lease.id===attempt.leaseId&&!lease.released&&ms(lease.expiresAt)>now);
+  if(!live)return null;
+  const a=live.attempt;
+  return {state:"WORKING",code:"IN_FLIGHT",says:`${plainCode(a.role)} ${a.id} is on it now (started ${a.startedAt}).`,at:a.startedAt,
+    owner:a.role==="SCOUT"?"SCOUT_LANE":"RUNNER",nextAction:"Let it finish; its lease is renewed while it works."};
+}
+
+function backoffOf(debt: AssignmentHead["debt"], clipAt: number): AssignmentWaiting["backoff"] {
   if (!debt || debt.consecutiveFailures <= 0) return null;
   return {
     failures: debt.consecutiveFailures,
@@ -1972,7 +2005,7 @@ function nextStepWords(input: {
   return input.outcome?.nextAction ?? "";
 }
 
-function askGapStep(d: RouteDisposition | null, clipAt: number): { readonly owner: NextStepOwner; readonly nextAction: string } | null {
+function askGapStep(d: RouteDisposition | AssignmentHeadDisposition | null, clipAt: number): { readonly owner: NextStepOwner; readonly nextAction: string } | null {
   if (d === null) return null;
   const parts = askGapNoteParts(d.note);
   if (d.disposition === "DISCOVERED") {
@@ -2011,32 +2044,21 @@ export function arguedAbsenceWords(ob: Pick<StandingObligation, "absentUntil" | 
   return text === "" ? recheck : `${recheck} Would unlock: ${clip(text.replace(/[.\s]+$/, ""), clipAt)}.`;
 }
 
-function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Clips): Derived {
-  const ob = g.obligation;
-  const now = idx.now;
+function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | null, clips: Clips): Derived {
+  const ob = head.obligation;
   const dueAt = ob?.nextDueAt ?? null;
   const active = ob?.active ?? true;
-  const backoff = backoffOf(g.debt, clips.text);
-  const retryAt = backoff ? (g.debt?.retryAt ?? null) : null;
+  const backoff = backoffOf(head.debt, clips.text);
+  const retryAt = backoff ? (head.debt?.retryAt ?? null) : null;
   const eligibleAt = active ? eligibleAtOf(dueAt, retryAt) : null;
   const overdue = !active ? false : eligibleAt === null ? null : ms(eligibleAt) <= now;
-  const open = ob?.openOccurrenceId ? g.occurrences.find((o) => o.id === ob.openOccurrenceId && o.closedAt === null) ?? null : null;
-  const openRound = open
-    ? {
-        id: open.id,
-        openedAt: open.openedAt,
-        dueAt: open.dueAt,
-        reached: (idx.attemptsByRouteTask.get(open.routeTaskId) ?? []).length > 0,
-      }
-    : null;
-  const band = what.why.band?.band ?? null;
+  const openRound = head.openRound ? {id:head.openRound.id,openedAt:head.openRound.openedAt,dueAt:head.openRound.dueAt,reached:head.openRound.reached} : null;
 
   const stepWords = (state: AssignmentState, outcome: RoundOutcome | null): string =>
     nextStepWords({ state, outcome, overdue, dueAt, retryAt, eligibleAt, backoff: backoff !== null, band });
 
-  for (const r of g.rounds) {
-    const out = roundOutcome(r, idx, clips.text);
-    if (out?.state === "WORKING") {
+  const out=liveOutcome(head,now);
+  if(out!==null){
       return {
         state: "WORKING",
         stateSays: out.says,
@@ -2054,11 +2076,8 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
           openRound,
         },
       };
-    }
   }
-
-  const latest = latestWorkedRound(g);
-  const outcome = latest ? roundOutcome(latest, idx, clips.text) : null;
+  const outcome=head.latest?outcomeFromHead(head.latest,now,clips.text):null;
 
   if (ob !== null && !ob.active) {
     return {
@@ -2081,17 +2100,17 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
   }
 
   if (outcome === null) {
-    const neverDispatched = g.debt?.cause === "NEVER_DISPATCHED" && g.debt.consecutiveFailures > 0;
+    const neverDispatched = head.debt?.cause === "NEVER_DISPATCHED" && head.debt.consecutiveFailures > 0;
     const blocker = openRound
-      ? `Round ${open?.sequence ?? ""} was opened ${openRound.openedAt} and no worker has reached it yet.`
-      : g.occurrences.length > 0
-        ? `${plural(g.occurrences.length, "round")} opened and closed without any worker reaching them.`
+      ? `Round ${head.openRound?.sequence ?? ""} was opened ${openRound.openedAt} and no worker has reached it yet.`
+      : head.occurrenceCount > 0
+        ? `${plural(head.occurrenceCount, "round")} opened and closed without any worker reaching them.`
         : overdue === false
           ? "Nothing yet: its first reading is not due."
           : "No worker has reached it yet: the runner has not dispatched it.";
     return {
       state: "WAITING",
-      stateSays: g.occurrences.length === 0 ? "Registered and never reached by a worker." : "Opened and never reached by a worker.",
+      stateSays: head.occurrenceCount === 0 ? "Registered and never reached by a worker." : "Opened and never reached by a worker.",
       waiting: {
         waiting: overdue !== false,
         since: overdue ? eligibleAt : overdue === false ? null : (openRound?.openedAt ?? null),
@@ -2106,7 +2125,7 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
             : {
                 kind: "NAMED",
                 says: neverDispatched
-                  ? `${blocker} Its due time passed undispatched in ${plural(g.debt?.consecutiveFailures ?? 0, "cycle")} in a row.`
+                  ? `${blocker} Its due time passed undispatched in ${plural(head.debt?.consecutiveFailures ?? 0, "cycle")} in a row.`
                   : blocker,
               },
         owner: "RUNNER",
@@ -2136,7 +2155,7 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
       : state === "SUCCEEDED"
         ? (backoff?.since ?? (overdue ? eligibleAt : null))
         : outcome.at;
-  const askGap = ob !== null && parseAskGapObligationId(ob.id) !== null ? askGapStep(latest?.routeTask?.disposition ?? null, clips.text) : null;
+  const askGap = ob !== null && parseAskGapObligationId(ob.id) !== null ? askGapStep(head.latest?.disposition ?? null, clips.text) : null;
   const argued = arguedAbsenceWords(ob, now, clips.text);
   return {
     state,
@@ -2157,21 +2176,19 @@ function deriveStanding(g: Gathered, idx: Index, what: AssignmentWhat, clips: Cl
   };
 }
 
-function deriveWorkItem(g: Gathered, idx: Index, clips: Clips): Derived {
-  for (const r of g.rounds) {
-    const out = roundOutcome(r, idx, clips.text);
-    if (out?.state === "WORKING") {
+function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derived {
+  const out=liveOutcome(head,now);
+  if(out!==null){
       return {
         state: "WORKING",
         stateSays: out.says,
         waiting: { waiting: false, since: out.at, overdue: null, dueAt: null, retryAt: null, eligibleAt: null, backoff: null, blocker: { kind: "NONE", says: "Nothing is blocking it: a worker holds it now." }, owner: "FLEET", nextAction: out.nextAction, openRound: null },
       };
-    }
   }
-  const item = g.workItems[0] ?? null;
-  const latest = latestWorkedRound(g);
-  const outcome = latest ? roundOutcome(latest, idx, clips.text) : null;
-  const transitionAt = item?.transitions.at(-1)?.at ?? item?.createdAt ?? null;
+
+  const item = head.item;
+  const outcome=head.latest?outcomeFromHead(head.latest,now,clips.text):null;
+  const transitionAt = item?.lastTransitionAt ?? item?.createdAt ?? null;
   const reading = item ? WORK_ITEM_STATE_READING[item.state] : undefined;
   if (item && reading) {
     const why = reading.state === "BLOCKED" && outcome ? `${reading.says} ${outcome.says}` : reading.says;
@@ -2196,7 +2213,7 @@ function deriveWorkItem(g: Gathered, idx: Index, clips: Clips): Derived {
       },
     };
   }
-  const pending = g.rounds.find((r) => r.attempts.length === 0 && r.routeTask !== null && (r.routeTask.state === "PENDING" || r.routeTask.state === "RECLAIMABLE"));
+  const pending = head.pendingTaskId;
   if (outcome === null) {
     return {
       state: "WAITING",
@@ -2209,7 +2226,7 @@ function deriveWorkItem(g: Gathered, idx: Index, clips: Clips): Derived {
         retryAt: null,
         eligibleAt: null,
         backoff: null,
-        blocker: { kind: "NAMED", says: pending ? `Step ${pending.routeTaskId} is queued and no worker has taken it.` : "No step of this work has been taken by a worker." },
+        blocker: { kind: "NAMED", says: pending ? `Step ${pending} is queued and no worker has taken it.` : "No step of this work has been taken by a worker." },
         owner: "FLEET",
         nextAction: "The fleet's next worker takes the queued step.",
         openRound: null,
@@ -2228,7 +2245,7 @@ function deriveWorkItem(g: Gathered, idx: Index, clips: Clips): Derived {
         retryAt: null,
         eligibleAt: null,
         backoff: null,
-        blocker: { kind: "NAMED", says: `Step ${pending.routeTaskId} is queued and no worker has taken it yet.` },
+        blocker: { kind: "NAMED", says: `Step ${pending} is queued and no worker has taken it yet.` },
         owner: "FLEET",
         nextAction: "The fleet's next worker takes the queued step.",
         openRound: null,
@@ -2286,7 +2303,7 @@ function attributedUsd(all: Iterable<ExactSum | null>): number | null {
 
 function buildRow(g: Gathered, idx: Index, src: AssignmentSummarySources, clips: Clips, denominatorUsd: number | null): AssignmentRow {
   const what = g.members.kind === "STANDING_OBLIGATION" ? whatOfStanding(g, idx, src, clips) : whatOfWorkItem(g, clips);
-  const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(g, idx, what, clips) : deriveWorkItem(g, idx, clips);
+  const baseDerived = g.members.kind === "STANDING_OBLIGATION" ? deriveStanding(headOf(g,idx), idx.now, what.why.band?.band??null, clips) : deriveWorkItem(headOf(g,idx), idx.now, clips);
   const publication = g.workItems.flatMap(item => item.publicationOutcome ? [item.publicationOutcome] : [])
     .sort((left, right) => right.at.localeCompare(left.at))[0];
   const derived: Derived = publication && publication.status !== "PUBLISHED" && baseDerived.state !== "WORKING"
@@ -2404,13 +2421,9 @@ export interface AssignmentIndexRow {
   readonly subjectName: string | null;
   readonly stateCode: string | null;
   readonly assignmentKeys: readonly string[];
-  readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string; readonly at: string }[];
   /** Receipt-specific state; an unproven carried row is UNKNOWN. */
   readonly instructionStates?: Readonly<Record<string, AssignmentState>>;
   readonly lastActivityAt: string | null;
-  readonly lastAttemptAt?: string | null;
-  readonly directDependentCount?: number | null;
-  readonly readyAfterThisSettlesCount?: number | null;
   readonly band: 1 | 2 | 3 | null;
   readonly overdue: boolean | null;
   readonly waitingSince: string | null;
@@ -2511,17 +2524,53 @@ function clockOf(g: Gathered): AssignmentClock | null {
     subjectId: ob.subjectId, assignments: ob.assignments ?? [] };
 }
 
+export type AssignmentHeadEntry = Pick<AssignmentEntry,"index"|"horizon"|"obligation">;
+/** No log history, list rendering, graph traversal, source payloads, or cost ledger is needed to count an assignment. */
+export function deriveAssignmentEntriesFromHeads(heads:readonly AssignmentHead[],nowIso:string):Map<string,AssignmentHeadEntry>{
+  const now=ms(nowIso),out=new Map<string,AssignmentHeadEntry>(),clips={text:ASSIGNMENT_TEXT_CLIP,list:ASSIGNMENT_LIST_CLIP};
+  for(const head of heads){
+    const ob=head.obligation,item=head.item,standing=head.kind==="STANDING_OBLIGATION";
+    const band=ob?bandFor({id:ob.id,subjectId:ob.subjectId,readerImpactAt:ob.readerImpactAt,providerId:providerOfObligation(ob.id),nextDueAt:ob.nextDueAt??""},{pilotZips:[]}).band:null;
+    let derived=standing?deriveStanding(head,now,band,clips):deriveWorkItem(head,now,clips);
+    const publication=head.publication;
+    if(publication&&publication.status!=="PUBLISHED"&&derived.state!=="WORKING")derived={state:"WAITING",stateSays:publication.code,
+      waiting:{...derived.waiting,waiting:true,since:publication.at,owner:"FLEET",blocker:{kind:"NAMED",says:publication.code},
+        nextAction:publication.recovery==="PUBLISHER"?"The existing publisher retries with retained verified evidence; no new research or owner approval is needed."
+          :"The worker receives the exact failed check and continues verification or source repair automatically."}};
+    const ask=ob?parseAskGapObligationId(ob.id):null,subject=standing?ob?.subjectId??null:item?.subject??null,where=whereOf(subject);
+    const title=standing?ob?(ask?`${askGapTitle(ask.code)} — ${displayNameOf(ask.bodyId).short}`:`${sentenceCase(ob.recordClass)} via ${ob.routeId===null?"no route named yet":words(ob.routeId)}`)
+      :`Standing obligation ${head.id}`:item?item.obligation:`Work item ${head.id}`;
+    const manual=standing?null:item?.manualSourceGap;
+    const refs=[...(ob?.assignments??[]).map(mark=>({key:mark.assignmentKey,ref:mark.ref})),
+      ...(manual?.assignmentKey?[{key:manual.assignmentKey,ref:manual.instructionReceipt}]:[])];
+    const instructionStates:Record<string,AssignmentState>={};
+    for(const mark of refs)instructionStates[instructionReceiptKey(mark.key,mark.ref)]=refs.some(other=>other.key===mark.key&&other.ref!==mark.ref)?"UNKNOWN":derived.state;
+    const w=derived.waiting;
+    const lane:AssignmentLane=isProofRecord({obligationId:standing?head.id:null,project:item?.project??null})||head.proof?"PROOF":!standing?"CREATED":head.laneRole===null?"UNASSIGNED":head.laneRole==="SCOUT"?"SCOUT":"ROUTINE";
+    const index:AssignmentIndexRow={id:head.id,kind:head.kind,lane,state:derived.state,label:clip(title,clips.text),subjectName:subject===null?null:displayNameOf(subject).short,
+      stateCode:where.held?STATE_CODE_BY_NAME.get(where.value.state??"")??null:null,assignmentKeys:[...new Set(refs.map(mark=>mark.key))],instructionStates,
+      lastActivityAt:head.lastActivityAt,band,overdue:w.overdue,waitingSince:w.since,eligibleAt:w.eligibleAt,
+      blocker:w.blocker.kind==="NONE"?null:clip(w.blocker.kind==="NAMED"?w.blocker.says:w.blocker.gap.says,clips.text),owner:w.owner,nextAction:clip(w.nextAction,clips.text)};
+    const failing=(head.debt?.consecutiveFailures??0)>0;
+    const obligation:AssignmentClock|null=ob?{active:ob.active,eligibleAt:eligibleAtOf(ob.nextDueAt??null,failing?head.debt!.retryAt:null),backoff:failing,subjectId:ob.subjectId,assignments:ob.assignments??[]}:null;
+    const next=Math.min(...[...head.live.map(live=>ms(live.lease.expiresAt)),ms(ob?.nextDueAt),ms(ob?.absentUntil),ms(failing?head.debt?.retryAt:null)].filter(at=>Number.isFinite(at)&&at>now));
+    out.set(head.id,{index,obligation,horizon:Number.isFinite(next)?new Date(next).toISOString():null});
+  }
+  return out;
+}
+
+/** The memory adapter joins source records; the native reader supplies these heads directly. */
+export function assignmentHeadsFromSources(src:AssignmentSummarySources):AssignmentHead[]{
+  const idx=indexSources(src);
+  return [...members(idx).values()].map(member=>headOf(gather(member,idx),idx));
+}
+
 /** Every assignment `src` holds whole, or only those named in `only`, as the snapshot carries it. */
 export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: ReadonlySet<string>): Map<string, AssignmentEntry> {
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP, costDenominatorUsd: null });
   const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
     ? [[item.id, item.manualSourceGap] as const] : []));
-  const dependentsByUpstream = new Map<string,Set<string>>();
   const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
-  for (const item of src.workItems) for (const dependency of item.dependencies) {
-    const dependents = dependentsByUpstream.get(dependency.upstreamId) ?? new Set<string>();
-    dependents.add(item.id); dependentsByUpstream.set(dependency.upstreamId,dependents);
-  }
   const out = new Map<string, AssignmentEntry>();
   for (const row of built.rows) {
     if (only !== undefined && !only.has(row.id)) continue;
@@ -2529,20 +2578,6 @@ export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: Re
     const manualGap = manualGapByItem.get(row.id);
     const membership = built.memberships.get(row.id);
     const workIds = membership?.workItemIds ?? new Set<string>();
-    const graphReadable = membership !== undefined && [...workIds].every(id=>workById.has(id));
-    const relatedAttempts = [...workIds].flatMap(id=>built.idx.attemptsByWorkItem.get(id)??[]);
-    const directDependents = graphReadable ? new Set([...workIds].flatMap(id=>[...(dependentsByUpstream.get(id)??[])])) : null;
-    for (const id of workIds) directDependents?.delete(id);
-    const dependentGraphReadable = directDependents !== null && [...directDependents].every(id=>{
-      const dependent=workById.get(id);
-      return dependent !== undefined && dependent.dependencies.every(edge=>workById.has(edge.upstreamId));
-    });
-    const readyAfterThisSettlesCount = !dependentGraphReadable || directDependents === null ? null : [...directDependents].reduce((count,id)=>{
-      const dependent = workById.get(id);
-      if (!dependent || isTerminalState(dependent.state)) return count;
-      const outstanding = dependent.dependencies.filter(edge=>workById.get(edge.upstreamId)?.state !== "VERIFIED_COMPLETE");
-      return outstanding.length === 1 && workIds.has(outstanding[0]!.upstreamId) ? count+1 : count;
-    },0);
     const assignmentRefs = [...(row.what.assignments??[]).map(mark=>({key:mark.assignmentKey,ref:mark.ref,at:mark.at})),
       ...(manualGap?.assignmentKey ? [{key:manualGap.assignmentKey,ref:manualGap.instructionReceipt,at:workById.get(row.id)?.createdAt??src.nowIso}] : [])];
     const instructionStates: Record<string,AssignmentState> = {};
@@ -2554,10 +2589,8 @@ export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: Re
     const index: AssignmentIndexRow = { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
       label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
       assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualGap?.assignmentKey ? [manualGap.assignmentKey] : [])])],
-      assignmentRefs,instructionStates,
+      instructionStates,
       lastActivityAt: listed.lastActivityAt,
-      lastAttemptAt:relatedAttempts.map(attempt=>attempt.startedAt).sort().at(-1)??null,
-      directDependentCount:directDependents?.size??null,readyAfterThisSettlesCount,
       band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,
       eligibleAt: listed.waiting.eligibleAt, blocker: listed.waiting.blocker,
       owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };
@@ -2567,6 +2600,7 @@ export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: Re
   }
   return out;
 }
+
 
 /** Whether a pipeline item's source names an attempt or work item an assignment holds. */
 export function pipelineLinked(state: AssignmentPipeline, assigned: (workItemId: string) => boolean, attempt: (attemptId: string) => boolean): boolean {

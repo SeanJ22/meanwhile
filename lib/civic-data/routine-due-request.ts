@@ -137,12 +137,18 @@ type ClassedTask = { readonly id: string; readonly contract: { readonly schedule
 const clockWork = (task: ClassedTask) => task.contract.schedule?.kind === "SITTING_WINDOW" || parseStateBallotContractId(task.id)?.family === "voting-sites";
 
 /**
- * Rulings §0 work order: §4 clock work first, then Sean's orders, then everything else. A requested clock task goes first
- * among the clock work; a requested task of any other kind goes first among the rest. Each class keeps its own order.
+ * Rulings §0: clock work first, then Sean's orders. A requested clock task goes first among the clock work; a requested
+ * task of any other kind goes first among the rest, never ahead of any clock work. Every other task keeps its place,
+ * except that where-to-vote reads (requested ones first) lead the pass: a few a pass keep each state on its clock.
  */
 export function dueRequestsFirstInClass<T extends { readonly task: ClassedTask }>(jobs: readonly T[], requested: ReadonlySet<string>): T[] {
-  const asked = (job: T) => requested.has(job.task.id), clock = jobs.filter(job => clockWork(job.task)), rest = jobs.filter(job => !clockWork(job.task));
-  return [...clock.filter(asked), ...clock.filter(job => !asked(job)), ...rest.filter(asked), ...rest.filter(job => !asked(job))];
+  const asked = (job: T) => requested.has(job.task.id), clock = jobs.filter(job => clockWork(job.task));
+  const lifted = [...clock.filter(asked), ...clock.filter(job => !asked(job))];
+  const kept = jobs.filter(job => clockWork(job.task) || !asked(job)).map(job => clockWork(job.task) ? lifted.shift()! : job);
+  const after = kept.findLastIndex(job => clockWork(job.task)) + 1;
+  const ordered = [...kept.slice(0, after), ...jobs.filter(job => !clockWork(job.task) && asked(job)), ...kept.slice(after)];
+  const voting = (job: T) => parseStateBallotContractId(job.task.id)?.family === "voting-sites";
+  return [...ordered.filter(voting), ...ordered.filter(job => !voting(job))];
 }
 
 function openAt(request: RoutineDueRequest, nowMs: number): boolean {

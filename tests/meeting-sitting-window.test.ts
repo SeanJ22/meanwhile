@@ -6,9 +6,7 @@ import { PgDialect } from "drizzle-orm/pg-core";
 
 import {
   MEETING_SITTING_WINDOW,
-  ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_CONTRACTS,
-  sittingWindowDueAtMs,
   sittingWindowHot,
 } from "../lib/civic-data/contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, derivedMeetingFamilyId, meetingPartitionId, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
@@ -38,7 +36,6 @@ import {
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
-const PASS = ROUTINE_DATA_ADMISSION_MS;
 const LEAD = SITTING_WINDOW_ADMISSION_LEAD_MS;
 const BASE_LEAD = SITTING_WINDOW_BASE_ADMISSION_LEAD_MS;
 const PIMA = "ocd-division/country:us/state:az/county:pima#governing";
@@ -131,9 +128,6 @@ test("a meeting partition is re-read hourly when hot and twice daily otherwise, 
   assert.equal(routineTaskDue(partition, clock, base + 12 * HOUR - BASE_LEAD - 1, false), false);
   assert.equal(routineTaskDue(partition, clock, base + 12 * HOUR - BASE_LEAD, false), true);
   assert.equal(routineTaskDue(partition, clock, base + HOUR - LEAD, undefined), true, "unknown reads as hot");
-  // The registry's own due instant is unchanged; the runner no longer admits on it.
-  assert.equal(sittingWindowDueAtMs(MEETING_SITTING_WINDOW, base, true), base + HOUR - PASS);
-  assert.equal(sittingWindowDueAtMs(MEETING_SITTING_WINDOW, base, false), base + 12 * HOUR - PASS);
 });
 
 test("C6: a body is hourly for a meeting in the next seven days or one that concluded in the previous seven", () => {

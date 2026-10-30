@@ -107,3 +107,19 @@ test("a slice holds only what its card shows: no donor or money lines, only a pe
     assert.equal(cardOfFact("person", "campaign-donor:abc"), null);
   } finally { await db.pg.close(); }
 });
+
+test("a slice asked for again waits again when it was done, is left alone when it already waits, and is done once more when it was being built", async () => {
+  const { db, list } = await open();
+  try {
+    const ask = () => list.touch([{ kind: "slice", placeId: PLACE, subjectId: PLACE, field: "bodies", origin: { from: "loader" }, source: { source: "test" } }]);
+    assert.equal(await ask(), 1);
+    assert.equal(await ask(), 0, "already waiting: nothing is written");
+    const [claim] = await list.claim("slice", 1);
+    assert.equal(await ask(), 1, "asked for while it is being built");
+    assert.equal(await list.finish(claim!), false, "the build that began before the new fact does not close the row");
+    const [again] = await list.claim("slice", 1);
+    assert.equal(await list.finish(again!), true);
+    assert.equal(await ask(), 1, "a finished slice waits again");
+    assert.deepEqual(await db.query("SELECT status FROM work"), [{ status: "waiting" }]);
+  } finally { await db.pg.close(); }
+});

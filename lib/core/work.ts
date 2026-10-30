@@ -363,6 +363,9 @@ export interface ReopenInput {
 }
 
 /** Each transition and its hourly count commit together. */
+/** The attempt reports a row keeps besides its first. */
+export const ATTEMPT_REPORTS_KEPT = 20;
+
 export function workList(query: Query, options: { readonly owner: string; readonly leaseMs?: number; readonly now?: () => Date }) {
   // PostgreSQL binds "now" at execution; worker clock skew cannot expire another worker's lease.
   const leaseMs = options.leaseMs ?? 30_000, timestamp = () => options.now?.().toISOString() ?? "now";
@@ -479,6 +482,12 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async renew(claim: WorkRow): Promise<boolean> {
       return (await query(`UPDATE work SET lease_until=$3::timestamptz+$4::int*interval '1 millisecond'
         WHERE id=$1 AND lease_owner=$2 AND status='taken' AND lease_until>$3::timestamptz RETURNING id`, [...fenced(claim), leaseMs])).length === 1;
+    },
+    /** What a claimed row's hunt did is added to its reports; the row keeps the first report and the latest {@link ATTEMPT_REPORTS_KEPT} attempts. */
+    async report(claim: WorkRow, report: Readonly<Record<string, unknown>>): Promise<boolean> {
+      const [id, owner] = fenced(claim);
+      return (await query(`UPDATE work SET reports = CASE WHEN jsonb_array_length(reports) > $4::int THEN reports - 1 ELSE reports END || $3::jsonb
+        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`, [id, owner, canonicalJson([report]), ATTEMPT_REPORTS_KEPT])).length === 1;
     },
     /** With a cadence, the job repeats: its next row is made when that long has passed. */
     async finish(claim: WorkRow, repeatMs?: number, deadEnd?: Unlock): Promise<boolean> {

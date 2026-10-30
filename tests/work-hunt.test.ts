@@ -103,4 +103,6 @@ test("a claimed row is finished by what its hunt did: done when it ran, waiting 
   await claims.endWave();
   const statuses = (await rows("SELECT status, attempts FROM work ORDER BY status, attempts")).map(row => `${row.status}:${row.attempts}`);
   assert.deepEqual(statuses, ["done:1", "waiting:0", "waiting:1"], "the third was never reached and is as if untouched; the failed one waits out its back-off");
+  const attempts = (await rows("SELECT reports->-1 AS last, jsonb_array_length(reports) AS n FROM work ORDER BY status, attempts")).map(row => `${(row.last as { outcome?: string }).outcome}:${row.n}`);
+  assert.deepEqual(attempts, ["WORKED:2", "undefined:1", "FAILED:2"], "each hunt that ran leaves its attempt on the row; the row that was never reached has only its first report");
 });

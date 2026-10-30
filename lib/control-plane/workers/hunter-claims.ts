@@ -79,6 +79,8 @@ export function hunterClaims(deps: {
       const row = result.routeTaskId === null ? undefined : held.get(result.routeTaskId);
       if (row === undefined) return;
       held.delete(result.routeTaskId!);
+      await deps.list.report(row, { kind: "attempt", routeTaskId: result.routeTaskId, attemptId: result.attemptId, executor: result.executor, outcome: result.outcome,
+        committed: result.dispositionCommitted, detail: result.detail.slice(0, 300), at: deps.now() });
       if (result.outcome !== "WORKED") { await deps.list.later(row, result.detail.slice(0, 300) || "The hunt did not finish"); return; }
       // A planner's hunt comes back when its dead-end clock runs out; every other row asked once.
       await deps.list.finish(row, row.origin.from === "planner" && plannedTaskOf(row) === null ? await deps.deadEndMs() : undefined, await deps.deadEndOf(result));

@@ -39,6 +39,9 @@ test("town and ward service areas require resolved membership, while countywide 
   assert.equal(projectVotingJurisdiction({ ...local, matchingUnit: "TOWN" }, reader).sites.length, 0);
   assert.equal(projectVotingJurisdiction({ ...local, matchingUnit: "TOWN" }, { ...reader, towns: [site.town] }).sites.length, 1);
   assert.equal(projectVotingJurisdiction({ ...local, matchingUnit: "WARD", sites: [{ ...site, ward: "2" }] }, reader).sites.length, 0);
+  const shared = { ...site, kind: "ELECTION_DAY" as const, ward: "2", assignments: ["1", "2"].map(ward => ({ precinct: ward, ward, source })) };
+  const wardOne = { precinct: "1", ward: "1", kind: "OFFICIAL_PRECINCT" as const, source, geometry: { type: "Polygon", coordinates: [[[-72, 43], [-71, 43], [-71, 44], [-72, 43]]] } };
+  assert.equal(projectVotingJurisdiction({ ...local, matchingUnit: "WARD", sites: [shared], boundaries: [wardOne] }, { ...reader, point: { lat: 43.2, lng: -71.5 } }).narrowing.kind, "EXACT", "a polling place serving several wards matches each ward's polygon");
   assert.equal(projectVotingJurisdiction({ ...local, matchingUnit: "COUNTY" }, { ...reader, towns: ["Another town"] }).sites.length, 1);
   const ward = { ...local, ocdId: `${local.ocdId}/ward:2` };
   assert.equal(votingJurisdictionCovers(ward, { ...reader, wards: ["1"] }), false);

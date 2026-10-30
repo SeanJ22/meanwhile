@@ -14,6 +14,9 @@ import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts"
 import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/facts/entities.ts";
 import { ensurePortalBodyLabels } from "../lib/facts/portal-publication.ts";
 import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
+import { acquireRegistrationSource } from "../lib/registration/acquire.ts";
+import { withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
+import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -808,7 +811,8 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   // It gets its own ten minutes: about 81,000 board facts would otherwise take two days of one-minute maintenance budgets.
   const governingDeadlineMs = Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 10 * 60_000);
   const governingBoards = routineJob(ROUTINE_JOBS.censusGoverningBodies,
-    () => makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), more: () => Date.now() < governingDeadlineMs }), null)
+    () => makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), more: () => Date.now() < governingDeadlineMs,
+      confirmRelease: checkedAfter => withPublisherAcquisitionDeadline("Census of Governments (2022)", ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, signal => acquireRegistrationSource({ signal, checkedAfter })) }), null)
     .then(report => {
       if (report?.states.length) console.log(`RCD_TASK census-governing-bodies: ${report.states.join(", ")}: ${report.live} board facts live, ` +
         `${report.confirmed} confirmed, ${report.held} held, ${report.unheld} governments not yet held on a place` +

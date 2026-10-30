@@ -5,7 +5,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { readStateReference } from "../control-plane/expansion/state-references.ts";
 import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
-import { REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
+import { REGISTRATION_CHECK_AFTER_MS, REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
 import { slotsFor } from "../registry/derive.ts";
 import type { Division } from "../registry/types.ts";
 import { readReleaseCheck } from "../sources/known-release.ts";
@@ -100,14 +100,28 @@ export async function makeCensusGoverningBodies(input: {
   readonly db: FactDb & { readonly query: Query }; readonly root: string; readonly states: readonly string[]; readonly clocks: Clocks;
   /** Holds the registration check of the Census release: when the publisher last confirmed the fingerprint of the file the rows come from. */
   readonly vault: EvidenceStore; readonly more: () => boolean; readonly purge?: ReaderCachePurger;
+  /** Asks the publisher about the release again, no earlier than `checkedAfter`; the answer lands in the vault's check above. */
+  readonly confirmRelease: (checkedAfter: string) => Promise<unknown>;
 }): Promise<CensusGoverningReport> {
   const { db } = input;
   const order = censusGoverningOrder(input.states);
   // The facts count as captured on the release's latest check when it still has the fingerprint of the file we keep; a newer check files them again.
-  const check = await readReleaseCheck(input.vault, { sourceId: "census-governments-registration", releaseId: "cog-2022", url: REGISTRATION_SOURCE_URL });
-  const checkedAt = check?.sha256 === REGISTRATION_SOURCE_SHA256 ? check.checkedAt : REGISTRATION_HELD_RETRIEVED_AT;
-  // The release's own re-check keeps them fresh; one that has not happened (or found a different file) is fix work, and nothing is claimed fresh meanwhile.
-  if (Date.now() - Date.parse(checkedAt) > input.clocks.windowHours("contact") * 3_600_000) throw new Error(`CENSUS_RELEASE_NOT_CONFIRMED_SINCE:${checkedAt}`);
+  const release = { sourceId: "census-governments-registration", releaseId: "cog-2022", url: REGISTRATION_SOURCE_URL };
+  const lastCheck = async () => {
+    const check = await readReleaseCheck(input.vault, release);
+    return check?.sha256 === REGISTRATION_SOURCE_SHA256 ? check.checkedAt : REGISTRATION_HELD_RETRIEVED_AT;
+  };
+  let checkedAt = await lastCheck();
+  // This pass asks the publisher again once its last answer is old, so the registration run's 90-day clock never leaves these facts stale.
+  let unanswered = "";
+  if (Date.now() - Date.parse(checkedAt) > REGISTRATION_CHECK_AFTER_MS) {
+    try {
+      await input.confirmRelease(new Date(Date.now() - REGISTRATION_CHECK_AFTER_MS).toISOString());
+      checkedAt = await lastCheck();
+    } catch (error) { unanswered = `: ${error instanceof Error ? error.message : String(error)}`; }
+  }
+  // A release that could not be confirmed, or that answered with a different file, is fix work, and nothing is claimed fresh meanwhile.
+  if (Date.now() - Date.parse(checkedAt) > input.clocks.windowHours("contact") * 3_600_000) throw new Error(`CENSUS_RELEASE_NOT_CONFIRMED_SINCE:${checkedAt}${unanswered}`);
   const version = createHash("sha256").update("SPN-01C:census-row\n").update(checkedAt).update(readFileSync(join(input.root, "data", "derived", "registration", "index.json"))).digest("hex");
   const held = await readPassCursor(db.query, CENSUS_GOVERNING_CURSOR);
   const prior = held ? JSON.parse(held) as Cursor : null;
@@ -115,14 +129,14 @@ export async function makeCensusGoverningBodies(input: {
   let after = prior?.version === version && !prior.done ? prior.after : null;
   const report = { states: [] as string[], live: 0, confirmed: 0, held: 0, unheld: 0, refused: {} as Record<string, number> };
   if (at < 0 || at >= order.length || !input.more()) return report;
-  const release = await saveReleaseCopy(db.query, { name: "census-governments-registration", url: REGISTRATION_SOURCE_URL, sha256: REGISTRATION_SOURCE_SHA256,
+  const saved = await saveReleaseCopy(db.query, { name: "census-governments-registration", url: REGISTRATION_SOURCE_URL, sha256: REGISTRATION_SOURCE_SHA256,
     checkedAt, text: "" });
   for (; at < order.length && input.more(); at++, after = null) {
     const state = order[at]!;
     report.states.push(state.toUpperCase());
     const boards = censusBoards(input.root, state).filter(board => after === null || board.government > after);
     const { header, rows } = censusRows(input.root, new Set(boards.flatMap(board => board.record.nativeIds.census_pid6 ?? [])));
-    const copy = { ...release, text: [header, ...rows.values()].join("\n") };
+    const copy = { ...saved, text: [header, ...rows.values()].join("\n") };
     let finished = true;
     for (let start = 0; start < boards.length; start += BATCH) {
       if (!input.more()) { finished = false; break; }

@@ -227,25 +227,25 @@
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 122
+      "line": 130
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 219
+      "line": 227
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 133
+      "line": 141
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 175
+      "line": 183
     },
     {
       "file": "lib/sources/legiscan/reader.ts",

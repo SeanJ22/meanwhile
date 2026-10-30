@@ -4,6 +4,7 @@ import test from "node:test";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
+import { forgetNationalShelf, refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../lib/officials/people-sources.ts";
 import { installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -94,6 +95,7 @@ test("real card endpoints confirm current national rows without touching source 
   assert.ok(canonical);
   installReaderDatabaseQuery(async statements => { state.reads++; if (state.unavailable) throw new Error("planted current national read failure"); return canonical(statements); });
   globalThis.fetch = async () => { throw new Error("Reader attempted an external or database fetch"); };
+  forgetNationalShelf();
   const before = state.reads;
   try {
     const actions = await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) });
@@ -104,16 +106,20 @@ test("real card endpoints confirm current national rows without touching source 
     assert.equal(votes.status, 200);
     const voteBody = await votes.json();
     assert.equal(voteBody.votes[0].id, tie.id);
-    assert.equal(state.reads - before, 2, "both endpoints independently confirm the stored rows");
+    const loaded = state.reads - before;
+    assert.ok(loaded > 0);
+    await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) });
+    assert.equal(state.reads - before, loaded, "both endpoints share the President this server holds: once loaded, they read nothing");
     publishRoster({ ...roster, officeholders: roster.officeholders.map(person => person.id === president.id
       ? { ...person, executive: { ...person.executive, records: person.executive!.records!.slice(1) } } : person) });
+    await refreshNationalShelf();
     const updated = await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) });
     assert.equal(updated.status, 200);
-    assert.equal((await updated.json()).count, register.length + signed.length - 1, "same-pointer action changes reach the next read");
+    assert.equal((await updated.json()).count, register.length + signed.length - 1, "same-pointer action changes reach the next check");
     state.unavailable = true;
-    assert.equal((await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) })).status, 503);
-    assert.equal((await votesGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/votes?member=${encodeURIComponent(vice.id)}`))).status, 503);
-    assert.equal(state.reads - before, 5, "failed current checks never reuse the earlier actions or votes");
+    await assert.rejects(refreshNationalShelf(), /planted current national read failure/);
+    assert.equal((await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) })).status, 200, "a failed check keeps serving the President this server holds");
+    assert.equal((await votesGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/votes?member=${encodeURIComponent(vice.id)}`))).status, 200);
   } finally { state.unavailable = false; publishRoster(roster); installReaderDatabaseQuery(canonical); globalThis.fetch = originalFetch; }
 });
 

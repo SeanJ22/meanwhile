@@ -1,6 +1,7 @@
 "use client";
 
 import { useV6 } from "./context.tsx";
+import { SliceProgress } from "./slice-progress.tsx";
 import { WorkCounts } from "./work-counts.tsx";
 import { WorkWaiting } from "./work-waiting.tsx";
 import s from "./v6.module.css";
@@ -14,6 +15,7 @@ export function WorkScreen() {
         <h1 className={s.h1}>Work</h1>
       </header>
       <WorkWaiting />
+      <SliceProgress />
       <WorkCounts />
     </>
   );

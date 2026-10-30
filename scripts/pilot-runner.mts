@@ -1,5 +1,6 @@
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
 import { PLANNER_JOB } from "../lib/hunt/blank-planner.ts";
+import { SLICE_JOB, slicesLane } from "../lib/reader/slice-lane.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
@@ -1088,6 +1089,7 @@ function holdForRestart(targetSha: string): void {
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
   drainMemberLane();
+  drainSliceLane();
   drainParserLane();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
@@ -1290,6 +1292,21 @@ async function runPlannerLane(deadlineMs: number): Promise<void> {
   if (!run || run.status !== 0) throw new Error("PLANNER_LANE_EXITED: the changed blanks are read again on the next run");
 }
 
+let sliceLaneChild: ChildProcess | null = null;
+async function runSliceLane(deadlineMs: number): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(SLICE_JOB.id)) return;
+  const [run] = await runRuntimeChildren([{ id: SLICE_JOB.id, databaseBytesPerRun: SLICE_JOB.databaseBytesPerRun, executable: process.execPath,
+    args: [...TS_CHILD, "scripts/slice-lane.mts"], env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
+    cwd: CODE_ROOT, env: process.env, deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
+    onStarted: (_id, child) => { sliceLaneChild = child; } });
+  sliceLaneChild = null;
+  if (!run || run.status !== 0) throw Error("Slices stopped; marked slices stay waiting");
+}
+function drainSliceLane(): void {
+  if (sliceLaneChild?.connected) sliceLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error("Slice lane drain failed", error); });
+}
+
 // Expected SQL request and response bytes for one 55-minute turn: claims, page copies, fact checks and new links.
 const PARSER_LANE_DATABASE_BYTES = 150_000_000;
 let parserLaneChild: ChildProcess | null = null;
@@ -1399,6 +1416,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: PLANNER_JOB.id, everyMs: PLANNER_JOB.everyMs, budgetMs: PLANNER_JOB.budgetMs, run: runPlannerLane },
   { id: "parser-lane", everyMs: 60_000, budgetMs: 55 * 60_000, run: runParserLane },
   placePagesLane(runPlacePages),
+  slicesLane(runSliceLane),
   publishNowLane(runPublishNow),
   placeMapsLane(runPlaceMaps),
   doorProbesLane(runDoorProbes),

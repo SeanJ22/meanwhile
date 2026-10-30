@@ -1,19 +1,13 @@
 import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError, type CivicDataReadStore } from "../civic-data/read-model.ts";
-import { readCanonicalShelf } from "./canonical.ts";
+import { publicationVersion, readCanonicalShelf } from "./canonical.ts";
+import { shelfPart } from "./shelf.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
 import { federalDirectoryScope, federalDirectoryProjectionIssues, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
-import { withFederalPortraits } from "../officials/federal-directory-read-model.ts";
-
-export interface NationalShelf {
-  readonly congress: FederalDirectoryReadModel;
-  readonly federalByState: ReadonlyMap<string, FederalDirectoryReadModel>;
-  readonly president: OfficeholderSet | null;
-  readonly version: string;
-}
+import { readStateFederalDirectory, withFederalPortraits } from "../officials/federal-directory-read-model.ts";
 
 /** Current national executive memberships (the President, the Vice President and the Cabinet); historical holders remain retrievable separately. */
 export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet | null {
@@ -40,12 +34,12 @@ export function liveNationalExecutiveRoster(roster: OfficeholderSet | null): Off
     unmatched: current.unmatched.filter(row => ids.has(row.officeholderId)) };
 }
 
-/** States read the national executives independently of Congress's national directory load. */
+/** The President, Vice President and Cabinet are read from these sources, with their portraits. */
 const presidentSources = ["statewide-executive-sources", "wikidata-people"];
-export const nationalPresidentPointers = () => [...presidentSources,"people-portraits"].map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
-/** Every independent read confirms the current stored rows. A state may supply
- * the canonical package already read for this same composition. */
-export async function readNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
+const nationalPresidentPointers = () => [...presidentSources,"people-portraits"].map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
+
+/** Reads the stored rows once, from the store given or the current one. */
+export async function loadNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
   const canonical = await Promise.resolve().then(() => store ? store() : readCanonicalShelf(nationalPresidentPointers()));
   const reads = await Promise.all([...presidentSources,"people-portraits"].map(source => readPeopleSourceProjection("US", source, { store: canonical })));
   const portraits=reads.at(-1);
@@ -57,20 +51,24 @@ export async function readNationalPresident(store?: () => Promise<CivicDataReadS
   return president;
 }
 
-export async function readNationalShelf(): Promise<NationalShelf> {
-  const [canonical, president] = await Promise.all([
-    readCanonicalShelf(REGISTRY_STATES.map(state => ({ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) }))),
-    readNationalPresident(),
-  ]);
+/** Congress, whole and by state, as it was published. */
+export interface CongressShelf {
+  readonly congress: FederalDirectoryReadModel;
+  readonly federalByState: ReadonlyMap<string, FederalDirectoryReadModel>;
+}
+
+/** Reads every state's stored delegation once and joins them into Congress. */
+async function loadNationalCongress(): Promise<CongressShelf> {
+  const canonical = await readCanonicalShelf(REGISTRY_STATES.map(state => ({ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) })));
   const reads = await readPromotedCivicDataBatch<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", REGISTRY_STATES.map(federalDirectoryScope), { store: canonical });
-  const federalByState = new Map<string, FederalDirectoryReadModel>(), versions: string[] = [];
+  const federalByState = new Map<string, FederalDirectoryReadModel>();
   for (let index = 0; index < reads.length; index++) {
     const read = reads[index];
     if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
     if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") continue;
     const issues = federalDirectoryProjectionIssues(read.value);
     if (issues.length) throw new Error(`FEDERAL_SHELF_INVALID:${REGISTRY_STATES[index]}:${issues.join(",")}`);
-    federalByState.set(REGISTRY_STATES[index], read.value); versions.push(read.metadata.versionId ?? read.kind);
+    federalByState.set(REGISTRY_STATES[index], read.value);
   }
   const values = [...federalByState.values()], first = values[0];
   if (!first) throw new Error("FEDERAL_SHELF_NOT_RECORDED");
@@ -80,5 +78,29 @@ export async function readNationalShelf(): Promise<NationalShelf> {
     roster: { ...first.roster, scope: "us", officeholders: values.flatMap(value => value.roster.officeholders), divisions: values.flatMap(value => value.roster.divisions), unmatched: values.flatMap(value => value.roster.unmatched) },
     directory: { ...first.directory, counts: {}, byMember: Object.assign({}, ...values.map(value => value.directory.byMember)), committees: Object.assign({}, ...values.map(value => value.directory.committees)) },
   };
-  return { congress, federalByState, president, version: versions.join("|") };
+  return { congress, federalByState };
 }
+
+/** One state's delegation as published, or null when none is. */
+async function loadFederalState(state: string): Promise<FederalDirectoryReadModel | null> {
+  const store = await readCanonicalShelf([{ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) }]);
+  const read = await readStateFederalDirectory(state, { store });
+  if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
+  return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value : null;
+}
+
+const pointerKey = (pointer: { recordClass: string; scope: string }) => `${pointer.recordClass}:${pointer.scope}`;
+const president = shelfPart("president", () => publicationVersion(nationalPresidentPointers().map(pointerKey)), loadNationalPresident);
+const congress = shelfPart("congress", () => publicationVersion(REGISTRY_STATES.map(state => pointerKey({ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) }))), loadNationalCongress);
+
+/** The President, Vice President and Cabinet, held in this server's memory and read again only when they are published again. */
+export const nationalPresident = president.read;
+const states = new Map<string, ReturnType<typeof shelfPart<FederalDirectoryReadModel | null>>>();
+/** One state's House delegation and Senators, held the same way, so a card for one member never reads the whole of Congress. */
+export function nationalFederalState(state: string): Promise<FederalDirectoryReadModel | null> {
+  let part = states.get(state);
+  if (!part) states.set(state, part = shelfPart(`federal:${state}`, () => publicationVersion([pointerKey({ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) })]), () => loadFederalState(state)));
+  return part.read();
+}
+/** Congress, whole and by state, held in this server's memory the same way. */
+export const nationalCongress = congress.read;

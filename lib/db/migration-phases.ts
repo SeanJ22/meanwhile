@@ -176,6 +176,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "SPN-01D_place_slice": { phase: "expand", why: "Adds the table that holds one small slice per card per place; nothing reads it until readers switch." },
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",
     lockFirst: CIVIC_DATA_STATUS_WRITE_TABLES, lockFirstMode: "SHARE ROW EXCLUSIVE" },
   "ZP-01_build_fingerprint": { phase: "expand", why: "ZIP builds compare selected-input fingerprints before transferring or copying an answer.", lockFirst: ["place_page"] },

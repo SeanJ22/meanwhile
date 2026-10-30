@@ -38,6 +38,9 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-worker.mts": 512,
+  "slice-lane.mts": 192,
+  // The planner imported with its reader and work-list clients peaks near 111 MiB; a 5,000-row page adds tens of MiB.
+  "planner-lane.mts": 192,
   "parser-worker.mts": 512,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,

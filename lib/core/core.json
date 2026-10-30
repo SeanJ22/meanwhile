@@ -308,6 +308,12 @@
         "scripts/prepare-place-pages.mts"
       ]
     },
+    "place_slice": {
+      "writers": [
+        "lib/reader/slices.ts"
+      ],
+      "bypass": []
+    },
     "questionnaire_invitations": {
       "writers": [
         "lib/db/questionnaire.ts"

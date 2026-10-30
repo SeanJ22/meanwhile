@@ -35,7 +35,6 @@ const rawPage = (id: string) => ({ division_ids: [id], entities: [], fields: [],
 /** The runner's own place-page functions over a fixture database; only the turn process is run in this process. */
 async function placePageRunner(options: { readonly turnMs: number }) {
   const db = await factDb({ withHourlyCounts: true });
-  await db.query("INSERT INTO pass_cursor(name,position) VALUES('place-pages:adopt','done')");
   const wrapped: FactDb = { transaction: run => db.transaction(query => run(async (text, params) => {
     if (text !== PLACE_PACKAGE_SQL) return query(text, params);
     await new Promise(resolve => setTimeout(resolve, 10));

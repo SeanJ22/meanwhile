@@ -18,7 +18,7 @@ test("DG reader fixtures apply the full real migration journal and retain actual
     assert.deepEqual(rows, [{ source_id: "dg-held-registry-fixture", scope: "US-AZ:reader-registry-runtime", known_good: true, decision: "GOOD", held_id: "held-body" }]);
     const latest = await db.query(`SELECT to_regclass('public.rebuild_queue') AS queue,
       pg_get_functiondef('fact_changed()'::regprocedure) AS trigger_definition`);
-    assert.equal(latest[0]!.queue, "rebuild_queue");
+    assert.equal(latest[0]!.queue, null, "the retired rebuild queue is gone");
     assert.ok(!String(latest[0]!.trigger_definition).includes("INSERT INTO rebuild_queue"), "the door owns delivery; the old per-row trigger stays retired");
   } finally { await db.pg.close(); }
 });

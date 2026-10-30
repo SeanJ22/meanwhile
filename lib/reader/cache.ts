@@ -198,9 +198,6 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
     UNION SELECT ep.place_id FROM entity_place ep JOIN subjects s ON s.id=ep.entity_id
     UNION SELECT p.place_id FROM place_page p WHERE p.place_id NOT LIKE 'zip:%' AND p.depends && (
       $3::text[] || $2::text[] || ARRAY(SELECT id FROM service_places) || ARRAY(SELECT id FROM subjects WHERE kind<>'place'))
-    UNION SELECT o.page_id FROM place_page_dependency o JOIN place_page p ON p.place_id=o.page_id AND p.depends IS NULL
-      WHERE o.entity_id=ANY($3::text[]) OR o.entity_id=ANY($2::text[]) OR o.entity_id IN (SELECT id FROM service_places)
-        OR o.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
     UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
   ) INSERT INTO place_page(place_id,stale_at,priority)
     SELECT a.id,clock_timestamp(),e.page_priority FROM affected a JOIN entity e ON e.id=a.id AND a.id NOT LIKE 'zip:%' ORDER BY a.id

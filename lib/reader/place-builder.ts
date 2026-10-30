@@ -8,7 +8,7 @@ import type { Query } from "../facts/publish.ts";
 import { ROSTER_PERSON_FIELDS } from "../facts/roster-read.ts";
 import type { PlaceInput } from "./place-types.ts";
 import type { FactDb } from "../facts/publish.ts";
-import { preparedStatement, readPassCursor, readerFactDb, writePassCursor } from "../facts/db.ts";
+import { preparedStatement, readerFactDb } from "../facts/db.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
@@ -658,35 +658,6 @@ async function heldPlacePage(id:string,query:Query):Promise<HeldPlacePage|undefi
   }};
 }
 
-const ADOPT_CURSOR = "place-pages:adopt";
-const ADOPT_PAGES = 500;
-
-/**
- * Carries the retired queue's marks and each page's dependencies onto the page rows themselves, a few hundred pages a step in
- * place order, from the old tables' own rows. A page keeps what it was built with; only marks and dependencies move.
- */
-async function adoptHeldPages(db: FactDb, deadline: number): Promise<void> {
-  while (Date.now()<deadline) {
-    const finished=await db.transaction(async query=>{
-      const after=await readPassCursor(query,ADOPT_CURSOR) ?? "";
-      if(after==="done")return true;
-      const [chunk]=await query(`WITH chunk AS (SELECT place_id FROM place_page WHERE place_id>$1 AND place_id NOT LIKE 'zip:%' ORDER BY place_id LIMIT $2),
-        moved AS (UPDATE place_page p SET depends=ARRAY(SELECT d.entity_id FROM place_page_dependency d WHERE d.page_id=p.place_id ORDER BY 1),
-          stale_at=coalesce(p.stale_at,q.queued_at),priority=coalesce(q.priority,p.priority) FROM chunk
-          LEFT JOIN rebuild_queue q ON q.place_id=chunk.place_id AND (q.built_generation IS NULL OR q.generation>q.built_generation)
-          WHERE p.place_id=chunk.place_id AND p.depends IS NULL RETURNING p.place_id)
-        SELECT (SELECT count(*)::int FROM chunk) AS n,(SELECT max(place_id) FROM chunk) AS last`,[after,ADOPT_PAGES]);
-      const last=Number(chunk?.n)===ADOPT_PAGES ? String(chunk!.last) : null;
-      await query(`INSERT INTO place_page(place_id,stale_at,priority) SELECT q.place_id,q.queued_at,q.priority FROM rebuild_queue q
-        JOIN entity e ON e.id=q.place_id WHERE q.place_id>$1 AND ($2::text IS NULL OR q.place_id<=$2) AND q.place_id NOT LIKE 'zip:%'
-          AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) ON CONFLICT DO NOTHING`,[after,last]);
-      await writePassCursor(query,ADOPT_CURSOR,last ?? "done");
-      return false;
-    });
-    if(finished)return;
-  }
-}
-
 export interface RebuildTurn { readonly rebuilt:number; readonly failed:number; readonly remaining:number; readonly unchanged?:number }
 
 /** Takes marked pages in order of urgency and builds each from a single snapshot; a page marked again while it builds stays marked. */
@@ -696,7 +667,6 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
   const deadline=Date.now()+(options.timeBudgetMs ?? 240_000);
   // One turn builds hundreds of pages; a record every page carries crosses the connection once per version.
   const shared:PlaceTurnReads={};
-  await adoptHeldPages(db,Date.now()+Math.floor((deadline-Date.now())/4));
   const [pass]=await db.transaction(query=>query("SELECT clock_timestamp()::text AS started_at"));
   let started=0,rebuilt=0,unchanged=0,failed=0;
   const work=async()=>{

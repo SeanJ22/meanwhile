@@ -40,7 +40,7 @@ test("a split ZIP unions overlapping ready rows once and retains every body's fi
   });
   const before = structuredClone([city, county]);
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY, COUNTY] }, [city, county]);
-  assert.deepEqual(entries(result.entities).map(body => body.id), [BOARD, COUNTY_BOARD]);
+  assert.deepEqual(entries(result.entities).map(body => body.id), [COUNTY_BOARD, BOARD]);
   assert.deepEqual(entries(result.rosters).map(row => row.person_id), ["city-member", "county-member"]);
   assert.equal(entries(result.fields).length, 2);
   assert.equal(entries(result.comments)[0]!.value, "Three minutes");
@@ -96,7 +96,7 @@ test("an explicit body page adds only that body's ready facts to the requested p
   const city = page(CITY, [entity(BOARD)]);
   const explicit = page(COUNTY_BOARD, [entity(COUNTY_BOARD, COUNTY)], { page_kind: "body", division_ids: [], fields: [{ entity_id: COUNTY_BOARD, field: "name", value: "Supervisors" }] });
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY], bodyIds: ["legacy-supervisors-alias"] }, [city, explicit]);
-  assert.deepEqual(entries(result.entities).map(body => body.id), [BOARD, COUNTY_BOARD]);
+  assert.deepEqual(entries(result.entities).map(body => body.id), [COUNTY_BOARD, BOARD]);
   assert.equal(entries(result.fields)[0]!.value, "Supervisors");
   assert.deepEqual(result.division_ids, [CITY]);
 });

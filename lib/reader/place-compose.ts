@@ -30,6 +30,9 @@ function pageTime(row: Row): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+/** The order a place read prints its rows in: by id, then field. */
+const byText = (...keys: string[]) => (a: Row, b: Row) => { for (const key of keys) { const x = String(a[key]), y = String(b[key]); if (x !== y) return x < y ? -1 : 1; } return 0; };
+
 /** Combine ready division and body rows before the single shared reader decoder runs.
  * Selecting each body's newest complete row also carries deletions: an older overlapping
  * county page cannot put back a member or field removed from its newer city page. */
@@ -109,8 +112,10 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   const meetingRows = new Map<string, { header: Row; payload: Row; meetings: Row[]; documents: Row[]; members: Row[]; links: Row[] }>();
   for (const page of ordered) for (const partition of records(page.row.meeting_rows)) {
     const source = record(restoreAgendaText(partition.payload, strings(page.row.agenda_texts)));
-    const meetings = records(source.meetings).filter(meeting => meeting.bodyId ? owns(page, meeting.bodyId) : selected.has(String(meeting.ocdId))
-      && strings(page.row.division_ids).includes(String(meeting.ocdId))).map(meeting=>canonicalRow(meeting));
+    const servesSelected = (meeting: Row) => selected.has(String(meeting.ocdId)) && strings(page.row.division_ids).includes(String(meeting.ocdId));
+    // A sitting of a body no page lists still belongs to the places its page serves, as it does when those places are read together.
+    const meetings = records(source.meetings).filter(meeting => meeting.bodyId ? (originalOwner.has(String(meeting.bodyId)) || bodyOwner.has(canonical(meeting.bodyId))
+      ? owns(page, meeting.bodyId) : servesSelected(meeting)) : servesSelected(meeting)).map(meeting=>canonicalRow(meeting));
     const members = records(source.derivedMembers).filter(member => owns(page, member.bodyId)).map(member=>canonicalRow(member));
     const bodyScope = /^source:[^:]+:body:([^:]+)(?::|$)/.exec(String(partition.scope));
     const body = bodyScope ? decodeURIComponent(bodyScope[1]!) : null;
@@ -138,10 +143,10 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     registration_held: !input.bodyFactsOnly && !agendaOnly && active.some(page => page.row.registration_held === true),
     governments: input.bodyFactsOnly || agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)),
     divisions: input.bodyFactsOnly || agendaOnly ? [] : allDivisions.filter(division => selected.has(String(division.ocdId)) || named.has(String(division.ocdId))),
-    entities: [...entities.values()],
-    fields: ownRows("fields", "entity_id"),
+    entities: [...entities.values()].sort(byText("id")),
+    fields: ownRows("fields", "entity_id").sort(byText("entity_id")),
     rosters: agendaOnly ? [] : ownRows("rosters", "body_id"),
-    comments: ownRows("comments", "entity_id"),
+    comments: ownRows("comments", "entity_id").sort(byText("entity_id", "field")),
     sittings: ownRows("sittings", "body_id"),
     meeting_rows: [...meetingRows.values()].map(({ header, payload, meetings, documents, members, links }) => ({
       ...header,

@@ -16,6 +16,7 @@ import { pipelineStatesOf } from "../lib/control-plane/assignment-read.ts";
 import { ASK_GAP_NAMESPACE } from "../lib/control-plane/ask-gap-id.ts";
 import type { AskGapObservation } from "../lib/control-plane/ask-gap-observations.ts";
 import type { Attempt, AttemptCost, ExecutionLease, WorkerRef } from "../lib/control-plane/attempt.ts";
+import { heartbeat } from "../lib/control-plane/attempt.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { buildCostPanel, buildSpendByPlace, costPanelOf, spendByDay, spendByDayOf, placeRowsOf } from "../lib/control-plane/cost-panel.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
@@ -530,6 +531,44 @@ test("a steady publish reads only the rows changed since the last one and derive
   assert.deepEqual([...derivedFor, ...histories], [], "a fresh fold advances saved segments without assignment history reads");
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assertSamePanels("idle publish", three.panels, await fromScratch(repos, idle, [HUNT], null, three.published.readings));
+});
+
+test("a clock-only fold checks a silently renewed lease head before applying saved expiry segments", async () => {
+  const repos = createMemoryRepositories();
+  const w = emptyWorld(), id = obligationId(1), wi = "wi-renewed-clock";
+  w.obligations.push({ ...initialWorld().obligations[1]!, nextDueAt: at(T1, -1), occurrenceCount: 1 });
+  w.workItems.push(workItem(wi, `${id}#1`, { routeTaskIds: ["rt-renewed-clock"] }));
+  const attempt = round(w, wi, "renewed-clock", { worker: PLAIN, startedAt: at(T1, -0.25), open: true, leaseUntil: at(T1, 1) });
+  w.occurrences.push({ id: "occ-renewed-clock", obligationId: id, sequence: 1, dueAt: at(T1, -1), workItemId: wi,
+    routeTaskId: attempt.routeTaskId, openedAt: at(T1, -0.25), closedAt: null, disposition: null, unresolvedReason: null } as FreshnessOccurrence);
+  await seed(repos, w);
+  // Production's semantic lease cursor deliberately ignores a valid live renewal.
+  const quiet = { ...repos, ownerLeaseChanges: { read: async () => T1 } };
+  const one = await publish(quiet, T1, null, [], null);
+  const settled = await publish(quiet, at(T1, 0.25), one.published, [], null);
+  const held = (await repos.leases.read(attempt.routeTaskId))!;
+  const renewed = heartbeat(held.value, at(T1, 0.5), 2 * 3_600_000);
+  await repos.leases.compareAndSet(attempt.routeTaskId, held.revision, renewed, at(T1, 0.5));
+  const histories: string[] = [];
+  const watched = { ...quiet, ...Object.fromEntries((["artifacts", "costs", "workerResults", "scoutResults", "promotionPipeline"] as const).map(name =>
+    [name, new Proxy(repos[name], { get(target, member, receiver) {
+      const value = Reflect.get(target, member, receiver);
+      if (typeof value !== "function") return value;
+      return (...args: unknown[]) => {
+        if (["read", "readKeys", "readAll", "readAllNarrowed"].includes(String(member))) histories.push(`${name}.${String(member)}`);
+        return value.apply(target, args);
+      };
+    } })])) } as ControlPlaneRepositories;
+  const checked = await publish(watched, held.value.expiresAt, settled.published, [], null, undefined, repos);
+  const row = (await repos.ownerAssignmentRows.read([id]))[0]!;
+  assert.equal(checked.panels.rows.allRowsIndex[0]!.state, "WORKING", "crossing the old expiry must not declare the renewed worker lost");
+  assert.equal(row.nextAt, renewed.expiresAt, "the current lease head supplies the next expiry check");
+  assert.deepEqual(histories, [], "a lease expiry check never downloads assignment log history");
+  assertSamePanels("renewed lease", checked.panels, await fromScratch(repos, held.value.expiresAt, [], null, checked.published.readings));
+  const expired = await publish(watched, renewed.expiresAt, checked.published, [], null, undefined, repos);
+  assert.equal(expired.panels.rows.allRowsIndex[0]!.state, "FAILED", "the actual unrenewed expiry still exposes a lost worker");
+  assert.deepEqual(histories, [], "the actual expiry also uses only current heads");
+  assertSamePanels("actual lease expiry", expired.panels, await fromScratch(repos, renewed.expiresAt, [], null, expired.published.readings));
 });
 
 test("an interrupted snapshot publish resumes from the state count row without rebuilding unrelated assignments", async () => {

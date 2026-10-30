@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
-import { factReader } from "./db.ts";
+import { factReader, readerFactDb } from "./db.ts";
 import type { Query } from "./publish.ts";
 import { isOfficialSource, type OfficialLinkingPage, type OfficialLinkingPageRef } from "../civic-data/source-authority.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
+import { CIVIC_DATA_PROMOTION_OPERATION } from "../civic-data/production-write.ts";
 
 export const LINKING_COPY_SCHEMA = "ALTER TABLE source_copy ADD COLUMN IF NOT EXISTS content text";
 const hash = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
@@ -17,12 +18,12 @@ export function linkingCopyIdentity(url: string, html: string) {
   return { id: -Number.parseInt(hash(key).slice(0, 13), 16) - 1, key, sha256 };
 }
 
+/** The linking page is the publication's own evidence, saved by the job that publishes from it on its writable connection. */
 export async function saveLinkingCopy(page: OfficialLinkingPage, at: string, query?: Query): Promise<OfficialLinkingPageRef> {
   if (!query) {
-    if (!installed) assertWriteAllowed("save voting linking page");
-    query = copyQuery() ?? undefined;
+    if (!installed) assertWriteAllowed(CIVIC_DATA_PROMOTION_OPERATION);
+    query = installed ?? readerFactDb().query;
   }
-  if (!query) throw Error("Saved linking page database is unavailable");
   const parent = page.linkingPage ? await saveLinkingCopy(page.linkingPage, at, query) : undefined;
   const { id, key, sha256 } = linkingCopyIdentity(page.url, page.html);
   await query(`INSERT INTO source_copy(id,url,final_url,fetched_at,http_status,sha256,blob_key,is_archive,content)

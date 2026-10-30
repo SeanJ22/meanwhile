@@ -134,7 +134,7 @@ import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
-import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SCAN_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationAdmission, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
@@ -620,8 +620,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   for (const scope of resolved.scopes) {
     if (scope.kind === "UNRESOLVED") throw new Error(`scope ${scope.decision.key}: ${scope.why}`);
   }
-  const admitted = admittedHuntSourceScopes(resolved.scopes, RUN_STARTED_AT);
-  tasks.push(...huntSourceTasks(admitted, RUN_STARTED_AT));
+  tasks.push(...huntSourceTasks(resolved.scopes, RUN_STARTED_AT));
   }
   return [...new Map(tasks.map(task=>[task.id,task])).values()];
 }

@@ -41,7 +41,7 @@ export function resolveRollingCeiling(
   return { rollingCeilingUsd: overrideUsd, source: "OVERRIDE", fallbackUsd };
 }
 
-export type FleetSafetyStatus = "ACTIVE" | "PAUSED" | "SCHEDULED BLACKOUT" | "CIRCUIT BROKEN";
+export type FleetSafetyStatus = "ACTIVE" | "PAUSED" | "CIRCUIT BROKEN";
 export type FleetStopCode =
   | "CYCLE_MODEL_SPEND_CEILING"
   | "OPERATIONAL_NIGHT_MODEL_SPEND_CEILING"
@@ -108,7 +108,6 @@ export interface FleetSafetySnapshot {
 export function operationalNightAt(nowIso: string): OperationalNight {
   return { active: false, start: nowIso, end: new Date(Date.parse(nowIso) + 15 * 60_000).toISOString(), startsOnSaturday: false };
 }
-export function scheduledBlackoutAt(_nowIso: string): boolean { return false; }
 
 function amount(value: number | null | undefined): value is number {
   return typeof value === "number" && Number.isFinite(value) && value >= 0;
@@ -958,14 +957,11 @@ export class FleetSafetyController {
 
   snapshot(now: string = new Date(this.clock()).toISOString()): FleetSafetySnapshot {
     this.expireProviderCircuits(Date.parse(now));
-    const blackout = scheduledBlackoutAt(now);
-    const status: FleetSafetyStatus = blackout
-      ? "SCHEDULED BLACKOUT"
-      : this.paused
-        ? "PAUSED"
-        : [...this.circuits.values()].some(circuit => Date.parse(circuit.eligibleAt) > Date.parse(now))
-          ? "CIRCUIT BROKEN"
-          : "ACTIVE";
+    const status: FleetSafetyStatus = this.paused
+      ? "PAUSED"
+      : [...this.circuits.values()].some(circuit => Date.parse(circuit.eligibleAt) > Date.parse(now))
+        ? "CIRCUIT BROKEN"
+        : "ACTIVE";
     return {
       formatVersion: 1,
       status,

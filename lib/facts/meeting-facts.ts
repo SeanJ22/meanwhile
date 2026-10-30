@@ -241,7 +241,10 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
     const spoken = meeting.location.address ?? meeting.location.name;
     await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, lineOf(copy, spoken) ? spoken : addressOnPage(copy, spoken) ?? spoken);
   }
-  else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
+  else if(meeting.venueGap?.publishedText) {
+    const stated = meeting.venueGap.publishedText;
+    await claim("location",{name:stated,address:null}, lineOf(copy, stated) ? stated : addressOnPage(copy, stated) ?? stated);
+  }
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
   if(meeting.mapPin?.pendingReplacement)count(await publishMeetingPinFact(db,{meeting,capture:input.pinCapture,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));

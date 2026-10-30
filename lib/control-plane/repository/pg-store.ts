@@ -1,6 +1,7 @@
 import { capabilityLog } from "../../core/capability.ts";
 import { pgOwnerCostRefs } from "./owner-cost-refs.ts";
 import { pgOwnerAssignmentRows } from "./owner-assignment-rows.ts";
+import { pgOwnerAssignmentHeads } from "./owner-assignment-heads.ts";
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
 import { checkedValueQuery, hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
@@ -1850,6 +1851,7 @@ export async function createPgRepositories(
     ownerSnapshotStates: pgAggregateRepository<OwnerSnapshotState>(sql, "OwnerSnapshotState", "cp_owner_snapshots", bounded),
     ownerSnapshotStateTotals: pgAggregateRepository<StateTotals>(sql, "StateTotals", "cp_owner_snapshots", bounded),
     ownerAssignmentRows: pgOwnerAssignmentRows(sql),
+    ownerAssignmentHeads: pgOwnerAssignmentHeads(sql),
     ownerLeaseChanges: pgOwnerLeaseChanges(sql),
     ownerCostRefs: pgOwnerCostRefs(sql),
     ownerSnapshotInboxes: pgAggregateRepository<SpilledInbox>(sql, "SpilledInbox", "cp_owner_snapshots", bounded),

@@ -477,6 +477,7 @@ export interface ControlPlaneRepositories {
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
   /** The running totals the snapshot is folded from, and where each of its reads last stopped. */
   readonly ownerSnapshotTotals: AggregateRepository<OwnerSnapshotTotals>;
+  readonly ownerAssignmentHeads: import("./owner-assignment-heads.ts").OwnerAssignmentHeads;
   readonly ownerAssignmentRows: import("./owner-assignment-rows.ts").OwnerAssignmentRows;
   readonly ownerCostRefs: import("./owner-cost-refs.ts").OwnerCostRefs;
   /** Each state's published rows, its running totals, and the rows a publish routed to it before folding it. */

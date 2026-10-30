@@ -1,3 +1,4 @@
+import { storedOwnerAssignmentHeads } from "./owner-assignment-heads.ts";
 import { storedOwnerCostRefs, type OwnerCostRef } from "./owner-cost-refs.ts";
 import { storedOwnerAssignmentRows } from "./stored-owner-assignment-rows.ts";
 import type { OwnerAssignmentRow } from "./owner-assignment-rows.ts";
@@ -388,6 +389,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
     ownerSnapshotStateTotals: ownerStateTotals,
     ownerAssignmentRows: storedOwnerAssignmentRows(memoryAggregateRepository<OwnerAssignmentRow | null>("OwnerAssignmentRow"), ownerStateTotals),
+    ownerAssignmentHeads: storedOwnerAssignmentHeads(() => repositories),
     ownerCostRefs: storedOwnerCostRefs(memoryAggregateRepository<OwnerCostRef | null>("OwnerCostRef"),ownerTotals),
     ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry"),()=>repositories.fixMap),

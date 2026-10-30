@@ -8,7 +8,8 @@
  * place, point or agenda link, is a difference; one only the fact store holds is an addition.
  */
 import { writeFileSync } from "node:fs";
-import { MEETING_FACT_ROWS_SQL, meetingsFromFactRows } from "../lib/facts/meeting-read.ts";
+import { MEETING_FACT_ROWS_SQL } from "../lib/facts/meeting-read.ts";
+import { composeSittings } from "../lib/reader/sittings.ts";
 import { differences, type Shown } from "../lib/facts/meeting-parity.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { Query } from "../lib/facts/publish.ts";
@@ -60,7 +61,7 @@ for (const { zip, state } of zips) {
   const bodies = new Map<string, Shown>();
   for (const meeting of shown) if (meeting.bodyId && !bodies.has(meeting.bodyId)) bodies.set(meeting.bodyId, meeting);
   const rows = bodies.size ? await query(MEETING_FACT_ROWS_SQL, [[...bodies.keys()], new Date(FROM).toISOString()]) : [];
-  const held = meetingsFromFactRows(rows, id => { const seed = bodies.get(id)!; return { name: seed.bodyName, ocdId: seed.ocdId, jurisdiction: seed.jurisdiction }; }, NOW).filter(inWindow);
+  const held = composeSittings(rows, id => { const seed = bodies.get(id)!; return { name: seed.bodyName, ocdId: seed.ocdId, jurisdiction: seed.jurisdiction }; }, NOW).meetings.filter(inWindow);
   const byId = new Map(held.flatMap(meeting => [[meeting.id, meeting] as const, ...(meeting.mergedMeetingIds ?? []).map(id => [id, meeting] as const)]));
   const ids = new Set<string>();
   let missing = 0, changed = 0, matched = 0;

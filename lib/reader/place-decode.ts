@@ -2,14 +2,11 @@ import { federalMoneyGovernmentDivision } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { factCommentAccessFromRows } from "../facts/comment-read.ts";
-import { meetingsFromFactRows, sittingFactsFromRows } from "../facts/meeting-read.ts";
+import { sittingFactsFromRows } from "../facts/meeting-read.ts";
+import { composeSittings } from "./sittings.ts";
 import { bodyFieldsFromRows, type BodyFacts } from "../facts/registry-overlay.ts";
 import { factRostersFromRows } from "../facts/roster-read.ts";
-import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
-import { collapseDuplicateSittings } from "../sources/composite/index.ts";
-import { mergeDuplicateSittingFields, mergeReaderSittings } from "../meetings/sitting-merge.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../meetings/snapshot.ts";
-import type { Meeting } from "../sources/types.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { Division } from "../registry/types.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
@@ -97,18 +94,14 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
   if (!input.includeAgenda) decoded.documents = [];
   const agendaDocumentLinks = (row.agenda_document_links ?? []) as AgendaDocumentLink[];
   const bodyOf = new Map(bodies.map(body => [body.id,body]));
-  const held = meetingsFromFactRows(rawSittings, id => {
+  const composed = composeSittings(rawSittings, id => {
     const body = bodyOf.get(id);
     return { name: names.get(id) ?? body?.name ?? id, ocdId: body?.division.startsWith("ocd-division/") ? body.division : null, jurisdiction: body?.government ?? "Local" };
   }, new Date());
-  const hiddenRetired = (meeting: Meeting) => RETIRED_MEETING_ROUTES.some(route => meeting.bodyId === route.bodyId && meeting.id.startsWith(`${route.meetingSource}:`)
-    && (route.successorAlreadyWired || held.some(other => other.bodyId === route.bodyId && other.id.startsWith(`${route.replacedBy}:`))));
-  const exact = collapseDuplicateSittings(held.filter(meeting => !hiddenRetired(meeting)),mergeDuplicateSittingFields);
-  const merged = mergeReaderSittings(exact.rows), meetings = merged.rows;
-  const overlaid = meetings.sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
+  const overlaid = composed.meetings, merged = composed;
   const heldAt = rawSittings.filter(fact => fact.field === "title").map(fact => new Date(fact.checked_at as string).toISOString()).sort().at(-1) ?? null;
   const agendaDocuments = decoded.documents.map(d => ({...d,meetingId:merged.aliases.get(d.meetingId) ?? d.meetingId}));
-  const duplicates = exact.dropped.length + merged.dropped.length;
+  const duplicates = composed.dropped.length;
   const snapshotHeldAt = heldAt;
   // The placeholder only satisfies the snapshot shape for the search; readers get `snapshotHeldAt`.
   const snapshot: MeetingsSnapshot = { formatVersion: 1,generatedAt: snapshotHeldAt ?? new Date(0).toISOString(),
@@ -135,7 +128,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     const meetings = overlaid.filter(m => m.bodyId === body.id), ids = new Set(meetings.map(m => m.id));
     const checked = rawSittings.filter(fact => fact.body_id === body.id && fact.field === "title").map(fact => new Date(fact.checked_at as string).toISOString()).sort().at(-1);
     return [body.id,{...snapshot,generatedAt:checked ?? snapshot.generatedAt,meetings,
-      counts:snapshotCounts(meetings,[...exact.dropped,...merged.dropped].filter(m => m.bodyId === body.id).length),agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
+      counts:snapshotCounts(meetings,composed.dropped.filter(m => m.bodyId === body.id).length),agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
   return { registry,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])

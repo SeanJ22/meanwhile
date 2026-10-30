@@ -27756,5 +27756,268 @@
       "checkedAt": "2026-10-23T09:34:04.500Z",
       "detail": "Current official Atlas client names Political_Divisions. Metadata supports SQL and maxRecordCount2000; full WGS84 GeoJSON has all1703 server-counted polygons. Server SQL derives integer ward and division from canonical division_num, matching all1703 native polling assignments and correcting the contradictory short_div_num13 on canonical1301."
     }
+  },
+  {
+    "id": "mt-yellowstone-polling-places-2026",
+    "publisher": "Yellowstone County Elections Department",
+    "url": "https://www.yellowstonecountymt.gov/elections/polling",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt/county:yellowstone",
+      "name": "Yellowstone County",
+      "countyFips": "30111",
+      "population": 164731
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.yellowstonecountymt.gov/elections/",
+    "electionAssociationVerified": false,
+    "model": "ASSIGNED",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY",
+      "tableIndex": 0,
+      "columns": {
+        "name": "Polling Place",
+        "precinct": "Precinct Map"
+      },
+      "templates": {
+        "address": "{Address}, {City}, MT"
+      },
+      "constants": {
+        "hours": "7:00 a.m. until 8:00 p.m."
+      }
+    },
+    "office": {
+      "name": "Yellowstone County Elections Department",
+      "url": "https://www.yellowstonecountymt.gov/elections/"
+    },
+    "discoveredFrom": "Web search for the county election office; county elections page (names the Nov 3, 2026 Federal General Election) and its Polling Places & Precincts page on yellowstonecountymt.gov (.gov)"
+  },
+  {
+    "id": "mt-gallatin-polling-places-2026",
+    "publisher": "Gallatin County Elections Department",
+    "url": "https://www.gallatinmt.gov/DocumentCenter/View/2179",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt/county:gallatin",
+      "name": "Gallatin County",
+      "countyFips": "30031",
+      "population": 118960
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.gallatinmt.gov/380/Elections",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "COUNTY",
+    "title": "Gallatin County Precinct List 2026 Update",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "(?<!PCT )\\b\\d{2}[A-E] [A-Z](?:(?!PCT )[^\\d])*? (?:\\d+ |Tamarack St)[\\s\\S]*? (?:Bozeman/Four Corners|Gallatin Gateway|West Yellowstone|Three Forks|Big Sky|Bozeman|Belgrade|Manhattan)(?= |$)",
+        "fields": {
+          "precinct": {
+            "pattern": "^(\\d{2}[A-E])",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^\\d{2}[A-E] (.+?) (?=\\d+ |Tamarack St)",
+            "group": 1
+          },
+          "street": {
+            "pattern": "^\\d{2}[A-E] .+? ((?:\\d+ |Tamarack St)[\\s\\S]*)$",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "precinct": "precinct"
+      },
+      "templates": {
+        "address": "{street}, MT"
+      },
+      "constants": {
+        "hours": "7 a.m. to 8 p.m."
+      }
+    },
+    "office": {
+      "name": "Gallatin County Elections Department",
+      "url": "https://www.gallatinmt.gov/380/Elections"
+    },
+    "discoveredFrom": "Gallatin County Election Department page (gallatinmt.gov, .gov) names the November 3, 2026 Federal General Election and links 'Gallatin County Montana Precinct & Polling Place List' (DocumentCenter/View/2179, Precinct List 2026 Update PDF)"
+  },
+  {
+    "id": "mt-missoula-polling-places-2026",
+    "publisher": "Missoula County Elections Office",
+    "url": "https://www.missoulacounty.gov/departments/elections/current-election/",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt/county:missoula",
+      "name": "Missoula County",
+      "countyFips": "30063",
+      "population": 117922
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.missoulacounty.gov/departments/elections/current-election/",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "within": {
+          "pattern": "Where are the polling places\\?([\\s\\S]*?)</ul>",
+          "group": 1
+        },
+        "pattern": "<li\\b[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "^([\\s\\S]*?)(?:&nbsp;|\\s|</strong>)*[-\u2013]\\s*\\d",
+            "group": 1
+          },
+          "address": {
+            "pattern": "[-\u2013]\\s*(\\d[\\s\\S]*?)(?:&nbsp;|\\s)*$",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "address": "address"
+      },
+      "constants": {
+        "hours": "7 a.m. to 8 p.m."
+      }
+    },
+    "office": {
+      "name": "Missoula County Elections Office",
+      "url": "https://www.missoulacounty.gov/departments/elections"
+    },
+    "discoveredFrom": "Missoula County Elections department page (missoulacounty.gov, .gov) links its Current Election page, which names the November 3, 2026 Federal General Election and lists the 20 Election Day polling places"
+  },
+  {
+    "id": "mt-flathead-polling-places-2026",
+    "publisher": "Flathead County Election Department",
+    "url": "https://flatheadcounty.gov/download_file/view/e1fdffaf-f8af-475d-8d56-57cfa1cd7019/971",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt/county:flathead",
+      "name": "Flathead County",
+      "countyFips": "30029",
+      "population": 104357
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://flatheadcounty.gov/department-directory/election/election-current",
+    "electionAssociationVerified": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "COUNTY",
+    "title": "Flathead County 2026 Polling Places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "\\b\\d{1,2}(?:, \\d{1,2})* [A-Z][^\\d]*? \\d+ [\\s\\S]*?\\b59\\d{3}\\b",
+        "fields": {
+          "precinct": {
+            "pattern": "^(\\d{1,2}(?:, \\d{1,2})*)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "^\\d{1,2}(?:, \\d{1,2})* ([A-Z][^\\d]*?) \\d",
+            "group": 1
+          },
+          "address": {
+            "pattern": "^\\d{1,2}(?:, \\d{1,2})* [A-Z][^\\d]*? (\\d+ [\\s\\S]*\\b59\\d{3})$",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "address": "address",
+        "precinct": "precinct"
+      }
+    },
+    "office": {
+      "name": "Flathead County Election Department",
+      "url": "https://flatheadcounty.gov/department-directory/election"
+    },
+    "discoveredFrom": "Flathead County current-election page links CLICK HERE TO VIEW ALL FLATHEAD COUNTY POLLING PLACES under 2026 FEDERAL GENERAL ELECTION and states ELECTION DAY: NOVEMBER 3, 2026; download link redirects to Polling_Places__plus__2026_IDs.pdf.",
+    "supersedes": [
+      "https://flatheadcounty.gov/application/files/4017/7930/1160/Flathead_County_2026_Polling_Places.pdf"
+    ]
+  },
+  {
+    "id": "mt-cascade-polling-places-2026",
+    "publisher": "Cascade County Election Office",
+    "url": "https://www.cascadecountymt.gov/DocumentCenter/View/6771",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt/county:cascade",
+      "name": "Cascade County",
+      "countyFips": "30013",
+      "population": 84414
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.cascadecountymt.gov/587/Cascade-County-Polling-And-Ballot-Drop-O",
+    "electionAssociationVerified": false,
+    "model": "ASSIGNED",
+    "matchingUnit": "COUNTY",
+    "title": "Cascade County Montana Polling Places",
+    "extraction": {
+      "format": "pdf",
+      "kind": "ELECTION_DAY",
+      "records": {
+        "pattern": "\\b\\d{1,2}[A-Z]? HD \\d{3} SD \\d{3} .+? \\d+ .+? MT 59\\d{3}\\b",
+        "fields": {
+          "precinct": {
+            "pattern": "^(\\d{1,2}[A-Z]?)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "SD \\d{3} (.+?) \\d+ ",
+            "group": 1
+          },
+          "address": {
+            "pattern": "SD \\d{3} .+? (\\d+ .+? MT 59\\d{3})$",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "address": "address",
+        "precinct": "precinct"
+      }
+    },
+    "office": {
+      "name": "Cascade County Election Office",
+      "url": "https://www.cascadecountymt.gov/587/Cascade-County-Polling-And-Ballot-Drop-O"
+    },
+    "discoveredFrom": "Cascade County 'Polling And Ballot Drop Off Places' page (cascadecountymt.gov, .gov) links 'Cascade County Polling Places' (DocumentCenter/View/6771); the PDF and page are undated, so election association is left unverified; the linked file is named 'Cascade-County-Polling-Places-2024' but it is the list the current page links, and its five sites match the five 2026 polling places the page names (Exhibition Hall, Belt, Cascade, Sun River, Vaughn)"
   }
 ]

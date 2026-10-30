@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import * as nodeModule from "node:module";
-import { test } from "node:test";
+import { test, type TestContext } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { IndependentRuntimeLaneScheduler, passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
@@ -32,12 +32,18 @@ function runnerFunction(name: string): string {
 const rawPage = (id: string) => ({ division_ids: [id], entities: [], fields: [], rosters: [], comments: [], sittings: [],
   meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {}, registry: null, governments: [], divisions: [] });
 
-/** The runner's own place-page functions over a fixture database; only the turn process is run in this process. */
-async function placePageRunner(options: { readonly turnMs: number }) {
+/**
+ * The runner's own place-page functions over a fixture database; only the turn process is run in this process.
+ * With `test`, the clock is the test's own: each page read takes exactly 10 ms of it, so a turn's time budget buys the same number of pages
+ * however busy the machine is. Without it the pages take 10 real milliseconds.
+ */
+async function placePageRunner(options: { readonly turnMs: number; readonly test?: TestContext }) {
+  options.test?.mock.timers.enable({ apis: ["Date"], now: Date.now() });
   const db = await factDb({ withHourlyCounts: true });
   const wrapped: FactDb = { transaction: run => db.transaction(query => run(async (text, params) => {
     if (text !== PLACE_PACKAGE_SQL) return query(text, params);
-    await new Promise(resolve => setTimeout(resolve, 10));
+    if (options.test) options.test.mock.timers.tick(10); else await new Promise(resolve => setTimeout(resolve, 10));
+    onPage();
     return [rawPage(String((params?.[1] as string[])[0]))];
   })) };
   const turns: { at: number; deadline: number; ended?: number }[] = [];
@@ -46,6 +52,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   let pause: unknown[] | Error = [];
   let childStatus = 0;
   let onTurn: (index: number) => void = () => {};
+  let onPage: () => void = () => {};
   // Launch spacing reads this clock, so a test can step past a slowed job's wait without sleeping.
   const clock = { now: Date.now() };
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
@@ -93,11 +100,12 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   return { db, context, turns, reservations, log, queuePlaces, count, clock,
     setPause: (value: unknown[] | Error) => { pause = value; },
     setChildStatus: (status: number) => { childStatus = status; },
-    onTurn: (hook: (index: number) => void) => { onTurn = hook; } };
+    onTurn: (hook: (index: number) => void) => { onTurn = hook; },
+    onPage: (hook: () => void) => { onPage = hook; } };
 }
 
-test("the runner's place-page lane drains queued pages in turns, then waits for the standing clock", async () => {
-  const runner = await placePageRunner({ turnMs: 60 });
+test("the runner's place-page lane drains queued pages in turns, then waits for the standing clock", async t => {
+  const runner = await placePageRunner({ turnMs: 60, test: t });
   try {
     assert.equal(await runner.queuePlaces(0, 16), 16, "the deployment queues every unbuilt place for the runner");
     assert.deepEqual(runInContext(`runStandingRuntimeTick("test", true)`, runner.context), undefined);
@@ -118,13 +126,15 @@ test("the runner's place-page lane drains queued pages in turns, then waits for 
   } finally { await runner.db.pg.close(); }
 });
 
-test("a pending restart stops new place-page turns and waits for no more than the turn in progress", async () => {
-  const runner = await placePageRunner({ turnMs: 150 });
+test("a pending restart stops new place-page turns and waits for no more than the turn in progress", async t => {
+  const runner = await placePageRunner({ turnMs: 150, test: t });
   try {
     await runner.queuePlaces(0, 400);
     let heldAt = 0;
-    runner.onTurn(index => {
-      if (index === 2) setTimeout(() => { heldAt = Date.now(); runInContext(`holdForRestart("${"b".repeat(40)}")`, runner.context); }, 20);
+    // The restart becomes pending when the second turn reads its third page, on the test's own clock.
+    let pagesInSecondTurn = 0;
+    runner.onPage(() => {
+      if (runner.turns.length === 2 && ++pagesInSecondTurn === 3) { heldAt = Date.now(); runInContext(`holdForRestart("${"b".repeat(40)}")`, runner.context); }
     });
     runInContext(`runStandingRuntimeTick("test", true)`, runner.context);
     await runner.context.standingRuntimeScheduler.waitForIdle();
@@ -144,8 +154,8 @@ test("a pending restart stops new place-page turns and waits for no more than th
   } finally { await runner.db.pg.close(); }
 });
 
-test("a place-pages spike spaces its turns out and never stops them; it returns to its pace when the slow-down ends", async () => {
-  const runner = await placePageRunner({ turnMs: 20 });
+test("a place-pages spike spaces its turns out and never stops them; it returns to its pace when the slow-down ends", async t => {
+  const runner = await placePageRunner({ turnMs: 20, test: t });
   const root = mkdtempSync(join(tmpdir(), "place-pages-breaker-")), path = join(root, "breaker.json"), previous = process.env[JOB_BREAKER_PATH_ENV];
   const snapshot = (times?: number) => saveBreakerSnapshot(path, { checkedAt: new Date(runner.clock.now).toISOString(), hour: "", jobs: times
     ? { "place-pages": { seen: "", times }, "door-probes": { seen: "", normal: 300_000_000 } } : {} });

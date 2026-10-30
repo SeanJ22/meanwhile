@@ -1,7 +1,8 @@
 import { newestFirst, type WorkInput, type WorkList, type WorkRow } from "../core/work.ts";
 import type { Unlock } from "../core/capability.ts";
 import { captureProvenance, receiptCapture } from "../facts/capture.ts";
-import { bodyNamed, learnDoorChannel, splitSubject } from "../facts/entities.ts";
+import { bodyNamed, canonicalSubject, ensureGoverningBody, learnDoorChannel, resolvePerson, splitSubject } from "../facts/entities.ts";
+import { nameKey } from "../facts/roster-facts.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { withFactConfirmations } from "../facts/confirmation.ts";
 import { publishLoaded, type Clocks, type FactDb, type Query } from "../facts/publish.ts";
@@ -12,7 +13,7 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { ProbeFetch } from "../doors/probe.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import type { Lead, PlatformParser } from "./parser-hook.ts";
+import type { Lead, ParsedFact, PlatformParser } from "./parser-hook.ts";
 import { platformOf } from "./platform-of.ts";
 
 /** A link that could not be read this many times goes to a detective. */
@@ -83,14 +84,45 @@ export async function readLead(deps: LeadDeps, claim: WorkRow): Promise<LeadResu
     if (!bodies.has(name)) bodies.set(name, deps.facts.transaction(query => bodyNamed(query, lead.subjectId, null, name)).then(body => body?.id ?? null));
     return bodies.get(name)!;
   };
+  // A person on the page is the one person the matcher finds in the seat the page puts them in; two equal matches wait for a detective.
+  const bodyHeld = async (id: string) => {
+    const subject = await canonicalSubject(deps.facts.query, id);
+    const [body] = await deps.facts.query("SELECT id, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [subject]);
+    const made = body ? null : await ensureGoverningBody(deps.facts.query, subject);
+    return body ? { id: String(body.id), state: body.state as string | null, parentId: body.parent_id as string | null } : made;
+  };
   const provenance = captureProvenance(capture, []);
   const linkingPage = parsed.facts.length ? await officialLinkingPage(deps, lead) : null;
   if (linkingPage) await deps.facts.transaction(query => learnDoorChannel(query, splitSubject(lead.subjectId).root, lead.url));
+  const people = new Map<string, Promise<{ body: string; person: string } | null>>();
+  const personOf = (fact: ParsedFact, bodyId: string) => {
+    const key = JSON.stringify([bodyId, fact.person]);
+    if (!people.has(key)) people.set(key, (async () => {
+      const body = await bodyHeld(bodyId);
+      if (!body) return null;
+      const places = (await deps.facts.query("SELECT place_id, boundary_year, placement_basis FROM entity_place WHERE entity_id = $1", [body.id]))
+        .map(row => ({ placeId: String(row.place_id), boundaryYear: Number(row.boundary_year), basis: row.placement_basis as "SERVICE_AREA" | "HOST_COUNTY" }));
+      const { name, ids = [] } = fact.person!;
+      const found = await resolvePerson(deps.facts, { name, state: body.state, places, placeId: places.length ? null : body.parentId,
+        externalIds: [...ids, [`roster-name:${body.id}`, nameKey(name)]] }, deps.clocks.retryMinutes("officeholder"));
+      if (typeof found !== "string") return null;
+      // A roster on the government's own page is the person's official page too.
+      if (linkingPage) await deps.facts.transaction(query => learnDoorChannel(query, found, lead.url));
+      return { body: body.id, person: found };
+    })());
+    return people.get(key)!;
+  };
   await withBatchedReaderInvalidation(purge => withFactConfirmations(deps.facts, async () => {
     for (const fact of parsed.facts) {
-      const subjectId = await subjectOf(fact.subjectHint);
+      let subjectId = await subjectOf(fact.subjectHint), field = fact.field;
       if (subjectId === null) { unmatched.count++; continue; }
-      const outcome = await publishLoaded(deps.facts, { subjectId, field: fact.field, fieldKind: fact.fieldKind, value: fact.value, valueText: fact.valueText,
+      if (fact.person) {
+        const seated = await personOf(fact, subjectId);
+        if (!seated) { tally.held++; continue; }
+        field = field.replaceAll("{person}", seated.person).replaceAll("{body}", seated.body);
+        subjectId = fact.on === "body" ? seated.body : seated.person;
+      }
+      const outcome = await publishLoaded(deps.facts, { subjectId, field, fieldKind: fact.fieldKind, value: fact.value, valueText: fact.valueText,
         quote: fact.quote, provenance, copy, linkingPage, producedBy: `parser:${platform}`, costUsd: 0 },
       () => ({ quote: fact.quote, valueText: fact.valueText }), deps.clocks, deps.now(), { purge });
       if ("refused" in outcome) { if (outcome.refused === "SUBJECT_NOT_FOUND") unmatched.count++; else tally.refused++; }

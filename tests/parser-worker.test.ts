@@ -142,3 +142,24 @@ test("every installed parser is found by its folder, and a link's kind of websit
   }
   assert.equal(platformOf("https://files.thrillshare.com/documents/a.pdf?x=1"), "pdf", "a file's own type wins over its host");
 });
+
+test("a person on a page is the one person the matcher finds, in the seat the page gives them, and is not made twice", async t => {
+  const roster = (name: string) => `<html><body><h1>Board of Supervisors</h1><p>${name}, Chair</p></body></html>`;
+  const people: PlatformParser = { platform: "legistar-insite", parse: (page, lead) => {
+    const name = /<p>(.*), Chair<\/p>/.exec(page.raw)![1]!, quote = `${name}, Chair`, who = { name, ids: [["legistar:pima", "77"] as const] };
+    return { links: [], facts: [
+      { subjectHint: null, person: who, on: "body", field: "member:{person}", fieldKind: "officeholder", value: { name, office: "Chair" }, valueText: name, quote },
+      { subjectHint: null, person: who, field: "name", fieldKind: "officeholder", value: name, valueText: name, quote },
+      { subjectHint: null, person: who, field: "office:{body}", fieldKind: "officeholder", value: "Chair", valueText: "Chair", quote },
+    ] };
+  } };
+  const pages = { [GOVERNMENT_PAGE]: PAGES[GOVERNMENT_PAGE]!.replace("Calendar.aspx", "a").replace(URL_OF_LEAD, "https://pima.legistar.com/a") + `<a href="https://pima.legistar.com/b">b</a>`,
+    "https://pima.legistar.com/a": roster("Jane Roe"), "https://pima.legistar.com/b": roster("Jane Roe") };
+  const { facts, list, run } = await setup(pages, new Map([[people.platform, people]]));
+  t.after(() => facts.pg.close());
+  await list.ensure([productionLead({ url: "https://pima.legistar.com/a" }), productionLead({ url: "https://pima.legistar.com/b" })]);
+  assert.equal((await run()).published, 3, "the second page only confirms what the first said");
+  const rows = await facts.query(`SELECT e.kind, f.field, f.status FROM fact f JOIN entity e ON e.id = f.entity_id ORDER BY e.kind, f.field`);
+  assert.deepEqual(rows.map(row => `${row.kind}:${String(row.field).replace(/:.*/, "")}:${row.status}`), ["body:member:live", "person:name:live", "person:office:live"]);
+  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM entity WHERE id LIKE 'person:az:legistar-pima%'`))[0]!.n), 1, "the same person on two pages is one person");
+});

@@ -2,6 +2,7 @@ import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { ReadOnlyQuery, Statement, Row } from "../control-plane/admin-view/promoted-slices.ts";
 import { readerDatabaseQuery } from "./database.ts";
+import { currentReaderRoute, withReaderRoute } from "../db/reader-route.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
@@ -189,7 +190,10 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
 export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): Promise<CivicDataReadStore & { additionalRows: readonly Row[]; additionalEntries: readonly Pointer[] }> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
-  const [loaded] = await ((query as PublishedQuery).canonicalBody ?? query)([canonicalStatement(keys,additional)]);
+  // A read outside any reader route names the kinds of record it takes, so the meter shows who is reading.
+  const read = () => ((query as PublishedQuery).canonicalBody ?? query)([canonicalStatement(keys,additional)]);
+  const [loaded] = await (currentReaderRoute() === "unattributed"
+    ? withReaderRoute(`shelf:${[...new Set(entries.map(entry => entry.recordClass))].join("+")}`, read) : read());
   const additionalRows = loaded.find(row => row.row_kind === "additional")?.part_payload as readonly Row[] | undefined;
   const additionalEntries: Pointer[] = additional?.canonicalKeys ? [...new Set((additionalRows ?? []).flatMap(row => row.canonical_keys as readonly string[] ?? []))]
     .map(key => { const colon = key.indexOf(":"); return { recordClass: key.slice(0, colon) as RoutineRecordClass, scope: key.slice(colon + 1) }; }) : [];

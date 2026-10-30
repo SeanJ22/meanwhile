@@ -2,7 +2,7 @@ import { productionKeysStore, type KeysStore } from "./keys-store.ts";
 import { testDueKeys } from "./keys-test.ts";
 import type { BriefProblem } from "../counts/problem-groups.ts";
 import type { KeyView } from "./keys-model.ts";
-import { importExistingKeys } from "./keys-import.ts";
+import { importRuntimeKeys } from "./keys-import.ts";
 import { billingCollectorEnvironment } from "../control-plane/provider-billing-environment.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 
@@ -19,9 +19,25 @@ export function keyProblems(keys: readonly KeyView[], at: string): readonly Brie
   });
 }
 
+let firstPass = true;
+
 /** Uses the same control-plane connection as Admin. No Admin request or Google session is involved. */
-export async function keysRunnerPass(store: KeysStore = productionKeysStore(), at = new Date().toISOString()): Promise<void> {
-  if (process.env.WTP_RUNTIME_MODE === "production") await importExistingKeys(billingCollectorEnvironment(), store, at);
+export async function keysRunnerPass(store: KeysStore = productionKeysStore(), at = new Date().toISOString(), dependencies: {
+  readonly env?: NodeJS.ProcessEnv; readonly github?: () => string | null;
+  readonly report?: Parameters<typeof importRuntimeKeys>[4];
+} = {}): Promise<void> {
+  if ((dependencies.env ?? process.env).WTP_RUNTIME_MODE === "production") {
+    const env = dependencies.env ?? billingCollectorEnvironment();
+    const savedGithub = (await store.list(true)).find(row => row.name === "GH_TOKEN");
+    if (!env.GH_TOKEN?.trim() && savedGithub && !savedGithub.deleted) env.GH_TOKEN = await store.read("GH_TOKEN");
+    if (!env.GH_TOKEN?.trim() && !savedGithub) {
+      delete env.GH_TOKEN; if (!env.GITHUB_TOKEN?.trim()) delete env.GITHUB_TOKEN;
+      const { runtimeGithubCredential } = await import("../ops/runtime-release-handoff.ts");
+      env.GH_TOKEN = dependencies.github ? dependencies.github() ?? undefined : runtimeGithubCredential({ root: process.cwd(), env }) ?? undefined;
+    }
+    await importRuntimeKeys(env, "runner", at, store, dependencies.report);
+    if (firstPass) { for (const key of await store.list()) if (!key.working) await store.retest(key.name, at); firstPass = false; }
+  }
   await testDueKeys(store, at);
   const keys = await store.list();
   await Promise.all(keys.map(async row => { await store.read(row.name, true, at); }));

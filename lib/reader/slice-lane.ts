@@ -24,22 +24,22 @@ export function slicesLane(run: (deadlineMs: number) => Promise<void>): Independ
 export interface SliceTurn { readonly claimed: number; readonly built: number; readonly written: number; readonly backfilled: number }
 const NOTHING: SliceTurn = { claimed: 0, built: 0, written: 0, backfilled: 0 };
 
-/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. */
-async function rebuildMarked(list: WorkList, facts: Query): Promise<SliceTurn> {
+/** Work that ignores the turn's end cannot hold the turn open past it. */
+const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
+  if (end.aborted) reject(end.reason); else end.addEventListener("abort", () => reject(end.reason), { once: true }); })]) : work;
+
+/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. At the turn's end the marked slices go back to waiting. */
+async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal): Promise<SliceTurn> {
   const claims = await list.claim("slice", CLAIM_LIMIT);
   if (!claims.length) return NOTHING;
   const wanted = new Map<string, Set<SliceCard>>();
-  for (const claim of claims) {
-    const cards = wanted.get(claim.subjectId!) ?? new Set<SliceCard>();
-    cards.add(claim.field as SliceCard);
-    wanted.set(claim.subjectId!, cards);
-  }
+  for (const claim of claims) wanted.set(claim.subjectId!, (wanted.get(claim.subjectId!) ?? new Set<SliceCard>()).add(claim.field as SliceCard));
   try {
-    const written = await writeSlices(facts, await buildSlices(facts, wanted));
+    const written = await untilEnd(end, (async () => writeSlices(facts, await buildSlices(facts, wanted)))());
     for (const claim of claims) await list.finish(claim);
     return { claimed: claims.length, built: wanted.size, written, backfilled: 0 };
   } catch (error) {
-    for (const claim of claims) await list.later(claim, error instanceof Error ? error.message : String(error));
+    for (const claim of claims) await (end?.aborted ? list.release(claim) : list.later(claim, error instanceof Error ? error.message : String(error)));
     throw error;
   }
 }
@@ -48,38 +48,34 @@ async function rebuildMarked(list: WorkList, facts: Query): Promise<SliceTurn> {
 async function backfill(facts: Query, now: Date): Promise<SliceTurn & { readonly done: boolean }> {
   const held = JSON.parse(await readPassCursor(facts, BACKFILL_CURSOR) ?? "{}") as { after?: string; doneAt?: string };
   if (held.doneAt && now.getTime() - Date.parse(held.doneAt) < SWEEP_EVERY_MS) return { ...NOTHING, done: true };
-  const places = (await facts(`SELECT e.id FROM entity e WHERE e.kind='place' AND e.id>$1
-    AND NOT EXISTS(SELECT 1 FROM place_slice s WHERE s.place_id=e.id AND s.card='governs') ORDER BY e.id LIMIT $2`, [held.after ?? "", BACKFILL_PLACES])).map(row => String(row.id));
-  if (!places.length) {
-    await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify({ doneAt: now.toISOString() }));
-    return { ...NOTHING, done: true };
-  }
+  const places = (await facts(`SELECT e.id FROM entity e WHERE e.kind='place' AND e.id>$1 AND NOT EXISTS(SELECT 1 FROM place_slice s WHERE s.place_id=e.id AND s.card='governs') ORDER BY e.id LIMIT $2`, [held.after ?? "", BACKFILL_PLACES])).map(row => String(row.id));
+  if (!places.length) { await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify({ doneAt: now.toISOString() })); return { ...NOTHING, done: true }; }
   const written = await writeSlices(facts, await buildSlices(facts, new Map(places.map(place => [place, new Set(SLICE_CARDS)]))));
   await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify({ after: places.at(-1) }));
   return { claimed: 0, built: places.length, written, backfilled: places.length, done: false };
 }
 
 /** One look: marked slices first, then, when none are marked, the next places without slices. */
-export async function sliceTurn(input: { readonly list: WorkList; readonly facts: Query; readonly now?: Date }): Promise<SliceTurn & { readonly idle: boolean }> {
-  const marked = await rebuildMarked(input.list, input.facts);
+export async function sliceTurn(input: { readonly list: WorkList; readonly facts: Query; readonly now?: Date; readonly turnEnd?: AbortSignal }): Promise<SliceTurn & { readonly idle: boolean }> {
+  const marked = await rebuildMarked(input.list, input.facts, input.turnEnd);
   if (marked.claimed) return { ...marked, idle: false };
-  const first = await backfill(input.facts, input.now ?? new Date());
+  const first = await untilEnd(input.turnEnd, backfill(input.facts, input.now ?? new Date()));
   return { claimed: 0, built: first.built, written: first.written, backfilled: first.backfilled, idle: first.done };
 }
 
-/** The lane's turn: keeps looking until its deadline or a release drain, resting between looks so building every place stays within its pace. */
-export async function runSliceLane(input: { readonly list: WorkList; readonly facts: Query; readonly deadlineMs: number; readonly stopRequested: () => boolean;
+/** The lane's turn: keeps looking until it is asked to stop, resting between looks so building every place stays within its pace. */
+export async function runSliceLane(input: { readonly list: WorkList; readonly facts: Query; readonly stopRequested: () => boolean; readonly turnEnd?: AbortSignal;
   readonly log: (line: string) => void; readonly sleep?: (ms: number) => Promise<void> }): Promise<{ readonly built: number; readonly written: number; readonly backfilled: number }> {
   const sleep = input.sleep ?? ((ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms)));
   const total = { built: 0, written: 0, backfilled: 0 };
-  while (!input.stopRequested() && Date.now() < input.deadlineMs) {
+  while (!input.stopRequested()) {
     let turn: Awaited<ReturnType<typeof sliceTurn>>;
-    try { turn = await sliceTurn({ list: input.list, facts: input.facts }); }
+    try { turn = await sliceTurn({ list: input.list, facts: input.facts, turnEnd: input.turnEnd }); }
     catch (error) {
+      if (input.turnEnd?.aborted) break;
       // The rows it held go back to waiting with a growing pause; the lane looks again after its own.
       input.log(`Slices: a look failed (${error instanceof Error ? error.message : String(error)}); the slices stay marked`);
-      await sleep(IDLE_MS);
-      continue;
+      await sleep(IDLE_MS); continue;
     }
     total.built += turn.built; total.written += turn.written; total.backfilled += turn.backfilled;
     if (turn.backfilled) input.log(`Slices: ${turn.backfilled} places given their first slices (${turn.written} written)`);

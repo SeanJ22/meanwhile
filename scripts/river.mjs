@@ -1439,7 +1439,7 @@ async function measure(flags) {
   const path = `repos/${repoSlug()}/pulls/${pr}`;
   const got = pr ? await github("GET", path) : { ok: false, status: 0, body: "no release pull request number; pass --pr" };
   const body = got.ok && typeof got.body?.body === "string" && got.body.body.includes(MEASURES_END) ? got.body.body : null;
-  const patched = body === null ? got : await github("PATCH", path, { body: `${body.split(MEASURES_START)[0]}${block}${body.split(MEASURES_END)[1]}` });
+  const patched = body === null ? { ok: false, status: got.status, body: got.ok ? "the body has no release-measures block" : got.body } : await github("PATCH", path, { body: `${body.split(MEASURES_START)[0]}${block}${body.split(MEASURES_END)[1]}` });
   if (patched.ok) console.log(`river measure: release ${record.release} notes updated on #${pr}`);
   else actionNeeded(`replace the release-measures block in release ${record.release}'s pull request body with the block above`, "PATCH", path, undefined, `${patched.status}: ${patched.body?.message ?? patched.body}`);
 }

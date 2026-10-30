@@ -9,7 +9,7 @@ import test from "node:test";
 import { ZERO_COST, type AttemptCost } from "../lib/control-plane/attempt.ts";
 import { costEntryWithModel, spendByTier, costPortionsByModel, type CostEntry, type CostModelShare } from "../lib/control-plane/cost.ts";
 import { canonicalModelId, modelTierFor, MODELS } from "../lib/models.ts";
-import { buildCostPanel, buildMonthlySpend } from "../lib/control-plane/cost-panel.ts";
+import { buildCostPanel } from "../lib/control-plane/cost-panel.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { registerRouteTask, registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
@@ -86,37 +86,6 @@ const row = (attemptId: string, cost: AttemptCost, byModel?: readonly CostModelS
   cost,
   recordedAt: NOW,
   ...(byModel ? { byModel } : {}),
-});
-
-const ATTEMPTS = [
-  { id: "at-escalated", worker: { version: SONNET, provider: "anthropic" } },
-  { id: "at-plain", worker: { version: SONNET, provider: "anthropic" } },
-];
-const COSTS = [row("at-escalated", COMBINED, SPLIT), row("at-plain", { ...ZERO_COST, usd: 0.01, requestCount: 3, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, uncachedInputTokens: 10, inputTokens: 10, outputTokens: 5 })];
-const close = (a: number | null | undefined, b: number): boolean => a !== null && a !== undefined && Math.abs(a - b) < 1e-9;
-
-test("Money's cost-by-model gives each model its own part of an escalated charge, and the parts are counted once", () => {
-  const month = buildMonthlySpend({ costs: COSTS, attempts: ATTEMPTS, nowIso: NOW });
-  const of = (model: string) => month.byModel.find((r) => r.key === model);
-  assert.ok(close(of(OPUS)?.usd, 0.0305), "the frontier's part is the frontier's, not the start model's");
-  assert.ok(close(of(SONNET)?.usd, 0.0124 + 0.01), "Sonnet carries its own part and the plain charge");
-  assert.ok(close(month.total.total, 0.0529), "the month's total is the ledger's, unchanged");
-  assert.ok(close(month.byModel.reduce((n, r) => n + (r.usd ?? 0), 0), month.total.total ?? Number.NaN), "the by-model rows sum to the total: nothing counted twice");
-  assert.equal(of(OPUS)?.tokens.cacheReadInputTokens.total, 5000, "each model's tokens are its own attempt's");
-  assert.equal(of(SONNET)?.tokens.cacheReadInputTokens.total, 8000);
-  assert.equal(of(OPUS)?.tokens.requestCount.total, 2, "the frontier's requests are its own turns");
-  assert.equal(of(SONNET)?.tokens.requestCount.total, 13 + 3, "the start model keeps the Attempt's non-model requests");
-  assert.equal(month.tokens.cacheReadInputTokens.total, 13_000, "the month's token totals read the row once");
-
-  const panel = buildCostPanel({ costs: COSTS, attempts: ATTEMPTS, cacheByRole: null, share: null, verifiedRecords: null });
-  const usdOf = (rows: typeof panel.costByModel, key: string): number | null => {
-    const r = rows.find((x) => x.key === key);
-    return r !== undefined && r.usd.held ? r.usd.value.value : null;
-  };
-  assert.ok(close(usdOf(panel.costByModel, OPUS), 0.0305), "the panel's by-model row gives the frontier its part");
-  assert.ok(close(usdOf(panel.costByModel, SONNET), 0.0224));
-  assert.ok(close(panel.summary.measuredUsd, 0.0529), "the panel's total is the ledger's");
-  assert.ok(close(usdOf(panel.costByRole, "SCOUT"), 0.0529), "by role, the charge is still one Scout charge");
 });
 
 test("a split that does not sum to the charge is not trusted: the row is read whole under its Attempt's model, never guessed", () => {

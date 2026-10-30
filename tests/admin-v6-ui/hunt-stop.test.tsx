@@ -1,3 +1,4 @@
+import { noHunts } from "../helpers/order-hunts.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {readFileSync} from "node:fs";
@@ -76,9 +77,9 @@ test("state and country stop controls stay pending until their runner orders are
     await page.waitForFunction(()=> (window as unknown as {latestReceipt?:{status:string}}).latestReceipt?.status==="queued");
     assert.equal(writes,1);
     assert.equal((await repos.huntOrders.pending("az")).length,1);
-    await applyHuntOrders(repos,"nh",now);
+    await applyHuntOrders(repos,noHunts,"nh",now);
     assert.equal(await page.evaluate(()=> (window as unknown as {latestReceipt:{status:string}}).latestReceipt.status),"queued");
-    await applyHuntOrders(repos,"az",now);
+    await applyHuntOrders(repos,noHunts,"az",now);
     await page.waitForFunction(()=> (window as unknown as {latestReceipt?:{status:string}}).latestReceipt?.status==="done");
     await page.screenshot({path:"/tmp/cp01-admin-state-stop.png",fullPage:true});
     await page.getByRole("button",{name:"Country view",exact:true}).click();
@@ -86,7 +87,7 @@ test("state and country stop controls stay pending until their runner orders are
     await page.getByRole("dialog").getByRole("button",{name:"Send",exact:true}).click();
     await page.waitForFunction(()=> (window as unknown as {latestReceipt?:{status:string}}).latestReceipt?.status==="queued");
     assert.equal(writes,2);
-    for(const state of HUNT_STATES) await applyHuntOrders(repos,state,now);
+    for(const state of HUNT_STATES) await applyHuntOrders(repos,noHunts,state,now);
     await page.waitForFunction(()=> (window as unknown as {latestReceipt?:{status:string}}).latestReceipt?.status==="done");
     assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value.expansionScopes?.filter(isHunt).length,0);
     await page.close();

@@ -8,10 +8,13 @@ import type { StoredCapability, Unlock } from "./capability.ts";
 
 /** Why the row exists: Sean's order, a reader's request, an Ask question, or the code that planned it. */
 export type WorkOrigin =
-  | { readonly from: "order"; readonly orderId: string }
+  | { readonly from: "order"; readonly orderId: string; /** The orders that sent money to this place: the Send each came from, its receipt and when. */ readonly marks?: readonly OrderMark[] }
   | { readonly from: "demand"; readonly subjectType: string; readonly presses: number }
   | { readonly from: "ask"; readonly questionId: string }
   | { readonly from: "planner" | "loader" | "detective"; readonly workId?: string };
+
+/** Sean's Send that pointed money at a place: its key, the receipt that funds it, when it reached the place and any questions he asked. */
+export type OrderMark = import("../control-plane/scheduler/obligation.ts").ObligationAssignment;
 
 export interface WorkInput {
   readonly kind: WorkKind;
@@ -80,8 +83,8 @@ export interface ClaimWhere {
   readonly platform?: string;
   /** Only rows about these subjects. */
   readonly subjects?: readonly string[];
-  /** Rows marked unpaid (`value.paid` false) are served only for these subjects, the places money was pointed at; absent means no such limit. */
-  readonly fundedSubjects?: readonly string[];
+  /** Free work only: the rows marked unpaid (`value.paid` false) and no others. Without it, unpaid rows are never served. */
+  readonly unpaid?: boolean;
 }
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
@@ -129,6 +132,7 @@ export const WORK_DDL = [
   `CREATE UNIQUE INDEX IF NOT EXISTS work_series_live ON work (series) WHERE series IS NOT NULL AND status IN ('waiting','taken')`,
   `CREATE INDEX IF NOT EXISTS work_repeat_due ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NOT NULL`,
   `CREATE INDEX IF NOT EXISTS work_done_old ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NULL`,
+  `CREATE INDEX IF NOT EXISTS work_order_hunt ON work (state) WHERE kind = 'hunt' AND (origin ? 'marks' OR origin ? 'ended') AND (status IN ('waiting','taken') OR repeat_ms IS NOT NULL)`,
   `CREATE INDEX IF NOT EXISTS work_reader_live ON work (priority DESC, received_at) WHERE tier = 'reader' AND status IN ('waiting','taken')`,
   `CREATE INDEX IF NOT EXISTS work_dead_end ON work (dead_since, id) WHERE dead_since IS NOT NULL`,
   `CREATE INDEX IF NOT EXISTS work_reopened ON work ((reopened->>'at') DESC) WHERE reopened IS NOT NULL`,
@@ -253,7 +257,7 @@ export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
     AND ($8::boolean IS NOT TRUE OR value->>'plain' = 'true')
     AND ($9::text IS NULL OR value->>'platform' = $9)
     AND ($10::text[] IS NULL OR subject_id = ANY($10))
-    AND ($11::text[] IS NULL OR value->>'paid' IS DISTINCT FROM 'false' OR subject_id = ANY($11::text[]))
+    AND (coalesce(value->>'paid','') = 'false') = ($11::boolean IS TRUE)
   ORDER BY work_tier_rank(tier), priority DESC, due_at, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -316,8 +320,46 @@ const SOONER_SQL = `INSERT INTO work (${COLUMNS})
     tier = CASE WHEN work_tier_rank(work.tier) > work_tier_rank('reader') THEN 'reader' ELSE work.tier END,
     priority = CASE WHEN work.tier = 'reader' THEN work.priority + 1 WHEN work_tier_rank(work.tier) > work_tier_rank('reader') THEN 1 ELSE work.priority END,
     due_at = CASE WHEN work.status = 'waiting' THEN least(work.due_at, EXCLUDED.due_at) ELSE work.due_at END,
+    value = CASE WHEN jsonb_typeof(work.value) = 'object' THEN work.value - 'paid' ELSE work.value END,
+    content_version = work.content_version + CASE WHEN work.status = 'taken' AND work.value->>'paid' = 'false' THEN 1 ELSE 0 END,
     origin = work.origin || jsonb_build_object('presses', coalesce((work.origin->>'presses')::int,0) + 1)
   RETURNING *`;
+
+/**
+ * Sean's orders point money at places: each place's one live hunt becomes an order-tier hunt that paid workers may take, with the
+ * Sends that funded it recorded as marks. A place with no hunt gets one. A hunt a free worker holds goes back to waiting when it finishes.
+ */
+const PROMOTE_SQL = `INSERT INTO work (${COLUMNS})
+  SELECT 'work-' || md5(r.series || ':' || gen_random_uuid()::text),'hunt','order',r.priority,r.state,r.place_id,r.place_id,NULL,NULL,
+    jsonb_build_array(jsonb_build_object('placeId',r.place_id,'subjectId',r.place_id,'url',NULL,'source','Your order')),'[]'::jsonb,
+    '{"plain":false}'::jsonb,NULL,$2::timestamptz,$2::timestamptz,
+    jsonb_build_object('from','order','orderId',r.marks->0->>'ref','marks',r.marks),
+    ${RECEIVED_STEP("'order'", "$2::timestamptz")},r.series
+  FROM jsonb_to_recordset($1::jsonb) AS r(series text,state text,place_id text,priority int,marks jsonb)
+  ON CONFLICT (series) WHERE series IS NOT NULL AND status IN ('waiting','taken') DO UPDATE SET
+    state = EXCLUDED.state,
+    tier = CASE WHEN work_tier_rank(work.tier) > work_tier_rank('order') THEN 'order' ELSE work.tier END,
+    priority = greatest(work.priority, EXCLUDED.priority),
+    value = CASE WHEN jsonb_typeof(work.value) = 'object' THEN work.value - 'paid' ELSE work.value END,
+    content_version = work.content_version + CASE WHEN work.status = 'taken' AND work.value->>'paid' = 'false' THEN 1 ELSE 0 END,
+    due_at = CASE WHEN work.status = 'waiting' THEN least(work.due_at, EXCLUDED.due_at) ELSE work.due_at END,
+    origin = jsonb_build_object('from','order','orderId',coalesce(work.origin->>'orderId',EXCLUDED.origin->>'orderId'),'marks',
+      (SELECT coalesce(jsonb_agg(m ORDER BY m->>'at'),'[]'::jsonb) FROM (SELECT DISTINCT ON (m->>'assignmentKey',m->>'ref') m
+        FROM jsonb_array_elements(coalesce(work.origin->'marks','[]'::jsonb) || (EXCLUDED.origin->'marks')) m ORDER BY m->>'assignmentKey',m->>'ref',m->>'at') d))
+      || CASE WHEN work.origin ? 'ended' THEN jsonb_build_object('ended',work.origin->'ended') ELSE '{}'::jsonb END
+  WHERE work.tier <> 'order' OR work.value ? 'paid' OR work.state <> EXCLUDED.state OR work.priority < EXCLUDED.priority
+    OR NOT (coalesce(work.origin->'marks','[]'::jsonb) @> (EXCLUDED.origin->'marks'))
+  RETURNING id`;
+
+/**
+ * The place's hunt goes back to free work: the money that pointed at it is gone. The Sends that still fund it stay on it, so it
+ * comes back when they are funded again; the ones a stop ended are kept apart, so the same Send never restarts what it stopped.
+ * A hunt a paid worker holds finishes first.
+ */
+const DEMOTE_SQL = `UPDATE work SET tier = 'coverage', value = CASE WHEN jsonb_typeof(work.value) = 'object' THEN work.value ELSE '{}'::jsonb END || '{"paid":false}'::jsonb,
+    origin = jsonb_build_object('from','planner','marks',d.marks,'ended',coalesce(work.origin->'ended','[]'::jsonb) || d.ended),
+    content_version = work.content_version + CASE WHEN work.status = 'taken' THEN 1 ELSE 0 END
+  FROM jsonb_to_recordset($1::jsonb) AS d(id text, marks jsonb, ended jsonb) WHERE work.id = d.id RETURNING work.id`;
 
 const ORDER_SQL = `INSERT INTO work (id,kind,tier,priority,state,place_id,subject_id,reports,due_at,received_at,origin,steps)
   VALUES ($1,'order','order',0,$2,$3,$4,jsonb_build_array($5::jsonb),$6::timestamptz,$6::timestamptz,$7::jsonb,$8::jsonb) ON CONFLICT (id) DO NOTHING`;
@@ -434,6 +476,33 @@ export function workList(query: Query, options: { readonly owner: string; readon
         one.subject_id, canonicalJson(one.reports[0]), at, canonicalJson(origin), series]);
       return row(saved!);
     },
+    /** Sean's orders point money at these places: each place's live hunt becomes an order-tier hunt, or one is made. */
+    async promote(inputs: readonly { readonly placeId: string; readonly state: string; readonly priority: number; readonly marks: readonly OrderMark[] }[]): Promise<number> {
+      if (!inputs.length) return 0;
+      const byPlace = new Map<string, { series: string; state: string; place_id: string; priority: number; marks: OrderMark[] }>();
+      for (const input of inputs) {
+        if (!input.marks.length) throw new Error("WORK_INVALID_INPUT");
+        const held = byPlace.get(input.placeId) ?? { series: `blank:${input.placeId}`, state: input.state.toUpperCase(), place_id: input.placeId, priority: input.priority, marks: [] };
+        held.priority = Math.max(held.priority, input.priority);
+        held.marks.push(...input.marks);
+        byPlace.set(input.placeId, held);
+      }
+      const all = [...byPlace.values()];
+      let changed = 0;
+      for (let at = 0; at < all.length; at += 1_000) changed += (await query(PROMOTE_SQL, [JSON.stringify(all.slice(at, at + 1_000)), timestamp()])).length;
+      return changed;
+    },
+    /** The hunts Sends have pointed money at, live or waiting to repeat, in a state: which Sends fund each now, which a stop ended, and whether paid workers may take it. */
+    async orderHunts(state: string): Promise<readonly { readonly id: string; readonly placeId: string; readonly funded: boolean;
+      readonly marks: readonly OrderMark[]; readonly ended: readonly OrderMark[] }[]> {
+      return (await query(`SELECT id, subject_id, tier = 'order' AS funded, coalesce(origin->'marks','[]'::jsonb) AS marks, coalesce(origin->'ended','[]'::jsonb) AS ended
+        FROM work WHERE kind = 'hunt' AND (origin ? 'marks' OR origin ? 'ended') AND state = $1 AND (status IN ('waiting','taken') OR repeat_ms IS NOT NULL)`, [state.toUpperCase()]))
+        .map(held => ({ id: String(held.id), placeId: String(held.subject_id), funded: held.funded === true, marks: held.marks as OrderMark[], ended: held.ended as OrderMark[] }));
+    },
+    /** These hunts go back to free work, keeping the Sends that still fund them and setting aside the ones a stop ended. */
+    async demote(hunts: readonly { readonly id: string; readonly marks: readonly OrderMark[]; readonly ended?: readonly OrderMark[] }[]): Promise<number> {
+      return hunts.length ? (await query(DEMOTE_SQL, [JSON.stringify(hunts.map(hunt => ({ id: hunt.id, marks: hunt.marks, ended: hunt.ended ?? [] })))])).length : 0;
+    },
     /** An order Sean gave is on the list from the moment it is accepted; replaying it changes nothing. */
     async order(input: { readonly receiptId: string; readonly label: string; readonly placeId?: string; readonly state?: string; readonly at: string }): Promise<void> {
       await query(ORDER_SQL, [workId({ kind: "order", subjectId: input.receiptId }), (input.state ?? "US").toUpperCase(), input.placeId ?? "ocd-division/country:us",
@@ -476,7 +545,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
         taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
-          where.plainOnly ?? null, where.platform ?? null, where.subjects ?? null, where.fundedSubjects ?? null])).map(row));
+          where.plainOnly ?? null, where.platform ?? null, where.subjects ?? null, where.unpaid ?? null])).map(row));
       }
       taken.sort(IN_TIER_ORDER);
       for (const extra of taken.splice(n)) await release(extra);
@@ -495,9 +564,9 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const at = timestamp();
       return (await query(`SELECT 1 AS ready FROM work WHERE kind = ANY($1::text[]) AND status = 'waiting' AND due_at <= $2::timestamptz
           AND ($3::text IS NULL OR state = $3) AND ($4::boolean IS NOT TRUE OR value->>'plain' = 'true')
-          AND ($5::text[] IS NULL OR value->>'paid' IS DISTINCT FROM 'false' OR subject_id = ANY($5::text[]))
+          AND (coalesce(value->>'paid','') = 'false') = ($5::boolean IS TRUE)
         UNION ALL SELECT 1 FROM work WHERE kind = ANY($1::text[]) AND status = 'taken' AND lease_until <= $2::timestamptz AND ($3::text IS NULL OR state = $3) LIMIT 1`,
-      [kinds, at, where.state?.toUpperCase() ?? null, where.plainOnly ?? null, where.fundedSubjects ?? null])).length > 0;
+      [kinds, at, where.state?.toUpperCase() ?? null, where.plainOnly ?? null, where.unpaid ?? null])).length > 0;
     },
     /** A claimed row goes back to waiting as if it had never been taken. */
     release,

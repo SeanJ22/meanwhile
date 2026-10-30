@@ -3,11 +3,8 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
-import { BLANK_PLANNER_CURSOR, keepPlannerList, planBlankChanges } from "../lib/hunt/blank-planner.ts";
+import { BLANK_PLANNER_CURSOR, keepPlannerList, planBlankChanges, runFreeTries } from "../lib/hunt/blank-planner.ts";
 import { readPassCursor } from "../lib/facts/db.ts";
-import { capabilityLog } from "../lib/core/capability.ts";
-import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -39,7 +36,7 @@ test("blanks that changed become one standing hunt for each place they sit in, o
   await blank("person:nowhere", "photo");
 
   const first = await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() });
-  assert.deepEqual(first, { changed: 4, places: 2, added: 2 }, "an entity with no place plans nothing");
+  assert.deepEqual(first, { changed: 4, places: 2, added: 2, again: 0 }, "an entity with no place plans nothing");
   const rows = await query("SELECT kind, tier, series, place_id, subject_id, priority, value, origin, status FROM work ORDER BY place_id");
   assert.deepEqual(rows.map(row => [row.kind, row.tier, row.series, row.status, row.priority]), [
     ["hunt", "coverage", `blank:${COCONINO}`, "waiting", 1],
@@ -48,9 +45,9 @@ test("blanks that changed become one standing hunt for each place they sit in, o
   assert.deepEqual([rows[0]!.value, rows[0]!.origin, rows[0]!.subject_id], [{ plain: false, paid: false }, { from: "planner" }, COCONINO]);
   assert.ok(await readPassCursor(facts.query, BLANK_PLANNER_CURSOR));
 
-  assert.deepEqual(await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() }), { changed: 0, places: 0, added: 0 }, "nothing changed, nothing read again");
+  assert.deepEqual(await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() }), { changed: 0, places: 0, added: 0, again: 0 }, "nothing changed, nothing read again");
   await facts.query("UPDATE blank SET reason = 'still missing', updated_at = now() + interval '1 minute' WHERE entity_id = $1", [`${PIMA}#board`]);
-  assert.deepEqual(await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() }), { changed: 1, places: 1, added: 0 }, "a place with a live hunt is not given a second");
+  assert.deepEqual(await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() }), { changed: 1, places: 1, added: 0, again: 0 }, "a place with a live hunt is not given a second");
   assert.equal((await query("SELECT count(*)::int AS n FROM work"))[0]!.n, 2);
 });
 
@@ -63,52 +60,45 @@ test("a big catch-up is read a page at a time and resumes where it stopped", asy
   for (let pass = 0; pass < 4; pass += 1) seen.push((await planBlankChanges({ facts: facts.query, list, now: () => new Date().toISOString(), page: 2 })).changed);
   assert.deepEqual(seen, [2, 2, 1, 0]);
 });
-
-test("a standing hunt is served only where money was pointed, and comes again on its clock", async t => {
+test("a standing hunt is free work: paid workers never take it, the free try reads what is held and turns it into links, and it comes again on its day or when a blank changes", async t => {
   const { facts, query, blank, close } = await open();
   t.after(close);
   let at = new Date("2026-10-30T12:00:00Z");
   const list = workList(query, { owner: "planner", now: () => at });
+  await facts.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'pima.example.gov')", [`${PIMA}#board`]);
   await blank(`${PIMA}#board`, "agenda_url");
   await blank("person:jane", "photo");
   await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() });
 
-  assert.equal(await list.ready(["hunt"], { fundedSubjects: [] }), false, "no money pointed anywhere: the hunts wait as standing work");
-  assert.equal((await list.claim(["hunt"], 5, { fundedSubjects: [] })).length, 0);
-  assert.equal(await list.ready(["hunt"], { fundedSubjects: [COCONINO] }), true);
-  const [claim, ...rest] = await list.claim(["hunt"], 5, { fundedSubjects: [COCONINO] });
-  assert.deepEqual([claim!.subjectId, rest.length], [COCONINO, 0], "only the funded place is served");
-  assert.equal((await list.claim(["hunt"], 5)).length, 1, "a claim with no limit serves what is left");
+  assert.equal(await list.ready(["hunt"]), false, "paid workers see nothing: the hunts are free work");
+  assert.equal((await list.claim(["hunt"], 5)).length, 0);
+  assert.equal(await list.ready(["hunt"], { unpaid: true }), true);
 
-  assert.equal(await list.finish(claim!, 5 * DAY), true);
+  const tried = await runFreeTries({ facts: facts.query, list, now: () => at.toISOString() }, 10);
+  assert.deepEqual(tried, { tried: 2, pages: 1 });
+  assert.deepEqual(await query("SELECT url, value->>'platform' AS platform, state, origin->>'from' AS origin FROM work WHERE kind = 'lead'"),
+    [{ url: "https://pima.example.gov/", platform: "own-site", state: "AZ", origin: "planner" }], "a page the place is known by becomes a link for the page readers");
+  assert.deepEqual(await query("SELECT subject_id, status, repeat_ms::text AS repeat, unlock FROM work WHERE kind = 'hunt' ORDER BY subject_id"), [
+    { subject_id: COCONINO, status: "done", repeat: String(DAY), unlock: { kind: "source", state: "az", text: "No page is known for this place; a new source for its state unlocks it" } },
+    { subject_id: PIMA, status: "done", repeat: String(DAY), unlock: null },
+  ], "a place with open blanks and nothing to read is a dead end a new source unlocks");
+
   await blank("person:jane", "bio");
-  await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() });
-  assert.equal((await query("SELECT count(*)::int AS n FROM work WHERE series = $1", [`blank:${COCONINO}`]))[0]!.n, 1, "a hunt waiting out its clock is not repeated early");
-  at = new Date(at.getTime() + 6 * DAY);
-  assert.deepEqual(await keepPlannerList(list, at.getTime()), { spawned: 1, retired: 0 });
-  assert.equal((await query("SELECT count(*)::int AS n FROM work WHERE series = $1 AND status = 'waiting'", [`blank:${COCONINO}`]))[0]!.n, 1, "its next row is made");
+  const again = await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() });
+  assert.equal(again.again, 2, "a changed blank starts the next free try now, not tomorrow");
+  assert.equal((await query("SELECT count(*)::int AS n FROM work WHERE kind = 'hunt' AND status = 'waiting'"))[0]!.n, 2);
+  at = new Date(at.getTime() + 2 * DAY);
+  assert.deepEqual(await keepPlannerList(list, at.getTime()), { spawned: 0, retired: 0 }, "nothing is waiting to repeat that was not already started");
 });
 
-test("the hunters work a standing hunt only for a funded place whose blanks changed since its last hunt", async t => {
+test("a reader's press makes the place's free hunt one paid workers may take", async t => {
   const { facts, query, blank, close } = await open();
   t.after(close);
-  const at = new Date("2026-10-30T12:00:00Z");
-  const list = workList(query, { owner: "planner", now: () => at });
-  const repos = createMemoryRepositories();
+  const list = workList(query, { owner: "planner" });
   await blank(`${PIMA}#board`, "agenda_url");
-  await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() });
-  const funded = [PIMA];
-  let changed = false;
-  const claims = hunterClaims({ list, repos, now: () => at.toISOString(), deadEndMs: async () => 5 * DAY, capabilities: capabilityLog(async () => []),
-    deadEndOf: async () => undefined, funded: () => funded, due: async () => changed, log: () => {} });
-
-  await claims.select(["az"], false);
-  assert.equal(await claims.claim(true), null, "money pointed, but the blanks are as the last hunt left them: the row waits out its clock");
-  assert.deepEqual(await query("SELECT status, repeat_ms::text AS repeat FROM work"), [{ status: "done", repeat: String(5 * DAY) }]);
-
-  at.setTime(at.getTime() + 6 * DAY);
-  await keepPlannerList(list, at.getTime());
-  changed = true;
-  assert.equal((await claims.claim(true))?.taskIds.length, 1, "money pointed and the blanks changed: the hunters take it as a task");
-  assert.equal((await repos.workItems.list()).length, 1);
+  await planBlankChanges({ facts: facts.query, list, now: () => new Date().toISOString() });
+  await list.sooner({ placeId: PIMA, subjectId: PIMA, subjectType: "BODY" });
+  const [claim] = await list.claim(["hunt"], 5);
+  assert.deepEqual([claim!.subjectId, claim!.tier], [PIMA, "reader"]);
+  assert.equal((await query("SELECT value ? 'paid' AS marked FROM work"))[0]!.marked, false);
 });

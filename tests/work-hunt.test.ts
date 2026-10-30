@@ -15,7 +15,7 @@ import { hunterFor } from "../lib/hunt/runtime.ts";
 const now = "2026-10-18T00:00:00Z";
 const division = "ocd-division/country:us/state:az/county:pima";
 const claimsOf = (list: ReturnType<typeof workList>, repos: ReturnType<typeof createMemoryRepositories>) =>
-  hunterClaims({ list, repos, now: () => now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, funded: () => [], due: async () => true, log: () => {} });
+  hunterClaims({ list, repos, now: () => now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, due: async () => true, log: () => {} });
 
 test("an unanswered Ask question is handed to the hunter, reaches it with held place facts, and appears in the daily brief", async t => {
   const repos = createMemoryRepositories();

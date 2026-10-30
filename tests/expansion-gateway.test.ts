@@ -1,3 +1,4 @@
+import { noHunts } from "./helpers/order-hunts.ts";
 import { applyHuntOrders } from "../lib/control-plane/hunt-orders.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -140,7 +141,7 @@ test("stopping a hunt ends its paid work and keeps the place as a free Send; sto
   assert.equal(removed.ok, true, removed.receipt.says);
   assert.match(removed.receipt.says, /Stop requested/);
   assert.equal((await repos.huntOrders.pending("az")).length,1);
-  await applyHuntOrders(repos,"az",NOW);
+  await applyHuntOrders(repos,noHunts,"az",NOW);
   const kept = expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}))?.value ?? null).scopes;
   assert.deepEqual(kept.filter(isHunt).map((s) => s.key), ["cd:119/0406"]);
   assert.deepEqual(kept.filter((s) => !isHunt(s)).map((s) => [s.key, s.budgetUsd, s.sourceWorkVersion]), [["county:2020/04019", 0, 1]]);

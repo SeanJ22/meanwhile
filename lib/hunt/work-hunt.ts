@@ -8,6 +8,7 @@ import type { WorkRow } from "../core/work.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { AskQuestion } from "../ask/question-work.ts";
+import type { ObligationAssignment } from "../control-plane/scheduler/obligation.ts";
 
 /** What a hunt row carries when a research round planned a task the hunters already know: that task, and whether plain code can run it. */
 export interface PlannedTask { readonly routeTaskId: string; readonly plain: boolean }
@@ -33,9 +34,12 @@ function huntOf(claim: WorkRow, now: string) {
     return { work: { ...made, autonomousPlan: plan }, label: "Find the answer to a reader's question" };
   }
   const government = claim.subjectId!.split("#")[0]!;
+  // Sean's Sends that pointed money here travel with the hunt: charges are counted against them and his directions are read from them.
+  const marks = (claim.origin.marks ?? []) as readonly ObligationAssignment[];
   const made = createWorkItem({ project: "freshness", question: "HAVE_IT", subject: government,
     obligation: `Find and publish the facts missing for ${government}, asked for ${day} (${claim.id.slice(5, 13)})`, why: WHY[workKind], contract, now });
-  return { work: { ...made, autonomousPlan: { ...huntPacketPlan(government), workKind } as AutonomousWorkPlan }, label: "Find the facts missing for this government" };
+  return { work: { ...made, autonomousPlan: { ...huntPacketPlan(government), workKind,
+    ...(marks.length ? { assignmentMarks: marks, ownerInstructions: [...new Set(marks.map(mark => mark.ref))] } : {}) } as AutonomousWorkPlan }, label: "Find the facts missing for this government" };
 }
 
 /**

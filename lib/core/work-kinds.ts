@@ -16,6 +16,9 @@ export function workCostKindOf(row: { readonly kind: WorkKind; readonly tier: Wo
   if (row.tier === "order" || row.origin.from === "order") return "order";
   return "planner";
 }
+/** The row state a planning state's work is kept under; national work is US. */
+export const workStateOf = (planningState: string): string => planningState === "system" ? "US" : planningState.toUpperCase();
+
 /** The steps an order moves through, in order. They are stored on the order's row as each is reached. */
 export const ORDER_STEP_NAMES = ["Received", "Accepted", "Scheduled", "In progress", "Done"] as const;
 export interface OrderStep { readonly step: (typeof ORDER_STEP_NAMES)[number]; readonly at: string }

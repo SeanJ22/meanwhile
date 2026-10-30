@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
-import { unitBelongsToState } from "./unit-state.ts";
 import type { AggregateRepository, ControlPlaneRepositories, Persisted } from "./repository/types.ts";
 import { ADMIN_CONFIG_ID, withExpansionScopes } from "./gateway/admin-config.ts";
 import { expansionScopesOf, isHunt, type ExpansionScopeDecision } from "./expansion/scopes.ts";
 import { huntPlaceKey } from "./admin-view/v6-hunts-read.ts";
-import { HUNT_PACKET_NAMESPACE } from "../hunt/packet.ts";
+import { workStateOf } from "../core/work-kinds.ts";
+import type { WorkList } from "../core/work.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
 export const scopeControlKey=(key:string):string=>createHash("sha256").update(key).digest("hex");
@@ -44,7 +44,7 @@ export async function requestHuntStop(repos: ControlPlaneRepositories,input: {
   }),input.at);
 }
 
-export async function applyHuntOrders(repos: ControlPlaneRepositories,state: string,now: string): Promise<number> {
+export async function applyHuntOrders(repos: ControlPlaneRepositories,list: Pick<WorkList,"orderHunts"|"demote">,state: string,now: string): Promise<number> {
   const orders=await repos.huntOrders.pending(state);
   if(!orders.length)return 0;
   const held=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
@@ -62,16 +62,12 @@ export async function applyHuntOrders(repos: ControlPlaneRepositories,state: str
   const scopes=parsed.scopes.map(scope=>ended.get(scope.key)??scope);
   if(held && ended.size)await repos.adminConfig.save(held,withExpansionScopes(held.value,{scopes,decidedAt:now}),now);
   const funded=new Set(scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId));
-  for(const row of await repos.obligations.listWhere(["materializedBy"],"OWNER_DISPATCH")) {
-    if(!row.id.startsWith(HUNT_PACKET_NAMESPACE) || !row.value.active || !unitBelongsToState(row.id,row.value.subjectId,state))continue;
-    const marks=row.value.assignments??[];
-    const reached=marks.some(mark=>orders.some(order=>mark.at<=order.value.requestedAt &&
-      (order.value.scopeKey===null || mark.assignmentKey===order.value.scopeKey)));
-    const keep=marks.some(mark=>!orders.some(order=>mark.at<=order.value.requestedAt &&
-      (order.value.scopeKey===null || mark.assignmentKey===order.value.scopeKey)) &&
-      (mark.assignmentKey.startsWith("dispatch:") || funded.has(mark.ref)));
-    if(reached && !keep)await repos.obligations.compareAndSet(row.id,row.revision,{...row.value,active:false,nextDueAt:null,updatedAt:now},now);
-  }
+  // The hunts money was pointed at go back to free work when a stop reaches every Send that funds them.
+  const markReached=(mark:{at:string;assignmentKey:string})=>orders.some(order=>mark.at<=order.value.requestedAt &&
+    (order.value.scopeKey===null || mark.assignmentKey===order.value.scopeKey));
+  await list.demote((await list.orderHunts(workStateOf(state))).filter(hunt=>hunt.funded && hunt.marks.some(markReached) &&
+    !hunt.marks.some(mark=>!markReached(mark) && (mark.assignmentKey.startsWith("dispatch:") || funded.has(mark.ref))))
+    .map(hunt=>({id:hunt.id,marks:hunt.marks.filter(mark=>!markReached(mark)),ended:hunt.marks.filter(markReached)})));
   for(const order of orders)await repos.huntOrders.compareAndSet(order.id,order.revision,{...order.value,confirmedAt:now,
     affected:parsed.scopes.filter(scope=>ended.has(scope.key) && reaches(order,scope)).length},now);
   return orders.length;

@@ -16,8 +16,6 @@ export const HUNT_PACKET_ROUTE_ID = "hunter:packet";
 export const HUNT_PACKET_NAMESPACE = "hunt:packet:";
 
 export const huntPacketObligationId = (governmentId: string): string => `${HUNT_PACKET_NAMESPACE}${governmentId}`;
-export const governmentOfPacketObligation = (obligationId: string): string | null =>
-  obligationId.startsWith(HUNT_PACKET_NAMESPACE) ? obligationId.slice(HUNT_PACKET_NAMESPACE.length) : null;
 
 const HUNTABLE_PREDICATES: ReadonlySet<string> = new Set(["fact", "identity", "source", "freshness"]);
 const VALUE_CHARS = 160;

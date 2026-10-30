@@ -44,16 +44,13 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 import { modelLaneClosure } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { OWNER_DISPATCH } from "@/lib/control-plane/scheduler/obligation.ts";
-import { openOccurrence, planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
 import { scheduleObligation } from "@/lib/control-plane/scheduler/obligation.ts";
-import { submit } from "@/lib/control-plane/gateway/gateway.ts";
-import { huntPacketsProvider } from "@/lib/control-plane/scheduler/providers/hunt-packets.ts";
 import { placeSourceExecutor, type HuntSourceScope } from "@/lib/hunt/own-site-runtime.ts";
 import { ensureEntity } from "@/lib/facts/entities.ts";
 import { MemoryEvidenceStore, putArtifact } from "@/lib/control-plane/evidence/store.ts";
 import { factDb } from "./helpers/hunters-db.ts";
 import { beginAttempt, claim } from "@/lib/control-plane/attempt.ts";
-import { nextAutonomousOperation } from "@/lib/control-plane/workers/coordinator.ts";
 import { parseDispatchTarget } from "@/lib/control-plane/scheduler/dispatch-target.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/registry.ts";
@@ -678,43 +675,9 @@ test("materialized meetings hunts keep their identities and read the government'
   }
 });
 
-test("an Admin order still creates its paid hunt packet beside the free meeting reads", async () => {
-  const repos = createMemoryRepositories();
-  const accepted = await submit({ type: "fleet.deployHere", subject: "fleet", input: { note: "Send agents to Tucson AZ. Fill OFF-17 portraits first.", budgetUsd: 1 },
-    stateVersion: null, idempotencyKey: "hn01-paid-dispatch", caller: "OWNER_SESSION", actorRef: "test-owner" },
-  { repos, now: () => T0, currentStateVersion: null, codeSha: null, readPlaceScore: async () => null, wake: null });
-  assert.equal(accepted.ok, true, accepted.receipt.says);
-  const [intent] = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch;
-  assert.equal(intent.budgetUsd, 1);
-  const place = "ocd-division/country:us/state:az/place:tucson";
-  const target = { ...dispatchWorkTarget({ intentId: intent.intentId, note: intent.note!, requestedAt: intent.requestedAt }), budgetUsd: intent.budgetUsd };
-  const { world } = await cycleWorld(repos, T0);
-  const plan = planDispatchWork({ targets: [target], world: { ...world, packetDivisions: new Map([[target.key, [place]]]) } });
-  const applied = await applyDispatchWork(repos, plan, { now: T0 });
-  assert.deepEqual(applied.failed, []);
-  const materialized = new Set((await repos.obligations.list()).map(row => row.id));
-  const paid = buildRegistry([huntPacketsProvider({ materialized: () => ({ ids: materialized }) })], { root: ROOT, nowIso: T0 });
-  const packet = paid.units.find(unit => unit.obligation.subjectId === place);
-  assert.ok(packet, "the same Admin order still owns a hunt packet for its place");
-  assert.equal(packet.route.executorClass, "BOUNDED_MODEL_WORKER", "free meeting reads do not replace the ordered paid hunt");
-  const synced = await syncObligations(repos, [packet.obligation], T0);
-  const occurrence = await openOccurrence(repos, { obligation: synced.all[0], dueAt: T0, now: T0 });
-  assert.ok(occurrence);
-  assert.equal(occurrence.routeTask.state, "PENDING");
-  assert.equal(occurrence.routeTask.routeId, "hunter:packet");
-  assert.deepEqual(occurrence.workItem.autonomousPlan?.ownerInstructions, [intent.intentId]);
-  const next = await nextAutonomousOperation({ repos, now: () => T0, methodVersion: 0,
-    readEvidence: async () => { throw new Error("No evidence read is needed to schedule the paid hunt"); },
-    independentContext: async () => { throw new Error("No audit is needed to schedule the paid hunt"); } }, occurrence.workItem.id);
-  assert.equal(next.action, "SCOUT");
-  assert.equal(next.task?.id, occurrence.routeTask.id, "the ordered paid task is handed to the hunter, not replaced by the free route");
-  assert.equal(readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch[0].budgetUsd, 1,
-    "materializing the paid job preserves the owner's budget");
-});
-
 test("a pause holds paid work, never free work: hunts are not stopped while paused, and Box publishing still runs", () => {
   const planner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(planner, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  assert.match(planner, /if\(!dry && !filteredCycle && !huntsPaused\)await demoteUnfunded\(huntList,PLANNING_STATE,fundedRefs\);/);
   const runner = readFileSync(join(ROOT, "scripts/routine-civic-data-runner.mts"), "utf8");
   const read = runner.slice(runner.indexOf("async function readHuntSourceTasks("));
   assert.ok(read.indexOf("publishBoxFindings(") > 0 && read.indexOf("publishBoxFindings(") < read.indexOf("if (intents.runnerPause.paused) return [];"),

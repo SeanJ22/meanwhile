@@ -8,7 +8,6 @@ import type { ExecutorKind } from "../scheduler/dispatch.ts";
 import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../scheduler/dispatch-target.ts";
 import type { MeetingPartitionOwnership } from "../scheduler/provider-inputs.ts";
 import { jurisdictionRequirements } from "../scheduler/providers/local-jurisdictions.ts";
-import { huntPacketObligation } from "../../hunt/packet-plan.ts";
 import {
   MEETINGS_DISCOVERY_RECORD_CLASS,
   meetingsDiscoveryObligationId,
@@ -292,10 +291,9 @@ export interface DispatchWorkWorld {
 
   readonly refusedRegistries?: ReadonlyMap<string, string>;
 
-  readonly packetDivisions?: ReadonlyMap<string, readonly string[]>;
 }
 
-export type RequirementKind = "MEETINGS_DISCOVERY" | "REGISTRY_ROUTE" | "HUNT_PACKET";
+export type RequirementKind = "MEETINGS_DISCOVERY" | "REGISTRY_ROUTE";
 
 export interface RequirementInstance {
 
@@ -349,11 +347,6 @@ export function requirementsFor(
     });
   }
   return out.sort((a, b) => (a.obligation.id < b.obligation.id ? -1 : a.obligation.id > b.obligation.id ? 1 : 0));
-}
-
-function packetRequirements(divisions: readonly string[]): RequirementInstance[] {
-  return [...new Set(divisions)].sort().map(id => ({ obligation: huntPacketObligation(id), kind: "HUNT_PACKET" as const,
-    executor: "BOUNDED_MODEL_WORKER" as const, carriage: "OWED" as const }));
 }
 
 export type BlockedCode =
@@ -640,9 +633,6 @@ export function planDispatchWork(input: {
     for (const { reg, jurisdiction } of units.placed) {
       instances.push(...requirementsFor(reg, jurisdiction, needOf(reg, jurisdiction.id), world.meetingPartitions));
     }
-    const packetDivisions = world.packetDivisions?.get(target.key) ??
-      (target.kind === "DISPATCH" ? units.placed.flatMap(({ jurisdiction }) => jurisdiction.ocdId ? [jurisdiction.ocdId] : []) : []);
-    instances.push(...packetRequirements(packetDivisions));
 
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
@@ -772,10 +762,9 @@ export async function applyDispatchWork(
       const next = withAssignment(held.value.assignments, reordered);
       const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
         .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
-      const stopped = held.value.materializedBy === OWNER_DISPATCH && !held.value.active && mark.obligationId.startsWith("hunt:packet:");
-      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan || stopped) {
+      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
         heldMarks.set(mark.obligationId, await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
-          ...(autonomousPlan ? { autonomousPlan } : {}), ...(stopped ? { active: true, nextDueAt: null } : {}), updatedAt: input.now }, input.now));
+          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now));
       }
       marked.push(key);
       recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });

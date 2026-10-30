@@ -99,7 +99,7 @@ test("CH-24 lane: the round under the switch closes its own model lane after any
   assert.match(round, /const laneClosure = modelLaneClosure\(\{[\s\S]{0,800}?paidWorkInHunterLane: CONTINUOUS_HUNTERS,\n  unreadableControls,\n\}\);/);
   assert.match(round, /row\.action === "SCOUT" && \(CONTINUOUS_HUNTERS \|\| paidWorkerCapacity\(\) > 0\)/);
   const wave = round.slice(round.indexOf("if (CONTINUOUS_HUNTERS) {"), round.indexOf("const workerDispatches = await runLeaseWorkerProcesses({"));
-  assert.match(wave, /list\.ensure\(rows\.slice\(at, at \+ 1_000\)\)/);
+  assert.match(wave, /huntList\.ensure\(rows\.slice\(at, at \+ 1_000\)\)/);
   assert.match(wave, /return \{ \.\.\.planned, dispatches: \[\.\.\.queueFailures\], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 \};/);
 });
 

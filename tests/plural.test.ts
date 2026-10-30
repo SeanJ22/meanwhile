@@ -1,3 +1,4 @@
+import { noHunts } from "./helpers/order-hunts.ts";
 import {sourceHintsOf} from "../lib/control-plane/field-manual-sources.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import assert from "node:assert/strict";
@@ -275,7 +276,7 @@ test("with every hunt stopped in every state, the admitted worker rereads the sa
   const send = placeSend("03060", requestedAt, "send:03060");
   await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [send] }, now);
   await requestHuntStop(repos, { receiptId: "stop-every-hunt", at: stoppedAt, actor: "owner" });
-  for (const state of HUNT_STATES) await applyHuntOrders(repos, state, stoppedAt);
+  for (const state of HUNT_STATES) await applyHuntOrders(repos,noHunts, state, stoppedAt);
   const [kept] = expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { expansionScopes: true })).value).scopes;
   assert.deepEqual([isHunt(kept!), kept!.receiptId, kept!.sourceWorkVersion], [false, "send:03060", 1], "the hunt ended; the place keeps its free Send");
   const dataset: BuiltDataset = { formatVersion: 1, builtAt: completedAt, coverage: "Two fixture ZIPs in New Hampshire", zctaUniverse: ["03060", "03101"],

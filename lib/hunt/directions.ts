@@ -3,7 +3,6 @@ import {RESEARCH_INTENT_LOG_KEY} from '../control-plane/scheduler/research-polic
 import type {ControlPlaneRepositories} from '../control-plane/repository/types.ts';
 import type {ObligationAssignment} from '../control-plane/scheduler/obligation.ts';
 import {openControlPlane} from '../control-plane/admin-data.ts';
-import {huntPacketObligationId} from './packet.ts';
 /** Read only the instructions already bound to this government's occurrence.
  * Direction is Sean's text; this function creates no work or spending limit. */
 export async function huntDirections(repos:ControlPlaneRepositories,refs:readonly string[],assignments:readonly ObligationAssignment[]){
@@ -23,11 +22,10 @@ export async function huntDirections(repos:ControlPlaneRepositories,refs:readonl
 
 /** Use the same bound owner instructions for Exa as for the model hunter. */
 export async function workItemHuntDirections(repos:ControlPlaneRepositories,input:{workItemId:string;governmentId:string}):Promise<readonly string[]>{
- const item=await repos.workItems.readNarrowed(input.workItemId,{autonomousPlan:['ownerInstructions']});
+ const item=await repos.workItems.readNarrowed(input.workItemId,{autonomousPlan:['ownerInstructions','assignmentMarks']});
  if(!item)throw new Error('HUNT_DIRECTIONS_WORK_ITEM_UNAVAILABLE');
- const value=item.value as {autonomousPlan?:{ownerInstructions?:readonly string[]}};
- const owner=await repos.obligations.readNarrowed(huntPacketObligationId(input.governmentId),{assignments:true});
- return huntDirections(repos,value.autonomousPlan?.ownerInstructions??[],(owner?.value as {assignments?:readonly ObligationAssignment[]}|undefined)?.assignments??[]);
+ const value=item.value as {autonomousPlan?:{ownerInstructions?:readonly string[];assignmentMarks?:readonly ObligationAssignment[]}};
+ return huntDirections(repos,value.autonomousPlan?.ownerInstructions??[],value.autonomousPlan?.assignmentMarks??[]);
 }
 
 export async function liveHuntDirections(input:{workItemId:string;governmentId:string}):Promise<readonly string[]>{

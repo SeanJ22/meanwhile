@@ -94,19 +94,13 @@ export async function readAskedGaps(repos: Pick<ControlPlaneRepositories, "askGa
   return [...foldAskGapObservations(reading.rows, now).asked.values()];
 }
 
-export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults" | "doors" | "adminConfig" | "askGapObservations">,
-  rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string,
-  read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue>> {
-  const packets = await read(rows.map(row => row.governmentId), now, await readAskedGaps(repos, now));
-  const maxWaitMs = await deadEndWaitMs(repos);
-  const out = new Map<string, PacketDue>();
-  for (const row of rows) {
-    const packet = packets.get(row.governmentId);
-    if (packet === undefined) { out.set(row.governmentId, { due: false, why: "its owed list could not be read" }); continue; }
-    const [last, doors] = await Promise.all([lastPacketJob(repos, row.governmentId), shutDoorsOf(repos, row.governmentId)]);
-    out.set(row.governmentId, packetDue({ packet, last: lastJobOf(last), orderedAt: orderedAtOf(row.assignments), shutDoors: doors, now, maxWaitMs }));
-  }
-  return out;
+/** Whether a funded place is due another hunt: an open blank changed since its last hunt, an order reached it since, a door shut, or its dead-end clock ran out. */
+export async function governmentDue(repos: Pick<ControlPlaneRepositories, "scoutResults" | "doors" | "adminConfig" | "askGapObservations">,
+  governmentId: string, orderedAt: string | null, now: string, read: typeof readGovernmentPackets = readGovernmentPackets): Promise<PacketDue> {
+  const packet = (await read([governmentId], now, await readAskedGaps(repos, now))).get(governmentId);
+  if (packet === undefined) return { due: false, why: "its owed list could not be read" };
+  const [last, doors, maxWaitMs] = await Promise.all([lastPacketJob(repos, governmentId), shutDoorsOf(repos, governmentId), deadEndWaitMs(repos)]);
+  return packetDue({ packet, last: lastJobOf(last), orderedAt, shutDoors: doors, now, maxWaitMs });
 }
 
 export interface HunterRuntimeInput {
@@ -130,11 +124,11 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const maxWaitMs = await deadEndWaitMs(input.repos);
   const read = input.readPackets ?? readGovernmentPackets;
   const readerQuestion = item.autonomousPlan?.readerQuestion;
-  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
+  const marks = item.autonomousPlan?.assignmentMarks ?? [];
   const packetNow = async (): Promise<HuntPacket | null> => {
     const divisions = readerQuestion?.divisions.length ? readerQuestion.divisions : [governmentId.split("#")[0]!];
     const packets = await read(divisions, input.now(), await readAskedGaps(input.repos, input.now()));
-    const directions=await huntDirections(input.repos,item.autonomousPlan?.ownerInstructions??[],owner?.assignments??[]);
+    const directions=await huntDirections(input.repos,item.autonomousPlan?.ownerInstructions??[],marks);
     if (!readerQuestion) {const packet=packets.get(governmentId);return packet?Object.assign({},packet,{directions}):null;}
     // Read all held facts for the place before hunting its unanswered question.
     // The question is work instructions, never a new checklist or evidence.
@@ -144,8 +138,8 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
       held: held.flatMap(packet => packet.held), blanks: held.flatMap(packet => packet.blanks),...{directions} };
   };
   const opening = await packetNow();
-  const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
-  const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(owner?.assignments), shutDoors: doors, now: input.now(), maxWaitMs });
+  const assignmentKeys = [...new Set(marks.map(mark => mark.assignmentKey))];
+  const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(marks), shutDoors: doors, now: input.now(), maxWaitMs });
   const role: HuntRole = due?.due ? due.role : last ? "DETECTIVE" : "HUNTER";
   const prepareBody=liveHuntBodyPreparer({repos:input.repos,root:input.root,now:input.now});
   let packet: HuntPacket | null = null;

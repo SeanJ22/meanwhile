@@ -8,10 +8,9 @@ import { summarizePlanningRound, mergeStatePlanningPass, STATE_PLANNING_WALK_MS,
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { backfillBox } from "../lib/control-plane/box.ts";
-import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
+import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder } from "../lib/control-plane/repository/pg-store.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
-import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
@@ -35,7 +34,7 @@ import { researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/resea
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
-import { rowsOfPlanningState } from "../lib/control-plane/workers/hunter-claims.ts";
+import { workStateOf } from "../lib/core/work-kinds.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, type HeldDiggerWorkItem } from "../lib/control-plane/workers/held-digger-priority.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
@@ -128,10 +127,9 @@ import {
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
-import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
+import { demoteUnfunded, endedHunts, fundedHunts, fundedMembers } from "../lib/hunt/funded-hunts.ts";
 import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
 import { readPlaceWords } from "../lib/hunt/place-words.ts";
-import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
 import { preloadOperationalReferenceState, planningJurisdictionRegistries } from "../lib/civic-data/operational-references.ts";
@@ -292,7 +290,6 @@ import { admittedRuntimeChildEnvironment, assertRuntimeAuthority } from "../lib/
 import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
 
-
 let releaseDrainRequested=false;
 process.on("message", message => {
   if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
@@ -413,12 +410,13 @@ if(STATE===null) {
   const summaries = new Map<string, StatePlanningSummary>();
   const url=controlPlaneUrlFromEnv(); if(!url)throw new Error("The planner database is unavailable");
   const parentRepos=await createPgRepositories(url,NOW,{skipBootstrap:true});
+  const parentHunts=workList(controlPlaneQuery(),{owner:"round:parent"});
   crashRepos=parentRepos;
   const roundIntents=await readPlanningIntents(parentRepos);
   if(parentRepos.controlReadsBackfill && !await parentRepos.controlReadsBackfill.finished()) {
     if(dry || filteredCycle)throw new Error("Complete the scoped control backfill in a full runner round before filtered planning");
     for(const state of PLANNING_STATES) {
-      await applyHuntOrders(parentRepos,state,nowIso());
+      await applyHuntOrders(parentRepos,parentHunts,state,nowIso());
       await runStateControlBackfill(parentRepos.controlReadsBackfill,state,(state,copied,archived)=>{
         if((copied+archived)%1000===0)console.log(`planning backfill ${state}: ${copied} copied, ${archived} archived`);
       });
@@ -560,15 +558,17 @@ try {
 const intents = readIntents(intentLog);
 
 const planningRevision=await repos.planningControls?.revision(PLANNING_STATE)??0;
+const huntList=workList(controlPlaneQuery(),{owner:`round:${PLANNING_STATE}`});
 if(!dry && !filteredCycle) {
-  await applyHuntOrders(repos,PLANNING_STATE,NOW);
+  await applyHuntOrders(repos,huntList,PLANNING_STATE,NOW);
   await pending.step("box:changed", () => backfillBox(repos, NOW, `box-backfill:${PLANNING_STATE}`));
 }
 const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}});
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;
 const fundedRefs=[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
   ...intentLog.flatMap(intent=>intent.kind==="INTENT" && intent.action==="DISPATCH" && !intents.cancelledDispatch.has(intent.intentId)?[intent.intentId]:[])];
-if(!dry && !filteredCycle && !huntsPaused)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
+// A place whose money is gone goes back to free work.
+if(!dry && !filteredCycle && !huntsPaused)await demoteUnfunded(huntList,PLANNING_STATE,fundedRefs);
 const planningSections={expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}} as const;
 const cycleObservation = observeCyclePhases(repos);
 
@@ -615,7 +615,7 @@ const meetingPartitions = plannerMeetingOwnership({ root: ROOT, reads: plannerRe
   registryBodies: () => [...promotedRegistries().registries.values()].flatMap(registry => registry.jurisdictions) });
 let materialized: MaterializedReading;
 try {
-  materialized = {ids:await readMaterializedPlanningIds(repos,fundedRefs)};
+  materialized = {ids:await readMaterializedPlanningIds(repos)};
 } catch (error) {
   materialized = { unreadable: error instanceof Error ? error.message : String(error) };
 }
@@ -632,7 +632,7 @@ await meetingPartitions.readStates([
 // Owner-reported official changes are standing Scout instructions in their state's own round.
 const officialsLeads = PLANNING_STATE === "system" ? [] : await pending.step("officials-leads:refresh", () => refreshOfficialsLeads(repos, NOW, { apply: !filteredCycle }));
 const registryProviders = [
-  ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), officialsLeadProvider(officialsLeads), huntPacketsProvider({ materialized: () => materialized }),
+  ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), officialsLeadProvider(officialsLeads),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
   await loadCandidateEnrichmentProvider(trackedStates, { root: ROOT, nowIso: NOW }),
   meetingsDiscoveryProvider({ materialized: () => materialized, registered: promotedRegistries }),
@@ -717,7 +717,6 @@ console.log(
 
 let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");
-console.log(`  hunt packets: ${sync.all.filter(o => o.active && o.id.startsWith(HUNT_PACKET_NAMESPACE)).length} government(s) an order sent agents to`);
 console.log(
   `  ${floorLine(
     floored(
@@ -940,22 +939,6 @@ if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) &&
 }
 if (continuedStandingLineages.length) console.log(`  standing source periods continued: ${continuedStandingLineages.length}; no duplicate Scout root opened; canonical roots ${continuedStandingLineages.slice(0, 3).map(row=>row.rootWorkItemId).join(", ")}${continuedStandingLineages.length>3?" …":""}`);
 
-{
-  const packetRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE));
-  if (packetRows.length > 0) {
-    try {
-      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW);
-      const waiting = packetRows.filter(row => due.get(row.obligation.subjectId)?.due !== true);
-      for (const row of waiting) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
-      console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} due to be sent` +
-        (waiting.length ? `; waiting: ${waiting.slice(0, 3).map(row => `${row.obligation.subjectId} (${due.get(row.obligation.subjectId)?.why ?? "unread"})`).join("; ")}${waiting.length > 3 ? " …" : ""}` : ""));
-    } catch (error) {
-      runtimeConditions.push(`hunt packets could not be read (${error instanceof Error ? error.message : String(error)}); none is sent this round`);
-      for (const row of packetRows) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
-    }
-  }
-}
-
 if(intentLogUnreadable!==null)  runtimeConditions.push(
     `research intents could not be read (${intentLogUnreadable}); the paid model lane stays closed this cycle as if paused, ` +
       "and plain-code work, routine intake and free discovery walks continue",
@@ -1078,7 +1061,6 @@ const subjectByObligation = new Map(sync.all.map((o) => [o.id, o.subjectId]));
 const lifetimeHuntSubjects = new Set((expansionPlan?.scopes ?? [])
   .filter(scope => scope.kind === "RESOLVED" && scope.decision.budgetStartedAt !== null && scope.decision.budgetUsd > 0)
   .flatMap(scope => [...scope.members]));
-const activeHuntSubjects=new Set(sync.all.filter(row=>row.id.startsWith("hunt:packet:") && row.assignments?.some(mark=>fundedRefs.includes(mark.ref))).map(row=>row.subjectId));
 const lifetimeHuntWorkIds = new Set(sync.all.filter(o => lifetimeHuntSubjects.has(o.subjectId)).map(o => o.id));
 const lifetimeHuntWork = (work: string): boolean => lifetimeHuntSubjects.has(work) || lifetimeHuntWorkIds.has(work);
 const hasLifetimeHunt = lifetimeHuntSubjects.size > 0;
@@ -1582,7 +1564,6 @@ if (dispatchTargets.length > 0) {
     const plan = planDispatchWork({
       targets: dispatchTargets,
       world: {
-        packetDivisions,
         registries,
         territory: expansionLoad.territory ?? null,
         territoryDetail: expansionLoad.territoryDetail ?? null,
@@ -1597,6 +1578,9 @@ if (dispatchTargets.length > 0) {
     const applied = dispatchWorkWrites
       ? await applyDispatchWork(repos, plan, { now: NOW })
       : null;
+    // Sean's money points at every government a funded Send reaches: each gets a hunt paid workers may take.
+    const funded = fundedHunts({ targets: dispatchTargets, divisions: packetDivisions, state: PLANNING_STATE, rank: government => placeRankFor(government), ended: await endedHunts(huntList, PLANNING_STATE) });
+    if (dispatchWorkWrites && funded.length > 0) console.log(`  funded hunts: ${await huntList.promote(funded)} of ${funded.length} government(s) newly pointed at or moved up`);
     dispatchRecorded = applied?.recorded ?? [];
     if (applied !== null) {
       const targetOf = new Map(plan.writes.map(w => [w.instance.obligation.id, w.target.key] as const));
@@ -1630,7 +1614,7 @@ if (dispatchTargets.length > 0) {
 if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(process.env)) {
   try {
     const written = [...dispatchWrittenThisCycle.keys()];
-    materialized = {ids:await readMaterializedPlanningIds(repos,fundedRefs)};
+    materialized = {ids:await readMaterializedPlanningIds(repos)};
     const rebuilt = buildRegistry(registryProviders, registryContext);
     const known = new Set(allUnits.map((u) => u.obligation.id));
     const wanted = new Set(written);
@@ -1647,7 +1631,6 @@ if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(process.env))
         standingById.set(o.id, o);
         subjectByObligation.set(o.id, o.subjectId);
         if (lifetimeHuntSubjects.has(o.subjectId)) lifetimeHuntWorkIds.add(o.id);
-        if(o.id.startsWith("hunt:packet:") && o.assignments?.some(mark=>fundedRefs.includes(mark.ref)))activeHuntSubjects.add(o.subjectId);
         if (dispatchWrittenThisCycle.get(o.id)?.startsWith("dispatch:")) dispatchPriority.add(o.id);
         if (scopePlaceFirst !== null) scopePlaceFirst.add(o.id);
       }
@@ -1690,7 +1673,7 @@ for (const { intent, detail } of dispatchDetails) {
   if (await honorIntent(intent, work === null ? detail : `${detail} ${dispatchWorkSentence(work)}`)) honoredDispatch.push(intent.intentId);
 }
 
-const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? [])], dispatchRecorded);
+const assignmentMembers = assignmentMembership([...sync.all, ...(sync.outside ?? []), ...await fundedMembers(huntList, PLANNING_STATE)], dispatchRecorded);
 
 const sendsReachedThisCycle = new Map<string, readonly string[]>();
 if (plannedSendMarks !== null) {
@@ -2213,7 +2196,7 @@ async function runAutonomousWave() {
   const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   // A packet is hunted here when an order funds its government. A hunt a row of the work list asked for is the hunters' own.
-  const huntable = (item: WorkItem) => item.autonomousPlan?.workKind === undefined && (item.autonomousPlan?.capability !== "hunt-packet" || activeHuntSubjects.has(item.subject));
+  const huntable = (item: WorkItem) => item.autonomousPlan?.workKind === undefined && item.autonomousPlan?.capability !== "hunt-packet";
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && huntable(item),
     onSelectionSnapshot: items => { for (const item of items) if(huntable(item))workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
@@ -2278,12 +2261,11 @@ async function runAutonomousWave() {
       try {
         // Each planned task is a row the hunters claim. One a named order covers is served in Sean's tier; a task still waiting from an earlier round is not added twice.
         const rows = ordered.map((id, at) => ({
-          kind: "hunt" as const, tier: Number.isFinite(queue.rank(id)) ? "order" as const : "coverage" as const, state: rowsOfPlanningState(PLANNING_STATE),
+          kind: "hunt" as const, tier: Number.isFinite(queue.rank(id)) ? "order" as const : "coverage" as const, state: workStateOf(PLANNING_STATE),
           placeId: metadata.get(id)?.subject.split("#")[0] ?? "ocd-division/country:us", subjectId: id, series: `task:${id}`, claimKey: NOW,
           priority: ordered.length - at, value: { routeTaskId: id, plain: plainTaskIds.has(id) }, origin: { from: "planner" as const }, source: { source: "research round" } }));
-        const list = workList(controlPlaneQuery(), { owner: `round:${PLANNING_STATE}` });
         let added = 0;
-        for (let at = 0; at < rows.length; at += 1_000) added += await list.ensure(rows.slice(at, at + 1_000));
+        for (let at = 0; at < rows.length; at += 1_000) added += await huntList.ensure(rows.slice(at, at + 1_000));
         console.log(`  hunter lane: ${added} of ${ordered.length} planned task(s) added to the work list (${ordered.filter(id => plainTaskIds.has(id)).length} plain-code)`);
       } catch (error) {
         runtimeConditions.push(`the planned tasks could not be added to the work list (${error instanceof Error ? error.message : String(error)}); they remain owed`);

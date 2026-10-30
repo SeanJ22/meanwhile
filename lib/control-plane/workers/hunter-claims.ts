@@ -1,5 +1,6 @@
 import { REOPEN_BATCH, reopenDeadEnds, type CapabilityLog, type Unlock } from "../../core/capability.ts";
 import type { WorkList, WorkRow } from "../../core/work.ts";
+import { workStateOf } from "../../core/work-kinds.ts";
 import { plannedTaskOf, taskOfRow } from "../../hunt/work-hunt.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import type { DispatchResult } from "../scheduler/dispatch.ts";
@@ -14,11 +15,13 @@ export const HUNTER_CLAIM_RENEW_MS = 60_000;
 /** How often the list's own clock looks for dead ends to put back. */
 export const DEAD_END_CLOCK_MS = 5 * 60_000;
 
-/** The hunters' arming and budget reading is kept per planning state; national rows use the system one. */
-export const rowsOfPlanningState = (state: string): string => state === "system" ? "US" : state.toUpperCase();
+/** How long a funded place waits between looks at its blanks; a changed blank or a new order brings the look forward. */
+export const FUNDED_LOOK_MS = 24 * 3_600_000;
 
-/** A hunt the planner made for a place, as opposed to one a research round planned a task for. */
-const standing = (row: WorkRow): boolean => row.origin.from === "planner" && plannedTaskOf(row) === null;
+/** A hunt Sean's money pointed at a place, as opposed to one a research round planned a task for. */
+const funded = (row: WorkRow): boolean => row.kind === "hunt" && row.origin.from === "order" && plannedTaskOf(row) === null;
+/** The newest of the orders that reached the place. */
+const orderedAtOf = (row: WorkRow): string | null => ((row.origin.marks ?? []) as readonly { readonly at: string }[]).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
 /**
  * The hunters' claims on the work list. A row is taken, turned into the task the workers run, kept leased while the
@@ -33,10 +36,8 @@ export function hunterClaims(deps: {
   readonly capabilities: CapabilityLog;
   /** What the hunt's own record says would unlock the blanks it left open. */
   readonly deadEndOf: (result: DispatchResult) => Promise<Unlock | undefined>;
-  /** The places money was pointed at: a standing hunt the planner made for any other place is not worked. */
-  readonly funded: () => readonly string[];
-  /** Whether a place's open blanks have changed since its last hunt, or its dead-end clock has run out. */
-  readonly due: (governmentId: string) => Promise<boolean>;
+  /** Whether a funded place is due another hunt: its open blanks changed since the last one, a new order reached it, or its dead-end clock ran out. */
+  readonly due: (governmentId: string, orderedAt: string | null) => Promise<boolean>;
   readonly log: (line: string) => void;
   readonly limit?: number;
 }) {
@@ -60,17 +61,17 @@ export function hunterClaims(deps: {
       const start = Math.max(0, states.indexOf(state)) + 1;
       for (let step = 0; step < states.length; step += 1) {
         const next = states[(start + step) % states.length]!;
-        if (await deps.list.ready(HUNTER_KINDS, { state: rowsOfPlanningState(next), plainOnly, fundedSubjects: deps.funded() })) return state = next;
+        if (await deps.list.ready(HUNTER_KINDS, { state: workStateOf(next), plainOnly })) return state = next;
       }
       return state;
     },
     async claim(paidOpen: boolean): Promise<HunterQueue | null> {
-      const rows = await deps.list.claim(HUNTER_KINDS, deps.limit ?? 20, { state: rowsOfPlanningState(state), plainOnly: !paidOpen, fundedSubjects: deps.funded() });
+      const rows = await deps.list.claim(HUNTER_KINDS, deps.limit ?? 20, { state: workStateOf(state), plainOnly: !paidOpen });
       const taskIds: string[] = [], plainTaskIds: string[] = [];
       for (const row of rows) {
         try {
-          // A standing hunt the planner made waits out its clock when the place's blanks are as the last hunt left them.
-          if (standing(row) && !await deps.due(row.subjectId!)) { await deps.list.finish(row, await deps.deadEndMs()); continue; }
+          // A funded place whose blanks are as the last hunt left them waits for its next look.
+          if (funded(row) && !await deps.due(row.subjectId!, orderedAtOf(row))) { await deps.list.finish(row, FUNDED_LOOK_MS); continue; }
           const task = await taskOfRow(deps.repos, row, deps.now());
           // A task that has nothing left to run, or is already running for another row, finishes the row.
           if (task === null || held.has(task.routeTaskId)) { await deps.list.finish(row); continue; }
@@ -89,8 +90,8 @@ export function hunterClaims(deps: {
       if (row === undefined) return;
       held.delete(result.routeTaskId!);
       if (result.outcome !== "WORKED") { await deps.list.later(row, result.detail.slice(0, 300) || "The hunt did not finish"); return; }
-      // A planner's hunt comes back when its dead-end clock runs out; every other row asked once.
-      await deps.list.finish(row, standing(row) ? await deps.deadEndMs() : undefined, await deps.deadEndOf(result));
+      // A funded place is looked at again on its clock; every other row asked once.
+      await deps.list.finish(row, funded(row) ? FUNDED_LOOK_MS : undefined, await deps.deadEndOf(result));
     },
     /** Keeps the leases of rows whose hunts are still running. */
     async keep(): Promise<void> {

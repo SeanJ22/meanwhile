@@ -356,7 +356,7 @@ export async function dispatchAutonomousTask(runtime: AutonomousCoordinatorRunti
   const executor:DeclaredExecutor=denial?{lane:"BOUNDED_MODEL_WORKER",workerFor:({holder})=>({role:"SCOUT",provider:"unavailable",version:FLEET_POLICY_VERSION,instance:holder}),run:async()=>({kind:"ABORTED",ranAs:"BOUNDED_MODEL_WORKER",failureOutcome:"DENIED_BY_POLICY",endedAt:now(),cost:{...ZERO_COST,requestCount:0,inputTokens:0,outputTokens:0,usd:0},detail:`DENIED_BY_POLICY:${denial}`})}:await runtime.scoutFor!(item,task);
   // Charge the exact standing obligation that opened this WorkItem, with its Send marks.
   const owner = await owningObligation(runtime.repos, item.id, task.id);
-  const assignments = owner?.value.assignments ?? [];
+  const assignments = plan.assignmentMarks ?? owner?.value.assignments ?? [];
   return dispatchOne(runtime.repos,{obligation:{obligation:{id:task.id,subjectId:item.subject,recordClass:plan.contract.recordClass,
     routeId:task.routeId,active:true,readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:null,assignments},nextDueAt:task.createdAt,cadenceHours:24,
     cadenceSource:"DEFAULT_NO_SIGNAL",basis:"One hunt packet job"},routeTaskId:task.id,holder:`autonomous:SCOUT:${randomUUID()}`,

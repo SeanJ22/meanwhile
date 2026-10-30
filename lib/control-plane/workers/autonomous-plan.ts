@@ -115,6 +115,8 @@ export interface AutonomousWorkPlan {
   readonly missionPart?: string;
   readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };
   readonly ownerInstructions?: readonly string[];
+  /** The Sends that pointed money at this place, as its work row recorded them; charges and directions read them. */
+  readonly assignmentMarks?: readonly import("../scheduler/obligation.ts").ObligationAssignment[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
     { readonly contractId: StateRegistryContractId | typeof COMMENT_RULE_PUBLICATION | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };

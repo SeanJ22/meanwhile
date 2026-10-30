@@ -1,3 +1,4 @@
+import { noHunts } from "./helpers/order-hunts.ts";
 import { applyHuntOrders } from "../lib/control-plane/hunt-orders.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -37,7 +38,7 @@ test("a stopped hunt finishes, and an unavailable score is never zero",async()=>
  const s=setup();s.setScore(null);const out=await submit(ask("expansion.scope.set","hunt-score-two",{geography,budgetUsd:20,priority:1}),s.deps);assert.equal(out.ok,true);
  assert.equal(out.receipt.huntScores![0].before,null);
  await submit(ask("expansion.scope.remove","hunt-stop-one",{key:out.receipt.huntScores![0].scopeKey}),s.deps);
- await applyHuntOrders(s.repos,"az",AT);
+ await applyHuntOrders(s.repos,noHunts,"az",AT);
  const done=await confirmReceipt(s.repos,out.receipt,Date.parse(AT),s.deps.readPlaceScore);assert.equal(done.state,"applied");assert.deepEqual(done.progress,{done:null,of:null});assert.match(done.change!.before,/—/);assert.match(done.change!.after,/—/);
 });
 test("a send uses only its own created and deferred runner counts",async()=>{

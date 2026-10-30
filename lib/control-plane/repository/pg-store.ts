@@ -5,7 +5,7 @@ import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts
 import { checkedValueQuery, hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
-import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
+import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOrder } from "../scheduler/state-planning.ts";
 import type { HuntOrder, HuntOrderRepository } from "../hunt-orders.ts";
 import { pgAdminConfigRepository } from "./admin-config.ts";
 import { archivedAggregateRepository, createPgDispatchState, workItemStateFilter } from "./dispatch-state.ts";
@@ -181,7 +181,6 @@ export interface PgRepositoryBounds {
   readonly activeOnly?: boolean;
   readonly since?: string;
 }
-
 
 function heldFilter(held: HeldSlots | undefined, at: (value: unknown) => string, slot: string, version: string): string {
   if (!held || held.length === 0) return "";
@@ -1560,7 +1559,9 @@ export async function pgPlanningIntents(sql:Sql,state:string|null,stoppedAt:stri
       AND (NOT EXISTS(SELECT 1 FROM cp_log_research_intents h WHERE h.log_key=$1 AND h.record->>'honors'=i.record->>'intentId')
         OR i.record->>'action'='DISPATCH' AND $3::text IS NOT NULL AND EXISTS(
           SELECT 1 FROM cp_obligations o WHERE cp_control_state(o.value)=$3
-            AND o.value->'assignments' @> jsonb_build_array(jsonb_build_object('ref',i.record->>'intentId'))))
+            AND o.value->'assignments' @> jsonb_build_array(jsonb_build_object('ref',i.record->>'intentId'))
+          UNION ALL SELECT 1 FROM work w WHERE w.kind='hunt' AND w.state=CASE WHEN $3='system' THEN 'US' ELSE upper($3) END
+            AND w.origin->'marks' @> jsonb_build_array(jsonb_build_object('ref',i.record->>'intentId'))))
       AND (i.record->>'action'<>'DISPATCH' OR (($4::text IS NULL OR i.record->>'requestedAt'>$4) AND NOT EXISTS(
         SELECT 1 FROM cp_log_research_intents c WHERE c.log_key=$1 AND c.record->>'action'='CANCEL_DISPATCH'
           AND c.record->>'kind'='INTENT' AND c.record->>'note'=i.record->>'intentId')))
@@ -1570,41 +1571,12 @@ export async function pgPlanningIntents(sql:Sql,state:string|null,stoppedAt:stri
   return rows.map(row=>parseValue<ResearchIntent>(row.record,"effective planning controls"));
 }
 
-export async function deactivateUnfundedHunts(repos:ControlPlaneRepositories,refs:readonly string[],now:string):Promise<number> {
-  const state=repos.planningState;
-  if(!state)throw new Error("Hunt reconciliation needs one planning state");
+/** The obligations an owner's Send created that still run. */
+export async function readMaterializedPlanningIds(repos:ControlPlaneRepositories):Promise<ReadonlySet<string>> {
   const sql=placeReadConnection(repos);
-  if(sql) {
-    const run=boundedRunner(sql,"cp_obligations",CONTROL_PLANE_REQUEST_BOUNDS_MS);
-    const rows=await run("stopUnfundedHunts","PAGE",`WITH stopped AS (UPDATE cp_obligations SET revision=revision+1,updated_at=$3::timestamptz,
-      value=value || jsonb_build_object('active',false,'nextDueAt',NULL,'updatedAt',$3::text)
-      WHERE cp_control_state(value)=$1 AND value->>'active'='true' AND id LIKE 'hunt:packet:%'
-        AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(coalesce(value->'assignments','[]'::jsonb)) mark WHERE mark->>'ref'=ANY($2::text[]))
-      RETURNING id) SELECT count(*)::integer AS n FROM stopped`,[state,refs,now]) as {n:number}[];
-    return Number(rows[0].n);
-  }
-  let count=0;
-  for(const row of await repos.obligations.listWhere(["materializedBy"],"OWNER_DISPATCH")) {
-    if(row.id.startsWith("hunt:packet:") && row.value.active && planningStateOf(row.value.subjectId)===state && !row.value.assignments?.some(mark=>refs.includes(mark.ref))) {
-      await repos.obligations.compareAndSet(row.id,row.revision,{...row.value,active:false,nextDueAt:null,updatedAt:now},now);count++;
-    }
-  }
-  return count;
-}
-
-export async function readMaterializedPlanningIds(repos:ControlPlaneRepositories,refs:readonly string[]):Promise<ReadonlySet<string>> {
-  const sql=placeReadConnection(repos);
-  if(!sql) {
-    const stops=(repos.planningState?await repos.huntOrders.listWhere(["state"],repos.planningState):await repos.huntOrders.list()).filter(row=>row.value.confirmedAt!==null);
-    return new Set((await repos.obligations.listWhere(["materializedBy"],"OWNER_DISPATCH")).filter(row=>
-      row.id.startsWith("hunt:packet:")?row.value.assignments?.some(mark=>refs.includes(mark.ref) && !stops.some(stop=>
-        stop.value.requestedAt>=mark.at && (stop.value.scopeKey===null || stop.value.scopeKey===mark.assignmentKey))):row.value.active).map(row=>row.id));
-  }
+  if(!sql)return new Set((await repos.obligations.listWhere(["materializedBy"],"OWNER_DISPATCH")).filter(row=>row.value.active).map(row=>row.id));
   const rows=await sql.query(`SELECT id FROM cp_obligations WHERE cp_control_state(value)=$1 AND value->>'materializedBy'='OWNER_DISPATCH'
-    AND ((id NOT LIKE 'hunt:packet:%' AND value->>'active'='true')
-      OR EXISTS(SELECT 1 FROM jsonb_array_elements(coalesce(value->'assignments','[]'::jsonb)) mark WHERE mark->>'ref'=ANY($2::text[])
-        AND NOT EXISTS(SELECT 1 FROM cp_hunt_orders stop WHERE stop.value->>'state'=$1 AND stop.value->>'confirmedAt' IS NOT NULL
-          AND stop.value->>'requestedAt'>=mark->>'at' AND (stop.value->>'scopeKey' IS NULL OR stop.value->>'scopeKey'=mark->>'assignmentKey')))) ORDER BY id`,[repos.planningState??"system",refs]) as {id:string}[];
+    AND value->>'active'='true' ORDER BY id`,[repos.planningState??"system"]) as {id:string}[];
   return new Set(rows.map(row=>row.id));
 }
 

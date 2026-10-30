@@ -7,24 +7,28 @@ import { requestHuntStop, applyHuntOrders, HUNT_STATES, scopeControlKey } from "
 import { expansionScopesOf, isHunt, type ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, planningStateOf, runStatePlanningRound, stateDispatchTarget } from "../lib/control-plane/scheduler/state-planning.ts";
 import { parseDispatchTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { huntPacketObligationId } from "../lib/hunt/packet.ts";
+import { openOrderHunts } from "./helpers/order-hunts.ts";
+import { demoteUnfunded } from "../lib/hunt/funded-hunts.ts";
+import { WORK_DDL, workList, type WorkList } from "../lib/core/work.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
 import { confirmReceipt } from "../lib/control-plane/gateway/confirmation.ts";
 import type { StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
 
 const AT="2026-10-16T10:00:00.000Z",STOP="2026-10-16T11:00:00.000Z";
 const scope=(state:string,n:number):ExpansionScopeDecision=>({key:`zcta:2020/${85000+n}`,geography:{type:"zcta",geoid:String(85000+n),version:"zcta:2020",label:`ZIP ${85000+n}`,stateAbbr:state.toUpperCase()},priority:n+1,budgetUsd:10,decidedAt:AT,decidedBy:"owner",receiptId:`send-${state}-${n}`,previous:null,note:null});
-async function setup() {
+/** The hunts Sean's money points at, as the round writes them: one for each place a funded Send reaches. */
+async function point(list:WorkList,decisions:readonly ExpansionScopeDecision[]) {
+  await list.promote(decisions.map(decision=>({placeId:`ocd-division/country:us/state:${decision.geography.stateAbbr.toLowerCase()}/place:${decision.geography.geoid}`,
+    state:decision.geography.stateAbbr,priority:0,marks:[{assignmentKey:decision.key,ref:decision.receiptId,at:AT,relation:"CREATED" as const}]})));
+}
+const fundedIn=async(list:WorkList,state:string)=>(await list.orderHunts(state)).filter(hunt=>hunt.funded);
+async function setup(t:{after:(close:()=>unknown)=>void}) {
   const repos=createMemoryRepositories();
+  const {pg,list}=await openOrderHunts();t.after(()=>pg.close());
   const scopes=[...Array.from({length:79},(_,n)=>scope("az",n)),scope("nh",100)];
   await repos.adminConfig.put(ADMIN_CONFIG_ID,{...defaultAdminConfig(AT),expansionScopes:scopes},AT);
-  for(const decision of scopes) {
-    const subjectId=`ocd-division/country:us/state:${decision.geography.stateAbbr.toLowerCase()}/place:${decision.geography.geoid}`;
-    const id=huntPacketObligationId(subjectId);
-    await repos.obligations.put(id,{id,subjectId,active:true,materializedBy:"OWNER_DISPATCH",nextDueAt:AT,updatedAt:AT,
-      assignments:[{assignmentKey:decision.key,ref:decision.receiptId,at:AT,relation:"CREATED"}]} as unknown as StandingObligation,AT);
-  }
-  return {repos,scopes};
+  await point(list,scopes);
+  return {repos,scopes,list};
 }
 
 test("a full round runs each state in order with no overlapping planning children and continues after a failed state",async()=>{
@@ -35,20 +39,21 @@ test("a full round runs each state in order with no overlapping planning childre
   const target=parseDispatchTarget("Arizona and New Hampshire");assert.deepEqual(stateDispatchTarget(target,"az")?.states,["az"]);assert.equal(stateDispatchTarget(target,"ca"),null);
 });
 
-test("79 concurrent stop requests are independent; the next state pass stops all 79 and retains another state's hunt",async()=>{
-  const {repos,scopes}=await setup();
+test("79 concurrent stop requests are independent; the next state pass stops all 79 and retains another state's hunt",async t=>{
+  const {repos,scopes,list}=await setup(t);
   const before=(await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision;
   await Promise.all(scopes.slice(0,79).map((decision,n)=>requestHuntStop(repos,{receiptId:`stop-${n}`,state:"az",scopeKey:decision.key,at:STOP,actor:"owner"})));
   assert.equal((await repos.huntOrders.pending("az")).length,79);assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision,before);
-  assert.equal(await applyHuntOrders(repos,"az",STOP),79);
+  assert.equal(await applyHuntOrders(repos,list,"az",STOP),79);
   const kept=expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes;
   assert.deepEqual(kept.filter(isHunt).map(row=>row.receiptId),["send-nh-100"]);
   assert.equal(kept.filter(row=>row.geography.stateAbbr==="AZ" && row.budgetUsd===0 && row.decidedAt===STOP).length,79,"each stopped place stays as a $0 Send for its free source work");
-  const active=(await repos.obligations.list()).filter(row=>row.value.active);assert.equal(active.length,1);assert.match(active[0].value.subjectId,/state:nh/);
-  assert.equal(await applyHuntOrders(repos,"az",STOP),0);
+  assert.equal((await fundedIn(list,"AZ")).length,0,"every stopped place is free work again");
+  const active=await fundedIn(list,"NH");assert.equal(active.length,1);assert.match(active[0].placeId,/state:nh/);
+  assert.equal(await applyHuntOrders(repos,list,"az",STOP),0);
 });
 
-test("Stop every hunt in every state holds only hunts: standing work, free Sends and run-now controls keep planning (Oct 29)",async()=>{
+test("Stop every hunt in every state holds only hunts: standing work, free Sends and run-now controls keep planning (Oct 29)",async t=>{
   const {readPlanningIntents,readMaterializedPlanningIds}=await import("../lib/control-plane/repository/pg-store.ts");
   const {buildResearchIntent}=await import("../lib/control-plane/research-view.ts");
   const {readIntents,RESEARCH_INTENT_LOG_KEY}=await import("../lib/control-plane/scheduler/research-policy.ts");
@@ -57,13 +62,10 @@ test("Stop every hunt in every state holds only hunts: standing work, free Sends
   const {nationalPlaceSendRequests,scheduleNationalPlace}=await import("../lib/hunt/place-source-task.ts");
   const {standing}=await import("../lib/control-plane/scheduler/durable.ts");
   const repos=createMemoryRepositories();
+  const {pg,list}=await openOrderHunts();t.after(()=>pg.close());
   const hunt={...scope("az",0),key:"zcta:2020/85635",geography:{...scope("az",0).geography,geoid:"85635",label:"ZIP 85635"},budgetUsd:25,budgetStartedAt:AT,sourceWorkVersion:1 as const,receiptId:"hunt-85635"};
   await repos.adminConfig.put(ADMIN_CONFIG_ID,{...defaultAdminConfig(AT),expansionScopes:[hunt,scope("nh",100)]},AT);
-  for(const decision of [hunt,scope("nh",100)]) {
-    const id=huntPacketObligationId(`ocd-division/country:us/state:${decision.geography.stateAbbr.toLowerCase()}/place:${decision.geography.geoid}`);
-    await repos.obligations.put(id,{id,subjectId:id,active:true,materializedBy:"OWNER_DISPATCH",nextDueAt:AT,updatedAt:AT,
-      assignments:[{assignmentKey:decision.key,ref:decision.receiptId,at:AT,relation:"CREATED"}]} as unknown as StandingObligation,AT);
-  }
+  await point(list,[hunt,scope("nh",100)]);
   const discovery={id:"meetings:discovery:az-fixture",subjectId:"ocd-division/country:us/state:az/place:fixture",active:true,materializedBy:"OWNER_DISPATCH",nextDueAt:AT,updatedAt:AT} as unknown as StandingObligation;
   await repos.obligations.put(discovery.id,discovery,AT);
   const place=standing({id:"national-place:85635",subjectId:"zip:85635",recordClass:"OFFICIAL_ROSTER",routeId:"national-place-sources",active:true,
@@ -75,15 +77,14 @@ test("Stop every hunt in every state holds only hunts: standing work, free Sends
   const runNow=buildResearchIntent("RUN_CYCLE_NOW","2026-10-16T11:30:00.000Z","owner",null,"run-now");
   await repos.researchIntents.append(RESEARCH_INTENT_LOG_KEY,runNow.intentId,runNow,"2026-10-16T11:30:00.000Z");
   const APPLY="2026-10-16T12:00:00.000Z";
-  for(const state of HUNT_STATES)await applyHuntOrders(repos,state,APPLY);
-  for(const state of HUNT_STATES)assert.equal(await applyHuntOrders(repos,state,"2026-10-16T13:00:00.000Z"),0,"a later planning round reads no stop again");
+  for(const state of HUNT_STATES)await applyHuntOrders(repos,list,state,APPLY);
+  for(const state of HUNT_STATES)assert.equal(await applyHuntOrders(repos,list,state,"2026-10-16T13:00:00.000Z"),0,"a later planning round reads no stop again");
   // Hunts stay stopped: no hunt is left, no paid packet plans, and no Send from before the stop is dispatched.
   const scopes=expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes;
   assert.deepEqual(scopes.filter(isHunt),[]);
-  assert.equal((await repos.obligations.list()).filter(row=>row.id.startsWith("hunt:packet:") && row.value.active).length,0);
+  assert.equal((await fundedIn(list,"AZ")).length+(await fundedIn(list,"NH")).length,0);
   const az={...repos,planningState:"az"};
-  assert.deepEqual([...await readMaterializedPlanningIds(az,scopes.filter(row=>row.budgetUsd>0).map(row=>row.receiptId))],[discovery.id],
-    "materialized standing discovery keeps planning; hunt packets do not");
+  assert.deepEqual([...await readMaterializedPlanningIds(az)],[discovery.id],"materialized standing discovery keeps planning; hunts are on the work list");
   const controls=readIntents(await readPlanningIntents(az));
   assert.deepEqual(controls.pendingDispatch,[]);assert.deepEqual(controls.pendingRunNow.map(row=>row.intentId),[runNow.intentId]);assert.equal(controls.paused||controls.runnerPause.paused,false);
   assert.equal(await readPlanningContinuation(repos,true,0),null,"no directed hunt continues");
@@ -100,26 +101,26 @@ test("Stop every hunt in every state holds only hunts: standing work, free Sends
   assert.equal((await repos.obligations.mustRead(place.id)).value.active,true);
 });
 
-test("one state stop waits for the runner's exact confirmation; global stop writes one order per state",async()=>{
-  const {repos}=await setup();
+test("one state stop waits for the runner's exact confirmation; global stop writes one order per state",async t=>{
+  const {repos,list}=await setup(t);
   const out=await submit({type:"expansion.scope.stopAll",subject:"Arizona",input:{state:"az"},stateVersion:null,idempotencyKey:"stop-arizona-once",caller:"OWNER_SESSION",actorRef:"adm_test"},{repos,now:()=>STOP,currentStateVersion:null,codeSha:null});
   assert.equal(out.ok,true,out.receipt.says);
   assert.equal((await confirmReceipt(repos,out.receipt,Date.parse(STOP))).state,"waiting");
-  await applyHuntOrders(repos,"nh",STOP);assert.equal((await confirmReceipt(repos,out.receipt,Date.parse(STOP))).state,"waiting");
-  await applyHuntOrders(repos,"az",STOP);assert.equal((await confirmReceipt(repos,out.receipt,Date.parse(STOP))).state,"applied");
+  await applyHuntOrders(repos,list,"nh",STOP);assert.equal((await confirmReceipt(repos,out.receipt,Date.parse(STOP))).state,"waiting");
+  await applyHuntOrders(repos,list,"az",STOP);assert.equal((await confirmReceipt(repos,out.receipt,Date.parse(STOP))).state,"applied");
   await requestHuntStop(repos,{receiptId:"stop-country",at:STOP,actor:"owner"});
   const orders=await repos.huntOrders.listWhere(["receiptId"],"stop-country");assert.equal(orders.length,HUNT_STATES.length);assert.equal(new Set(orders.map(row=>row.value.state)).size,HUNT_STATES.length);
 });
 
-test("a new hunt after a stop survives and a replay finishes deactivating work if the scope was already removed",async()=>{
-  const {repos,scopes}=await setup();
+test("a new hunt after a stop survives and a replay finishes freeing work if the scope was already removed",async t=>{
+  const {repos,scopes,list}=await setup(t);
   await requestHuntStop(repos,{receiptId:"stop-az",state:"az",at:STOP,actor:"owner"});
   const held=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true});
   const later={...scope("az",200),decidedAt:"2026-10-16T12:00:00.000Z"};
   await repos.adminConfig.save(held,{...held.value,expansionScopes:[scopes.at(-1)!,later]},STOP);
-  await applyHuntOrders(repos,"az",STOP);
+  await applyHuntOrders(repos,list,"az",STOP);
   assert.deepEqual(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.filter(isHunt).map(row=>row.receiptId),["send-nh-100",later.receiptId]);
-  assert.equal((await repos.obligations.list()).filter(row=>row.value.active).length,1);
+  assert.equal((await fundedIn(list,"AZ")).length+(await fundedIn(list,"NH")).length,1);
 });
 
 test("the national control summary sums counts without copying state assignments or government records",async()=>{
@@ -133,8 +134,8 @@ test("the national control summary sums counts without copying state assignments
   }finally{await db.close();}
 });
 
-test("a state query includes a crossing hunt's declared reach without reading an unrelated state's orders",async()=>{
-  const {repos}=await setup();
+test("a state query includes a crossing hunt's declared reach without reading an unrelated state's orders",async t=>{
+  const {repos}=await setup(t);
   const held=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:{ids:["zcta:2020/85000"]}});
   await repos.adminConfig.save(held,{...held.value,expansionScopes:held.value.expansionScopes!.map(scope=>({...scope,planningStates:["AZ","CA"]}))},STOP);
   const ca=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:"CA"}}});
@@ -166,6 +167,7 @@ test("planning reads effective controls and this state's live Sends instead of a
   const db=new PGlite();
   try {
     await db.exec("CREATE TABLE cp_log_research_intents(log_key text,record_id text,position bigint,record jsonb); CREATE TABLE cp_obligations(id text,value jsonb)");
+    for(const ddl of WORK_DDL)await db.exec(ddl);
     await db.exec(CONTROL_READS_BACKFILL_DDL[0]);
     const log=[];
     for(let n=0;n<2000;n++)log.push(buildResearchIntent(n%2?"RESUME":"PAUSE",new Date(Date.parse(AT)-2000+n).toISOString(),"owner",null,`old-${n}`));
@@ -181,28 +183,27 @@ test("planning reads effective controls and this state's live Sends instead of a
     assert.equal(effective.length,4);assert.deepEqual(readIntents(effective).pendingDispatch.map(row=>row.intentId),[send.intentId]);
     const honored={formatVersion:1,kind:"HONORED",intentId:`${send.intentId}:honored`,honors:send.intentId,action:"DISPATCH",honoredAt:STOP,honoredBy:"runner",detail:"applied"};
     await db.query("INSERT INTO cp_log_research_intents VALUES('level-1',$1,3000,$2::jsonb)",[honored.intentId,JSON.stringify(honored)]);
-    await db.query("INSERT INTO cp_obligations VALUES('paused-hunt',$1::jsonb)",[JSON.stringify({subjectId:"ocd-division/country:us/state:az/place:fixture",active:false,assignments:[{ref:send.intentId,at:AT}]})]);
+    await workList(async(text,params=[])=>(await db.query<Record<string,unknown>>(text,[...params])).rows,{owner:"planning-test"})
+      .promote([{placeId:"ocd-division/country:us/state:az/place:fixture",state:"AZ",priority:0,marks:[{assignmentKey:"paused-hunt",ref:send.intentId,at:AT,relation:"CREATED"}]}]);
     assert.equal((await pgPlanningIntents(sql,"az",null)).some(row=>row.kind==="INTENT" && row.action==="DISPATCH" && row.intentId===send.intentId),true,"resuming paid work retains a previously acknowledged Send whose hunt was paused");
     assert.equal((await pgPlanningIntents(sql,"az",STOP)).some(row=>row.kind==="INTENT" && row.action==="DISPATCH"),false);
   }finally{await db.close();}
 });
 
-test("pausing hunts removes their next-round obligations and resuming restores only the current funded places",async()=>{
-  const {deactivateUnfundedHunts,readMaterializedPlanningIds}=await import("../lib/control-plane/repository/pg-store.ts");
-  const {repos,scopes}=await setup();
-  const stateRepos={...repos,planningState:"az"};
-  assert.equal(await deactivateUnfundedHunts(stateRepos,[],STOP),79);
-  assert.equal((await readMaterializedPlanningIds(stateRepos,[])).size,0);
-  const funded=scopes[0].receiptId;
-  const resumed=await readMaterializedPlanningIds(stateRepos,[funded]);
-  assert.equal(resumed.size,1);
+test("pausing hunts frees their places and resuming restores only the current funded places",async t=>{
+  const {repos,scopes,list}=await setup(t);
+  assert.equal(await demoteUnfunded(list,"az",[]),79);
+  assert.equal((await fundedIn(list,"AZ")).length,0);
+  const funded=scopes[0];
+  await point(list,[funded]);
+  assert.equal((await fundedIn(list,"AZ")).length,1,"only the place that is funded again runs");
   await requestHuntStop(repos,{receiptId:"stop-paused-hunts",state:"az",at:STOP,actor:"owner"});
-  await applyHuntOrders(repos,"az",STOP);
-  assert.equal((await readMaterializedPlanningIds(stateRepos,[funded])).size,0);
+  await applyHuntOrders(repos,list,"az",STOP);
+  assert.equal((await fundedIn(list,"AZ")).length,0);
 });
 
-test("a hunt pause waits for its exact completed-state acknowledgement, regardless of later runner heartbeats",async()=>{
-  const {repos,scopes}=await setup();
+test("a hunt pause waits for its exact completed-state acknowledgement, regardless of later runner heartbeats",async t=>{
+  const {repos,scopes}=await setup(t);
   const outcome=await submit({type:"expansion.scope.budget",subject:"geo:az.zcta.85000",input:{placeKey:"geo:az.zcta.85000",change:"pause"},
     stateVersion:null,idempotencyKey:"pause-one-hunt-now",caller:"OWNER_SESSION",actorRef:"adm_test"},
     {repos,now:()=>STOP,currentStateVersion:null,codeSha:null});
@@ -213,16 +214,6 @@ test("a hunt pause waits for its exact completed-state acknowledgement, regardle
   const state=await repos.researchState.mustRead("level-1:az");
   await repos.researchState.compareAndSet(state.id,state.revision,{cycleFinishedAt:STOP,scopeControls:{[scopeControlKey(scopes[0].key)]:outcome.receipt.receiptId}} as never,STOP);
   assert.equal((await confirmReceipt(repos,outcome.receipt,Date.parse(STOP))).state,"applied");
-});
-
-test("state planning retains Census government packets as well as OCD divisions",async()=>{
-  const {buildRegistry}=await import("../lib/control-plane/scheduler/registry.ts");
-  const {huntPacketsProvider}=await import("../lib/control-plane/scheduler/providers/hunt-packets.ts");
-  const ids=new Set(["hunt:packet:government:US-AZ:123456","hunt:packet:ocd-division/country:us/state:az/county:pima","hunt:packet:government:US-NH:654321"]);
-  const providers=[huntPacketsProvider({materialized:()=>({ids})})];
-  assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"az"}).units.length,2);
-  assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"nh"}).units.length,1);
-  assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"system"}).units.length,0);
 });
 
 test("every Census government keeps its own state in the hunt plan",async()=>{

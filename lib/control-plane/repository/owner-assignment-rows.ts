@@ -19,11 +19,17 @@ export interface OwnerAssignmentRow {
 export interface OwnerAssignmentHead {
   readonly id: string;
   readonly state: string;
-  readonly members: readonly string[];
-  readonly clause: string | null;
   readonly subjectId: string | null;
   readonly versions: Readonly<Record<string, string>>;
 }
+
+const READBACK_CONTRACTS=["official-filings","comment-access","everyday-routing","ballot-navigation"];
+export const ownerReadbackItem=(item:WorkItem):boolean=>!!item.publicationOutcome&&item.publicationOutcome.status!=="HELD"&&(
+  READBACK_CONTRACTS.includes(item.autonomousPlan?.publication?.contractId??"")||
+  (/^registry-runtime:[A-Z]{2}$/.test(item.autonomousPlan?.publication?.contractId??"")&&item.autonomousPlan?.contract?.recordClass==="OFFICIAL_ROSTER"));
+export const ownerReadbackWhere=(value:string):string=>`${value} #>> '{publicationOutcome,status}' <> 'HELD' AND (
+  ${value} #>> '{autonomousPlan,publication,contractId}' IN (${READBACK_CONTRACTS.map(id=>`'${id}'`).join(",")}) OR
+  (${value} #>> '{autonomousPlan,publication,contractId}' ~ '^registry-runtime:[A-Z]{2}$' AND ${value} #>> '{autonomousPlan,contract,recordClass}'='OFFICIAL_ROSTER'))`;
 
 export interface OwnerStateWrite {
   readonly id: string;
@@ -38,7 +44,7 @@ export interface OwnerAssignmentRows {
   find(input: { readonly members?: readonly string[]; readonly clauses?: readonly string[]; readonly dueAt?: string }): Promise<readonly string[]>;
   save(rows: readonly OwnerAssignmentRow[], removed: readonly string[], states?: readonly OwnerStateWrite[], prior?: readonly OwnerAssignmentHead[]): Promise<void>;
   scopeMembers(identities: readonly { readonly key: string; readonly ref: string }[]): Promise<ReadonlyMap<string, readonly string[]>>;
-  publications(readbackOnly?: boolean): Promise<readonly WorkItem[]>;
+  publications(): Promise<readonly WorkItem[]>;
   clear(): Promise<void>;
 }
 
@@ -64,21 +70,16 @@ export const OWNER_ASSIGNMENT_ROWS_DDL = [
   "CREATE INDEX IF NOT EXISTS cp_owner_assignment_recent ON cp_owner_assignment_rows(state_code,assignment_state,lane,last_activity_at DESC,id)",
 ] as const;
 
-const parse = (value: unknown): OwnerAssignmentRow => (typeof value === "string" ? JSON.parse(value) : value) as OwnerAssignmentRow;
 const ROW_FIELDS = `jsonb_build_object('id',id,'state',state_code,'builtAt',value->'builtAt',
   'group',value->'group','indexSegments',index_segments,'part',value->'part','nextAt',value->'nextAt')`;
 
-/** PostgreSQL jsonb text, including its byte-length key order and decimal number spelling. */
+/** PostgreSQL jsonb text for count rows: strings, booleans, nulls and integer counts. */
 export function ownerRowJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(ownerRowJson).join(", ")}]`;
   if (value !== null && typeof value === "object") return `{${Object.keys(value).filter(key => (value as Record<string, unknown>)[key] !== undefined)
     .sort((a,b) => Buffer.byteLength(a)-Buffer.byteLength(b) || Buffer.compare(Buffer.from(a),Buffer.from(b)))
     .map(key => `${JSON.stringify(key)}: ${ownerRowJson((value as Record<string, unknown>)[key])}`).join(", ")}}`;
-  const json = JSON.stringify(value) ?? "null";
-  if (typeof value !== "number" || !/e/i.test(json)) return json;
-  const [mantissa, exponent] = json.split(/e/i), negative = mantissa.startsWith("-"), digits = mantissa.replace(/[-.]/g,""),
-    point = mantissa.replace("-","").split(".")[0].length + Number(exponent);
-  return `${negative?"-":""}${point<=0?`0.${"0".repeat(-point)}${digits}`:point>=digits.length?digits+"0".repeat(point-digits.length):`${digits.slice(0,point)}.${digits.slice(point)}`}`;
+  return JSON.stringify(value) ?? "null";
 }
 const digest = (value: unknown): string => createHash("md5").update(ownerRowJson(value)).digest("hex");
 const fieldsOf = (row: OwnerAssignmentRow): Record<string, unknown> => ({
@@ -88,7 +89,7 @@ const fieldsOf = (row: OwnerAssignmentRow): Record<string, unknown> => ({
   a: row.indexSegments.map(segment => segment.lastActivityAt), c: row.part,
 });
 export function ownerAssignmentHeadOf(row: OwnerAssignmentRow): OwnerAssignmentHead {
-  return {id:row.id,state:row.state,members:row.group.members,clause:row.group.clause,subjectId:row.group.obligation?.subjectId??null,
+  return {id:row.id,state:row.state,subjectId:row.group.obligation?.subjectId??null,
     versions:Object.fromEntries(Object.entries(fieldsOf(row)).map(([key,value])=>[key,digest(value)]))};
 }
 export function ownerAssignmentContributions(rows: readonly OwnerAssignmentRow[]): ReadonlyMap<string,AssignmentPart> {
@@ -106,18 +107,20 @@ function rowPatch(row: OwnerAssignmentRow, before: OwnerAssignmentHead | undefin
 
 export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
   const rows = async (text: string, args: readonly unknown[]) =>
-    (await sql.query(text, args) as { value: unknown }[]).map(row => parse(row.value));
+    (await sql.query(text, args) as { value: unknown }[]).map(row => row.value as OwnerAssignmentRow);
   return {
     read: async ids => ids.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`, [ids]) : [],
     async heads(ids) {
       if (!ids.length) return [];
-      return await sql.query(`SELECT id,state_code AS state,members,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
-        jsonb_build_object('g',md5(((value->'group')-'members'-'publications')::text),'m',md5(members::text),
-          'p',md5((value #> '{group,publications}')::text),'s',md5((SELECT jsonb_agg(segment-'lastActivityAt' ORDER BY ordinal)
+      const rows=await sql.query(`SELECT id,state_code AS state,value #>> '{group,obligation,subjectId}' AS "subjectId",
+        encode(decode(concat(md5(((value->'group')-'members'-'publications'-'usd'-'items'-'scoutKeys')::text),md5(members::text),
+          md5((value #> '{group,publications}')::text),md5((SELECT jsonb_agg(segment-'lastActivityAt'-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount' ORDER BY ordinal)
             FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),
-          'a',md5((SELECT jsonb_agg(segment->'lastActivityAt' ORDER BY ordinal)
-            FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),'c',md5((value->'part')::text)) AS versions
-        FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`,[ids]) as OwnerAssignmentHead[];
+          md5((SELECT jsonb_agg(segment->'lastActivityAt' ORDER BY ordinal)
+            FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),md5(((value->'part')||'{"usd":null,"candidates":[]}'::jsonb)::text)),'hex'),'base64') AS fingerprint
+        FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`,[ids]) as {id:string;state:string;subjectId:string|null;fingerprint:string}[];
+      return rows.map(({fingerprint,...row})=>{const hex=Buffer.from(fingerprint,"base64").toString("hex");
+        return {...row,versions:Object.fromEntries(["g","m","p","s","a","c"].map((key,i)=>[key,hex.slice(i*32,(i+1)*32)]))};});
     },
     async contributions(ids) {
       if (!ids.length) return new Map();
@@ -162,10 +165,11 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
               SELECT patch->>'id' AS id,patch->>'state' AS state,patch FROM jsonb_array_elements($1::jsonb) p(patch)
             ), changed AS (
               UPDATE cp_owner_assignment_rows r SET state_code=p.state,value=(r.value || (p.patch-'group'-'indexActivity')) ||
-                CASE WHEN p.patch ? 'group' THEN jsonb_build_object('group',((r.value->'group')-'usd'-'items'-'scoutKeys') || (p.patch->'group')) ELSE '{}'::jsonb END ||
-                CASE WHEN p.patch ? 'indexActivity' THEN jsonb_build_object('indexSegments',(
-                  SELECT jsonb_agg(segment || jsonb_build_object('lastActivityAt',p.patch->'indexActivity'->(ordinal-1)::integer) ORDER BY ordinal)
-                  FROM jsonb_array_elements(r.index_segments) WITH ORDINALITY s(segment,ordinal))) ELSE '{}'::jsonb END
+                jsonb_build_object('group',((r.value->'group')-'usd'-'items'-'scoutKeys')||coalesce(p.patch->'group','{}'::jsonb),
+                  'part',coalesce(p.patch->'part',r.value->'part')||'{"usd":null,"candidates":[]}'::jsonb,'indexSegments',(
+                  SELECT jsonb_agg((segment-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount') ||
+                    CASE WHEN p.patch ? 'indexActivity' THEN jsonb_build_object('lastActivityAt',p.patch->'indexActivity'->(ordinal-1)::integer) ELSE '{}'::jsonb END ORDER BY ordinal)
+                  FROM jsonb_array_elements(coalesce(p.patch->'indexSegments',r.index_segments)) WITH ORDINALITY s(segment,ordinal)))
               FROM incoming p WHERE r.id=p.id RETURNING r.id
             ) INSERT INTO cp_owner_assignment_rows(id,state_code,value)
               SELECT id,state,patch FROM incoming p WHERE NOT EXISTS(SELECT 1 FROM changed c WHERE c.id=p.id)`,[JSON.stringify(batch)]);
@@ -192,12 +196,10 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
       for (const row of rows) { const identity = `${row.key}\n${row.ref}`; out.set(identity,[...(out.get(identity) ?? []),row.subject]); }
       return out;
     },
-    async publications(readbackOnly = false) {
+    async publications() {
       const rows = await sql.query(`SELECT p.item FROM cp_owner_assignment_rows r
         CROSS JOIN LATERAL jsonb_array_elements(coalesce(r.value #> '{group,publications}','[]'::jsonb)) p(item)
-        ${readbackOnly ? `WHERE p.item #>> '{publicationOutcome,status}' <> 'HELD' AND (
-          p.item #>> '{autonomousPlan,publication,contractId}' IN ('official-filings','comment-access','everyday-routing','ballot-navigation') OR
-          (p.item #>> '{autonomousPlan,publication,contractId}' ~ '^registry-runtime:[A-Z]{2}$' AND p.item #>> '{autonomousPlan,contract,recordClass}'='OFFICIAL_ROSTER'))` : ""}
+        WHERE ${ownerReadbackWhere("p.item")}
         ORDER BY p.item->>'id'`, []) as {item:WorkItem}[];
       return rows.map(row => row.item);
     },

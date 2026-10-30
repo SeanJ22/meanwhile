@@ -4,8 +4,11 @@ import type { WorkItem } from "../work-item.ts";
 import type { ControlPlaneRepositories, RecordProjection } from "./types.ts";
 import type { Sql } from "./pg-store.ts";
 import { boundedQuery } from "./request-bounds.ts";
+import { ownerReadbackItem, ownerReadbackWhere } from "./owner-assignment-rows.ts";
 
 const ATTEMPT_FIELDS="id routeTaskId workItemId leaseId startedAt endedAt outcome abortReason";
+const HEAD_FIELDS="obligation debt item proof live latest laneRole pendingTaskId publication occurrenceCount openRound lastActivityAt";
+const COUNT_OBLIGATION_FIELDS="recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason";
 const OBLIGATION_FIELDS="id recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason openOccurrenceId";
 const projection=(fields:string):RecordProjection=>Object.fromEntries(fields.split(" ").map(field=>[field,true]));
 
@@ -13,11 +16,7 @@ export interface AssignmentHeadSeeds {
   readonly groups: readonly string[];
   readonly workItems: readonly string[];
 }
-export interface AssignmentHeadBatch {
-  readonly heads: readonly AssignmentHead[];
-  readonly members: ReadonlyMap<string, readonly string[]>;
-  readonly workItems: readonly WorkItem[];
-}
+export type AssignmentHeadBatch=Readonly<ReturnType<typeof assignmentHeadBatchFromSources>>&{readonly workItems:readonly WorkItem[];readonly owners:readonly string[]};
 export interface OwnerAssignmentHeads {
   read(seeds: AssignmentHeadSeeds, now: string): Promise<AssignmentHeadBatch>;
 }
@@ -60,24 +59,28 @@ export function storedOwnerAssignmentHeads(get: () => ControlPlaneRepositories):
       workerResults:workerResults.filter(row=>ownedSet.has(row.workItemId)),scoutResults:scoutResults.filter(row=>ownedSet.has(row.workItemId)||attemptSet.has(row.attemptId)),
       dispositions:null,pipeline:null,activation:null,servedReader:null,pilotZips:[],askGapObservations:null});
     const created=new Set(batch.heads.filter(head=>head.kind==="WORK_ITEM").map(head=>head.id));
-    return {...batch,workItems:workItems.filter(row=>created.has(row.id)||row.publicationOutcome)};
+    return {...batch,workItems:workItems.filter(row=>created.has(row.id)||ownerReadbackItem(row)),
+      owners:(await repos.ownerAssignmentRows.find({members:[...batch.members.values()].flat()})).filter(id=>!seeds.groups.includes(id))};
   } };
 }
 
 const pick = (value: string, fields: string): string => `jsonb_strip_nulls(jsonb_build_object(${fields.split(" ").flatMap(field => [`'${field}'`, `${value}->'${field}'`]).join(",")}))`;
+const tuple = (value:string,fields:string):string => `jsonb_build_array(${fields.split(" ").map(field=>`${value}->'${field}'`).join(",")})`;
+const object = (value:readonly unknown[]|undefined,fields:string):Record<string,unknown>|undefined => value?Object.fromEntries(fields.split(" ").flatMap((key,i)=>value[i]===null?[]:[[key,value[i]]])):undefined;
 const timestamp = (value: string): string => `CASE WHEN pg_input_is_valid(${value},'timestamptz') THEN (${value})::timestamptz END`;
-const attempt = (v: string): string => `${pick(v,"id routeTaskId leaseId startedAt endedAt outcome abortReason")}||jsonb_build_object('role',${v}#>'{worker,role}')`;
+const normalized = (value:string):string => `btrim(regexp_replace(${value},'${String.raw`[\u0009-\u000D\u0020\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]+`}',' ','g'))`;
+const clipped = (value:string):string => `left(${normalized(value)},161)`;
+const attempt = (v: string): string => `${pick(v,"id routeTaskId leaseId startedAt endedAt outcome")}||jsonb_strip_nulls(jsonb_build_object('role',${v}#>'{worker,role}','abortReason',${clipped(`${v}->>'abortReason'`)}))`;
 const lease = (v: string): string => pick(v,"id released expiresAt");
-const item = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_build_object('lastTransitionAt',${v}#>'{transitions,-1,at}','manualSourceGap',${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")})`;
-const routing = (v: string): string => `${pick(v,"id project subject obligation directoryParent planRepair dependencies autonomousPlan")}||jsonb_strip_nulls(jsonb_build_object(
-  'publicationOutcome',CASE WHEN ${v}->'publicationOutcome' IS NOT NULL AND ${v}->'publicationOutcome'<>'null'::jsonb THEN ${pick(`${v}->'publicationOutcome'`,"status versionId workerResultId acceptedRecordIds")} END))`;
+const item = (v: string): string => `${pick(v,"id project subject state createdAt")}||jsonb_build_object('obligation',${clipped(`${v}->>'obligation'`)},'lastTransitionAt',${v}#>'{transitions,-1,at}','manualSourceGap',${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")})`;
+const routing = (v: string): string => `${pick(v,"id subject")}||jsonb_build_object('obligation',CASE WHEN ${v}->>'obligation' ~ '${String.raw`^[^\u000A\u000D\u2028\u2029]*#[0-9]+$`}' THEN ${v}->>'obligation' ELSE '' END)||CASE WHEN ${ownerReadbackWhere(v)} THEN
+  ${pick(v,"autonomousPlan")}||jsonb_build_object('publicationOutcome',${pick(`${v}->'publicationOutcome'`,"status versionId workerResultId acceptedRecordIds")}) ELSE '{}'::jsonb END`;
 
 const workFields = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_strip_nulls(jsonb_build_object(
   'directoryParent',CASE WHEN ${v}->'directoryParent' IS NOT NULL THEN ${pick(`${v}->'directoryParent'`,"workItemId bodyId")} END,
   'planRepair',CASE WHEN ${v}->'planRepair' IS NOT NULL THEN ${pick(`${v}->'planRepair'`,"parentWorkItemId authority")} END,
   'manualSourceGap',CASE WHEN ${v}->'manualSourceGap' IS NOT NULL THEN ${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")} END,
   'transitions',jsonb_build_array(jsonb_build_object('at',${v}#>'{transitions,-1,at}')),
-  'dependencies',(SELECT jsonb_agg(jsonb_build_object('upstreamId',d->'upstreamId')) FROM jsonb_array_elements(coalesce(${v}->'dependencies','[]'::jsonb)) d),
   'autonomousPlan',CASE WHEN ${v}#>'{autonomousPlan,publication}' IS NOT NULL OR ${v}#>'{autonomousPlan,contract,recordClass}' IS NOT NULL THEN
     jsonb_build_object('publication',${pick(`${v}#>'{autonomousPlan,publication}'`,"contractId bodyId")},'contract',jsonb_build_object('recordClass',${v}#>'{autonomousPlan,contract,recordClass}')) END,
   'publicationOutcome',CASE WHEN ${v}->'publicationOutcome' IS NOT NULL AND ${v}->'publicationOutcome'<>'null'::jsonb THEN ${pick(`${v}->'publicationOutcome'`,"status at code recovery bodyIds versionId workerResultId acceptedRecordIds")} END))`;
@@ -153,10 +156,13 @@ member_keys AS MATERIALIZED (SELECT id,member FROM resolved UNION SELECT value#>
 occurrence_members AS MATERIALIZED (SELECT value#>>'{obligationId}' AS id,value#>>'{workItemId}' AS member,min((value->>'sequence')::int) AS sequence FROM occurrences GROUP BY 1,2),
 members AS MATERIALIZED (SELECT m.id,m.member,row_number() OVER(PARTITION BY m.id ORDER BY o.sequence NULLS LAST,m.member) AS ordinal
   FROM member_keys m LEFT JOIN occurrence_members o USING(id,member)),
+old_owners AS MATERIALIZED (SELECT r.id FROM cp_owner_assignment_rows r
+  WHERE r.members ?| ARRAY(SELECT DISTINCT member FROM members) AND NOT r.id=ANY($1::text[])),
 items AS MATERIALIZED (SELECT m.id,m.member,m.ordinal,w.value FROM members m LEFT JOIN LATERAL
   (SELECT ${workFields("value")} AS value FROM cp_work_items_history WHERE id=m.member ORDER BY revision DESC LIMIT 1) w ON true),
 tasks AS MATERIALIZED (SELECT DISTINCT ON(m.id,t.id) m.id,t.id AS task,t.value,m.ordinal FROM members m
-  CROSS JOIN LATERAL (SELECT id,${taskFields("value")} AS value,revision FROM cp_route_tasks_history WHERE value#>>'{workItemId}'=m.member OFFSET 0) t ORDER BY m.id,t.id,t.revision DESC),
+  CROSS JOIN LATERAL (SELECT id,${pick("task.value","id createdAt state")} AS value,revision FROM cp_route_tasks_history task WHERE task.value#>>'{workItemId}'=m.member
+    AND (EXISTS(SELECT 1 FROM cp_attempts a WHERE a.value#>>'{routeTaskId}'=task.id) OR (NOT EXISTS(SELECT 1 FROM cp_obligations o WHERE o.id=m.id) AND NOT EXISTS(SELECT 1 FROM occurrences o WHERE o.value#>>'{obligationId}'=m.id))) OFFSET 0) t ORDER BY m.id,t.id,t.revision DESC),
 orphan_tasks AS MATERIALIZED (SELECT DISTINCT ON(m.id,a.value#>>'{routeTaskId}') m.id,m.ordinal,a.value,a.id AS attempt
   FROM members m CROSS JOIN LATERAL (SELECT id,${attemptFields("value")} AS value FROM cp_attempts WHERE value#>>'{workItemId}'=m.member OFFSET 0) a
   WHERE NOT EXISTS(SELECT 1 FROM tasks t WHERE t.id=m.id AND t.task=a.value#>>'{routeTaskId}')
@@ -169,16 +175,21 @@ round_keys AS MATERIALIZED (
   UNION ALL SELECT a.id,a.value#>>'{routeTaskId}',ARRAY[1::bigint,a.ordinal,9223372036854775807::bigint,row_number() OVER(PARTITION BY a.id,a.ordinal
     ORDER BY ${timestamp("a.value->>'startedAt'")},coalesce(${timestamp("a.value->>'endedAt'")},${timestamp("a.value->>'startedAt'")}),a.attempt)] FROM orphan_tasks a
 ),
-rounds AS MATERIALIZED (SELECT r.id,r.task,r.ordering,t.value FROM round_keys r LEFT JOIN LATERAL
-  (SELECT ${taskFields("value")} AS value FROM cp_route_tasks_history WHERE id=r.task ORDER BY revision DESC LIMIT 1) t ON true),
+rounds AS MATERIALIZED (SELECT r.id,r.task,r.ordering,coalesce(t.value,missing.value) AS value FROM round_keys r LEFT JOIN tasks t ON t.id=r.id AND t.task=r.task
+  LEFT JOIN LATERAL (SELECT ${pick("value","id createdAt state")} AS value FROM cp_route_tasks_history WHERE t.task IS NULL AND r.ordering[1]=0 AND id=r.task AND EXISTS(SELECT 1 FROM cp_attempts a WHERE a.value#>>'{routeTaskId}'=r.task) ORDER BY revision DESC LIMIT 1) missing ON true),
 attempts AS MATERIALIZED (SELECT r.id,r.task,r.ordering,a.id AS attempt,a.value,${timestamp("a.value->>'startedAt'")} AS started_at,
     coalesce(${timestamp("a.value->>'endedAt'")},${timestamp("a.value->>'startedAt'")}) AS activity_at
   FROM rounds r CROSS JOIN LATERAL (SELECT id,${attemptFields("value")} AS value FROM cp_attempts WHERE value#>>'{routeTaskId}'=r.task OFFSET 0) a),
 latest AS MATERIALIZED (SELECT DISTINCT ON(a.id) a.* FROM attempts a
   ORDER BY a.id,a.activity_at DESC NULLS LAST,a.ordering DESC,a.started_at DESC NULLS LAST,a.attempt DESC),
-scouts AS MATERIALIZED (SELECT DISTINCT ON(s.record->>'attemptId') s.record->>'attemptId' AS attempt,${scoutFields("s.record")} AS record
-  FROM cp_log_scout_results s WHERE s.record->>'attemptId' IN (SELECT attempt FROM latest UNION SELECT r.value#>>'{disposition,attemptId}' FROM rounds r JOIN latest l ON l.id=r.id AND l.task=r.task)
-  ORDER BY s.record->>'attemptId',s.record->>'recordedAt' DESC,s.log_key DESC,s.position DESC),
+outcome_tasks AS MATERIALIZED (SELECT l.id,l.task,t.value FROM latest l JOIN rounds r ON r.id=l.id AND r.task=l.task AND r.ordering=l.ordering AND r.value IS NOT NULL CROSS JOIN LATERAL
+  (SELECT ${taskFields("value")} AS value FROM cp_route_tasks_history WHERE id=l.task ORDER BY revision DESC LIMIT 1) t),
+scouts AS MATERIALIZED (SELECT wanted.attempt,s.record FROM
+  (SELECT attempt FROM latest UNION SELECT value#>>'{disposition,attemptId}' FROM outcome_tasks WHERE value#>>'{disposition,attemptId}' IS NOT NULL) wanted
+  CROSS JOIN LATERAL (SELECT chosen.record FROM (SELECT ${scoutFields("record")} AS record,log_key,position,
+    first_value(pg_input_is_valid(record->>'recordedAt','timestamptz')) OVER(ORDER BY log_key,position) AS valid FROM cp_log_scout_results WHERE record->>'attemptId'=wanted.attempt) chosen
+    ORDER BY CASE WHEN valid THEN ${timestamp("chosen.record->>'recordedAt'")} END DESC NULLS LAST,
+      CASE WHEN valid THEN log_key END DESC,CASE WHEN valid THEN position END DESC,log_key,position LIMIT 1) s),
 workers AS MATERIALIZED (SELECT DISTINCT ON(s.record->>'attemptId') s.record->>'attemptId' AS attempt,${workerFields("s.record")} AS record
   FROM cp_log_worker_results s WHERE s.log_key IN(SELECT member FROM members) AND s.record->>'attemptId' IN(SELECT attempt FROM latest)
   ORDER BY s.record->>'attemptId',s.log_key DESC,s.position DESC),
@@ -187,57 +198,60 @@ activity AS MATERIALIZED (
   UNION ALL SELECT o.value#>>'{obligationId}',coalesce(o.value->>'closedAt',o.value->>'openedAt'),4 FROM occurrences o
   UNION ALL SELECT m.id,s.record->>'recordedAt',2 FROM members m CROSS JOIN LATERAL (SELECT ${pick("record","recordedAt")} AS record FROM cp_log_artifacts WHERE log_key=m.member AND record#>>'{workItemId}'=m.member OFFSET 0) s
   UNION ALL SELECT m.id,s.record->>'endedAt',3 FROM members m CROSS JOIN LATERAL (SELECT ${pick("record","endedAt")} AS record FROM cp_log_worker_results WHERE log_key=m.member AND record#>>'{workItemId}'=m.member OFFSET 0) s
-  UNION ALL SELECT m.id,s.record->>'recordedAt',1 FROM members m JOIN cp_log_scout_results s ON s.record#>>'{workItemId}'=m.member
-  UNION ALL SELECT a.id,s.record->>'recordedAt',1 FROM attempts a JOIN cp_log_scout_results s ON s.record->>'attemptId'=a.attempt
+  UNION ALL SELECT m.id,s.at,1 FROM members m CROSS JOIN LATERAL (SELECT record->>'recordedAt' AS at FROM cp_log_scout_results WHERE record#>>'{workItemId}'=m.member OFFSET 0) s
+  UNION ALL SELECT a.id,s.at,1 FROM attempts a CROSS JOIN LATERAL (SELECT record->>'recordedAt' AS at FROM cp_log_scout_results WHERE record->>'attemptId'=a.attempt OFFSET 0) s
 )
-SELECT g.id,
+SELECT g.id,CASE WHEN row_number() OVER(ORDER BY g.id)=1 THEN ARRAY(SELECT id FROM old_owners ORDER BY id) END AS owners,
   coalesce((SELECT jsonb_agg(m.member ORDER BY m.ordinal) FROM members m WHERE m.id=g.id),'[]'::jsonb) AS members,
-  coalesce((SELECT jsonb_agg(${routing("i.value")} ORDER BY i.ordinal) FROM items i WHERE i.id=g.id AND i.value IS NOT NULL AND (i.member=g.id OR i.value->'publicationOutcome' IS NOT NULL)),'[]'::jsonb) AS items,
-  jsonb_strip_nulls(jsonb_build_object(
-    'obligation',CASE WHEN o.id IS NOT NULL THEN ${pick("o.value",OBLIGATION_FIELDS.replace("id ","").replace(" openOccurrenceId",""))} END,
-    'debt',CASE WHEN d.id IS NOT NULL THEN ${pick("d.value","cause consecutiveFailures firstFailedAt retryAt")} END,
-    'item',CASE WHEN o.id IS NULL AND NOT EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN (SELECT ${item("i.value")} FROM items i WHERE i.id=g.id AND i.value IS NOT NULL ORDER BY i.ordinal LIMIT 1) END,
-    'proof',CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,
-    'live',coalesce((SELECT jsonb_agg(jsonb_build_object('attempt',${attempt("a.value")},'lease',${lease("le.value")}) ORDER BY a.ordering,a.started_at,a.activity_at,a.attempt)
+  coalesce((SELECT jsonb_agg(${routing("i.value")} ORDER BY i.ordinal) FROM items i WHERE i.id=g.id AND i.value IS NOT NULL AND (i.member=g.id OR (${ownerReadbackWhere("i.value")}))),'[]'::jsonb) AS items,
+  jsonb_build_array(
+    CASE WHEN o.id IS NOT NULL THEN ${tuple("o.value",COUNT_OBLIGATION_FIELDS)} END,
+    CASE WHEN d.id IS NOT NULL THEN ${tuple("d.value","cause consecutiveFailures firstFailedAt retryAt")} END,
+    CASE WHEN o.id IS NULL AND NOT EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN (SELECT ${item("i.value")} FROM items i WHERE i.id=g.id AND i.value IS NOT NULL ORDER BY i.ordinal LIMIT 1) END,
+    CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,
+    coalesce((SELECT jsonb_agg(jsonb_build_object('attempt',${attempt("a.value")},'lease',${lease("le.value")}) ORDER BY a.ordering,a.started_at,a.activity_at,a.attempt)
       FROM attempts a JOIN cp_leases le ON le.id=a.task WHERE a.id=g.id AND a.value->'outcome' IS NULL
         AND le.value->>'id'=a.value->>'leaseId' AND NOT(le.value->>'released')::boolean AND ${timestamp("le.value->>'expiresAt'")}>$3::timestamptz),'[]'::jsonb),
-    'latest',CASE WHEN l.attempt IS NOT NULL THEN jsonb_strip_nulls(jsonb_build_object('attempt',${attempt("l.value")},'leaseRead',true,
-      'lease',CASE WHEN le.id IS NOT NULL THEN ${lease("le.value")} END,
+    CASE WHEN l.attempt IS NOT NULL THEN jsonb_strip_nulls(jsonb_build_object(
+      'attempt',CASE WHEN r.value->'disposition' IS NULL AND r.value->'policyDenial' IS NULL THEN ${attempt("l.value")} END,
+      'lease',CASE WHEN r.value->'disposition' IS NULL AND r.value->'policyDenial' IS NULL AND l.value->'outcome' IS NULL AND le.id IS NOT NULL THEN ${lease("le.value")} END,
       'disposition',CASE WHEN r.value->'disposition' IS NOT NULL AND r.value->'disposition'<>'null'::jsonb THEN
-        ${pick("r.value->'disposition'","disposition at note")}||jsonb_build_object('artifactCount',r.value#>'{disposition,artifactCount}') END,
+        ${pick("r.value->'disposition'","disposition at")}||jsonb_build_object('note',CASE WHEN g.id LIKE 'freshness:ask-gap:%' THEN r.value#>>'{disposition,note}' WHEN r.value#>>'{disposition,disposition}' IN('INGESTED','DISCOVERED','POINTER_ONLY','WALKED_NO_YIELD','NOT_APPLICABLE','RECHECK_DUE') THEN '' ELSE ${clipped("r.value#>>'{disposition,note}'")} END,'artifactCount',r.value#>'{disposition,artifactCount}') END,
       'policyDenial',CASE WHEN r.value->>'state'='POLICY_DENIED' THEN r.value->'policyDenial' END,
       'scout',CASE WHEN s.attempt IS NOT NULL THEN ${pick("s.record","outcome recordedAt distinctEvidenceRungs refusal candidateCount findingCount rungs nextRungs")} END,
-      'worker',CASE WHEN w.attempt IS NOT NULL THEN ${pick("w.record","endedAt result")} END)) END,
-    'laneRole',(SELECT a.value#>'{worker,role}' FROM attempts a WHERE a.id=g.id ORDER BY a.started_at DESC NULLS LAST,a.activity_at DESC NULLS LAST,a.attempt DESC LIMIT 1),
-    'pendingTaskId',(SELECT r.task FROM rounds r WHERE r.id=g.id AND r.value->>'state' IN('PENDING','RECLAIMABLE') AND NOT EXISTS(SELECT 1 FROM attempts a WHERE a.id=r.id AND a.task=r.task) ORDER BY r.ordering LIMIT 1),
-    'publication',(SELECT ${pick("i.value->'publicationOutcome'","status at code recovery")} FROM items i WHERE i.id=g.id AND i.value->'publicationOutcome' IS NOT NULL AND i.value->'publicationOutcome'<>'null'::jsonb ORDER BY i.value#>>'{publicationOutcome,at}' DESC,i.ordinal LIMIT 1),
-    'occurrenceCount',(SELECT nullif(count(*),0) FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id),
-    'openRound',(SELECT jsonb_build_object('id',c.id,'sequence',c.value->'sequence','openedAt',c.value->'openedAt','dueAt',c.value->'dueAt',
-      'reached',EXISTS(SELECT 1 FROM attempts a WHERE a.id=g.id AND a.task=c.value#>>'{routeTaskId}')) FROM occurrences c WHERE c.id=o.value->>'openOccurrenceId' AND c.value->'closedAt' IS NULL LIMIT 1),
-    'lastActivityAt',(SELECT at FROM activity WHERE id=g.id AND pg_input_is_valid(at,'timestamptz') ORDER BY at::timestamptz DESC,priority LIMIT 1)
-  )) AS head
-FROM groups g LEFT JOIN cp_obligations o ON o.id=g.id LEFT JOIN cp_debts d ON d.id=g.id
-LEFT JOIN latest l ON l.id=g.id LEFT JOIN rounds r ON r.id=l.id AND r.task=l.task AND r.ordering=l.ordering
-LEFT JOIN cp_leases le ON le.id=l.task LEFT JOIN scouts s ON s.attempt=coalesce(r.value#>>'{disposition,attemptId}',l.attempt)
+      'worker',CASE WHEN r.value->'disposition' IS NULL AND r.value->'policyDenial' IS NULL AND w.attempt IS NOT NULL THEN ${pick("w.record","endedAt result")} END)) END,
+    (SELECT a.value#>'{worker,role}' FROM attempts a WHERE a.id=g.id ORDER BY a.started_at DESC NULLS LAST,a.activity_at DESC NULLS LAST,a.attempt DESC LIMIT 1),
+    (SELECT r.task FROM rounds r WHERE r.id=g.id AND r.value->>'state' IN('PENDING','RECLAIMABLE') AND NOT EXISTS(SELECT 1 FROM attempts a WHERE a.id=r.id AND a.task=r.task) ORDER BY r.ordering LIMIT 1),
+    (SELECT ${pick("i.value->'publicationOutcome'","status at code recovery")} FROM items i WHERE i.id=g.id AND i.value->'publicationOutcome' IS NOT NULL AND i.value->'publicationOutcome'<>'null'::jsonb ORDER BY i.value#>>'{publicationOutcome,at}' DESC,i.ordinal LIMIT 1),
+    (SELECT nullif(count(*),0) FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id),
+    (SELECT ${tuple("c.value","sequence openedAt")} FROM occurrences c WHERE c.id=o.value->>'openOccurrenceId' AND c.value->'closedAt' IS NULL LIMIT 1),
+    (SELECT at FROM activity WHERE id=g.id AND pg_input_is_valid(at,'timestamptz') ORDER BY at::timestamptz DESC,priority LIMIT 1)
+  ) AS head
+FROM groups g LEFT JOIN LATERAL (SELECT id,${pick("value",OBLIGATION_FIELDS)} AS value FROM cp_obligations WHERE id=g.id LIMIT 1) o ON true
+LEFT JOIN LATERAL (SELECT id,${pick("value","cause consecutiveFailures firstFailedAt retryAt")} AS value FROM cp_debts WHERE id=g.id LIMIT 1) d ON true
+LEFT JOIN latest l ON l.id=g.id LEFT JOIN outcome_tasks r ON r.id=l.id AND r.task=l.task
+LEFT JOIN LATERAL (SELECT id,${lease("value")} AS value FROM cp_leases WHERE id=l.task LIMIT 1) le ON true LEFT JOIN scouts s ON s.attempt=coalesce(r.value#>>'{disposition,attemptId}',l.attempt)
 LEFT JOIN workers w ON w.attempt=l.attempt ORDER BY g.id`;
 
 export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {
   return { async read(seeds, now) {
-    if (!(seeds.groups.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [] };
+    if (!(seeds.groups.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [], owners: [] };
     const rows = await boundedQuery(sql,{operation:"cp_owner_assignment_rows.heads",callClass:"PAGE"},OWNER_ASSIGNMENT_HEADS_SQL, [seeds.groups,seeds.workItems,now]) as {
-      id: string; members: string[]; items: WorkItem[]; head: Partial<AssignmentHead>;
+      id: string; members: string[]; items: WorkItem[]; head: readonly unknown[]; owners: string[] | null;
     }[];
     const hydrateAttempt = (value: AssignmentHead["live"][number]["attempt"]) => Object.assign({endedAt:null,outcome:null,abortReason:null},value);
-    const heads = rows.map(({id,head}) => {
-      const latest = head.latest ? Object.assign({lease:null,disposition:null,policyDenial:null,scout:null,worker:null},head.latest,{
-        attempt:hydrateAttempt(head.latest.attempt),scout:head.latest.scout?Object.assign({refusal:null},head.latest.scout):null}) : null;
+    const heads = rows.map(({id,head:wire}) => {
+      const decoded=object(wire,HEAD_FIELDS)!;
+      const head={...decoded,obligation:object(decoded.obligation as unknown[],COUNT_OBLIGATION_FIELDS),debt:object(decoded.debt as unknown[],"cause consecutiveFailures firstFailedAt retryAt"),openRound:object(decoded.openRound as unknown[],"sequence openedAt")} as Partial<AssignmentHead>;
+      const latest = head.latest ? Object.assign({lease:null,leaseRead:true,disposition:null,policyDenial:null,scout:null,worker:null},head.latest,{
+        ...(head.latest.attempt?{attempt:hydrateAttempt(head.latest.attempt)}:{}),scout:head.latest.scout?Object.assign({refusal:null},head.latest.scout):null}) : null;
       return Object.assign({id,kind:head.obligation||head.occurrenceCount?"STANDING_OBLIGATION":"WORK_ITEM",obligation:null,debt:null,item:null,proof:false,laneRole:null,pendingTaskId:null,publication:null,
         occurrenceCount:0,openRound:null,lastActivityAt:null},head,{latest,
         obligation:head.obligation?Object.assign({id,routeId:null,readerImpactAt:null,nextDueAt:null,absentUntil:null,absenceUnlock:null,assignments:[],retiredAt:null,retirementReason:null},head.obligation):null,
         debt:head.debt?Object.assign({detail:""},head.debt):null,
         live:(head.live??[]).map(row=>({...row,attempt:hydrateAttempt(row.attempt)}))}) as AssignmentHead;
     });
-    return { heads,
+    return { heads, owners:rows.flatMap(row=>row.owners??[]),
       members: new Map(rows.map(row => [row.id,row.members])), workItems: [...new Map(rows.flatMap(row => row.items).map(item => [item.id,item])).values()] };
   } };
 }

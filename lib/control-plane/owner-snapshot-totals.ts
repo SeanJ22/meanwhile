@@ -37,7 +37,7 @@ import {
   type PlaceTotals,
   type SpendByPlaceView,
 } from "./cost-panel.ts";
-import type { OwnerAssignmentHead, OwnerAssignmentRow } from "./repository/owner-assignment-rows.ts";
+import { ownerReadbackItem, type OwnerAssignmentHead, type OwnerAssignmentRow } from "./repository/owner-assignment-rows.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
 import type { AskGapCode } from "../ask/gap-codes.ts";
 import { askGapObligationId } from "./ask-gap-id.ts";
@@ -97,7 +97,7 @@ export interface OwnerSnapshotTotals {
 type Slot = readonly [key: string, position: number, changedAt: string];
 
 /** Where a log fold's next read starts (`through` less the slack) and the slots that read leaves out. */
-interface LogCursor {
+export interface LogCursor {
   readonly through: string;
   readonly held: readonly Slot[];
 }
@@ -250,55 +250,8 @@ function foldedBefore(cursor: LogCursor | null, slackMs: number): (r: ChangedRec
   return (r) => Date.parse(r.changedAt!) < since || held.has(slotKey(r.key, r.position));
 }
 
-/** Lease heartbeats do not change assignment state; this cursor tracks the four fields that do. */
-async function eachLeaseChanged(repos:ControlPlaneRepositories,since:string|null,page:(rows:readonly {routeTaskId:string}[])=>Promise<void>,
-  remember:{cursors:Record<string,LogCursor>;name:string;slackMs:number}):Promise<string>{
-  if(!repos.ownerLeaseChanges)return eachChanged(repos.leases,since,{routeTaskId:true},page,remember);
-  const prior=remember.cursors[remember.name];
-  if(since!==null&&prior)since=iso(Date.parse(prior.through)-remember.slackMs);
-  const held=(prior?.held??[]).filter(([, ,at])=>since===null||at>=since),taken:Slot[]=[];
-  const through=await repos.ownerLeaseChanges.read(since,held.map(([id,version])=>[id,version]),async rows=>{
-    for(const row of rows)taken.push([row.id,row.version,row.changedAt]);await page(rows);
-  });
-  remember.cursors[remember.name]={through,held:[...held,...taken].filter(([, ,at])=>Date.parse(at)>=Date.parse(through)-remember.slackMs)};
-  return through;
-}
-
-/** An aggregate's rows changed since `since`, narrowed, page by page; answers the clock the read began at. */
-async function eachChanged<R>(repo: AggregateRepository<unknown>, since: string | null, projection: RecordProjection, page: (rows: readonly R[]) => void | Promise<void>,
-  remember: { readonly cursors: Record<string, LogCursor>; readonly name: string; readonly slackMs: number }): Promise<string> {
-  const prior = remember.cursors[remember.name];
-  if (since !== null && prior) since = iso(Date.parse(prior.through) - remember.slackMs);
-  const held = (prior?.held ?? []).filter(([, , at]) => since === null || at >= since);
-  const taken: Slot[] = [];
-  const read = await needs(repo.listChangedSince, "changed-since read")(since, held.map(([id, revision]) => [id, revision]), { projection, page: (rows) => {
-    for (const row of rows) taken.push([row.id, row.revision, "changedAt" in row && typeof row.changedAt === "string" ? row.changedAt : ""]);
-    return page(rows.map((row) => row.value as R));
-  } });
-  const through = read.through ?? iso(Date.now());
-  remember.cursors[remember.name] = { through, held: [...held, ...taken.map(([id, revision, at]) => [id, revision, at || through] as const)]
-    .filter(([, , at]) => Date.parse(at) >= Date.parse(through) - remember.slackMs) };
-  return through;
-}
-
-async function eachLogChanged<R>(log: AppendOnlyRepository<unknown>, since: string | null, projection: RecordProjection, page: (records: readonly ChangedRecord<R>[]) => void | Promise<void>,
-  remember: { readonly cursors: Record<string, LogCursor>; readonly name: string; readonly slackMs: number }): Promise<string> {
-  const prior = remember.cursors[remember.name];
-  if (since !== null && prior) since = iso(Date.parse(prior.through) - remember.slackMs);
-  const held = (prior?.held ?? []).filter(([, , at]) => since === null || at >= since);
-  const taken: Slot[] = [];
-  const read = await log.readChangedSince(since, held.map(([key, position]) => [key, position]), { projection, page: (records) => {
-    for (const row of records) taken.push([row.key, row.position, row.changedAt ?? ""]);
-    return page(records as readonly ChangedRecord<R>[]);
-  } });
-  const through = read.through ?? iso(Date.now());
-  remember.cursors[remember.name] = { through, held: [...held, ...taken.map(([key, position, at]) => [key, position, at || through] as const)]
-    .filter(([, , at]) => Date.parse(at) >= Date.parse(through) - remember.slackMs) };
-  return through;
-}
-
 /** The work items an assignment holds: those on record, and those a round, task, attempt or worker result names. */
-async function heldWorkItems(repos: ControlPlaneRepositories, ids: Iterable<string>): Promise<Set<string>> {
+export async function heldWorkItems(repos: ControlPlaneRepositories, ids: Iterable<string>): Promise<Set<string>> {
   const out = new Set<string>();
   for (const chunk of chunks(unique(ids), ASSIGNMENT_BATCH)) {
     for (const row of await needs(repos.workItems.readManyNarrowed, "work-item read by id")(chunk, { id: true })) out.add(row.id);
@@ -612,11 +565,6 @@ export function updateAssignmentPart(prior: AssignmentPart, before: readonly Ass
 const segmentAt = (segments: readonly IndexSegment[], at: string): IndexSegment =>
   segments.find((s) => (s.from === null || s.from <= at) && (s.until === null || at < s.until)) ?? segments[segments.length - 1]!;
 
-const CHANGE_PROJECTIONS = {
-  workItem: { id: true, obligation: true, subject: true, directoryParent: true, planRepair: true },
-  byWorkItem: { workItemId: true },
-} satisfies Record<string, RecordProjection>;
-
 const narrowPublication = (w: WorkItem): WorkItem => ({ id: w.id, autonomousPlan: w.autonomousPlan && {
   publication: w.autonomousPlan.publication, contract: { recordClass: w.autonomousPlan.contract?.recordClass } },
   publicationOutcome: w.publicationOutcome && { status: w.publicationOutcome.status, versionId: w.publicationOutcome.versionId,
@@ -694,7 +642,6 @@ export class OwnerSnapshotFold {
   readonly #stateOfGroup = new Map<string, string>();
   /** Each assignment's index row, segment by segment over the instants the clock alone changes it at. */
   readonly #index = new Map<string, IndexSegment[]>();
-  readonly #groupOf = new Map<string, string>();
   /** States whose rows this publish wrote. */
   readonly #written = new Set<string>();
   /** Attempts changed since the last publish. */
@@ -795,9 +742,8 @@ export class OwnerSnapshotFold {
       this.#initialization=null;await checkpoint.save(this,null);return this;
     }
     if (this.#rebuild && this.#input.write) await this.#repos.ownerAssignmentRows.clear();
-    const changed = this.#rebuild ? new Set<string>() : await this.#routeChanges();
+    const changed = await this.#routeChanges(this.#rebuild?null:this.#through);
     if (this.#rebuild) {
-      await this.#routeEverything();
       for (const state of Object.keys(prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments?.states ?? {} : {})) this.#inboxes.touch(state);
     }
     this.costs=await costs(this.#priorCosts,changed);
@@ -815,7 +761,6 @@ export class OwnerSnapshotFold {
     }
     await this.#drain();
     this.costs=await costs(this.costs,changed);await this.#drain();
-    if(this.#rebuild)this.#cursors.costs=structuredClone(this.costs.cursor);
     await this.#foldPipeline(this.#rebuild);
     return this;
   }
@@ -835,11 +780,6 @@ export class OwnerSnapshotFold {
 
   get pipeline(): { readonly items: number; readonly linked: number; readonly verified: number } {
     return { items: this.#pipeline.items, linked: this.#pipeline.items - Object.keys(this.#pipeline.unlinked).length, verified: this.#pipeline.verified };
-  }
-
-  /** Every work item with a publication outcome, as the public readbacks read it. */
-  publications(readbackOnly = false): Promise<readonly WorkItem[]> {
-    return this.#repos.ownerAssignmentRows.publications(readbackOnly);
   }
 
   /** Standing obligations by the state name each carries. */
@@ -879,8 +819,6 @@ export class OwnerSnapshotFold {
       links: this.#links, pipeline: this.#pipeline } };
   }
 
-  #remember(name: string) { return { cursors: this.#cursors, name, slackMs: this.#slackMs }; }
-
   /* ---------------------------------------------------------- routing */
 
   /** Each work item to the state whose rows hold it. */
@@ -896,84 +834,17 @@ export class OwnerSnapshotFold {
     await this.#inboxes.settle();
   }
 
-  /** The assignments a changed row reaches, each routed to its state; answers every work item a changed row names. */
-  async #routeChanges(): Promise<Set<string>> {
-    const repos = this.#repos;
-    const since = iso(Date.parse(this.#through) - this.#slackMs);
-    const items: string[] = [];
-    const changedItems = new Set<string>();
-    const scoutAttempts: string[] = [];
-    const group = (id: string) => this.#inboxes.group(stateOf(id), id);
-    const throughs = await Promise.all([
-      eachChanged<{ id: string }>(repos.obligations, since, { id: true }, (rows) => { for (const o of rows) group(o.id); }, this.#remember("obligations")),
-      eachChanged<{ obligationId: string; workItemId: string }>(repos.occurrences, since, { obligationId: true, workItemId: true }, (rows) => {
-        for (const o of rows) { group(o.obligationId); items.push(o.workItemId); }
-      }, this.#remember("occurrences")),
-      eachChanged<{ obligationId: string }>(repos.debts, since, { obligationId: true }, (rows) => { for (const d of rows) group(d.obligationId); }, this.#remember("debts")),
-      eachChanged<{ bodyId: string; code: AskGapCode }>(repos.askGapObservations, since, { bodyId: true, code: true }, (rows) => {
-        for (const o of rows) group(askGapObligationId(o.bodyId, o.code));
-      }, this.#remember("askGapObservations")),
-      eachChanged<WorkItem>(repos.workItems, since, CHANGE_PROJECTIONS.workItem, (rows) => {
-        for (const w of rows) { this.#noteWorkItem(w); changedItems.add(w.id); items.push(w.id); }
-      }, this.#remember("workItems")),
-      eachChanged<{ workItemId: string }>(repos.routeTasks, since, CHANGE_PROJECTIONS.byWorkItem, (rows) => { for (const r of rows) items.push(r.workItemId); }, this.#remember("routeTasks")),
-      eachChanged<{ id: string; workItemId: string }>(repos.attempts, since, { id: true, workItemId: true }, (rows) => {
-        for (const a of rows) { this.#changedAttempts.add(a.id); items.push(a.workItemId); }
-      }, this.#remember("attempts")),
-      eachLeaseChanged(repos, since, async (rows) => {
-        const tasks = await needs(repos.routeTasks.readManyNarrowed, "route-task read by id")(unique(rows.map((l) => l.routeTaskId)), CHANGE_PROJECTIONS.byWorkItem);
-        for (const t of tasks) items.push((t.value as { workItemId: string }).workItemId);
-      }, this.#remember("leases")),
-      ...(["artifacts", "workerResults"] as const).map((name) =>
-        eachLogChanged<{ workItemId: string }>(repos[name] as AppendOnlyRepository<unknown>, since, CHANGE_PROJECTIONS.byWorkItem, (records) => { for (const r of records) items.push(r.record.workItemId); }, this.#remember(name))),
-      eachLogChanged<{ workItemId?: string; attemptId?: string }>(repos.scoutResults as AppendOnlyRepository<unknown>, since, { workItemId: true, attemptId: true }, (records) => {
-        for (const r of records) { if(r.record.workItemId)items.push(r.record.workItemId);else if(r.record.attemptId)scoutAttempts.push(r.record.attemptId); }
-      }, this.#remember("scoutResults")),
-    ]);
-    for(const batch of chunks(unique(scoutAttempts),ASSIGNMENT_BATCH))for(const row of await needs(repos.attempts.readManyNarrowed,"attempt read by id")(batch,CHANGE_PROJECTIONS.byWorkItem))items.push((row.value as {workItemId:string}).workItemId);
-    this.#through = throughs.sort()[0]!;
-    /* A parent's membership changes reach its children. */
-    for (const [child, parent] of Object.entries(this.#links)) if (changedItems.has(parent)) items.push(child);
-    await this.#routeItems(items);
-    return new Set(unique(items));
-  }
-
-  /** Every standing obligation and every work item and orphaned execution record, each routed to its state, page by page. */
-  async #routeEverything(): Promise<void> {
-    const repos = this.#repos;
-    const throughs: string[] = [];
-    // These rows join the assignments below. Keep their versions too, so their
-    // overlap cannot send an unchanged assignment through the next publish.
-    for (const name of ["debts", "leases", "askGapObservations"] as const) {
-      throughs.push(await eachChanged(repos[name] as AggregateRepository<unknown>, null, { id: true }, () => {}, this.#remember(name)));
-    }
-    throughs.push(await eachLogChanged(repos.artifacts, null, { workItemId: true }, () => {}, this.#remember("artifacts")));
-    throughs.push(await eachChanged<{ id: string }>(repos.obligations, null, { id: true }, async (rows) => {
-      for (const o of rows) this.#inboxes.group(stateOf(o.id), o.id);
-      await this.#inboxes.settle();
-    }, this.#remember("obligations")));
-    throughs.push(await eachChanged<WorkItem>(repos.workItems, null, CHANGE_PROJECTIONS.workItem, async (rows) => {
-      for (const w of rows) { this.#noteWorkItem(w); this.#inboxes.item(homeOf(w.id, w), w.id); }
-      await this.#inboxes.settle();
-    }, this.#remember("workItems")));
-    const orphans = async (ids: readonly string[]) => {
-      const wanted = unique(ids);
-      const held = new Set((await needs(repos.workItems.readManyNarrowed, "work-item read by id")(wanted, { id: true })).map((row) => row.id));
-      for (const id of wanted) if (!held.has(id)) this.#inboxes.item(homeOf(id, undefined), id);
-      await this.#inboxes.settle();
-    };
-    for (const name of ["routeTasks", "attempts", "occurrences"] as const) {
-      throughs.push(await eachChanged<{ workItemId: string }>(repos[name], null, CHANGE_PROJECTIONS.byWorkItem, (rows) => orphans(rows.map((r) => r.workItemId)), this.#remember(name)));
-    }
-    throughs.push(await eachLogChanged<{ workItemId: string }>(repos.workerResults as AppendOnlyRepository<unknown>, null, CHANGE_PROJECTIONS.byWorkItem,
-      (records) => orphans(records.map((r) => r.record.workItemId)), this.#remember("workerResults")));
-    throughs.push(await eachLogChanged<{ workItemId?: string; attemptId?: string }>(repos.scoutResults as AppendOnlyRepository<unknown>, null, { workItemId: true, attemptId: true }, async records => {
-      const items=records.flatMap(r=>r.record.workItemId?[r.record.workItemId]:[]);
-      const attempts=unique(records.filter(r=>!r.record.workItemId).map(r=>r.record.attemptId));
-      for(const row of await needs(repos.attempts.readManyNarrowed,"attempt read by id")(attempts,CHANGE_PROJECTIONS.byWorkItem))items.push((row.value as {workItemId:string}).workItemId);
-      await this.#routeItems(items);
-    },this.#remember("scoutResults")));
-    this.#through = throughs.sort()[0]!;
+  /** Source changes are deduplicated and joined to the work list beside their rows. */
+  async #routeChanges(through:string|null):Promise<Set<string>>{
+    const changes=await this.#repos.ownerAssignmentChanges.read({through,cursors:this.#cursors,slackMs:this.#slackMs});
+    for(const group of changes.groups)this.#inboxes.group(group.state,group.id);
+    const parents=new Set(changes.links.map(row=>row.id));
+    await this.#routeItems(Object.entries(this.#links).filter(([,parent])=>parents.has(parent)).map(([child])=>child).concat(changes.items));
+    for(const row of changes.links){if(row.parent)this.#links[row.id]=row.parent;else delete this.#links[row.id];}
+    for(const id of changes.changedAttempts)this.#changedAttempts.add(id);
+    for(const name of Object.keys(this.#cursors))delete this.#cursors[name];
+    Object.assign(this.#cursors,changes.cursors);this.#through=changes.through;
+    return new Set(changes.changedWorkItems);
   }
 
   /* ----------------------------------------------------------- states */
@@ -992,17 +863,11 @@ export class OwnerSnapshotFold {
           for(const[place,totals]of Object.entries(inbox.places))mergePlaceTotals(loaded.places[place]??=placeTotals(),totals);
           if(checkpoint)loaded.inboxRun=this.#inboxes.run;
         }
-        await this.#loadRows(inbox.groups);
-        await this.#loadRows(await this.#repos.ownerAssignmentRows.find({ members: inbox.items, clauses: inbox.groups }));
-        const targets = new Set(inbox.groups);
-        /* A new obligation takes in the created work items whose clause names it. */
-        for (const id of loaded.groups) { const clause = this.#groups.get(id)!.clause; if (clause !== null && targets.has(clause) && !this.#groups.has(clause)) targets.add(id); }
-        for (const item of inbox.items) { const held = this.#groupOf.get(item); if (held !== undefined) targets.add(held); }
-        const touched = targets.size;
-        await this.#derive([...targets], []);
-        const probes = [...await heldWorkItems(this.#repos, inbox.items.filter((item) => !this.#groupOf.has(item)))];
-        await this.#derive([], probes);
-        this.#input.log(`assignments: ${state} folded — ${touched} derived again, ${probes.length} work item(s) no assignment held`);
+        const targets=unique([...inbox.groups,...await this.#repos.ownerAssignmentRows.find({members:inbox.items,clauses:inbox.groups})]);
+        await this.#derive(targets,[]);
+        const owned=new Set([...this.#groups.values()].flatMap(group=>group.members)),probes=inbox.items.filter(id=>!owned.has(id));
+        await this.#derive([],probes);
+        this.#input.log(`assignments: ${state} folded — ${targets.length} derived again, ${probes.length} work item(s) no assignment held`);
         await this.#emit();
         if(checkpoint){
           this.#checkpointStates+=1;
@@ -1026,7 +891,6 @@ export class OwnerSnapshotFold {
     for (const row of await this.#repos.ownerAssignmentRows.heads(unique(ids).filter(id => !this.#priorRows.has(id)))) {
       await this.#load(row.state);
       this.#priorRows.set(row.id,row);
-      this.#setGroup(row.state,row.id,{members:row.members,clause:row.clause,obligation:null,publications:[]});
     }
   }
 
@@ -1065,7 +929,6 @@ export class OwnerSnapshotFold {
     this.#priorRows.clear();
     this.#stateOfGroup.clear();
     this.#index.clear();
-    this.#groupOf.clear();
     this.#replaced.clear();
   }
 
@@ -1073,15 +936,11 @@ export class OwnerSnapshotFold {
     this.#groups.set(id, g);
     this.#stateOfGroup.set(id, state);
     this.#loaded.get(state)!.groups.add(id);
-    for (const m of g.members) this.#groupOf.set(m, id);
   }
 
   #dropGroup(id: string): void {
     this.#replaced.add(id);
     const state = this.#stateOfGroup.get(id);
-    for (const m of this.#groups.get(id)?.members ?? []) {
-      if (this.#groupOf.get(m) === id) this.#groupOf.delete(m);
-    }
     if (state !== undefined) this.#loaded.get(state)?.groups.delete(id);
     this.#groups.delete(id);
     this.#stateOfGroup.delete(id);
@@ -1089,12 +948,6 @@ export class OwnerSnapshotFold {
   }
 
   /* --------------------------------------------------------- deriving */
-
-  #noteWorkItem(w: Pick<WorkItem, "id" | "directoryParent"> & { readonly planRepair?: { readonly parentWorkItemId: string } }): void {
-    const parent = w.directoryParent?.workItemId ?? w.planRepair?.parentWorkItemId;
-    if (parent) this.#links[w.id] = parent;
-    else delete this.#links[w.id];
-  }
 
   /** Membership settles using current heads; old history never crosses the database connection. */
   async #derive(targets:readonly string[],probes:readonly string[]):Promise<void>{
@@ -1105,8 +958,8 @@ export class OwnerSnapshotFold {
   async #deriveBatch(targets:readonly string[],probes:readonly string[]):Promise<void>{
     const ids=new Set(targets);
     await this.#loadRows(targets);
-    await this.#loadRows(await this.#repos.ownerAssignmentRows.find({members:probes}));
-    for(const id of probes){const group=this.#groupOf.get(id);if(group)ids.add(group);}
+    const owners=await this.#repos.ownerAssignmentRows.find({members:probes});
+    await this.#loadRows(owners);for(const id of owners)ids.add(id);
     for(let round=0;;round++){
       if(round>16)throw new Error(`assignment membership did not settle for ${[...ids].slice(0,5).join(", ")}`);
       const src=await this.#repos.ownerAssignmentHeads.read({groups:[...ids],workItems:probes},this.#input.nowIso);
@@ -1114,7 +967,7 @@ export class OwnerSnapshotFold {
       const produced=new Map([...derived].map(([id,entry])=>[id,{...entry,members:src.members.get(id)??[]}]));
       const items=new Map(src.workItems.map(w=>[w.id,w]));
       const stateOfEntry=(id:string,entry:{index:{kind:string}})=>entry.index.kind==="WORK_ITEM"?homeOf(id,items.get(id)):stateOf(id);
-      const owners=await this.#repos.ownerAssignmentRows.find({members:unique([...src.members.values()].flat())});
+      const owners=src.owners;
       await this.#loadRows(unique([...owners,...produced.keys()]));
       const added=unique([...owners,...produced.keys()]).filter(id=>!ids.has(id));
       if(added.length){for(const id of added)ids.add(id);continue;}
@@ -1125,7 +978,7 @@ export class OwnerSnapshotFold {
         const entry=produced.get(id);if(!entry)continue;
         const state=stateOfEntry(id,entry),own=entry.members.flatMap(member=>items.get(member)?[items.get(member)!]:[]);
         this.#setGroup(state,id,{members:entry.members,obligation:entry.obligation,
-          publications:own.filter(item=>item.publicationOutcome).map(narrowPublication),clause:entry.index.kind==="WORK_ITEM"?clauseObligation(items.get(id)?.obligation??""):null});
+          publications:own.filter(ownerReadbackItem).map(narrowPublication),clause:entry.index.kind==="WORK_ITEM"?clauseObligation(items.get(id)?.obligation??""):null});
         this.#index.set(id,this.#segments(heads.get(id)!));
       }
       return;

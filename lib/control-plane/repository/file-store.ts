@@ -1,3 +1,4 @@
+import { storedOwnerAssignmentChanges } from "./stored-owner-assignment-changes.ts";
 import { storedOwnerAssignmentHeads } from "./owner-assignment-heads.ts";
 import { storedOwnerCostRefs, type OwnerCostRef } from "./owner-cost-refs.ts";
 import { storedOwnerAssignmentRows } from "./stored-owner-assignment-rows.ts";
@@ -757,6 +758,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
     ownerSnapshotStateTotals: ownerStateTotals,
     ownerAssignmentRows: storedOwnerAssignmentRows(fileAggregateRepository<OwnerAssignmentRow | null>(resolved, "OwnerAssignmentRow", "owner-assignment-rows"), ownerStateTotals),
+    ownerAssignmentChanges: storedOwnerAssignmentChanges(() => repositories),
     ownerAssignmentHeads: storedOwnerAssignmentHeads(() => repositories),
     ownerCostRefs: storedOwnerCostRefs(fileAggregateRepository<OwnerCostRef | null>(resolved, "OwnerCostRef", "owner-cost-refs"),ownerTotals),
     ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),

@@ -1,3 +1,4 @@
+import { ownerReadbackItem } from "../lib/control-plane/repository/owner-assignment-rows.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -10,7 +11,7 @@ import {
   type AssignmentView,
   type IndexSegment,
 } from "../lib/control-plane/assignment-view.ts";
-import { pipelineStatesOf } from "../lib/control-plane/assignment-read.ts";
+import { readEveryAssignmentSource } from "./helpers/assignment-sources.ts";
 import { ASK_GAP_NAMESPACE } from "../lib/control-plane/ask-gap-id.ts";
 import type { AskGapObservation } from "../lib/control-plane/ask-gap-observations.ts";
 import type { Attempt, AttemptCost, ExecutionLease, WorkerRef } from "../lib/control-plane/attempt.ts";
@@ -161,7 +162,7 @@ function initialWorld(): World {
       const open = s === rounds && i % 5 === 1;
       const worker = i % 3 === 0 ? MODEL : PLAIN;
       w.workItems.push(workItem(wi, `${id}#${s}`, { routeTaskIds: [`rt-${i}-${s}`], createdAt: startedAt,
-        ...(s === rounds && i % 9 === 0 ? { autonomousPlan: { publication: { contractId: "official-roster", bodyId: `ocd-division/country:us/state:${STATES[i % 10]}/place:p${i}` },
+        ...(s === rounds && i % 9 === 0 ? { autonomousPlan: { publication: { contractId: `registry-runtime:${STATES[i % 10].toUpperCase()}`, bodyId: `ocd-division/country:us/state:${STATES[i % 10]}/place:p${i}` },
           contract: { recordClass: "OFFICIAL_ROSTER" } } as never, publicationOutcome: { at: at(startedAt, 1), workerResultId: `wr-at-${i}-${s}`, status: "PUBLISHED",
           code: "PUBLISHED", detail: "fixture", candidateId: null, versionId: `v-${i}` } } : {}) }));
       w.occurrences.push({ id: `occ-${id}-${String(s).padStart(6, "0")}`, obligationId: id, sequence: s, dueAt: startedAt, workItemId: wi, routeTaskId: `rt-${i}-${s}`,
@@ -332,7 +333,7 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
     attribution,
     searches: fold.costs.searches[now.slice(0, 7)] ?? {},
     obligationsByState: fold.obligationsByState(),
-    publications: (await fold.publications()).map((w) => w.id).sort(),
+    publications: (await repos.ownerAssignmentRows.publications()).map((w) => w.id).sort(),
     rows: rowsAt(states, now),
   };
   await fold.saveTotals(priorRow);
@@ -340,15 +341,8 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
 }
 
 async function sourcesAt(repos: ControlPlaneRepositories, now: string, served: ServedReaderReadback | null): Promise<AssignmentSources> {
-  const values = async <T,>(repo: { list(): Promise<readonly { value: T }[]> }) => (await repo.list()).map((r) => r.value);
-  const attempts = await values(repos.attempts as never as { list(): Promise<readonly { value: Attempt }[]> });
-  const open = new Set(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
-  return { nowIso: now, obligations: await values(repos.obligations), occurrences: await values(repos.occurrences), workItems: await values(repos.workItems),
-    routeTasks: await values(repos.routeTasks), attempts, debts: await values(repos.debts),
-    leases: (await values(repos.leases)).filter((l) => open.has(l.routeTaskId)), dispositions: null, artifacts: await repos.artifacts.readAll(),
-    costs: await repos.costs.readAll(), scoutResults: await repos.scoutResults.readAll(), workerResults: await repos.workerResults.readAll(),
-    pipeline: pipelineStatesOf(await repos.promotionPipeline.readAll()), activation: null, servedReader: served, pilotZips: [],
-    askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) };
+  return {...await readEveryAssignmentSource(repos,now),servedReader:served,
+    askGapObservations:(await repos.askGapObservations.list()).map(row=>row.value)};
 }
 
 /** Every panel from every row, as the publisher computed it before it kept totals. */
@@ -371,7 +365,7 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
     attribution: providerBillingAttribution({ now, costs, attempts, scopes, holds: {}, scopeMembers: exactScopeMembers(scopes, obligations), readings: read }),
     searches: searchLedgersOf(costs, now),
     obligationsByState: byState,
-    publications: sources.workItems.filter((w) => w.publicationOutcome).map((w) => w.id).sort(),
+    publications: sources.workItems.filter(ownerReadbackItem).map((w) => w.id).sort(),
     rows: { allRowsIndex },
   });
 }
@@ -524,7 +518,8 @@ test("a clock-only fold checks a silently renewed lease head before applying sav
     routeTaskId: attempt.routeTaskId, openedAt: at(T1, -0.25), closedAt: null, disposition: null, unresolvedReason: null } as FreshnessOccurrence);
   await seed(repos, w);
   // Production's semantic lease cursor deliberately ignores a valid live renewal.
-  const quiet = { ...repos, ownerLeaseChanges: { read: async () => T1 } };
+  repos.leases.listChangedSince=async()=>({rows:[],through:T1});
+  const quiet=repos;
   const one = await publish(quiet, T1, null, [], null);
   const settled = await publish(quiet, at(T1, 0.25), one.published, [], null);
   const held = (await repos.leases.read(attempt.routeTaskId))!;
@@ -698,6 +693,8 @@ test("native assignment heads match full indexes through archive joins, renewed 
     for(const name of["artifacts","worker_results","scout_results"])await db.exec(`CREATE TABLE cp_log_${name}(log_key text NOT NULL,position bigint NOT NULL,record jsonb NOT NULL,PRIMARY KEY(log_key,position))`);
     const repos=createMemoryRepositories(),world=initialWorld(),parent=world.workItems[0];
     world.workItems[0]={...parent,publicationOutcome:{...parent.publicationOutcome!,bodyIds:["body-good"]}};
+    const opened=world.occurrences.find(row=>row.closedAt===null)!,obIndex=world.obligations.findIndex(row=>row.id===opened.obligationId);
+    world.obligations[obIndex]={...world.obligations[obIndex],openOccurrenceId:opened.id};
     world.workItems.push(workItem("valid-directory",`${obligationId(1)}#1`,{subject:parent.subject,directoryParent:{workItemId:parent.id,bodyId:"body-good",versionId:"v"},
       autonomousPlan:{publication:{bodyId:"body-good"}} as never}),workItem("valid-repair",`${obligationId(1)}#1`,{subject:parent.subject,
       ...{planRepair:{parentWorkItemId:parent.id,authority:"WORK_INSTRUCTIONS_ONLY"}}} as Partial<WorkItem>));
@@ -715,13 +712,22 @@ test("native assignment heads match full indexes through archive joins, renewed 
     world.workItems.push(workItem("head-attempt-tie","attempt ties"));
     const tied=round(world,"head-attempt-tie","tie-first",{worker:PLAIN,startedAt:at(T1,-2)}),lastTied=round(world,"head-attempt-tie","tie-last",{worker:PLAIN,startedAt:at(T1,-1)});
     world.attempts[world.attempts.indexOf(tied)]={...tied,endedAt:lastTied.endedAt};
-    world.workItems.push(workItem("head-worker","worker ties"));
+    world.attempts[world.attempts.indexOf(lastTied)]={...lastTied,outcome:"LEASE_EXPIRED",abortReason:"\uFEFF\u00A0reason\t 😀".repeat(1000)};
+    world.workItems.push(workItem("head-worker","\uFEFF\u00A0worker\t ties 😀".repeat(1000)));
     const workerAttempt=round(world,"head-worker","worker",{worker:PLAIN,startedAt:at(T1,-1)}),worker=parserResult(workerAttempt);
     world.workerResults.push({...worker,id:"worker-one",endedAt:at(T1,-.01)},
       {...worker,id:"worker-two",endedAt:at(T1,-1),result:{...worker.result,verdict:"FAILED",blockers:[{description:"last slot wins"}]} as never});
+    world.routeTasks.push({...world.routeTasks[0],id:"head-next",workItemId:"head-worker",createdAt:T1,state:"PENDING",attemptIds:[],disposition:null});
+    world.workItems.push(workItem("head-disposition","disposition"),workItem("head-invalid-attempt","invalid ended time"));
+    const disposed=round(world,"head-disposition","disposition",{worker:PLAIN,startedAt:at(T1,-1)}),task=world.routeTasks.findIndex(row=>row.id===disposed.routeTaskId);
+    world.routeTasks[task]={...world.routeTasks[task],disposition:{disposition:"INGESTED",attemptId:disposed.id,at:T1,artifactIds:disposed.artifactIds,observation:null,permission:"ALLOWED",transport:"REACHABLE",note:"unread full source ".repeat(1000)} as never};
+    const askId=world.obligations.find(row=>row.id.startsWith(ASK_GAP_NAMESPACE))!.id;world.workItems.push(workItem("head-ask",`${askId}#1`));
+    const ask=round(world,"head-ask","ask",{worker:PLAIN,startedAt:at(T1,-1),obligation:askId}),askTask=world.routeTasks.findIndex(row=>row.id===ask.routeTaskId);world.routeTasks[askTask]={...world.routeTasks[askTask],disposition:{...world.routeTasks[task].disposition!,attemptId:ask.id,disposition:"DISCOVERED",note:"unused prefix ".repeat(1000)+" NEXT READ: 2026-11-01T00:00:00Z"}};
+    world.workItems.push(workItem("head-policy","policy"));const denied=round(world,"head-policy","policy",{worker:PLAIN,startedAt:at(T1,-1)}),deniedTask=world.routeTasks.findIndex(row=>row.id===denied.routeTaskId);world.routeTasks[deniedTask]={...world.routeTasks[deniedTask],state:"POLICY_DENIED",policyDenial:{at:T1,reason:"policy",requiredChange:"change"} as never};
+    const invalid=round(world,"head-invalid-attempt","invalid-ended",{worker:PLAIN,startedAt:at(T1,-1)});world.attempts[world.attempts.indexOf(invalid)]={...invalid,endedAt:"invalid-ended"};
     world.artifacts.push({...world.artifacts[0],artifactId:"invalid-time",workItemId:"head-worker",recordedAt:"not-a-time"});
     // Append identities are distinct even when multiple Scout results describe one attempt.
-    const extra=world.scouts.splice(-2);await seed(repos,world);
+    const extra=world.scouts.splice(-2);extra.push({...scout,recordedAt:"2026-10-17T11:00:00.000-04:00",outcome:"EVIDENCE_FOUND",findings:[{}] as never});await seed(repos,world);
     for(const[i,row]of extra.entries())await repos.scoutResults.append(row.obligationId,`tie-${i}`,row,row.recordedAt);
     const src=await sourcesAt(repos,T1,null),source=(name:keyof AssignmentSources)=>src[name] as readonly {id?:string;obligationId?:string;routeTaskId?:string}[];
     for(const [name,key]of[["obligations","obligations"],["debts","debts"],["leases","leases"],["attempts","attempts"],["work_items","workItems"],["route_tasks","routeTasks"],["occurrences","occurrences"]]as const){
@@ -741,8 +747,12 @@ test("native assignment heads match full indexes through archive joins, renewed 
       }
       const expected=deriveAssignmentEntries({...src,nowIso:now}),batch=await reader.read(seeds,now),actual=deriveAssignmentEntriesFromHeads(batch.heads,now);
       assert.deepEqual([...actual.keys()].sort(),[...expected.keys()].sort(),now);
-      assert.equal(batch.heads.find(row=>row.id==="head-ties")!.latest!.attempt.id,earlier.id,"latest activity wins over latest start");
-      assert.equal(batch.heads.find(row=>row.id==="head-attempt-tie")!.latest!.attempt.id,lastTied.id,"last canonical round wins an activity tie");
+      assert.equal(batch.heads.find(row=>row.id==="head-ties")!.latest!.attempt!.id,earlier.id,"latest activity wins over latest start");
+      assert.equal(batch.heads.find(row=>row.id==="head-attempt-tie")!.latest!.attempt!.id,lastTied.id,"last canonical round wins an activity tie");
+      assert.deepEqual(batch.heads.find(row=>row.id===opened.obligationId)!.openRound,{sequence:opened.sequence,openedAt:opened.openedAt},"only the open occurrence count fields cross the connection");
+      assert.equal(batch.heads.find(row=>row.id==="head-worker")!.pendingTaskId,"head-next","pending task state survives the compact route projection");
+      assert.equal(batch.heads.find(row=>row.id==="head-disposition")!.latest!.disposition!.artifactCount,1,"applied disposition retains its evidence count");
+      assert.equal(batch.heads.find(row=>row.id==="head-disposition")!.latest!.attempt,undefined,"dispositions replace unused attempt and lease bodies");
       if(now===T1)assert.equal(actual.get("head-ties")!.index.state,"WORKING","an older live round wins over newer completed rounds");
       for(const[id,entry]of expected){assert.deepEqual(actual.get(id),{index:entry.index,horizon:entry.horizon,obligation:entry.obligation},`${now}: ${id}`);
         assert.deepEqual([...(batch.members.get(id)??[])].sort(),[...entry.members].sort(),`membership: ${id}`);}
@@ -752,5 +762,8 @@ test("native assignment heads match full indexes through archive joins, renewed 
     const cold=await reader.read({groups:wanted,workItems:[]},T1),actual=deriveAssignmentEntriesFromHeads(cold.heads,T1);
     assert.deepEqual([...actual.keys()].sort(),[...wanted].sort(),"cold group reads find their saved members beside the source rows");
     for(const id of wanted)assert.deepEqual(actual.get(id),((entry)=>({index:entry.index,horizon:entry.horizon,obligation:entry.obligation}))(expected.get(id)!));
+    assert.deepEqual(cold.owners,[],"requested owners are already held by the fold");
+    await db.query("INSERT INTO cp_owner_assignment_rows(id,members) VALUES('prior-other-state',$1::jsonb)",[JSON.stringify([expected.get(wanted[0])!.members[0]])]);
+    assert.deepEqual((await reader.read({groups:wanted,workItems:[]},T1)).owners,["prior-other-state"],"the database returns additional prior owners once, across every head's membership");
   }finally{await db.close();}
 });

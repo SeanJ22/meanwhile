@@ -1,4 +1,4 @@
-import { ownerAssignmentHeadOf, ownerAssignmentContributions, type OwnerAssignmentRow, type OwnerAssignmentRows } from "./owner-assignment-rows.ts";
+import { ownerReadbackItem, ownerAssignmentHeadOf, ownerAssignmentContributions, type OwnerAssignmentRow, type OwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import type { AggregateRepository } from "./types.ts";
 import type { StateTotals } from "../owner-snapshot-totals.ts";
 
@@ -41,11 +41,9 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
       }
       return out;
     },
-    async publications(readbackOnly = false) {
+    async publications() {
       const items = (await values()).flatMap(row => row.group.publications);
-      return items.filter(item => !readbackOnly || (item.publicationOutcome?.status !== 'HELD' && (
-        ['official-filings','comment-access','everyday-routing','ballot-navigation'].includes(item.autonomousPlan?.publication?.contractId ?? '') ||
-        (/^registry-runtime:[A-Z]{2}$/.test(item.autonomousPlan?.publication?.contractId ?? '') && item.autonomousPlan?.contract?.recordClass === 'OFFICIAL_ROSTER'))))
+      return items.filter(ownerReadbackItem)
         .sort((a,b) => a.id.localeCompare(b.id));
     },
     async clear() {

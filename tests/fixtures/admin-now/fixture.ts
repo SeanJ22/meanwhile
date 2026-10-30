@@ -1,5 +1,5 @@
 /**
- * Sample section data for photographing Admin's Now and Workers pages (scripts/admin-now-shots.mts). Shaped like
+ * Sample section data for rendering Admin's Now and Workers pages. Shaped like
  * the live sections: all 56 states and territories, 79 ZIP hunts in the three tracked states, paid work paused by
  * the owner, a round that ended with a stack trace, a migration outcome, and many doors shut for the same few
  * reasons. Figures are made up for the picture; nothing here is read back as a fact.

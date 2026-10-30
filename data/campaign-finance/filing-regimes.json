@@ -2,8 +2,7 @@
   "formatVersion": 1,
   "_note": [
     "CANONICAL DATA. This file is the campaign-finance FILING REGIME REGISTRY, read by",
-    "lib/control-plane/campaign-finance/filing-regime.ts and routed through by",
-    "lib/control-plane/campaign-finance/authority.ts. It is hand-maintained and is NOT a",
+    "lib/control-plane/campaign-finance/filing-regime.ts. It is hand-maintained and is NOT a",
     "generated artifact.",
     "",
     "IT IS WHAT THIS PROJECT KNOWS NOW. It is NEVER a complete list of American campaign-finance",

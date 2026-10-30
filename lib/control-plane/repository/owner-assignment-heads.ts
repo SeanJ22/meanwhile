@@ -65,8 +65,10 @@ const attempt = (v: string): string => `${pick(v,"id routeTaskId leaseId started
 const lease = (v: string): string => pick(v,"id released expiresAt");
 const item = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_build_object('lastTransitionAt',${v}#>'{transitions,-1,at}','manualSourceGap',${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")})`;
 const publication = (v: string): string => pick(`${v}->'publicationOutcome'`,"status at code recovery");
-const routing = (v: string): string => `${pick(v,"id project subject obligation directoryParent planRepair dependencies")}||jsonb_strip_nulls(jsonb_build_object(
-  'autonomousPlan',jsonb_build_object('publication',${v}#>'{autonomousPlan,publication}','contract',jsonb_build_object('recordClass',${v}#>'{autonomousPlan,contract,recordClass}')),
+const routing = (v: string): string => `${pick(v,"id project subject obligation directoryParent planRepair")}||jsonb_strip_nulls(jsonb_build_object(
+  'dependencies',CASE WHEN jsonb_array_length(coalesce(${v}->'dependencies','[]'::jsonb))>0 THEN ${v}->'dependencies' END,
+  'autonomousPlan',CASE WHEN ${v}#>'{autonomousPlan,publication}' IS NOT NULL OR ${v}#>'{autonomousPlan,contract,recordClass}' IS NOT NULL THEN
+    jsonb_build_object('publication',${pick(`${v}#>'{autonomousPlan,publication}'`,"contractId bodyId")},'contract',jsonb_build_object('recordClass',${v}#>'{autonomousPlan,contract,recordClass}')) END,
   'publicationOutcome',CASE WHEN ${v}->'publicationOutcome' IS NOT NULL AND ${v}->'publicationOutcome'<>'null'::jsonb THEN ${pick(`${v}->'publicationOutcome'`,"status versionId workerResultId acceptedRecordIds")} END))`;
 
 /** All reduction happens beside the rows. No artifact, occurrence, work-item, or result history leaves Postgres. */
@@ -166,11 +168,10 @@ SELECT g.id,
   coalesce((SELECT jsonb_agg(m.member ORDER BY m.ordinal) FROM members m WHERE m.id=g.id),'[]'::jsonb) AS members,
   coalesce((SELECT jsonb_agg(${routing("i.value")} ORDER BY i.ordinal) FROM items i WHERE i.id=g.id AND i.value IS NOT NULL),'[]'::jsonb) AS items,
   jsonb_strip_nulls(jsonb_build_object(
-    'id',g.id,'kind',CASE WHEN o.id IS NOT NULL OR EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN 'STANDING_OBLIGATION' ELSE 'WORK_ITEM' END,
-    'obligation',CASE WHEN o.id IS NOT NULL THEN ${pick("o.value","id recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason")} END,
+    'obligation',CASE WHEN o.id IS NOT NULL THEN ${pick("o.value","recordClass subjectId routeId active readerImpactAt nextDueAt absentUntil absenceUnlock assignments retiredAt retirementReason")} END,
     'debt',CASE WHEN d.id IS NOT NULL THEN ${pick("d.value","cause consecutiveFailures firstFailedAt retryAt")} END,
     'item',CASE WHEN o.id IS NULL AND NOT EXISTS(SELECT 1 FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id) THEN (SELECT ${item("i.value")} FROM items i WHERE i.id=g.id AND i.value IS NOT NULL ORDER BY i.ordinal LIMIT 1) END,
-    'proof',EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))),
+    'proof',CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,
     'live',coalesce((SELECT jsonb_agg(jsonb_build_object('attempt',${attempt("a.value")},'lease',${lease("le.value")}) ORDER BY a.ordering,a.value->>'startedAt',a.activity,a.attempt)
       FROM attempts a JOIN cp_leases le ON le.id=a.task WHERE a.id=g.id AND a.value->'outcome'='null'::jsonb
         AND le.value->>'id'=a.value->>'leaseId' AND NOT(le.value->>'released')::boolean AND le.value->>'expiresAt'>$4),'[]'::jsonb),
@@ -189,7 +190,7 @@ SELECT g.id,
     'laneRole',(SELECT a.value#>'{worker,role}' FROM attempts a WHERE a.id=g.id ORDER BY a.value->>'startedAt' DESC,a.activity DESC,a.attempt DESC LIMIT 1),
     'pendingTaskId',(SELECT r.task FROM rounds r WHERE r.id=g.id AND r.value->>'state' IN('PENDING','RECLAIMABLE') AND NOT EXISTS(SELECT 1 FROM attempts a WHERE a.id=r.id AND a.task=r.task) ORDER BY r.ordering LIMIT 1),
     'publication',(SELECT ${publication("i.value")} FROM items i WHERE i.id=g.id AND i.value->'publicationOutcome' IS NOT NULL AND i.value->'publicationOutcome'<>'null'::jsonb ORDER BY i.value#>>'{publicationOutcome,at}' DESC,i.ordinal LIMIT 1),
-    'occurrenceCount',(SELECT count(*) FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id),
+    'occurrenceCount',(SELECT nullif(count(*),0) FROM occurrences c WHERE c.value#>>'{obligationId}'=g.id),
     'openRound',(SELECT jsonb_build_object('id',c.id,'sequence',c.value->'sequence','openedAt',c.value->'openedAt','dueAt',c.value->'dueAt',
       'reached',EXISTS(SELECT 1 FROM attempts a WHERE a.id=g.id AND a.task=c.value#>>'{routeTaskId}')) FROM occurrences c WHERE c.id=o.value->>'openOccurrenceId' AND c.value->'closedAt'='null'::jsonb LIMIT 1),
     'lastActivityAt',(SELECT at FROM activity WHERE id=g.id AND pg_input_is_valid(at,'timestamptz') ORDER BY at::timestamptz DESC,priority LIMIT 1)
@@ -206,12 +207,12 @@ export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {
       id: string; members: string[]; items: WorkItem[]; head: Partial<AssignmentHead>;
     }[];
     const hydrateAttempt = (value: AssignmentHead["live"][number]["attempt"]) => Object.assign({endedAt:null,outcome:null,abortReason:null},value);
-    const heads = rows.map(({head}) => {
+    const heads = rows.map(({id,head}) => {
       const latest = head.latest ? Object.assign({lease:null,disposition:null,policyDenial:null,scout:null,worker:null},head.latest,{
         attempt:hydrateAttempt(head.latest.attempt),scout:head.latest.scout?Object.assign({refusal:null},head.latest.scout):null}) : null;
-      return Object.assign({obligation:null,debt:null,item:null,proof:false,laneRole:null,pendingTaskId:null,publication:null,
+      return Object.assign({id,kind:head.obligation||head.occurrenceCount?"STANDING_OBLIGATION":"WORK_ITEM",obligation:null,debt:null,item:null,proof:false,laneRole:null,pendingTaskId:null,publication:null,
         occurrenceCount:0,openRound:null,lastActivityAt:null},head,{latest,
-        obligation:head.obligation?Object.assign({routeId:null,readerImpactAt:null,nextDueAt:null,absentUntil:null,absenceUnlock:null,assignments:[],retiredAt:null,retirementReason:null},head.obligation):null,
+        obligation:head.obligation?Object.assign({id,routeId:null,readerImpactAt:null,nextDueAt:null,absentUntil:null,absenceUnlock:null,assignments:[],retiredAt:null,retirementReason:null},head.obligation):null,
         debt:head.debt?Object.assign({detail:""},head.debt):null,
         live:(head.live??[]).map(row=>({...row,attempt:hydrateAttempt(row.attempt)}))}) as AssignmentHead;
     });

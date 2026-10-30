@@ -28,6 +28,8 @@ export interface CivicLookup {
   electionId: string;
   state: string | null;
   checkedAt: string;
+  /** The town Google resolved the queried address to; request-local like the rest of the lookup. */
+  town?: string;
   status: "AVAILABLE" | "NO_DATA" | "OUTAGE";
   reason: string | null;
   failureReason?: VotingFallbackReason;
@@ -87,14 +89,12 @@ export function civicElectionRows(raw: string, checkedAt: string, knownIds: Read
       ocdId, joinedDivisionId: knownIds.has(ocdId) ? ocdId : null, value: row, sources: civicSources(row, checkedAt, "elections") };
   });
 }
-export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: string, knownIds: ReadonlySet<string> = new Set(), expectedTowns: readonly string[] = []): CivicLookup {
+export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: string, knownIds: ReadonlySet<string> = new Set()): CivicLookup {
   const data = civicObject(JSON.parse(raw)), election = civicObject(data.election);
   if (election.id !== electionId || election.electionDay !== GOOGLE_CIVIC_ELECTION_DAY) throw new Error("Google Civic returned a different election.");
   const normalized = civicObject(data.normalizedInput);
   const state = string(normalized.state).toUpperCase();
   if (!GOOGLE_CIVIC_STATES.includes(state)) throw new Error("Google Civic did not resolve a US state or territory.");
-  if (expectedTowns.length && !expectedTowns.some(town => civicTownKey(town) === civicTownKey(string(normalized.city))))
-    throw new Error("Google Civic resolved a different town.");
   const rows: CivicFact[] = [];
   const occurrences = new Map<string, number>();
   const groups = [["contests", "CONTEST"], ["pollingLocations", "POLLING_LOCATION"], ["earlyVoteSites", "EARLY_VOTE_SITE"], ["dropOffLocations", "DROP_OFF_LOCATION"]] as const;
@@ -128,7 +128,7 @@ export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: s
         ...(url ? { url } : {}) });
     }
   }
-  return { formatVersion: 1, kind: "LOOKUP", electionId, state, checkedAt, status: rows.length ? "AVAILABLE" : "NO_DATA",
+  return { formatVersion: 1, kind: "LOOKUP", electionId, state, checkedAt, town: string(normalized.city), status: rows.length ? "AVAILABLE" : "NO_DATA",
     reason: rows.length ? null : "Google Civic has not supplied contests or voting sites for this address.", rows,
     counts: { loaded: rows.length, joined, unjoined: rows.length - joined }, electionOffices };
 }

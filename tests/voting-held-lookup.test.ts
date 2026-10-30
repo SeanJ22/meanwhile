@@ -6,6 +6,7 @@ import { addCensusVotingGeographies, votingPlaceFromZip } from "../lib/ballot/vo
 import { POST } from "../app/api/voting-sites/route.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
@@ -35,16 +36,16 @@ const file: VotingSitesFile = { generatedAt: "2026-10-20", jurisdictions: [{
     geometry: { type: "Polygon", coordinates: [[[-96, 29], [-95, 29], [-95, 30], [-96, 30], [-96, 29]]] } }],
 }] };
 
-async function holding(): Promise<ReaderAuthorityEdgeBundle> {
+async function holding(held: VotingSitesFile = file, heldState = "TX"): Promise<ReaderAuthorityEdgeBundle> {
   const store = new MemoryRoutineDataStore();
-  const candidate = votingSitesCandidate({ state: "TX", current: file, prior: null, failures: [],
-    acquisition: await holdVotingRawEvidence({ rawBodies: [{ url: source.url, contentType: "application/json", bytes: new TextEncoder().encode(JSON.stringify(file)) }] }),
+  const candidate = votingSitesCandidate({ state: heldState, current: held, prior: null, failures: [],
+    acquisition: await holdVotingRawEvidence({ rawBodies: [{ url: source.url, contentType: "application/json", bytes: new TextEncoder().encode(JSON.stringify(held)) }] }),
     successfulAuthorityReads: 1, requestedUrl: source.url, finalUrl: source.url, retrievedAt: at });
-  const outcome = await processRegisteredManualCandidate(store, "voting-sites:TX", candidate, at);
+  const outcome = await processRegisteredManualCandidate(store, stateBallotContractId("voting-sites", heldState), candidate, at);
   assert.ok(outcome.promoted);
   const projection = outcome.promoted;
   return { edgeOnly: true, stateAuthorities: { families: new Set(["voting-sites"]), load: async (family, state) => {
-    assert.equal(family, "voting-sites"); assert.equal(state, "TX");
+    assert.equal(family, "voting-sites"); assert.equal(state, heldState);
     return { kind: "PROMOTED_POINTERS", entries: [{ kind: "PROMOTED", projection, attested: {
       recordClass: "VOTING_SITE", scope: candidate.scope, versionId: candidate.id, payloadSha256: candidate.normalization.normalizedHash!,
       retrievedAt: at, staleAtRetrieval: false, version: candidate.temporal.version, sourceThrough: candidate.temporal.sourceThrough,
@@ -56,8 +57,10 @@ test("street requests use one Census geocode and held precincts; ZIPs return the
   const edge = await holding(), previous = globalThis.fetch, requests: string[] = [];
   globalThis.fetch = async input => {
     const url = new URL(String(input));
+    // Google's live lookup starts beside Census; the held official answer wins without it.
+    if (url.hostname === "www.googleapis.com") return new Response("unavailable", { status: 503 });
     if (url.origin !== "https://geocoding.geo.census.gov") {
-      assert.ok(/neon|proxy|localhost/.test(url.hostname), "Only the anonymous count database may be called alongside Census");
+      assert.ok(/neon|proxy|localhost/.test(url.hostname), "Only Google and the anonymous count database may be called alongside Census");
       return Response.json({ fields: [], rows: [], rowCount: 0, command: "INSERT", rowAsArray: false });
     }
     requests.push(url.origin + url.pathname);
@@ -173,4 +176,70 @@ test("official site facts outrank newer secondary facts and a failed geocode can
   assert.equal(merged.name, newest.name);
   assert.equal(merged.lat, earlier.lat);
   assert.equal(merged.geocodeSource, "PUBLISHER");
+});
+
+// Census is slow or failing (HTTP 502 or no answer inside the deadline) while Google answers a Montana street.
+const montana = readFileSync("tests/fixtures/google-civic/mt-voterinfo.json", "utf8");
+const elections = readFileSync("tests/fixtures/google-civic/elections.json", "utf8");
+async function postWithCensusDown(edge: ReaderAuthorityEdgeBundle, census: "502" | "timeout") {
+  const previous = globalThis.fetch, previousKey = process.env.GOOGLE_CIVIC_API_KEY, google: string[] = [];
+  process.env.GOOGLE_CIVIC_API_KEY = "private-test-key";
+  globalThis.fetch = async (input, init) => {
+    const url = new URL(String(input));
+    if (url.hostname === "geocoding.geo.census.gov") {
+      if (census === "502") return new Response("Bad Gateway", { status: 502 });
+      // AbortSignal.timeout does not hold the event loop open by itself; a server's open socket would.
+      const open = setTimeout(() => {}, 10_000);
+      return await new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener("abort", () => { clearTimeout(open); reject(init.signal!.reason); }));
+    }
+    if (url.hostname === "www.googleapis.com") {
+      google.push(url.pathname);
+      return new Response(url.pathname.endsWith("/elections") ? elections : montana, { headers: { "content-type": "application/json" } });
+    }
+    return Response.json({ fields: [], rows: [], rowCount: 0, command: "INSERT", rowAsArray: false });
+  };
+  try {
+    const started = Date.now();
+    const response = await withReaderAuthorityEdge(edge, () => POST(new Request("http://localhost/api/voting-sites", {
+      method: "POST", body: JSON.stringify({ address: "1301 E 6th Ave, Helena, MT 59601" }) })));
+    return { response, answer: await response.json(), elapsed: Date.now() - started, google };
+  } finally {
+    globalThis.fetch = previous;
+    if (previousKey === undefined) delete process.env.GOOGLE_CIVIC_API_KEY; else process.env.GOOGLE_CIVIC_API_KEY = previousKey;
+  }
+}
+const noMontanaHolding: ReaderAuthorityEdgeBundle = { edgeOnly: true, stateAuthorities: { families: new Set(["voting-sites"]), load: async () => ({ kind: "PROMOTED_POINTERS",
+  entries: [{ kind: "NOT_RECORDED", recordClass: "VOTING_SITE", scope: "US-MT:voting-sites" }] }) } };
+
+for (const census of ["502", "timeout"] as const) test(`a street Census cannot place (${census}) still gets Google's Montana sites inside the reader deadline`, async () => {
+  const { response, answer, elapsed, google } = await postWithCensusDown(noMontanaHolding, census);
+  assert.equal(response.status, 200);
+  assert.ok(elapsed < 3000, `answered in ${elapsed} ms`);
+  assert.deepEqual(google.sort(), ["/civicinfo/v2/elections", "/civicinfo/v2/voterinfo"]);
+  assert.equal(answer.precision, "ZIP", "our own placement came from the ZIP; Google placed the street itself");
+  assert.equal(answer.outsideCoverage, false);
+  assert.ok(Number.isFinite(answer.point?.lat), "the ZIP's map point still centers the map");
+  const sites = answer.jurisdictions.flatMap((j: { sites: { name: string; kind: string; hours?: string; sources?: { publisher: string }[] }[] }) => j.sites);
+  assert.deepEqual(sites.map((site: { name: string; kind: string }) => [site.name, site.kind]), [
+    ["LEWIS AND CLARK LIBRARY", "ELECTION_DAY"], ["Lewis & Clark County Elections", "EARLY_VOTING"], ["Lewis & Clark County Elections", "DROP_BOX"]]);
+  assert.match(sites[0].hours!, /7 am - 8 pm/);
+  assert.ok(sites.every((site: { sources?: { publisher: string }[] }) => site.sources?.some(source => /Voting Information Project/.test(source.publisher))));
+  assert.ok(answer.jurisdictions[0].sources.some((source: { title?: string }) => source.title === "Voting information powered by the Civic Information API"));
+  assert.equal(answer.jurisdictions[0].narrowing.kind, "EXACT");
+  assert.equal(answer.googleFallback.available, true);
+  assert.doesNotMatch(JSON.stringify(answer), /1301 E 6th|private-test-key/);
+});
+
+test("a held official Montana Election Day site beats Google's when Census is down", async () => {
+  const official = { publisher: "Lewis and Clark County Elections", url: "https://www.lccountymt.gov/elections", checkedAt: at };
+  const held: VotingSitesFile = { generatedAt: "2026-10-20", jurisdictions: [{
+    ocdId: "ocd-division/country:us/state:mt/county:lewis_and_clark", state: "MT", countyFips: "30049", name: "Lewis and Clark County",
+    model: "VOTE_CENTER", election: "2026 General Election", sourceOrg: official.publisher, sourceUrl: official.url, collectedAt: "2026-10-20", refusal: null,
+    sites: [{ id: "official-mt-1", name: "Official county vote center", address: "316 N Park Ave, Helena, MT 59623", room: null, lat: 46.59, lng: -112.04,
+      kind: "ELECTION_DAY", election: null, serves: null, countyFips: "30049", hours: "7 am - 8 pm", sources: [official] }] }] };
+  const { answer } = await postWithCensusDown(await holding(held, "MT"), "502");
+  const sites = answer.jurisdictions.flatMap((j: { sites: { id: string; name: string }[] }) => j.sites);
+  assert.deepEqual(sites.map((site: { id: string }) => site.id), ["official-mt-1"]);
+  assert.equal(answer.googleFallback, undefined);
+  assert.doesNotMatch(JSON.stringify(answer), /LEWIS AND CLARK LIBRARY/);
 });

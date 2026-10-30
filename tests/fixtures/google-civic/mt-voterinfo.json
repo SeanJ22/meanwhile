@@ -1,0 +1,118 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "1301 East 6th Avenue",
+    "addressLine": [
+      "1301 East 6th Avenue"
+    ],
+    "city": "Helena",
+    "state": "MT",
+    "zip": "59601"
+  },
+  "pollingLocations": [
+    {
+      "address": {
+        "locationName": "LEWIS AND CLARK LIBRARY",
+        "line1": "120 S LAST CHANCE GULCH",
+        "addressLine": [
+          "120 S LAST CHANCE GULCH"
+        ],
+        "city": "HELENA",
+        "state": "MT",
+        "zip": "59601"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 46.5852200154961,
+      "longitude": -112.0417770542813,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "earlyVoteSites": [
+    {
+      "address": {
+        "locationName": "Lewis & Clark County Elections",
+        "line1": "316 N Park Ave",
+        "line2": "Rm 168",
+        "addressLine": [
+          "316 N Park Ave",
+          "Rm 168"
+        ],
+        "city": "Helena",
+        "state": "MT",
+        "zip": "59623"
+      },
+      "pollingHours": "Mon, Oct 5: 8 am - 5 pm\nTue, Oct 6: 8 am - 5 pm\nWed, Oct 7: 8 am - 5 pm\nThu, Oct 8: 8 am - 5 pm\nFri, Oct 9: 8 am - 5 pm\nTue, Oct 13: 8 am - 5 pm\nWed, Oct 14: 8 am - 5 pm\nThu, Oct 15: 8 am - 5 pm\nFri, Oct 16: 8 am - 5 pm\nMon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nMon, Nov 2: 8 am - 12 pm",
+      "latitude": 46.58988396494631,
+      "longitude": -112.04066901754376,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "dropOffLocations": [
+    {
+      "address": {
+        "locationName": "Lewis & Clark County Elections",
+        "line1": "316 N Park Ave",
+        "line2": "Rm 168",
+        "addressLine": [
+          "316 N Park Ave",
+          "Rm 168"
+        ],
+        "city": "Helena",
+        "state": "MT",
+        "zip": "59623"
+      },
+      "pollingHours": "Mon, Oct 5: 8 am - 5 pm\nTue, Oct 6: 8 am - 5 pm\nWed, Oct 7: 8 am - 5 pm\nThu, Oct 8: 8 am - 5 pm\nFri, Oct 9: 8 am - 5 pm\nTue, Oct 13: 8 am - 5 pm\nWed, Oct 14: 8 am - 5 pm\nThu, Oct 15: 8 am - 5 pm\nFri, Oct 16: 8 am - 5 pm\nMon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nMon, Nov 2: 8 am - 5 pm\nTue, Nov 3: 7 am - 8 pm",
+      "latitude": 46.58988396494631,
+      "longitude": -112.04066901754376,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Montana",
+      "electionAdministrationBody": {
+        "name": "Secretary of State",
+        "electionInfoUrl": "https://sosmt.gov/elections/",
+        "electionRegistrationConfirmationUrl": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+        "votingLocationFinderUrl": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+        "electionRulesUrl": "https://sosmt.gov/elections/absentee/",
+        "correspondenceAddress": {
+          "line1": "Elections and Voter Services Division, P.O. Box 202801",
+          "addressLine": [
+            "Elections and Voter Services Division, P.O. Box 202801"
+          ],
+          "city": "Helena",
+          "state": "",
+          "zip": "59620-2801"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

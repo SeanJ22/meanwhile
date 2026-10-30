@@ -42,11 +42,17 @@ test("a partial successful HTTP response cannot supply voting locations", async 
   assert.doesNotMatch(failures.join(""), /private reader street|private-test-key/);
 });
 
-test("a same-state lookup resolved to another town cannot supply a polling place", () => {
+test("a same-state lookup resolved to another town than Census placed the street cannot supply a polling place", async () => {
   const raw = JSON.parse(response({}));
   raw.normalizedInput.city = "New London";
-  assert.throws(() => civicLookupFromRaw(JSON.stringify(raw), "12000", checkedAt, new Set(), ["Concord city"]), /different town/);
-  assert.doesNotThrow(() => civicLookupFromRaw(JSON.stringify(raw), "12000", checkedAt, new Set(), ["New London town"]));
+  raw.pollingLocations = [{ address: { locationName: "Town hall", line1: "1 Public St", city: "New London", state: "WI", zip: "54961" }, latitude: 44.39, longitude: -88.74 }];
+  const options = { apiKey: "private-test-key", now: () => checkedAt, fetchImpl: async () => Response.json(raw),
+    electionCatalog: Promise.resolve({ raw: JSON.stringify({ elections: [{ id: "12000", name: "General Election", electionDay: "2026-11-03", ocdDivisionId: "ocd-division/country:us" }] }), checkedAt, status: 200 }) };
+  const located = { ...votingPlaceFromZip(["ocd-division/country:us/state:wi"]), precision: "ADDRESS" as const };
+  assert.equal((await readGoogleVotingAnswer("private reader street", { ...located, towns: ["Concord city"] }, options)).jurisdictions.length, 0);
+  assert.equal((await readGoogleVotingAnswer("private reader street", { ...located, towns: ["New London town"] }, options)).jurisdictions.length, 1);
+  // Without a Census street match, Google's own geocode of the typed street stands; the ZIP's state still must match.
+  assert.equal((await readGoogleVotingAnswer("private reader street", { ...located, precision: "ZIP", towns: ["Concord city"] }, options)).jurisdictions.length, 1);
 });
 
 test("Google polling rows reject mailing destinations and another state without rejecting legal cross-town assignments", async () => {

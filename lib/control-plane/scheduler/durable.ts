@@ -739,17 +739,10 @@ export async function openOccurrence(
     now: input.now,
   }), ...(current.value.autonomousPlan ? { autonomousPlan: { ...current.value.autonomousPlan,
     ownerInstructions: [...new Set((current.value.assignments ?? []).map(assignment => assignment.ref))] } } : {}) };
-  const routeTask = createRouteTask({
-    workItemId: workItem.id,
-    routeId: o.routeId,
-    routeLabel: o.routeId,
-    target: o.subjectId,
-    inherited: true,
-    now: input.now,
-  });
-
-  await registerWorkItem(repos, workItem, input.now);
-  await registerRouteTask(repos, routeTask, input.now);
+  const routeTask = createRouteTask({ workItemId: workItem.id, routeId: o.routeId, routeLabel: o.routeId, target: o.subjectId, inherited: true, now: input.now });
+  // An open cut off before its occurrence was saved left this sequence's WorkItem (and perhaps its RouteTask): they are kept.
+  if (!await repos.workItems.readNarrowed(workItem.id, { id: true })) await registerWorkItem(repos, workItem, input.now);
+  if (!await repos.routeTasks.readNarrowed(routeTask.id, { id: true })) await registerRouteTask(repos, routeTask, input.now);
 
   const occurrence: FreshnessOccurrence = {
     id: occurrenceId(o.id, sequence),

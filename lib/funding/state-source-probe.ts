@@ -5,7 +5,8 @@ import {acquireCampaignFinanceResource} from "./state-acquisition.ts";
 import {CAMPAIGN_FINANCE_PARSER,type CampaignFinanceResource} from "./state-sources.ts";
 import {rebuildCampaignCycles} from "./state-cycles.ts";
 import type {ReaderCachePurger} from "../reader/cache.ts";
-import {CAMPAIGN_PEOPLE_SQL,readCampaignMoneyPeople} from "./state-people.ts";
+import {CAMPAIGN_PEOPLE_SQL,readCampaignMoneyPeople,type CampaignMoneyPerson} from "./state-people.ts";
+import {survivingIds} from "../core/ids.ts";
 
 const hash=(value:string)=>createHash("sha256").update(value).digest("hex");
 export const campaignResourceCursor=(state:string,id:string)=>`campaign-money:resource:${state}:${hash(id)}`;
@@ -67,7 +68,7 @@ export async function campaignMoneyDependencyHash(query:Query,state:string):Prom
 /** The changed-source pass binds its actual people to the same database snapshot as its dependency hash. */
 export async function readCampaignMoneyInputs(query:Query,state:string) {
   const snapshot:{dependencyHash:string|null}={dependencyHash:null};
-  const people=await readCampaignMoneyPeople(async(text,params)=>{
+  const held=await readCampaignMoneyPeople(async(text,params)=>{
     if(text!==CAMPAIGN_PEOPLE_SQL)throw new Error("Campaign people snapshot requested an unrelated query");
     const rows=await query(`WITH people AS MATERIALIZED (${text}),inputs AS (${campaignDependencySql})
       SELECT people.*,inputs.hash AS dependency_hash FROM inputs LEFT JOIN people ON true`,params);
@@ -75,7 +76,15 @@ export async function readCampaignMoneyInputs(query:Query,state:string) {
     return rows.filter(row=>typeof row.id==="string");
   },state);
   if(!snapshot.dependencyHash)throw new Error("Campaign people snapshot has no source inputs");
-  return {people,dependencyHash:snapshot.dependencyHash};
+  // A person merged into another is that other person: the money files under the survivor, and the old id stays one of its aliases.
+  const survivors=await survivingIds(query,held.map(person=>person.id));
+  const people=new Map<string,CampaignMoneyPerson>();
+  for(const person of held){
+    const id=survivors.get(person.id)??person.id,{aliases:_,...row}=person,key=JSON.stringify({...row,id}),seen=people.get(key);
+    const aliases=[...new Set([...seen?.aliases??[],...person.aliases??[],...id===person.id?[]:[person.id]])].filter(alias=>alias!==id);
+    people.set(key,seen?{...seen,aliases}:id===person.id?person:{...person,id,aliases});
+  }
+  return {people:[...people.values()],dependencyHash:snapshot.dependencyHash};
 }
 
 /** Read the existing source cursors, without campaign facts or the published people list. */

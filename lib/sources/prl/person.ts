@@ -1,3 +1,4 @@
+import { openStatesPerson } from "../../core/ids.ts";
 import type { SeatHolder } from "../../officials/lookup.ts";
 import { readHeldPersonIdentity, type HeldPersonIdentity } from "../../officials/person-read.ts";
 import { readerPersonKeys } from "../../identity/reader-person.ts";
@@ -9,10 +10,9 @@ import { normalize, searchTerms } from "../../corpus/positions.ts";
 export function prlPersonKeys(subjectId: string, holder?: Pick<HeldPersonIdentity, "nativeIds"> | null): PrlPersonKeys {
   const ids = holder?.nativeIds ?? {};
   const unique = (values: readonly string[]) => new Set(values).size === 1 ? values[0] : undefined;
-  const uuid = /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/.exec(subjectId)?.[1];
   return {
     bioguideId: /^congress:([A-Z]\d{6})$/.exec(subjectId)?.[1] ?? unique(ids.bioguide ?? ids.congress ?? []),
-    openstatesId: uuid ? `ocd-person/${uuid}` : unique(ids["ocd-person"] ?? ids.openstates ?? []),
+    openstatesId: openStatesPerson(subjectId)?.id ?? unique(ids["ocd-person"] ?? ids.openstates ?? []),
     candidateId: /^fec:([HSP][A-Z0-9]{8})$/.exec(subjectId)?.[1] ?? unique(ids.fec ?? []),
   };
 }

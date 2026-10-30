@@ -8,6 +8,7 @@ import { federalMoneyRows, federalMoneySources } from "@/lib/federal-money/view"
 import type { FederalMoneyPlaceRead } from "@/lib/federal-money/reader";
 import { readerText } from "@/lib/text/reader-names";
 import { useReaderNames } from "@/components/ui/reader-names-context";
+import { FederalAwardsCard } from "./money-card";
 
 const requests = new Map<string, Promise<FederalMoneyPlaceRead>>();
 const labels = {
@@ -64,7 +65,7 @@ export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], rec
       const page = await load(divisionId, bodyId, value.nextCursor, recipientIds, recipientNames, recipientState);
       if (current !== request.current) return;
       if (page.sources.some(source => source.status === "UNAVAILABLE" && value.sources.find(prior => prior.source === source.source)?.moreRecords)) throw new Error("More federal records are unavailable.");
-      setRead({ identity, value: { ...page, sources: page.sources.map(source => {
+      setRead({ identity, value: { ...page, awards: value.awards, sources: page.sources.map(source => {
         const prior = value.sources.find(row => row.source === source.source);
         const records = prior?.versionId === source.versionId ? [...new Map([...prior.records, ...source.records].map(fact => [fact.id, fact])).values()] : source.records;
         return { ...source, records };
@@ -74,9 +75,11 @@ export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], rec
     finally { setPageState(previous => previous?.request === current ? { ...previous, loading: false } : previous); }
   }
   if (!value || value.division !== divisionId || value.bodyId !== (bodyId ?? null)) return <CardGapContribution id={`federal-money:${identity}:loading`} label="federal money and records" />;
-  const rows = federalMoneyRows([...new Map(value.sources.flatMap(source => source.records).map(fact => [fact.id, fact])).values()], { divisionId, bodyId, bodyIds: value.recipientIds ?? recipientIds, recipientNames, recipientState });
+  const held = federalMoneyRows([...new Map(value.sources.flatMap(source => source.records).map(fact => [fact.id, fact])).values()], { divisionId, bodyId, bodyIds: value.recipientIds ?? recipientIds, recipientNames, recipientState });
+  const award = (row: typeof held[number]) => ["GRANT", "CONTRACT", "LOAN"].includes(row.fact.kind);
+  // Awards rebuilt by recipient replace the older award rows for this government.
+  const rows = value.awards ? held.filter(row => !award(row)) : held;
   const sources = federalMoneySources(rows);
-  const award = (row: typeof rows[number]) => ["GRANT", "CONTRACT", "LOAN"].includes(row.fact.kind);
   const groups = [
     { label: "Federal money received by this government", rows: rows.filter(row => award(row) && row.relationship !== "GEOGRAPHY") },
     { label: "Federal money spent in this area", rows: rows.filter(row => award(row) && row.relationship === "GEOGRAPHY") },
@@ -85,11 +88,12 @@ export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], rec
   ];
   return <section aria-label="Federal money and records" className="space-y-5">
     <CardGapSection label="federal money and records">
+    {value.awards && <div aria-label="Federal money received"><h4 className="t-detail font-medium text-paper">Federal money received</h4><div className="mt-2"><FederalAwardsCard view={value.awards} id={`federal-money:${identity}`} /></div></div>}
     {groups.filter(group => group.rows.length).map(group => <div key={group.label} aria-label={group.label}>
       <h4 className="t-detail font-medium text-paper">{group.label}</h4>
       <ul className="mt-2 space-y-3">{group.rows.map(row => <li key={row.fact.id} data-federal-source={row.fact.source} data-federal-record={row.fact.id} className="t-body leading-relaxed text-paper-dim">{readerText(row.text, "sentence", knownNames)}</li>)}</ul>
     </div>)}
-    {value.sources.map(source => !rows.some(row => row.fact.source === source.source)
+    {value.sources.map(source => source.source === "usaspending" && value.awards ? null : !rows.some(row => row.fact.source === source.source)
       ? <CardGapContribution key={source.source} id={`federal-money:${identity}:${source.source}`} label={labels[source.source].toLowerCase()} />
       : source.coverageComplete === false && <CardGapContribution key={source.source} id={`federal-money:${identity}:${source.source}:more`} label="more records for this place" />)}
     {value.nextCursor && <button type="button" className="t-caption text-link" disabled={loadingMore} onClick={() => void loadMore()}>{loadingMore ? "Loading records…" : pageFailed ? "Try loading more records again" : "Load more records"}</button>}

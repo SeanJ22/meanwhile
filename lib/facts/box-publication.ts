@@ -21,7 +21,7 @@ import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome,
 import { nameKey, publishBodyNameFromPage, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { pageCopy, saveCaptureCopy } from "./source-copy.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
+import type { ReaderCachePurger } from "../reader/cache.ts";
 import { seatIn, seatQuoteOnPage, seatTitleIn } from "./seat-evidence.ts";
 export { seatIn } from "./seat-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
@@ -47,13 +47,13 @@ interface BoxPublicationReport {
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
   /** Published seats needing Sean's decision. */
   readonly seats: { readonly flagged: number };
-  /** Box facts that read as a label, a heading, a notice or a bare link (flagged for Sean), cut to the part that states the thing, re-filed, or renamed to the name alone. */
-  readonly labels: { readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number };
+  /** Box facts that read as a label, a heading, a notice or a bare link, flagged for Sean. */
+  readonly labels: { readonly flagged: number };
 }
 
 /** Audits read what already reached readers; the publication lane calls them separately so they cannot stop waiting facts. */
-export async function reviewPublishedBoxFacts(query: Query, purge?: ReaderCachePurger) {
-  return { seats: await reviewBoxSeats(query), labels: await reviewBoxFacts(query, purge) };
+export async function reviewPublishedBoxFacts(query: Query) {
+  return { seats: await reviewBoxSeats(query), labels: await reviewBoxFacts(query) };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -153,7 +153,7 @@ async function reviewBoxSeats(query: Query): Promise<{ readonly flagged: number 
 
 const SCHEDULE_WORDS = /\b(?:mon|tues|wednes|thurs|fri|satur|sun)day|\bmonthly\b|\bweekly\b|\bbi-?weekly\b|\bquarterly\b|\bannual(?:ly)?\b/i;
 
-/** What a Box fact that is a label, a heading, a notice, a bare link or a paragraph should become: come down, move to the field it belongs to, or be cut to the part that states the thing. */
+/** What a Box fact that is a label, a heading, a notice, a bare link or a paragraph should be: flagged for Sean, filed as the rule it states, or cut to the part that states the thing (a paragraph filed as the schedule is published cut). */
 export type Remedy = { readonly pull: string } | { readonly move: "comment:detail" } | { readonly value: string } | null;
 export function remedyFor(field: string, kind: string, value: string, quote: string, name: string | null): Remedy {
   if (field.startsWith("member:")) return name !== null && !looksLikeNameCell(name) ? { pull: "NOT_A_PERSON" } : null;
@@ -169,76 +169,27 @@ export function remedyFor(field: string, kind: string, value: string, quote: str
   return null;
 }
 
-/**
- * A member saved with the title written after the name ("Priscilla Alderete - President") is the name alone, and the
- * title is the seat. The person's own record, their name fact and the body's member fact all take the clean name;
- * honorifics and suffixes stay. Every live member is read once, then each new one as it arrives.
- */
-async function retitleMembers(query: Query, purge?: ReaderCachePurger): Promise<number> {
-  const since = Number(await readPassCursor(query, "box-names") ?? 0);
-  const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
-  const rows = await query(`SELECT id, entity_id, field, value->>'name' AS name, value->>'office' AS office FROM fact
-    WHERE id > $1 AND id <= $2 AND status = 'live' AND field LIKE 'member:%' AND value->>'name' ~ '[-–—,(]'`, [since, newest]);
-  let renamed = 0;
-  for (const row of rows) {
-    const old = String(row.name), { name, title } = splitPersonTitle(old);
-    if (title === null || !name) continue;
-    const person = String(row.field).slice("member:".length);
-    await query(`UPDATE fact SET value = value || jsonb_build_object('name', $2::text, 'office', coalesce(value->>'office', $3::text)), value_text = $2 WHERE id = $1 AND status = 'live'`, [row.id, name, title]);
-    await query("UPDATE entity SET name = $2 WHERE id = $1 AND name = $3 AND name IS DISTINCT FROM $2", [person, name, old]);
-    await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE entity_id = $1 AND field = 'name' AND status = 'live' AND value_text = $3", [person, name, old]);
-    if (row.office === null) {
-      await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
-        SELECT $2, $3, to_jsonb($4::text), $4, 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1 AND quote ILIKE '%' || $4 || '%'
-        AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = $3 AND d.status = 'live')`, [row.id, person, `office:${row.entity_id}`, title]);
-    }
-    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge, query);
-    renamed++;
-  }
-  await writePassCursor(query, "box-names", String(newest));
-  return renamed;
-}
-
 /** A fact that looks wrong is flagged for Sean (remove, keep, send the fleet, or type the value), never taken down by the system (rulings §2 step 6). */
 async function flagLooksWrong(query: Query, factId: number, reason: string): Promise<number> {
   return (await query(`INSERT INTO owner_flag (fact_id, kind, reason) SELECT $1, 'AUDIT_LOOKS_WRONG', $2
     WHERE EXISTS (SELECT 1 FROM fact WHERE id = $1 AND status = 'live') AND NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [factId, reason])).length;
 }
 
-/** Box facts that are a label, a heading, a notice, a bare link or a paragraph get their remedy, and the walk's better reading of the same page takes their place; the pass reads only facts added since its last. */
-async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number }> {
+/** Box facts that are a label, a heading, a notice, a bare link or a paragraph are flagged for Sean, never taken down or rewritten here; a corrected fact comes through the Slide when the Box publishes it. The pass reads only facts added since its last. */
+async function reviewBoxFacts(query: Query): Promise<{ readonly flagged: number }> {
   const since = Number(await readPassCursor(query, "box-labels") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
-  const rows = await query(`SELECT f.id, f.entity_id, f.field, e.kind, coalesce(f.value_text, '') AS value_text, coalesce(f.quote, '') AS quote, f.value->>'name' AS name
+  const rows = await query(`SELECT f.id, f.field, e.kind, coalesce(f.value_text, '') AS value_text, coalesce(f.quote, '') AS quote, f.value->>'name' AS name
     FROM fact f JOIN entity e ON e.id = f.entity_id
     WHERE f.id > $1 AND f.id <= $2 AND f.produced_by = 'box' AND f.status = 'live'
       AND (f.field IN ('agenda_url', 'meeting_cadence', 'comment:period', 'comment:detail') OR f.field LIKE 'member:%')`, [since, newest]);
-  const tally = { flagged: 0, moved: 0, cut: 0, renamed: await retitleMembers(query, purge) };
+  let flagged = 0;
   for (const row of rows) {
     const remedy = remedyFor(String(row.field), String(row.kind), String(row.value_text), String(row.quote), row.name === null ? null : String(row.name));
-    if (!remedy) continue;
-    if ("move" in remedy) {
-      const [moved] = await query(`UPDATE fact SET field = $2 WHERE id = $1 AND status = 'live'
-        AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = fact.entity_id AND d.field = $2 AND d.status = 'live') RETURNING id`, [row.id, remedy.move]);
-      if (moved) {
-        // The page's own words on how to comment show the body takes it.
-        await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
-          SELECT entity_id, 'comment:period', '"YES"'::jsonb, 'YES', 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1
-          AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = 'comment:period' AND d.status = 'live')`, [row.id, row.entity_id]);
-        tally.moved++;
-      } else {
-        tally.flagged += await flagLooksWrong(query, Number(row.id), "NOT_YES_OR_NO");
-      }
-    } else if ("value" in remedy) {
-      await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE id = $1 AND status = 'live'", [row.id, remedy.value]);
-      tally.cut++;
-    } else {
-      tally.flagged += await flagLooksWrong(query, Number(row.id), remedy.pull);
-    }
-    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge, query);
+    if (remedy) flagged += await flagLooksWrong(query, Number(row.id), "pull" in remedy ? remedy.pull : "move" in remedy ? "NOT_YES_OR_NO" : "NOT_A_SCHEDULE");
   }
   await writePassCursor(query, "box-labels", String(newest));
-  return tally;
+  return { flagged };
 }
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
@@ -279,12 +230,12 @@ async function publishBoxPass(input: {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now);
   const report = { looked: 0, deferred: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0,
-    seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 },
+    seats: { flagged: 0 }, labels: { flagged: 0 },
     errorExamples: [] as { findingId: string; stage: string; detail: string }[],
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   if (input.audit !== false) {
-    try { Object.assign(report, await reviewPublishedBoxFacts(facts.query, input.purge)); }
+    try { Object.assign(report, await reviewPublishedBoxFacts(facts.query)); }
     catch (error) {
       report.failuresByReason.BOX_AUDIT_FAILED = 1;
       report.errorExamples.push({ findingId: "published-facts", stage: "AUDIT", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
@@ -552,8 +503,10 @@ async function publishBoxPass(input: {
       }
       // The board is named as the page names it, without what the page hangs on it ("Board of Education Home" names the Board of Education).
       const shown = slot.class === "bodies" ? asNamed ?? value : value;
+      // A paragraph filed as the schedule is published as the schedule it states.
+      const remedy = remedyFor(slot.slot, "body", value, finding.exactQuote, null), written = remedy && "value" in remedy ? remedy.value : value;
       const outcome = slot.class === "bodies" ? await claim("name", shown, shown, quote)
-        : slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
+        : slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, written, written, quote);
       // A page's own words on how to comment show the body takes it.
       if (slot.class === "comment rules" && slot.slot !== "comment:period" && !("blank" in outcome)) await claim("comment:period", "YES", finding.exactQuote, finding.exactQuote);
       await settle(finding.row, outcome, slot.class);

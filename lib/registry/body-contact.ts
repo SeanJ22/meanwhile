@@ -18,7 +18,8 @@ export function bodyContactRows(body: CoveredBody): BodyContactRow[] {
   if (sharedPhone && (!contact?.phone || telHref(contact.phone) !== telHref(sharedPhone.phone))) {
     rows.push({ label: contact?.phone ? "Board office phone" : "Phone", value: sharedPhone.phone, href: telHref(sharedPhone.phone) });
   }
-  if (contact?.address) rows.push({ label: "Office address", value: readerText(contact.address, "address"), href: null });
+  const address = contact?.address ?? contact?.mailingAddress;
+  if (address) rows.push({ label: contact?.address ? "Office address" : "Mailing address", value: readerText(address, "address"), href: null });
   if (contact?.email) rows.push({ label: "Email", value: contact.email, href: `mailto:${contact.email}` });
   if (body.homepageUrl) {
     rows.push({ label: "Website", value: new URL(body.homepageUrl).hostname.replace(/^www\./, ""), href: body.homepageUrl });

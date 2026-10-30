@@ -6,17 +6,16 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { vaultCapture } from "../lib/facts/capture.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { OFFICE_FACT_TARGETS_SQL, officeAddressesOnPage, publishHeldOfficeFacts, streetOfficeAddress } from "../lib/meetings/office-facts.ts";
-import { REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL } from "../lib/registration/publication.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const NOW = "2026-10-26T06:30:00.000Z", STATE = "AZ";
 const PLACE = "ocd-division/country:us/state:az/school_district:sunnyside_unified_district";
 const GOVERNMENT = "az:school:sunnyside-unified", BODY = `${PLACE}#board`;
-const ADDRESS = "2238 E. Ginter Road, Tucson, AZ 85706";
+const ADDRESS = "2238 E. Ginter Road, Tucson, AZ 85706", NCES_ADDRESS = "2238 E GINTER RD, TUCSON, AZ, 85706", NCES_SHA256 = "376539484b400c0c6d72d100766dc7acacc8725f464556062e2920b3a9b6a64c";
 const SOURCE = "https://nces.ed.gov/ccd/Data/zip/ccd_lea_029_2324.zip";
 const provenance = { sourceUrl: SOURCE, sourceOrg: "National Center for Education Statistics", collectedAt: NOW, verifiedAt: null };
 
-async function setup(address = ADDRESS) {
+async function setup(address = NCES_ADDRESS) {
   const db = await factDb(), vault = new MemoryEvidenceStore();
   await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
     ($1,'place','Sunnyside Unified School District','AZ',NULL),
@@ -26,31 +25,32 @@ async function setup(address = ADDRESS) {
   await db.query("INSERT INTO civic_data_promotions(key,record_class,payload) VALUES($1,'REGISTRATION',$2)", ["REGISTRATION:US-AZ:registration:v1", JSON.stringify({ governments: [{
     id: "government:US-AZ:nces:0408170", jurisdictionId: GOVERNMENT, state: STATE,
     aliases: [GOVERNMENT], bodyIds: [BODY], name: "Sunnyside Unified School District", officeAddress: address,
-    mailingAddress: "PO Box 123, Tucson, AZ 85706", website: null, provenance,
+    mailingAddress: "PO Box 123, Tucson, AZ 85706", website: null, provenance, nativeIds: { nces_leaid: "0408170" },
   }] })]);
-  const hash = "a".repeat(64), releaseId = SOURCE.split("/").at(-1)!;
+  const hash = NCES_SHA256, releaseId = SOURCE.split("/").at(-1)!;
   const identity = createHash("sha256").update(`nces-ccd\n${releaseId}\n${SOURCE}`).digest("hex");
   const prefix = `project/freshness/source/nces-ccd/releases/${identity}`, key = `${prefix}/${hash}.bin`;
   const body = new TextEncoder().encode("the existing immutable source archive");
   await vault.put(key, body, { contentType: "application/zip", contentHash: `sha256-${hash}`, byteLength: body.length });
   const manifest = new TextEncoder().encode(JSON.stringify({ sourceId: "nces-ccd", releaseId, requestedUrl: SOURCE,
-    finalUrl: SOURCE, sha256: hash, key, sourceObservedAt: NOW, retrievedAt: NOW, byteLength: body.length }));
+    finalUrl: SOURCE, sha256: hash, key, sourceObservedAt: NOW, retrievedAt: NOW, checkedAt: NOW, byteLength: body.length }));
   await vault.put(`${prefix}/manifest.json`, manifest, { contentType: "application/json", contentHash: "manifest:fixture", byteLength: manifest.length, objectClass: "MUTABLE_INDEX" });
   return { db, vault, key };
 }
 
 test("held national physical office fields publish to the owning government through the fact door without rereading the archive", async () => {
-  const { db, vault, key } = await setup();
+  const { db, vault } = await setup();
   const reads: string[] = [], ordinaryGet = vault.get.bind(vault);
   vault.get = async key => { reads.push(key); return ordinaryGet(key); };
   try {
     const first = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
     assert.deepEqual(first, { published: 1, confirmed: 0, blanks: 1, failures: [] });
-    assert.deepEqual(await db.query("SELECT entity_id,field,value FROM fact WHERE status='live'"), [{ entity_id: GOVERNMENT, field: "office_address", value: ADDRESS }]);
+    assert.deepEqual(await db.query("SELECT entity_id,field,value FROM fact WHERE status='live'"), [{ entity_id: GOVERNMENT, field: "office_address", value: NCES_ADDRESS }]);
     const copy = (await db.query("SELECT url,blob_key,fetched_at FROM source_copy"))[0]!;
-    assert.equal(copy.url, SOURCE); assert.equal(copy.blob_key, key); assert.equal(new Date(String(copy.fetched_at)).toISOString(), NOW);
+    assert.equal(copy.url, SOURCE); assert.ok(String(copy.blob_key).startsWith("release:nces-ccd-directory:")); assert.equal(new Date(String(copy.fetched_at)).toISOString(), NOW);
     assert.ok(reads.every(read => read.endsWith("manifest.json")), "only the manifest, never source archive bytes, leaves the vault");
-    const blank = (await db.query("SELECT entity_id,field,next_try_at FROM blank"))[0]!;
+    const blank = (await db.query("SELECT entity_id,field,next_try_at FROM blank WHERE entity_id=$1",[BODY]))[0]!;
+    assert.deepEqual(await db.query("SELECT entity_id,reason FROM blank WHERE entity_id=$1",[GOVERNMENT]), []);
     assert.equal(blank.entity_id, BODY); assert.equal(blank.field, "office_address");
     assert.ok(Date.parse(String(blank.next_try_at)) > Date.now());
     const next = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
@@ -65,7 +65,7 @@ test("a government office publishes without any body or meeting referencing it",
     await db.query("DELETE FROM entity WHERE id=$1", [BODY]);
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [GOVERNMENT], more: () => true });
     assert.deepEqual(report, { published: 1, confirmed: 0, blanks: 0, failures: [] });
-    assert.deepEqual(await db.query("SELECT entity_id,value FROM fact WHERE field='office_address' AND status='live'"), [{entity_id: GOVERNMENT,value: ADDRESS}]);
+    assert.deepEqual(await db.query("SELECT entity_id,value FROM fact WHERE field='office_address' AND status='live'"), [{entity_id: GOVERNMENT,value: NCES_ADDRESS}]);
   } finally { await db.pg.close(); }
 });
 
@@ -125,54 +125,48 @@ test("a newly held official physical office replaces an older address through th
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
     assert.equal(report.published, 1);
     assert.deepEqual(await db.query("SELECT value,status FROM fact WHERE entity_id=$1 AND field='office_address' ORDER BY id", [GOVERNMENT]), [
-      { value: old, status: "superseded" }, { value: ADDRESS, status: "live" },
+      { value: old, status: "superseded" }, { value: NCES_ADDRESS, status: "live" },
     ]);
   } finally { await db.pg.close(); }
 });
 
-test("the supplied NCES directory's exact native row can publish with its original source attestation", async () => {
-  const address = "2238 E GINTER RD, TUCSON, AZ, 85706";
-  const { db, vault } = await setup(address);
+test("an NCES address is quoted from the file's own row and checked there; no blank opens", async () => {
+  const { db, vault } = await setup();
   try {
-    const source = { ...provenance, sourceUrl: "https://nces.ed.gov/ccd/files.asp", collectedAt: NOW };
-    await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(jsonb_set(payload,'{governments,0,provenance}',$1),
-      '{governments,0,nativeIds}', '{"nces_leaid":"0408170"}')`, [JSON.stringify(source)]);
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
     assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
-    assert.equal((await db.query("SELECT value FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]))[0]!.value, address);
-    const copy = (await db.query("SELECT url,sha256,blob_key,fetched_at FROM source_copy"))[0]!;
-    assert.equal(copy.url, source.sourceUrl);
-    assert.equal(copy.sha256, "376539484b400c0c6d72d100766dc7acacc8725f464556062e2920b3a9b6a64c");
-    assert.equal(new Date(String(copy.fetched_at)).toISOString(), "2026-08-19T00:00:00.000Z");
-    assert.ok(String(copy.blob_key).startsWith("release:nces-ccd-directory:"));
+    const [fact] = await db.query("SELECT value_text,quote,quote_start IS NOT NULL AS checked FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]);
+    assert.equal(fact!.value_text, "2238 E GINTER RD,,,TUCSON,AZ,85706", "the address as the file's row writes it");
+    assert.ok(String(fact!.quote).startsWith("0408170,2025-2026,AZ,") && fact!.checked);
+    assert.deepEqual(await db.query("SELECT reason FROM blank WHERE entity_id=$1", [GOVERNMENT]), []);
   } finally { await db.pg.close(); }
 });
 
-test("a newer registration wrapper cites the original immutable Census copy and capture date", async () => {
+test("an NCES address absent from the file's native row never goes live; the one published unchecked before moves to held with the reason", async () => {
+  const { db, vault } = await setup("99 Wrong Street, Tucson, AZ 85706");
+  try {
+    const [copy] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
+      VALUES($1,$1,$2,$3,'old-nces') RETURNING id`, [SOURCE, NOW, "f".repeat(64)]);
+    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'office_address','"99 Wrong Street, Tucson, AZ 85706"','99 Wrong Street, Tucson, AZ 85706','live','OFFICIAL',$2,'99 Wrong Street, Tucson, AZ 85706',$3,'held-office-addresses')`, [GOVERNMENT, copy!.id, NOW]);
+    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
+    assert.equal(report.published, 0); assert.equal(report.blanks, 2); assert.deepEqual(report.failures, []);
+    assert.deepEqual(await db.query("SELECT status,held_reason FROM fact"), [{ status: "held", held_reason: "CHECK_FAILED:NO_EXACT_LINE" }]);
+    assert.deepEqual(await db.query("SELECT entity_id,reason FROM blank WHERE entity_id=$1", [GOVERNMENT]), [{ entity_id: GOVERNMENT, reason: "CHECK_FAILED:NO_EXACT_LINE" }]);
+  } finally { await db.pg.close(); }
+});
+
+test("an NCES file nobody has re-checked lately holds nothing, keeps the last address up and raises one piece of fix work", async () => {
   const { db, vault } = await setup();
   try {
     const [copy] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
-      VALUES($1,$1,$2,$3,'held-census-original') RETURNING id`, [REGISTRATION_SOURCE_URL, REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256]);
-    await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(jsonb_set(payload,'{governments,0,provenance}',$1),
-      '{vintage}',$2)`, [JSON.stringify({ ...provenance, sourceUrl: REGISTRATION_SOURCE_URL, collectedAt: NOW }),
-      JSON.stringify({ sourceSha256: REGISTRATION_SOURCE_SHA256 })]);
-    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
-    assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
-    assert.equal((await db.query("SELECT source_copy_id FROM fact WHERE entity_id=$1 AND field='office_address'", [GOVERNMENT]))[0]!.source_copy_id, copy!.id);
-    const copies = await db.query("SELECT fetched_at,sha256 FROM source_copy");
-    assert.equal(copies.length, 1); assert.equal(new Date(String(copies[0]!.fetched_at)).toISOString(), REGISTRATION_HELD_RETRIEVED_AT);
-    assert.equal(copies[0]!.sha256, REGISTRATION_SOURCE_SHA256);
-  } finally { await db.pg.close(); }
-});
-
-test("the supplied NCES attestation does not establish an address absent from that exact native source row", async () => {
-  const { db, vault } = await setup("99 Wrong Street, Tucson, AZ 85706");
-  try {
-    await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(jsonb_set(payload,'{governments,0,provenance}',$1),
-      '{governments,0,nativeIds}', '{"nces_leaid":"0408170"}')`, [JSON.stringify({ ...provenance, sourceUrl: "https://nces.ed.gov/ccd/files.asp", collectedAt: "2026-08-19" })]);
-    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
-    assert.equal(report.published, 0); assert.equal(report.blanks, 2); assert.deepEqual(report.failures, []);
-    assert.deepEqual(await db.query("SELECT field FROM fact"), []);
+      VALUES($1,$1,$2,$3,'old-nces') RETURNING id`, [SOURCE, NOW, "f".repeat(64)]);
+    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'office_address','"99 Old Street, Tucson, AZ 85706"','99 Old Street, Tucson, AZ 85706','live','OFFICIAL',$2,'99 Old Street, Tucson, AZ 85706',$3,'held-office-addresses')`, [GOVERNMENT, copy!.id, NOW]);
+    const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true, clock: () => Date.parse(NOW) + 40 * 86_400_000 });
+    assert.deepEqual(report.failures, ["The NCES file hasn't been re-checked in 40 days"]);
+    assert.deepEqual(await db.query("SELECT status FROM fact"), [{ status: "live" }]);
+    assert.deepEqual(await db.query("SELECT reason FROM blank WHERE entity_id=$1", [GOVERNMENT]), []);
   } finally { await db.pg.close(); }
 });
 
@@ -187,7 +181,7 @@ test("sharing a place does not give a board either neighboring government's offi
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [BODY], more: () => true });
     assert.equal(report.published, 0); assert.equal(report.blanks, 1);
     assert.deepEqual(await db.query("SELECT field FROM fact"), []);
-    assert.deepEqual(await db.query("SELECT entity_id FROM blank"), [{ entity_id: BODY }]);
+    assert.deepEqual(await db.query("SELECT entity_id FROM blank WHERE reason NOT LIKE 'CHECK_FAILED%'"), [{ entity_id: BODY }]);
   } finally { await db.pg.close(); }
 });
 
@@ -213,7 +207,7 @@ for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exa
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'sunnyside.example.gov')", [GOVERNMENT]);
     await db.query("UPDATE civic_data_promotions SET payload=$1", [JSON.stringify({ governments: [
       { id: "government:US-AZ:nces:0408170", jurisdictionId: GOVERNMENT, state: STATE, aliases: [GOVERNMENT, `${PLACE}${suffix}`],
-        bodyIds: [subbody], name: "Sunnyside Unified School District", officeAddress: ADDRESS, website: homepage, provenance },
+        bodyIds: [subbody], name: "Sunnyside Unified School District", officeAddress: NCES_ADDRESS, website: homepage, provenance, nativeIds: { nces_leaid: "0408170" } },
       { id: neighbor, jurisdictionId: neighbor, state: STATE, aliases: [neighbor], bodyIds: [], name: "Neighbor School District",
         officeAddress: "88 Neighbor Street, Tucson, AZ 85706", website: "https://neighbor.example.gov/", provenance },
     ] })]);
@@ -223,8 +217,8 @@ for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exa
       readCapture: async () => { throw new Error("The held exact government address needs no site reread"); } });
     assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
     assert.deepEqual(await db.query("SELECT entity_id,value FROM fact WHERE field='office_address' AND status='live'"),
-      [{ entity_id: GOVERNMENT, value: ADDRESS }]);
-    assert.deepEqual(await db.query("SELECT entity_id FROM blank WHERE field='office_address'"), [{ entity_id: subbody }]);
+      [{ entity_id: GOVERNMENT, value: NCES_ADDRESS }]);
+    assert.deepEqual(await db.query("SELECT entity_id FROM blank WHERE field='office_address' AND reason NOT LIKE 'CHECK_FAILED%'"), [{ entity_id: subbody }]);
   } finally { await db.pg.close(); }
 });
 
@@ -240,7 +234,7 @@ test("a canonical subbody's own native government prefix survives its older plac
     const report = await publishHeldOfficeFacts({ facts: db, vault, clocks: factClocks(null), now: NOW, bodyIds: [subbody], more: () => true });
     assert.equal(report.published, 1); assert.deepEqual(report.failures, []);
     assert.deepEqual(await db.query("SELECT entity_id,value FROM fact WHERE field='office_address' AND status='live'"),
-      [{ entity_id: GOVERNMENT, value: ADDRESS }]);
+      [{ entity_id: GOVERNMENT, value: NCES_ADDRESS }]);
   } finally { await db.pg.close(); }
 });
 

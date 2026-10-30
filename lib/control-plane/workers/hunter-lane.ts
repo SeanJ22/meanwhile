@@ -1,10 +1,6 @@
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
 import type { DispatchResult } from "../scheduler/dispatch.ts";
 import { releaseOpenJobs, SPEND_HOLD_STALE_MS } from "../expansion/spend-holds.ts";
 import { HUNTER_LANE_REFRESH_MS, type ArmedHunterLane } from "./hunter-lane-arming.ts";
-
-export const HUNTER_QUEUE_FORMAT = 1;
 
 export const HUNTER_LANE_LIFE_MS = 55 * 60_000;
 
@@ -53,42 +49,23 @@ export function stuckWorkerLine(worker: { readonly pid: number; readonly taskId:
     `${worker.tasksDone} task(s) finished before it; its task remains owed and the other workers keep running`;
 }
 
+/** The tasks one claim of rows from the work list hands to the hunters' workers. */
 export interface HunterQueue {
-  readonly format: typeof HUNTER_QUEUE_FORMAT;
-  readonly writtenAt: string;
+  readonly claimedAt: string;
   readonly taskIds: readonly string[];
   readonly plainTaskIds: readonly string[];
-}
-
-export function hunterQueuePath(armingPath: string): string {
-  return join(dirname(armingPath), "queue.json");
-}
-
-export function writeHunterQueue(path: string, queue: Omit<HunterQueue, "format">): void {
-  mkdirSync(dirname(path), { recursive: true });
-  const temporary = `${path}.${process.pid}.tmp`;
-  writeFileSync(temporary, JSON.stringify({ format: HUNTER_QUEUE_FORMAT, ...queue }));
-  renameSync(temporary, path);
-}
-
-export function readHunterQueue(path: string): HunterQueue | { readonly unread: string } {
-  try {
-    const q = JSON.parse(readFileSync(path, "utf8")) as Partial<HunterQueue> | null;
-    if (q === null || q.format !== HUNTER_QUEUE_FORMAT || typeof q.writtenAt !== "string" || !Array.isArray(q.taskIds) || !Array.isArray(q.plainTaskIds)) {
-      return { unread: "the round's queue is not in the expected form" };
-    }
-    return q as HunterQueue;
-  } catch (error) {
-    return { unread: (error as NodeJS.ErrnoException)?.code === "ENOENT" ? "no round has written a queue yet" : `the round's queue could not be read (${error instanceof Error ? error.message : String(error)})` };
-  }
 }
 
 export interface HunterLaneLoopDeps {
   readonly clock: () => number;
   readonly sleep: (ms: number) => Promise<void>;
   readonly arm: () => Promise<ArmedHunterLane>;
-  readonly readQueue: () => HunterQueue | { readonly unread: string };
-  readonly selectQueue?: () => string;
+  /** The state whose rows are worked next: the one with rows ready, or the current one when none has. */
+  readonly selectState: () => Promise<string>;
+  /** Claims the next rows of the current state from the work list; null when there are none. */
+  readonly claim: (paidOpen: boolean) => Promise<HunterQueue | null>;
+  /** Rows claimed but not reached by the wave go back to waiting. */
+  readonly endWave: () => Promise<void>;
 
   readonly runWave: (input: { readonly queue: HunterQueue; readonly paidOpen: boolean; readonly deadlineMs: number;
     readonly absorb: () => HunterQueue | null }) => Promise<readonly DispatchResult[]>;
@@ -135,7 +112,7 @@ export function hunterLane(deps: HunterLaneLoopDeps) {
     const startMs = deps.clock();
     const untilMs = startMs + lifeMs;
     let stopped = false;
-    let queueKey = deps.selectQueue?.() ?? "queue";
+    let state = await deps.selectState();
     await rearm();
     const refresher = (async () => {
       while (!stopped) {
@@ -147,41 +124,44 @@ export function hunterLane(deps: HunterLaneLoopDeps) {
     })();
     let waves = 0;
     let dispatched = 0;
-    const consumed = new Map<string,string>();
-    let lastRanOpen = false;
     let lastSaidMs = startMs;
     let ended = "its life ended; the runner starts a fresh lane";
     try {
       while (deps.clock() < untilMs) {
         if (deps.stopRequested()) { ended = "a release asked it to drain"; break; }
-        const selected = deps.selectQueue?.() ?? "queue";
-        if (selected !== queueKey) { queueKey=selected; await rearm(); }
-        const queue = deps.readQueue();
+        const selected = await deps.selectState();
+        if (selected !== state) { state = selected; await rearm(); }
         const paidOpen = current!.closed === null;
-        const fresh = !("unread" in queue) && (queue.writtenAt !== consumed.get(queueKey) || (paidOpen && !lastRanOpen));
-        if (!fresh) {
+        const q = await deps.claim(paidOpen);
+        if (q === null) {
           if (deps.clock() - lastSaidMs >= HUNTER_LANE_IDLE_SAY_MS) {
-            deps.log(`hunter lane: waiting for the round's next queue (${"unread" in queue ? queue.unread : `last written ${queue.writtenAt}`})`);
+            deps.log(`hunter lane: waiting for hunts on the work list${paidOpen ? "" : " (paid work is held; only plain-code tasks are taken)"}`);
             lastSaidMs = deps.clock();
           }
           await deps.sleep(HUNTER_LANE_IDLE_READ_MS);
           continue;
         }
-        const q = queue as HunterQueue;
-        consumed.set(queueKey,q.writtenAt);
-        lastRanOpen = paidOpen;
-        deps.log(`hunter lane: wave ${waves + 1} over the queue written ${q.writtenAt}: ${q.taskIds.length} task(s), ${q.plainTaskIds.length} plain-code${paidOpen ? "" : "; paid tasks wait"}`);
+        deps.log(`hunter lane: wave ${waves + 1} over ${q.taskIds.length} task(s) claimed from the work list for ${state}, ${q.plainTaskIds.length} plain-code${paidOpen ? "" : "; paid tasks wait"}`);
         let absorbReadMs = deps.clock();
+        let claimed: Promise<void> | null = null;
+        let joining: HunterQueue | null = null;
         const absorb = (): HunterQueue | null => {
-          if (deps.stopRequested() || deps.clock() >= untilMs || deps.clock() - absorbReadMs < HUNTER_LANE_IDLE_READ_MS) return null;
-          absorbReadMs = deps.clock();
-          const next = deps.readQueue();
-          if ("unread" in next || next.writtenAt === consumed.get(queueKey)) return null;
-          consumed.set(queueKey,next.writtenAt);
-          deps.log(`hunter lane: the queue written ${next.writtenAt} joins the running wave: ${next.taskIds.length} task(s), ${next.plainTaskIds.length} plain-code`);
-          return next;
+          if (claimed === null && !deps.stopRequested() && deps.clock() < untilMs && deps.clock() - absorbReadMs >= HUNTER_LANE_IDLE_READ_MS) {
+            absorbReadMs = deps.clock();
+            claimed = deps.claim(current!.closed === null).then(next => {
+              if (next === null) return;
+              deps.log(`hunter lane: ${next.taskIds.length} more task(s) from the work list join the running wave, ${next.plainTaskIds.length} plain-code`);
+              joining = joining === null ? next : { claimedAt: next.claimedAt, taskIds: [...joining.taskIds, ...next.taskIds], plainTaskIds: [...joining.plainTaskIds, ...next.plainTaskIds] };
+            }).catch(error => { deps.log(`hunter lane: more hunts could not be claimed (${error instanceof Error ? error.message : String(error)})`); })
+              .finally(() => { claimed = null; });
+          }
+          const ready = joining;
+          joining = null;
+          return ready;
         };
         const results = await deps.runWave({ queue: q, paidOpen, deadlineMs: untilMs, absorb });
+        await claimed;
+        await deps.endWave();
         const unsettled=await releaseAll(new Date(deps.clock()).toISOString());
         for(const failure of unsettled)deps.log(`hunter lane: an open request hold could not be released (${failure})`);
         armedAll.push(current!);

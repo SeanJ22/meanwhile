@@ -57,14 +57,14 @@ export const ARCHIVE_STATE_SQL=`SELECT cp_archive_occurrences(ARRAY(
       AND o.value->>'closedAt' IS NOT NULL LIMIT 100 FOR UPDATE OF o SKIP LOCKED
   ) o WHERE cp_control_state(w.value)=$1 LIMIT 100)) AS moved`;
 
-const CHARGE_COLUMNS = "id,charged_at,job_id,route_task_id,obligation_id,jurisdiction,attempt_id,usd,known_usd,measured,bounded,assignment_refs,is_scout,scout_usd,cache";
+const CHARGE_COLUMNS = "id,charged_at,job_id,route_task_id,obligation_id,jurisdiction,attempt_id,usd,known_usd,measured,bounded,assignment_refs,is_scout,scout_usd,cache,work_kind";
 async function insertCharges(sql: Sql, charges: readonly PricedCharge[]): Promise<void> {
   if (!charges.length) return;
   await sql.query(`INSERT INTO cp_model_charges (${CHARGE_COLUMNS}) SELECT
     charge->>'id',(charge->>'at')::timestamptz,charge->>'jobId',charge->>'routeTaskId',charge->>'obligationId',
     charge->>'jurisdiction',charge->'metered'->>'attemptId',(charge->>'usd')::double precision,
     (charge->>'knownUsd')::double precision,(charge->>'measured')::boolean,(charge->>'bounded')::boolean,
-    nullif(charge->'assignmentRefs','null'::jsonb),is_scout,(charge->'metered'->'cost'->>'usd')::double precision,cache
+    nullif(charge->'assignmentRefs','null'::jsonb),is_scout,(charge->'metered'->'cost'->>'usd')::double precision,cache,charge->>'workKind'
     FROM jsonb_to_recordset($1::jsonb) AS entries(charge jsonb,is_scout boolean,cache jsonb) ON CONFLICT(id) DO NOTHING`,
   [JSON.stringify(charges.map(charge => ({ charge, is_scout: charge.metered.role === "SCOUT" && charge.metered.routeId !== SCOUT_PREWARM_ROUTE_ID, cache: cacheTotals(charge) })))]);
 }

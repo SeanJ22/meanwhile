@@ -108,6 +108,78 @@ export function bundleTables(file, text) {
   return BUNDLE_TABLES.filter(table => new RegExp(`\\b${table}\\b`).test(clean)).map(table => ({ file, table }));
 }
 
+const CORE = "lib/core/core.json";
+const NAME = String.raw`(?:public\.)?"?([a-z_][\w$]*)"?`;
+const WRITES = [String.raw`\binsert\s+into\s+(?:only\s+)?${NAME}`, String.raw`\bdelete\s+from\s+(?:only\s+)?${NAME}`,
+  String.raw`\bupdate\s+(?:only\s+)?${NAME}(?:\s+(?:as\s+)?[a-z_]\w*)?\s+set\b`, String.raw`\btruncate\s+(?:table\s+)?(?:only\s+)?${NAME}`].map(source => new RegExp(source, "gi"));
+const DYNAMIC_WRITE = /\b(?:(?:insert\s+into|delete\s+from|truncate\s+(?:table\s+)?)\s+(?:only\s+)?"?\$\{|update\s+(?:only\s+)?"?\$\{[^}]*\}"?(?:\s+(?:as\s+)?[a-z_]\w*)?\s+set\b)/i;
+/** Application code that runs against the databases; migrations are how a table is defined, tests are not shipped. */
+const shippedFile = file => /^(?:app|lib|scripts|netlify)\//.test(file) && codeFile(file) && !/\.test\.[cm]?[jt]sx?$/.test(file);
+const writerFile = file => shippedFile(file) && !/^lib\/(?:db|control-plane\/repository)\/migrations\//.test(file);
+
+/** The tables the ORM schema names, by the identifier code writes them through. */
+export function ormTables(schema) {
+  return new Map([...schema.matchAll(/export const (\w+) = pgTable\(\s*"(\w+)"/g)].map(([, identifier, table]) => [identifier, table]));
+}
+
+/** The tables a file writes by name or through the ORM, and whether it also writes a table named at run time. */
+export function tableWrites(text, orm = new Map()) {
+  const clean = withoutComments(text), tables = new Set();
+  for (const pattern of WRITES) for (const match of clean.matchAll(pattern)) tables.add(match[1].toLowerCase());
+  for (const match of clean.matchAll(/\.(?:insert|update|delete)\(\s*(\w+)\s*\)/g)) if (orm.has(match[1])) tables.add(orm.get(match[1]));
+  return { tables: [...tables].sort(), dynamic: DYNAMIC_WRITE.test(clean) };
+}
+
+/** Every table a file defines by name, and whether it also defines one named at run time. */
+export function createdTables(text) {
+  const names = new Set(), clean = withoutComments(text);
+  for (const match of clean.matchAll(/\bcreate\s+table\s+(?:if\s+not\s+exists\s+)?(?:public\.)?"?([a-z_][\w]*)"?\s*(?:\(|as\b)/gi)) names.add(match[1].toLowerCase());
+  return { names: [...names].sort(), dynamic: /\bcreate\s+table\s+(?:if\s+not\s+exists\s+)?"?(?:[a-z_]\w*)?\$\{/i.test(clean) };
+}
+
+/**
+ * lib/core/core.json lists the core tables and the files allowed to write each. A write from any other file is a bypass,
+ * listed as it stands today so the list only shrinks. A table defined outside the core is listed under `other`, which only shrinks.
+ */
+export function coreProblems(core, texts, baseCore = null) {
+  const problems = [], at = (what, file) => sentence(what, file, "docs/how-it-works.md section 9");
+  const writes = new Map(), dynamic = new Set(), created = new Map(), dynamicTables = new Set(), orm = ormTables(texts.get("lib/db/schema.ts") ?? "");
+  for (const [file, text] of texts) {
+    if (writerFile(file)) {
+      const found = tableWrites(text, orm);
+      if (found.dynamic) dynamic.add(file);
+      for (const table of found.tables) if (core.tables[table]) writes.set(`${file}\t${table}`, { file, table });
+    }
+    if (shippedFile(file) && file !== "scripts/check-rulings.mjs") {
+      const defined = createdTables(text);
+      for (const name of defined.names) if (!created.has(name)) created.set(name, file);
+      if (defined.dynamic) dynamicTables.add(file);
+    }
+  }
+  const listed = new Set();
+  for (const [table, { writers, bypass }] of Object.entries(core.tables)) {
+    for (const file of [...writers, ...bypass]) listed.add(`${file}\t${table}`);
+    for (const file of writers) if (!texts.has(file)) problems.push(at(`The writer listed for ${table} does not exist`, file));
+    for (const file of bypass) if (!writes.has(`${file}\t${table}`)) problems.push(at(`${file} no longer writes ${table}; take it off the bypass list`, CORE));
+    for (const file of bypass) if (writers.includes(file)) problems.push(at(`${file} is listed as both a writer and a bypass of ${table}`, CORE));
+  }
+  for (const [key, { file, table }] of writes) if (!listed.has(key)) problems.push(at(`A new write to the core table ${table}`, file));
+  for (const file of dynamic) if (!core.dynamicWrites.includes(file)) problems.push(at("A new write to a table named at run time", file));
+  for (const file of core.dynamicWrites) if (!dynamic.has(file)) problems.push(at(`${file} no longer writes a table named at run time; take it off the list`, CORE));
+  const known = new Set([...Object.keys(core.tables), ...core.other]);
+  for (const [name, file] of created) if (!known.has(name)) problems.push(at(`A new table, ${name}, outside the core`, file));
+  for (const file of dynamicTables) if (!core.dynamicTables.includes(file)) problems.push(at("A new table named at run time", file));
+  for (const file of core.dynamicTables) if (!dynamicTables.has(file)) problems.push(at(`${file} no longer defines a table named at run time; take it off the list`, CORE));
+  if (baseCore) {
+    const had = (list, now) => now.filter(item => !list.includes(item));
+    for (const [table, { bypass }] of Object.entries(core.tables)) for (const file of had(baseCore.tables[table]?.bypass ?? [], bypass)) problems.push(at(`${file} was added as a bypass of ${table}`, CORE));
+    for (const name of had(baseCore.other, core.other)) problems.push(at(`${name} was added to the tables outside the core`, CORE));
+    for (const file of had(baseCore.dynamicWrites, core.dynamicWrites)) problems.push(at(`${file} was added to the run-time table writers`, CORE));
+    for (const file of had(baseCore.dynamicTables, core.dynamicTables)) problems.push(at(`${file} was added to the run-time table definers`, CORE));
+  }
+  return problems;
+}
+
 /** The control-plane table behind each repository on `repos`, from the repositories' own constructors. */
 export function repositoryTables(text) {
   const tables = new Map();
@@ -273,6 +345,8 @@ export async function checkRulings({ cwd = process.cwd(), base, update = true } 
     for (const row of [...unlisted(now, saved), ...unlisted(saved, allowed),
       ...(newest && older ? unlisted(newest, older) : []), ...(newest ? unlisted(saved, newest) : [])]) problems.push(say(row));
   }
+  if (!texts.has(CORE)) problems.push(sentence("The core file is missing", CORE, "docs/how-it-works.md section 9"));
+  else problems.push(...coreProblems(JSON.parse(texts.get(CORE)), texts, JSON.parse(held(cwd, base, CORE) ?? "null")));
   const reachable = importedScripts(texts);
   for (const file of paths.filter(file => !previous.has(file))) {
     if (/^docs\/(?:evidence\/|measurements\/|[a-z][a-z0-9]*-[a-z]*\d[a-z0-9-]*\.md$)/i.test(file)) problems.push(sentence("An added proof file", file));

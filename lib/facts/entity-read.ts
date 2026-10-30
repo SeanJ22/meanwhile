@@ -12,6 +12,8 @@ const STATE_NAMES: Readonly<Record<string, string>> = {
   GU: "Guam", MP: "Northern Mariana Islands", PR: "Puerto Rico", VI: "U.S. Virgin Islands",
 };
 
+/** A site as its publisher writes it, as an address that opens: a bare host gets the scheme the web gives it. */
+export const siteUrl = (written: string): string => /^https?:\/\//i.test(written) ? written : `http://${written}`;
 export const stateName = (code: string | null): string | null => (code ? STATE_NAMES[code.toUpperCase()] ?? null : null);
 
 export const stateCodeOf = (name: string): string | null => Object.entries(STATE_NAMES).find(([, full]) => full === name)?.[0] ?? null;

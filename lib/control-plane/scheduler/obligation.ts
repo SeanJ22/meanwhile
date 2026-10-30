@@ -69,9 +69,7 @@ export interface FreshnessObligation {
   /** A recorded, expiring absence; the obligation is not re-walked until this time. Runtime-owned. */
   readonly absentUntil?: string | null;
   /** What would reopen a recorded absence before it expires. Cleared with `absentUntil`. */
-  readonly absenceUnlock?: import("./absence.ts").AbsenceUnlock | null;
-  /** The last time a new capability cleared this obligation's absence early, and what it was. */
-  readonly absenceReopened?: { readonly at: string; readonly because: string } | null;
+  readonly absenceUnlock?: { readonly text: string; readonly recordedAt?: string } | null;
   /** Set when the owner's dispatch materialized this obligation; a registration pass never resets it. */
   readonly materializedBy?: typeof OWNER_DISPATCH;
   /** Every owner Send that reached this obligation (CREATED or REORDERED), appended and never overwritten. Runtime-owned. */

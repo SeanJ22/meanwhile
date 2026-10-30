@@ -127,7 +127,7 @@ const COLLECTION_STORES = [
 
 /**
  * Exact (store, column) pairs exempt from the fragment sweep. Empty: identifying values are kept out of collection
- * stores entirely, and `tests/identity-boundary.test.ts` proves it over value spaces.
+ * stores entirely.
  */
 const DELIBERATE_IDENTIFIER_COLUMNS = new Set<string>([
 ]);

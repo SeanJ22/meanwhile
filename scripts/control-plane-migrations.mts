@@ -22,6 +22,8 @@ import { moveRetiredDoorPages } from "../lib/control-plane/repository/migrations
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installJobBreaker, jobBreakerMigrationDefinition } from "../lib/control-plane/repository/migrations/BB-01.ts";
 import { installKeys, keysMigrationDefinition } from "../lib/control-plane/repository/migrations/KB-01.ts";
+import { WORK_MIGRATION_DECLARATIONS, contractWork, expandWork, oneWorkListContractDefinition, oneWorkListDefinition } from "../lib/control-plane/repository/migrations/SPN-01B.ts";
+import { addChargeWorkKind, workKindMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-cost.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
@@ -63,6 +65,10 @@ const MIGRATIONS = [
   { id: "RIVER-DOORCFG-149_expand", source: "lib/control-plane/repository/migrations/RIVER-DOORCFG-149.ts", declarations: ["lib/control-plane/repository/migrations/DB-03A.ts", LINKING_SEEDS, "lib/facts/linking-copy.ts"],
     definition: linkingPagesMigrationDefinition, apply: withProductionReader(moveRetiredDoorPages) },
   { id: "KB-01_expand", source: "lib/control-plane/repository/migrations/KB-01.ts", declarations: ["lib/core/keys-store.ts"], definition: keysMigrationDefinition, apply: installKeys },
+  { id: "SPN-01B_expand", source: "lib/control-plane/repository/migrations/SPN-01B.ts", declarations: WORK_MIGRATION_DECLARATIONS, definition: oneWorkListDefinition, apply: expandWork },
+  { id: "SPN-01B_contract", source: "lib/control-plane/repository/migrations/SPN-01B.ts", declarations: WORK_MIGRATION_DECLARATIONS, definition: oneWorkListContractDefinition, apply: contractWork },
+  { id: "SPN-01B_cost_expand", source: "lib/control-plane/repository/migrations/SPN-01B-cost.ts", declarations: ["lib/control-plane/repository/model-charges.ts"],
+    definition: workKindMigrationDefinition, apply: addChargeWorkKind },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

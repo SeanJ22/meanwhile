@@ -1,7 +1,7 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
-import { boundedIndexOf, normalizeText, type CheckEntity, type SavedCopy } from "./check.ts";
+import { boundedIndexOf, exactLine, lineOf, normalizeText, type CheckEntity, type SavedCopy } from "./check.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -87,9 +87,11 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   const pin = input.meeting.mapPin!;
   const copy = input.copy ?? await db.transaction(query => saveCaptureCopy(query, input.capture!));
+  // A saved geocoder response quotes its matchedAddress line and is checked; a reused receipt holds no text, so it stays unchecked.
+  const line = exactLine(copy.text, "matchedAddress", pin.matchedAddress!);
   for(let attempt=0;;attempt++)try{
     return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
-      valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
+      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:line ? "checked" : "loader", costUsd:0}, clocks, now);
   }catch(error){
     const conflict=error as {code?:string;constraint?:string}|null;
     // Re-read after a rolled-back deadlock or competing first publication, using the same saved Census copy.
@@ -168,10 +170,11 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
     else if (outcome.decision === "CONFIRM") tally.confirmed++;
     else tally.held++;
   };
-  const claim = async (field: string, value: unknown, valueText: string, quote: string = valueText) =>
-    count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote, copy,
+  // A value the saved copy shows keeps the line that shows it and is checked there; one it only implies (a link built from an id) stays unchecked until its line can be found.
+  const claim = async (field: string, value: unknown, valueText: string, quote: string | null = lineOf(copy, valueText)) =>
+    count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote: quote ?? valueText, copy,
       // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
-      acquisition: field === "location" ? "walker" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      acquisition: field === "location" ? "walker" : quote ? "checked" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };

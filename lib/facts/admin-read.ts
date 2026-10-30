@@ -23,6 +23,8 @@ const REASON_WORDS: Readonly<Record<string, string>> = {
   ARCHIVE_NEVER_PROVES_PRESENT: "an archived page cannot show what is true today",
   SECOND_SOURCE_REQUIRED: "this is a judgment call and needs a second source",
   NO_SAVED_COPY: "no saved copy of the source page is held",
+  NO_EXACT_LINE: "no line of the saved source shows the value",
+  SOURCE_FIELD_MISMATCH: "the saved source does not show this value",
 };
 
 function blankWords(stage: string, reason: string): string {

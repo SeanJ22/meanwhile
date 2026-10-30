@@ -122,6 +122,6 @@ export async function acquireSchoolRelease(kind: SchoolReleaseKind, options: Pic
   const url = links[0];
   options.onSourceUrl?.(url);
   return acquireKnownRelease({ ...options, sourceId: "nces-ccd", releaseId: url.split("/").at(-1)!, url,
-    parserVersion: kind === "f33" ? "nces-f33/2" : "nces-lea/2", allowedHosts: ["nces.ed.gov", "ies.ed.gov"], maxBytes: 64 * 1024 * 1024, checkAfterMs: 30 * 24 * 60 * 60 * 1000,
+    parserVersion: kind === "f33" ? "nces-f33/2" : "nces-lea/2", allowedHosts: ["nces.ed.gov", "ies.ed.gov"], maxBytes: 64 * 1024 * 1024, checkAfterMs: 15 * 24 * 60 * 60 * 1000,
     validate: bytes => { const parsed = table({ bytes }); if (!parsed.rows.length || !parsed.header.includes("LEAID")) throw new Error("NCES_RELEASE_INVALID"); } });
 }

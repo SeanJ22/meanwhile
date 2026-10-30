@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { neon } from "../db/client.ts";
+import { capabilityLog } from "./capability.ts";
 import { lockKey, unlockKey, KEYS_MASTER_ENV } from "./keys-crypto.ts";
 import { KEY_SERVICES, keyLabel, keyName, type KeyService, type KeyView } from "./keys-model.ts";
 
@@ -88,9 +89,12 @@ export function keysStore(query: KeysQuery, encryptionKey: string | undefined) {
     open(name: string, locked: string): string { return unlockKey(name, locked, encryptionKey); },
     async tested(name: string, version: string, result: { working: boolean; says: string }, at: string): Promise<void> {
       // An old result must never overwrite a replacement key, or recreate a deleted key.
-      await query(`UPDATE cp_keys SET tested_at=$3, working=$4, says=$5,
-        next_test_at=$3::timestamptz + interval '1 day' WHERE name=$1 AND version=$2 AND (tested_at IS NULL OR tested_at <= $3::timestamptz)`,
+      const [was] = await query("SELECT working FROM cp_keys WHERE name=$1 AND version=$2", [name, version]);
+      const changed = await query(`UPDATE cp_keys SET tested_at=$3, working=$4, says=$5,
+        next_test_at=$3::timestamptz + interval '1 day' WHERE name=$1 AND version=$2 AND (tested_at IS NULL OR tested_at <= $3::timestamptz) RETURNING name`,
       [name, version, at, result.working, result.says]);
+      // A key that starts to work is something new the system can do.
+      if (result.working && was?.working === false && changed.length) await capabilityLog(query).record([{ kind: "key", name, because: `the key ${name} was saved and tests Working` }], at);
     },
   };
 }

@@ -1,4 +1,3 @@
-import { mergeAssignmentParts } from "../assignment-view.ts";
 import type { OwnerAssignmentRow, OwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import type { AggregateRepository } from "./types.ts";
 import type { StateTotals } from "../owner-snapshot-totals.ts";
@@ -30,10 +29,6 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
         if (state.expectedRevision === null) await stateTotals.put(state.id, state.value, state.value.builtAt);
         else await stateTotals.compareAndSet(state.id, state.expectedRevision, state.value, state.value.builtAt);
       }
-    },
-    async candidates(state, nowIso, excluding = []) {
-      const excluded = new Set(excluding);
-      return mergeAssignmentParts((await values()).filter(row => row.state === state && !excluded.has(row.id)).map(row => row.part), nowIso).candidates;
     },
     async scopeMembers(identities) {
       const out = new Map<string,string[]>();

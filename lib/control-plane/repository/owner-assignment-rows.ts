@@ -1,4 +1,4 @@
-import type { AssignmentCandidate, AssignmentPart, IndexSegment } from "../assignment-view.ts";
+import type { AssignmentPart, IndexSegment } from "../assignment-view.ts";
 import type { GroupTotals, StateTotals } from "../owner-snapshot-totals.ts";
 import type { Sql } from "./pg-store.ts";
 import type { WorkItem } from "../work-item.ts";
@@ -24,7 +24,6 @@ export interface OwnerAssignmentRows {
   read(ids: readonly string[]): Promise<readonly OwnerAssignmentRow[]>;
   find(input: { readonly members?: readonly string[]; readonly clauses?: readonly string[]; readonly dueAt?: string }): Promise<readonly OwnerAssignmentRow[]>;
   save(rows: readonly OwnerAssignmentRow[], removed: readonly string[], states?: readonly OwnerStateWrite[]): Promise<void>;
-  candidates(state: string, nowIso: string, excluding?: readonly string[]): Promise<readonly AssignmentCandidate[]>;
   scopeMembers(identities: readonly { readonly key: string; readonly ref: string }[]): Promise<ReadonlyMap<string, readonly string[]>>;
   publications(readbackOnly?: boolean): Promise<readonly WorkItem[]>;
   clear(): Promise<void>;
@@ -53,8 +52,6 @@ export const OWNER_ASSIGNMENT_ROWS_DDL = [
 ] as const;
 
 const parse = (value: unknown): OwnerAssignmentRow => (typeof value === "string" ? JSON.parse(value) : value) as OwnerAssignmentRow;
-const groups = ["WORKING", "BLOCKED", "FAILED", "WAITING", "SUCCEEDED", "RETIRED", "UNKNOWN"];
-const lanes = ["SCOUT", "ROUTINE", "CREATED", "UNASSIGNED", "PROOF"];
 const ROW_FIELDS = `jsonb_build_object('id',id,'state',state_code,'builtAt',value->'builtAt',
   'group',value->'group','indexSegments',index_segments,'part',value->'part','nextAt',value->'nextAt')`;
 
@@ -95,21 +92,6 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
       };
       if (sql.withPinnedConnection) await sql.withPinnedConnection(write);
       else await write(sql);
-    },
-    async candidates(state, nowIso, excluding = []) {
-      const found: AssignmentCandidate[] = [];
-      for (const status of groups) {
-        const recent = status === "SUCCEEDED" || status === "RETIRED";
-        const band = status === "WORKING" || status === "WAITING";
-        const rows = await sql.query(`SELECT picked.id,picked.state,picked.lane,picked.band,picked."waitingSince",picked."lastActivityAt" FROM unnest($3::text[]) AS g(lane) CROSS JOIN LATERAL (
-          SELECT r.id,r.assignment_state AS state,r.lane,r.band,
-            r.waiting_since AS "waitingSince",r.last_activity_at AS "lastActivityAt"
-          FROM cp_owner_assignment_rows r WHERE r.state_code=$1 AND r.assignment_state=$2 AND r.lane=g.lane AND NOT(r.id=ANY($5::text[]))
-          ORDER BY ${band ? "r.band," : ""}${recent ? "r.last_activity_at DESC NULLS LAST" : "coalesce(r.waiting_since,$4)"},r.id
-          LIMIT CASE WHEN g.lane='PROOF' THEN 5 ELSE 20 END) picked`, [state, status, lanes, nowIso, excluding]) as AssignmentCandidate[];
-        found.push(...rows);
-      }
-      return found;
     },
     async scopeMembers(identities) {
       if (!identities.length) return new Map();

@@ -1159,7 +1159,7 @@ export class OwnerSnapshotFold {
         for (const item of inbox.items) { const held = this.#groupOf.get(item); if (held !== undefined) targets.add(held); }
         const touched = targets.size;
         await this.#derive([...targets], []);
-        const probes = inbox.items.filter((item) => !this.#groupOf.has(item));
+        const probes = [...await heldWorkItems(this.#repos, inbox.items.filter((item) => !this.#groupOf.has(item)))];
         await this.#derive([], probes);
         this.#input.log(`assignments: ${state} folded — ${touched} derived again, ${probes.length} work item(s) no assignment held`);
         await this.#emit();

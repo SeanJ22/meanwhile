@@ -621,3 +621,25 @@ test("normal publication resumes acknowledged changes without replaying its comp
     assert.equal("bodyAttempts"in row,false,"the runner does not persist detailed body attempts");
   }
 });
+
+test("artifact-only receipts never read assignment history; execution or later work-item membership still does",async()=>{
+  const repos=createMemoryRepositories(),world=emptyWorld();
+  const attempt=round(world,"attempt-only","orphan",{worker:PLAIN,startedAt:at(T1,-1)});
+  world.workerResults.push({...parserResult(attempt),id:"worker-only-result",workItemId:"worker-only",attemptId:"worker-only-attempt"});
+  const artifact=world.artifacts[0]!;
+  world.artifacts.push({...artifact,artifactId:"receipt-0",workItemId:"capture-receipts",recordedAt:at(T1,-.25)});
+  await seed(repos,world);
+  let previous=await publish(repos,T1,null,[],null);
+  const readKeys=repos.artifacts.readKeys!;let realMembership=false,reads=0;
+  repos.artifacts.readKeys=async(...args)=>{if(args[0].includes("capture-receipts")){assert.ok(realMembership,"unassigned receipts must never enumerate artifact history");reads+=1;}return readKeys(...args);};
+  for(const [i,now]of [[1,at(T1,.5)],[2,at(T1,1)]] as const){
+    await repos.artifacts.append("capture-receipts",`receipt-${i}`,{...artifact,artifactId:`receipt-${i}`,workItemId:"capture-receipts",recordedAt:now},now);
+    const current=await publish(repos,now,previous.published,[],null);
+    assert.equal(current.view.summary.total,2);assertSamePanels("unassigned receipts",current.panels,await fromScratch(repos,now,[],null,current.published.readings));
+    previous=current;
+  }
+  assert.equal((await repos.artifacts.readAll()).length,4);assert.equal(reads,0);
+  realMembership=true;await repos.workItems.put("capture-receipts",workItem("capture-receipts","standalone"),at(T1,1.5));
+  const current=await publish(repos,at(T1,2),previous.published,[],null);
+  assert.equal(current.view.summary.total,3);assert.ok(reads>0);assertSamePanels("later real membership",current.panels,await fromScratch(repos,at(T1,2),[],null,current.published.readings));
+});

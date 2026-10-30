@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
@@ -10,6 +11,7 @@ export const GET = readerRoute("/api/funding/[target]", async function GET(
   request: Request,
   { params }: { params: Promise<{ target: string }> },
 ) {
+  await loadWebsiteSavedKeys();
   let target: string;
   try { target = decodeURIComponent((await params).target); }
   catch { return Response.json({ error: "invalid target encoding" }, { status: 400 }); }

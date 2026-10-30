@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * `pnpm secrets:sweep` — reads the actual values out of `.env.local` and looks
+ * `pnpm secrets:sweep` — reads the actual saved values from the Keys box and looks
  * for those across the repository, the Drive mirror, and (with `--transcripts`)
  * the session transcripts. A pattern scan would match every git SHA and miss
  * any other credential shape (see `lib/ops/secret-redaction.ts`).
@@ -22,7 +22,6 @@ import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 import {
   findSecrets,
-  isPublishedByDesign,
   loadSecrets,
   redactSecrets,
   type SecretHit,
@@ -34,9 +33,9 @@ const TRANSCRIPTS = "C:/Users/seanj/.claude/projects/C--Users-seanj-dev-we-the-p
 
 const withTranscripts = process.argv.includes("--transcripts");
 
-const secrets = loadSecrets(join(ROOT, ".env.local"));
+const secrets = [...await loadSecrets(), ...["WTP_CONTROL_PLANE_DATABASE_URL", "WTP_KEYS_ENCRYPTION_KEY"].flatMap(name => process.env[name] ? [{ name, value: process.env[name]! }] : [])];
 if (secrets.length === 0) {
-  console.error("secrets:sweep · CANNOT RUN — no secrets read from .env.local, so nothing could be searched for.");
+  console.error("secrets:sweep · CANNOT RUN — no saved keys could be read, so nothing could be searched for.");
   process.exit(2);
 }
 
@@ -95,7 +94,7 @@ function sweep(label: string, files: string[], base: string) {
   console.log(`  ${label.padEnd(24)} ${read} file(s) read`);
 }
 
-console.log(`secrets:sweep · ${secrets.length} secret value(s) from .env.local, searched BY VALUE\n`);
+console.log(`secrets:sweep · ${secrets.length} saved key value(s), searched BY VALUE\n`);
 
 sweep("repository", repoFiles(), ROOT);
 
@@ -120,23 +119,7 @@ if (filesRead === 0) {
   process.exit(2);
 }
 
-/*
- * `NEXT_PUBLIC_*` values are served to every reader by design, so they are
- * counted and named apart from leaks rather than reported as one.
- */
-const secretHits = hits.filter((h) => !isPublishedByDesign(h.secretName));
-const publicHits = hits.filter((h) => isPublishedByDesign(h.secretName));
-
-console.log(
-  `\nsecrets:sweep · ${secretHits.length} SECRET occurrence(s) · ` +
-    `${publicHits.length} occurrence(s) of NEXT_PUBLIC_* values, which ship to every reader by design and are not leaks`,
-);
-
-if (publicHits.length > 0) {
-  const names = [...new Set(publicHits.map((h) => h.secretName))].sort();
-  console.log(`  set aside, by name: ${names.join(", ")}`);
-}
-
+const secretHits = hits;
 if (secretHits.length === 0) {
   console.log(`\nsecrets:sweep · 0 secret occurrence(s) across ${filesRead} file(s) read.`);
   process.exit(0);
@@ -177,16 +160,14 @@ if (process.argv.includes("--scrub")) {
       refused += 1;
       continue;
     }
-    const after = redactSecrets(before, secrets.filter((s) => !isPublishedByDesign(s.name)));
+    const after = redactSecrets(before, secrets);
     if (after === before) {
       console.log(`  NO-OP    ${file} — nothing replaced, which contradicts the sweep; not written`);
       refused += 1;
       continue;
     }
     writeFileSync(file, after, "utf8");
-    const remaining = findSecrets(file, readText(file) ?? "", secrets).filter(
-      (h) => !isPublishedByDesign(h.secretName),
-    );
+    const remaining = findSecrets(file, readText(file) ?? "", secrets);
     console.log(
       `  SCRUBBED ${file} — ${fileHits.reduce((n, h) => n + h.occurrences, 0)} value(s) replaced, ${remaining.length} remaining on re-read`,
     );

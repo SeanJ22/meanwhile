@@ -38,7 +38,7 @@ export function KeysBox() {
     input.value = "";
     await send("POST", { name: replacing?.name ?? name, value, service });
   }
-  return <section aria-labelledby="keys-title" className={s.stack}>
+  return <section aria-labelledby="keys-title" className={`${s.stack} ${s.keysBox}`}>
     <h3 id="keys-title" className={s.h3}>Keys</h3>
     {status}
     <form onSubmit={save} className={s.stack} autoComplete="off">
@@ -56,15 +56,18 @@ export function KeysBox() {
     {reading.kind === "failed" && <p>The saved keys could not be read. <button className={s.btn} onClick={reload}>Try again</button></p>}
     {reading.kind === "ready" && <>
       {reading.data.rows.every(row => row.deleted) && <p>No keys saved yet.</p>}
-      {reading.data.rows.filter(row => !row.deleted).map(row => <div key={row.name} className={s.stack}>
+      {reading.data.rows.filter(row => !row.deleted).map(row => <div key={row.name} data-key-row="" className={s.stack}>
         <div className={s.inline}><strong>{row.label}</strong> <Pill tone={row.working ? "good" : "warn"}>{row.working ? "Working" : "Not working"}</Pill></div>
         <p>{row.purpose}</p><p>Last tested {row.testedAt ? mst(row.testedAt) : "—"}</p>
         {!row.working && <p>{row.says}</p>}
         <p>Runner last read {row.runnerReadAt ? mst(row.runnerReadAt) : "—"}</p>
         <p>Changed {mst(row.changedAt)}</p>
-        <button type="button" className={s.btn} disabled={busy} onClick={() => replace(row)}>Replace {row.label}</button>
-        <button type="button" className={s.btn} disabled={busy} onClick={() => void send("DELETE", { name: row.name })}>Delete {row.label}</button>
+        <div className={s.inline}>
+        <button type="button" aria-label={`Test ${row.label} now`} className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "test" })}>Test now</button>
+        <button type="button" aria-label={`Replace ${row.label}`} className={s.btn} disabled={busy} onClick={() => replace(row)}>Replace</button>
+        <button type="button" aria-label={`Delete ${row.label}`} className={s.btn} disabled={busy} onClick={() => void send("DELETE", { name: row.name })}>Delete</button>
         {row.canUndo && <button type="button" className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "undo" })}>Undo last change</button>}
+        </div>
         <details><summary>Earlier changes</summary>{row.history.map((change, i) => <p key={i}>{mst(change.at)} · {change.before} → {change.after}</p>)}</details>
         <details><summary>Technical details</summary><p>{row.name}</p></details>
       </div>)}

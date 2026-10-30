@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 export const SYNTHESIS_CACHE_TTL = {
   ttl: "5m",
   milliseconds: 5 * 60 * 1000,
@@ -32,7 +33,7 @@ export function isAskCallerKey(value: unknown): value is AskCallerKey {
 
 /** A declared synthetic run keeps its own key on every deployment, so `NODE_ENV` alone never decides it. */
 export function askCallerKey(
-  env: NodeJS.ProcessEnv = process.env,
+  env: NodeJS.ProcessEnv = storedKeyEnvironment(),
   runClass: "ORGANIC" | "SYNTHETIC" | "UNKNOWN" = "ORGANIC",
 ): AskCallerKey {
   const declared = env.WTP_ASK_CALLER;

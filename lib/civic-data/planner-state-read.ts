@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { databaseReadOnlyQuery, installReaderDatabaseQuery } from "../reader/database.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
@@ -57,9 +58,10 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
   const postal = state.toUpperCase();
   if (!/^[A-Z]{2}$/.test(postal) && state !== "system") throw new Error(`PLANNER_STATE_INVALID:${state}`);
   if (!query) {
-    if (!process.env.DATABASE_URL) throw new Error("PLANNER_STORE_UNCONFIGURED");
+    const connection = storedKeyValue("DATABASE_URL");
+    if (!connection) throw new Error("PLANNER_STORE_UNCONFIGURED");
     installConnectAttemptWindow();
-    query = databaseReadOnlyQuery(process.env.DATABASE_URL);
+    query = databaseReadOnlyQuery(connection);
   }
   const direct: ReadOnlyQuery = async statements => {
     const started = performance.now();

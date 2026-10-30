@@ -1,5 +1,5 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** @freshness-reads-here — stored source observations survive replay and failed refresh. */
-import { config as loadEnv } from "dotenv";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,14 +22,14 @@ import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/kno
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-loadEnv({ path: join(ROOT, ".env.local") });
+
 installNeonRequestDeadline();
 const promote = process.argv.includes("--promote");
 if (!promote) throw new Error("Run the registered fec-funding adapter with --promote.");
 prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 const cycle = fecCycle(new Date(), process.argv.find(arg => arg.startsWith("--cycle="))?.slice(8));
-const key = process.env.FEC_API_KEY;
+const key = storedKeyValue("FEC_API_KEY");
 const current = await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported");
 const prior = current?.payload ?? JSON.parse(readFileSync(join(ROOT, "data/fec/fec-2026.json"), "utf8")) as FundingSnapshot;
 // FEC registrations are national, so every place's members are joined by their exact FEC IDs.

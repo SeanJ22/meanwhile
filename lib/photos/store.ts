@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { assertPublicUrl } from "../hunt/egress.ts";
 import { acquireKnownRelease } from "../sources/known-release.ts";
 import { normalizePortrait, PORTRAIT_ACCEPT, MAX_PORTRAIT_BYTES, PORTRAIT_DECODER_VERSION } from "./decode.ts";
@@ -28,7 +29,7 @@ export function createPortraitRuntime(acquire:typeof acquireKnownRelease = acqui
   },
   put: async (key, bytes) => {
     const { getStore } = await import("@netlify/blobs");
-    const siteID = process.env.WTP_BLOBS_SITE_ID, token = process.env.WTP_BLOBS_TOKEN;
+    const siteID = process.env.WTP_BLOBS_SITE_ID, token = storedKeyValue("WTP_BLOBS_TOKEN");
     const store = getStore({name:"meanwhile-portraits",consistency:"strong",...(siteID && token ? {siteID,token} : {})});
     await store.set(key, new Uint8Array(bytes).buffer, {onlyIfNew:true});
   },

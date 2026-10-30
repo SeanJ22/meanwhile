@@ -90,7 +90,7 @@ test("the smoke key is restricted to the smoke's own origin and ships nowhere el
   assert.equal(smoke.name, "meanwhile-synthetic-provider-smoke");
   assert.deepEqual(smoke.allowedOrigins, [SMOKE_ORIGIN]);
   assert.equal(
-    smoke.envVar,
+    smoke.keyName,
     "WTP_MAPTILER_SMOKE_KEY",
     "the smoke key must live in its own variable — sharing NEXT_PUBLIC_MAPTILER_KEY would ship " +
       "it to the browser as the production or staging key",
@@ -110,7 +110,7 @@ test("local, CI and preview deploys carry no browser key at all", () => {
   for (const context of ["local", "ci", "deploy-preview", "branch-deploy:other"] as DeployContext[]) {
     const identity = keyIdentityFor(context);
     assert.equal(identity.name, "none", `${context} must carry no browser key`);
-    assert.equal(identity.envVar, null);
+    assert.equal(identity.keyName, null);
     assert.deepEqual(identity.allowedOrigins, []);
   }
 });
@@ -142,7 +142,7 @@ test("the smoke refuses to spend the production key", () => {
 
   const missing = refuseSharedKey({ smokeKey: undefined, productionKey: "P" });
   assert.equal(missing.ok, false);
-  assert.match(missing.ok === false ? missing.says : "", /NEEDS OWNER/);
+  assert.match(missing.ok === false ? missing.says : "", /Keys box/);
 
   assert.deepEqual(refuseSharedKey({ smokeKey: "SMOKE", productionKey: "PROD" }), { ok: true });
   assert.deepEqual(refuseSharedKey({ smokeKey: "SMOKE", productionKey: undefined }), { ok: true });

@@ -1,8 +1,10 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { NextResponse } from "next/server";
 import { jurisdictionFromOcdId } from "@/lib/coverage/states";
 import { readFederalMoneyForPlace } from "@/lib/federal-money/reader";
 
 export async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const query = new URL(request.url).searchParams;
   const divisionId = query.get("division") ?? "";
   const bodyId = query.get("body") || undefined;

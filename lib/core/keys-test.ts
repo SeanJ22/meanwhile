@@ -1,13 +1,15 @@
 import type { KeyService } from "./keys-model.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
+import { SMOKE_ORIGIN } from "../map/key-matrix.ts";
 import type { KeysStore } from "./keys-store.ts";
 
 export interface KeyTestResult { readonly working: boolean; readonly says: string }
+interface KeyCompanion { readonly clientId?: string; readonly clientSecret?: string; readonly mapOrigin?: string; readonly neonOrganization?: string }
 interface Probe { readonly url: string; readonly method?: string; readonly body?: string; readonly headers?: Readonly<Record<string, string>>; readonly accepts: (body: unknown) => boolean }
 const record = (body: unknown): Record<string, unknown> => body && typeof body === "object" ? body as Record<string, unknown> : {};
 const array = (value: unknown): boolean => Array.isArray(value) && value.length > 0;
 
-function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoauth" | "google-client" | "other" | "brave" | "exa">, key: string): Probe {
+function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoauth" | "google-client" | "other" | "brave" | "exa">, key: string, companion?: KeyCompanion): Probe {
   const q = encodeURIComponent(key);
   switch (service) {
     case "anthropic": return { url: "https://api.anthropic.com/v1/models?limit=1", headers: { "x-api-key": key, "anthropic-version": "2023-06-01" }, accepts: b => array(record(b).data) };
@@ -17,16 +19,16 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
     case "openstates": return { url: "https://v3.openstates.org/jurisdictions?classification=state&per_page=1", headers: { "X-API-KEY": key }, accepts: b => array(record(b).results) };
     case "legiscan": return { url: `https://api.legiscan.com/?key=${q}&op=getSessionList&state=AZ`, accepts: b => record(b).status === "OK" && array(record(b).sessions) };
     case "govinfo": return { url: `https://api.govinfo.gov/collections?api_key=${q}`, accepts: b => array(record(b).collections) };
-    case "lda": return { url: "https://lda.senate.gov/api/v1/filings/?filing_year=2025&page_size=1", headers: { Authorization: `Token ${key}` }, accepts: b => array(record(b).results) };
+    case "lda": return { url: "https://lda.gov/api/v1/filings/?filing_year=2025&page_size=1", headers: { Authorization: `Token ${key}` }, accepts: b => array(record(b).results) };
     case "socrata": return { url: "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=1", headers: { "X-App-Token": key }, accepts: array };
     case "civic": return { url: `https://www.googleapis.com/civicinfo/v2/elections?key=${q}`, accepts: b => Array.isArray(record(b).elections) };
-    case "sam": return { url: `https://api.sam.gov/opportunities/v2/opportunities?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && Array.isArray(record(b).opportunitiesData) };
-    case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: PUBLIC_SITE_ORIGIN, Referer: `${PUBLIC_SITE_ORIGIN}/` }, accepts: b => record(b).version === 8 && array(record(b).layers) };
+    case "sam": return { url: `https://api.sam.gov/opportunities/v2/search?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && (record(b).totalRecords === 0 || Array.isArray(record(b).opportunitiesData)) };
+    case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: companion?.mapOrigin ?? PUBLIC_SITE_ORIGIN, Referer: `${companion?.mapOrigin ?? PUBLIC_SITE_ORIGIN}/` }, accepts: b => record(b).version === 8 && array(record(b).layers) };
     case "netlify": return { url: "https://api.netlify.com/api/v1/user", headers: { Authorization: `Bearer ${key}` }, accepts: b => typeof record(b).id === "string" };
     case "github": return { url: "https://api.github.com/user", headers: { Authorization: `Bearer ${key}`, "User-Agent": "Meanwhile keys check", Accept: "application/vnd.github+json" }, accepts: b => typeof record(b).login === "string" };
     case "anthropic-admin": return { url: "https://api.anthropic.com/v1/organizations/me", headers: { "x-api-key": key, "anthropic-version": "2023-06-01" }, accepts: b => typeof record(b).id === "string" };
     case "exa-admin": return { url: "https://admin-api.exa.ai/team-management/api-keys", headers: { "x-api-key": key }, accepts: b => Array.isArray(record(b).apiKeys) };
-    case "neon": return { url: "https://console.neon.tech/api/v2/projects?limit=1", headers: { Authorization: `Bearer ${key}` }, accepts: b => Array.isArray(record(b).projects) };
+    case "neon": return { url: companion?.neonOrganization ? `https://console.neon.tech/api/v2/projects?limit=1&org_id=${encodeURIComponent(companion.neonOrganization)}` : "https://console.neon.tech/api/v2/users/me/organizations", headers: { Authorization: `Bearer ${key}` }, accepts: b => Array.isArray(record(b)[companion?.neonOrganization ? "projects" : "organizations"]) };
     case "maptiler-service": return { url: "https://service.maptiler.com/v1/analytics/api_usage/timeline?period=current_billing_period&classifier=api_keys&group=request&format=json",
       headers: { Authorization: `Token ${key}` }, accepts: b => Array.isArray(record(b).datasets) };
   }
@@ -53,12 +55,11 @@ async function testSearchKey(service: "brave" | "exa", value: string, fetchImpl:
 
 /** Response shape matters: Census can return an invalid-key HTML page with status 200. */
 export async function testKey(service: KeyService, value: string, fetchImpl: typeof fetch = fetch,
-  companion?: { readonly clientId?: string; readonly clientSecret?: string }): Promise<KeyTestResult> {
+  companion?: KeyCompanion): Promise<KeyTestResult> {
   try {
     if (service === "brave" || service === "exa") return await testSearchKey(service, value, fetchImpl);
     if (service === "other") return { working: false, says: "The team needs to add a key check for this service." };
     if (service === "signing") {
-      if (value.length < 24) return { working: false, says: "This sign-in key is too short." };
       const { signEnvelope, openEnvelope } = await import("../control-plane/admin-auth.ts");
       const signed = await signEnvelope({ check: "saved key" }, value);
       const result = await openEnvelope(signed, value);
@@ -85,8 +86,8 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
         ? { working: true, says: "The database accepted the connection." }
         : { working: false, says: "The database did not confirm the connection." };
     }
-    const request = probe(service, value);
-    const response = await fetchImpl(request.url, { method: request.method, body: request.body, headers: request.headers, redirect: "error", signal: AbortSignal.timeout(2_000) });
+    const request = probe(service, value, companion);
+    const response = await fetchImpl(request.url, { method: request.method, body: request.body, headers: request.headers, redirect: "error", signal: AbortSignal.timeout(8_000) });
     if (response.status === 401 || response.status === 403) return { working: false, says: "The service refused this key or its access." };
     if (response.status === 429) return { working: false, says: "The service's usage limit has been reached." };
     if (!response.ok) return { working: false, says: "The service could not complete the key check." };
@@ -97,14 +98,20 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
 }
 
 export async function testDueKeys(store: KeysStore, at: string, name?: string,
-  check: typeof testKey = testKey, source?: "runner" | "website"): Promise<number> {
-  const due = await store.claimTests(at, name, source);
+  check: typeof testKey = testKey): Promise<number> {
+  const due = await store.claimTests(at, name);
   await Promise.all(due.map(async row => {
     let result: KeyTestResult;
     try {
-      const companion = row.service === "googleoauth" || row.service === "google-client" ? {
-        clientId: await store.read("GOOGLE_OAUTH_CLIENT_ID"), clientSecret: await store.read("GOOGLE_OAUTH_CLIENT_SECRET"),
-      } : undefined;
+      const source = row.name.endsWith(".runner") ? "runner" : row.name.endsWith(".website") ? "website" : undefined;
+      const companion: KeyCompanion = {
+        ...(row.service === "googleoauth" || row.service === "google-client" ? {
+          clientId: await store.read("GOOGLE_OAUTH_CLIENT_ID", false, at, source),
+          clientSecret: await store.read("GOOGLE_OAUTH_CLIENT_SECRET", false, at, source),
+        } : {}),
+        ...(row.name.replace(/\.(runner|website)$/, "") === "WTP_MAPTILER_SMOKE_KEY" ? { mapOrigin: SMOKE_ORIGIN } : {}),
+        ...(row.service === "neon" ? { neonOrganization: process.env.NEON_BILLING_ORG_ID } : {}),
+      };
       result = await check(row.service, store.open(row.name, row.locked), fetch, companion);
     }
     catch { result = { working: false, says: "The saved key could not be opened. Check the Keys box encryption setting." }; }

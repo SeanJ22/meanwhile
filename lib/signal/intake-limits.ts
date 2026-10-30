@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /**
  * Intake protection policy: thresholds, the submission classifier, and same-origin enforcement, shared
  * by /api/reactions and /api/log. Each threshold reads its environment variable at call time, and the
@@ -9,7 +10,7 @@
  */
 
 function envInt(name: string, fallback: number): number {
-  const raw = process.env[name];
+  const raw = storedKeyEnvironment()[name];
   if (!raw) return fallback;
   const parsed = Number.parseInt(raw, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;

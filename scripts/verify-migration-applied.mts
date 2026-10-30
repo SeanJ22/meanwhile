@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * verify-migration-applied — read a target database's catalog back and diff it
  * against a committed migration's own SQL.
@@ -15,7 +16,6 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { config as loadEnv } from "dotenv";
 import { neon } from "../lib/db/client.ts";
 
 import {
@@ -29,7 +29,6 @@ import {
 } from "../lib/db/applied-migrations.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const args = process.argv.slice(2);
 const tag = args.find((a) => a.startsWith("--tag="))?.slice("--tag=".length);
@@ -42,7 +41,7 @@ if (!tag) {
 
 const envName =
   target === "production" ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
-const url = process.env[envName];
+const url = storedKeyEnvironment()[envName];
 if (!url) {
   console.error(`verify:migration — ${envName} is not set, so this could not be checked at all.`);
   console.error("That is a COULD-NOT-TELL, not a pass.");

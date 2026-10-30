@@ -253,7 +253,7 @@ test("g13: the sanction table is a closed list, and both narrow operations are o
 test("g13: the standing intake runtime declares exactly what the guard requires", () => {
   const runtime = readFileSync("scripts/intake-tripwire.mts", "utf8");
   assert.match(runtime, /resolveProductionWriteHandle\(\)/);
-  assert.match(runtime, /process\.env\.DATABASE_URL = handle\.connection/);
+  assert.match(runtime, /selectSavedDatabase\("WTP_PRODUCTION_DATABASE_URL_WRITE"\)/);
   assert.match(runtime, /process\.env\.WTP_DB_ROLE = "production"/);
   assert.match(runtime, /process\.env\.WTP_SANCTIONED_WRITE = "intake-limiter-purge"/);
   assert.match(runtime, /assertWriteAllowed\("an intake limiter purge"\)/);

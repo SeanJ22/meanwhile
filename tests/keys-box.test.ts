@@ -7,7 +7,6 @@ import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { importExistingKeys } from "../lib/core/keys-import.ts";
 import { handleKeys } from "../lib/core/keys-http.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "../lib/ops/origins.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -70,6 +69,24 @@ test("daily checks run at 24 hours, survive restart and are claimed once by comp
   assert.equal(tests, 2);
 });
 
+test("a saved key can be retested without its value, without stealing an active test or reviving a deleted key", async t => {
+  const { store } = await fixture(t);
+  const version = await store.save("Example", SECRET, "signing", AT);
+  await testDueKeys(store, AT, "Example", async () => ({ working: false, says: "The service could not be reached." }));
+  const next = "2026-10-29T12:01:00.000Z";
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next, "Example")).length, 1);
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next, "Example")).length, 0);
+  await store.tested("Example", version, await good(), next);
+  assert.equal((await store.list())[0].working, true);
+  assert.equal((await store.claimTests("2026-10-30T12:00:59.999Z")).length, 0);
+  await store.remove("Example", next);
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next)).length, 0);
+  assert.equal(await store.read("Example"), undefined);
+});
+
 test("a killed test is reclaimed and old results cannot overwrite a replacement or resurrect a deleted key", async t => {
   const { store } = await fixture(t);
   const old = await store.save("Example", SECRET, "anthropic", AT);
@@ -91,6 +108,7 @@ test("HTML success pages and provider failures never count as working or expose 
   assert.equal((await testKey("census", SECRET, fake(new Response("<html>Invalid Key</html>")))).working, false);
   assert.equal((await testKey("anthropic", SECRET, fake(Response.json({ error: "no" })))).working, false);
   assert.equal((await testKey("anthropic", SECRET, fake(Response.json({ data: [{ id: "claude" }] })))).working, true);
+  assert.equal((await testKey("signing", "internal-setting")).working, true, "use the website's actual signing behavior");
   const failure = await testKey("anthropic", SECRET, (async () => { throw new Error(SECRET); }) as typeof fetch);
   assert.equal(failure.working, false);
   assert.equal(JSON.stringify(failure).includes(SECRET), false);
@@ -99,6 +117,32 @@ test("HTML success pages and provider failures never count as working or expose 
     assert.equal(new Headers(init?.headers).get("authorization"), `Token ${SECRET}`);
     return Response.json({ datasets: [] });
   }) as typeof fetch)).working, true);
+});
+
+test("key checks use current provider routes, reporting scope and the dedicated map test origin", async t => {
+  const { store } = await fixture(t);
+  await store.save("WTP_MAPTILER_SMOKE_KEY", SECRET, "maptiler", AT);
+  await testDueKeys(store, AT, undefined, async (service, value, _fetch, companion) => testKey(service, value,
+    (async (_url, init) => {
+      assert.equal(new Headers(init?.headers).get("origin"), "http://maptiler-smoke.localhost");
+      return Response.json({ version: 8, layers: [{}] });
+    }) as typeof fetch, companion));
+  assert.equal((await store.list())[0].working, true);
+  for (const [service, path, body] of [
+    ["lda", "https://lda.gov/api/v1/filings/", { results: [{}] }],
+    ["sam", "https://api.sam.gov/opportunities/v2/search", { totalRecords: 0, opportunitiesData: [] }],
+    ["neon", "https://console.neon.tech/api/v2/users/me/organizations", { organizations: [] }],
+  ] as const) {
+    assert.equal((await testKey(service, SECRET, (async (url, init) => {
+      assert.equal(String(url).split("?")[0], path);
+      assert.equal(init?.redirect, "error");
+      return Response.json(body);
+    }) as typeof fetch)).working, true);
+  }
+  assert.equal((await testKey("neon", SECRET, (async url => {
+    assert.equal(new URL(String(url)).searchParams.get("org_id"), "existing-billing-account");
+    return Response.json({ projects: [] });
+  }) as typeof fetch, { neonOrganization: "existing-billing-account" })).working, true);
 });
 
 test("search keys are checked against a rejected control without submitting paid searches", async () => {
@@ -127,25 +171,6 @@ test("failed and overdue key checks appear in the brief and disappear after reco
   await testDueKeys(store, next, undefined, good);
   assert.deepEqual(keyProblems(await store.list(), next), []);
   assert.match(keyProblems(await store.list(), "2026-10-31T12:00:00.000Z")[0].what, /overdue/);
-});
-
-test("imports preserve distinct runtime credentials and never replace an owner's saved change", async t => {
-  const { store } = await fixture(t);
-  // Signing checks exercise the real site's HMAC without external services.
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website");
-  assert.equal((await store.list()).length, 2);
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), "runner-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY.website"), "website-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", true, AT, "runner"), "runner-".repeat(8));
-  await store.save("WTP_ADMIN_SESSION_KEY", SECRET, "signing", AT);
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), SECRET);
-  assert.equal((await store.list()).length, 2);
-  await store.remove("WTP_ADMIN_SESSION_KEY", AT);
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), undefined, "the import cannot restore a deleted key");
 });
 
 test("undo restores the previous encrypted value, retests it, and keeps every value out of history", async t => {
@@ -187,11 +212,48 @@ test("the protected Settings API saves, tests, lists and deletes without returni
     const listed = await handleKeys(request("GET"), cookie, deps);
     assert.match(listed.headers.get("cache-control")!, /no-store/);
     assert.equal((await listed.json()).rows[0].working, true);
+    const retested = await handleKeys(request("POST", { name: "Example", action: "test" }), cookie, deps);
+    assert.equal(retested.status, 200);
+    assert.equal((await retested.text()).includes(SECRET), false);
     await keysRunnerPass(store);
     assert.ok((await store.list())[0].runnerReadAt);
     const deleted = await handleKeys(request("DELETE", { name: "Example" }), cookie, deps);
     assert.equal(deleted.status, 200);
     assert.equal(await store.read("Example"), undefined);
+  });
+});
+
+test("saving starts the provider test immediately and keeps its work alive without holding the response", async t => {
+  const { store } = await fixture(t);
+  let release!: () => void;
+  const provider = new Promise<void>(resolve => { release = resolve; });
+  const kept: Promise<unknown>[] = [];
+  let started = false;
+  await withAdminSessionKey(async () => {
+    const cookie = (await adminSessionCookie()).split("=")[1];
+    const response = await handleKeys(new Request(`${ADMIN_ORIGIN}/api/admin/v6/keys`, {
+      method: "POST", headers: { host: hostOf(ADMIN_ORIGIN), origin: ADMIN_ORIGIN, "content-type": "application/json" },
+      body: JSON.stringify({ name: "Slow provider", value: SECRET, service: "anthropic" }),
+    }), cookie, {
+      store: () => store,
+      test: (saved, at, name) => {
+        started = true;
+        return testDueKeys(saved, at, name, async (_service, value) => {
+          assert.equal(value, SECRET); await provider; return good();
+        });
+      },
+      waitUntil: pending => { kept.push(pending); },
+    });
+    assert.equal(started, true);
+    assert.equal(response.status, 200);
+    const body = await response.json();
+    assert.match(body.says, /saved.*test is running/i);
+    assert.equal(body.rows[0].testedAt, null);
+    assert.equal(JSON.stringify(body).includes(SECRET), false);
+    assert.equal(kept.length, 1);
+    assert.equal(await store.read("Slow provider"), SECRET);
+    release(); await Promise.all(kept);
+    assert.equal((await store.list())[0].working, true);
   });
 });
 
@@ -210,19 +272,6 @@ test("known credentials cannot skip their provider check by choosing a different
     }
     assert.ok((await store.list()).every(row => row.service === "congress"));
   });
-});
-
-test("simultaneous runtime imports preserve both keys, and a later owner edit wins over a first import", async t => {
-  const { store } = await fixture(t);
-  await Promise.all([
-    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner"),
-    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website"),
-  ]);
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "runner"), "runner-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
-  await store.save("ANTHROPIC_API_KEY", SECRET, "signing", AT);
-  await importExistingKeys({ ANTHROPIC_API_KEY: "old-website-setting" }, store, AT, "website");
-  assert.equal(await store.read("ANTHROPIC_API_KEY", false, AT, "website"), SECRET);
 });
 
 test("the standing clock picks up saved keys on its next tick and tests again on the following day", async t => {

@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { askPlaybook, askSettings } from "./runtime-settings.ts";
 import { writerSelection } from "./writer-selection.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
@@ -238,7 +239,7 @@ async function synthesizeOnRung(
     return { kind: "UNAVAILABLE", why: "no-evidence", ms: elapsed() };
   }
 
-  const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;
+  const apiKey = options.apiKey ?? storedKeyValue("ANTHROPIC_API_KEY");
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key", ms: elapsed() };
   if (options.signal?.aborted) return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "AbortError" };
   if (options.allowCall && !options.allowCall()) {

@@ -1,3 +1,4 @@
+import { loadNativeSavedKeys } from "../../lib/core/keys-native.ts";
 import { seedLineKeeper } from "../../lib/control-plane/line-keeper/runtime.ts";
 import { flushDatabaseTransfer } from "../../lib/db/transfer.ts";
 export const config={background:true};
@@ -8,6 +9,7 @@ export function isPublishedProductionDeploy(event:{deploy:{context?:string;publi
 const initializer={
   async deploySucceeded(event:{deploy:{context?:string;publishedAt?:string|null}}):Promise<void> {
     if(!isPublishedProductionDeploy(event)) return;
+    await loadNativeSavedKeys({ deploy: event.deploy });
     await seedLineKeeper();
     await flushDatabaseTransfer();
   },

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { randomUUID } from "node:crypto";
 
 import { ZERO_COST } from "../control-plane/attempt.ts";
@@ -99,7 +100,7 @@ async function lookBatchRequest(apiKey: string, customId: string, params: Record
 /** The model call the reviewer is handed: screenshots and prompt in, the model's JSON text out, the bill in the ledger. */
 export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, fetchImpl: typeof fetch = fetch,
   options: LookCallOptions = {}): NonNullable<LookReviewDeps["callModel"]> {
-  const batched = batchEnabledForJob("background-worker-audit", "AUDIT_SAMPLE", options.env ?? process.env);
+  const batched = batchEnabledForJob("background-worker-audit", "AUDIT_SAMPLE", options.env ?? storedKeyEnvironment());
   return async ({ prompt, schema, images }) => {
     const jobId = `look-review:${randomUUID()}`;
     const content = [

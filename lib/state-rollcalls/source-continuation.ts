@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { holdRawCapture, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
 import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cache.ts";
@@ -32,7 +33,7 @@ export async function continueOfficialVoteDocument(input:{
   const now=input.now??(()=>new Date().toISOString()),cache=(input.cache??runtimeCivicReadCache()).jobState();
   const key=JSON.stringify([input.sourceId,input.parserVersion,input.url]);
   const saved=await cache.readCheckpoint<SavedDocument>("official-vote-source",key);
-  const checkedAfter=Date.parse(process.env[SOURCE_CHECK_AFTER_ENV]??"");
+  const checkedAfter=Date.parse(storedKeyEnvironment()[SOURCE_CHECK_AFTER_ENV]??"");
   const acceptedStatuses=input.acceptedStatuses??[200];
   if(input.reuse!==false&&saved?.context===input.context&&saved.requestedUrl===input.url&&acceptedStatuses.includes(saved.httpStatus)&&
       Date.parse(saved.retrievedAt)>Date.parse(now())-(input.maxAgeMs??3_600_000)&&

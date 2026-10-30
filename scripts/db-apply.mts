@@ -1,7 +1,8 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
-import { config as loadEnv } from "dotenv";
+import { loadEnvLocal } from "./load-env-local.mjs";
 import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
 import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, runtimeContractContinues, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
 
@@ -16,12 +17,12 @@ export function productionBuildCanApply(env: Record<string, string | undefined>)
   return env.NETLIFY === "true" && env.CONTEXT === "production" && env.BRANCH === "main";
 }
 
-export async function runDbApply(args: string[], env = process.env, deps: ApplyDeps = {}): Promise<number> {
+export async function runDbApply(args: string[], env = storedKeyEnvironment(), deps: ApplyDeps = {}): Promise<number> {
   if (args.includes("--production-build") && !productionBuildCanApply(env)) {
     console.log("db:apply: production expand skipped outside the Netlify production main build; writes=0");
     return 0;
   }
-  loadEnv({ path: ".env.local", processEnv: env, quiet: true });
+  loadEnvLocal(process.cwd(), env);
   const production = args.includes("--target=production");
   const dry = args.includes("--dry");
   const requestedPhase = args.find(a => a.startsWith("--phase="))?.slice(8);
@@ -40,7 +41,7 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
     result = { status: 1, stdout: "", stderr: "db:apply: REFUSED — contract migrations require the exact production commit to be serving and loaded\n" };
   } else {
     const execute = deps.execute ?? ((childArgs, childEnv) => {
-      const child = spawnSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e",
+      const child = spawnSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e",
         "import { applyMigrations } from './scripts/apply-migrations.mts'; import { applyControlPlaneMigrations } from './scripts/control-plane-migrations.mts'; const args = process.argv.slice(1); try { await applyMigrations(args); if (args.includes('--target=production')) await applyControlPlaneMigrations(args); } catch (error) { if (error?.code !== 'CP01_OWNER_INITIALIZATION_PENDING') throw error; console.log('CP01_OWNER_INITIALIZATION_PENDING: durable counts checkpoint saved; cleanup will continue on its existing clock'); process.exitCode = 75; }", "--", ...childArgs], {
         cwd: process.cwd(), env: childEnv, encoding: "utf8", windowsHide: true, maxBuffer: 16 * 1024 * 1024,
       });

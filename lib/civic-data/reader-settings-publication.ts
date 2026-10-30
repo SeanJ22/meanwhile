@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { fieldManualEntryId, type FieldManualRepos } from "../control-plane/field-manual.ts";
 import { rolePlaybook, readRolePlaybookRow } from "../control-plane/playbooks.ts";
 import { getStore } from "@netlify/blobs";
@@ -24,7 +25,7 @@ export interface SettingsEdgeStore {
 }
 export function settingsEdgeStore(): SettingsEdgeStore {
   const siteID = process.env.NETLIFY_SITE_ID || process.env.NETLIFY_BLOBS_SITE_ID;
-  const token = process.env.NETLIFY_API_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
+  const token = storedKeyValue("NETLIFY_API_TOKEN") || storedKeyValue("NETLIFY_BLOBS_TOKEN");
   const store = getStore({ name: READER_ARTIFACT_STORE_NAME, consistency: "strong", ...(siteID && token ? { siteID, token } : {}) });
   return {
     async read() {

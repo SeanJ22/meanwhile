@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
@@ -100,11 +101,11 @@ export async function runAdminEvidenceMirror(input: {
 
   readonly remote?: AdminEvidenceRemote;
 }): Promise<AdminMirrorReport> {
-  const env = input.env ?? process.env;
+  const env = input.env ?? storedKeyEnvironment();
   const empty = (state: AdminMirrorReport["state"]): AdminMirrorReport =>
     ({ state, examined: 0, copied: 0, alreadyVerified: 0, refused: 0, failures: [] });
   if (env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED !== "1") return empty("DISABLED");
-  if (!input.remote && (!env.NETLIFY_SITE_ID || !env.NETLIFY_BLOBS_TOKEN)) return empty("NOT_CONFIGURED");
+  if (!input.remote && (!env.NETLIFY_SITE_ID || !storedKeyValue("NETLIFY_BLOBS_TOKEN", env))) return empty("NOT_CONFIGURED");
   const deadlineMs = Math.min(input.deadlineMs ?? Number.POSITIVE_INFINITY, Date.now() + ADMIN_MIRROR_BUDGET_MS);
   let expired = false;
   const beforeDeadline = async <T>(read: () => Promise<T>): Promise<T> => {
@@ -117,7 +118,7 @@ export async function runAdminEvidenceMirror(input: {
       })]);
     } finally { if (timer) clearTimeout(timer); }
   };
-  const source = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: env.NETLIFY_BLOBS_TOKEN });
+  const source = input.remote ?? new NetlifyAdminEvidenceRemote({ siteID: env.NETLIFY_SITE_ID, token: storedKeyValue("NETLIFY_BLOBS_TOKEN", env) });
 
   const remote: AdminEvidenceRemote = {
     read: key => beforeDeadline(() => source.read(key)),

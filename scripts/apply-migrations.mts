@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * `pnpm db:apply` — apply the committed Drizzle migrations over the HTTP
  * driver (`drizzle-kit migrate`'s websocket driver does not connect through the
@@ -25,7 +26,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { config as loadEnv } from "dotenv";
 import { neon } from "../lib/db/client.ts";
 
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
@@ -132,7 +132,6 @@ export async function applyMigrations(args: string[], options: { beforeContract?
     process.exit(0);
   }
 
-  loadEnv({ path: join(process.cwd(), ".env.local"), quiet: true });
 
   const PRODUCTION = args.includes("--target=production");
   const DRY = args.includes("--dry");
@@ -173,11 +172,11 @@ export async function applyMigrations(args: string[], options: { beforeContract?
   let which: string;
   // A build with no DDL to apply can inspect the journal without a writer.
   // This connection never reaches schema setup or migration transactions.
-  const INSPECT_ONLY = PRODUCTION_BUILD && !process.env.WTP_PRODUCTION_DATABASE_URL_WRITE;
+  const INSPECT_ONLY = PRODUCTION_BUILD && !storedKeyValue("WTP_PRODUCTION_DATABASE_URL_WRITE");
 
   if (INSPECT_ONLY) {
     which = "DATABASE_URL";
-    connection = process.env.DATABASE_URL ?? "";
+    connection = storedKeyValue("DATABASE_URL") ?? "";
     let host = "";
     try { host = new URL(connection).hostname; } catch { /* Refuse without printing credentials. */ }
     if (host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !host.endsWith(".neon.tech")) {
@@ -199,7 +198,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       throw error;
     }
   } else {
-    const local = process.env.DATABASE_URL;
+    const local = storedKeyValue("DATABASE_URL");
     which = "DATABASE_URL";
     if (!local) {
       console.error("db:apply: DATABASE_URL is not set — refusing to guess a database.");

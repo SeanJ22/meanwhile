@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /** Who ran this, and was the work already in: the provenance that decides a passing run's proof class. */
 
 import { execFileSync } from "node:child_process";
@@ -36,7 +37,7 @@ function git(args: string[], cwd: string): string | null {
 export function readRunProvenance(
   testedSha: string | null,
   cwd: string = process.cwd(),
-  env: NodeJS.ProcessEnv = process.env,
+  env: NodeJS.ProcessEnv = storedKeyEnvironment(),
 ): RunProvenance {
   const status = git(["status", "--porcelain"], cwd);
   const workingTreeClean = status !== null && status.length === 0;

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 /**
  * Send and area budgets as hard caps. Every dollar paid work may spend on a
  * budgeted Send or area is held first, in one shared store of holds
@@ -224,8 +225,8 @@ export function releaseHold(ledger: BudgetLedger, holdId: string, now: string): 
  */
 export const SPEND_HOLDS_TABLE_VAR = "WTP_SPEND_HOLDS_TABLE";
 
-export function spendHoldsTableEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
-  return env[SPEND_HOLDS_TABLE_VAR]?.trim() !== "0";
+export function spendHoldsTableEnabled(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): boolean {
+  return storedKeyEnvironment(env)[SPEND_HOLDS_TABLE_VAR]?.trim() !== "0";
 }
 
 /** What an admission asks for. */

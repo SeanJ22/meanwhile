@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { readPromotedCivicData, readPromotedCivicDataPredecessors, type CivicDataReadResult, type ProvenCivicDataHistory } from "./read-model.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -9,7 +10,7 @@ import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { reissuesSitting, supersedesSeriesRecord, type ListedSittingFacts } from "../sources/event-identity.ts";
 import type { Meeting } from "../sources/types.ts";
 
-export function meetingHistoryRestoreEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+export function meetingHistoryRestoreEnabled(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): boolean {
   return env.WTP_MEETING_HISTORY_RESTORE?.trim().toLowerCase() === "on";
 }
 

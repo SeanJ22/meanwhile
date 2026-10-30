@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { acquireKnownRelease, type KnownRelease } from "../sources/known-release.ts";
 import { readSourceApi } from "../control-plane/scheduler/scout-api.ts";
 import { portraitHash, type PortraitCapture, type PortraitSources } from "../photos/evidence.ts";
@@ -66,7 +67,7 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
   const readApi = options.readApi ?? readSourceApi;
   const storePortrait = options.storePortrait ?? storeStandingPortrait;
   const sourceSignal = signal ?? new AbortController().signal;
-  const apiConfigured = options.apiKeyConfigured ?? Boolean(process.env.CONGRESS_API_KEY?.trim());
+  const apiConfigured = options.apiKeyConfigured ?? Boolean(storedKeyValue("CONGRESS_API_KEY")?.trim());
   const holders = value.roster.officeholders.map(row => ({ ...row }));
   const lastAttempt = latestPortraitAttempts(options.previousExcludedFacts ?? [], "CONGRESS_PORTRAIT_");
   const attemptedAt = (person: Officeholder) =>
@@ -86,7 +87,7 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
     // A member the deadline interrupted is unfinished, not failed: they stay due, behind members not yet tried.
     if (sourceSignal.aborted) { code = "CONGRESS_PORTRAIT_INTERRUPTED"; detail = "The pass deadline interrupted this attempt; it continues on the next pass."; }
     let diagnostic = error === undefined ? "" : sanitizedErrorDiagnostic(error, 500);
-    for (const [key, secret] of Object.entries(process.env)) if (/(?:API_KEY|TOKEN)$/.test(key) && secret) {
+    for (const [key, secret] of Object.entries(storedKeyEnvironment())) if (/(?:API_KEY|TOKEN)$/.test(key) && secret) {
       diagnostic = diagnostic.split(secret).join("[REDACTED]").split(encodeURIComponent(secret)).join("[REDACTED]");
     }
     excludedFacts.push({ key: `${person.personId ?? person.id}:portrait`, code,

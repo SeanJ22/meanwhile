@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { databaseReadOnlyQuery } from "../reader/database.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
@@ -23,7 +24,7 @@ export async function readOperationalReferenceState(state: string, query?: ReadO
   const key = state.toLowerCase();
   if (!/^[a-z]{2}$/.test(key)) throw new Error(`OPERATIONAL_REFERENCE_STATE_INVALID:${state}`);
   if (!query) {
-    const url = process.env.DATABASE_URL;
+    const url = storedKeyValue("DATABASE_URL");
     if (!url) throw new Error("OPERATIONAL_REFERENCE_STORE_UNCONFIGURED");
     installConnectAttemptWindow();
     query = databaseReadOnlyQuery(url);

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { withReaderSelection } from "@/lib/db/reader-route";
 import { AnswerForm } from "@/components/questionnaire/answer-form";
 import { findInvitation, findToken } from "@/lib/db/questionnaire";
@@ -38,6 +39,7 @@ export default async function QuestionnairePage({
 }: {
   params: Promise<{ token: string }>;
 }) {
+  await loadWebsiteSavedKeys();
   const { token } = await params;
 
   const lookup = await findToken(digestToken(token));

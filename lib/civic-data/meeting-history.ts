@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /** History is promoted before the partition removes the sittings, so no record is ever in neither place. */
 import { createHash } from "node:crypto";
 
@@ -39,7 +40,7 @@ export type MeetingHistoryMove =
 
 const NOTHING = new Map<string, MeetingHistoryMoveRecord>();
 
-export function meetingHistoryMoveEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+export function meetingHistoryMoveEnabled(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): boolean {
   return env.WTP_MEETING_HISTORY_MOVE?.trim().toLowerCase() !== "off";
 }
 

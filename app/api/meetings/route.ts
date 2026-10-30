@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { compressedJson } from "@/lib/api/compressed-json";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
@@ -25,6 +26,7 @@ import type { ReaderStateResponse } from "@/lib/reader/client";
 export const runtime = "nodejs";
 
 export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const timing = stageTimer(), params = new URL(request.url).searchParams;
   const unknown = rejectUnknown(params, ["lat", "lng", "radiusKm", "zip", "include"]);
   if (!unknown.ok) return refuse(unknown.error);

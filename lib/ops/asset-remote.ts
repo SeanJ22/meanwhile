@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /** The asset store's public address; a restore is verified by hash, never by status code. */
 import { createHash } from "node:crypto";
 
@@ -5,7 +6,7 @@ import { createHash } from "node:crypto";
 export const DEFAULT_ASSET_REMOTE =
   "https://raw.githubusercontent.com/SeanJ22/wtp-assets/main";
 
-export function assetRemoteBase(env: NodeJS.ProcessEnv = process.env): string {
+export function assetRemoteBase(env: NodeJS.ProcessEnv = storedKeyEnvironment()): string {
   const configured = env.WTP_ASSET_REMOTE?.trim();
   return (configured && configured.length > 0 ? configured : DEFAULT_ASSET_REMOTE).replace(
     /\/+$/,
@@ -17,7 +18,7 @@ export function assetRemoteBase(env: NodeJS.ProcessEnv = process.env): string {
 export function remoteAssetUrl(
   sha256: string,
   extension: string,
-  env: NodeJS.ProcessEnv = process.env,
+  env: NodeJS.ProcessEnv = storedKeyEnvironment(),
 ): string {
   if (!/^[0-9a-f]{64}$/.test(sha256)) {
     throw new Error(
@@ -45,7 +46,7 @@ export async function fetchAssetFromRemote(
   extension: string,
   options: { env?: NodeJS.ProcessEnv; fetchImpl?: typeof fetch } = {},
 ): Promise<RemoteAssetResult & { body?: Buffer }> {
-  const env = options.env ?? process.env;
+  const env = options.env ?? storedKeyEnvironment();
   const doFetch = options.fetchImpl ?? fetch;
   const url = remoteAssetUrl(sha256, extension, env);
 

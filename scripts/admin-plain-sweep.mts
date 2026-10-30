@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * The plain-English sweep over the RENDERED admin console: machine codes arrive
  * at render time from the control plane, so only the rendered document can be
@@ -109,7 +110,7 @@ async function main(): Promise<void> {
   if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(base)) {
     throw new Error(`admin:plain-sweep refuses ${base}: this instrument reads a LOCAL build and never production.`);
   }
-  const key = process.env.WTP_ADMIN_SESSION_KEY;
+  const key = storedKeyValue("WTP_ADMIN_SESSION_KEY");
   if (!key) throw new Error("WTP_ADMIN_SESSION_KEY is not set, so no admin session can be minted and no admin page can be read.");
 
   const nowSeconds = Math.floor(Date.now() / 1000);

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 import { sourceFetch } from "../http.ts";
 import { FEDERAL_SOURCES, type FederalSourceId } from "./targets.ts";
 import { object, rows, string } from "./normalize.ts";
@@ -23,8 +24,8 @@ export interface FederalClientOptions {
 
 /** Provider quotas enter the shared host clock. No local-government request cap applies. */
 export function federalClient(options: FederalClientOptions) {
-  const config = FEDERAL_SOURCES[options.source], env = options.env ?? process.env;
-  const key = config.key ? env[config.key] : undefined;
+  const config = FEDERAL_SOURCES[options.source], env = options.env ?? storedKeyEnvironment();
+  const key = config.key ? storedKeyValue(config.key, env) : undefined;
   const clock = options.now ?? (() => new Date().toISOString());
   let pace: number = options.source === "senate-lda" && !key ? 4000 : config.paceMs;
   async function get(urlValue: string, kind: FederalCapture["kind"], context?: FederalCapture["context"]): Promise<FederalCapture> {

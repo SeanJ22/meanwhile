@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
@@ -145,7 +146,7 @@ const ROOT = process.cwd();
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
 const DATABASE_TRANSFER_DIR = transferJournalDir();
 if (DATABASE_TRANSFER_DIR) process.env.WTP_DATABASE_TRANSFER_DIR = DATABASE_TRANSFER_DIR;
-process.env[VITAL_SIGNS_REPORT_ENV] = "1";
+storedKeyEnvironment()[VITAL_SIGNS_REPORT_ENV] = "1";
 
 
 keepNeonBytesInProcess();
@@ -164,16 +165,12 @@ function keepOwnNeonBytes(nowMs: number): void {
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
 
-if (!process.env.WTP_BILLING_ENV_FILE) {
-  const launchFile = process.execArgv.find(a => a.startsWith("--env-file="));
-  if (launchFile) process.env.WTP_BILLING_ENV_FILE = launchFile.slice("--env-file=".length);
-}
-for (const name of BILLING_SECRET_NAMES) delete process.env[name];
+for (const name of BILLING_SECRET_NAMES) delete storedKeyEnvironment()[name];
 const argv = process.argv.slice(2);
 const STAGING = argv.includes("--staging") || process.env.WTP_RUNTIME_MODE === "staging";
 if (STAGING && process.env.WTP_DB_ROLE !== "local") throw new Error("Staging runner requires WTP_DB_ROLE=local");
 if (STAGING) process.env.WTP_RUNTIME_MODE = "staging";
-assertProductionDatabaseTarget(process.env);
+assertProductionDatabaseTarget(storedKeyEnvironment());
 const AUTO_RELEASE_HANDOFF = !STAGING && argv.includes("--release-handoff");
 const provider = argv.includes("--provider=file") ? "file" : "postgres";
 if (provider === "postgres") {
@@ -187,10 +184,10 @@ await startCivicReadCacheHost();
 
 function standingChildEnvironment(
   capability: Parameters<typeof admittedRuntimeChildEnvironment>[0]["capability"],
-  parentEnv: NodeJS.ProcessEnv = process.env,
+  parentEnv: NodeJS.ProcessEnv = storedKeyEnvironment(),
   billingCollector = false,
 ): NodeJS.ProcessEnv {
-  if (STAGING) return billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
+  if (STAGING) return billingCollector ? { ...storedKeyEnvironment(parentEnv) } : withoutBillingSecrets(parentEnv);
   return provider === "postgres"
     ? admittedRuntimeChildEnvironment({
       parentEnv: ["RESEARCH_CYCLE", "CONSOLE_PUBLISHER"].includes(capability)
@@ -200,7 +197,7 @@ function standingChildEnvironment(
       parentPid: process.pid,
       billingCollector,
     })
-    : billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
+    : billingCollector ? { ...storedKeyEnvironment(parentEnv) } : withoutBillingSecrets(parentEnv);
 }
 
 const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
@@ -212,8 +209,8 @@ const PARENT_CODE_SHA = headSha(ROOT);
 
 let RUNNING_CODE_SHA = PARENT_CODE_SHA;
 let CODE_ROOT = ROOT;
-const jobBreakerPath = process.env[JOB_BREAKER_PATH_ENV] ?? join(ROOT, ".mirror", "job-transfer-breaker.json");
-if (provider === "postgres" && !STAGING) process.env[JOB_BREAKER_PATH_ENV] = jobBreakerPath;
+const jobBreakerPath = storedKeyEnvironment()[JOB_BREAKER_PATH_ENV] ?? join(ROOT, ".mirror", "job-transfer-breaker.json");
+if (provider === "postgres" && !STAGING) storedKeyEnvironment()[JOB_BREAKER_PATH_ENV] = jobBreakerPath;
 /** When each job this runner schedules last started, finished or failed; it rides on the heartbeat for the line keeper. */
 const jobRuns = new JobRunBook();
 const RESEARCH_JOB = "research-cycle";
@@ -229,7 +226,7 @@ function breakerOwnBytes() {
 }
 async function checkJobTransfers(): Promise<void> {
   if (provider !== "postgres" || STAGING || canary) return;
-  const controlUrl = controlPlaneUrlFromEnv(), readerUrl = process.env.DATABASE_URL;
+  const controlUrl = controlPlaneUrlFromEnv(), readerUrl = storedKeyValue("DATABASE_URL");
   if (!controlUrl || !readerUrl) throw new Error("Job transfer breaker requires both databases");
   await withDatabaseJob(JOB_BREAKER_JOB, async () => {
     if (!jobBreaker) {
@@ -407,7 +404,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     env: standingChildEnvironment("RESEARCH_CYCLE"),
   }], {
     cwd: CODE_ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     maxBufferBytes: 64 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
     onStdout: (_id, output) => { process.stdout.write(output); currentCycleOutput = `${currentCycleOutput}${output}`.slice(-8000); },
@@ -661,9 +658,9 @@ const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; reado
 const publishChangedConsole = consolePublisher({
   readInputs: async () => {
 
-    const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+    const env = STAGING ? storedKeyEnvironment() : runtimeProductionReadEnvironment(storedKeyEnvironment());
     const controlUrl = controlPlaneUrlFromEnv(env);
-    const readerUrl = env.DATABASE_URL;
+    const readerUrl = storedKeyValue("DATABASE_URL", env);
     if (!controlUrl || !readerUrl) throw new Error("CONSOLE_INPUTS_UNCONFIGURED");
     return consoleInputReader(controlUrl, readerUrl, RUNNING_CODE_SHA)();
   },
@@ -694,7 +691,7 @@ async function publishConsoleChildren(): Promise<boolean> {
   let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
     if (publisher.name === "owner snapshot") {
-      const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+      const env = STAGING ? storedKeyEnvironment() : runtimeProductionReadEnvironment(storedKeyEnvironment());
       const controlUrl = controlPlaneUrlFromEnv(env);
       const ready = controlUrl ? await ownerCountsReady(controlUrl).catch(() => false) : false;
       if (!ready) {
@@ -711,10 +708,10 @@ async function publishConsoleChildren(): Promise<boolean> {
       executable: process.execPath,
 
       args: [...TS_CHILD, ...publisher.args],
-      env: standingChildEnvironment("CONSOLE_PUBLISHER", process.env, publisher.name === "owner snapshot"),
+      env: standingChildEnvironment("CONSOLE_PUBLISHER", storedKeyEnvironment(), publisher.name === "owner snapshot"),
     }], {
       cwd: CODE_ROOT,
-      env: process.env,
+      env: storedKeyEnvironment(),
 
       maxBufferBytes: 16 * 1024 * 1024,
       noProgressMs: RUNTIME_NO_PROGRESS_MS,
@@ -750,7 +747,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
   const childEnvironment = standingChildEnvironment(
     "ROUTINE_SUPERVISOR",
     {
-      ...process.env,
+      ...storedKeyEnvironment(),
       [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt,
     },
   );
@@ -764,7 +761,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
     env: withPassDeadline(childEnvironment, deadlineMs),
   }], {
     cwd: CODE_ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     deadlineMs,
 
     maxBufferBytes: 64 * 1024 * 1024,
@@ -815,10 +812,10 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
     databaseBytesPerRun: 137_544_447,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/publish-now-runner.mts"],
-    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...storedKeyEnvironment(), [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
   }], {
     cwd: CODE_ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     deadlineMs,
     maxBufferBytes: 16 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
@@ -842,10 +839,10 @@ async function runPlaceMaps(deadlineMs: number): Promise<void> {
     databaseBytesPerRun: 16_777_216,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", "--place-maps"],
-    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...storedKeyEnvironment(), [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
   }], {
     cwd: CODE_ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     deadlineMs,
     maxBufferBytes: 16 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
@@ -941,7 +938,7 @@ async function runIntakeRuntime(deadlineMs: number): Promise<void> {
     env: withPassDeadline(standingChildEnvironment("INTAKE_RUNTIME"), deadlineMs),
   }], {
     cwd: CODE_ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     deadlineMs,
 
     maxBufferBytes: 16 * 1024 * 1024,
@@ -1150,7 +1147,7 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
   const tail = currentCycleErrors.split("\n").filter(line => line && line.trim() !== abort).slice(-8).join("\n");
   let lastError = [abort?.slice(0, 400), failedRead, tail.slice(-1600)].filter(Boolean).join("\n").slice(0, 2000) || null;
   if (lastError) {
-    for (const [name, value] of Object.entries(process.env)) {
+    for (const [name, value] of Object.entries(storedKeyEnvironment())) {
       if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) lastError = lastError.split(value).join("[private]");
     }
     lastError = lastError.replace(/postgres(?:ql)?:\/\/[^\s"'<>]+/gi, "[private connection]");
@@ -1241,7 +1238,7 @@ async function runHunterLane(deadlineMs: number): Promise<void> {
     env: withPassDeadline(standingChildEnvironment("RESEARCH_CYCLE"), deadlineMs),
   }], {
     cwd: CODE_ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     deadlineMs,
     maxBufferBytes: 16 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
@@ -1267,7 +1264,7 @@ async function runMemberLane(deadlineMs: number): Promise<void> {
   const [run] = await runRuntimeChildren([{id:"legistar-members",databaseBytesPerRun:LEGISTAR_MEMBER_DATABASE_BYTES,
     executable:process.execPath,args:[...TS_CHILD,"scripts/legistar-members-worker.mts"],
     env:withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"),deadlineMs)}],{
-    cwd:CODE_ROOT,env:process.env,deadlineMs,maxBufferBytes:16*1024*1024,noProgressMs:RUNTIME_NO_PROGRESS_MS,
+    cwd:CODE_ROOT,env:storedKeyEnvironment(),deadlineMs,maxBufferBytes:16*1024*1024,noProgressMs:RUNTIME_NO_PROGRESS_MS,
     onStdout:(_id,output)=>process.stdout.write(output),onStderr:(_id,output)=>process.stderr.write(output),
     onStarted:(_id,child)=>{memberLaneChild=child;}});
   memberLaneChild=null;
@@ -1294,7 +1291,7 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
       databaseBytesPerRun: 11_852_414, executable: process.execPath,
       args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
-    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
+    }], { cwd: CODE_ROOT, env: storedKeyEnvironment(), maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
       onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
       onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
     if (!run || run.status !== 0) throw new Error(`CENSUS_LANE_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
@@ -1327,7 +1324,7 @@ async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
       databaseBytesPerRun: 32_000_000, executable: process.execPath,
       args: [...TS_CHILD, "scripts/rebuild-place-pages.mts"],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
-    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,
+    }], { cwd: CODE_ROOT, env: storedKeyEnvironment(), maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,
       onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
       onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
     const result = run?.status === 0 ? placePageTurnResult(run.stdout ?? "") : null;
@@ -1392,14 +1389,14 @@ async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
 function runAdminCopyTick(): void {
   if (runtimeAdmissionsHeld || adminCopyWork || provider !== "postgres" ||
       process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
-      !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) return;
+      !process.env.NETLIFY_SITE_ID || !storedKeyValue("NETLIFY_BLOBS_TOKEN")) return;
   adminCopyWork = (async () => {
     const repos = await ownerRepositories();
     if (!repos) return;
     const result = await runAuthorizedAdminCopyTick({ repos, vaultRoot: join(ROOT, ...VAULT_DIR), env: {
       WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED: process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED,
       NETLIFY_SITE_ID: process.env.NETLIFY_SITE_ID,
-      NETLIFY_BLOBS_TOKEN: process.env.NETLIFY_BLOBS_TOKEN,
+      NETLIFY_BLOBS_TOKEN: storedKeyValue("NETLIFY_BLOBS_TOKEN"),
     } });
     if (result.examined) console.log(`  private Admin exact-copy request: copied ${result.copied}, refused ${result.refused}, pending ${result.pending}`);
   })().catch(error => {
@@ -1410,7 +1407,7 @@ function runAdminCopyTick(): void {
 function startAdminCopyClock(): void {
   if (runtimeAdmissionsHeld || adminCopyTimer !== null || provider !== "postgres" ||
       process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
-      !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) return;
+      !process.env.NETLIFY_SITE_ID || !storedKeyValue("NETLIFY_BLOBS_TOKEN")) return;
   runAdminCopyTick();
   adminCopyTimer = setInterval(runAdminCopyTick, ADMIN_COPY_POLL_MS);
 }
@@ -1538,14 +1535,14 @@ async function inspectRuntimeRelease(): Promise<RuntimeReleaseInspection> {
   const repository = runtimeGithubRepository(ROOT);
   if (repository === null) return releaseInspectionRefusal("GITHUB_ORIGIN_UNRESOLVED", "runtime origin is not a GitHub repository", served.sha);
   const checkRuns = typeof served.sha === "string" && /^[0-9a-f]{40}$/i.test(served.sha)
-    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential({ root: ROOT, env: process.env }) })
+    ? await fetchGithubCheckRuns({ repository, sha: served.sha, token: runtimeGithubCredential(storedKeyEnvironment()) })
     : null;
   return inspectNewestDeployedRuntimeRelease({ runningSha: RUNNING_CODE_SHA, served, checkRuns,
     readDeploys: () => fetchRuntimeProductionDeploys({
       siteId: process.env.NETLIFY_SITE_ID ?? process.env.WTP_BLOBS_SITE_ID,
-      token: process.env.NETLIFY_AUTH_TOKEN ?? process.env.NETLIFY_TOKEN ?? process.env.WTP_BLOBS_TOKEN ?? process.env.NETLIFY_BLOBS_TOKEN,
+      token: storedKeyValue("NETLIFY_AUTH_TOKEN") ?? storedKeyValue("NETLIFY_TOKEN") ?? storedKeyValue("WTP_BLOBS_TOKEN") ?? storedKeyValue("NETLIFY_BLOBS_TOKEN"),
     }),
-    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token: runtimeGithubCredential({ root: ROOT, env: process.env }) }),
+    readChecks: sha => fetchGithubCheckRuns({ repository, sha, token: runtimeGithubCredential(storedKeyEnvironment()) }),
   });
 }
 
@@ -1696,7 +1693,7 @@ async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean>
   const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 100_000_000, executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
-    cwd, env: withPassDeadline(process.env, deadlineMs), maxBufferBytes: 16 * 1024 * 1024,
+    cwd, env: withPassDeadline(storedKeyEnvironment(), deadlineMs), maxBufferBytes: 16 * 1024 * 1024,
     deadlineMs,
     onStarted: (_id, child) => { runtimeContractChild = child; },
     onStdout: (_id, output) => process.stdout.write(output),

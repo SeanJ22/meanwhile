@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * The one command that may spend MapTiler quota — `pnpm provider:smoke`.
  *
@@ -39,10 +40,10 @@ interface Reading {
 }
 
 async function main(): Promise<void> {
-  const key = process.env.WTP_MAPTILER_SMOKE_KEY;
+  const key = storedKeyValue("WTP_MAPTILER_SMOKE_KEY");
   const verdict = refuseSharedKey({
     smokeKey: key,
-    productionKey: process.env.NEXT_PUBLIC_MAPTILER_KEY,
+    productionKey: storedKeyValue("NEXT_PUBLIC_MAPTILER_KEY"),
   });
   if (!verdict.ok) {
     console.error(`\nPROVIDER SMOKE — NOT RUN\n\n  ${verdict.says}\n`);
@@ -51,13 +52,13 @@ async function main(): Promise<void> {
   }
 
   // Set before the browser opens, and only when the operator did not choose a tighter ceiling.
-  if (!process.env[PROVIDER_CEILING_VAR]) process.env[PROVIDER_CEILING_VAR] = SMOKE_CEILING;
+  if (!storedKeyEnvironment()[PROVIDER_CEILING_VAR]) storedKeyEnvironment()[PROVIDER_CEILING_VAR] = SMOKE_CEILING;
 
   console.log("\nPROVIDER SMOKE — MapTiler\n");
   console.log(`  origin        ${SMOKE_ORIGIN}`);
   console.log(`  style         ${STYLE}`);
   console.log("  key           WTP_MAPTILER_SMOKE_KEY (value never printed)");
-  console.log(`  ceiling       ${process.env[PROVIDER_CEILING_VAR]} request(s)\n`);
+  console.log(`  ceiling       ${storedKeyEnvironment()[PROVIDER_CEILING_VAR]} request(s)\n`);
 
   const browser = await launchGuarded({
     label: "provider-smoke",

@@ -1,3 +1,4 @@
+import { selectSavedDatabase } from "../lib/core/keys-values.ts";
 /**
  * Production intake observation owned by the standing runtime.
  *
@@ -30,7 +31,7 @@ let observation: IntakeRuntimeObservation;
 try {
   assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] });
   const handle = resolveProductionWriteHandle();
-  process.env.DATABASE_URL = handle.connection;
+  if (process.env.WTP_RUNTIME_MODE !== "staging") selectSavedDatabase("WTP_PRODUCTION_DATABASE_URL_WRITE");
   if (process.env.WTP_RUNTIME_MODE === "staging") process.env.WTP_DB_ROLE = "local";
   else process.env.WTP_DB_ROLE = "production";
   process.env.WTP_SANCTIONED_WRITE = "intake-limiter-purge";

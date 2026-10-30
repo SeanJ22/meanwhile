@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { factReader } from "@/lib/facts/db";
 import { lowestZipsForDivisions, placeMapQuery } from "@/lib/place-map/reader";
 import { readZipLocations } from "@/lib/place-map/locations";
@@ -8,6 +9,7 @@ export const dynamic = "force-dynamic";
 /** The release fill and reader walks use the same published counties. No reader sources are preloaded.
  * The CDN keeps the answer until the next deploy empties it, or a day at most. */
 export async function GET(): Promise<Response> {
+  await loadWebsiteSavedKeys();
   try {
     const query = factReader();
     if (!query) throw new Error("Reader database unavailable");

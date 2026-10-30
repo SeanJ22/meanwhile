@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../../core/keys-values.ts";
 import { OWNER_LEASE_CHANGES_DDL } from "../owner-lease-changes.ts";
 import { OWNER_COST_REFS_DDL, OWNER_COST_REFS_SEED_DDL } from "../owner-cost-refs.ts";
 import { OWNER_STUCK_COUNTS_DDL, OWNER_STUCK_COUNTS_BACKFILL_DDL } from "../owner-stuck-counts.ts";
@@ -113,7 +114,7 @@ export class OwnerSnapshotInitializationPending extends Error {
   constructor(){super("CP01_OWNER_INITIALIZATION_PENDING: durable owner work-list initialization will continue in the next cleanup attempt");}
 }
 
-export async function contractControlCounts(sql:Sql,env:NodeJS.ProcessEnv=process.env,
+export async function contractControlCounts(sql:Sql,env:NodeJS.ProcessEnv=storedKeyEnvironment(),
   dependencies:unknown={}):Promise<string>{
   const deps=typeof dependencies==="object"&&dependencies!==null?dependencies as {readonly initialize?:()=>Promise<boolean>}:{};
   const [prior]=await sql.query("SELECT value->>'formatVersion' AS format,value->>'ownerWorkListReady' AS ready,value->>'initializing' AS initializing FROM cp_owner_snapshots WHERE id='totals'") as {format:string;ready:string;initializing:string}[];

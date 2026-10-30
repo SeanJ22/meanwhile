@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites.ts";
 import { lowestZipForDivision, lowestZipsForDivisions } from "../place-map/reader.ts";
 import { canonicalContestId, canonicalCandidacyId } from "../hunt/candidate-universe.ts";
@@ -43,7 +44,7 @@ export async function collectPublishedCampaignReadback(state: string, now: strin
   }
   // Campaign links deliberately live behind Battlecard → Sources. Serialized RSC props are not a public witness.
   // This existing-runner browser is isolated from the owner's signed-in session and never submits Ask or Send.
-  const browserEnv = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => value !== undefined &&
+  const browserEnv = Object.fromEntries(Object.entries(storedKeyEnvironment()).filter(([key, value]) => value !== undefined &&
     /^(path|systemroot|windir|temp|tmp|userprofile|localappdata|appdata|home|playwright_browsers_path)$/i.test(key))) as Record<string, string>;
   const browser = await launchGuarded({ label: "publication-readback", headless: true, env: browserEnv });
   const deadline = setTimeout(() => { void browser.close().catch(() => undefined); }, 75_000);
@@ -78,7 +79,7 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
       },
       observe: async input => {
         if (!browser) {
-          const env = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => value !== undefined &&
+          const env = Object.fromEntries(Object.entries(storedKeyEnvironment()).filter(([key, value]) => value !== undefined &&
             /^(path|systemroot|windir|temp|tmp|userprofile|localappdata|appdata|home|playwright_browsers_path)$/i.test(key))) as Record<string, string>;
           browser = await launchGuarded({ label: "worker-publication-readback", headless: true, env });
           deadline = setTimeout(() => { void browser?.close().catch(() => undefined); }, 75_000);
@@ -110,7 +111,7 @@ export async function collectPublishedManualReaderReadback(items: readonly WorkI
       },
       observe: async visit => {
         if (!browser) {
-          const env = Object.fromEntries(Object.entries(process.env).filter(([key, value]) => value !== undefined &&
+          const env = Object.fromEntries(Object.entries(storedKeyEnvironment()).filter(([key, value]) => value !== undefined &&
             /^(path|systemroot|windir|temp|tmp|userprofile|localappdata|appdata|home|playwright_browsers_path)$/i.test(key))) as Record<string, string>;
           browser = await launchGuarded({ label: "manual-publication-readback", headless: true, env });
           deadline = setTimeout(() => { void browser?.close().catch(() => undefined); }, 75_000);

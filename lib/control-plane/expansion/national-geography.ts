@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { FIPS_TO_STATE, districtIdentity } from "../../ocd/fips.ts";
 import { countyIdentity, legislativeIdentity, placeIdentity, schoolIdentity, stateBase, subdivisionIdentity } from "../../ocd/divisions.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
@@ -35,7 +36,7 @@ export interface GeographyReadOptions {
 }
 
 export async function heldDivisionsForZip(zip: string, published?: PublishedLookupState, selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceDivision[]> {
-  if (!published && !process.env.DATABASE_URL) return [];
+  if (!published && !storedKeyValue("DATABASE_URL")) return [];
   const state = published ?? await loadPublishedAreaLookupState([zip]);
   if (state.source !== "published") return [];
   const result = await state.lookup.groupingsForZcta(zip);

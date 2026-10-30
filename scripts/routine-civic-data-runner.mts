@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { recordParentMemory } from "../lib/civic-data/parent-memory.ts";
 import { groupCongressReads, congressMemberResults, type CongressRunGroup } from "../lib/civic-data/congress-runs.ts";
 import { appendRoutineLaunchDecisions, routineLaunchDecision, type RoutineLaunchDecision } from "../lib/civic-data/launch-decisions.ts";
@@ -276,7 +277,7 @@ const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : P
 ], false, process.argv.slice(2)), process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
-const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
+const inheritedStartedAt = storedKeyEnvironment()[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
 const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inheritedStartedAt)) &&
     new Date(Date.parse(inheritedStartedAt)).toISOString() === inheritedStartedAt
   ? inheritedStartedAt
@@ -353,8 +354,8 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv() && !PLACE_MAPS) {
         failureDomain: "derived:meeting-doors",
         executable: process.execPath,
         args: [...TS_CHILD, "scripts/publish-meeting-doors.mts", "--promote"],
-        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
-      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
+        env: admittedRuntimeChildEnvironment({ parentEnv: storedKeyEnvironment(), capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
+      }], { cwd: ROOT, env: storedKeyEnvironment(), timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
         onStarting: command => acquireChildMemory(command), onSettled: run => releaseChildMemory(run.id) });
       console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
     }
@@ -822,8 +823,8 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
       if (!await federalPeopleSplitRecorded(splitRepos.ownerDigests)) {
         const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, databaseBytesPerRun: 1_907_347_669, failureDomain: "derived:federal-people-split",
           executable: process.execPath, args: ["--experimental-strip-types", "scripts/split-federal-people.mts"],
-          env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
-        }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, deadlineMs, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
+          env: admittedRuntimeChildEnvironment({ parentEnv: storedKeyEnvironment(), capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
+        }], { cwd: ROOT, env: storedKeyEnvironment(), timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, deadlineMs, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
           onStarting: command => acquireChildMemory(command, [], deadlineMs), onSettled: run => releaseChildMemory(run.id) });
         const at = new Date().toISOString(), record = run ? federalPeopleSplitRecord(run, at, RUNNING_CODE_SHA) : null;
         if (record) {
@@ -916,7 +917,7 @@ const offeredTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...hun
   .map(task => ({ ...task, ...factRefreshBounds(task, sourceFactClocks) }));
 /** A slowed source not yet due is not read for, clocked or launched this pass; its work stays owed. Its child's launch records it. */
 const selectedTasks = offeredTasks.filter(task => {
-  if (admitJobLaunch(task.id, process.env, Date.now(), false)) return true;
+  if (admitJobLaunch(task.id, storedKeyEnvironment(), Date.now(), false)) return true;
   recordLaunchDecision(task, "DEFER", SLOWED_REASON, `JOB_TRANSFER_BREAKER: ${task.id} ${JOB_SLOWED_WORDS}`);
   return false;
 });
@@ -1286,17 +1287,17 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     env: withPassDeadline({
 
       ...(pending.task.registeredContractId !== undefined || automaticRefreshContract(pending.task.id) ? admittedRuntimeChildEnvironment({
-        parentEnv: process.env,
+        parentEnv: storedKeyEnvironment(),
         capability: "MANUAL_CONTRACT",
         contract: pending.task.registeredContractId ?? automaticRefreshContract(pending.task.id) ?? pending.task.id,
         parentPid: process.pid,
       }) : admittedRuntimeChildEnvironment({
-        parentEnv: process.env,
+        parentEnv: storedKeyEnvironment(),
         capability: "ROUTINE_CONTRACT",
         contract: pending.task.id,
         parentPid: process.pid,
       })),
-      ...pending.env,
+      ...storedKeyEnvironment(pending.env),
     }, SOURCE_CHILD_DEADLINE_MS),
 
     ...(pending.task.childTimeoutMs === undefined ? {} : { timeoutMs: pending.task.childTimeoutMs }),
@@ -1327,7 +1328,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
     sourceHandoffs.set(unit.id, handoff);
     return { id: unit.id, databaseBytesPerRun: 243_607_822, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
       args: [...TS_CHILD, "scripts/fetch-congress-legislators.mts", "--promote", ...handoff.args],
-      env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT", contract: unit.id, parentPid: process.pid }),
+      env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: storedKeyEnvironment(), capability: "MANUAL_CONTRACT", contract: unit.id, parentPid: process.pid }),
         ...stateCalendarEnvironment(unit.members) }, PASS_LAUNCH_DEADLINE_MS) };
   }
   if (unit.kind !== "STATE_CALENDARS" && unit.kind !== "MEETING_PARTITION") return sourceChildCommand(unit);
@@ -1341,7 +1342,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
   if (unit.kind !== "STATE_CALENDARS") {
     const command = sourceChildCommand(unit);
     return { ...command, args: [...command.args.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],
-      env: { ...command.env, NODE_ENV: command.env?.NODE_ENV ?? process.env.NODE_ENV, ...CIVIC_DATA_PROCESS_ENV } };
+      env: { ...storedKeyEnvironment(command.env), NODE_ENV: command.env?.NODE_ENV ?? process.env.NODE_ENV, ...CIVIC_DATA_PROCESS_ENV } };
   }
   return {
     id: unit.id,
@@ -1349,7 +1350,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
     failureDomain: unit.id,
     executable: process.execPath,
     args: [...TS_CHILD, ...unit.command.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],
-    env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "STATE_CALENDARS", contract: unit.id, parentPid: process.pid }),
+    env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: storedKeyEnvironment(), capability: "STATE_CALENDARS", contract: unit.id, parentPid: process.pid }),
       ...CIVIC_DATA_PROCESS_ENV, ...stateCalendarEnvironment(unit.members) },
       PASS_LAUNCH_DEADLINE_MS),
     ...(meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
@@ -1365,7 +1366,7 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
   units.map(sourceUnitCommand),
   {
     cwd: ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     deadlineMs: SOURCE_CHILD_DEADLINE_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
@@ -1713,10 +1714,10 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
   const command = sourceUnitCommand(run);
   recordSourceSettlementFailures(await runBoundedChildPass([{
     ...command,
-    env: withPassDeadline(command.env ?? process.env, readDeadlineMs),
+    env: withPassDeadline(command.env ?? storedKeyEnvironment(), readDeadlineMs),
   }], {
     cwd: ROOT,
-    env: process.env,
+    env: storedKeyEnvironment(),
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     deadlineMs: readDeadlineMs,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
@@ -1756,11 +1757,11 @@ if (!PUBLISH_NOW && !PLACE_MAPS && ONLY === null && Date.now() < PASS_DEADLINE_M
 }
 if (!PUBLISH_NOW && !PLACE_MAPS && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
   try { await routineJob(ROUTINE_JOBS.statePointerRetirement, async () => {
-    const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(process.env.DATABASE_URL!);
+    const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(storedKeyValue("DATABASE_URL")!);
     const query = (text: string, params: readonly unknown[]) => sql.query(text, [...params], { fetchOptions: {
       signal: AbortSignal.timeout(Math.max(1, Math.min(5_000, deadlineMs - Date.now()))),
     } });
-    const origins = await reconcileNationalStatePointers({ query, env: process.env, deadlineMs,
+    const origins = await reconcileNationalStatePointers({ query, env: storedKeyEnvironment(), deadlineMs,
       onDeferred: (id, scope, detail) => recordLaunchDecision({ id, sourceId: "state-pointer-retirement", scope }, "DEFER", detail.split(":")[0], detail) });
     const retired = await retireNationalStatePointers(query, origins);
     if (retired) console.log(`RCD_STATE_BUCKETS retired=${retired}`);

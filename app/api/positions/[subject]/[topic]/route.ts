@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { settlePositionHoldingAnswer, type PositionHoldingReaders } from "@/lib/candidates/position-holding";
 import { readerRoute } from "@/lib/api/reader-route";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
@@ -60,6 +61,7 @@ export const GET = readerRoute("/api/positions/[subject]/[topic]", async functio
   request: Request,
   { params }: { params: Promise<{ subject: string; topic: string }> },
 ) {
+  await loadWebsiteSavedKeys();
   const { subject: rawSubject, topic: rawTopic } = await params;
   const subject = decodeURIComponent(rawSubject);
   const topic = decodeURIComponent(rawTopic).slice(0, MAX_TOPIC_CHARS);

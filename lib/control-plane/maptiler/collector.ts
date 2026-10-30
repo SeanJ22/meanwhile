@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 /** Both classifiers must produce one complete billing window; a partial answer is a failed attempt and the publisher keeps the last good reading. */
 
 import {
@@ -50,7 +51,7 @@ async function productionActorCounts(
   until: string,
   env: Readonly<Record<string, string | undefined>>,
 ): Promise<MapTilerActorCounts | null> {
-  const url = env.WTP_PRODUCTION_DATABASE_URL_READONLY?.trim();
+  const url = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY", env)?.trim();
   if (!url) return null;
   const { neon } = await import("../../db/client.ts");
   const sql = neon(url);
@@ -104,11 +105,11 @@ function failedSnapshot(input: {
 export async function collectMapTilerUsage(
   input: CollectMapTilerUsageInput = {},
 ): Promise<MapTilerUsageSnapshot> {
-  const env = input.env ?? process.env;
+  const env = input.env ?? storedKeyEnvironment();
   const nowIso = input.nowIso ?? new Date().toISOString();
   const rawToken = input.token === undefined ? serviceTokenFromEnv(env) : input.token?.trim() || null;
   const { allowance, assumed } = allowanceFrom(
-    input.allowanceRaw === undefined ? env[MAPTILER_ALLOWANCE_VAR] : input.allowanceRaw,
+    input.allowanceRaw === undefined ? storedKeyEnvironment(env)[MAPTILER_ALLOWANCE_VAR] : input.allowanceRaw,
   );
 
   if (rawToken === null) {

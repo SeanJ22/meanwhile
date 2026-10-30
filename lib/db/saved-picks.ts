@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { neon } from "./client.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
@@ -8,7 +9,7 @@ export interface SavedPicks { revision: number; file: PicksFile }
 export const privatePicksDigest = (secret: string) => createHash("sha256").update(`private-ballot:${secret}`).digest("hex");
 
 /** No link to event identity, IP, contact information, ZIP or a reader account. */
-export function savedPicksStore(query: PicksQuery = (text, params) => neon(process.env.DATABASE_URL!).query(text, [...params])) {
+export function savedPicksStore(query: PicksQuery = (text, params) => neon(storedKeyValue("DATABASE_URL")!).query(text, [...params])) {
   const row = (r: Record<string, unknown> | undefined): SavedPicks | null => r ? { revision: Number(r.revision), file: r.file as PicksFile } : null;
   return {
     async read(secret: string) {

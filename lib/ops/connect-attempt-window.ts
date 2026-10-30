@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /**
  * The connect window for every standing-runner process: with happy eyeballs, each resolved address gets this long
  * before the next is tried, so a slow but reachable IPv4 address is not abandoned.
@@ -18,7 +19,7 @@ export function nodeOptionsWithConnectWindow(existing: string | undefined, ms: n
 /** Apply the window to this process and to every child spawned from its environment. */
 export function installConnectAttemptWindow(
   ms: number = CONNECT_ATTEMPT_WINDOW_MS,
-  env: Record<string, string | undefined> = process.env,
+  env: Record<string, string | undefined> = storedKeyEnvironment(),
 ): void {
   setDefaultAutoSelectFamilyAttemptTimeout(ms);
   env.NODE_OPTIONS = nodeOptionsWithConnectWindow(env.NODE_OPTIONS, ms);

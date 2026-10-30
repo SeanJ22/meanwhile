@@ -77,4 +77,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default async function configuration(phase: string): Promise<NextConfig> {
+  if (phase === "phase-production-build" && process.env.NETLIFY === "true" && process.env.CONTEXT === "production" && process.env.BRANCH === "main") {
+    const { refreshSavedKeys } = await import("./lib/core/keys-runtime.ts");
+    await refreshSavedKeys("build");
+  }
+  // The map key is public by design and origin-restricted; the browser fetches MapTiler directly.
+  const { storedKeyValue } = await import("./lib/core/keys-values.ts");
+  return { ...nextConfig, env: { ...nextConfig.env, NEXT_PUBLIC_MAPTILER_KEY: storedKeyValue("NEXT_PUBLIC_MAPTILER_KEY") ?? "" } };
+}

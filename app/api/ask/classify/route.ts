@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { withPublishedAskSettings } from "@/lib/ask/runtime-settings.ts";
 import type { AskClassifyReply } from "@/lib/ask/answer";
 import { classifyQuestion } from "@/lib/routing/classifier";
@@ -22,6 +23,7 @@ function getIpLimiter() {
 }
 
 export async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   return withPublishedAskSettings(() => answerWithSettings(request));
 }
 

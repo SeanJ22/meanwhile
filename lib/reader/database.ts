@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { neon, neonConfig, Pool, type PoolClient } from "../db/client.ts";
 import type { ReadOnlyQuery, Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
@@ -82,7 +83,7 @@ export function installReaderDatabaseQuery(query: ReadOnlyQuery | null | undefin
 /** Foreground ballots use read-only HTTP; other readers reuse their socket transaction. */
 export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   if (installed !== undefined) return installed;
-  const connectionString = process.env.DATABASE_URL?.trim();
+  const connectionString = storedKeyValue("DATABASE_URL")?.trim();
   if (!connectionString) return null;
   return databaseReadOnlyQuery(connectionString, deadlineMs);
 }
@@ -106,7 +107,7 @@ function readOnlyPool(connectionString: string): Pool {
 
 /** Begin handshakes during code loading, without reading or saving civic data. */
 export function warmReaderConnections(): Promise<void> {
-  const connection = process.env.DATABASE_URL?.trim();
+  const connection = storedKeyValue("DATABASE_URL")?.trim();
   if (!connection) return Promise.resolve();
   return serverReaderValue(`reader-connection-start:${connection}`, async () => {
     const pool = readOnlyPool(connection);

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * Form posts, client fetches and chat tool calls all reach the same `submit()`.
@@ -100,6 +101,7 @@ async function readBody(
 }
 
 async function post(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({
     headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,

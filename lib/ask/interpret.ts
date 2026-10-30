@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { askPlaybook } from "./runtime-settings.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { ASK_MODEL_ROLES } from "./model.ts";
@@ -142,7 +143,7 @@ export async function interpretQuestion(
   const started = Date.now();
   const elapsed = () => Date.now() - started;
 
-  const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;
+  const apiKey = options.apiKey ?? storedKeyValue("ANTHROPIC_API_KEY");
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key", ms: elapsed() };
 
   const impl = meteredAskFetch(options.fetchImpl ?? fetch, "interpret", options.recordCost);

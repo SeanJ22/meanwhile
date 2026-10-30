@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 /** Credentialed, read-only government APIs shared by hunters and detectives.
  * Credentials stay in transport, never in source locators or model output. */
 import { readCompleteResponse } from "../../sources/source-bytes.ts";
@@ -65,11 +66,11 @@ export function isSourceApiUrl(value: string): boolean {
 }
 
 export async function readSourceApi(name: SourceApiTool, raw: unknown, options: SourceApiOptions = {}): Promise<SourceApiResult> {
-  const env = options.env ?? process.env;
+  const env = options.env ?? storedKeyEnvironment();
   const input = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   const params = input.params && typeof input.params === 'object' ? input.params as Record<string,unknown> : {};
   const fetcher = options.fetchImpl ?? fetch;
-  const secrets = Object.entries(env).filter(([key,value]) => /(?:API_KEY|TOKEN)$/.test(key) && value).map(([,value]) => value!);
+  const secrets = Object.entries(storedKeyEnvironment(env)).filter(([key,value]) => /(?:API_KEY|TOKEN)$/.test(key) && value).map(([,value]) => value!);
   const redact = (text:string) => secrets.reduce((s,key) => s.split(key).join('[REDACTED]').split(encodeURIComponent(key)).join('[REDACTED]'), text);
   let requests = 0, bytes = 0;
   const get = async (url:URL, headers:Record<string,string> = {}) => {
@@ -100,13 +101,14 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
         const entries = JSON.parse(found.text).results ?? [];
         if (found.status !== 200 || !entries.some((e:{resource?:{id?:string};metadata?:{domain?:string}}) => e.resource?.id === input.dataset && e.metadata?.domain === input.domain)) throw new Error('Dataset/domain not found in Socrata catalog');
         url = new URL(`https://${input.domain}/resource/${input.dataset}.json`);
-        if (env.SOCRATA_APP_TOKEN) headers['X-App-Token'] = env.SOCRATA_APP_TOKEN;
+        const socrataToken = storedKeyValue("SOCRATA_APP_TOKEN", env);
+        if (socrataToken) headers['X-App-Token'] = socrataToken;
         // SOCRATA_SECRET_TOKEN is an OAuth application secret, not a Basic Auth password.
         // Public dataset reads use the application token; never send its secret to dataset hosts.
       } else url = new URL('https://api.us.socrata.com/api/catalog/v1');
     } else {
       if (!cfg) throw new Error('Unknown source API');
-      const key = env[cfg.key]?.trim();
+      const key = storedKeyValue(cfg.key, env)?.trim();
       if (!key) throw new Error(`${cfg.key} is not configured`);
       const path = typeof input.path === 'string' ? input.path.replace(/^\/+/, '') : cfg.path;
       const providerBase = new URL(cfg.base);
@@ -122,7 +124,7 @@ export async function readSourceApi(name: SourceApiTool, raw: unknown, options: 
     if (name === 'legiscan_api' && !/^get[A-Z]/.test(url.searchParams.get('op') ?? '')) throw new Error('LegiScan requires a read-only get operation');
     for (const key of [...url.searchParams.keys()]) if (credentialName.test(key)) url.searchParams.delete(key);
     const sourceUrl = url.href;
-    if (cfg?.param) url.searchParams.set(cfg.param,env[cfg.key]!);
+    if (cfg?.param) url.searchParams.set(cfg.param,storedKeyValue(cfg.key, env)!);
     const response = await get(url,headers);
     return {...response,sourceUrl,requests,bytes};
   } catch (error) { throw new Error(redact(error instanceof Error ? error.message : String(error))); }

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { EMPTY_SPEND } from "../spend-window.ts";
 import { createFileRepositories } from "../repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
@@ -37,7 +38,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   let current = "";
   const perTask = process.env.WTP_LEASE_RUNTIME_PER_TASK === "1";
   let shared: Awaited<ReturnType<typeof autonomousStandingRuntime>> | undefined;
-  const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: process.env,
+  const buildRuntime = (subject: string | null) => autonomousStandingRuntime({ root: config.root, repos, environment: storedKeyEnvironment(),
     browse: browseWithPlaywright,
     ...(subject === null ? { openBytesFor: s => safety.guardedOpenBytes("public-web", s) } : { openBytes: safety.guardedOpenBytes("public-web", subject) }),
     ...(config.modelEnabled ? { transport: request => broker.call<ModelResponse>("model", request),

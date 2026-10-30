@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -7,8 +8,8 @@ import { operationalStatePath } from "../ops/operational-state-path.ts";
 
 export const TRANSFER_JOURNAL_DIR_ENV = "WTP_DATABASE_TRANSFER_DIR";
 export function transferJournalDir(): string | null {
-  if (process.env[TRANSFER_JOURNAL_DIR_ENV]) return operationalStatePath(process.env[TRANSFER_JOURNAL_DIR_ENV]!);
-  if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || mayUseTestFixture(process.env)) return null;
+  if (storedKeyEnvironment()[TRANSFER_JOURNAL_DIR_ENV]) return operationalStatePath(storedKeyEnvironment()[TRANSFER_JOURNAL_DIR_ENV]!);
+  if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || mayUseTestFixture(storedKeyEnvironment())) return null;
   return operationalStatePath(join(tmpdir(), "meanwhile-database-transfer"));
 }
 

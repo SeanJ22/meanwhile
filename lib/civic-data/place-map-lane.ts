@@ -1,6 +1,8 @@
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import type { RoutineSourceTask, RoutineTaskClock } from "./runner.ts";
 import { placeMapReservationMiB } from "../place-map/memory.ts";
+import { ROUTINE_PASS_BUDGET_MS } from "./contracts.ts";
+import { parseStateBallotContractId } from "./state-scopes.ts";
 
 /** Each state's map child. Its own lane runs them, so the routine pass's time and memory never starve a state's map. */
 const PLACE_MAP_SCRIPT = "scripts/place-map-refresh.mts";
@@ -24,13 +26,20 @@ export function isPlaceMapTask(task: Pick<RoutineSourceTask, "command">): boolea
   return task.command[0] === PLACE_MAP_SCRIPT;
 }
 
+/** Where-to-vote reads run in their own lane on the routine pass's budget, so its slow reads before launch never hold them. */
+export const isVotingSitesTask = (task: Pick<RoutineSourceTask, "id">) => parseStateBallotContractId(task.id)?.family === "voting-sites";
+export const VOTING_SITES_SINGLETON_PORT = 49_376;
+export function votingSitesLane(run: (deadlineMs: number) => Promise<void>): IndependentRuntimeLane {
+  return { id: "voting-sites", everyMs: PLACE_MAP_LANE_INTERVAL_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run };
+}
+
 /**
- * The place-map lane offers only state maps. The routine pass offers every other task, and a state map only when the
- * owner names it with --only (an owner refresh of that one contract).
+ * The place-map lane offers only state maps, and the voting-sites lane only where-to-vote reads. The routine pass offers
+ * every other task, and one of theirs only when the owner names it with --only (an owner refresh of that one contract).
  */
-export function laneSourceTasks<T extends Pick<RoutineSourceTask, "command">>(tasks: readonly T[], placeMaps: boolean, args: readonly string[]): T[] {
+export function laneSourceTasks<T extends Pick<RoutineSourceTask, "command" | "id">>(tasks: readonly T[], placeMaps: boolean, args: readonly string[]): T[] {
   const named = args.some(arg => arg === "--only" || arg.startsWith("--only="));
-  return tasks.filter(task => placeMaps ? isPlaceMapTask(task) : named || !isPlaceMapTask(task));
+  return tasks.filter(task => placeMaps ? isPlaceMapTask(task) : named || !isPlaceMapTask(task) && !isVotingSitesTask(task));
 }
 
 /**

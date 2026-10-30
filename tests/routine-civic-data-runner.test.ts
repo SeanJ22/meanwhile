@@ -274,7 +274,7 @@ test("candidate findings missing a place stay visible without failing unrelated 
   const task = { id: "candidate-profiles:CA" };
   const context = { controlPlaneUrlFromEnv: () => "postgres://fixture", neon: () => ({ query: () => {} }),
     readCandidateProfilePublicationTasks: async () => ({ tasks: [task], unscoped: 156 }),
-    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures, PLACE_MAPS: false,
+    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures, OWN_LANE: false,
     console: { log: () => {} }, safeFailure: String, sanitizedErrorDiagnostic: String };
   const run = () => runInNewContext(transpileModule(`(async () => { ${code}; return { tasks: candidateFindingTasks, lines: candidateFindingLines }; })()`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },

@@ -84,7 +84,7 @@ import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
-import { placeMapsLane } from "../lib/civic-data/place-map-lane.ts";
+import { placeMapsLane, votingSitesLane } from "../lib/civic-data/place-map-lane.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, type PlacePageTurn } from "../lib/reader/place-page-worker.ts";
 import { DOOR_PROBES_JOB, doorProbesLane, runStandingDoorProbes } from "../lib/doors/probe-lane.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
@@ -834,17 +834,17 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
   }
 }
 
-/** Each state's map runs in its own lane, one at a time, with the same source children, receipts and launch log as the
- * routine pass, so the routine pass's time and memory never hold it back. */
-async function runPlaceMaps(deadlineMs: number): Promise<void> {
+/** Each state's map, and each state's where-to-vote read, runs in its own lane with the same source children, receipts
+ * and launch log as the routine pass, so the routine pass's time and memory never hold it back. */
+async function runRoutineLane(lane: "place-maps" | "voting-sites", deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) return;
-  if (!jobLaunchAllowed("place-maps")) return;
+  if (!jobLaunchAllowed(lane)) return;
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
-    id: "place-maps",
+    id: lane,
     databaseBytesPerRun: 16_777_216,
     executable: process.execPath,
-    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", "--place-maps"],
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", `--${lane}`],
     env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
   }], {
     cwd: CODE_ROOT,
@@ -854,10 +854,10 @@ async function runPlaceMaps(deadlineMs: number): Promise<void> {
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
   });
-  if (!run) throw new Error("PLACE_MAPS_CHILD_RESULT_MISSING");
+  if (!run) throw new Error(`${lane.toUpperCase()}_CHILD_RESULT_MISSING`);
   if (run.status !== 0) {
-    await persistOuterRoutineChildFailure(routineSupervisorCycleId(hostname(), startedAt, "place-maps"), startedAt, run,
-      `${run.stdout ?? ""}\n${run.stderr ?? ""}`, "place-maps");
+    await persistOuterRoutineChildFailure(routineSupervisorCycleId(hostname(), startedAt, lane), startedAt, run,
+      `${run.stdout ?? ""}\n${run.stderr ?? ""}`, lane);
   }
 }
 
@@ -868,7 +868,7 @@ async function persistOuterRoutineChildFailure(
   output: string,
   lane: RoutineSupervisorLane = "routine-civic-data",
 ): Promise<void> {
-  const name = lane === "publish-now" ? "publish now" : lane === "place-maps" ? "state place maps" : "routine civic data";
+  const name = lane === "publish-now" ? "publish now" : lane === "place-maps" ? "state place maps" : lane === "voting-sites" ? "voting sites" : "routine civic data";
   const outer = routineSupervisorOuterEvidence({
     output,
     termination: run.termination,
@@ -1369,7 +1369,8 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
-  placeMapsLane(runPlaceMaps),
+  placeMapsLane(deadlineMs => runRoutineLane("place-maps", deadlineMs)),
+  votingSitesLane(deadlineMs => runRoutineLane("voting-sites", deadlineMs)),
   doorProbesLane(runDoorProbes),
 ], (outcome) => {
   if (outcome.state === "FAILED") {

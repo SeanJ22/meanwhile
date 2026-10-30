@@ -22,6 +22,7 @@ import { moveRetiredDoorPages } from "../lib/control-plane/repository/migrations
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { installJobBreaker, jobBreakerMigrationDefinition } from "../lib/control-plane/repository/migrations/BB-01.ts";
 import { installKeys, keysMigrationDefinition } from "../lib/control-plane/repository/migrations/KB-01.ts";
+import { expandOwnerLive, ownerLiveMigrationDefinition } from "../lib/control-plane/repository/migrations/CP-01-LIVE.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
@@ -63,6 +64,7 @@ const MIGRATIONS = [
   { id: "RIVER-DOORCFG-149_expand", source: "lib/control-plane/repository/migrations/RIVER-DOORCFG-149.ts", declarations: ["lib/control-plane/repository/migrations/DB-03A.ts", LINKING_SEEDS, "lib/facts/linking-copy.ts"],
     definition: linkingPagesMigrationDefinition, apply: withProductionReader(moveRetiredDoorPages) },
   { id: "KB-01_expand", source: "lib/control-plane/repository/migrations/KB-01.ts", declarations: ["lib/core/keys-store.ts"], definition: keysMigrationDefinition, apply: installKeys },
+  { id: "CP-01-LIVE_expand", source: "lib/control-plane/repository/migrations/CP-01-LIVE.ts", declarations: ["lib/control-plane/repository/owner-lease-changes.ts"], definition: ownerLiveMigrationDefinition, apply: expandOwnerLive },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

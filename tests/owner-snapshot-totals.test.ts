@@ -19,7 +19,7 @@ import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { buildCostPanel, buildSpendByPlace, costPanelOf, spendByDay, spendByDayOf, placeRowsOf } from "../lib/control-plane/cost-panel.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import { initializeOwnerSnapshot } from "../lib/control-plane/owner-snapshot-initialize.ts";
-import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
+import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, OwnerSnapshotFoldPending, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { type OwnerSnapshotState } from "../lib/control-plane/owner-surface.ts";
 import { stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
 import type { PromotionPipelineRecord } from "../lib/control-plane/promotion/types.ts";
@@ -299,21 +299,21 @@ function rowsAt(states: ReadonlyMap<string, OwnerSnapshotState>, at: string) {
   const holds = (r: IndexSegment) => (r.from === null || r.from <= at) && (r.until === null || at < r.until);
   return {
     allRowsIndex: all.flatMap((r) => r.allRowsIndex).filter(holds).map(({ from: _from, until: _until, ...row }) => row).sort((a, b) => a.id.localeCompare(b.id)),
-    bodyAttempts: all.flatMap((r) => r.bodyAttempts).sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId)),
   };
 }
 
 /** One publish exactly as `scripts/publish-owner-snapshot.mts` composes it, every panel read back with each state's rows joined in. */
 async function publish(repos: ControlPlaneRepositories, now: string, prior: Published | null, scopes: readonly ExpansionScopeDecision[], served: ServedReaderReadback | null,
-  heldRows?: number, inspectionRepos = repos) {
+  heldRows?: number, inspectionRepos = repos, listRows=true) {
   const priorRow = await repos.ownerSnapshotTotals.read(OWNER_SNAPSHOT_TOTALS_ID);
   const askGapObservations = (await repos.askGapObservations.list()).map((r) => r.value);
   const fold = await OwnerSnapshotFold.fold(repos, priorRow?.value ?? null, { nowIso: now, slackMs: 0, servedReader: prior?.servedReader ?? null,
     askGapObservations, scopes, carried: prior?.readings ?? [], write: true, heldRows, log: () => {} });
   const read = readings(now, prior?.readings ?? []);
   const attribution = billingAttributionOf({ now, scopes, holds: {}, readings: read, hunts: fold.costs.hunts, windowOf: readingWindows(fold.costs, read, now) });
+  if(listRows)await fold.view({activation:null}); // Readback must invalidate already rendered delivery rows.
   await fold.readBack(served);
-  const view = await fold.view({ activation: null });
+  const view = await fold.view({ activation: null },{rows:listRows});
   const countOnly = await fold.view({ activation: null }, { rows: false });
   const population = (summary: AssignmentView["summary"]) => ({ ...summary,
     groups: summary.groups.map(({ published: _displayed, ...group }) => group) });
@@ -328,7 +328,7 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
   for (const [state, part] of Object.entries(totals.assignments!.states)) {
     const own = assignmentRows.filter(row => row.state === state);
     const stateTotals = (await inspectionRepos.ownerSnapshotStateTotals.read(`totals:${state}`))!.value;
-    states.set(state, { builtAt: part.builtAt, allRowsIndex: own.flatMap(row => row.indexSegments), bodyAttempts: own.flatMap(row => row.bodyAttempts),
+    states.set(state, { builtAt: part.builtAt, allRowsIndex: own.flatMap(row => row.indexSegments),
       spendByPlace: placeRowsOf(state, stateTotals.places) } as unknown as OwnerSnapshotState);
   }
   const spend = fold.spendByPlace();
@@ -370,7 +370,7 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
     const name = US_STATES.find((st) => unitCarriesState(hay, st.code))?.name ?? "other";
     byState[name] = (byState[name] ?? 0) + 1;
   }
-  const { allRowsIndex, bodyAttempts } = buildAssignmentView(sources);
+  const { allRowsIndex } = buildAssignmentView(sources);
   return json({
     costPanel: buildCostPanel({ costs, attempts, cacheByRole: null, share: null, verifiedRecords, nowIso: now }),
     spendByDay: spendByDay(costs, now),
@@ -379,7 +379,7 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
     searches: searchLedgersOf(costs, now),
     obligationsByState: byState,
     publications: sources.workItems.filter((w) => w.publicationOutcome).map((w) => w.id).sort(),
-    rows: { allRowsIndex, bodyAttempts },
+    rows: { allRowsIndex },
   });
 }
 
@@ -387,16 +387,17 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
 async function viewAsOfFolds(repos: ControlPlaneRepositories, published: Published, states: ReadonlyMap<string, OwnerSnapshotState>, now: string,
   servedAt: (at: string) => ServedReaderReadback | null): Promise<AssignmentView> {
   const parts = [];
+  const current=await sourcesAt(repos,now,servedAt(now)),latest=deriveAssignmentEntries(current);
   const lists = new Map<string, AssignmentListRow>();
   for (const [state] of Object.entries(published.totals.assignments!.states)) {
     const ids = [...new Set(states.get(state)!.allRowsIndex.map(row => row.id))];
     for (const row of await repos.ownerAssignmentRows.read(ids)) {
       const own = [...deriveAssignmentEntries(await sourcesAt(repos, row.builtAt, servedAt(row.builtAt)))].filter(([id]) => id === row.id);
       parts.push(assignmentPartOf(own, row.builtAt));
-      for (const [id, entry] of own) if (entry.list) lists.set(id, entry.list);
+      for (const [id] of own) {const entry=latest.get(id);if(entry?.list)lists.set(id,entry.list);}
     }
   }
-  const scratch = buildAssignmentView(await sourcesAt(repos, now, servedAt(now)));
+  const scratch = buildAssignmentView(current);
   const linked = scratch.summary.pipeline.held ? scratch.summary.pipeline.value.linked : null;
   return json(assembleAssignmentView({ nowIso: now, part: mergeAssignmentParts(parts, now), lists: (id) => lists.get(id), activation: null,
     totals: { costs: scratch.summary.costs, pipeline: linked && { items: linked.denominator, linked: linked.value },
@@ -428,7 +429,7 @@ for (const [held, says] of [[undefined, "held in memory"], [1, "each written to 
 
   const one = await publish(repos, T1, null, [HUNT], served1, held);
   assertSamePanels("first publish", one.panels, await fromScratch(repos, T1, [HUNT], served1, one.published.readings));
-  const { allRowsIndex: _rows, bodyAttempts: _bodies, ...national } = json(buildAssignmentView(await sourcesAt(repos, T1, served1)));
+  const { allRowsIndex: _rows, ...national } = json(buildAssignmentView(await sourcesAt(repos, T1, served1)));
   assert.deepEqual(one.view, national, "first publish: with every state folded now, the view is exactly the from-scratch view");
   assert.ok(one.states.size > 5, "every state's rows are published on their own row");
   assert.ok(one.view.summary.total > 40 && one.view.rows.length > 0, "the fixture publishes a real list");
@@ -495,7 +496,7 @@ test("a steady publish reads only the rows changed since the last one and derive
     } })])) as unknown as ControlPlaneRepositories;
   const now = at(T1, 1);
   const due = await repos.ownerAssignmentRows.find({ dueAt: now });
-  const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos);
+  const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos,false);
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assert.ok(derivedFor.has(obligationId(12)), "the assignment the new round belongs to is derived again");
   const allowed = new Set([obligationId(12), ...due.map(row => row.id)]);
@@ -504,12 +505,12 @@ test("a steady publish reads only the rows changed since the last one and derive
   assert.ok([...loaded].every(state => touchedStates.has(state)), "only affected states' small counts are read");
   assertSamePanels("steady publish", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
   /* A changed-row read starts where the last one began, so the publish right after a change reads it once more. */
-  const settled = await publish(watched, at(T1, 2), two.published, [HUNT], null, undefined, repos);
+  const settled = await publish(watched, at(T1, 2), two.published, [HUNT], null, undefined, repos,false);
   loaded.clear();
   derivedFor.clear();
   const idle = at(T1, 9);
   const expired = await repos.ownerAssignmentRows.find({ dueAt: idle });
-  const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos);
+  const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos,false);
   const expiredIds = new Set(expired.map(row => row.id));
   assert.ok([...derivedFor].every(id => expiredIds.has(id)), "an idle publish only updates work-list deadlines that passed");
   assert.deepEqual(whole, [], "no control-plane table is read whole");
@@ -528,6 +529,16 @@ test("an interrupted snapshot publish resumes from the state count row without r
   const now = at(T1, 1);
   const two = await publish(repos, now, one.published, [HUNT], null);
   assertSamePanels("after an unpaired state", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
+  const prior=(await repos.ownerSnapshotTotals.read("totals"))!,next=at(T1,2);
+  const interrupted=await OwnerSnapshotFold.fold(repos,prior.value,{nowIso:next,slackMs:0,servedReader:null,
+    askGapObservations:[],scopes:[HUNT],carried:two.published.readings,write:true,log:()=>{}});
+  readingWindows(interrupted.costs,readings(next,two.published.readings),next);
+  await interrupted.saveTotals(prior); // Crash here: the public snapshot still carries the earlier billing periods.
+  const changed=repos.costs.readChangedSince;
+  repos.costs.readChangedSince=async(since,...args)=>{assert.notEqual(since,null,"a snapshot-write interruption must not refold the whole cost ledger");return changed(since,...args);};
+  const recovered=await publish(repos,at(T1,3),two.published,[HUNT],null);
+  repos.costs.readChangedSince=changed;
+  assertSamePanels("after totals committed before the snapshot",recovered.panels,await fromScratch(repos,at(T1,3),[HUNT],null,recovered.published.readings));
 });
 
 
@@ -551,11 +562,11 @@ test("the owner contract checkpoints a backlog before publication and replays a 
   late.workItems.push(workItem(lateId,"late-contract",{subject:"state-az"}));
   round(late,lateId,"late-contract-attempt",{worker:PLAIN,startedAt:at(T2,.5),usd:.019});
   await seed(repos,late);
-  const persist=repos.ownerCostRefs.persist;
+  const acknowledge=repos.ownerSnapshotInboxes.compareAndSet;
   let crash=true;
-  repos.ownerCostRefs.persist=async(...args)=>{if(crash){crash=false;throw Error("crash after durable state output");}return persist(...args);};
+  repos.ownerSnapshotInboxes.compareAndSet=async(...args)=>{if(crash&&args[2].run===""){crash=false;throw Error("crash after durable state output");}return acknowledge(...args);};
   await assert.rejects(attempt(),/crash after durable state output/);
-  repos.ownerCostRefs.persist=persist;
+  repos.ownerSnapshotInboxes.compareAndSet=acknowledge;
   let complete=false,attempts=0;
   while(!complete&&attempts++<30)complete=await attempt();
   assert.equal(complete,true,"bounded state batches resume until initialization finishes");
@@ -581,4 +592,37 @@ test("an empty owner contract finishes billing and refresh phases in one bounded
   assert.equal(ready.ownerWorkListReady,true);
   assert.equal(ready.initializing,undefined);
   assert.equal(ready.costs!.foldedAt,T2);
+});
+
+
+test("normal publication resumes acknowledged changes without replaying its completed state inboxes",async()=>{
+  const repos=createMemoryRepositories(),world=initialWorld();await seed(repos,world);
+  const initial=await publish(repos,T1,null,[],null);
+  await seed(repos,changesBeforeT2(world));
+  const added=emptyWorld();added.workItems.push(workItem("new-normal-state-ut","standalone",{subject:"state-ut"}));
+  round(added,"new-normal-state-ut","new-state-attempt",{worker:PLAIN,startedAt:at(T2,-.5),usd:.003});await seed(repos,added);
+  const changed= repos.obligations.listChangedSince!;
+  let reads=0;repos.obligations.listChangedSince=async(...args)=>{reads+=1;return changed(...args);};
+  const input={nowIso:T2,slackMs:0,servedReader:null,askGapObservations:[],scopes:[],carried:initial.published.readings,write:true,log:()=>{},continuation:{maxStates:1}};
+  const before=(await repos.ownerSnapshotTotals.read("totals"))!;
+  await assert.rejects(OwnerSnapshotFold.fold(repos,before.value,input),OwnerSnapshotFoldPending);
+  const staged=(await repos.ownerSnapshotTotals.read("totals"))!;
+  assert.equal(staged.value.ownerWorkListReady,true,"existing normalized counts remain eligible for their next continuation");
+  assert.equal(staged.value.initializing,true);
+  assert.ok(staged.value.initialization!.pending.length>1);
+  assert.notEqual(staged.value.assignments!.through,before.value.assignments!.through,"source cursors are acknowledged before remaining states derive");
+  const sourceReads=reads;
+  const acknowledged=async()=> (await repos.ownerSnapshotInboxes.list()).filter(row=>row.value.run==="").length;
+  const pending=await acknowledged();
+  await assert.rejects(OwnerSnapshotFold.fold(repos,staged.value,input),OwnerSnapshotFoldPending);
+  assert.equal(reads,sourceReads,"resuming a state batch does not reread already acknowledged sources");
+  assert.equal(await acknowledged(),pending+1,"the completed inbox acknowledgement is durable without rewriting national counts");
+  const after=await publish(repos,T2,initial.published,[],null);
+  assert.equal((await repos.ownerSnapshotTotals.read("totals"))!.value.initializing,undefined);
+  assert.ok((await repos.ownerSnapshotTotals.read("totals"))!.value.assignments!.states.ut,"a state first seen in a resumed batch retains its running counts");
+  assertSamePanels("normal continuation",after.panels,await fromScratch(repos,T2,[],null,after.published.readings));
+  for(const row of await repos.ownerAssignmentRows.read([...deriveAssignmentEntries(await sourcesAt(repos,T2,null)).keys()])){
+    assert.equal("list"in row,false,"the runner does not persist drilldown list rows");
+    assert.equal("bodyAttempts"in row,false,"the runner does not persist detailed body attempts");
+  }
 });

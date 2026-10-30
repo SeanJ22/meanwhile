@@ -49,7 +49,7 @@ import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, colle
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
 import type { AssignmentPublication, AssignmentView } from "../lib/control-plane/assignment-view.ts";
 import { readAskGapObservations } from "../lib/control-plane/ask-gap-observations.ts";
-import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
+import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, OwnerSnapshotFoldPending, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
@@ -492,8 +492,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  /* The totals go first, by compare-and-set, so two publishers never fold the same rows into one total; they pair with the
-     state rows the fold already wrote, so they are written even when the view could not be assembled. */
+  // Commit the completed fold before replacing the public summary.
   if (reads) {
     await reads.fold.saveTotals(reads.prior);
   }
@@ -531,4 +530,9 @@ async function main(): Promise<void> {
 await main();
 }
 
-if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) await publishOwnerSnapshot();
+if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
+  try{await publishOwnerSnapshot();}catch(error){
+    if(!(error instanceof OwnerSnapshotFoldPending))throw error;
+    console.log(error.message);process.exitCode=75;
+  }
+}

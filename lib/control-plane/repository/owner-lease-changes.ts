@@ -35,6 +35,17 @@ export const OWNER_LEASE_CHANGES_DDL = [
   `CREATE TRIGGER cp_owner_lease_change BEFORE INSERT OR UPDATE ON cp_leases FOR EACH ROW EXECUTE FUNCTION cp_touch_owner_lease()`,
 ] as const;
 
+/** A live renewal keeps its queued expiry check; that check reads the current lease before changing counts. */
+export const OWNER_LEASE_RENEWAL_DDL = OWNER_LEASE_CHANGES_DDL[3].replace(
+  `OLD.owner_fingerprint IS NOT DISTINCT FROM ${fingerprint("NEW.value")}`,
+  `(OLD.owner_fingerprint IS NOT DISTINCT FROM ${fingerprint("NEW.value")} OR (
+    OLD.value->'id'=NEW.value->'id' AND OLD.value->'routeTaskId'=NEW.value->'routeTaskId'
+    AND OLD.value->'released'='false'::jsonb AND NEW.value->'released'='false'::jsonb
+    AND (OLD.value->>'expiresAt')::timestamptz>statement_timestamp()
+    AND (NEW.value->>'heartbeatAt')::timestamptz>(OLD.value->>'heartbeatAt')::timestamptz
+    AND (NEW.value->>'heartbeatAt')::timestamptz<(OLD.value->>'expiresAt')::timestamptz
+    AND (NEW.value->>'expiresAt')::timestamptz>(OLD.value->>'expiresAt')::timestamptz))`);
+
 /** A semantic cursor reads only lease identity and routing metadata; its version is never a write/CAS revision. */
 export function pgOwnerLeaseChanges(sql: Sql): OwnerLeaseChanges {
   return { async read(since, held, page) {

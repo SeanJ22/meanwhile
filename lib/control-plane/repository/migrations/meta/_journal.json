@@ -79,6 +79,11 @@
       "id": "KB-01_expand",
       "phase": "expand",
       "hash": "630dd43ac3af3fc0ad42892d5239139442d1b5bcbf9933e12a027a6c662f8a4e"
+    },
+    {
+      "id": "CP-01-LIVE_expand",
+      "phase": "expand",
+      "hash": "8b5c5f1d1620536d5c7b447ff588f8a8cbf033aee32ca06cbd92c2bb3ab50c42"
     }
   ]
 }

@@ -29,7 +29,7 @@ const identityHeaders=(page?:string)=>`coalesce((SELECT jsonb_object_agg(origina
   FROM page_headers${page?` WHERE page_id=${page}`:''}),'{}'::jsonb)`;
 
 /** Every selection of places and boards is composed from their saved pages and the identity aliases they depend on. */
-export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
+const PLACE_SELECTION = `WITH requested_bodies AS (
   SELECT coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=id),id) AS id
     FROM unnest($3::text[]) AS requested(id)
 ), state_bodies AS (
@@ -50,7 +50,16 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     AND id ~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$'
     AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
       OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
-), ${identityCtes}
+), ${identityCtes}`;
+
+/**
+ * The saved pages of a selection. Given the print of the answer a server already holds ($10), it returns that print alone while the pages and the
+ * aliases they depend on are unchanged, and the pages otherwise.
+ */
+export const PLACE_PAGES_SQL = `${PLACE_SELECTION}, printed AS (
+  SELECT md5(coalesce(string_agg(s.id||':'||coalesce(p.version::text,'-')||':'||(${identityHeaders('s.id')})::text,',' ORDER BY s.id),'')) AS print
+    FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id WHERE e.state=$1::char(2) OR e.state IS NULL
+), pages AS (
 SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,
   coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) AS row,
   ${identityHeaders('s.id')} AS body_headers,
@@ -60,7 +69,14 @@ SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state
     OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies)
     THEN CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
     ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS value) saved ON true
-  WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id`;
+  WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id
+)
+SELECT pages.*,(SELECT print FROM printed) AS print FROM pages WHERE (SELECT print FROM printed) IS DISTINCT FROM $10::text
+UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,(SELECT print FROM printed) WHERE (SELECT print FROM printed)=$10::text`;
+
+/** A combined answer is kept in this server's memory while the print of its pages is unchanged, and never for long, since sittings are read against the clock. */
+const COMBINED_KEPT = 24, COMBINED_MS = 60_000;
+const combined = serverReaderValue("place-combined", () => new Map<string, { readonly print: string; readonly at: number; readonly place: PlacePackage }>());
 
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());
@@ -118,23 +134,32 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
   if(selection&&!request){request=new Map();requests.set(selection,request);}
   const prior=request?.get(key);
   if(prior)return prior;
-  const read=loadPlacePackage(selected,query());
+  const read=loadPlacePackage(selected,query(),true);
   request?.set(key,read);
   return read;
 }
 
-async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<PlacePackage> {
+async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false):Promise<PlacePackage> {
   if(!query)throw new Error("FACT_STORE_DATABASE_URL_MISSING");
-  const rows=await query(PLACE_PAGES_SQL,[input.state.toUpperCase(),input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],
-    input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false]);
+  const params=[input.state.toUpperCase(),input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],
+    input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false];
+  const key=JSON.stringify([params,input.placeId??null]),kept=remember?combined.get(key):undefined;
+  const rows=await query(PLACE_PAGES_SQL,[...params,kept && Date.now()-kept.at<COMBINED_MS ? kept.print : null]);
+  if(kept && rows.length===1 && rows[0]!.page_id===null && kept.print===rows[0]!.print)return kept.place;
   // A place whose page is not built yet adds nothing until it is; the places that are built still answer.
   const built=rows.filter(row=>row.row);
   if(!built.length)throw new Error("PLACE_PAGE_NOT_BUILT");
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
   const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
-  const merged=mergePlaceRows(canonical,built.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),row.body_headers as BodyHeaders ?? {}),page_id:row.page_id,
+  const merged=mergePlaceRows(canonical,built.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),row.body_headers as BodyHeaders ?? {},input.placeId!==undefined),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
   const place=await composePlaceRow(canonical,merged);
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
+  const print=rows[0]?.print;
+  if(remember && typeof print==="string") {
+    combined.delete(key);
+    combined.set(key,{print,at:Date.now(),place});
+    for(const oldest of combined.keys()){ if(combined.size<=COMBINED_KEPT)break; combined.delete(oldest); }
+  }
   return place;
 }

@@ -113,9 +113,13 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   for (const page of ordered) for (const partition of records(page.row.meeting_rows)) {
     const source = record(restoreAgendaText(partition.payload, strings(page.row.agenda_texts)));
     const servesSelected = (meeting: Row) => selected.has(String(meeting.ocdId)) && strings(page.row.division_ids).includes(String(meeting.ocdId));
-    // A sitting of a body no page lists still belongs to the places its page serves, as it does when those places are read together.
-    const meetings = records(source.meetings).filter(meeting => meeting.bodyId ? (originalOwner.has(String(meeting.bodyId)) || bodyOwner.has(canonical(meeting.bodyId))
-      ? owns(page, meeting.bodyId) : servesSelected(meeting)) : servesSelected(meeting)).map(meeting=>canonicalRow(meeting));
+    // A sitting stays with the page that lists its board; another page's copy of the same source stays too unless the board's page carries that source and no longer lists the sitting (withdrawn).
+    const kept = (meeting: Row) => {
+      if (!meeting.bodyId) return servesSelected(meeting);
+      const owner = originalOwner.get(String(meeting.bodyId)) ?? bodyOwner.get(canonical(meeting.bodyId));
+      return owner !== undefined && (owner === page || !records(owner.row.meeting_rows).some(held => held.scope === partition.scope));
+    };
+    const meetings = records(source.meetings).filter(kept).map(meeting=>canonicalRow(meeting));
     const members = records(source.derivedMembers).filter(member => owns(page, member.bodyId)).map(member=>canonicalRow(member));
     const bodyScope = /^source:[^:]+:body:([^:]+)(?::|$)/.exec(String(partition.scope));
     const body = bodyScope ? decodeURIComponent(bodyScope[1]!) : null;

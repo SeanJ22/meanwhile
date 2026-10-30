@@ -26,7 +26,7 @@ export interface PlacePackage {
 }
 
 export type PlaceInput = { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean;
-  /** A ZIP has one complete prebuilt answer. Map selections combine their saved division pages. */
+  /** Set for a typed ZIP: its answer is its places saved pages combined, and its boards keep the name facts they are published under. */
   readonly placeId?: string;
   /** Ballot reads consume only body facts; their registry and directory come from the state package. */
   readonly bodyFactsOnly?: boolean;

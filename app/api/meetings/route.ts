@@ -57,7 +57,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const fringe = zipRead.value ? location.fringe : [];
     const territoryRead = readerTerritory(location.state);
     const placeRead = timing.time("place", async () => readPlacesForStates(location.states, { divisionIds: location.divisionIds,
-      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe }));
+      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe,
+      ...(zipRead.value ? { placeId: `zip:${zipRead.value}` } : {}) }));
     const [state, place, settings] = await Promise.all([
       stateRead, placeRead, readReaderMeetingSettings(),
     ]);

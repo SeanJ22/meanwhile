@@ -6,7 +6,7 @@ import { completedWorkerResults } from "./repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
-import { slotFor, waitingForSlot } from "../facts/finding-slots.ts";
+import { SITE_WALK_LEAD, slotFor, waitingForSlot } from "../facts/finding-slots.ts";
 
 /** References into the existing result and artifact stores, never another evidence store. */
 export interface BoxOrigin {
@@ -71,8 +71,19 @@ interface BoxQueue {
   due(input: { readonly slots: Readonly<Record<string, number | string>>; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
-  /** Waiting rows handed to one builder, by the reason it gave them, about any board of the given governments (`<government>`, `<government>#governing`, `#board`, `#body:<slug>`); at most `limit` per government. */
-  waitingUnder(reason: string, limit: number, governmentIds: readonly string[]): Promise<readonly BoxFinding[]>;
+  /** The links hunters found, as small rows: the address, who it was found for and on which page, never the finding. */
+  waitingLinks(limit: number): Promise<readonly BoxLink[]>;
+  /** These findings were moved to the work list as links to read; they leave the Box. */
+  moved(ids: readonly string[], now: string): Promise<number>;
+}
+export interface BoxLink {
+  readonly id: string;
+  readonly url: string;
+  readonly subjectId: string;
+  readonly foundOn: string | null;
+  readonly foundAt: string;
+  /** The government the hunt that found it was about. */
+  readonly governmentId: string | null;
 }
 export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 
@@ -97,9 +108,16 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
       const subjects = subjectIds ? new Set(subjectIds) : null;
       return (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason && (!subjects || subjects.has(row.subjectId))).slice(0, limit);
     },
-    waitingUnder: async (reason, limit, governmentIds) => {
-      const all = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason);
-      return governmentIds.flatMap(id => all.filter(row => row.subjectId === id || row.subjectId.startsWith(`${id}#`)).slice(0, limit));
+    waitingLinks: async limit => (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === SITE_WALK_LEAD).slice(0, limit).map(row => ({
+      id: row.id, url: String(findingFact(row)?.value ?? ""), subjectId: row.subjectId, foundOn: row.sourceUrl, foundAt: row.lastRecordedAt ?? row.origins[0]!.recordedAt,
+      governmentId: row.origins.find(origin => origin.resultKey?.startsWith("hunt:packet:"))?.resultKey!.slice("hunt:packet:".length) ?? null })),
+    moved: async (ids, now) => {
+      let moved = 0;
+      for (const id of ids) {
+        const held = await repo.read(id);
+        if (held?.value.state === "waiting" && await repo.compareAndSet(id, held.revision, { ...held.value, state: "built", claim: null, refusal: null, publicationId: null, buildResultId: "lead" }, now)) moved++;
+      }
+      return moved;
     },
   };
 }

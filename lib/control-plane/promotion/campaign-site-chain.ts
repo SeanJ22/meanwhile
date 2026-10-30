@@ -4,12 +4,13 @@ import { canonicalJson, readByKeys, type AppendOnlyRepository, type ArtifactReco
 import type { Attempt, WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRecords, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
-import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
+import { findingFact, type BoxFinding } from "../box.ts";
+import type { WorkList } from "../../core/work.ts";
+import { findingOf } from "../../sources/handoff.ts";
 import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
 import type { Clocks } from "../../facts/publish.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
-import { CAMPAIGN_SITE_LEAD, slotVersion } from "../../facts/finding-slots.ts";
 import { pageCopy } from "../../facts/source-copy.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
@@ -93,6 +94,8 @@ export interface CampaignSiteChainOptions {
   /** The vaulted bytes of an artifact as a page read; null when the vault cannot produce them. */
   readonly heldPage: (artifact: ArtifactRecord) => Promise<CampaignSitePageRead | null>;
   readonly now: string;
+  /** Where hunters' campaign-site findings wait for this chain. */
+  readonly list: WorkList;
   /** Distinct lead URLs read in one run at most; the rest stay owed, named. */
   readonly maxReads?: number;
   // Reuse recent saved reads so acquisition slots reach leads never read.
@@ -432,7 +435,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const subjectIds = [...new Set([...options.subjects.values()].flatMap(subject => [subject.candidacyId, ...subject.readerKeys]))];
   const scouts = await scopedMatches(repos.scoutResults, ["subjectId"], subjectIds);
   const workIds = new Set(scouts.map(row => row.workItemId));
-  const leads = await repos.boxFindings.waitingFor(CAMPAIGN_SITE_LEAD, BOX_LEADS_PER_PASS, subjectIds);
+  const handed = await options.list.claim("fact", BOX_LEADS_PER_PASS, { platform: "campaign-site", subjects: subjectIds });
   for (let offset = 0; offset < subjectIds.length; offset += 16) {
     const ids = subjectIds.slice(offset, offset + 16);
     const work = await Promise.all(ids.flatMap(id => [id, `campaign-site:${id}`]).map(id => repos.workItems.listWhere(["subject"], id)));
@@ -510,19 +513,15 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   }
 
   // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
-  const windowHours = leads.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
-  for (const finding of leads) {
+  const windowHours = handed.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
+  for (const claim of handed) {
+    const finding = findingOf(claim);
     const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
-    if (subject === undefined) {
-      await holdBoxFinding(repos.boxFindings, finding.id, { class: "campaign sites", reason: "CANDIDACY_ON_NO_BALLOT", slots: slotVersion("campaign sites") }, options.now);
-      continue;
-    }
+    if (subject === undefined) { await options.list.later(claim, "CANDIDACY_ON_NO_BALLOT"); continue; }
     const scouted = await boxLead(repos, finding, subject, options, windowHours);
-    const claim = await takeBoxFinding(repos.boxFindings, finding.id, "campaign-site-chain", options.now, new Date(Date.parse(options.now) + 120_000).toISOString());
-    if (claim === null) continue;
-    if ("refused" in scouted) { await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "refused", reason: scouted.refused }, options.now); continue; }
+    if ("refused" in scouted) { await options.list.refuse(claim, scouted.refused); continue; }
     if (!heldStates.get(scouted.itemId)?.byStage.SCOUTED) await offer(scouted);
-    await finishBoxFinding(repos.boxFindings, finding.id, claim.token, { state: "built", publicationId: scouted.itemId }, options.now);
+    await options.list.finish(claim);
   }
 
   /* SCOUTED: every Marginalia pointer that is a lead becomes its own item, once: a later answer naming the same page is the same lead. */

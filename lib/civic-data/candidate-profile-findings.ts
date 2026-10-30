@@ -2,12 +2,14 @@ import { stateBallotContractId } from "./state-scopes.ts";
 import { candidatePortraitFromCommonsFile, type CandidatePortraitPatch, type CommonsPortraitRuntime } from "../ballot/candidate-portraits.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CampaignSiteIdentity } from "../candidates/campaign-site-verifier.ts";
-import { findingFact, finishBoxFinding, takeBoxFinding, type BoxFinding, type BoxRepository } from "../control-plane/box.ts";
+import { findingFact } from "../control-plane/box.ts";
+import type { WorkList, WorkRow } from "../core/work.ts";
+import { findingOf } from "../sources/handoff.ts";
 import { readHeldBytes, type HeldVaultArtifact } from "../control-plane/evidence/read-only-vault.ts";
 import { section3Page } from "../control-plane/promotion/section3.ts";
 import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
 import { checkFact, hostOf, linkQuote, type FieldKind, type Provenance } from "../facts/check.ts";
-import { CANDIDATE_PROFILE_LEAD, candidateChecklistId } from "../facts/finding-slots.ts";
+import { candidateChecklistId } from "../facts/finding-slots.ts";
 import type { Clocks } from "../facts/publish.ts";
 import { pageCopy } from "../facts/source-copy.ts";
 import type { PortraitVerification } from "../photos/binding.ts";
@@ -34,7 +36,7 @@ export type CandidateFindingSubject = CampaignSiteIdentity & { readonly readerKe
 interface CandidateFindingsReport {
   readonly published: Readonly<Record<string, number>>;
   readonly refused: Readonly<Record<string, number>>;
-  /** Findings for a candidacy no promoted ballot holds yet; they stay in the Box. */
+  /** Findings for a candidacy no promoted ballot holds yet; they stay on the work list. */
   readonly waiting: number;
 }
 
@@ -50,11 +52,13 @@ function portraitSources(verification: PortraitVerification, sourceClass: Manual
     review(verification.imageUrl, verification.sourceImageHash, verification.imageRetrievedAt ?? verification.checkedAt, sourceClass)];
 }
 
-const CANDIDATE_FINDINGS_PER_PASS = 500;
+export const CANDIDATE_FINDINGS_PER_PASS = 500;
 
 /** Hunters' bios, campaign contacts and portraits for candidates, each held to checkFact on its saved page, published on the candidate's profile card. */
-export async function publishCandidateFindings(input: {
-  readonly boxFindings: BoxRepository;
+export interface CandidateFindingsInput {
+  readonly list: WorkList;
+  /** The candidate-profile handoffs this pass claimed. */
+  readonly claims: readonly WorkRow[];
   readonly held: (artifactId: string) => Promise<HeldVaultArtifact | null>;
   readonly store: RoutineDataStore;
   readonly subjects: readonly CandidateFindingSubject[];
@@ -64,22 +68,29 @@ export async function publishCandidateFindings(input: {
   readonly now: string;
   readonly portrait?: PortraitRuntime;
   readonly commons?: CommonsPortraitRuntime;
-  readonly findings?: readonly BoxFinding[];
   readonly onPublished?: (candidate: { readonly id: string }, outcome: PromotionOutcome) => void;
-}): Promise<CandidateFindingsReport> {
+}
+
+export async function publishCandidateFindings(input: CandidateFindingsInput): Promise<CandidateFindingsReport> {
+  try { return await publishClaimed(input); }
+  // A failure that is not the findings' fault leaves every one of them waiting, as if never taken.
+  catch (error) { for (const claim of input.claims) await input.list.release(claim).catch(() => false); throw error; }
+}
+
+async function publishClaimed(input: CandidateFindingsInput): Promise<CandidateFindingsReport> {
   const report = { published: {} as Record<string, number>, refused: {} as Record<string, number>, waiting: 0 };
   const now = new Date(input.now);
-  const settled: { row: BoxFinding; field: string; outcome: Outcome; subject: CandidateFindingSubject | null }[] = [];
+  const settled: { claim: WorkRow; field: string; outcome: Outcome; subject: CandidateFindingSubject | null }[] = [];
   const subjects = new Map(input.subjects.flatMap(subject => [subject.candidacyId, ...subject.readerKeys].map(key => [key, subject] as const)));
-  for (const row of input.findings ?? await input.boxFindings.waitingFor(CANDIDATE_PROFILE_LEAD, CANDIDATE_FINDINGS_PER_PASS, [...subjects.keys()])) {
-    const subject = subjects.get(row.subjectId);
+  for (const claim of input.claims) {
+    const row = findingOf(claim), subject = subjects.get(row.subjectId);
     if (!subject) {
-      report.waiting++; continue;
+      report.waiting++; await input.list.release(claim); continue;
     }
     const fact = findingFact(row);
-    if (!fact || row.exactQuote === null) { settled.push({ row, field: "", outcome: { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" }, subject }); continue; }
+    if (!fact || row.exactQuote === null) { settled.push({ claim, field: "", outcome: { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" }, subject }); continue; }
     const field = candidateChecklistId(fact.field, fact.value) ?? fact.field;
-    settled.push({ row, field, subject,
+    settled.push({ claim, field, subject,
       outcome: await candidateOutcome(input, subject, field, String(fact.value), row.exactQuote, fact.origin.artifactIds, now) });
   }
 
@@ -114,16 +125,14 @@ export async function publishCandidateFindings(input: {
     if (!outcome.promoted && !outcome.confirmed) held.add(state);
   }
 
-  for (const { row, field, outcome, subject } of settled) {
-    if (!("refused" in outcome) && held.has(subject!.stateCode)) { report.waiting++; continue; }
-    const claim = await takeBoxFinding(input.boxFindings, row.id, "candidate-profile-writer", input.now, new Date(now.getTime() + 120_000).toISOString());
-    if (!claim) continue;
+  for (const { claim, field, outcome, subject } of settled) {
+    if (!("refused" in outcome) && held.has(subject!.stateCode)) { report.waiting++; await input.list.release(claim); continue; }
     const refused = "refused" in outcome ? outcome.refused : null;
     if (refused) {
-      await finishBoxFinding(input.boxFindings, row.id, claim.token, { state: "refused", reason: refused }, input.now);
+      await input.list.refuse(claim, refused);
       report.refused[refused.split(":")[0]!] = (report.refused[refused.split(":")[0]!] ?? 0) + 1;
     } else {
-      await finishBoxFinding(input.boxFindings, row.id, claim.token, { state: "built", publicationId: `candidate-profiles:${field}:${row.subjectId}` }, input.now);
+      await input.list.finish(claim);
       report.published[field] = (report.published[field] ?? 0) + 1;
     }
   }
@@ -131,7 +140,7 @@ export async function publishCandidateFindings(input: {
 }
 
 
-async function candidateOutcome(input: Parameters<typeof publishCandidateFindings>[0], subject: CandidateFindingSubject, field: string, value: string,
+async function candidateOutcome(input: CandidateFindingsInput, subject: CandidateFindingSubject, field: string, value: string,
   quote: string, artifactIds: readonly string[], now: Date): Promise<Outcome> {
   const kind = KIND[field];
   if (!kind) return { refused: "NO_CANDIDATE_FIELD" };

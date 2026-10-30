@@ -1,3 +1,4 @@
+import type { WorkList } from "../lib/core/work.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -46,7 +47,7 @@ async function checksFor(read: CampaignSitePageRead, subjects = new Map(committe
     artifactIds: [], scoutAttemptId: "held-scout", summary: "Campaign page lead",
   };
   await repos.promotionPipeline.append(itemId, scouted.recordId, scouted, NOW);
-  await projectCampaignSiteChains(repos, { subjects, now: "2026-09-25T21:30:00.000Z", readLead: async () => ({ ok: true, read }),
+  await projectCampaignSiteChains(repos, { subjects, list: { claim: async () => [] } as unknown as WorkList, now: "2026-09-25T21:30:00.000Z", readLead: async () => ({ ok: true, read }),
     recordRead: async () => artifactFor(read), heldPage: async () => read });
   const records = await repos.promotionPipeline.read(itemId);
   const verified = records.map(row => row.stage === "REFUSED" ? row.offered : row).filter(row => row.stage === "VERIFIED");

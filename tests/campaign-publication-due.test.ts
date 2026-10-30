@@ -1,11 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks, readCandidateProfileFindingBatch } from "../lib/civic-data/campaign-publication-due.ts";
+import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks } from "../lib/civic-data/campaign-publication-due.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { CANDIDATE_PROFILE_LEAD } from "../lib/facts/finding-slots.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue, routineFailureDomainFrontier } from "../lib/civic-data/runner.ts";
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { LEAD_DDL, WORK_DDL, workList } from "../lib/core/work.ts";
+import { moveBoxLinks, workStates } from "../lib/sources/box-links.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 
 test("committed approvals wake normal publication despite old acquisition clocks and survive restart", () => {
@@ -63,22 +66,26 @@ test("only an exact publication child receipt acknowledges the captured input co
 test("waiting profile findings schedule exact manual state children from recorded work geography", async () => {
   const db = new PGlite();
   try {
-    for (const table of ["cp_box_findings", "cp_work_items", "cp_occurrences", "cp_obligations"]) {
+    for (const table of ["cp_work_items", "cp_occurrences", "cp_obligations"]) {
       await db.exec(BOOTSTRAP_DDL.find(sql => sql.includes(`CREATE TABLE IF NOT EXISTS ${table} (`))!);
     }
+    for (const ddl of [...WORK_DDL, ...LEAD_DDL]) await db.exec(ddl);
+    const query = async (sql: string, params: readonly unknown[] = []) => (await db.query<Record<string, unknown>>(sql, [...params])).rows;
     const put = async (table: string, id: string, value: unknown) => db.query(`INSERT INTO ${table}(id,revision,updated_at,value) VALUES($1,1,now(),$2)`, [id, JSON.stringify(value)]);
     await put("cp_work_items", "work-oh", { autonomousPlan: { contract: { jurisdiction: { state: "OH" } } } });
     await put("cp_work_items", "work-nh", { autonomousPlan: { jurisdiction: "US-NH" } });
     await put("cp_occurrences", "occurrence", { workItemId: "work-il", obligationId: "obligation" });
     await put("cp_obligations", "obligation", { scopeDivisions: ["ocd-division/country:us/state:il/place:chicago"] });
-    const waiting = (subject: string, work: string) => ({ state: "waiting", subjectId: subject, lastRecordedAt: "2026-10-01T00:00:00Z",
-      waitingFor: { reason: CANDIDATE_PROFILE_LEAD }, origins: [{ workItemId: work }] });
-    await put("cp_box_findings", "oh", waiting("ballot-nh:unreliable-prefix", "work-oh"));
-    await put("cp_box_findings", "nh", waiting("ballot-candidacy:opaque-nh", "work-nh"));
-    await put("cp_box_findings", "unknown", waiting("ballot-az:prefix-alone-is-not-work-geography", "missing"));
-    await db.query("INSERT INTO cp_box_findings(id,revision,updated_at,value) SELECT 'il-'||n,1,now(),$1::jsonb||jsonb_build_object('subjectId','ballot-candidacy:'||n) FROM generate_series(1,501) n",
-      [JSON.stringify(waiting("opaque", "work-il"))]);
-    const query = async (sql: string, params: unknown[]) => (await db.query(sql, params)).rows;
+    const repos = createMemoryRepositories();
+    const waiting = (id: string, subject: string, work: string) => repos.boxFindings.put(id, { id, subjectId: subject, state: "waiting", lastRecordedAt: "2026-10-01T00:00:00Z", exactQuote: "q", sourceUrl: "https://x.example/",
+      origins: [{ workItemId: work, recordedAt: "2026-10-01T00:00:00Z" }], claim: null, attempts: [], generation: 0, publicationId: null, refusal: null,
+      waitingFor: { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: "1" } } as never, "2026-10-01T00:00:00Z");
+    await waiting("oh", "ballot-nh:unreliable-prefix", "work-oh");
+    await waiting("nh", "ballot-candidacy:opaque-nh", "work-nh");
+    await waiting("unknown", "ballot-az:prefix-alone-is-not-work-geography", "missing");
+    for (let n = 1; n <= 501; n++) await waiting(`il-${n}`, `ballot-candidacy:${n}`, "work-il");
+    const list = workList(query, { owner: "move", now: () => new Date("2026-10-02T00:00:00Z") });
+    await moveBoxLinks({ box: repos.boxFindings, list, states: workStates(query), now: () => new Date("2026-10-02T00:00:00Z"), limit: 600 });
     const read = await readCandidateProfilePublicationTasks(query, "2026-10-02T00:00:00Z");
     assert.equal(read.unscoped, 1);
     assert.deepEqual(read.tasks.map(task => [task.registeredContractId, task.command, task.ownerInvocation?.publicationPending]), [
@@ -86,11 +93,10 @@ test("waiting profile findings schedule exact manual state children from recorde
       ["candidate-profiles:NH", ["scripts/promote-manual-civic-projection.mts", "--contract=candidate-profiles:NH", "--candidate-findings"], true],
       ["candidate-profiles:OH", ["scripts/promote-manual-civic-projection.mts", "--contract=candidate-profiles:OH", "--candidate-findings"], true],
     ]);
-    assert.equal((await readCandidateProfileFindingBatch("IL", query)).length, 500);
-    assert.deepEqual(await readCandidateProfileFindingBatch("OH", query), [{ id: "oh", subject: "ballot-nh:unreliable-prefix" }]);
-    assert.deepEqual(await readCandidateProfileFindingBatch("NH", query), [{ id: "nh", subject: "ballot-candidacy:opaque-nh" }]);
-    assert.deepEqual(await readCandidateProfileFindingBatch("AZ", query), []);
-    await db.exec("UPDATE cp_box_findings SET value=jsonb_set(value,'{state}','\"built\"')");
+    assert.equal((await list.claim("fact", 600, { platform: "candidate-profile", state: "IL" })).length, 501);
+    assert.deepEqual((await list.claim("fact", 10, { platform: "candidate-profile", state: "OH" })).map(row => row.subjectId), ["ballot-nh:unreliable-prefix"]);
+    assert.deepEqual(await list.claim("fact", 10, { platform: "candidate-profile", state: "AZ" }), []);
+    await db.exec("UPDATE work SET status = 'done'");
     assert.deepEqual(await readCandidateProfilePublicationTasks(query, "2026-10-02T00:00:00Z"), { tasks: [], unscoped: 0 });
   } finally { await db.close(); }
 });

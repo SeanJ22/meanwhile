@@ -4,22 +4,22 @@ import { canonicalCandidacyId, canonicalContestId } from "../hunt/candidate-univ
 import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { factClocks } from "../facts/clocks.ts";
-import { CANDIDATE_PROFILE_LEAD } from "../facts/finding-slots.ts";
-import type { BoxFinding } from "../control-plane/box.ts";
+import type { WorkList } from "../core/work.ts";
+import { findingOf } from "../sources/handoff.ts";
 import type { PortraitRuntime } from "../photos/store.ts";
 import type { HeldVaultArtifact } from "../control-plane/evidence/read-only-vault.ts";
 import { readPromotedCivicData } from "./read-model.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
 import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
-import { readCandidateProfileFindingBatch } from "./campaign-publication-due.ts";
 import { routineReceiptFields, type RoutineRunnerReceipt } from "./runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
-import { publishCandidateFindings, type CandidateFindingSubject } from "./candidate-profile-findings.ts";
+import { CANDIDATE_FINDINGS_PER_PASS, publishCandidateFindings, type CandidateFindingSubject } from "./candidate-profile-findings.ts";
 
 export async function runCandidateProfileFindingsJob(input: {
   readonly state: string;
   readonly store: RoutineDataStore;
-  readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "adminConfig">;
+  readonly repos: Pick<ControlPlaneRepositories, "adminConfig">;
+  readonly list: WorkList;
   readonly query: (sql: string, params: unknown[]) => Promise<unknown>;
   readonly readHeld: (ids: readonly string[]) => Promise<(id: string) => Promise<HeldVaultArtifact | null>>;
   readonly now: string;
@@ -27,14 +27,11 @@ export async function runCandidateProfileFindingsJob(input: {
 }): Promise<{ readonly report: Awaited<ReturnType<typeof publishCandidateFindings>>; readonly receipt: RoutineRunnerReceipt | null }> {
   const state = requireBallotState(input.state), contractId = stateBallotContractId("candidate-profiles", state);
   if (input.store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
-  const batch = await readCandidateProfileFindingBatch(state, input.query);
-  if (!batch.length) return { report: { published: {}, refused: {}, waiting: 0 }, receipt: null };
-  const wanted = new Set(batch.map(row => row.subject));
-  const subjects = await findingSubjects();
-  const rows = await input.query("SELECT value FROM cp_box_findings WHERE id=ANY($1::text[]) AND value->>'state'='waiting' AND value#>>'{waitingFor,reason}'=$2 ORDER BY id",
-    [batch.map(row => row.id), CANDIDATE_PROFILE_LEAD]) as { value: BoxFinding | string }[];
-  const findings = rows.map(row => typeof row.value === "string" ? JSON.parse(row.value) as BoxFinding : row.value);
-  const held = await input.readHeld(findings.flatMap(row => row.origins.flatMap(origin => origin.artifactIds)));
+  const claims = await input.list.claim("fact", CANDIDATE_FINDINGS_PER_PASS, { platform: "candidate-profile", state });
+  if (!claims.length) return { report: { published: {}, refused: {}, waiting: 0 }, receipt: null };
+  const wanted = new Set(claims.map(claim => claim.subjectId));
+  const subjects = await findingSubjects().catch(async error => { for (const claim of claims) await input.list.release(claim).catch(() => false); throw error; });
+  const held = await input.readHeld(claims.flatMap(claim => findingOf(claim).origins.flatMap(origin => origin.artifactIds)));
   const approved = await input.query(`SELECT record#>>'{campaignSite,candidacyId}' candidacy_id,record#>>'{campaignSite,host}' host
     FROM cp_log_promotion_pipeline WHERE record->>'stage'='APPROVED_FOR_PROMOTION'
     AND upper(record#>>'{campaignSite,identity,stateCode}')=$1 AND record#>>'{campaignSite,candidacyId}'=ANY($2::text[])`,
@@ -42,7 +39,7 @@ export async function runCandidateProfileFindingsJob(input: {
   const campaignHosts = new Map<string, string[]>();
   for (const row of approved) campaignHosts.set(row.candidacy_id, [...campaignHosts.get(row.candidacy_id) ?? [], row.host]);
   let receipt: RoutineRunnerReceipt | null = null;
-  const report = await publishCandidateFindings({ boxFindings: input.repos.boxFindings, held, store: input.store, subjects, findings,
+  const report = await publishCandidateFindings({ list: input.list, claims, held, store: input.store, subjects,
     campaignHosts, clocks: factClocks((await input.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), now: input.now, portrait: input.portrait,
     onPublished: (candidate, outcome) => { receipt = { source: contractId, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }; } });
   return { report, receipt };

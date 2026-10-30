@@ -30,10 +30,13 @@ export async function workCounts(query: Query, state: string | null, now: Date):
 
 export interface Waiting { readonly kind: WorkKind; readonly tier: WorkTier; readonly waiting: number }
 
-/** What is waiting now, by kind and tier. Forty small counters are read; no job is opened. */
-export async function workWaiting(query: Query): Promise<{ readonly rows: readonly Waiting[]; readonly changedAt: string | null }> {
+/** What is waiting now, by kind and tier, and since when the oldest link to read has waited. Forty small counters and one probe of each state's first waiting link are read; no job is opened. */
+export async function workWaiting(query: Query): Promise<{ readonly rows: readonly Waiting[]; readonly changedAt: string | null; readonly oldestLead: string | null }> {
   const rows = await query("SELECT kind,tier,n::text AS waiting,changed_at FROM work_waiting WHERE n>0 ORDER BY kind,tier");
   const changed = rows.map(row => new Date(row.changed_at as string | Date).getTime());
+  const [oldest] = rows.some(row => row.kind === "lead") ? await query(`SELECT min(head.due_at) AS oldest FROM unnest($1::text[]) AS s(state) CROSS JOIN LATERAL (
+    SELECT due_at FROM work WHERE state = s.state AND kind = 'lead' AND status = 'waiting' ORDER BY due_at LIMIT 1) head`, [[...REGISTRY_STATES, "US"]]) : [];
   return { rows: rows.map(row => ({ kind: row.kind as WorkKind, tier: row.tier as WorkTier, waiting: Number(row.waiting) })),
-    changedAt: changed.length ? new Date(Math.max(...changed)).toISOString() : null };
+    changedAt: changed.length ? new Date(Math.max(...changed)).toISOString() : null,
+    oldestLead: oldest?.oldest ? new Date(oldest.oldest as string | Date).toISOString() : null };
 }

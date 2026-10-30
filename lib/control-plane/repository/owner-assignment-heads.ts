@@ -69,7 +69,7 @@ const timestamp = (value: string): string => `CASE WHEN pg_input_is_valid(${valu
 const attempt = (v: string): string => `${pick(v,"id routeTaskId leaseId startedAt endedAt outcome abortReason")}||jsonb_build_object('role',${v}#>'{worker,role}')`;
 const lease = (v: string): string => pick(v,"id released expiresAt");
 const item = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_build_object('lastTransitionAt',${v}#>'{transitions,-1,at}','manualSourceGap',${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")})`;
-const routing = (v: string): string => `${pick(v,"id project subject obligation directoryParent planRepair dependencies autonomousPlan")}||jsonb_strip_nulls(jsonb_build_object(
+const routing = (v: string): string => `${pick(v,"id subject obligation autonomousPlan")}||jsonb_strip_nulls(jsonb_build_object(
   'publicationOutcome',CASE WHEN ${v}->'publicationOutcome' IS NOT NULL AND ${v}->'publicationOutcome'<>'null'::jsonb THEN ${pick(`${v}->'publicationOutcome'`,"status versionId workerResultId acceptedRecordIds")} END))`;
 
 const workFields = (v: string): string => `${pick(v,"id project subject obligation state createdAt")}||jsonb_strip_nulls(jsonb_build_object(
@@ -77,7 +77,6 @@ const workFields = (v: string): string => `${pick(v,"id project subject obligati
   'planRepair',CASE WHEN ${v}->'planRepair' IS NOT NULL THEN ${pick(`${v}->'planRepair'`,"parentWorkItemId authority")} END,
   'manualSourceGap',CASE WHEN ${v}->'manualSourceGap' IS NOT NULL THEN ${pick(`${v}->'manualSourceGap'`,"assignmentKey instructionReceipt")} END,
   'transitions',jsonb_build_array(jsonb_build_object('at',${v}#>'{transitions,-1,at}')),
-  'dependencies',(SELECT jsonb_agg(jsonb_build_object('upstreamId',d->'upstreamId')) FROM jsonb_array_elements(coalesce(${v}->'dependencies','[]'::jsonb)) d),
   'autonomousPlan',CASE WHEN ${v}#>'{autonomousPlan,publication}' IS NOT NULL OR ${v}#>'{autonomousPlan,contract,recordClass}' IS NOT NULL THEN
     jsonb_build_object('publication',${pick(`${v}#>'{autonomousPlan,publication}'`,"contractId bodyId")},'contract',jsonb_build_object('recordClass',${v}#>'{autonomousPlan,contract,recordClass}')) END,
   'publicationOutcome',CASE WHEN ${v}->'publicationOutcome' IS NOT NULL AND ${v}->'publicationOutcome'<>'null'::jsonb THEN ${pick(`${v}->'publicationOutcome'`,"status at code recovery bodyIds versionId workerResultId acceptedRecordIds")} END))`;
@@ -156,7 +155,7 @@ members AS MATERIALIZED (SELECT m.id,m.member,row_number() OVER(PARTITION BY m.i
 items AS MATERIALIZED (SELECT m.id,m.member,m.ordinal,w.value FROM members m LEFT JOIN LATERAL
   (SELECT ${workFields("value")} AS value FROM cp_work_items_history WHERE id=m.member ORDER BY revision DESC LIMIT 1) w ON true),
 tasks AS MATERIALIZED (SELECT DISTINCT ON(m.id,t.id) m.id,t.id AS task,t.value,m.ordinal FROM members m
-  CROSS JOIN LATERAL (SELECT id,${taskFields("value")} AS value,revision FROM cp_route_tasks_history WHERE value#>>'{workItemId}'=m.member OFFSET 0) t ORDER BY m.id,t.id,t.revision DESC),
+  CROSS JOIN LATERAL (SELECT id,${pick("value","id createdAt state")} AS value,revision FROM cp_route_tasks_history WHERE value#>>'{workItemId}'=m.member OFFSET 0) t ORDER BY m.id,t.id,t.revision DESC),
 orphan_tasks AS MATERIALIZED (SELECT DISTINCT ON(m.id,a.value#>>'{routeTaskId}') m.id,m.ordinal,a.value,a.id AS attempt
   FROM members m CROSS JOIN LATERAL (SELECT id,${attemptFields("value")} AS value FROM cp_attempts WHERE value#>>'{workItemId}'=m.member OFFSET 0) a
   WHERE NOT EXISTS(SELECT 1 FROM tasks t WHERE t.id=m.id AND t.task=a.value#>>'{routeTaskId}')
@@ -169,16 +168,19 @@ round_keys AS MATERIALIZED (
   UNION ALL SELECT a.id,a.value#>>'{routeTaskId}',ARRAY[1::bigint,a.ordinal,9223372036854775807::bigint,row_number() OVER(PARTITION BY a.id,a.ordinal
     ORDER BY ${timestamp("a.value->>'startedAt'")},coalesce(${timestamp("a.value->>'endedAt'")},${timestamp("a.value->>'startedAt'")}),a.attempt)] FROM orphan_tasks a
 ),
-rounds AS MATERIALIZED (SELECT r.id,r.task,r.ordering,t.value FROM round_keys r LEFT JOIN LATERAL
-  (SELECT ${taskFields("value")} AS value FROM cp_route_tasks_history WHERE id=r.task ORDER BY revision DESC LIMIT 1) t ON true),
+rounds AS MATERIALIZED (SELECT r.id,r.task,r.ordering,coalesce(t.value,missing.value) AS value FROM round_keys r LEFT JOIN tasks t ON t.id=r.id AND t.task=r.task
+  LEFT JOIN LATERAL (SELECT ${pick("value","id createdAt state")} AS value FROM cp_route_tasks_history WHERE t.task IS NULL AND id=r.task ORDER BY revision DESC LIMIT 1) missing ON true),
 attempts AS MATERIALIZED (SELECT r.id,r.task,r.ordering,a.id AS attempt,a.value,${timestamp("a.value->>'startedAt'")} AS started_at,
     coalesce(${timestamp("a.value->>'endedAt'")},${timestamp("a.value->>'startedAt'")}) AS activity_at
   FROM rounds r CROSS JOIN LATERAL (SELECT id,${attemptFields("value")} AS value FROM cp_attempts WHERE value#>>'{routeTaskId}'=r.task OFFSET 0) a),
 latest AS MATERIALIZED (SELECT DISTINCT ON(a.id) a.* FROM attempts a
   ORDER BY a.id,a.activity_at DESC NULLS LAST,a.ordering DESC,a.started_at DESC NULLS LAST,a.attempt DESC),
-scouts AS MATERIALIZED (SELECT DISTINCT ON(s.record->>'attemptId') s.record->>'attemptId' AS attempt,${scoutFields("s.record")} AS record
-  FROM cp_log_scout_results s WHERE s.record->>'attemptId' IN (SELECT attempt FROM latest UNION SELECT r.value#>>'{disposition,attemptId}' FROM rounds r JOIN latest l ON l.id=r.id AND l.task=r.task)
-  ORDER BY s.record->>'attemptId',s.record->>'recordedAt' DESC,s.log_key DESC,s.position DESC),
+outcome_tasks AS MATERIALIZED (SELECT l.id,l.task,t.value FROM latest l CROSS JOIN LATERAL
+  (SELECT ${taskFields("value")} AS value FROM cp_route_tasks_history WHERE id=l.task ORDER BY revision DESC LIMIT 1) t),
+scouts AS MATERIALIZED (SELECT wanted.attempt,s.record FROM
+  (SELECT attempt FROM latest UNION SELECT value#>>'{disposition,attemptId}' FROM outcome_tasks WHERE value#>>'{disposition,attemptId}' IS NOT NULL) wanted
+  CROSS JOIN LATERAL (SELECT ${scoutFields("record")} AS record FROM cp_log_scout_results WHERE record->>'attemptId'=wanted.attempt
+    ORDER BY record->>'recordedAt' DESC,log_key DESC,position DESC LIMIT 1) s),
 workers AS MATERIALIZED (SELECT DISTINCT ON(s.record->>'attemptId') s.record->>'attemptId' AS attempt,${workerFields("s.record")} AS record
   FROM cp_log_worker_results s WHERE s.log_key IN(SELECT member FROM members) AND s.record->>'attemptId' IN(SELECT attempt FROM latest)
   ORDER BY s.record->>'attemptId',s.log_key DESC,s.position DESC),
@@ -187,8 +189,8 @@ activity AS MATERIALIZED (
   UNION ALL SELECT o.value#>>'{obligationId}',coalesce(o.value->>'closedAt',o.value->>'openedAt'),4 FROM occurrences o
   UNION ALL SELECT m.id,s.record->>'recordedAt',2 FROM members m CROSS JOIN LATERAL (SELECT ${pick("record","recordedAt")} AS record FROM cp_log_artifacts WHERE log_key=m.member AND record#>>'{workItemId}'=m.member OFFSET 0) s
   UNION ALL SELECT m.id,s.record->>'endedAt',3 FROM members m CROSS JOIN LATERAL (SELECT ${pick("record","endedAt")} AS record FROM cp_log_worker_results WHERE log_key=m.member AND record#>>'{workItemId}'=m.member OFFSET 0) s
-  UNION ALL SELECT m.id,s.record->>'recordedAt',1 FROM members m JOIN cp_log_scout_results s ON s.record#>>'{workItemId}'=m.member
-  UNION ALL SELECT a.id,s.record->>'recordedAt',1 FROM attempts a JOIN cp_log_scout_results s ON s.record->>'attemptId'=a.attempt
+  UNION ALL SELECT m.id,s.at,1 FROM members m CROSS JOIN LATERAL (SELECT record->>'recordedAt' AS at FROM cp_log_scout_results WHERE record#>>'{workItemId}'=m.member OFFSET 0) s
+  UNION ALL SELECT a.id,s.at,1 FROM attempts a CROSS JOIN LATERAL (SELECT record->>'recordedAt' AS at FROM cp_log_scout_results WHERE record->>'attemptId'=a.attempt OFFSET 0) s
 )
 SELECT g.id,
   coalesce((SELECT jsonb_agg(m.member ORDER BY m.ordinal) FROM members m WHERE m.id=g.id),'[]'::jsonb) AS members,
@@ -216,9 +218,10 @@ SELECT g.id,
       'reached',EXISTS(SELECT 1 FROM attempts a WHERE a.id=g.id AND a.task=c.value#>>'{routeTaskId}')) FROM occurrences c WHERE c.id=o.value->>'openOccurrenceId' AND c.value->'closedAt' IS NULL LIMIT 1),
     'lastActivityAt',(SELECT at FROM activity WHERE id=g.id AND pg_input_is_valid(at,'timestamptz') ORDER BY at::timestamptz DESC,priority LIMIT 1)
   )) AS head
-FROM groups g LEFT JOIN cp_obligations o ON o.id=g.id LEFT JOIN cp_debts d ON d.id=g.id
-LEFT JOIN latest l ON l.id=g.id LEFT JOIN rounds r ON r.id=l.id AND r.task=l.task AND r.ordering=l.ordering
-LEFT JOIN cp_leases le ON le.id=l.task LEFT JOIN scouts s ON s.attempt=coalesce(r.value#>>'{disposition,attemptId}',l.attempt)
+FROM groups g LEFT JOIN LATERAL (SELECT id,${pick("value",OBLIGATION_FIELDS)} AS value FROM cp_obligations WHERE id=g.id LIMIT 1) o ON true
+LEFT JOIN LATERAL (SELECT id,${pick("value","cause consecutiveFailures firstFailedAt retryAt")} AS value FROM cp_debts WHERE id=g.id LIMIT 1) d ON true
+LEFT JOIN latest l ON l.id=g.id LEFT JOIN outcome_tasks r ON r.id=l.id AND r.task=l.task
+LEFT JOIN LATERAL (SELECT id,${lease("value")} AS value FROM cp_leases WHERE id=l.task LIMIT 1) le ON true LEFT JOIN scouts s ON s.attempt=coalesce(r.value#>>'{disposition,attemptId}',l.attempt)
 LEFT JOIN workers w ON w.attempt=l.attempt ORDER BY g.id`;
 
 export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {

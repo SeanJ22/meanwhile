@@ -184,48 +184,6 @@ export async function syncObligations(
   return { all, registered, alreadyDurable, refreshed, outside };
 }
 
-export async function retireObligationsByPrefix(
-  repos: ControlPlaneRepositories,
-  prefixes: readonly string[],
-  now: string,
-  reason: string,
-): Promise<{
-  readonly retired: readonly string[];
-  readonly alreadyRetired: readonly string[];
-}> {
-  const retired: string[] = [];
-  const alreadyRetired: string[] = [];
-  if (prefixes.length === 0) return { retired, alreadyRetired };
-
-  for (const row of await repos.obligations.list()) {
-    if (!prefixes.some((prefix) => row.id.startsWith(prefix))) continue;
-    const held = row.value;
-    if (
-      held.active === false &&
-      held.nextDueAt === null &&
-      held.retirementReason === reason
-    ) {
-      alreadyRetired.push(row.id);
-      continue;
-    }
-    await repos.obligations.compareAndSet(
-      row.id,
-      row.revision,
-      {
-        ...held,
-        active: false,
-        nextDueAt: null,
-        retiredAt: held.retiredAt ?? now,
-        retirementReason: reason,
-        updatedAt: now,
-      },
-      now,
-    );
-    retired.push(row.id);
-  }
-  return { retired, alreadyRetired };
-}
-
 export const SUPERSEDED_RETIREMENT_BOUND = 0.25;
 
 export function obligationNamespace(id: string): string | null {

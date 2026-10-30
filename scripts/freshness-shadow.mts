@@ -158,7 +158,6 @@ import {
   openOccurrence,
   resumeOpenOccurrence,
   persistDebts,
-  retireObligationsByPrefix,
   syncObligations,
   type AbandonedOccurrence,
   type SettledOccurrence,
@@ -678,42 +677,6 @@ if (ONLY !== null || IDS !== null) {
       "diagnostic and is never a reading of the whole corpus.",
   );
 }
-
-const LEGACY_MEETINGS_OBLIGATION_PREFIX = "freshness:meetings:";
-const LEGACY_MEETINGS_RETIREMENT_REASON =
-  "PDC authority transferred to the matching source/body production meeting-partition contract";
-const meetingsRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
-  repos,
-  [LEGACY_MEETINGS_OBLIGATION_PREFIX],
-  NOW,
-  LEGACY_MEETINGS_RETIREMENT_REASON,
-);
-console.log(
-  `  legacy tracked-snapshot meetings clocks: ${meetingsRetirement.retired.length} retired this cycle; ` +
-    `${meetingsRetirement.alreadyRetired.length} already inactive with no next-due`,
-);
-const factClockRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
-  repos,
-  ["freshness:meeting-times:", "freshness:agendas:"],
-  NOW,
-  "PDC authority transferred meeting and agenda acquisition to source/body production meeting-partition contracts",
-);
-console.log(
-  `  legacy parallel meeting-fact clocks: ${factClockRetirement.retired.length} retired this cycle; ` +
-    `${factClockRetirement.alreadyRetired.length} already inactive with no next-due`,
-);
-const LEGACY_FEC_MODEL_OBLIGATION_PREFIX =
-  "freshness:campaign-finance:ballot-az-pima:us-house-6#";
-const fecModelRetirement = filteredCycle ? { retired: [], alreadyRetired: [] } : await retireObligationsByPrefix(
-  repos,
-  [LEGACY_FEC_MODEL_OBLIGATION_PREFIX],
-  NOW,
-  "PDC authority transferred federal acquisition to the FEC_FUNDING / federal-supported production civic-data contract",
-);
-console.log(
-  `  legacy parallel federal campaign-finance clocks: ${fecModelRetirement.retired.length} retired this cycle; ` +
-    `${fecModelRetirement.alreadyRetired.length} already inactive with no next-due`,
-);
 
 let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");

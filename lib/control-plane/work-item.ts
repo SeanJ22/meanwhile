@@ -230,6 +230,8 @@ export interface WorkItemTransition {
 }
 
 export function createWorkItem(input: {
+  /** A work row's own id, when the item stands for one row of the work list. */
+  id?: string;
   project: string;
   subject: string;
   obligation: string;
@@ -241,7 +243,7 @@ export function createWorkItem(input: {
   dependencies?: readonly WorkDependency[];
   now: string;
 }): WorkItem {
-  const id = workItemId(input.project, input.subject, input.obligation);
+  const id = input.id ?? workItemId(input.project, input.subject, input.obligation);
   return {
     id,
     project: input.project,

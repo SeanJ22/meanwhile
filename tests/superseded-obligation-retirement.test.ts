@@ -11,7 +11,6 @@ import {
   persistDebts,
   planRetiredResidue,
   planSupersededRetirement,
-  retireObligationsByPrefix,
   settleRetirements,
   supersededRetirementReason,
   syncObligations,
@@ -280,7 +279,8 @@ test("SEEDED: while the provider cannot read its input, nothing is retired and t
 test("SEEDED: a row the legacy prefix retirement left pointing at an open occurrence has it closed under its own reason, and keeps its retirement", async () => {
   for (const [label, repos] of await eachStore("wtp-superseded-")) {
     const shape = await supersededShape(repos);
-    await retireObligationsByPrefix(repos, ["freshness:candidate-enrichment:"], T1, "LEGACY TRANSFER");
+    const before = await repos.obligations.mustRead(AWAITS);
+    await repos.obligations.compareAndSet(AWAITS, before.revision, { ...before.value, active: false, nextDueAt: null, retiredAt: T1, retirementReason: "LEGACY TRANSFER", updatedAt: T1 }, T1);
     const legacy = (await repos.obligations.mustRead(AWAITS)).value;
     assert.equal(legacy.active, false);
     assert.equal(legacy.openOccurrenceId, shape.occurrenceId, `${label}: the legacy path left the occurrence open`);

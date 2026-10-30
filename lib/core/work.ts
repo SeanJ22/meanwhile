@@ -81,6 +81,9 @@ export interface ClaimWhere {
 }
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
+/** The column that holds a hunt's work item, task, lease and attempts on its own row; added after the table, so it is its own statement. */
+export const WORK_RUN_DDL = [`ALTER TABLE work ADD COLUMN IF NOT EXISTS run jsonb NOT NULL DEFAULT '{}'::jsonb`] as const;
+
 export const WORK_DDL = [
   `CREATE OR REPLACE FUNCTION work_tier_rank(tier text) RETURNS smallint LANGUAGE sql IMMUTABLE AS $$
     SELECT CASE tier WHEN 'clock' THEN 0 WHEN 'order' THEN 1 WHEN 'reader' THEN 2 ELSE 3 END::smallint $$`,
@@ -374,6 +377,20 @@ export interface ReopenInput {
 }
 
 /** Each transition and its hourly count commit together. */
+/** What a hunt row keeps of its own hunt: the work item, the route task and the lease are one each; attempts are kept by id. */
+export type RunPart = "item" | "task" | "lease" | "attempt";
+
+/** Saves one part of a hunt on the row it ran from. */
+export async function saveRun(query: Query, rowId: string, part: RunPart, key: string, value: unknown): Promise<void> {
+  await query(part === "attempt"
+    ? `UPDATE work SET run = jsonb_set(CASE WHEN run ? 'attempts' THEN run ELSE run || '{"attempts":{}}'::jsonb END, ARRAY['attempts', $2::text], $3::jsonb) WHERE id = $1`
+    : `UPDATE work SET run = run || jsonb_build_object($2::text, $3::jsonb) WHERE id = $1`,
+  [rowId, part === "attempt" ? key : part, canonicalJson(value)]);
+}
+
+/** The attempt reports a row keeps besides its first. */
+export const ATTEMPT_REPORTS_KEPT = 20;
+
 export function workList(query: Query, options: { readonly owner: string; readonly leaseMs?: number; readonly now?: () => Date }) {
   // PostgreSQL binds "now" at execution; worker clock skew cannot expire another worker's lease.
   const leaseMs = options.leaseMs ?? 30_000, timestamp = () => options.now?.().toISOString() ?? "now";
@@ -498,6 +515,12 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async renew(claim: WorkRow): Promise<boolean> {
       return (await query(`UPDATE work SET lease_until=$3::timestamptz+$4::int*interval '1 millisecond'
         WHERE id=$1 AND lease_owner=$2 AND status='taken' AND lease_until>$3::timestamptz RETURNING id`, [...fenced(claim), leaseMs])).length === 1;
+    },
+    /** What a claimed row's hunt did is added to its reports; the row keeps the first report and the latest {@link ATTEMPT_REPORTS_KEPT} attempts. */
+    async report(claim: WorkRow, report: Readonly<Record<string, unknown>>): Promise<boolean> {
+      const [id, owner] = fenced(claim);
+      return (await query(`UPDATE work SET reports = CASE WHEN jsonb_array_length(reports) > $4::int THEN reports - 1 ELSE reports END || $3::jsonb
+        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`, [id, owner, canonicalJson([report]), ATTEMPT_REPORTS_KEPT])).length === 1;
     },
     /** With a cadence, the job repeats: its next row is made when that long has passed. */
     async finish(claim: WorkRow, repeatMs?: number, deadEnd?: Unlock): Promise<boolean> {

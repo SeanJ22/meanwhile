@@ -5,6 +5,8 @@
     "tests/**/*.{ts,mts,mjs,tsx}",
     "netlify/functions/*.mts",
     "lib/sources/platform-adapters/*.{ts,mjs}",
+    "lib/sources/*/parser.ts",
+    "lib/extract/parser.ts",
     "lib/control-plane/workers/{national,route}-worker.ts"
   ],
   "project": [

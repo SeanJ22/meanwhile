@@ -1,8 +1,9 @@
+import { CAPABILITY_DDL } from "../../../core/capability.ts";
 import { WORK_DDL } from "../../../core/work.ts";
 import type { Sql } from "../pg-store.ts";
 
 /** Sources of the work table's definition, so the journal hash follows them. */
-export const WORK_MIGRATION_DECLARATIONS = ["lib/core/work.ts"] as const;
+export const WORK_MIGRATION_DECLARATIONS = ["lib/core/work.ts", "lib/core/capability.ts"] as const;
 
 // The old list's stock is taken out of the hourly counts and the new list's put in, so each row is counted once.
 const STOCK_OF = (table: string, index: string, sign: 1 | -1) => `INSERT INTO count_hour(state,hour,step,n)
@@ -94,14 +95,16 @@ $$`;
 const OLD_INDEX = "count_work_row_index(to_jsonb(w),statement_timestamp())";
 const NEW_INDEX = "count_work_index(w,statement_timestamp())";
 
-/** The previous list's rows move across as they stand; a leased row is simply waiting again. */
+/** The previous list's rows move across as they stand; a leased row is simply waiting again. A refused Legistar member record is a dead end that a better Legistar reader unlocks. */
 const COPY_ROWS = `INSERT INTO work (id,kind,tier,priority,state,place_id,subject_id,field,url,sources,reports,value,quote,due_at,attempts,status,refusal,
-  content_version,received_at,done_at,done_times,refused_times,origin,series)
+  content_version,received_at,done_at,done_times,refused_times,origin,series,unlock,dead_since)
 SELECT id,CASE kind WHEN 'read' THEN 'lead' WHEN 'audit' THEN 'recheck' ELSE kind END,CASE kind WHEN 'load' THEN 'clock' ELSE 'coverage' END,
   priority,state,place_id,subject_id,field,url,sources,reports,value,quote,not_before,attempts,
   CASE status WHEN 'ready' THEN 'waiting' WHEN 'taken' THEN 'waiting' ELSE status END,refusal,content_version,received_at,
   CASE WHEN status='done' THEN done_times[cardinality(done_times)] END,done_times,refused_times,
-  jsonb_build_object('from',CASE kind WHEN 'detect' THEN 'detective' ELSE 'loader' END),CASE kind WHEN 'load' THEN id END
+  jsonb_build_object('from',CASE kind WHEN 'detect' THEN 'detective' ELSE 'loader' END),CASE kind WHEN 'load' THEN id END,
+  CASE WHEN status='refused' AND starts_with(subject_id,'legistar-members:') THEN jsonb_build_object('kind','parser','name','legistar','platform','legistar','text',refusal) END,
+  CASE WHEN status='refused' AND starts_with(subject_id,'legistar-members:') THEN refused_times[cardinality(refused_times)] END
 FROM work_row ON CONFLICT DO NOTHING`;
 
 const GRANTS = `DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname='wtp_cp_release_readonly') THEN
@@ -115,6 +118,7 @@ export const LEGISTAR_COUNTS_DDL = [COUNT_WORK_LEGISTAR,
 /** Expand: the new list exists, holds the old list's rows, and is counted. The old list stays for the code still running on it. */
 export const WORK_EXPAND = [
   ...WORK_DDL,
+  ...CAPABILITY_DDL,
   `DROP TRIGGER IF EXISTS count_hour_work_row ON work_row`,
   `DROP TRIGGER IF EXISTS count_legistar_work ON work_row`,
   `DROP TRIGGER IF EXISTS work_row_counts ON work_row`,

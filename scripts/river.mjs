@@ -1373,20 +1373,27 @@ function measureNotes(record) {
     ...["before", "after"].filter((side) => record[side]?.zips).map((side) => `Slowest ZIPs ${side} (${record[side].at}, live ${record[side].live?.slice(0, 7) ?? "unknown"}): ${slowest(side)}.`),
     ...(record.zips.length ? [`The 50 ZIPs: ${record.zips.map(({ zip, state }) => `${zip} ${state}`).join(", ")}.`] : []),
     "",
-    "Facts reaching readers: fact rows in the reader database whose live_at falls in the 24 hours ending at the deploy, then in the first 24 hours on the release (any status except held); an early read gives facts an hour over the first full hours.",
+    "Facts reaching readers: facts that went live in the 24 hours ending at the deploy, then in the first 24 hours on the release, counted once each, and only when the value is new for that thing and field (no earlier shown row holds the same value), is still the current value, and is on a reader's page (a place page built since it went live depends on its thing; a meeting counts when its body is on a place page). Replaced rows and reloads of values already shown don't count. An early read gives facts an hour over the first full hours.",
     `ZIPs usable: one random ZIP in each of the 50 states, the same 50 before and after, each opened cold (new browser context, empty cache) on ${PUBLIC_SITE_ORIGIN} on a phone (390×844, touch, 12 Mbps down, 3 up, 70 ms), a tablet (820×1180, touch) and a desktop (1440×900), both 30 Mbps down, 10 up, 40 ms. Usable means the side panel shows the place with no loading note (with its count badge where the panel is a sheet) and the map, basemap included, has finished drawing; counted when under 3 seconds.`,
     "Database reads: request plus response bytes in database_transfer_hourly, both databases, in GB an hour, averaged over the 6 full hours before the deploy and the first 6 full hours after the runner switched.",
     "Lines of code: lines in every tracked .ts, .tsx, .mts, .cts, .mjs, .cjs, .js, .jsx, .css and .sql file, except .d.ts, *.min.*, node_modules, .next and public/vendor; river at the release base, then the release head.",
   ];
 }
 
+/** Facts that reached readers with live_at in [from, until): current, a new value for their thing and field, and on a reader's page. */
+const readerFacts = (from, until) => `FROM fact f JOIN entity e ON e.id = f.entity_id WHERE f.status = 'live' AND f.live_at >= ${from} AND f.live_at < ${until}
+  AND NOT EXISTS (SELECT 1 FROM fact p WHERE p.entity_id = f.entity_id AND p.field = f.field AND p.id <> f.id AND p.live_at < f.live_at AND p.value_text = f.value_text)
+  AND CASE WHEN e.kind = 'meeting' THEN EXISTS (SELECT 1 FROM place_page_dependency d WHERE d.entity_id = e.parent_id)
+    ELSE EXISTS (SELECT 1 FROM place_page_dependency d JOIN place_page pg ON pg.place_id = d.page_id WHERE d.entity_id = f.entity_id AND pg.built_at >= f.live_at) END`;
+
 /** The reader-database SQL River runs for facts and reads (`at` is the deploy, or the runner switch for reads after). */
 export function measureSql(at, after) {
   const t = `timestamptz '${at}'`;
+  const fullHours = `least(24, floor(extract(epoch FROM now() - ${t}) / 3600))::int`;
   return {
     facts: after
-      ? `SELECT count(*) FILTER (WHERE live_at < ${t} + interval '24 hours') AS facts_first_day, least(24, floor(extract(epoch FROM now() - ${t}) / 3600))::int AS full_hours, count(*) FILTER (WHERE live_at < ${t} + make_interval(hours => least(24, floor(extract(epoch FROM now() - ${t}) / 3600))::int)) AS facts_in_full_hours FROM fact WHERE status <> 'held' AND live_at >= ${t} AND live_at < ${t} + interval '24 hours';`
-      : `SELECT count(*) AS facts_a_day FROM fact WHERE status <> 'held' AND live_at >= ${t} - interval '24 hours' AND live_at < ${t};`,
+      ? `SELECT count(*) AS facts_first_day, ${fullHours} AS full_hours, count(*) FILTER (WHERE f.live_at < ${t} + make_interval(hours => ${fullHours})) AS facts_in_full_hours ${readerFacts(t, `${t} + interval '24 hours'`)};`
+      : `SELECT count(*) AS facts_a_day ${readerFacts(`${t} - interval '24 hours'`, t)};`,
     reads: after
       ? `SELECT round(sum(request_bytes + response_bytes) / 1e9 / nullif(count(DISTINCT hour), 0), 2) AS gb_an_hour, count(DISTINCT hour) AS hours FROM database_transfer_hourly WHERE hour >= date_trunc('hour', ${t} + interval '59 minutes 59 seconds') AND hour < date_trunc('hour', ${t} + interval '59 minutes 59 seconds') + interval '6 hours' AND hour + interval '1 hour' <= now();`
       : `SELECT round(sum(request_bytes + response_bytes) / 1e9 / nullif(count(DISTINCT hour), 0), 2) AS gb_an_hour, count(DISTINCT hour) AS hours FROM database_transfer_hourly WHERE hour >= date_trunc('hour', ${t}) - interval '6 hours' AND hour < date_trunc('hour', ${t});`,

@@ -100,7 +100,6 @@ import { scopedMeetingSource } from "./lib/scoped-meeting-source.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { derivedFamilyReadGroups, readDerivedFamilyMembers } from "../lib/civic-data/derived-meeting-acquisition.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import {
@@ -115,7 +114,6 @@ import {
   buildDerivedFamily,
   derivedFamilyCandidate,
   derivedFamilyFailedCandidate,
-  DERIVED_FAMILY_SOURCE_ID,
   familyMemberReadIssue,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";

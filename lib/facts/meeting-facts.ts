@@ -112,7 +112,7 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
   const line = input.held?.quote ?? exactLine(copy.text, "matchedAddress", pin.matchedAddress!);
   for(let attempt=0;;attempt++)try{
     return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
-      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:"loader", costUsd:0}, clocks, now);
+      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:"checked", costUsd:0}, clocks, now);
   }catch(error){
     const conflict=error as {code?:string;constraint?:string}|null;
     // Re-read after a rolled-back deadlock or competing first publication, using the same saved Census copy.
@@ -205,7 +205,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   const claim = async (field: string, value: unknown, valueText: string, quote: string | null = lineOf(copy, valueText)) =>
     count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote: quote ?? valueText, copy,
       // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
-      acquisition: field === "location" ? "walker" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      acquisition: field === "location" ? "walker" : "checked", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };

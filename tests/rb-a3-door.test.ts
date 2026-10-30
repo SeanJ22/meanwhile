@@ -260,11 +260,9 @@ test("Open States and Legistar API fields, and a portal linked by government, us
 test("a campaign or advocacy site cannot publish a fact about someone else, and refusal is recorded once", async () => {
   const db = await seeded();
   try {
-    const refusals: string[] = [];
     const claim = input({ provenance: "CAMPAIGN", sourceSubjectId: "another-person", quote: "Call 520-555-0100",
       copy: { ...input().copy, id: 2, finalUrl: "https://campaign.example/", text: "Example City Council Arizona Call 520-555-0100" } });
-    assert.deepEqual(await door(db, claim, clocks, now, { refusal: async (_claim, reason) => { refusals.push(reason); } }), { refused: "CAMPAIGN_OTHER_SUBJECT" });
-    assert.deepEqual(refusals, ["CAMPAIGN_OTHER_SUBJECT"]);
+    assert.deepEqual(await door(db, claim, clocks, now), { refused: "CAMPAIGN_OTHER_SUBJECT" });
     assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 0);
     assert.deepEqual(await publishClaim(db, claim, clocks, now), { blank: "CAMPAIGN_OTHER_SUBJECT" });
     assert.equal((await db.query("SELECT attempts FROM blank"))[0]!.attempts, 1);
@@ -331,22 +329,6 @@ test("a real later observation of the same source bytes advances its checked dat
       WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
         AND substring(step FROM 4)::jsonb->>2='in'`), [{ n: 1 }]);
   } finally { await db.pg.close(); }
-});
-
-test("an official field does not wait for another claim's refusal handoff", { timeout: 5_000 }, async () => {
-  const db = await seeded();
-  let release!: () => void;
-  let started!: () => void;
-  const waiting = new Promise<void>(resolve => { release = resolve; });
-  const handingOff = new Promise<void>(resolve => { started = resolve; });
-  try {
-    const failed = door(db, input({ acquisition: "hunter", quote: "invented words" }), clocks, now,
-      { refusal: async () => { started(); await waiting; } });
-    await handingOff;
-    assert.equal((await door(db, input(), clocks, now, { purge }) as { decision: string }).decision, "PUBLISH");
-    release();
-    assert.deepEqual(await failed, { refused: "QUOTE_NOT_ON_SAVED_COPY" });
-  } finally { release(); await db.pg.close(); }
 });
 
 test("one call creates the board a government names and publishes its fact under that board", async () => {

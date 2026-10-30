@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "./reader.css";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { resolveBasemap } from "@/lib/map/style";
 import { titleFor } from "@/lib/brand";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins";
 import { READER_START_SCRIPT } from "@/lib/reader/bootstrap";
@@ -86,7 +88,10 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <link rel="preload" href="/maplibre-gl-worker.mjs" as="script" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.maptiler.com" crossOrigin="anonymous" />
         <script dangerouslySetInnerHTML={{ __html: READER_START_SCRIPT }} />
+        <script async src="/map-first-view.mjs" data-map-dark={resolveBasemap("dark")?.styleUrl} data-map-light={resolveBasemap("light")?.styleUrl} />
         <script dangerouslySetInnerHTML={{ __html: BALLOT_LINK_START_SCRIPT }} />
       </head>
       <body className="min-h-full">

@@ -87,6 +87,14 @@ test("distinct published board phones stay visible and a repeated number appears
   assert.deepEqual(bodyContactRows(body).map(row => row.value), ["919-555-0100", "919-555-0200"]);
 });
 
+test("a mailing address shows as such only where no office address is held", () => {
+  const mailing = "PO BOX 126, OLD SAYBROOK, CT 06475";
+  assert.deepEqual(bodyContactRows(bodyFixture({ officeContact: { phone: null, address: null, mailingAddress: mailing, provenance: source } })),
+    [{ label: "Mailing address", value: "PO Box 126, Old Saybrook, CT 06475", href: null }]);
+  assert.deepEqual(bodyContactRows(bodyFixture({ officeContact: { phone: null, address: "1 Main Street, Old Saybrook, CT 06475", mailingAddress: mailing, provenance: source } })).map(row => row.label),
+    ["Office address"]);
+});
+
 test("a shouting office address reads in normal case in Contact", () => {
   const body = bodyFixture({ officeContact: { phone: null, address: "301 S MCDOWELL STREET, RALEIGH, NC 27601", provenance: source } });
   assert.deepEqual(bodyContactRows(body), [{ label: "Office address", value: "301 S McDowell Street, Raleigh, NC 27601", href: null }]);

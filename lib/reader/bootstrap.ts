@@ -1,3 +1,5 @@
+import { mapGlyphs, resolveBasemap } from "../map/style.ts";
+import { BOUNDARY_ARCHIVE_URL } from "../map/boundary-archive.ts";
 import type { ZctaCentroid } from "../geo/zcta-core.ts";
 import type { ReaderWorkerRequest } from "../map/boundary-worker.ts";
 
@@ -14,8 +16,14 @@ declare global {
 }
 
 /** A ZIP link starts its data and boundary reads before hydration. */
-export function readerStartScript(boundaryUrl: string): string { return `try{
-if(location.pathname==="/")document.documentElement.dataset.raster="pending";
+export function readerStartScript(boundaryUrl: string, glyphs = ""): string { return `try{
+if(location.pathname==="/"){
+document.documentElement.dataset.raster="pending";
+const glyphs=${JSON.stringify(glyphs)};
+if(glyphs){const resources=window.__readerMapResources??=new Map(),value=fetch(glyphs).then(async response=>{
+if(!response.ok)throw new Error("Map font unavailable");return {data:await response.arrayBuffer(),cacheControl:response.headers.get("Cache-Control")??undefined,expires:response.headers.get("Expires")??undefined}});
+resources.set(glyphs,value);value.catch(()=>{if(resources.get(glyphs)===value)resources.delete(glyphs)})}
+}
 if(location.pathname==="/ballot"&&!window.__readerSnapshots){
 const url="/api/reader/link-health",pending=fetch(url,{cache:"no-cache"});pending.catch(()=>{});
 window.__readerSnapshots={expires:Date.now()+30000,requests:{[url]:pending}};
@@ -76,7 +84,8 @@ if(zip===null){try{zip=JSON.parse(localStorage.getItem("wtp.approximate_location
 window.__startReaderZip(zip);
 }}catch(e){}`; }
 
-export const READER_START_SCRIPT = readerStartScript(typeof process === "undefined" ? "" : process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "");
+const basemap = typeof process === "undefined" ? null : resolveBasemap();
+export const READER_START_SCRIPT = readerStartScript(BOUNDARY_ARCHIVE_URL, basemap ? mapGlyphs(basemap.styleUrl).replace("{fontstack}", "Noto%20Sans%20Regular").replace("{range}", "0-255") : "");
 
 /** Consume each early response once; normal navigation keeps its abort behavior. */
 export function fetchReaderResponse(url: string, init?: RequestInit): Promise<Response> {

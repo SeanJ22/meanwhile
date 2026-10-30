@@ -2,15 +2,6 @@ import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { manualProducerInvocationMatrix } from "./manual-producer-invocation.ts";
 import type { RoutineSourceTask } from "./runner.ts";
-import { scheduledBlackoutAt } from "../control-plane/fleet-safety.ts";
-import { isFundedHunt } from "../control-plane/scheduler/hunt-continuation.ts";
-
-/** The owner did not pause a funded Send during the scheduled blackout. Unfunded Sends keep that policy. */
-export function admittedHuntSourceScopes(scopes: readonly ResolvedScope[], now: string): readonly ResolvedScope[] {
-  if (!scheduledBlackoutAt(now)) return scopes;
-  return scopes.filter(scope => scope.kind === "RESOLVED" &&
-    scope.decision.sourceWorkVersion === 1 && isFundedHunt(scope.decision));
-}
 
 export function huntSourceTasks(scopes: readonly ResolvedScope[], now: string): RoutineSourceTask[] {
   return manualProducerInvocationMatrix(scopes, now).filter(row => row.commandReady).flatMap(row => {

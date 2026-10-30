@@ -1,3 +1,4 @@
+import { capabilityLog } from "../../core/capability.ts";
 import { pgOwnerCostRefs } from "./owner-cost-refs.ts";
 import { pgOwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
@@ -1808,6 +1809,7 @@ export async function createPgRepositories(
 
   const adminRun = boundedRunner(sql, "cp_admin_config", bounds);
   const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
+  const capabilityRun = boundedRunner(sql, "capability", bounds);
   const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
   const breakerRun = boundedRunner(sql, "cp_job_transfer_breaker", bounds);
   const breakerSql = { query: async (text: string, params: readonly unknown[] = []) =>
@@ -1852,6 +1854,7 @@ export async function createPgRepositories(
     fieldManual: pgFieldManualRepository(sql,bounded,()=>repositories.fixMap),
     fixMap: createFixMapRepository(async (text, params) =>
       (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
+    capabilities: capabilityLog(async (text, params) => (await capabilityRun("capabilities", "POINT", text, params)) as readonly Record<string, unknown>[]),
     websitePacing: createWebsitePacing(async (text, params) =>
       (await pacingRun("websitePacing", "POINT", text, params)) as readonly Record<string, unknown>[]),
     jobSlowdowns: { latest: () => readJobBreakerState(breakerSql) },

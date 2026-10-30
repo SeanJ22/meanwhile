@@ -84,7 +84,6 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
   const decoded = await parts.loadOwned({documents:row.agenda_documents ?? []},row.parts as Record<string, unknown>) as {documents:MeetingsSnapshot["agendaDocuments"]};
-  const aliases = row.body_aliases as Record<string,string> | undefined ?? {};
   // This response's dictionary shares bytes only; every document regains its exact text before composition.
   const agendaTexts = row.agenda_texts as readonly string[] | undefined ?? [];
   for (const document of decoded.documents) {

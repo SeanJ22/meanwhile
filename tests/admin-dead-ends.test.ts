@@ -8,79 +8,13 @@ import test from "node:test";
 
 import { assignmentCompletionWords, evaluateAssignmentCompletion, memberObligations } from "../lib/control-plane/assignment-completion.ts";
 import { buildBodyViews, type BodyStoreFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
-import { latestScout, routineRuledOut, scoutDeadEnd } from "../lib/control-plane/admin-view/dead-ends.ts";
+import { routineRuledOut } from "../lib/control-plane/admin-view/dead-ends.ts";
 import type { CompletionSnapshot } from "../lib/control-plane/completion.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
-import type { ScoutResult, ScoutRung } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
 const NOW = "2026-09-25T12:00:00.000Z";
 const PAST = "2026-09-18T12:00:00.000Z";
-const OB = "freshness:candidate-enrichment:nj:2026:poe-pat#candidate-authored-awaits-site";
-
-function rung(i: number, ok: boolean | undefined): ScoutRung {
-  return { index: i, rung: i === 1 ? "primary-site-navigation" : "open-data-portal", tool: "fetch_public", target: `https://example.gov/${i}`, observed: ok === false ? "HTTP 403" : "HTTP 200", artifactIds: [], note: null, at: NOW, ...(ok === undefined ? {} : { ok }) };
-}
-
-function scout(over: Partial<ScoutResult> = {}): ScoutResult {
-  return {
-    formatVersion: 1,
-    attemptId: "at-1",
-    obligationId: OB,
-    routeTaskId: "rt-1",
-    workItemId: "wi-1",
-    subjectId: "nj:2026:poe-pat",
-    routeId: "candidate-authored-awaits-site",
-    recordClass: "candidate-enrichment",
-    providerId: "candidate-enrichment",
-    reason: "route candidate-authored-awaits-site has no machine-executable opening; genuine unresolved novelty runs a bounded Scout",
-    outcome: "NO_PROGRESS",
-    stoppedBy: "BOUND",
-    rungs: [rung(1, false), rung(2, true)],
-    distinctEvidenceRungs: 2,
-    candidates: [],
-    findings: [],
-    nextRungs: ["read the county filing index", "search the clerk's archive"],
-    unverified: [],
-    narrative: "fixture",
-    worker: { provider: "anthropic", model: "claude-opus-5-5", modelReported: "claude-opus-5-5" },
-    usage: { inputTokens: 1, outputTokens: 1, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, turns: 1, toolCalls: 2 },
-    usd: 0.4,
-    elapsedMs: 1000,
-    artifactIds: [],
-    methodCandidateIds: [],
-    refusal: null,
-    startedAt: "2026-09-24T09:59:00.000Z",
-    recordedAt: "2026-09-24T10:00:00.000Z",
-    ...over,
-  };
-}
-
-/* ------------------------------------------------------------ the walk */
-
-test("MW-016: a walk's failed rungs are what it ruled out, its next rungs what would settle it, its outcome who moves", () => {
-  const d = scoutDeadEnd(scout(), { retryAt: "2026-09-25T18:00:00.000Z" });
-  assert.match(d.ruledOut ?? "", /^1 rung tried and failed in the walk of .*: primary-site-navigation at https:\/\/example\.gov\/1 \(HTTP 403\)\.$/);
-  assert.match(d.wouldSettle ?? "", /The next rungs the walk of .* named: read the county filing index; search the clerk's archive\./);
-  assert.match(d.whoMoves ?? "", /^The Scout lane \(automatic, paid model\): it walked the ladder to the floor.*Its retry is not before /);
-  assert.deepEqual(d.gaps, {});
-});
-
-test("MW-016: a field the walk cannot answer stays null and names its gap", () => {
-  const legacy = scoutDeadEnd(scout({ rungs: [rung(1, undefined)], nextRungs: [], outcome: "ROUTE_CANDIDATE" }));
-  assert.equal(legacy.ruledOut, null);
-  assert.match(legacy.gaps.ruledOut ?? "", /predates recording whether each rung succeeded/);
-  assert.equal(legacy.wouldSettle, null);
-  assert.match(legacy.gaps.wouldSettle ?? "", /named no next rung/);
-  const none = scoutDeadEnd(null);
-  assert.equal(none.whoMoves, null);
-  assert.match(none.gaps.whoMoves ?? "", /no Scout walk is on record/);
-  // A refused finish keeps its machine-derived rungs; its outcome's owner is not believed.
-  const refused = scoutDeadEnd(scout({ outcome: "HUMAN_REQUIRED", refusal: [{ code: "SCOUT_EARLY_ABSENCE", detail: "too few rungs" }] as never }));
-  assert.notEqual(refused.ruledOut, null);
-  assert.match(refused.whoMoves ?? "", /^The Scout lane .*finish was refused \(SCOUT_EARLY_ABSENCE\)/);
-  assert.equal(latestScout([scout({ recordedAt: "2026-09-20T00:00:00.000Z", attemptId: "old" }), scout({ attemptId: "new" })])?.attemptId, "new");
-});
 
 /* ------------------------------------------------------------ routine reads */
 

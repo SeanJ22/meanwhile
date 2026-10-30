@@ -21,7 +21,6 @@ import { heldDivisionsForZip } from "../control-plane/expansion/national-geograp
 import { expansionScopesOf } from "../control-plane/expansion/scopes.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { readExpansionScopesForZips } from "../control-plane/expansion/runner-load.ts";
-import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 
 export interface NationalPlaceTask {
   readonly id: string;
@@ -34,7 +33,13 @@ export interface NationalPlaceSendRequest {
   readonly instructions: readonly string[];
 }
 
-export function nationalPlaceJobs(places: readonly NationalPlaceTask[], owner?: NationalPlaceSendRequest): RoutineSourceTask[] {
+/** A place its standing obligation found due, with that obligation's last work. */
+export interface NationalPlaceDue {
+  readonly zip: string;
+  readonly lastWorkedAt: string | null;
+}
+
+export function nationalPlaceJobs(places: readonly (NationalPlaceTask & { readonly lastWorkedAt?: string | null })[], owner?: NationalPlaceSendRequest): RoutineSourceTask[] {
   if (places.some(place => !/^\d{5}$/.test(place.zip))) throw new Error("National place acquisition needs five-digit ZIPs");
   return places.map(place => {
     const contract = requiredManualProductionContract(stateRegistryRuntimeContractId(place.state));
@@ -46,6 +51,7 @@ export function nationalPlaceJobs(places: readonly NationalPlaceTask[], owner?: 
       command: [...contract.command, `--national-zips=${place.zip}`, `--place-task=${place.id}`], cadenceMs: DEFAULT_CADENCE_HOURS * 3_600_000, retryMs: 15 * 60_000,
       contract: { readerProjection: contract.readerProjection,
         cadence: { description: "Refresh one state's sources for an admitted place", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
+      obligation: { lastWorkedAt: place.lastWorkedAt ?? null },
       ...(owner ? { ownerInvocation: { publicationPending: true as const, requestedAt: owner.requestedAt, instructions: [...new Set(owner.instructions)] } } : {}) };
   });
 }
@@ -54,7 +60,7 @@ export function nationalPlaceSendRequests(scopes: readonly ResolvedScope[], zips
   const requests = new Map<string, NationalPlaceSendRequest>();
   const selected = new Set(zips);
   const nowMs = Date.parse(now);
-  for (const scope of admittedHuntSourceScopes(scopes, now)) {
+  for (const scope of scopes) {
     if (scope.kind !== "RESOLVED" || scope.decision.sourceWorkVersion !== 1 || !scope.decision.receiptId) continue;
     const requestedAt = scope.decision.budgetStartedAt ?? scope.decision.decidedAt;
     const requestedMs = Date.parse(requestedAt);
@@ -116,7 +122,7 @@ export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row
   return { ...scheduled, nextDueAt: now, basis: "The place is below its owner target and its last hunt has not reported no progress." };
 }
 
-export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, places: readonly NationalPlaceTask[], now: string, sendRequests?: ReadonlyMap<string, NationalPlaceSendRequest>): Promise<string[]> {
+export async function dueNationalPlaces(repos: ControlPlaneRepositories, places: readonly NationalPlaceTask[], now: string, sendRequests?: ReadonlyMap<string, NationalPlaceSendRequest>): Promise<NationalPlaceDue[]> {
   const unique = [...new Set(places.map(place => place.zip))];
   const ids = new Map(places.map(place => {
     const state = requireRegistryState(place.state);
@@ -135,10 +141,10 @@ export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, plac
     const scheduled = await scheduleNationalPlace(repos, row, now, belowTarget.has(zip), requests.get(zip));
     return "cadenceHours" in scheduled && Date.parse(scheduled.nextDueAt) <= nowMs;
   }));
-  return unique.filter((_, index) => due[index]).sort((a, b) => {
-    const age = (zip: string) => Date.parse(held.get(ids.get(zip)!)?.lastWorkedAt ?? "") || 0;
-    return age(a) - age(b) || a.localeCompare(b);
-  });
+  const lastWorkedAt = (zip: string) => held.get(ids.get(zip)!)?.lastWorkedAt ?? null;
+  return unique.filter((_, index) => due[index]).sort((a, b) =>
+    (Date.parse(lastWorkedAt(a) ?? "") || 0) - (Date.parse(lastWorkedAt(b) ?? "") || 0) || a.localeCompare(b))
+    .map(zip => ({ zip, lastWorkedAt: lastWorkedAt(zip) }));
 }
 
 export async function runNationalPlaceTask(input: {
@@ -156,7 +162,7 @@ export async function runNationalPlaceTask(input: {
   let deferred: string | null = null;
   const { tools } = input;
   const holder = `national-place:${hostname()}:${process.pid}`;
-  for (const zip of await dueNationalPlaceZips(tools.repos, input.places, tools.now())) {
+  for (const { zip } of await dueNationalPlaces(tools.repos, input.places, tools.now())) {
     const now = tools.now();
     const place = input.places.find(place => place.zip === zip)!;
     const state = requireRegistryState(place.state);

@@ -6,7 +6,7 @@ import { receiptIdFor, type ActionRequest } from "@/lib/control-plane/gateway/co
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import { lookupAction, type GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, withFleetSpendCeiling, type AdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
-import { expansionScopesOf } from "@/lib/control-plane/expansion/scopes.ts";
+import { expansionScopesOf, isHunt } from "@/lib/control-plane/expansion/scopes.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 
@@ -126,7 +126,7 @@ test("only the owner's own session may select or remove a scope; a chat or an ag
   assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}), null);
 });
 
-test("removing a scope takes it off the list, and removing one that is not there changes nothing", async () => {
+test("stopping a hunt ends its paid work and keeps the place as a free Send; stopping it again changes nothing", async () => {
   const repos = createMemoryRepositories();
   await submit(setScope({ geography: PIMA, priority: 1, budgetUsd: 2 }, "scope-rm-0001"), deps(repos));
   await submit(
@@ -141,7 +141,9 @@ test("removing a scope takes it off the list, and removing one that is not there
   assert.match(removed.receipt.says, /Stop requested/);
   assert.equal((await repos.huntOrders.pending("az")).length,1);
   await applyHuntOrders(repos,"az",NOW);
-  assert.deepEqual(expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}))?.value ?? null).scopes.map((s) => s.key), ["cd:119/0406"]);
+  const kept = expansionScopesOf((await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}))?.value ?? null).scopes;
+  assert.deepEqual(kept.filter(isHunt).map((s) => s.key), ["cd:119/0406"]);
+  assert.deepEqual(kept.filter((s) => !isHunt(s)).map((s) => [s.key, s.budgetUsd, s.sourceWorkVersion]), [["county:2020/04019", 0, 1]]);
 
   const again = await remove("county:2020/04019", "scope-rm-0004");
   assert.equal(again.ok, false);

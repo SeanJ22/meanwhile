@@ -103,7 +103,8 @@ test("OB-01: first visit, ZIP entry and replay keep the real map's dialogs usabl
       await page.getByRole("dialog", { name: "Choose a location", exact: true }).waitFor({ state: "hidden" });
       assert.equal(await page.locator('[role="dialog"]:visible, dialog[open]').count(), 0);
 
-      // A new device: choose a ZIP and keep the pending place panel until the tour closes.
+      // A new device: leave the running map first, or it can write its tour flag back after the clear.
+      await page.goto(`${origin}/new-device`);
       await page.evaluate(() => localStorage.clear());
       await page.goto(origin);
       await page.getByRole("textbox", { name: /^zip code$/i }).fill("10001");

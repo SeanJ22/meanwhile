@@ -197,6 +197,8 @@ export interface Body {
   homepageUrl: string | null;
   /** The body's office address, as its own page states it; its source is in `fieldSources`. */
   officeAddress?: string;
+  /** The mailing address its government files, shown as such when no office address is held. */
+  mailingAddress?: string;
   /** The body's office phone, as its own page states it. */
   officePhone?: string;
   /** The body's published office email. */

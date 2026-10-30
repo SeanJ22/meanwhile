@@ -7,6 +7,7 @@ import { ADMIN_V6_SAME_CAUSE_CONTRACT, ADMIN_V6_STUCK_CONTRACT, STUCK_ITEM_LIMIT
 import { readShutDoorRecords, shutDoorItems } from "./v6-stuck-doors.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 import { readSurfaceItems } from "./v6-stuck-surfaces.ts";
+import { readReopenedItems } from "./v6-stuck-reopened.ts";
 import { readDoorCountsFromSql } from "./door-queries.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
@@ -31,11 +32,17 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
       return { items: shutDoorItems(rows, now), total: counts.shut };
     } catch { doorsUnread = true; return { items: [], total: 0 }; }
   })();
-  const [populationRead,shut,surfaces] = await Promise.all([population(query.scopeKey).then(value=>({value}),()=>({value:null,error:true})),shutRead,readSurfaceItems(now)]);
+  const reopenedRead = (async () => {
+    const url = controlPlaneUrlFromEnv();
+    if (!url) return [];
+    const sql = databaseHttpReadOnlySql(url);
+    return await readReopenedItems(async (text, params = []) => await sql.query(text, params), now).catch(() => []);
+  })();
+  const [populationRead,shut,surfaces,reopened] = await Promise.all([population(query.scopeKey).then(value=>({value}),()=>({value:null,error:true})),shutRead,readSurfaceItems(now),reopenedRead]);
   if ("error" in populationRead) return NextResponse.json({ state: "UNREAD", says: "The published work index could not be read just now, so stuck items are unknown, not zero." }, { status: 503, headers: NO_STORE });
   const read=populationRead.value;
   if (read === null) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so stuck items were not read." }, { status: 503, headers: NO_STORE });
-  const views = stuckViews(read.rows, query.scopeKey, now, [...shut.items, ...surfaces.items],read.summary,shut.total+surfaces.items.length);
+  const views = stuckViews(read.rows, query.scopeKey, now, [...reopened, ...shut.items, ...surfaces.items],read.summary,shut.total+surfaces.items.length+reopened.length);
   const base = { scope: query.scopeKey, revision: `${which}:${read.publishedAt ?? "unpublished"}:${query.scopeKey}`, asOf: read.publishedAt ?? now };
   const capped = views.total > STUCK_ITEM_LIMIT;
   const missingParts = [

@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { readFileSync } from "node:fs";
-import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";

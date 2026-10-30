@@ -24,6 +24,12 @@
         "lib/meetings/pin-blanks.ts"
       ]
     },
+    "capability": {
+      "writers": [
+        "lib/core/capability.ts"
+      ],
+      "bypass": []
+    },
     "civic_data_candidate_events": {
       "writers": [
         "lib/civic-data/store.ts"

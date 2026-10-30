@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
+import { capabilityLog } from "../lib/core/capability.ts";
 import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
@@ -14,7 +15,7 @@ import { hunterFor } from "../lib/hunt/runtime.ts";
 const now = "2026-10-18T00:00:00Z";
 const division = "ocd-division/country:us/state:az/county:pima";
 const claimsOf = (list: ReturnType<typeof workList>, repos: ReturnType<typeof createMemoryRepositories>) =>
-  hunterClaims({ list, repos, now: () => now, deadEndMs: async () => 5 * 86_400_000, log: () => {} });
+  hunterClaims({ list, repos, now: () => now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
 
 test("an unanswered Ask question is handed to the hunter, reaches it with held place facts, and appears in the daily brief", async t => {
   const repos = createMemoryRepositories();

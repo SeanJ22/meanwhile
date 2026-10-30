@@ -4,7 +4,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { defaultAdminConfig, ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { requestHuntStop, applyHuntOrders, HUNT_STATES, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
-import { expansionScopesOf, type ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { expansionScopesOf, isHunt, type ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, planningStateOf, runStatePlanningRound, stateDispatchTarget } from "../lib/control-plane/scheduler/state-planning.ts";
 import { parseDispatchTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
 import { huntPacketObligationId } from "../lib/hunt/packet.ts";
@@ -41,9 +41,63 @@ test("79 concurrent stop requests are independent; the next state pass stops all
   await Promise.all(scopes.slice(0,79).map((decision,n)=>requestHuntStop(repos,{receiptId:`stop-${n}`,state:"az",scopeKey:decision.key,at:STOP,actor:"owner"})));
   assert.equal((await repos.huntOrders.pending("az")).length,79);assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision,before);
   assert.equal(await applyHuntOrders(repos,"az",STOP),79);
-  assert.deepEqual(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.map(row=>row.receiptId),["send-nh-100"]);
+  const kept=expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes;
+  assert.deepEqual(kept.filter(isHunt).map(row=>row.receiptId),["send-nh-100"]);
+  assert.equal(kept.filter(row=>row.geography.stateAbbr==="AZ" && row.budgetUsd===0 && row.decidedAt===STOP).length,79,"each stopped place stays as a $0 Send for its free source work");
   const active=(await repos.obligations.list()).filter(row=>row.value.active);assert.equal(active.length,1);assert.match(active[0].value.subjectId,/state:nh/);
   assert.equal(await applyHuntOrders(repos,"az",STOP),0);
+});
+
+test("Stop every hunt in every state holds only hunts: standing work, free Sends and run-now controls keep planning (Oct 29)",async()=>{
+  const {readPlanningIntents,readMaterializedPlanningIds}=await import("../lib/control-plane/repository/pg-store.ts");
+  const {buildResearchIntent}=await import("../lib/control-plane/research-view.ts");
+  const {readIntents,RESEARCH_INTENT_LOG_KEY}=await import("../lib/control-plane/scheduler/research-policy.ts");
+  const {readPlanningContinuation}=await import("../lib/control-plane/scheduler/state-planning.ts");
+  const {huntSourceTasks}=await import("../lib/civic-data/hunt-source-tasks.ts");
+  const {nationalPlaceSendRequests,scheduleNationalPlace}=await import("../lib/hunt/place-source-task.ts");
+  const {standing}=await import("../lib/control-plane/scheduler/durable.ts");
+  const repos=createMemoryRepositories();
+  const hunt={...scope("az",0),key:"zcta:2020/85635",geography:{...scope("az",0).geography,geoid:"85635",label:"ZIP 85635"},budgetUsd:25,budgetStartedAt:AT,sourceWorkVersion:1 as const,receiptId:"hunt-85635"};
+  await repos.adminConfig.put(ADMIN_CONFIG_ID,{...defaultAdminConfig(AT),expansionScopes:[hunt,scope("nh",100)]},AT);
+  for(const decision of [hunt,scope("nh",100)]) {
+    const id=huntPacketObligationId(`ocd-division/country:us/state:${decision.geography.stateAbbr.toLowerCase()}/place:${decision.geography.geoid}`);
+    await repos.obligations.put(id,{id,subjectId:id,active:true,materializedBy:"OWNER_DISPATCH",nextDueAt:AT,updatedAt:AT,
+      assignments:[{assignmentKey:decision.key,ref:decision.receiptId,at:AT,relation:"CREATED"}]} as unknown as StandingObligation,AT);
+  }
+  const discovery={id:"meetings:discovery:az-fixture",subjectId:"ocd-division/country:us/state:az/place:fixture",active:true,materializedBy:"OWNER_DISPATCH",nextDueAt:AT,updatedAt:AT} as unknown as StandingObligation;
+  await repos.obligations.put(discovery.id,discovery,AT);
+  const place=standing({id:"national-place:85635",subjectId:"zip:85635",recordClass:"OFFICIAL_ROSTER",routeId:"national-place-sources",active:true,
+    readerImpactAt:null,observedChangeRateHours:null,lastWorkedAt:AT},AT);
+  await repos.obligations.put(place.id,place,AT);
+  const before=buildResearchIntent("DISPATCH",AT,"owner","Arizona","send-before");
+  await repos.researchIntents.append(RESEARCH_INTENT_LOG_KEY,before.intentId,before,AT);
+  await requestHuntStop(repos,{receiptId:"expansion.scope.stopAll:all",at:STOP,actor:"owner"});
+  const runNow=buildResearchIntent("RUN_CYCLE_NOW","2026-10-16T11:30:00.000Z","owner",null,"run-now");
+  await repos.researchIntents.append(RESEARCH_INTENT_LOG_KEY,runNow.intentId,runNow,"2026-10-16T11:30:00.000Z");
+  const APPLY="2026-10-16T12:00:00.000Z";
+  for(const state of HUNT_STATES)await applyHuntOrders(repos,state,APPLY);
+  for(const state of HUNT_STATES)assert.equal(await applyHuntOrders(repos,state,"2026-10-16T13:00:00.000Z"),0,"a later planning round reads no stop again");
+  // Hunts stay stopped: no hunt is left, no paid packet plans, and no Send from before the stop is dispatched.
+  const scopes=expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes;
+  assert.deepEqual(scopes.filter(isHunt),[]);
+  assert.equal((await repos.obligations.list()).filter(row=>row.id.startsWith("hunt:packet:") && row.value.active).length,0);
+  const az={...repos,planningState:"az"};
+  assert.deepEqual([...await readMaterializedPlanningIds(az,scopes.filter(row=>row.budgetUsd>0).map(row=>row.receiptId))],[discovery.id],
+    "materialized standing discovery keeps planning; hunt packets do not");
+  const controls=readIntents(await readPlanningIntents(az));
+  assert.deepEqual(controls.pendingDispatch,[]);assert.deepEqual(controls.pendingRunNow.map(row=>row.intentId),[runNow.intentId]);assert.equal(controls.paused||controls.runnerPause.paused,false);
+  assert.equal(await readPlanningContinuation(repos,true,0),null,"no directed hunt continues");
+  // Free work keeps running: the place stays a $0 Send whose plain-code sources run, and its standing clock comes due.
+  const send=scopes.find(row=>row.key===hunt.key)!;
+  assert.deepEqual([send.budgetUsd,send.sourceWorkVersion,send.receiptId,send.decidedAt],[0,1,"hunt-85635",APPLY]);
+  const resolved={kind:"RESOLVED" as const,decision:send,zctas:new Set(["85635"]),whole:new Set(["85635"]),fractions:new Map<string,number>(),states:["AZ"]};
+  const NEXT_DAY="2026-10-17T12:00:00.000Z";
+  assert.ok(huntSourceTasks([resolved],NEXT_DAY).length>0,"the Send's plain-code source refresh still runs");
+  const request=nationalPlaceSendRequests([resolved],["85635"],NEXT_DAY).get("85635");
+  assert.deepEqual(request,{requestedAt:APPLY,instructions:["hunt-85635"]});
+  const due=await scheduleNationalPlace(repos,(await repos.obligations.mustRead(place.id)).value,NEXT_DAY,false,request);
+  assert.equal("nextDueAt" in due && due.nextDueAt,NEXT_DAY,"the place's free source read is due");
+  assert.equal((await repos.obligations.mustRead(place.id)).value.active,true);
 });
 
 test("one state stop waits for the runner's exact confirmation; global stop writes one order per state",async()=>{
@@ -64,7 +118,7 @@ test("a new hunt after a stop survives and a replay finishes deactivating work i
   const later={...scope("az",200),decidedAt:"2026-10-16T12:00:00.000Z"};
   await repos.adminConfig.save(held,{...held.value,expansionScopes:[scopes.at(-1)!,later]},STOP);
   await applyHuntOrders(repos,"az",STOP);
-  assert.deepEqual(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.map(row=>row.receiptId),["send-nh-100",later.receiptId]);
+  assert.deepEqual(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.filter(isHunt).map(row=>row.receiptId),["send-nh-100",later.receiptId]);
   assert.equal((await repos.obligations.list()).filter(row=>row.value.active).length,1);
 });
 

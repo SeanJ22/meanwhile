@@ -3,7 +3,7 @@ import test from "node:test";
 import { retireAbsent } from "../lib/core/door.ts";
 import { exactLine, type SavedCopy } from "../lib/facts/check.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { publishLoaded } from "../lib/facts/publish.ts";
+import { publishClaim, publishLoaded } from "../lib/facts/publish.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const clocks = factClocks(null);
@@ -56,7 +56,27 @@ test("a source read at any of its addresses retires what none of them shows", as
   } finally { await db.pg.close(); }
 });
 
-test("a loader's fact is checked at its line; one the check refuses or that has no line is not published and opens its blank with the reason", async () => {
+test("a source copy past its window holds nothing and opens no blank; a current copy with a different value holds the unchecked fact", async () => {
+  const db = await factDb();
+  try {
+    const id = "az:city:example#governing", text = '{\n  "Phone": "520-555-0100"\n}';
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Example City Council','AZ')", [id]);
+    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov/api','https://example.gov/api',$1,$2,'k')", [before.toISOString(), "a".repeat(64)]);
+    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'office_phone','"520-555-9999"','520-555-9999','live','OFFICIAL',1,'520-555-9999',$2,'loader-c2')`, [id, before.toISOString()]);
+    const claim = (fetchedAt: Date) => ({ subjectId: id, field: "office_phone", fieldKind: "contact" as const, value: "520-555-0100", valueText: "520-555-0100", quote: "520-555-0100",
+      provenance: "OFFICIAL" as const, producedBy: "loader-c2", costUsd: 0, copy: { id: 1, finalUrl: "https://example.gov/api", text, fetchedAt, isArchive: false } });
+    const line = () => ({ quote: exactLine(text, "Phone", "520-555-0100")!, valueText: "520-555-0100" });
+    const stale = await publishLoaded(db, claim(new Date(now.getTime() - 800 * 3_600_000)), line, clocks, now, { purge });
+    assert.deepEqual(stale, { refused: "COPY_OUTSIDE_FRESHNESS_WINDOW" });
+    assert.deepEqual(await db.query("SELECT status FROM fact"), [{ status: "live" }], "readers keep the last value");
+    assert.deepEqual(await db.query("SELECT field FROM blank"), []);
+    await publishLoaded(db, { ...claim(now), value: "520-555-0200", valueText: "520-555-0200", quote: "520-555-0200" }, () => ({ quote: '"Phone": "520-555-0200"', valueText: "520-555-0200" }), clocks, now, { purge });
+    assert.deepEqual(await db.query("SELECT status,held_reason FROM fact"), [{ status: "held", held_reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
+  } finally { await db.pg.close(); }
+});
+
+test("a switched loader's fact that fails is retried once, never goes live and opens its blank; its unchecked live fact moves to held; Sean's value is untouched", async () => {
   const db = await factDb();
   try {
     const id = "az:city:example#governing", text = '{\n  "Name": "Example City Council",\n  "Phone": "520-555-0100"\n}';
@@ -65,16 +85,39 @@ test("a loader's fact is checked at its line; one the check refuses or that has 
     const copy: SavedCopy = { id: 1, finalUrl: "https://example.gov/api", text, fetchedAt: now, isArchive: false };
     const claim = (field: string, value: string) => ({ subjectId: id, field, fieldKind: "contact" as const, value, valueText: value, quote: value, provenance: "OFFICIAL" as const,
       producedBy: "loader-c2", costUsd: 0, copy });
-    const facts = () => db.query("SELECT field,quote,quote_start IS NOT NULL AS checked FROM fact WHERE status='live' ORDER BY field");
+    const live = (field: string, value: string, provenance: string, producedBy: string, checked: Date) => db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,$2,$3::jsonb,$4,'live',$5,CASE WHEN $5='OWNER' THEN NULL ELSE 1 END,$4,$6,$7)`, [id, field, JSON.stringify(value), value, provenance, checked.toISOString(), producedBy]);
+    const state = () => db.query("SELECT field,status,held_reason,quote_start IS NOT NULL AS checked FROM fact ORDER BY field,id");
     const blanks = () => db.query("SELECT field,reason,stage FROM blank ORDER BY field");
+    let looked = 0;
+    const find = (line: { quote: string; valueText: string } | null) => () => { looked++; return line; };
 
-    await publishLoaded(db, claim("office_phone", "520-555-0100"), { quote: exactLine(text, "Phone", "520-555-0100")!, valueText: "520-555-0100" }, clocks, now, { purge });
-    assert.deepEqual(await facts(), [{ field: "office_phone", quote: '"Phone": "520-555-0100"', checked: true }]);
-    assert.deepEqual(await blanks(), []);
+    await publishLoaded(db, claim("office_phone", "520-555-0100"), find({ quote: exactLine(text, "Phone", "520-555-0100")!, valueText: "520-555-0100" }), clocks, now, { purge });
+    assert.equal(looked, 1, "a fact that passes is looked up once");
+    assert.deepEqual(await state(), [{ field: "office_phone", status: "live", held_reason: null, checked: true }]);
 
-    await publishLoaded(db, claim("office_email", "a@example.gov"), { quote: '"Email": "a@example.gov"', valueText: "a@example.gov" }, clocks, now, { purge });
-    await publishLoaded(db, claim("homepage", "https://example.gov/"), null, clocks, now, { purge });
-    assert.deepEqual(await facts(), [{ field: "office_phone", quote: '"Phone": "520-555-0100"', checked: true }], "neither is published");
-    assert.deepEqual(await blanks(), [{ field: "homepage", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" }, { field: "office_email", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" }]);
+    await live("office_email", "old@example.gov", "OFFICIAL", "loader-c2", before);
+    await live("office_fax", "520-555-0199", "OWNER", "loader-c2", before);
+    await live("office_hours", "9 to 5", "OFFICIAL", "other-loader", before);
+    looked = 0;
+    await publishLoaded(db, claim("office_email", "a@example.gov"), find({ quote: '"Email": "a@example.gov"', valueText: "a@example.gov" }), clocks, now, { purge });
+    assert.equal(looked, 2, "a fact that fails is retried once");
+    await publishLoaded(db, claim("homepage", "https://example.gov/"), find(null), clocks, now, { purge });
+    assert.equal(looked, 4);
+    await publishLoaded(db, claim("office_fax", "520-555-0200"), find({ quote: '"Fax": "520-555-0200"', valueText: "520-555-0200" }), clocks, now, { purge });
+    await publishLoaded(db, claim("office_hours", "8 to 4"), find(null), clocks, now, { purge });
+    assert.deepEqual(await state(), [
+      { field: "office_email", status: "held", held_reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", checked: false },
+      { field: "office_fax", status: "live", held_reason: null, checked: false },
+      { field: "office_hours", status: "live", held_reason: null, checked: false },
+      { field: "office_phone", status: "live", held_reason: null, checked: true },
+    ], "no failed fact is live; Sean's value and another loader's fact stay; this loader's unchecked fact moved to held");
+    assert.deepEqual(await blanks(), [{ field: "homepage", reason: "CHECK_FAILED:NO_EXACT_LINE", stage: "CHECK" },
+      { field: "office_email", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" },
+      { field: "office_fax", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" },
+      { field: "office_hours", reason: "CHECK_FAILED:NO_EXACT_LINE", stage: "CHECK" }]);
+
+    const old = await publishClaim(db, { ...claim("office_address", "1 Main St"), entity: { id, fullName: "Example City Council", stateName: "Arizona", hosts: ["example.gov"], externalIds: [] }, producedBy: "old-path", acquisition: "loader" }, clocks, now, { purge });
+    assert.ok("blank" in old, "no loader publishes unchecked any more: the same quote that is not on the saved copy is refused");
   } finally { await db.pg.close(); }
 });

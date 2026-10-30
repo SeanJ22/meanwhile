@@ -8,6 +8,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../../lib/control-plane/gat
 import { submit } from "../../lib/control-plane/gateway/gateway.ts";
 import { confirmReceipt } from "../../lib/control-plane/gateway/confirmation.ts";
 import { applyHuntOrders, HUNT_STATES } from "../../lib/control-plane/hunt-orders.ts";
+import { isHunt } from "../../lib/control-plane/expansion/scopes.ts";
 import type { ActionRequest, ActionOutcome } from "../../lib/control-plane/gateway/contract.ts";
 
 const entry = `
@@ -87,7 +88,7 @@ test("state and country stop controls stay pending until their runner orders are
     assert.equal(writes,2);
     for(const state of HUNT_STATES) await applyHuntOrders(repos,state,now);
     await page.waitForFunction(()=> (window as unknown as {latestReceipt?:{status:string}}).latestReceipt?.status==="done");
-    assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value.expansionScopes?.length,0);
+    assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value.expansionScopes?.filter(isHunt).length,0);
     await page.close();
   }finally{await browser.close();}
 });

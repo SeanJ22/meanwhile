@@ -13,6 +13,7 @@ import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
+import { issuerCompletingFetch } from "../lib/sources/issuer-chain.ts";
 import { votingSitesCandidate, votingSitesContract, type VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { heldVotingSiteCoordinates, votingSiteAddressKey, type VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
@@ -237,7 +238,7 @@ export async function refreshVotingSources(input: {
   const state = requireBallotState(input.state), contract = votingSitesContract(state);
   const { store, context } = input;
   const now = input.now ?? (() => new Date().toISOString());
-  const fetchSource = input.fetch ?? fetch;
+  const fetchSource = input.fetch ?? issuerCompletingFetch();
   const deadlineMs = input.deadlineMs ?? votingAcquisitionDeadline(Date.now());
   const seeds = (input.seeds ?? ["voting-source-doors.json", "voting-legacy-doors.json"].flatMap(name =>
     JSON.parse(readFileSync(join(REFERENCE_DIR, name), "utf8")) as VotingSourceDoor[])).filter(door => door.scope.state === state);

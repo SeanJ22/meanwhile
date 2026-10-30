@@ -216,7 +216,7 @@ export function scopedHunts(scope: V6PlaceScope | null, scopeKey: string, source
   const members = sources.scopes.filter(decision => huntRelation(scope, decision, sources.scopeZips ?? null) === "member");
   return {
     lifetime: members.filter((d): d is ExpansionScopeDecision & { readonly budgetStartedAt: string } => typeof d.budgetStartedAt === "string"),
-    rolling: members.filter(d => typeof d.budgetStartedAt !== "string"),
+    rolling: members.filter(d => typeof d.budgetStartedAt !== "string" && d.budgetUsd > 0),
   };
 }
 

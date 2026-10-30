@@ -91,7 +91,7 @@ export async function continueMeetingFactPublication(input: {
     const supplied=input.meetings?.find(meeting=>meeting.id===id);
     const [row]=supplied ? [] : await input.facts.query(`SELECT reader_payload_value(jsonb_build_object(
       'id',r.value->'id','bodyId',r.value->'bodyId','ocdId',r.value->'ocdId','bodyName',r.value->'bodyName','title',r.value->'title',
-      'startsAt',r.value->'startsAt','timeZone',r.value->'timeZone','startPrecision',r.value->'startPrecision','location',r.value->'location',
+      'startsAt',r.value->'startsAt','startsAtOnPage',r.value->'startsAtOnPage','timeZone',r.value->'timeZone','startPrecision',r.value->'startPrecision','location',r.value->'location',
       'online',r.value->'online','mapPin',r.value->'mapPin','agendaUrl',r.value->'agendaUrl','videoUrl',r.value->'videoUrl',
       'jurisdiction',r.value->'jurisdiction','status',r.value->'status','provenance',r.value->'provenance','venueGap',r.value->'venueGap')) AS meeting
       FROM civic_data_promotions p JOIN civic_data_rows r ON r.promotion_key=p.key AND r.version_id=p.current_version_id

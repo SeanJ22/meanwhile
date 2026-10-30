@@ -2,6 +2,7 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
 import { boundedIndexOf, exactLine, lineOf, normalizeText, type CheckEntity, type SavedCopy } from "./check.ts";
+import { retireAbsent } from "../core/door.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -20,11 +21,12 @@ function localParts(startsAt: string, timeZone: string) {
 }
 
 /** Where the page states this sitting's date (and, when it gives one, its start time), in the publisher's own writing. */
-export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | "timeZone" | "startPrecision">): { readonly valueText: string; readonly quote: string } | null {
+export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | "startsAtOnPage" | "timeZone" | "startPrecision">): { readonly valueText: string; readonly quote: string } | null {
   const page = normalizeText(text);
   const p = localParts(meeting.startsAt, meeting.timeZone);
   const month = MONTHS[p.m - 1]!;
   const day = meeting.startPrecision === "DAY";
+  if (meeting.startsAtOnPage && boundedIndexOf(page, meeting.startsAtOnPage) !== -1) return { valueText: meeting.startsAtOnPage, quote: meeting.startsAtOnPage };
   const utc = new Date(meeting.startsAt).toISOString();
   const together = day ? [] : [utc,utc.replace(/\.000Z$/,"Z"),utc.replace(/[-:]/g,"").replace(/\.000Z$/,"Z")];
   for (const token of together) if (boundedIndexOf(page,token)!==-1) return { valueText: token, quote: token };
@@ -53,6 +55,22 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
         const quote=window.slice(0,time.i+time.t.length);
         return {valueText:quote,quote};
       }
+    }
+  }
+  return null;
+}
+
+const CANCELED_WORD = /\bcancell?ed\b|\bcancell?ation\b/i;
+
+/** Where the page says this sitting is canceled: the publisher's own word beside the sitting's title, with the line that shows it. */
+export function canceledOnPage(text: string, meeting: Pick<Meeting, "title">): { readonly valueText: string; readonly quote: string } | null {
+  const page = normalizeText(text), title = normalizeText(meeting.title);
+  if (!title) return null;
+  for (let at = page.indexOf(title); at !== -1; at = page.indexOf(title, at + 1)) {
+    const from = Math.max(0, at - 300), window = page.slice(from, at + title.length + 300), found = CANCELED_WORD.exec(window);
+    if (found) {
+      const start = from + found.index, quote = page.slice(Math.max(0, Math.min(start, at) - 40), Math.max(start + found[0].length, at + title.length) + 40);
+      return { valueText: found[0], quote };
     }
   }
   return null;
@@ -157,6 +175,8 @@ export async function publishMeetingPinFact(db: MeetingFactDb, input: {
 export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
   readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly pinCapture?: WorkerPublicationCapture; readonly producedBy: string;
   readonly geocodeAttempts?: readonly PinGeocodeAttempt[];
+  /** The sitting holds a live canceled fact; when its source no longer says canceled, that fact moves to history. */
+  readonly canceledHeld?: boolean;
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const { meeting, capture } = input;
   const id = meetingEntityId(meeting.id);
@@ -174,7 +194,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   const claim = async (field: string, value: unknown, valueText: string, quote: string | null = lineOf(copy, valueText)) =>
     count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote: quote ?? valueText, copy,
       // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
-      acquisition: field === "location" ? "walker" : quote ? "checked" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      acquisition: field === "location" ? "walker" : "checked", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };
@@ -185,6 +205,10 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
         valueText:meeting.startsAt,quote:meeting.startsAt,producedBy:input.producedBy}), retryMinutes: clocks.retryMinutes("meeting") });
     tally.blanks++;
   }
+  if (meeting.status === "CANCELED") {
+    const canceled = canceledOnPage(copy.text, meeting);
+    await claim("status", "CANCELED", canceled?.valueText ?? "canceled", canceled?.quote ?? null);
+  } else if (input.canceledHeld) await retireAbsent(db, { subjectId: id, fieldPrefix: "status", copyId: copy.id, stillShown: [], at: copy.fetchedAt });
   if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
   else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);

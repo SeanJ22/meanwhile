@@ -48,11 +48,19 @@ export async function saveSourceReference(query: Query, row: CopyRow): Promise<n
   return Number(held!.id);
 }
 
+/** The text a fact from this capture is checked against: the saved bytes as a reader would read them. */
+const savedTexts = new WeakMap<WorkerPublicationCapture, string>();
+export function savedText(capture: WorkerPublicationCapture): string {
+  let text = savedTexts.get(capture);
+  if (text === undefined) { text = checkText(capture.evidence.text, "", capture.evidence.canonicalUrl); savedTexts.set(capture, text); }
+  return text;
+}
+
 export async function saveCaptureCopy(query: Query, capture: WorkerPublicationCapture): Promise<SavedCopy> {
   const { evidence } = capture;
   const id = await saveSourceReference(query, { key: `artifact:${evidence.artifactId}`, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
     fetchedAt: capture.observedAt, httpStatus: capture.httpStatus, contentHash: evidence.contentHash });
-  return { id, finalUrl: evidence.canonicalUrl, text: checkText(evidence.text, "", evidence.canonicalUrl), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
+  return { id, finalUrl: evidence.canonicalUrl, text: savedText(capture), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
 }
 
 /** The rows of a published release the repo keeps beside its note, as a saved copy captured on the source's latest check: a re-check that finds the same fingerprint is a new capture of the same release. */

@@ -5,7 +5,7 @@ import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-p
 import { publishCapturedMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { addressOnPage, agendaFileOnPage, canceledOnPage, publishMeetingFacts, sittingOnPage } from "../lib/facts/meeting-facts.ts";
-import { meetingEntityId } from "../lib/facts/meeting-read.ts";
+import { MEETING_FACT_ROWS_SQL, meetingEntityId, meetingsFromFactRows } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -96,6 +96,28 @@ test("an address the feed composed from parts is quoted at the part the publishe
   assert.equal(addressOnPage(copy, "Annex - Council Chambers, 612 N Main St, Mitchell, South Dakota, 57301"), "612 N Main St");
   assert.equal(addressOnPage(copy, "Room 2, Mitchell, SD"), null);
   assert.equal(addressOnPage(copy, "9 Elsewhere Rd, Mitchell, South Dakota, 57301"), null);
+});
+
+test("the publisher's posting stamp, kind of sitting, end, and each published link are facts quoted from the page, and readers get them back", async () => {
+  const API = "https://auburnwa.api.civicclerk.com/v1/Events";
+  const page = capture('{"value":[{"id":2210,"eventName":"Human Services Committee","eventType":"Joint session","startDateTime":"2026-12-08T19:00:00Z","endDateTime":"2026-12-08T21:30:00Z",'
+    + '"postedOn":"2026-12-01T16:05:09.4Z","publishedFiles":[{"fileId":7051,"type":"Agenda","streamUrl":null},{"fileId":7162,"type":"Minutes","streamUrl":null}]}]}', API);
+  const file = (id: number) => `https://auburnwa.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=${id},plainText=false)`;
+  const db = await seeded();
+  try {
+    const base = { id: "civicclerk:auburn:2210", title: "Human Services Committee", startsAt: "2026-12-08T11:00:00-08:00", timeZone: "America/Los_Angeles", sourceUrl: API };
+    const sitting = meeting({ ...base, startsAtOnPage: "2026-12-08T19:00:00Z", postedAt: "2026-12-01T16:05:09.400Z", eventType: "Joint session", endsAt: "2026-12-08T13:30:00-08:00",
+      publishedLinks: [{ label: "Agenda", href: file(7051) }, { label: "Minutes", href: file(7162) }, { label: "Made up", href: file(9999) }] });
+    await publishMeetingFacts(db, { meeting: sitting, capture: page, producedBy: "test" }, clocks, NOW);
+    const rows = await db.query(MEETING_FACT_ROWS_SQL, [[BODY], "2026-01-01T00:00:00Z"]);
+    const [read] = meetingsFromFactRows(rows, () => ({ name: "Planning Commission", ocdId: OCD, jurisdiction: "Lewisville, TX" }), NOW);
+    assert.equal(read?.postedAt, "2026-12-01T16:05:09.400Z");
+    assert.equal(read?.eventType, "Joint session");
+    assert.equal(read?.endsAt, "2026-12-08T13:30:00-08:00");
+    assert.deepEqual(read?.publishedLinks?.map(link => link.label).sort(), ["Agenda", "Minutes"], "a link the page does not show is not published");
+    assert.ok(read?.fieldSources?.postedAt?.quote && read.fieldSources.endsAt?.quote);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM blank WHERE entity_id=$1 AND field LIKE 'link:%'", [meetingEntityId(base.id)]))[0]?.n, 1);
+  } finally { await db.pg.close(); }
 });
 
 test("a canceled sitting is a fact quoted from the publisher's own word beside its title, and it moves to history when the publisher stops saying it", async () => {

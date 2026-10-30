@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
@@ -58,6 +59,25 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
     }
   }
   return null;
+}
+
+/** The publisher's own stamp of when it posted, as the page writes it: the instant to the second, or the iCalendar compact form of it. */
+export function postedOnPage(text: string, postedAt: string): { readonly valueText: string; readonly quote: string } | null {
+  const page = normalizeText(text), instant = new Date(postedAt);
+  if (!Number.isFinite(instant.getTime())) return null;
+  const iso = instant.toISOString();
+  for (const token of [postedAt, iso, iso.replace(/\.000Z$/, "Z"), iso.replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z")])
+    if (boundedIndexOf(page, token) !== -1) return { valueText: token, quote: token };
+  // A feed often writes the same second with a shorter fraction, or none.
+  const second = new RegExp(`${iso.slice(0, 19)}(?:\\.\\d+)?Z?(?![\\p{L}\\p{N}])`, "u").exec(page)?.[0];
+  return second ? { valueText: second, quote: second } : null;
+}
+
+/** A file the page lists by number beside its kind, which is all a CivicClerk link is built from. */
+export function fileOnPage(text: string, url: string): { readonly valueText: string; readonly quote: string } | null {
+  const id = /fileId=(\d+)/.exec(url)?.[1];
+  const found = id ? new RegExp(`"fileId"\\s*:\\s*${id}\\b[^{}]{0,200}?"type"\\s*:\\s*"[^"]*"`, "i").exec(text) : null;
+  return id && found ? { valueText: id, quote: found[0] } : null;
 }
 
 /** A CivicClerk event names its agenda file by number, beside the word Agenda; the address the link is built from is not written on the page. */
@@ -251,6 +271,16 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   else if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
   else if(!meeting.mapPin&&!meeting.location) count(await publishMeetingPinFact(db,{meeting,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
+  if (meeting.postedAt) { const on = postedOnPage(copy.text, meeting.postedAt); await claim("posted_at", meeting.postedAt, on?.valueText ?? meeting.postedAt, on?.quote ?? null); }
+  if (meeting.eventType) await claim("event_type", meeting.eventType, meeting.eventType);
+  if (meeting.endsAt) {
+    const end = sittingOnPage(copy.text, { startsAt: meeting.endsAt, timeZone: meeting.timeZone, startPrecision: "MINUTE" });
+    await claim("ends_at", { endsAt: meeting.endsAt, timeZone: meeting.timeZone }, end?.valueText ?? meeting.endsAt, end?.quote ?? null);
+  }
+  for (const [order, link] of (meeting.publishedLinks ?? []).entries()) {
+    const byFile = lineOf(copy, link.href) ? null : fileOnPage(copy.text, link.href);
+    await claim(`link:${createHash("sha256").update(link.href).digest("hex").slice(0, 12)}`, { label: link.label, href: link.href, order }, byFile?.valueText ?? link.href, byFile?.quote ?? null);
+  }
   if (meeting.agendaUrl) {
     const byFile = lineOf(copy, meeting.agendaUrl) ? null : agendaFileOnPage(copy.text, meeting.agendaUrl);
     await (byFile ? claim("agenda_url", meeting.agendaUrl, byFile.valueText, byFile.quote) : claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl));

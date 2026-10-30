@@ -13,7 +13,10 @@ const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.f
   WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND (f.status = 'live'
     OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')`;
 
-const FIELD = { title: "title", status: "status", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
+const FIELD = { title: "title", status: "status", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl",
+  posted_at: "postedAt", event_type: "eventType", ends_at: "endsAt" } as const;
+/** A published link is its own fact, so each carries the page that shows it. */
+const factField = (field: string) => field.startsWith("link:") ? "publishedLink" : FIELD[field as keyof typeof FIELD];
 
 function publishedLocation(meeting: Meeting, value: unknown, source: Provenance, currentText?:string|null): Partial<Meeting> {
   let location = value as { name: string; address: string | null; lat?: number; lng?: number };
@@ -28,7 +31,7 @@ function publishedLocation(meeting: Meeting, value: unknown, source: Provenance,
 /** A current sitting field or a withdrawn office claim, citing its saved source. */
 export interface SittingFact {
   readonly meetingId: string;
-  readonly field: (typeof FIELD)[keyof typeof FIELD];
+  readonly field: (typeof FIELD)[keyof typeof FIELD] | "publishedLink";
   readonly value: unknown;
   readonly source: Provenance;
   readonly withdrawn?: boolean;
@@ -88,7 +91,7 @@ export async function readMeetingFacts(query: Query, meetings: readonly Meeting[
 export function sittingFactsFromRows(rows: readonly Record<string, unknown>[]): Map<string, SittingFact[]> {
   const byBody = new Map<string, SittingFact[]>();
   for (const row of rows) {
-    const field = FIELD[String(row.field) as keyof typeof FIELD];
+    const field = factField(String(row.field));
     if (!field) continue;
     const at = new Date(row.checked_at as string).toISOString();
     const fact: SittingFact = { meetingId: String(row.entity_id).slice("meeting:".length), field, value: row.value,
@@ -146,7 +149,10 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
       : field === "location" ? publishedLocation(meeting,value,source,factAt<attendanceAt?stated:null)
       : field==="mapPin" ? {mapPin:{...value as NonNullable<Meeting["mapPin"]>,meetingId:meeting.id}}
-      : field==="online" ? {online:value as Meeting["online"],location:null,venueGap:undefined} : { [field]: value as string };
+      : field==="online" ? {online:value as Meeting["online"],location:null,venueGap:undefined}
+      : field==="endsAt" ? {endsAt:(value as {endsAt:string}).endsAt}
+      : field==="publishedLink" ? {publishedLinks:[...(meeting.publishedLinks ?? []).filter(link=>link.href!==(value as {href:string}).href),
+        {label:(value as {label:string}).label,href:(value as {href:string}).href}]} : { [field]: value as string };
     out[index] = { ...meeting, ...patch, fieldSources: { ...meeting.fieldSources, [field]: source } };
   }
   return out.map(meeting=>{

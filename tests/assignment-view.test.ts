@@ -6,7 +6,7 @@ import type { Attempt, ExecutionLease, WorkerRole } from "../lib/control-plane/a
 import {
   OBLIGATION_PROVIDER_PREFIXES,
   buildAssignmentView,
-  assignmentHeadsFromSources,
+  assignmentHeadBatchFromSources,
   deriveAssignmentEntriesFromHeads,
   buildAssignments,
   assignmentCountClaims,
@@ -276,7 +276,7 @@ test("current heads keep live older rounds, renewed leases and last-activity out
   const newer=attempt("newer","b","work",{startedAt:"2026-09-22T11:00:00.000Z",endedAt:"2026-09-22T11:30:00.000Z",outcome:"TIMED_OUT"});
   const source={...empty(),workItems:[workItem("work")],attempts:[old,newer],routeTasks:[
     routeTask("a","work",{disposition:disposition({disposition:"INGESTED",attemptId:old.id})}),routeTask("b","work") ]};
-  const entry=(src:AssignmentSources,clock=NOW)=>deriveAssignmentEntriesFromHeads(assignmentHeadsFromSources(src),clock).get("work")!;
+  const entry=(src:AssignmentSources,clock=NOW)=>deriveAssignmentEntriesFromHeads(assignmentHeadBatchFromSources(src).heads,clock).get("work")!;
   assert.equal(entry(source).index.state,"SUCCEEDED","latest activity wins even when another attempt started later");
   assert.equal(entry({...source,attempts:[old,{...newer,endedAt:NOW}]}).index.state,"FAILED","the last canonical round wins an activity tie");
   const open={...source,attempts:[{...old,endedAt:null,outcome:null},newer],leases:[{

@@ -7,7 +7,6 @@ import { boundedQuery } from "./request-bounds.ts";
 
 export interface AssignmentHeadSeeds {
   readonly groups: readonly string[];
-  readonly obligations: readonly string[];
   readonly workItems: readonly string[];
 }
 export interface AssignmentHeadBatch {
@@ -29,7 +28,7 @@ export function storedOwnerAssignmentHeads(get: () => ControlPlaneRepositories):
     const where = async <T>(repo: import("./types.ts").AggregateRepository<T>, key: string, ids: readonly string[]) =>
       (await Promise.all(unique(ids).map(id=>repo.listWhere([key],id)))).flatMap(rows=>rows.map(row=>row.value));
     const workIds = unique([...seeds.workItems, ...old.flatMap(row => row.group.members)]);
-    const occurrenceRows = [...await where(repos.occurrences,"obligationId",[...seeds.obligations,...seeds.groups]),
+    const occurrenceRows = [...await where(repos.occurrences,"obligationId",seeds.groups),
       ...await where(repos.occurrences,"workItemId",workIds)];
     const occurrences = [...new Map(occurrenceRows.map(row => [row.id,row])).values()].sort((a,b)=>a.id.localeCompare(b.id));
     const owned = unique([...workIds,...occurrences.map(row=>row.workItemId)]), items = new Map<string,WorkItem>();
@@ -38,7 +37,7 @@ export function storedOwnerAssignmentHeads(get: () => ControlPlaneRepositories):
       const asked=new Set(wanted);
       wanted=unique([...items.values()].flatMap(row=>[row.directoryParent?.workItemId,(row as WorkItem & {planRepair?:{parentWorkItemId:string}}).planRepair?.parentWorkItemId])).filter(id=>!items.has(id)&&!asked.has(id));
     }
-    const obligations = await many(repos.obligations,unique([...seeds.obligations,...seeds.groups,...occurrences.map(row=>row.obligationId),...[...items.values()].map(row=>clauseObligation(row.obligation))]),ASSIGNMENT_OBLIGATION_PROJECTION);
+    const obligations = await many(repos.obligations,unique([...seeds.groups,...occurrences.map(row=>row.obligationId),...[...items.values()].map(row=>clauseObligation(row.obligation))]),ASSIGNMENT_OBLIGATION_PROJECTION);
     const taskRows = await where(repos.routeTasks,"workItemId",owned);
     const routeTasks=[...new Map([...taskRows,...await many(repos.routeTasks,occurrences.map(row=>row.routeTaskId))].map(row=>[row.id,row])).values()].sort((a,b)=>a.id.localeCompare(b.id));
     const attemptRows=await where(repos.attempts,"workItemId",owned);
@@ -73,10 +72,10 @@ const routing = (v: string): string => `${pick(v,"id project subject obligation 
 
 /** All reduction happens beside the rows. No artifact, occurrence, work-item, or result history leaves Postgres. */
 export const OWNER_ASSIGNMENT_HEADS_SQL = `WITH RECURSIVE
-requested AS MATERIALIZED (SELECT DISTINCT unnest($1::text[]||$2::text[]) AS id),
+requested AS MATERIALIZED (SELECT DISTINCT unnest($1::text[]) AS id),
 seed_obligations AS MATERIALIZED (SELECT o.id FROM cp_obligations o JOIN requested r USING(id)),
 seed_members AS MATERIALIZED (
-  SELECT unnest($3::text[]) AS id
+  SELECT unnest($2::text[]) AS id
   UNION SELECT jsonb_array_elements_text(r.members) FROM cp_owner_assignment_rows r WHERE r.id=ANY($1::text[])
   UNION SELECT o.value#>>'{workItemId}' FROM cp_occurrences_history o JOIN seed_obligations s ON s.id=o.value#>>'{obligationId}'
   UNION SELECT r.id FROM requested r WHERE NOT EXISTS(SELECT 1 FROM seed_obligations o WHERE o.id=r.id)
@@ -174,7 +173,7 @@ SELECT g.id,
     'proof',CASE WHEN EXISTS(SELECT 1 FROM items i WHERE i.id=g.id AND (i.value->>'project' ~ '^conformance(-|$)' OR i.value->>'project' IN('control-plane-proof','autonomous-fleet-proof'))) THEN true END,
     'live',coalesce((SELECT jsonb_agg(jsonb_build_object('attempt',${attempt("a.value")},'lease',${lease("le.value")}) ORDER BY a.ordering,a.value->>'startedAt',a.activity,a.attempt)
       FROM attempts a JOIN cp_leases le ON le.id=a.task WHERE a.id=g.id AND a.value->'outcome'='null'::jsonb
-        AND le.value->>'id'=a.value->>'leaseId' AND NOT(le.value->>'released')::boolean AND le.value->>'expiresAt'>$4),'[]'::jsonb),
+        AND le.value->>'id'=a.value->>'leaseId' AND NOT(le.value->>'released')::boolean AND le.value->>'expiresAt'>$3),'[]'::jsonb),
     'latest',CASE WHEN l.attempt IS NOT NULL THEN jsonb_strip_nulls(jsonb_build_object('attempt',${attempt("l.value")},'leaseRead',true,
       'lease',CASE WHEN le.id IS NOT NULL THEN ${lease("le.value")} END,
       'disposition',CASE WHEN r.value->'disposition' IS NOT NULL AND r.value->'disposition'<>'null'::jsonb THEN
@@ -202,8 +201,8 @@ LEFT JOIN workers w ON w.attempt=l.attempt ORDER BY g.id`;
 
 export function pgOwnerAssignmentHeads(sql: Sql): OwnerAssignmentHeads {
   return { async read(seeds, now) {
-    if (!(seeds.groups.length + seeds.obligations.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [] };
-    const rows = await boundedQuery(sql,{operation:"cp_owner_assignment_rows.heads",callClass:"PAGE"},OWNER_ASSIGNMENT_HEADS_SQL, [seeds.groups,seeds.obligations,seeds.workItems,now]) as {
+    if (!(seeds.groups.length + seeds.workItems.length)) return { heads: [], members: new Map(), workItems: [] };
+    const rows = await boundedQuery(sql,{operation:"cp_owner_assignment_rows.heads",callClass:"PAGE"},OWNER_ASSIGNMENT_HEADS_SQL, [seeds.groups,seeds.workItems,now]) as {
       id: string; members: string[]; items: WorkItem[]; head: Partial<AssignmentHead>;
     }[];
     const hydrateAttempt = (value: AssignmentHead["live"][number]["attempt"]) => Object.assign({endedAt:null,outcome:null,abortReason:null},value);

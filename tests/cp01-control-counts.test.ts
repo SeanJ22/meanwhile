@@ -124,10 +124,8 @@ test("owner row fingerprints, count aggregates and activity patches preserve col
     const heads=await repo.heads(entries.map(row=>row.id));
     assert.deepEqual(heads,entries.map(ownerAssignmentHeadOf).sort((a,b)=>a.id.localeCompare(b.id)));
     const actual=(await repo.contributions(entries.map(row=>row.id))).get("az")!,expected=ownerAssignmentContributions(entries).get("az")!;
-    assert.deepEqual({...actual.part,usd:null},{...expected.part,usd:null});assert.equal(actual.usdRows,2);
-    const {exactSum,mergeExact,exactValue}=await import("../lib/control-plane/exact-sum.ts"),sum=exactSum();
-    mergeExact(sum,actual.part.usd!);assert.equal(exactValue(sum),exactValue(expected.part.usd!));
-    assert.equal(sum.nan,expected.part.usd!.nan);assert.equal(sum.pinf,expected.part.usd!.pinf);
+    assert.deepEqual({...actual,usd:null},{...expected,usd:null});
+    assert.equal(actual.usd,null,"assignment counts do not copy the independent cost ledger");
     queries.length=0;
     const updated=entries.map(row=>({...row,builtAt:"2026-10-30T17:01:00.000Z",indexSegments:row.indexSegments.map((segment,i)=>({...segment,lastActivityAt:i?at:"2026-10-30T17:00:30.000Z"}))}));
     await repo.save(updated,[],[],heads);

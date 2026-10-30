@@ -22,10 +22,8 @@ export interface OwnerAssignmentHead {
   readonly members: readonly string[];
   readonly clause: string | null;
   readonly subjectId: string | null;
-  readonly usd: boolean;
   readonly versions: Readonly<Record<string, string>>;
 }
-export interface OwnerAssignmentContribution { readonly part: AssignmentPart; readonly usdRows: number }
 
 export interface OwnerStateWrite {
   readonly id: string;
@@ -36,7 +34,7 @@ export interface OwnerStateWrite {
 export interface OwnerAssignmentRows {
   read(ids: readonly string[]): Promise<readonly OwnerAssignmentRow[]>;
   heads(ids: readonly string[]): Promise<readonly OwnerAssignmentHead[]>;
-  contributions(ids: readonly string[]): Promise<ReadonlyMap<string, OwnerAssignmentContribution>>;
+  contributions(ids: readonly string[]): Promise<ReadonlyMap<string, AssignmentPart>>;
   find(input: { readonly members?: readonly string[]; readonly clauses?: readonly string[]; readonly dueAt?: string }): Promise<readonly string[]>;
   save(rows: readonly OwnerAssignmentRow[], removed: readonly string[], states?: readonly OwnerStateWrite[], prior?: readonly OwnerAssignmentHead[]): Promise<void>;
   scopeMembers(identities: readonly { readonly key: string; readonly ref: string }[]): Promise<ReadonlyMap<string, readonly string[]>>;
@@ -91,13 +89,12 @@ const fieldsOf = (row: OwnerAssignmentRow): Record<string, unknown> => ({
 });
 export function ownerAssignmentHeadOf(row: OwnerAssignmentRow): OwnerAssignmentHead {
   return {id:row.id,state:row.state,members:row.group.members,clause:row.group.clause,subjectId:row.group.obligation?.subjectId??null,
-    usd:row.group.usd!==null,versions:Object.fromEntries(Object.entries(fieldsOf(row)).map(([key,value])=>[key,digest(value)]))};
+    versions:Object.fromEntries(Object.entries(fieldsOf(row)).map(([key,value])=>[key,digest(value)]))};
 }
-export function ownerAssignmentContributions(rows: readonly OwnerAssignmentRow[]): ReadonlyMap<string,OwnerAssignmentContribution> {
+export function ownerAssignmentContributions(rows: readonly OwnerAssignmentRow[]): ReadonlyMap<string,AssignmentPart> {
   const states = new Map<string,OwnerAssignmentRow[]>();
   for (const row of rows) states.set(row.state,[...(states.get(row.state)??[]),row]);
-  return new Map([...states].map(([state,items])=>[state,{part:mergeAssignmentParts(items.map(row=>({...row.part,candidates:[]})),"1970-01-01T00:00:00.000Z"),
-    usdRows:items.filter(row=>row.group.usd!==null).length}]));
+  return new Map([...states].map(([state,items])=>[state,mergeAssignmentParts(items.map(row=>({...row.part,usd:null,candidates:[]})),"1970-01-01T00:00:00.000Z")]));
 }
 function rowPatch(row: OwnerAssignmentRow, before: OwnerAssignmentHead | undefined): Record<string,unknown> {
   if (!before) return {...row};
@@ -114,35 +111,28 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
     read: async ids => ids.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`, [ids]) : [],
     async heads(ids) {
       if (!ids.length) return [];
-      const found = await sql.query(`SELECT id,state_code AS state,members,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
-        coalesce(value #> '{group,usd}' <> 'null'::jsonb,false) AS usd,
+      return await sql.query(`SELECT id,state_code AS state,members,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
         jsonb_build_object('g',md5(((value->'group')-'members'-'publications')::text),'m',md5(members::text),
           'p',md5((value #> '{group,publications}')::text),'s',md5((SELECT jsonb_agg(segment-'lastActivityAt' ORDER BY ordinal)
             FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),
           'a',md5((SELECT jsonb_agg(segment->'lastActivityAt' ORDER BY ordinal)
             FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),'c',md5((value->'part')::text)) AS versions
         FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`,[ids]) as OwnerAssignmentHead[];
-      return found;
     },
     async contributions(ids) {
       if (!ids.length) return new Map();
       const found = await sql.query(`WITH RECURSIVE selected AS MATERIALIZED (
-        SELECT state_code AS state,value->'part' AS part,value #> '{group,usd}' <> 'null'::jsonb AS measured
+        SELECT state_code AS state,value->'part' AS part
         FROM cp_owner_assignment_rows WHERE id=ANY($1::text[])
       ), leaves(state,path,value) AS (
         SELECT state,ARRAY[]::text[],part-'usd'-'candidates' FROM selected
         UNION ALL SELECT state,path||e.key,e.value FROM leaves l
           CROSS JOIN LATERAL jsonb_each(CASE WHEN jsonb_typeof(l.value)='object' THEN l.value ELSE '{}'::jsonb END) e
-      ), counts AS (SELECT state,path,sum((value #>> '{}')::bigint) AS n FROM leaves WHERE jsonb_typeof(value)='number' GROUP BY state,path),
-      partials AS (SELECT state,p.value,count(*) AS n FROM selected
-        CROSS JOIN LATERAL jsonb_array_elements(coalesce(nullif(part #> '{usd,p}','null'::jsonb),'[]'::jsonb)) p(value) GROUP BY state,p.value)
-      SELECT s.state,count(*) FILTER(WHERE measured)::integer AS "usdRows",
+      ), counts AS (SELECT state,path,sum((value #>> '{}')::bigint) AS n FROM leaves WHERE jsonb_typeof(value)='number' GROUP BY state,path)
+      SELECT s.state,
         coalesce((SELECT jsonb_agg(jsonb_build_array(path,n) ORDER BY path) FROM counts c WHERE c.state=s.state),'[]'::jsonb) AS counts,
-        coalesce((SELECT jsonb_agg(jsonb_build_array(value,n)) FROM partials p WHERE p.state=s.state),'[]'::jsonb) AS partials,
-        (SELECT jsonb_agg(g.value) FROM selected i CROSS JOIN LATERAL jsonb_array_elements(i.part #> '{askGaps,open}') g(value) WHERE i.state=s.state) AS open,
-        jsonb_build_object('nan',sum(coalesce((part #>> '{usd,nan}')::bigint,0)),
-          'pinf',sum(coalesce((part #>> '{usd,pinf}')::bigint,0)),'ninf',sum(coalesce((part #>> '{usd,ninf}')::bigint,0))) AS nonfinite
-      FROM selected s GROUP BY s.state`,[ids]) as {state:string;usdRows:number;counts:[string[],number][];partials:[number,number][];open:AssignmentPart["askGaps"]["open"]|null;nonfinite:Record<string,number>}[];
+        (SELECT jsonb_agg(g.value) FROM selected i CROSS JOIN LATERAL jsonb_array_elements(i.part #> '{askGaps,open}') g(value) WHERE i.state=s.state) AS open
+      FROM selected s GROUP BY s.state`,[ids]) as {state:string;counts:[string[],number][];open:AssignmentPart["askGaps"]["open"]|null}[];
       return new Map(found.map(row=>{
         const part = structuredClone(assignmentPartOf([],"1970-01-01T00:00:00.000Z"));
         for (const [path,value] of row.counts) {
@@ -150,9 +140,7 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
           for (const key of path.slice(0,-1)) target = (target[key]??={}) as Record<string,unknown>;
           target[path[path.length-1]] = Number(value);
         }
-        const dollars = row.usdRows ? {p:row.partials.flatMap(([value,n])=>Array<number>(Number(n)).fill(value)),
-          ...Object.fromEntries(Object.entries(row.nonfinite).filter(([,value])=>Number(value)!==0).map(([key,value])=>[key,Number(value)]))} : null;
-        return [row.state,{part:{...part,usd:dollars,askGaps:{...part.askGaps,open:row.open??[]}},usdRows:Number(row.usdRows)}];
+        return [row.state,{...part,askGaps:{...part.askGaps,open:row.open??[]}}];
       }));
     },
     async find(input) {
@@ -174,7 +162,7 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
               SELECT patch->>'id' AS id,patch->>'state' AS state,patch FROM jsonb_array_elements($1::jsonb) p(patch)
             ), changed AS (
               UPDATE cp_owner_assignment_rows r SET state_code=p.state,value=(r.value || (p.patch-'group'-'indexActivity')) ||
-                CASE WHEN p.patch ? 'group' THEN jsonb_build_object('group',(r.value->'group') || (p.patch->'group')) ELSE '{}'::jsonb END ||
+                CASE WHEN p.patch ? 'group' THEN jsonb_build_object('group',(r.value->'group'-'usd'-'items'-'scoutKeys') || (p.patch->'group')) ELSE '{}'::jsonb END ||
                 CASE WHEN p.patch ? 'indexActivity' THEN jsonb_build_object('indexSegments',(
                   SELECT jsonb_agg(segment || jsonb_build_object('lastActivityAt',p.patch->'indexActivity'->(ordinal-1)::integer) ORDER BY ordinal)
                   FROM jsonb_array_elements(r.index_segments) WITH ORDINALITY s(segment,ordinal))) ELSE '{}'::jsonb END

@@ -36,7 +36,6 @@ import {
   type PlaceTotals,
   type SpendByPlaceView,
 } from "./cost-panel.ts";
-import { exactSum, mergeExact, subtractExact, type ExactSum } from "./exact-sum.ts";
 import type { OwnerAssignmentHead, OwnerAssignmentRow } from "./repository/owner-assignment-rows.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
 import type { AskGapCode } from "../ask/gap-codes.ts";
@@ -145,10 +144,6 @@ export interface CostTotals {
 /** One assignment's carried figures beside its published rows. */
 export interface GroupTotals {
   readonly members: readonly string[];
-  readonly usd: ExactSum | null;
-  readonly items: readonly string[];
-  /** The Scout-result log keys its work items and attempts are recorded under. */
-  readonly scoutKeys: readonly string[];
   readonly obligation: AssignmentClock | null;
   /** Its work items with a publication outcome, narrowed to what the public readbacks read. */
   readonly publications: readonly WorkItem[];
@@ -167,7 +162,6 @@ export interface StateTotals {
 /** What a state adds to the national figures; changed assignments update these counts by subtraction and addition. */
 export interface StatePart {
   readonly builtAt: string;
-  readonly usdRows: number;
   readonly assignments: AssignmentPart;
   /** Standing obligations by the state name their id and subject carry, "other" for none. */
   readonly obligations: Readonly<Record<string, number>>;
@@ -581,7 +575,7 @@ interface Loaded {
 
 
 /** Subtract the replaced entries and add their new contributions; every other count stays in its small row. */
-export function updateAssignmentPart(prior: AssignmentPart, before: readonly AssignmentPart[], after: readonly AssignmentPart[], usdRows: number): AssignmentPart {
+export function updateAssignmentPart(prior: AssignmentPart, before: readonly AssignmentPart[], after: readonly AssignmentPart[]): AssignmentPart {
   const out = structuredClone(prior) as { -readonly [K in keyof AssignmentPart]: AssignmentPart[K] };
   const add = (into: Record<string, number>, from: Readonly<Record<string, number>>, sign: number) => {
     for (const [key, n] of Object.entries(from)) { into[key] = (into[key] ?? 0) + sign * n; if (into[key] === 0) delete into[key]; }
@@ -595,7 +589,6 @@ export function updateAssignmentPart(prior: AssignmentPart, before: readonly Ass
   };
   const open = [...out.askGaps.open];
   let askRows = out.askGaps.rows;
-  const sum = structuredClone(out.usd ?? exactSum());
   for (const [sign, parts] of [[-1, before], [1, after]] as const) for (const part of parts) {
     out.total += sign * part.total;
     add(out.groups as Record<string, number>, part.groups, sign);
@@ -608,15 +601,8 @@ export function updateAssignmentPart(prior: AssignmentPart, before: readonly Ass
       if (sign === 1) open.push(gap);
       else { const index = open.findIndex(row => row.bodyId === gap.bodyId && row.code === gap.code); if (index >= 0) open.splice(index, 1); }
     }
-    if (part.usd !== null) {
-      if (sign === 1) mergeExact(sum, part.usd);
-      else {
-        for (const value of part.usd.p) subtractExact(sum, value);
-        for (const key of ["nan", "pinf", "ninf"] as const) if (part.usd[key]) { sum[key] = (sum[key] ?? 0) - part.usd[key]!; if (sum[key] === 0) delete sum[key]; }
-      }
-    }
   }
-  out.usd = usdRows === 0 ? null : sum;
+  out.usd = null;
   out.askGaps = { rows: askRows, open };
   return out;
 }
@@ -1039,7 +1025,7 @@ export class OwnerSnapshotFold {
     for (const row of await this.#repos.ownerAssignmentRows.heads(unique(ids).filter(id => !this.#priorRows.has(id)))) {
       await this.#load(row.state);
       this.#priorRows.set(row.id,row);
-      this.#setGroup(row.state,row.id,{members:row.members,clause:row.clause,obligation:null,usd:null,items:[],scoutKeys:[],publications:[]});
+      this.#setGroup(row.state,row.id,{members:row.members,clause:row.clause,obligation:null,publications:[]});
     }
   }
 
@@ -1051,7 +1037,7 @@ export class OwnerSnapshotFold {
     for(const [state,loaded]of this.#loaded){
       const after=[...loaded.groups].sort().filter(id=>this.#index.has(id)).map(id=>{
         const group=this.#groups.get(id)!,indexSegments=this.#index.get(id)!;
-        const entry={...group,index:segmentAt(indexSegments,now)};
+        const entry={...group,usd:null,index:segmentAt(indexSegments,now)};
         const part={...assignmentPartOf([[id,entry]],now),candidates:[]};
         const row:OwnerAssignmentRow={id,state,builtAt:now,group,indexSegments,part,
           nextAt:indexSegments.map(segment=>segment.until).filter((at):at is string=>at!==null&&at>now).sort()[0]??null};
@@ -1061,8 +1047,7 @@ export class OwnerSnapshotFold {
       const mark=(id:string,subject:string,sign:number)=>{const name=obligationStateName(id,subject);obligations[name]=(obligations[name]??0)+sign;if(!obligations[name])delete obligations[name];};
       for(const row of this.#priorRows.values())if(row.state===state&&this.#replaced.has(row.id)&&row.subjectId!==null)mark(row.id,row.subjectId,-1);
       for(const row of after)if(row.group.obligation)mark(row.id,row.group.obligation.subjectId,1);
-      const usdRows=(previous?.usdRows??0)-(prior?.usdRows??0)+after.filter(row=>row.group.usd!==null).length;
-      this.#states[state]={builtAt:now,usdRows,assignments:{...updateAssignmentPart(previous?.assignments??assignmentPartOf([],now),prior?[prior.part]:[],after.map(row=>row.part),usdRows),candidates:[]},
+      this.#states[state]={builtAt:now,assignments:{...updateAssignmentPart(previous?.assignments??assignmentPartOf([],now),prior?[prior]:[],after.map(row=>row.part)),candidates:[]},
         obligations,spend:placeSumOf(loaded.places)};
     }
     if(this.#input.write){
@@ -1123,7 +1108,7 @@ export class OwnerSnapshotFold {
     for(const id of probes){const group=this.#groupOf.get(id);if(group)ids.add(group);}
     for(let round=0;;round++){
       if(round>16)throw new Error(`assignment membership did not settle for ${[...ids].slice(0,5).join(", ")}`);
-      const src=await this.#repos.ownerAssignmentHeads.read({groups:[...ids],obligations:[...ids],workItems:probes},this.#input.nowIso);
+      const src=await this.#repos.ownerAssignmentHeads.read({groups:[...ids],workItems:probes},this.#input.nowIso);
       const derived=deriveAssignmentEntriesFromHeads(src.heads,this.#input.nowIso);
       const produced=new Map([...derived].map(([id,entry])=>[id,{...entry,members:src.members.get(id)??[]}]));
       const items=new Map(src.workItems.map(w=>[w.id,w]));
@@ -1139,7 +1124,7 @@ export class OwnerSnapshotFold {
       for(const id of ids){
         const entry=produced.get(id);if(!entry)continue;
         const state=stateOfEntry(id,entry),own=entry.members.flatMap(member=>items.get(member)?[items.get(member)!]:[]);
-        this.#setGroup(state,id,{members:entry.members,usd:null,items:[],scoutKeys:[],obligation:entry.obligation,
+        this.#setGroup(state,id,{members:entry.members,obligation:entry.obligation,
           publications:own.filter(item=>item.publicationOutcome).map(narrowPublication),clause:entry.index.kind==="WORK_ITEM"?clauseObligation(items.get(id)?.obligation??""):null});
         this.#index.set(id,this.#segments(heads.get(id)!));
       }

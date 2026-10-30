@@ -2530,9 +2530,6 @@ export function assignmentHeadBatchFromSources(src: AssignmentSummarySources): {
   return { heads: [...grouped.values()].map(member => headOf(gather(member, idx), idx)),
     members: new Map([...grouped].map(([id, member]) => [id, [...member.workItemIds]])) };
 }
-export function assignmentHeadsFromSources(src: AssignmentSummarySources): AssignmentHead[] {
-  return assignmentHeadBatchFromSources(src).heads;
-}
 
 /** Every assignment `src` holds whole, or only those named in `only`, as the snapshot carries it. */
 export function deriveAssignmentEntries(src: AssignmentSummarySources, only?: ReadonlySet<string>): Map<string, AssignmentEntry> {

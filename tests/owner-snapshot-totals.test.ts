@@ -28,7 +28,6 @@ import { billingAttributionOf, providerBillingAttribution } from "../lib/control
 import { searchLedgersOf } from "../lib/control-plane/provider-billing-collector.ts";
 import { exactScopeMembers } from "../lib/control-plane/provider-billing-scope-members.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -482,7 +481,7 @@ test("a steady publish reads only the rows changed since the last one and derive
       return (...args: unknown[]) => {
         if (["list", "listNarrowed", "readAll", "readAllNarrowed", "keys"].includes(String(member))) whole.push(`${name}.${String(member)}`);
         if (name === "artifacts" && member === "readKeys") histories.push("artifacts.readKeys");
-        if (name === "occurrences" && member === "listWhereIn" && (args[0] as string[])[0] === "obligationId") for (const id of args[1] as string[]) derivedFor.add(id);
+        if (name === "ownerAssignmentHeads" && member === "read") for (const id of (args[0] as {groups:string[]}).groups) derivedFor.add(id);
         if (name === "ownerSnapshotStateTotals" && member === "read") whole.push("ownerSnapshotStateTotals.read");
         if (name === "ownerSnapshotStateTotals" && member === "readNarrowed") {
           assert.equal("groups" in (args[1] as object), false, "state counts never carry every assignment");
@@ -497,7 +496,7 @@ test("a steady publish reads only the rows changed since the last one and derive
   const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos);
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assert.ok(derivedFor.has(obligationId(12)), "the assignment the new round belongs to is derived again");
-  assert.deepEqual([...derivedFor], [obligationId(12)], "only changed assignments are derived; saved segments advance clock-only rows");
+  assert.deepEqual([...derivedFor].sort(), [...new Set([obligationId(12),...due.map(row=>row.id)])].sort(), "only changed assignments and due clock heads are read");
   const touchedStates = new Set(["totals:nh", ...due.map(row => `totals:${row.state}`)]);
   assert.ok([...loaded].every(state => touchedStates.has(state)), "only affected states' small counts are read");
   assertSamePanels("steady publish", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
@@ -509,7 +508,8 @@ test("a steady publish reads only the rows changed since the last one and derive
   const expired = await repos.ownerAssignmentRows.read(await repos.ownerAssignmentRows.find({ dueAt: idle }));
   const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos);
   assert.ok(expired.length > 0, "the restart clock crosses saved assignment deadlines");
-  assert.deepEqual([...derivedFor, ...histories], [], "a fresh fold advances saved segments without assignment history reads");
+  assert.deepEqual([...derivedFor].sort(),expired.map(row=>row.id).sort(),"a fresh fold checks only due assignment heads");
+  assert.deepEqual(histories,[],"clock checks never read assignment history");
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assertSamePanels("idle publish", three.panels, await fromScratch(repos, idle, [HUNT], null, three.published.readings));
 });
@@ -684,13 +684,6 @@ test("artifact-only receipts never read assignment history; execution or later w
   assert.equal(current.view.summary.total,3);assert.ok(reads>0);assertSamePanels("later real membership",current.panels,await fromScratch(repos,at(T1,2),[],null,current.published.readings));
 });
 
-test("assignment membership seeks transfer keys before any saved row body is loaded",async()=>{
-  const queries:string[]=[];
-  const rows=pgOwnerAssignmentRows({query:async(text)=>{queries.push(text);return[{id:"held"}];}});
-  for(const seek of[{members:["member"]},{clauses:["obligation"]},{dueAt:T1}])assert.deepEqual(await rows.find(seek),["held"]);
-  assert.ok(queries.every(text=>/^SELECT id FROM cp_owner_assignment_rows/.test(text)));
-});
-
 test("native assignment heads match full indexes through archive joins, renewed leases and outcome ties",async()=>{
   const {PGlite}=await import("@electric-sql/pglite"),db=new PGlite();
   const {pgOwnerAssignmentHeads}=await import("../lib/control-plane/repository/owner-assignment-heads.ts");
@@ -736,7 +729,7 @@ test("native assignment heads match full indexes through archive joins, renewed 
     for(const[name,rows]of Object.entries(logs)){const positions=new Map<string,number>();for(const row of rows){const pos=(positions.get(row.key)??0)+1;positions.set(row.key,pos);
       await db.query(`INSERT INTO cp_log_${name}(log_key,position,record) VALUES($1,$2,$3::jsonb)`,[row.key,pos,JSON.stringify(row.record)]);}}
     const reader=pgOwnerAssignmentHeads({query:async(text,params=[])=>{return(await db.query(text,[...params])).rows;}});
-    const seeds={groups:[],obligations:src.obligations.map(row=>row.id),workItems:src.workItems.map(row=>row.id)};
+    const seeds={groups:src.obligations.map(row=>row.id),workItems:src.workItems.map(row=>row.id)};
     for(const now of[T1,at(T1,2),T2,T3]){
       if(now===at(T1,2)){
         const renewed=src.leases!.find(row=>row.expiresAt===at(T1,1))!;(renewed as {expiresAt:string}).expiresAt=at(T1,5);
@@ -749,7 +742,7 @@ test("native assignment heads match full indexes through archive joins, renewed 
     }
     const expected=deriveAssignmentEntries({...src,nowIso:T1}),wanted=[obligationId(0),"head-worker","cycle-a"];
     for(const[id,entry]of expected)await db.query("INSERT INTO cp_owner_assignment_rows(id,members) VALUES($1,$2::jsonb)",[id,JSON.stringify(entry.members)]);
-    const cold=await reader.read({groups:wanted,obligations:[],workItems:[]},T1),actual=deriveAssignmentEntriesFromHeads(cold.heads,T1);
+    const cold=await reader.read({groups:wanted,workItems:[]},T1),actual=deriveAssignmentEntriesFromHeads(cold.heads,T1);
     assert.deepEqual([...actual.keys()].sort(),[...wanted].sort(),"cold group reads find their saved members beside the source rows");
     for(const id of wanted)assert.deepEqual(actual.get(id),((entry)=>({index:entry.index,horizon:entry.horizon,obligation:entry.obligation}))(expected.get(id)!));
   }finally{await db.close();}

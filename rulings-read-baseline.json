@@ -1164,10 +1164,6 @@
       "table": "cp_log_discovery_attempts"
     },
     {
-      "file": "lib/civic-data/national-government-finance.ts",
-      "table": "cp_work_items"
-    },
-    {
       "file": "lib/civic-data/owner-refresh.ts",
       "table": "cp_admin_config"
     },
@@ -1178,10 +1174,6 @@
     {
       "file": "lib/civic-data/routine-due-request.ts",
       "table": "cp_admin_config"
-    },
-    {
-      "file": "lib/civic-data/special-district-boundaries.ts",
-      "table": "cp_work_items"
     },
     {
       "file": "lib/civic-data/worker-ballot-contests.ts",

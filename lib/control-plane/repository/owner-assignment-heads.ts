@@ -169,18 +169,20 @@ round_keys AS MATERIALIZED (
     ORDER BY ${timestamp("a.value->>'startedAt'")},coalesce(${timestamp("a.value->>'endedAt'")},${timestamp("a.value->>'startedAt'")}),a.attempt)] FROM orphan_tasks a
 ),
 rounds AS MATERIALIZED (SELECT r.id,r.task,r.ordering,coalesce(t.value,missing.value) AS value FROM round_keys r LEFT JOIN tasks t ON t.id=r.id AND t.task=r.task
-  LEFT JOIN LATERAL (SELECT ${pick("value","id createdAt state")} AS value FROM cp_route_tasks_history WHERE t.task IS NULL AND id=r.task ORDER BY revision DESC LIMIT 1) missing ON true),
+  LEFT JOIN LATERAL (SELECT ${pick("value","id createdAt state")} AS value FROM cp_route_tasks_history WHERE t.task IS NULL AND r.ordering[1]=0 AND id=r.task ORDER BY revision DESC LIMIT 1) missing ON true),
 attempts AS MATERIALIZED (SELECT r.id,r.task,r.ordering,a.id AS attempt,a.value,${timestamp("a.value->>'startedAt'")} AS started_at,
     coalesce(${timestamp("a.value->>'endedAt'")},${timestamp("a.value->>'startedAt'")}) AS activity_at
   FROM rounds r CROSS JOIN LATERAL (SELECT id,${attemptFields("value")} AS value FROM cp_attempts WHERE value#>>'{routeTaskId}'=r.task OFFSET 0) a),
 latest AS MATERIALIZED (SELECT DISTINCT ON(a.id) a.* FROM attempts a
   ORDER BY a.id,a.activity_at DESC NULLS LAST,a.ordering DESC,a.started_at DESC NULLS LAST,a.attempt DESC),
-outcome_tasks AS MATERIALIZED (SELECT l.id,l.task,t.value FROM latest l CROSS JOIN LATERAL
+outcome_tasks AS MATERIALIZED (SELECT l.id,l.task,t.value FROM latest l JOIN rounds r ON r.id=l.id AND r.task=l.task AND r.ordering=l.ordering AND r.value IS NOT NULL CROSS JOIN LATERAL
   (SELECT ${taskFields("value")} AS value FROM cp_route_tasks_history WHERE id=l.task ORDER BY revision DESC LIMIT 1) t),
 scouts AS MATERIALIZED (SELECT wanted.attempt,s.record FROM
   (SELECT attempt FROM latest UNION SELECT value#>>'{disposition,attemptId}' FROM outcome_tasks WHERE value#>>'{disposition,attemptId}' IS NOT NULL) wanted
-  CROSS JOIN LATERAL (SELECT ${scoutFields("record")} AS record FROM cp_log_scout_results WHERE record->>'attemptId'=wanted.attempt
-    ORDER BY record->>'recordedAt' DESC,log_key DESC,position DESC LIMIT 1) s),
+  CROSS JOIN LATERAL (SELECT chosen.record FROM (SELECT ${scoutFields("record")} AS record,log_key,position,
+    first_value(pg_input_is_valid(record->>'recordedAt','timestamptz')) OVER(ORDER BY log_key,position) AS valid FROM cp_log_scout_results WHERE record->>'attemptId'=wanted.attempt) chosen
+    ORDER BY CASE WHEN valid THEN ${timestamp("chosen.record->>'recordedAt'")} END DESC NULLS LAST,
+      CASE WHEN valid THEN log_key END DESC,CASE WHEN valid THEN position END DESC,log_key,position LIMIT 1) s),
 workers AS MATERIALIZED (SELECT DISTINCT ON(s.record->>'attemptId') s.record->>'attemptId' AS attempt,${workerFields("s.record")} AS record
   FROM cp_log_worker_results s WHERE s.log_key IN(SELECT member FROM members) AND s.record->>'attemptId' IN(SELECT attempt FROM latest)
   ORDER BY s.record->>'attemptId',s.log_key DESC,s.position DESC),

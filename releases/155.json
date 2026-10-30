@@ -1,0 +1,13 @@
+{
+  "n": 155,
+  "branch": "release/155",
+  "candidate_sha": "a7b5d676b75c170d3d71fbf72ac1d2d298829a6d",
+  "base_river_sha": "f99e414987623673305ca77e3ada0fb51e3b56f4",
+  "main_sha": "74e1fc2933fb246274d0e8528d5b2e862421cd3d",
+  "steps": [
+    "CP-01"
+  ],
+  "ci": "preparing",
+  "authorization": "Sean: Authorize one CP-01 release; protected release before READY, then a complete LIVE hour below 10 MB.",
+  "at": "2026-10-30T04:54:04.241020+00:00"
+}

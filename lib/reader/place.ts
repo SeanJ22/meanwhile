@@ -170,7 +170,7 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
   const saved=rows.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),row.body_headers as BodyHeaders ?? {}),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at}));
   // A page saved before sittings were read from the fact store holds no calendar to compose; it reads as unbuilt until its rebuild.
-  if(saved.some(row=>!Array.isArray(row.agenda_documents)))return readUnbuiltPlace(input,query);
+  if(saved.some(row=>!Array.isArray((row as Record<string,unknown>).agenda_documents)))return readUnbuiltPlace(input,query);
   const merged=mergePlaceRows(canonical,saved);
   const place=await composePlaceRow(canonical,merged);
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));

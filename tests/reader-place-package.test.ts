@@ -485,7 +485,7 @@ test("an opened ready agenda keeps exact documents, neighbour URL ownership and 
     await canonicalTables(db);
     const meeting = {id:"onbase:target",mergedMeetingIds:["alias:target"],bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
       startsAt:"2026-10-20T17:00:00-07:00",timeZone:"America/Phoenix",location:null,agendaUrl:"https://example.gov/shared-agenda",
-      jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
+      jurisdiction:"Tucson, AZ",status:"SCHEDULED" as const,provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
     const peer = {...meeting,id:"ical:target",mergedMeetingIds:[],videoUrl:"https://example.gov/video"};
     const neighbor = {...meeting,id:"onbase:neighbor",mergedMeetingIds:[],startsAt:"2026-10-25T17:00:00-07:00"};
     const neighborPeer = {...neighbor,id:"ical:neighbor",videoUrl:"https://example.gov/neighbor-video"};
@@ -575,7 +575,7 @@ test("ready agendas restore every document, alias and extraction variant from in
     await canonicalTables(db);
     const meeting = {id:"portal:agenda",mergedMeetingIds:["alias:opened-agenda"],bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
       startsAt:"2026-10-20T17:00:00-07:00",timeZone:"America/Phoenix",location:null,agendaUrl:"https://example.gov/agenda",
-      jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
+      jurisdiction:"Tucson, AZ",status:"SCHEDULED" as const,provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT}};
     const other = {...meeting,id:"ical:agenda",mergedMeetingIds:[],videoUrl:"https://example.gov/video"};
     const text = "EXACT AGENDA TEXT ".repeat(2500),variant = text+"\nDifferent verified extraction.";
     const document = {id:"portal-original",meetingId:meeting.id,ocdId:CITY,documentUrl:meeting.agendaUrl,contentHash:"c".repeat(64),retrievedAt:AT,
@@ -698,7 +698,7 @@ test("one place query preserves source-only bodies, local runtime records and th
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'CURATED_READER_RECORD',$2,$3,$4,'routing-version')",
       [`${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`,EVERYDAY_ROUTING_POINTER.scope,JSON.stringify(routing),AT]);
     const meeting = {id:"ical:source-only",bodyId:BODY,ocdId:CITY,bodyName:body.name,title:"Public hearing",startsAt:"2026-10-21T18:00:00-07:00",
-      timeZone:"America/Phoenix",location:null,agendaUrl:SOURCE,jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:body.provenance};
+      timeZone:"America/Phoenix",location:null,agendaUrl:SOURCE,jurisdiction:"Tucson, AZ",status:"SCHEDULED" as const,provenance:body.provenance};
     const family = {formatVersion:1,generatedAt:AT,meetings:[meeting,{...meeting,id:"ical:special",bodyId:SPECIAL,bodyName:special.name},
       {...meeting,id:"ical:elsewhere",bodyId:elsewhereBody}],agendaDocuments:[],sources:[],counts:{fresh:3,carried:0,total:3}};
     const scope = derivedMeetingFamilyScope("US-AZ");

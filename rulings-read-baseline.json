@@ -281,13 +281,13 @@
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 854
+      "line": 858
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 863
+      "line": 867
     },
     {
       "file": "scripts/split-federal-people.mts",
@@ -506,10 +506,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "lib/civic-data/planner-archive-state-read.ts",
-      "table": "civic_data_candidates"
-    },
-    {
       "file": "lib/civic-data/planner-clock-state-read.ts",
       "table": "civic_data_candidate_events"
     },
@@ -519,18 +515,6 @@
     },
     {
       "file": "lib/civic-data/planner-clock-state-read.ts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/civic-data/planner-meeting-state-read.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/civic-data/planner-meeting-state-read.ts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "lib/civic-data/planner-meeting-state-read.ts",
       "table": "civic_data_promotions"
     },
     {
@@ -884,14 +868,6 @@
     {
       "file": "lib/reader/page-subjects.ts",
       "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/reader/place-builder.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/reader/place-builder.ts",
-      "table": "civic_data_candidates"
     },
     {
       "file": "lib/reader/place-builder.ts",

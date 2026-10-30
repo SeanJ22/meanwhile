@@ -336,7 +336,7 @@ test("ZIP sampling: one random ZIP in each of the 50 states, from the ZIP index"
   assert.match(sql.facts, /f\.status = 'live' AND f\.live_at >= timestamptz '2026-10-29T06:51:00Z' - interval '24 hours'/);
   assert.match(sql.facts, /NOT EXISTS \(SELECT 1 FROM fact p .* p\.value_text = f\.value_text\)/, "a value already shown doesn't count");
   assert.match(sql.facts, /place_page_dependency/, "only facts on a reader's page count");
-  assert.match(measureSql("2026-10-29T06:51:00Z", true).reads, /request_bytes \+ response_bytes/);
+  for (const after of [false, true]) assert.match(measureSql("2026-10-29T06:51:00Z", after).reads, /sum\(response_bytes\) \/ 1e9/, "only the billed response bytes count");
 });
 
 test("arguments: --k v, --k=v and bare boolean flags", () => {

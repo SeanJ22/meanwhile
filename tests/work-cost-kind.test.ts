@@ -67,6 +67,8 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   assert.equal((await claims.claim(true))?.taskIds.length, 1);
   const ask = await newest();
   assert.equal(ask.item.autonomousPlan?.workKind, "ask");
+  const askRow = (await rows("SELECT id FROM work WHERE kind = 'ask'"))[0]!.id;
+  assert.deepEqual([ask.item.id, ask.task.id], [askRow, askRow], "the row's id is the work item's id and the task's id");
   await hunt(ask.item, ask.task, false);
   const charges = (await rows("SELECT work_kind, usd FROM cp_model_charges")) as { work_kind: string | null; usd: number }[];
   assert.ok(charges.length > 0 && charges.every(charge => charge.work_kind === "ask"), "every charge the hunt made says Ask question");
@@ -88,4 +90,18 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   assert.deepEqual(after.slice(2).map(k => k.usd), [null, null]);
   const total = (await rows("SELECT sum(usd) AS usd FROM cp_model_charges"))[0]!.usd as number;
   assert.ok(Math.abs((await readSpendWindow(repos, now())).windowUsd - total) < 1e-9, "both kinds are in the one daily pot");
+
+  // Tick three: a lane dies after its hunt ended but before the row was settled. The lease runs out, the row is reclaimed once, and it is not hunted again.
+  await list.sooner({ placeId: division, subjectId: `${division}#clerk`, subjectType: "body" });
+  assert.equal((await claims.claim(true))?.taskIds.length, 1);
+  const crashed = await newest();
+  await hunt(crashed.item, crashed.task, true);
+  const spent = (await rows("SELECT count(*)::int AS n FROM cp_model_charges"))[0]!.n;
+  await rows("UPDATE work SET lease_until = now() - interval '1 minute' WHERE status = 'taken'");
+  const next = hunterClaims({ list: workList(rows, { owner: "kind-test-2" }), repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
+  await next.select(["az"], false);
+  assert.equal(await next.claim(true), null, "the reclaimed row's hunt had ended, so it is finished and no task is handed out");
+  assert.equal(await next.claim(true), null, "and it is not claimed again");
+  assert.deepEqual((await rows("SELECT status, attempts FROM work WHERE id = $1", [crashed.task.id])).map(row => `${row.status}:${row.attempts}`), ["done:2"], "claimed twice, worked once");
+  assert.equal((await rows("SELECT count(*)::int AS n FROM cp_model_charges"))[0]!.n, spent, "no second charge");
 });

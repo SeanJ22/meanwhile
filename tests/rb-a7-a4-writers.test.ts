@@ -15,8 +15,8 @@ const purge = async () => ({ purged: true });
 
 const claim = (places: readonly EntityPlace[]): DoorInput => ({
   subjectId: BODY, places, field: "office_phone", fieldKind: "contact", provenance: "OFFICIAL", acquisition: "loader",
-  value: "520-555-0100", valueText: "520-555-0100", quote: "", producedBy: "fixture", costUsd: 0,
-  copy: { id: 1, finalUrl: "https://example.gov/board", text: "", fetchedAt: AT, isArchive: false },
+  value: "520-555-0100", valueText: "520-555-0100", quote: "Office phone 520-555-0100", producedBy: "fixture", costUsd: 0,
+  copy: { id: 1, finalUrl: "https://example.gov/board", text: "Office phone 520-555-0100", fetchedAt: AT, isArchive: false },
 });
 
 async function fixture() {

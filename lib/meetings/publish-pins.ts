@@ -522,6 +522,17 @@ export async function placePublishedMeetingPins(input: {
   return { meetings, placedCount, held, responses, attempts };
 }
 
+/** Census's answer to a saved point's own request, read again; null when it cannot be read. */
+export async function readCensusPointAgain(url: string, options: { readonly fetchImpl?: typeof fetch; readonly clock: () => string }): Promise<RetainedSourceResponse | null> {
+  try {
+    if (new URL(url).hostname !== "geocoding.geo.census.gov") return null;
+    const read = await politeGetText(url, { signal: AbortSignal.timeout(8000), accept: "application/json", fetchImpl: options.fetchImpl });
+    const bytes = new TextEncoder().encode(read.text);
+    return { source: "census-geocoder", requestedUrl: url, finalUrl: url, httpStatus: read.status, rawHash: createHash("sha256").update(bytes).digest("hex"),
+      byteCount: bytes.length, bytes, retrievedAt: options.clock(), contentType: read.contentType || "application/json" };
+  } catch { return null; }
+}
+
 /** Resolve a relative event citation against the exact promoted publisher route. */
 export function absolutePublisherMeetingUrl(
   citation: string | null,

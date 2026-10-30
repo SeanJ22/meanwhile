@@ -22,8 +22,8 @@ export interface PublishInput extends Claim {
   readonly value: unknown;
   readonly producedBy: string;
   readonly costUsd: number;
-  /** Findings from a hunter or walker carry claims to check against the saved page. A "loader" is not checked yet; a "checked" loader quotes the exact line of its saved copy and is. */
-  readonly acquisition?: "loader" | "hunter" | "walker" | "checked";
+  /** Who read the source: plain code ("loader"), a hunter or a walker. Every fact is checked against the line it quotes on its saved copy. */
+  readonly acquisition?: "loader" | "hunter" | "walker";
 }
 
 export type PublishOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly blank: string };
@@ -49,37 +49,24 @@ const failureDetail = (c: Pick<PublishInput, "copy" | "fieldKind" | "provenance"
   JSON.stringify({ sourceUrl: c.copy.finalUrl, copyId: c.copy.id, fieldKind: c.fieldKind, provenance: c.provenance,
     value: c.value, valueText: c.valueText, quote: c.quote, producedBy: c.producedBy });
 
+/** A fact the check refuses is not published: its blank opens with the reason, for a detective. */
+const refusalBlank = (db: FactDb, clocks: Clocks) => async (claim: PublishInput, reason: string): Promise<void> => {
+  if (reason === "SUBJECT_NOT_FOUND") return;
+  await db.transaction(query => openBlank(query, { entityId: claim.entity.id, field: claim.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
+    detail: failureDetail(claim), retryMinutes: clocks.retryMinutes(claim.fieldKind) }));
+};
+
 /** Older callers retain their blank result; every fact is written by the same door. */
 export async function publishClaim(db: FactDb, input: PublishInput, clocks: Clocks, now = new Date(),
   options: { readonly purge?: ReaderCachePurger } = {}): Promise<PublishOutcome> {
-  const outcome = await door(db, input, clocks, now, { ...options, refusal: async (claim, reason) => {
-    if (reason === "SUBJECT_NOT_FOUND") return;
-    await db.transaction(query => openBlank(query, { entityId: claim.entity.id, field: claim.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
-      detail: failureDetail(claim), retryMinutes: clocks.retryMinutes(claim.fieldKind) }));
-  } });
+  const outcome = await door(db, input, clocks, now, { ...options, refusal: refusalBlank(db, clocks) });
   return "refused" in outcome ? { blank: outcome.refused } : outcome;
 }
 
-/**
- * A loader's fact is checked at `line`, the text of its saved copy that shows the value. A fact whose line cannot be found, or that
- * the check refuses, still publishes as the loader sends it (no loader stops), and its blank opens with the reason so a detective sees it.
- */
-export async function publishLoaded(db: FactDb, input: DoorInput, line: { readonly quote: string; readonly valueText: string } | null,
+/** A loader's fact is checked at `line`, the text of its saved copy that shows the value, or at the quote it carries when it has no line. */
+export function publishLoaded(db: FactDb, input: DoorInput, line: { readonly quote: string; readonly valueText: string } | null,
   clocks: Clocks, now: Date, options: { readonly purge?: ReaderCachePurger } = {}): Promise<DoorOutcome> {
-  let reason = "NO_EXACT_LINE";
-  if (line) {
-    const checked = await door(db, { ...input, ...line, acquisition: "checked" }, clocks, now, options);
-    if (!("refused" in checked)) return checked;
-    reason = checked.refused;
-  }
-  const outcome = await door(db, { ...input, acquisition: "loader" }, clocks, now, options);
-  if ("refused" in outcome || outcome.factId === null) return outcome;
-  await db.transaction(async query => {
-    const [fact] = await query("SELECT entity_id,field FROM fact WHERE id=$1", [outcome.factId]);
-    await openBlank(query, { entityId: String(fact!.entity_id), field: String(fact!.field), stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
-      detail: failureDetail(input), retryMinutes: clocks.retryMinutes(input.fieldKind) });
-  });
-  return outcome;
+  return door(db, { ...input, ...line, acquisition: "loader" }, clocks, now, { ...options, refusal: refusalBlank(db, clocks) });
 }
 
 /** A source recheck records its exact live fact versions together. */

@@ -56,7 +56,7 @@ test("a source read at any of its addresses retires what none of them shows", as
   } finally { await db.pg.close(); }
 });
 
-test("a loader's fact is checked at its line; one the check refuses or that has no line still publishes and opens its blank with the reason", async () => {
+test("a loader's fact is checked at its line; one the check refuses or that has no line is not published and opens its blank with the reason", async () => {
   const db = await factDb();
   try {
     const id = "az:city:example#governing", text = '{\n  "Name": "Example City Council",\n  "Phone": "520-555-0100"\n}';
@@ -74,8 +74,7 @@ test("a loader's fact is checked at its line; one the check refuses or that has 
 
     await publishLoaded(db, claim("office_email", "a@example.gov"), { quote: '"Email": "a@example.gov"', valueText: "a@example.gov" }, clocks, now, { purge });
     await publishLoaded(db, claim("homepage", "https://example.gov/"), null, clocks, now, { purge });
-    assert.deepEqual(await facts(), [{ field: "homepage", quote: "https://example.gov/", checked: false }, { field: "office_email", quote: "a@example.gov", checked: false },
-      { field: "office_phone", quote: '"Phone": "520-555-0100"', checked: true }], "both still publish, as the loader sends them");
-    assert.deepEqual(await blanks(), [{ field: "homepage", reason: "CHECK_FAILED:NO_EXACT_LINE", stage: "CHECK" }, { field: "office_email", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" }]);
+    assert.deepEqual(await facts(), [{ field: "office_phone", quote: '"Phone": "520-555-0100"', checked: true }], "neither is published");
+    assert.deepEqual(await blanks(), [{ field: "homepage", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" }, { field: "office_email", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", stage: "CHECK" }]);
   } finally { await db.pg.close(); }
 });

@@ -47,21 +47,12 @@ function minutesArg(args: readonly string[], name: string, fallbackMinutes: numb
 }
 
 export type RoutineDueCommand =
-  | { readonly kind: "REQUEST"; readonly contractId: string; readonly dueInMs: number; readonly expiresInMs: number; readonly reason: string }
-  | { readonly kind: "WITHDRAW"; readonly requestId: string };
+  { readonly kind: "REQUEST"; readonly contractId: string; readonly dueInMs: number; readonly expiresInMs: number; readonly reason: string };
 
 export function routineDueCommand(args: readonly string[]): RoutineDueCommand {
-  const known = ["--contract=", "--due-in-minutes=", "--expires-in-minutes=", "--reason=", "--withdraw="];
+  const known = ["--contract=", "--due-in-minutes=", "--expires-in-minutes=", "--reason="];
   if (args.length === 0 || args.some((arg) => !known.some((prefix) => arg.startsWith(prefix)))) {
     throw new Error("ROUTINE_DUE_REQUEST_EXACT_ARGUMENTS_REQUIRED");
-  }
-  const withdraw = args.filter((arg) => arg.startsWith("--withdraw="));
-  if (withdraw.length > 0) {
-    const requestId = withdraw[0]!.slice("--withdraw=".length);
-    if (withdraw.length !== 1 || args.length !== 1 || !/^routine-due:[0-9a-f-]{36}$/.test(requestId)) {
-      throw new Error("ROUTINE_DUE_REQUEST_WITHDRAW_EXACT_ID_REQUIRED");
-    }
-    return { kind: "WITHDRAW", requestId };
   }
   const contracts = args.filter((arg) => arg.startsWith("--contract="));
   if (contracts.length !== 1) throw new Error("ROUTINE_DUE_REQUEST_ONE_CONTRACT_REQUIRED");
@@ -147,14 +138,17 @@ const clockWork = (task: ClassedTask) => task.contract.schedule?.kind === "SITTI
 
 /**
  * Rulings §0: clock work first, then Sean's orders. A requested clock task goes first among the clock work; a requested
- * task of any other kind goes first among the rest, never ahead of any clock work. Every other task keeps its place.
+ * task of any other kind goes first among the rest, never ahead of any clock work. Every other task keeps its place,
+ * except that where-to-vote reads (requested ones first) lead the pass: a few a pass keep each state on its clock.
  */
 export function dueRequestsFirstInClass<T extends { readonly task: ClassedTask }>(jobs: readonly T[], requested: ReadonlySet<string>): T[] {
   const asked = (job: T) => requested.has(job.task.id), clock = jobs.filter(job => clockWork(job.task));
   const lifted = [...clock.filter(asked), ...clock.filter(job => !asked(job))];
   const kept = jobs.filter(job => clockWork(job.task) || !asked(job)).map(job => clockWork(job.task) ? lifted.shift()! : job);
   const after = kept.findLastIndex(job => clockWork(job.task)) + 1;
-  return [...kept.slice(0, after), ...jobs.filter(job => !clockWork(job.task) && asked(job)), ...kept.slice(after)];
+  const ordered = [...kept.slice(0, after), ...jobs.filter(job => !clockWork(job.task) && asked(job)), ...kept.slice(after)];
+  const voting = (job: T) => parseStateBallotContractId(job.task.id)?.family === "voting-sites";
+  return [...ordered.filter(voting), ...ordered.filter(job => !voting(job))];
 }
 
 function openAt(request: RoutineDueRequest, nowMs: number): boolean {
@@ -163,7 +157,6 @@ function openAt(request: RoutineDueRequest, nowMs: number): boolean {
 
 export async function requestRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
   const command = routineDueCommand(args);
-  if (command.kind !== "REQUEST") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_REQUEST");
   if (parseStateBallotContractId(command.contractId)?.family !== "ballot-contests") await refreshDoorsForPass(repos.doors);
   const nowMs = Date.parse(now);
   if (!canonicalInstant(now)) throw new Error("ROUTINE_DUE_REQUEST_CLOCK_INVALID");
@@ -187,20 +180,4 @@ export async function requestRoutineDue(repos: ControlPlaneRepositories, args: r
   ] };
   await repos.adminConfig.save(row, next, now);
   return request;
-}
-
-export async function withdrawRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
-  const command = routineDueCommand(args);
-  if (command.kind !== "WITHDRAW") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_WITHDRAW");
-  if (!canonicalInstant(now)) throw new Error("ROUTINE_DUE_REQUEST_CLOCK_INVALID");
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID, { routineDueRequests: { ids: [command.requestId] } });
-  const prior = parseRoutineDueRequests(row?.value.routineDueRequests);
-  const index = prior.requests.findIndex((request) => request.id === command.requestId);
-  if (!row || index < 0) throw new Error(`ROUTINE_DUE_REQUEST_UNKNOWN:${command.requestId}`);
-  const found = prior.requests[index]!;
-  if (found.withdrawnAt !== null) return found;
-  const withdrawn = { ...found, withdrawnAt: now };
-  const requests = prior.requests.map((request, at) => (at === index ? withdrawn : request));
-  await repos.adminConfig.save(row, { ...row.value, updatedAt: now, routineDueRequests: requests }, now);
-  return withdrawn;
 }

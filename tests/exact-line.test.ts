@@ -40,7 +40,7 @@ test("a page quotes its own line, cut to the words around a value on a long line
   assert.ok(long.text.includes(quote));
 });
 
-test("a checked loader's fact is checked against the line it quotes; an unchecked loader still publishes", async () => {
+test("a loader's fact is checked against the line it quotes, and one with no line is refused", async () => {
   const db = await factDb();
   try {
     const id = "az:city:example#governing";
@@ -50,7 +50,7 @@ test("a checked loader's fact is checked against the line it quotes; an unchecke
     const claim = (over: Partial<PublishInput> = {}): PublishInput => ({
       entity: { id, fullName: "Example City Council", stateName: "Arizona", hosts: [], externalIds: [] },
       field: "office_phone", fieldKind: "contact", value: "520-555-0100", valueText: "520-555-0100", quote: exactLine(text, "Phone", "520-555-0100")!,
-      provenance: "OFFICIAL", producedBy: "loader-a", acquisition: "checked", costUsd: 0, copy: copyOf(text), ...over });
+      provenance: "OFFICIAL", producedBy: "loader-a", acquisition: "loader", costUsd: 0, copy: copyOf(text), ...over });
     assert.deepEqual(await door(db, claim({ quote: '"Phone": "520-555-0199"' }), clocks, now), { refused: "QUOTE_NOT_ON_SAVED_COPY" });
     const published = await door(db, claim(), clocks, now);
     assert.ok("decision" in published && published.decision === "PUBLISH");
@@ -61,8 +61,8 @@ test("a checked loader's fact is checked against the line it quotes; an unchecke
     assert.deepEqual(await door(db, filing({ quote: "" }), clocks, now), { refused: "QUOTE_NOT_ON_SAVED_COPY" }, "a money claim from a loader is checked, whatever its host");
     const amount = await door(db, filing({ copy: copyOf('{\n  "amount":   113895\n}'), quote: '"amount": 113895' }), clocks, now);
     assert.ok("decision" in amount && amount.decision === "PUBLISH", "the quote is an exact substring once whitespace is normalized");
-    const unchecked = await door(db, claim({ field: "office_email", value: "a@example.gov", valueText: "a@example.gov", quote: "", acquisition: "loader" }), clocks, now);
-    assert.ok("decision" in unchecked && unchecked.decision === "PUBLISH", "a loader not yet switched keeps publishing");
+    const unchecked = await door(db, claim({ field: "office_email", value: "a@example.gov", valueText: "a@example.gov", quote: "" }), clocks, now);
+    assert.deepEqual(unchecked, { refused: "QUOTE_NOT_ON_SAVED_COPY" }, "a fact with no line is not published");
   } finally { await db.pg.close(); }
 });
 

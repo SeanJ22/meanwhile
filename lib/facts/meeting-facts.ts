@@ -2,6 +2,7 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
 import { boundedIndexOf, exactLine, lineOf, normalizeText, type CheckEntity, type SavedCopy } from "./check.ts";
+import { retireAbsent, savedCopyFreshnessRefusal } from "../core/door.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -20,11 +21,12 @@ function localParts(startsAt: string, timeZone: string) {
 }
 
 /** Where the page states this sitting's date (and, when it gives one, its start time), in the publisher's own writing. */
-export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | "timeZone" | "startPrecision">): { readonly valueText: string; readonly quote: string } | null {
+export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | "startsAtOnPage" | "timeZone" | "startPrecision">): { readonly valueText: string; readonly quote: string } | null {
   const page = normalizeText(text);
   const p = localParts(meeting.startsAt, meeting.timeZone);
   const month = MONTHS[p.m - 1]!;
   const day = meeting.startPrecision === "DAY";
+  if (meeting.startsAtOnPage && boundedIndexOf(page, meeting.startsAtOnPage) !== -1) return { valueText: meeting.startsAtOnPage, quote: meeting.startsAtOnPage };
   const utc = new Date(meeting.startsAt).toISOString();
   const together = day ? [] : [utc,utc.replace(/\.000Z$/,"Z"),utc.replace(/[-:]/g,"").replace(/\.000Z$/,"Z")];
   for (const token of together) if (boundedIndexOf(page,token)!==-1) return { valueText: token, quote: token };
@@ -58,6 +60,39 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   return null;
 }
 
+/** A CivicClerk event names its agenda file by number, beside the word Agenda; the address the link is built from is not written on the page. */
+export function agendaFileOnPage(text: string, url: string): { readonly valueText: string; readonly quote: string } | null {
+  const id = /fileId=(\d+)/.exec(url)?.[1];
+  const found = id ? new RegExp(`"fileId"\\s*:\\s*${id}\\b[^{}]{0,200}?"type"\\s*:\\s*"[^"]*agenda[^"]*"`, "i").exec(text) : null;
+  return id && found ? { valueText: id, quote: found[0] } : null;
+}
+
+/** The part of an address the page writes as its publisher gave it: the address with the trailing parts the feed composed itself (city, a spelled-out state, ZIP) dropped one at a time, else the street part alone. Never a part with no street number. */
+export function addressOnPage(copy: SavedCopy, address: string): string | null {
+  const parts = address.split(/,\s*/);
+  for (let count = parts.length; count >= 1; count--) {
+    const text = parts.slice(0, count).join(", ");
+    if (/\d/.test(text) && lineOf(copy, text)) return text;
+  }
+  return parts.find(part => /^\d+\s+\S/.test(part) && part.length >= 8 && lineOf(copy, part)) ?? null;
+}
+
+const CANCELED_WORD = /\bcancell?ed\b|\bcancell?ation\b/i;
+
+/** Where the page says this sitting is canceled: the publisher's own word beside the sitting's title, with the line that shows it. */
+export function canceledOnPage(text: string, meeting: Pick<Meeting, "title">): { readonly valueText: string; readonly quote: string } | null {
+  const page = normalizeText(text), title = normalizeText(meeting.title);
+  if (!title) return null;
+  for (let at = page.indexOf(title); at !== -1; at = page.indexOf(title, at + 1)) {
+    const from = Math.max(0, at - 300), window = page.slice(from, at + title.length + 300), found = CANCELED_WORD.exec(window);
+    if (found) {
+      const start = from + found.index, quote = page.slice(Math.max(0, Math.min(start, at) - 40), Math.max(start + found[0].length, at + title.length) + 40);
+      return { valueText: found[0], quote };
+    }
+  }
+  return null;
+}
+
 export interface MeetingFactsReport { readonly live: number; readonly confirmed: number; readonly held: number; readonly blanks: number }
 
 type MeetingFactDb = FactDb & { readonly query: Query };
@@ -82,16 +117,19 @@ async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl:
   return (await readCheckEntity(db.query, id))!;
 }
 
+/** A verified point's saved Census response, known by the line its first fact quoted from it. */
+interface HeldPoint { readonly copy: SavedCopy; readonly quote: string }
+
 async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
-  readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly copy?: SavedCopy; readonly producedBy: string;
+  readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly held?: HeldPoint; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   const pin = input.meeting.mapPin!;
-  const copy = input.copy ?? await db.transaction(query => saveCaptureCopy(query, input.capture!));
-  // A saved geocoder response quotes its matchedAddress line and is checked; a reused receipt holds no text, so it stays unchecked.
-  const line = exactLine(copy.text, "matchedAddress", pin.matchedAddress!);
+  const copy = input.held?.copy ?? await db.transaction(query => saveCaptureCopy(query, input.capture!));
+  // A saved geocoder response quotes its matchedAddress line; a reused one is the line its first fact quoted.
+  const line = input.held?.quote ?? exactLine(copy.text, "matchedAddress", pin.matchedAddress!);
   for(let attempt=0;;attempt++)try{
     return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
-      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:line ? "checked" : "loader", costUsd:0}, clocks, now);
+      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:"checked", costUsd:0}, clocks, now);
   }catch(error){
     const conflict=error as {code?:string;constraint?:string}|null;
     // Re-read after a rolled-back deadlock or competing first publication, using the same saved Census copy.
@@ -105,6 +143,8 @@ export async function publishMeetingPinFact(db: MeetingFactDb, input: {
   readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly producedBy: string;
   readonly geocodeAttempts?: readonly PinGeocodeAttempt[];
   readonly registered?: boolean;
+  /** Asks Census the saved point's own request again when its saved response is older than a fact may be published from. */
+  readonly refreshPoint?: (url: string) => Promise<WorkerPublicationCapture | null>;
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   // The pin claim cites its saved Census copy; it does not register the old calendar as a new source door.
   const pin=input.meeting.mapPin;
@@ -115,14 +155,20 @@ export async function publishMeetingPinFact(db: MeetingFactDb, input: {
   if(pin?.matchedAddress){
     if(input.capture)published=await publishPinClaim(db,entity!,input,clocks,now);
     else {
-      // Reuse the receipt of an already verified point for this exact body and address. No source is reread.
-      const [held]=await db.query(`SELECT s.id,s.final_url,s.fetched_at FROM source_copy s JOIN fact f ON f.source_copy_id=s.id
+      // The saved response of an already verified point for this exact address is the copy, quoted by the line its first fact used.
+      const [held]=await db.query(`SELECT s.id,s.final_url,s.fetched_at,f.quote FROM source_copy s JOIN fact f ON f.source_copy_id=s.id
         WHERE s.url=$1 AND f.field='map_pin' AND f.status='live'
           AND f.value->>'coordinateSourceUrl'=$1 AND f.value->>'matchedAddress'=$2
-          AND (f.value->>'lat')::double precision=$3 AND (f.value->>'lng')::double precision=$4 LIMIT 1`,
+          AND (f.value->>'lat')::double precision=$3 AND (f.value->>'lng')::double precision=$4 ORDER BY s.fetched_at DESC LIMIT 1`,
         [pin.coordinateSourceUrl,pin.matchedAddress,pin.lat,pin.lng]);
-      if(held)published=await publishPinClaim(db,entity!,{...input,copy:{id:Number(held.id),finalUrl:String(held.final_url),
-        fetchedAt:new Date(held.fetched_at as string),text:"",isArchive:false}},clocks,now);
+      if(held){
+        const fetchedAt=new Date(held.fetched_at as string);
+        const stale=savedCopyFreshnessRefusal(fetchedAt,clocks.windowHours("contact"),now);
+        const fresh=stale&&input.refreshPoint?await input.refreshPoint(pin.coordinateSourceUrl!):null;
+        if(fresh)published=await publishPinClaim(db,entity!,{...input,capture:fresh},clocks,now);
+        else if(!stale)published=await publishPinClaim(db,entity!,{...input,held:{quote:String(held.quote),
+          copy:{id:Number(held.id),finalUrl:String(held.final_url),fetchedAt,text:String(held.quote),isArchive:false}}},clocks,now);
+      }
     }
     if(published&&!pin.pendingReplacement)return published;
   }
@@ -157,6 +203,8 @@ export async function publishMeetingPinFact(db: MeetingFactDb, input: {
 export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
   readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly pinCapture?: WorkerPublicationCapture; readonly producedBy: string;
   readonly geocodeAttempts?: readonly PinGeocodeAttempt[];
+  /** The sitting holds a live canceled fact; when its source no longer says canceled, that fact moves to history. */
+  readonly canceledHeld?: boolean;
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const { meeting, capture } = input;
   const id = meetingEntityId(meeting.id);
@@ -174,7 +222,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   const claim = async (field: string, value: unknown, valueText: string, quote: string | null = lineOf(copy, valueText)) =>
     count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote: quote ?? valueText, copy,
       // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
-      acquisition: field === "location" ? "walker" : quote ? "checked" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      acquisition: field === "location" ? "walker" : "checked", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };
@@ -185,15 +233,28 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
         valueText:meeting.startsAt,quote:meeting.startsAt,producedBy:input.producedBy}), retryMinutes: clocks.retryMinutes("meeting") });
     tally.blanks++;
   }
-  if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
-  else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
+  if (meeting.status === "CANCELED") {
+    const canceled = canceledOnPage(copy.text, meeting);
+    await claim("status", "CANCELED", canceled?.valueText ?? "canceled", canceled?.quote ?? null);
+  } else if (input.canceledHeld) await retireAbsent(db, { subjectId: id, fieldPrefix: "status", copyId: copy.id, stillShown: [], at: copy.fetchedAt });
+  if (meeting.location) {
+    const spoken = meeting.location.address ?? meeting.location.name;
+    await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, lineOf(copy, spoken) ? spoken : addressOnPage(copy, spoken) ?? spoken);
+  }
+  else if(meeting.venueGap?.publishedText) {
+    const stated = meeting.venueGap.publishedText;
+    await claim("location",{name:stated,address:null}, lineOf(copy, stated) ? stated : addressOnPage(copy, stated) ?? stated);
+  }
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
   if(meeting.mapPin?.pendingReplacement)count(await publishMeetingPinFact(db,{meeting,capture:input.pinCapture,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
   else if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
   else if(!meeting.mapPin&&!meeting.location) count(await publishMeetingPinFact(db,{meeting,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
-  if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
+  if (meeting.agendaUrl) {
+    const byFile = lineOf(copy, meeting.agendaUrl) ? null : agendaFileOnPage(copy.text, meeting.agendaUrl);
+    await (byFile ? claim("agenda_url", meeting.agendaUrl, byFile.valueText, byFile.quote) : claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl));
+  }
   if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
   await keepJoinLinkWork(db.query,meeting,clocks);
   return tally;

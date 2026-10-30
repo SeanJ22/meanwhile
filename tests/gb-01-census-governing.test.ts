@@ -25,6 +25,8 @@ import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 const ROOT = join(import.meta.dirname, "..");
 const clocks = factClocks(null);
 const purge = async () => ({ purged: true });
+/** A publisher that cannot be reached: the vault's last check is all there is. */
+const confirmRelease = async () => { throw new Error("publisher unreachable"); };
 const OR = "ocd-division/country:us/state:or", PORTLAND = `${OR}/place:portland`, MULTNOMAH = `${OR}/county:multnomah`,
   SCHOOL = `${OR}/school_district:portland_school_district_1j`;
 const CA = "ocd-division/country:us/state:ca", LA = `${CA}/county:los_angeles`;
@@ -82,7 +84,7 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     await pg.exec(BOOTSTRAP_DDL.find(ddl => ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
     const db = pgFacts(pg);
     await seedGovernments(db.query);
-    const report = await makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault: await censusVault(), more: () => true, purge });
+    const report = await makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault: await censusVault(), more: () => true, purge, confirmRelease });
     assert.deepEqual(report.states, ["OR"]);
     assert.equal(report.live, 5, "the city's address, the county's address and website, the district's address and website");
     assert.deepEqual(report.refused, {});
@@ -137,14 +139,14 @@ test("states go one at a time, Oregon first, resuming inside a state; a finished
     await seedGovernments(db.query);
     const watched = recorded(db), vault = await censusVault();
     let checks = 0;
-    const first = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, more: () => ++checks <= 3 });
+    const first = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, confirmRelease, more: () => ++checks <= 3 });
     assert.deepEqual(first.states, ["OR"]);
     const paused = JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name=$1", [CENSUS_GOVERNING_CURSOR]))[0]!.position));
     assert.equal(paused.state, "or");
     assert.equal(paused.done, false, "the pass stopped inside Oregon at its deadline");
     assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE produced_by='census-governing:CA'"))[0]!.n, 0, "California waits for Oregon");
 
-    const rest = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, more: () => true });
+    const rest = await makeCensusGoverningBodies({ db: watched.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, confirmRelease, more: () => true });
     assert.deepEqual(rest.states, ["OR", "CA", "WA"]);
     const order = await db.query("SELECT produced_by, min(id)::int AS first, max(id)::int AS last FROM fact GROUP BY produced_by ORDER BY first");
     assert.deepEqual(order.map(row => row.produced_by), ["census-governing:OR", "census-governing:CA"]);
@@ -155,7 +157,7 @@ test("states go one at a time, Oregon first, resuming inside a state; a finished
     assert.ok(!watched.sql.some(sql => /civic_data_|registry/i.test(sql)), "no promotion, candidate or registry runtime write");
 
     const done = recorded(db);
-    const idle = await makeCensusGoverningBodies({ db: done.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, more: () => true });
+    const idle = await makeCensusGoverningBodies({ db: done.db, root: ROOT, states: ["ca", "or", "wa"], clocks, vault, purge, confirmRelease, more: () => true });
     assert.deepEqual(idle.states, []);
     assert.deepEqual(done.sql, ["SELECT position FROM pass_cursor WHERE name = $1"]);
     assert.equal(done.transactions, 0);
@@ -166,7 +168,7 @@ test("a release nobody has re-checked lately is fix work and changes nothing; ea
   const db = await factDb();
   try {
     await seedGovernments(db.query);
-    const run = async (vault: MemoryEvidenceStore) => makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault, purge, more: () => true });
+    const run = async (vault: MemoryEvidenceStore) => makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault, purge, confirmRelease, more: () => true });
     await assert.rejects(run(new MemoryEvidenceStore()), /CENSUS_RELEASE_NOT_CONFIRMED_SINCE:2026-09-23/);
     await assert.rejects(run(await censusVault(new Date(Date.now() - 40 * 86_400_000).toISOString())), /CENSUS_RELEASE_NOT_CONFIRMED_SINCE/);
     assert.equal((await db.query("SELECT count(*)::int n FROM fact"))[0]!.n, 0);
@@ -179,11 +181,33 @@ test("a release nobody has re-checked lately is fix work and changes nothing; ea
   } finally { await db.pg.close(); }
 });
 
+test("a release last confirmed more than 15 days ago is asked about again by this pass itself, once, and a fresh answer files the facts the same pass", async () => {
+  const db = await factDb();
+  try {
+    await seedGovernments(db.query);
+    const stale = await censusVault(new Date(Date.now() - 40 * 86_400_000).toISOString());
+    const asked: string[] = [];
+    const confirmRelease = async (checkedAfter: string) => {
+      asked.push(checkedAfter);
+      const fresh = await censusVault();
+      const key = releaseManifestKey({ sourceId: "census-governments-registration", releaseId: "cog-2022", url: CENSUS });
+      await stale.put(key, (await fresh.get(key))!.bytes, { contentType: "application/json", contentHash: "manifest:test", byteLength: (await fresh.get(key))!.bytes.byteLength, objectClass: "MUTABLE_INDEX" });
+    };
+    const report = await makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault: stale, purge, confirmRelease, more: () => true });
+    assert.equal(asked.length, 1);
+    assert.ok(Math.abs(Date.parse(asked[0]!) - (Date.now() - 15 * 86_400_000)) < 60_000, "the publisher must answer after the 15-day mark");
+    assert.equal(report.live, 5);
+    const recent = await makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault: stale, purge, confirmRelease, more: () => true });
+    assert.equal(asked.length, 1, "a release confirmed within 15 days is not asked about again");
+    assert.deepEqual(recent.states, []);
+  } finally { await db.pg.close(); }
+});
+
 test("an address the Census filed as office_address leaves once the mailing address is verified, is held when that fails, and Sean's value stays", async () => {
   const db = await factDb();
   try {
     await seedGovernments(db.query);
-    const run = async (vault: MemoryEvidenceStore) => makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault, purge, more: () => true });
+    const run = async (vault: MemoryEvidenceStore) => makeCensusGoverningBodies({ db, root: ROOT, states: ["or"], clocks, vault, purge, confirmRelease, more: () => true });
     await run(await censusVault(new Date(Date.now() - 20 * 86_400_000).toISOString()));
     const [copy] = await db.query("SELECT id FROM source_copy ORDER BY id LIMIT 1");
     const old = (entity: string, provenance: string, checked: boolean) => db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,quote_start,checked_at,produced_by)

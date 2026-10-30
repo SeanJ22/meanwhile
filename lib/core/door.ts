@@ -157,8 +157,6 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
     const campaign = input.provenance === "CAMPAIGN" && !isOfficialUrl(copy.finalUrl, []) && !isSourceApiUrl(copy.finalUrl);
     const loaded = official && (acquisition === "loader" || acquisition === "checked") && !campaign;
-    // A filing or a money claim is always checked against the line it quotes, whatever its host.
-    const fast = loaded && acquisition === "loader" && input.provenance !== "FILING" && input.fieldKind !== "money";
     const provenance = input.provenance === "OWNER" ? "OWNER" : campaign ? "CAMPAIGN" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
     const c: PublishInput = { ...input, entity, provenance, copy };
     if (input.savedField) {
@@ -200,7 +198,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       && row.same_value;
     const verdict = repeated ? {ok:true as const,quoteStart:null} : input.savedField && savedCopyFreshnessRefusal(c.copy.fetchedAt,clocks.windowHours(c.fieldKind),now)
       ? {ok:false as const,reason:"COPY_OUTSIDE_FRESHNESS_WINDOW"} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
-      : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
+      : provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
       return { refused: verdict.reason };
     }

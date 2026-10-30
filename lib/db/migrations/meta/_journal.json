@@ -575,6 +575,13 @@
       "when": 1792834201400,
       "tag": "SPN-01B4_blank_changes",
       "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "7",
+      "when": 1792834202024,
+      "tag": "SPN-01C_retire_meeting_tables",
+      "breakpoints": true
     }
   ]
 }

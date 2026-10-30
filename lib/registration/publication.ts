@@ -14,6 +14,8 @@ export const REGISTRATION_HELD_RETRIEVED_AT = "2026-09-23T00:00:00.000Z" as cons
 /** Validator of the historically attested held release; new releases carry their own. */
 export const REGISTRATION_SOURCE_LAST_MODIFIED = "Thu, 24 Aug 2023 12:44:48 GMT" as const;
 export const REGISTRATION_SOURCE_THROUGH = "2022" as const;
+/** How long the publisher's last confirmation of the release stands before the next check asks it again. */
+export const REGISTRATION_CHECK_AFTER_MS = 15 * 24 * 60 * 60 * 1000;
 
 /** A registration candidate over this many escaped JSON bytes is refused (half the 64 MiB Neon response cap). */
 export const REGISTRATION_MAX_CANDIDATE_BYTES = 32 * 1024 * 1024;

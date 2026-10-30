@@ -76,7 +76,7 @@ test("a source copy past its window holds nothing and opens no blank; a current 
   } finally { await db.pg.close(); }
 });
 
-test("a switched loader's fact that fails is retried once, never goes live and opens its blank; its unchecked live fact moves to held; Sean's value and an old-path loader are untouched", async () => {
+test("a switched loader's fact that fails is retried once, never goes live and opens its blank; its unchecked live fact moves to held; Sean's value is untouched", async () => {
   const db = await factDb();
   try {
     const id = "az:city:example#governing", text = '{\n  "Name": "Example City Council",\n  "Phone": "520-555-0100"\n}';
@@ -118,6 +118,6 @@ test("a switched loader's fact that fails is retried once, never goes live and o
       { field: "office_hours", reason: "CHECK_FAILED:NO_EXACT_LINE", stage: "CHECK" }]);
 
     const old = await publishClaim(db, { ...claim("office_address", "1 Main St"), entity: { id, fullName: "Example City Council", stateName: "Arizona", hosts: ["example.gov"], externalIds: [] }, producedBy: "old-path", acquisition: "loader" }, clocks, now, { purge });
-    assert.ok("decision" in old && old.decision === "PUBLISH", "a loader still on the old path publishes as before");
+    assert.ok("blank" in old, "no loader publishes unchecked any more: the same quote that is not on the saved copy is refused");
   } finally { await db.pg.close(); }
 });

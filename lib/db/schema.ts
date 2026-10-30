@@ -7,7 +7,6 @@ import {
   primaryKey,
   check,
   customType,
-  doublePrecision,
   foreignKey,
   index,
   integer,
@@ -31,93 +30,6 @@ import {
  * and never join: no account key, device ID, retained IP, lasting session key
  * or foreign key.
  */
-
-/** One sitting of a public body, keyed by the source-namespaced id the adapters emit. */
-export const meetings = pgTable(
-  "meetings",
-  {
-    /** Source-namespaced: `<adapter>:<tenant>:<upstream id>`. */
-    id: text("id").primaryKey(),
-    /**
-     * The division whose government is meeting. Nullable: a body the Census
-     * does not enumerate has no canonical division, and none is invented.
-     */
-    ocdId: text("ocd_id"),
-    /** Dataset vintage `ocdId` was resolved against; null with it. */
-    divisionVintage: text("division_vintage"),
-    bodyName: text("body_name").notNull(),
-    title: text("title").notNull(),
-    /** Instant of the meeting's start; wall-clock lives with timeZone. */
-    startsAt: timestamp("starts_at", { withTimezone: true, mode: "string" }).notNull(),
-    timeZone: text("time_zone").notNull(),
-    /**
-     * Where the meeting is held; all four null together for an online
-     * meeting, with `online_label` saying what there is instead.
-     */
-    locationName: text("location_name"),
-    locationAddress: text("location_address"),
-    locationLat: doublePrecision("location_lat"),
-    locationLng: doublePrecision("location_lng"),
-    /** The published location string for an online meeting, verbatim. Present exactly when the location columns are null. */
-    onlineLabel: text("online_label"),
-    /**
-     * The join link the body published, or null when it published none. A
-     * null is rendered as the named gap and never filled with the body's
-     * homepage or a portal URL.
-     */
-    onlineJoinUrl: text("online_join_url"),
-    agendaUrl: text("agenda_url"),
-    /** Display only — join on ocdId, never on this. */
-    jurisdiction: text("jurisdiction").notNull(),
-    status: text("status", { enum: ["SCHEDULED", "CONCLUDED", "CANCELED"] }).notNull(),
-    /** Provenance, flattened; never dropped in a transform. */
-    sourceUrl: text("source_url"),
-    sourceOrg: text("source_org").notNull(),
-    collectedAt: timestamp("collected_at", { withTimezone: true, mode: "string" }).notNull(),
-    verifiedAt: timestamp("verified_at", { withTimezone: true, mode: "string" }),
-  },
-  (table) => [
-    index("meetings_ocd_id_idx").on(table.ocdId),
-    index("meetings_starts_at_idx").on(table.startsAt),
-    // The division and its vintage are both present or both absent.
-    check(
-      "meetings_division_vintage_pairing",
-      sql`(${table.ocdId} is null) = (${table.divisionVintage} is null)`,
-    ),
-  ],
-);
-
-/**
- * Agenda documents, append-only — one row per distinct version, id
- * `<meetingId>@<contentHash>`. Revisions are appended beside their prior
- * versions, never overwritten: a silently revised agenda is itself news.
- * Transcribed from AgendaDocumentStore, which keeps the same contract in
- * memory.
- */
-export const agendaDocuments = pgTable(
-  "agenda_documents",
-  {
-    id: text("id").primaryKey(),
-    meetingId: text("meeting_id").notNull(),
-    ocdId: text("ocd_id").notNull(),
-    divisionVintage: text("division_vintage").notNull(),
-    /** Where the document was fetched from. Observed, never constructed. */
-    documentUrl: text("document_url").notNull(),
-    /** SHA-256 of the raw bytes — the revision detector. */
-    contentHash: text("content_hash").notNull(),
-    retrievedAt: timestamp("retrieved_at", { withTimezone: true, mode: "string" }).notNull(),
-    contentType: text("content_type").notNull(),
-    /** Extracted text; null means extraction failed and the note says why. */
-    text: text("text"),
-    extraction: text("extraction", { enum: ["html", "pdf", "failed"] }).notNull(),
-    extractionNote: text("extraction_note"),
-    sourceUrl: text("source_url").notNull(),
-    sourceOrg: text("source_org").notNull(),
-    collectedAt: timestamp("collected_at", { withTimezone: true, mode: "string" }).notNull(),
-    verifiedAt: timestamp("verified_at", { withTimezone: true, mode: "string" }),
-  },
-  (table) => [index("agenda_documents_meeting_id_idx").on(table.meetingId)],
-);
 
 /**
  * The search log — what was asked and where, never who.

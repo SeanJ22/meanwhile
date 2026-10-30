@@ -209,6 +209,7 @@ export function makeCivicClerkSource(
           bodyName,
           title: (e.eventName ?? bodyName).trim(),
           startsAt,
+          startsAtOnPage: (e.startDateTime ?? e.eventDate ?? "").trim(),
           timeZone: wiring.timeZone,
           location: venue
             ? {

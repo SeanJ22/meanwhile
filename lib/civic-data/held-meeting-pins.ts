@@ -5,7 +5,7 @@ import { publishMeetingPinFact } from "../facts/meeting-facts.ts";
 import { readMeetingFacts, withSittingFacts } from "../facts/meeting-read.ts";
 import type { Clocks, FactDb, Query } from "../facts/publish.ts";
 import { repeatsPublishedVenue } from "../geo/address-query.ts";
-import { placePublishedMeetingPins, publishedPinOffices } from "../meetings/publish-pins.ts";
+import { placePublishedMeetingPins, publishedPinOffices, readCensusPointAgain } from "../meetings/publish-pins.ts";
 import type { Meeting } from "../sources/types.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { MeetingPinAddress } from "../meetings/pin-location.ts";
@@ -202,6 +202,11 @@ export async function publishHeldMeetingPins(input: {
       if(!meeting.mapPin&&officeFailures.has(meeting.bodyId??""))return;
       try {
         const outcome=await publishMeetingPinFact(facts,{meeting,capture,registered:registeredBodies.has(meeting.bodyId??""),geocodeAttempts:census.attempts.get(meeting.id)??[],
+          refreshPoint:async url=>{
+            const again=await readCensusPointAgain(url,{fetchImpl:input.fetchImpl,clock:()=>new Date(now()).toISOString()});
+            const saved=again&&await vaultCapture({vault:input.vault,url:again.finalUrl,bytes:again.bytes,httpStatus:again.httpStatus,contentType:again.contentType,retrievedAt:again.retrievedAt});
+            return saved&&!("error" in saved)?saved.capture:null;
+          },
           producedBy:`held-meeting-pins:${row.current_version_id}`},
           input.clocks,new Date(now()));
         considered++;settled.add(String(row.retry_key));

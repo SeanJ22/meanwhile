@@ -186,6 +186,8 @@ export interface Meeting {
   title: string;
   /** Start time, ISO 8601 with offset. Local government meets in local time. */
   startsAt: string;
+  /** The start exactly as the publisher wrote it, when that writing is not a date and time in the body's own clock (CivicClerk writes the local clock with a trailing Z). */
+  startsAtOnPage?: string;
   /**
    * How precisely the publisher dated this sitting.
    *

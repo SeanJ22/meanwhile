@@ -5,7 +5,7 @@ import type { SourceCheckEvidence } from "../civic-data/types.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { indexVault, readHeldBytes, READ_ONLY_VAULT_PROJECT } from "../control-plane/evidence/read-only-vault.ts";
 import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
-import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_SOURCE_LAST_MODIFIED, REGISTRATION_HELD_RETRIEVED_AT } from "./publication.ts";
+import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_SOURCE_LAST_MODIFIED, REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_CHECK_AFTER_MS } from "./publication.ts";
 import { validateGovernmentRelease } from "./source-reference.ts";
 
 export interface RegistrationSourceReceipt {
@@ -57,11 +57,13 @@ export async function acquireRegistrationSource(options: {
   readonly signal: AbortSignal; readonly fetchImpl?: typeof fetch; readonly now?: () => Date;
   readonly store?: KnownReleaseOptions["store"]; readonly locks?: KnownReleaseOptions["locks"];
   readonly readHeld?: KnownReleaseOptions["readHeld"];
+  /** The publisher must have been asked after this instant, even inside the usual interval. */
+  readonly checkedAfter?: string;
 }): Promise<RegistrationSourceReceipt> {
   try {
     const release = await acquireKnownRelease({
       sourceId: "census-governments-registration", releaseId: "cog-2022", url: REGISTRATION_SOURCE_URL,
-      parserVersion: REGISTRATION_PARSER_VERSION, signal: options.signal, maxBytes: 64 * 1024 * 1024, checkAfterMs: 15 * 24 * 60 * 60 * 1000,
+      parserVersion: REGISTRATION_PARSER_VERSION, signal: options.signal, maxBytes: 64 * 1024 * 1024, checkAfterMs: REGISTRATION_CHECK_AFTER_MS, checkedAfter: options.checkedAfter,
       fetchImpl: options.fetchImpl, now: options.now ? () => options.now!().toISOString() : undefined,
       store: options.store, locks: options.locks, readHeld: options.readHeld ?? (() => heldRelease(options.signal)),
       validate: validateGovernmentRelease,

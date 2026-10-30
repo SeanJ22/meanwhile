@@ -43,9 +43,12 @@ function leasedEngine(): PGlite {
   });
 }
 
+/** An empty Postgres. In a test run its engine is leased and handed to the next test on close, so a file of many tests holds one engine, not one per test. */
+export const emptyPglite = (): PGlite => process.env.NODE_TEST_CONTEXT ? leasedEngine() : new PGlite();
+
 /** A real Postgres with the fact store migration applied. */
 export async function factDb(options: { readonly withResolver?: boolean; readonly withHourlyCounts?: boolean; readonly withPlacePages?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
-  const pg = process.env.NODE_TEST_CONTEXT ? leasedEngine() : new PGlite();
+  const pg = emptyPglite();
   // Identity-migration tests start before RB-A1 creates place_page, then apply its full SQL themselves.
   for (const migration of MIGRATIONS.filter(path=>options.withPlacePages!==false || !path.endsWith("RB-A7_expand.sql")))
     for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);

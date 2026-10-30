@@ -1,4 +1,4 @@
-import { PGlite } from "@electric-sql/pglite";
+import { emptyPglite } from "./helpers/fact-db.ts";
 import { LEAD_DDL, WORK_DDL, workList, type WorkList } from "../lib/core/work.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -328,6 +328,7 @@ test("conflicting supplemental profiles cannot hold a campaign page that indepen
     assert.equal(state.stage, "APPROVED_FOR_PROMOTION");
     assert.equal(report.report.chain.approved.length, 1);
     assert.equal(report.report.chain.approved[0].campaignSite.evidence.cycleSource, undefined, "an unrelated profile never becomes the source of the cycle");
+    await p.close();
   }
 });
 
@@ -346,14 +347,20 @@ interface Plane {
   readonly list: WorkList;
   readonly vaultRoot: string;
   readonly requests: string[];
+  /** Frees the plane's database engine; every plane also frees it when its test ends. */
+  readonly close: () => Promise<void>;
 }
 
 async function plane(t: { after: (fn: () => void) => void }): Promise<Plane> {
-  const repos = createMemoryRepositories(), pg = new PGlite();
+  const repos = createMemoryRepositories(), pg = emptyPglite();
   for (const ddl of [...WORK_DDL, ...LEAD_DDL]) await pg.exec(ddl);
   const list = workList(async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows, { owner: "campaign-sites", leaseMs: 300_000 });
   const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-campaign-site-runner-"));
   t.after(() => rmSync(vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
+  // Each plane holds a whole database engine (hundreds of MB); left open, a file of 26 tests grew past 5 GB and the kernel killed it when the machine was busy.
+  let closed = false;
+  const close = async () => { if (!closed) { closed = true; await pg.close(); } };
+  t.after(close);
   const body = fixture("marginalia-tang-williams-lily.json");
   const work = createWorkItem({ project: "freshness", subject: TANG_WILLIAMS,
     obligation: `freshness:candidate-enrichment:${TANG_WILLIAMS}#candidate-marginalia-index`, why: "the Marginalia answer", now: T0 });
@@ -375,7 +382,7 @@ async function plane(t: { after: (fn: () => void) => void }): Promise<Plane> {
     outcome: "ROUTE_CANDIDATE", routeId: "kapner-news", canonicalUrl: "https://patch.com/new-jersey/mendham/kapner-runs", artifactIds: [], recordedAt: "2026-09-21T02:24:00.000Z", summary: "a news story" });
   await appendTransition(repos, kapner, ctx, T0);
   await appendTransition(repos, news, ctx, T0);
-  return { repos, list, vaultRoot, requests: [] };
+  return { repos, list, vaultRoot, requests: [], close };
 }
 
 async function cycle(p: Plane, now: string, extra: Partial<Parameters<typeof runCampaignSiteCycle>[0]> = {}, pages: Record<string, { status: number; body: string }> = served()) {

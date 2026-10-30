@@ -1,4 +1,5 @@
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
+import { SLICE_JOB, slicesLane } from "../lib/reader/slice-lane.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
@@ -1087,6 +1088,7 @@ function holdForRestart(targetSha: string): void {
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
   drainMemberLane();
+  drainSliceLane();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
@@ -1277,6 +1279,21 @@ function drainMemberLane():void {
   if(memberLaneChild?.connected)memberLaneChild.send({kind:"RUNTIME_RELEASE_DRAIN"},error=>{if(error)console.error("Legistar member drain failed",error);});
 }
 
+let sliceLaneChild: ChildProcess | null = null;
+async function runSliceLane(deadlineMs: number): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(SLICE_JOB.id)) return;
+  const [run] = await runRuntimeChildren([{ id: SLICE_JOB.id, databaseBytesPerRun: SLICE_JOB.databaseBytesPerRun, executable: process.execPath,
+    args: [...TS_CHILD, "scripts/slice-lane.mts"], env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
+    cwd: CODE_ROOT, env: process.env, deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
+    onStarted: (_id, child) => { sliceLaneChild = child; } });
+  sliceLaneChild = null;
+  if (!run || run.status !== 0) throw Error("Slices stopped; marked slices stay waiting");
+}
+function drainSliceLane(): void {
+  if (sliceLaneChild?.connected) sliceLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error("Slice lane drain failed", error); });
+}
+
 const auditPasses = auditPassClock({
   statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
   codeRoot: () => CODE_ROOT,
@@ -1365,6 +1382,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "legistar-members", everyMs: 60_000, budgetMs: 55*60_000, run: runMemberLane },
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   placePagesLane(runPlacePages),
+  slicesLane(runSliceLane),
   publishNowLane(runPublishNow),
   placeMapsLane(runPlaceMaps),
   doorProbesLane(runDoorProbes),

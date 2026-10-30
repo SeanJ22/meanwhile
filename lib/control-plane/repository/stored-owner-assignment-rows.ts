@@ -1,4 +1,4 @@
-import type { OwnerAssignmentRow, OwnerAssignmentRows } from "./owner-assignment-rows.ts";
+import { ownerAssignmentHeadOf, ownerAssignmentContributions, type OwnerAssignmentRow, type OwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import type { AggregateRepository } from "./types.ts";
 import type { StateTotals } from "../owner-snapshot-totals.ts";
 
@@ -15,6 +15,8 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
       const rows = store.readMany ? await store.readMany(ids) : (await Promise.all(ids.map(id => store.read(id)))).filter(row => row !== null);
       return rows.flatMap(row => row.value ? [row.value] : []).sort((a, b) => a.id.localeCompare(b.id));
     },
+    async heads(ids) { return (await this.read(ids)).map(ownerAssignmentHeadOf); },
+    async contributions(ids) { return ownerAssignmentContributions(await this.read(ids)); },
     async find(input) {
       const members = new Set(input.members), clauses = new Set(input.clauses);
       return (await values()).filter(row => row.group.members.some(id => members.has(id)) ||

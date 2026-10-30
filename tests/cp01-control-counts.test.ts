@@ -4,7 +4,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { assignmentPartOf, ASSIGNMENT_STATES, type AssignmentIndexRow } from "../lib/control-plane/assignment-view.ts";
 import { expandControlCounts, contractControlCounts, OWNER_ASSIGNMENT_PARTS_SQL } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
 import { CONTROL_COUNT_TABLES, controlCounts } from "../lib/control-plane/repository/control-counts.ts";
-import { OWNER_ASSIGNMENT_ROWS_DDL, pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
+import { OWNER_ASSIGNMENT_ROWS_DDL, ownerAssignmentHeadOf, ownerAssignmentContributions, ownerRowJson, pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
 import { contractOwnerLive } from "../lib/control-plane/repository/migrations/CP-01-LIVE.ts";
 
 test("control counts follow committed changes and owner migration retires blobs only after fresh contract catchup", async () => {
@@ -98,5 +98,46 @@ test("server-side owner migration contributions equal direct assignment counts f
     assert.deepEqual(repaired.map(row=>[row.id,Number(row.revision)]),[["current",1],["totals",1],["totals:az",2],["totals:empty",2],["totals:exact",1]]);
     await contractOwnerLive(sql);
     assert.deepEqual(await saved(),repaired,"repeated contract preserves revisions and timestamps when counts already agree");
+  }finally{await db.close();}
+});
+
+
+test("owner row fingerprints, count aggregates and activity patches preserve cold-start contributions",async()=>{
+  const db=new PGlite(),at="2026-10-30T17:00:00.000Z",queries:{text:string;params:readonly unknown[]}[]=[];
+  const sql={query:async(text:string,params:readonly unknown[]=[])=>{queries.push({text,params});return(await db.query(text,[...params])).rows;}};
+  try{
+    for(const ddl of OWNER_ASSIGNMENT_ROWS_DDL)await db.exec(ddl);
+    await db.exec("CREATE TABLE cp_owner_snapshots(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL)");
+    for(const value of[{é:"é",b:2,aa:1,abc:{yes:true,no:null},"😀":["a\\b","a \" b",null]},[1e-7,1e21,-1.25e-9,1e-30,0,-0,1.23e30]]){
+      const [row]=(await db.query<{json:string}>("SELECT $1::jsonb::text AS json",[JSON.stringify(value)])).rows;
+      assert.equal(ownerRowJson(value),row.json,"local fingerprint uses exactly the PostgreSQL representation");
+    }
+    const index={id:"freshness:ask-gap:body#CALENDAR_STALE",kind:"STANDING_OBLIGATION",lane:"ROUTINE",state:"WAITING",label:"One",subjectName:null,stateCode:"az",assignmentKeys:["hunt"],
+      instructionStates:{"hunt#receipt":"WAITING"},lastActivityAt:null,band:1,overdue:false,waitingSince:at,eligibleAt:at,blocker:null,owner:"FLEET",nextAction:"Read source"} as AssignmentIndexRow;
+    const obligation={active:true,eligibleAt:at,backoff:false,subjectId:"state-az",assignments:[]};
+    const make=(id:string,usd:import("../lib/control-plane/exact-sum.ts").ExactSum|null)=>({id,state:"az",builtAt:at,
+      group:{members:[id+"-member"],clause:null,obligation,usd,publications:[],items:[],scoutKeys:[]},
+      indexSegments:[{...index,id,from:null,until:"2026-10-30T18:00:00.000Z"},{...index,id,state:"FAILED" as const,from:"2026-10-30T18:00:00.000Z",until:null}],
+      part:assignmentPartOf([[id,{index:{...index,id},usd,obligation}]],at),nextAt:"2026-10-30T18:00:00.000Z"});
+    const entries=[make(index.id,{p:[1e-30,.1,.2],nan:1}),make("other",{p:[.1],pinf:1}),make("none",null)],repo=pgOwnerAssignmentRows(sql);
+    await repo.save(entries,[]);
+    const heads=await repo.heads(entries.map(row=>row.id));
+    assert.deepEqual(heads,entries.map(ownerAssignmentHeadOf).sort((a,b)=>a.id.localeCompare(b.id)));
+    const actual=(await repo.contributions(entries.map(row=>row.id))).get("az")!,expected=ownerAssignmentContributions(entries).get("az")!;
+    assert.deepEqual({...actual.part,usd:null},{...expected.part,usd:null});assert.equal(actual.usdRows,2);
+    const {exactSum,mergeExact,exactValue}=await import("../lib/control-plane/exact-sum.ts"),sum=exactSum();
+    mergeExact(sum,actual.part.usd!);assert.equal(exactValue(sum),exactValue(expected.part.usd!));
+    assert.equal(sum.nan,expected.part.usd!.nan);assert.equal(sum.pinf,expected.part.usd!.pinf);
+    queries.length=0;
+    const updated=entries.map(row=>({...row,builtAt:"2026-10-30T17:01:00.000Z",indexSegments:row.indexSegments.map((segment,i)=>({...segment,lastActivityAt:i?at:"2026-10-30T17:00:30.000Z"}))}));
+    await repo.save(updated,[],[],heads);
+    const payload=JSON.parse(String(queries.find(query=>query.text.includes("WITH incoming"))!.params[0]));
+    assert.equal(payload.some((patch:Record<string,unknown>)=>"group"in patch||"part"in patch||"indexSegments"in patch),false,"unchanged bodies never leave the process");
+    assert.equal(payload.every((patch:Record<string,unknown>)=>"indexActivity"in patch),true);
+    assert.deepEqual(await repo.read(entries.map(row=>row.id)),[...updated].sort((a,b)=>a.id.localeCompare(b.id)));
+    const current=await repo.heads(entries.map(row=>row.id)),moved=updated.map(row=>({...row,group:{...row.group,members:["moved"],scoutKeys:["new-key"]},indexSegments:row.indexSegments.map(segment=>({...segment,label:"New label"}))}));
+    await repo.save(moved,[],[],current);assert.deepEqual(await repo.read(entries.map(row=>row.id)),[...moved].sort((a,b)=>a.id.localeCompare(b.id)));
+    await assert.rejects(repo.save(updated,[],[{id:"missing-state",expectedRevision:7,value:{} as import("../lib/control-plane/owner-snapshot-totals.ts").StateTotals}],await repo.heads(entries.map(row=>row.id))),/Owner counts changed/);
+    assert.deepEqual(await repo.read(entries.map(row=>row.id)),[...moved].sort((a,b)=>a.id.localeCompare(b.id)),"rejected counts roll back partial field updates");
   }finally{await db.close();}
 });

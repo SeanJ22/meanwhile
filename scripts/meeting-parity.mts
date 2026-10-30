@@ -38,10 +38,11 @@ async function pickZips(): Promise<{ zip: string; state: string }[]> {
 }
 
 
-async function apiMeetings(zip: string): Promise<Shown[]> {
+interface ApiPlace { meetings: Shown[]; snapshot: { generatedAt: string; failed: { source: string }[] } | null; coverage: { bodies: { bodyId?: string }[] } }
+async function apiPlace(zip: string): Promise<ApiPlace> {
   for (let attempt = 0; ; attempt++) {
     const response = await fetch(`${SITE}/api/meetings?zip=${zip}`, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(60_000) });
-    if (response.ok) return ((await response.json()) as { meetings: Shown[] }).meetings;
+    if (response.ok) return (await response.json()) as ApiPlace;
     if (attempt >= 2) throw new Error(`${zip}: HTTP ${response.status}`);
   }
 }
@@ -49,11 +50,13 @@ async function apiMeetings(zip: string): Promise<Shown[]> {
 const inWindow = (m: { startsAt: string }) => { const at = Date.parse(m.startsAt); return at >= FROM && at <= TO; };
 
 const zips = await pickZips();
+const placeLosses = { lastCheckedLost: 0, lastCheckedOlder: 0, failedNoteLost: 0 };
 const report = { site: SITE, at: NOW.toISOString(), zips: zips.length, before: 0, matched: 0, missing: 0, changed: 0, added: 0, byKind: {} as Record<string, number>, missingBySource: {} as Record<string, number>, perZip: [] as unknown[] };
 const differing: { zip: string; state: string; differences: string[]; meeting: Shown }[] = [];
 const bump = (map: Record<string, number>, key: string) => { map[key] = (map[key] ?? 0) + 1; };
 for (const { zip, state } of zips) {
-  const shown = (await apiMeetings(zip)).filter(inWindow);
+  const place = await apiPlace(zip);
+  const shown = place.meetings.filter(inWindow);
   const bodies = new Map<string, Shown>();
   for (const meeting of shown) if (meeting.bodyId && !bodies.has(meeting.bodyId)) bodies.set(meeting.bodyId, meeting);
   const rows = bodies.size ? await query(MEETING_FACT_ROWS_SQL, [[...bodies.keys()], new Date(FROM).toISOString()]) : [];
@@ -68,6 +71,16 @@ for (const { zip, state } of zips) {
     const diff = differences(meeting, found);
     if (diff.length) { changed++; differing.push({ zip, state, differences: diff, meeting }); for (const kind of diff) bump(report.byKind, kind); } else matched++;
   }
+  // A place shows when its sources were last checked, and which of them are dark. Both come from the fact store's own record.
+  const placeBodies = [...new Set([...bodies.keys(), ...place.coverage.bodies.flatMap(body => body.bodyId ? [body.bodyId] : [])])];
+  const placeRows = placeBodies.length ? await query(MEETING_FACT_ROWS_SQL, [placeBodies, new Date(FROM).toISOString()]) : [];
+  const checked = placeRows.map(row => Date.parse(String(row.checked_at))).filter(Number.isFinite);
+  const factChecked = checked.length ? Math.max(...checked) : null;
+  if (place.snapshot) {
+    if (factChecked === null) placeLosses.lastCheckedLost++;
+    else if (factChecked < Date.parse(place.snapshot.generatedAt) - DAY) placeLosses.lastCheckedOlder++;
+    if (place.snapshot.failed.length) placeLosses.failedNoteLost++;
+  }
   const added = held.filter(meeting => !ids.has(meeting.id) && ![meeting.id, ...meeting.mergedMeetingIds ?? []].some(id => shown.some(s => s.id === id || s.mergedMeetingIds?.includes(id)))).length;
   report.before += shown.length; report.matched += matched; report.missing += missing; report.changed += changed; report.added += added;
   report.perZip.push({ zip, state, before: shown.length, matched, missing, changed, added });
@@ -80,5 +93,6 @@ const [owed] = await query(`WITH cm AS (SELECT r.value->>'startsAt' AS starts_at
   SELECT count(*)::int AS meetings, count(DISTINCT body_id)::int AS bodies FROM cm WHERE starts_at ~ '^[0-9]{4}-' AND starts_at::timestamptz BETWEEN $1 AND $2
   AND NOT EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = 'meeting:' || cm.row_id AND f.field = 'starts_at' AND f.status = 'live')`, [new Date(FROM).toISOString(), new Date(TO).toISOString()]);
 (report as Record<string, unknown>).owedByAcquisition = owed;
+(report as Record<string, unknown>).placeLosses = placeLosses;
 if (args.get("dump")) writeFileSync(args.get("dump")!, JSON.stringify(differing));
 console.log(JSON.stringify(report, null, 2));

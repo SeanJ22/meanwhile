@@ -5,11 +5,11 @@
  * the same as the live API shows.
  *
  *   pnpm meetings:parity -- --dump=differing.json
- *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/meeting-reread.mts differing.json [--pace=10]
+ *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/meeting-reread.mts differing.json [--pace=360] [--out=outcomes.json]
  *
  * --pace is seconds between two reads of one publisher's host (default 360, which is 10 an hour).
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { vaultCapture } from "../lib/facts/capture.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -86,6 +86,7 @@ async function capture(url: string): Promise<WorkerPublicationCapture | null> {
 const report = { meetings: rows.length, pageMissing: 0, recovered: 0, stillDifferent: 0, bySource: {} as Record<string, { meetings: number; recovered: number; pageMissing: number }>, remaining: {} as Record<string, number>, blanks: {} as Record<string, number> };
 const bump = (map: Record<string, number>, key: string) => { map[key] = (map[key] ?? 0) + 1; };
 const published = new Map<string, Shown>();
+const outcomes: { id: string; differences: string[] }[] = [];
 for (const { meeting } of rows) {
   const source = meeting.id.split(":")[0]!;
   const bucket = report.bySource[source] ??= { meetings: 0, recovered: 0, pageMissing: 0 };
@@ -114,8 +115,11 @@ for (const { meeting } of rows) {
   const source = meeting.id.split(":")[0]!;
   const found = byId.get(meeting.id);
   const diff = found ? differences(meeting, found) : ["missing"];
+  outcomes.push({ id: meeting.id, differences: diff });
   if (diff.length) { report.stillDifferent++; for (const kind of diff) bump(report.remaining, `${source}|${kind}`); }
   else { report.recovered++; report.bySource[source]!.recovered++; }
 }
+const out = args.find(arg => arg.startsWith("--out="))?.slice(6);
+if (out) writeFileSync(out, JSON.stringify(outcomes));
 console.log(JSON.stringify(report, null, 2));
 await db.pg.close();

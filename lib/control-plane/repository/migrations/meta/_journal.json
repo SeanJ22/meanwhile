@@ -104,6 +104,11 @@
       "id": "SPN-01B_cost_expand",
       "phase": "expand",
       "hash": "e7b4b3c61a5a3343ecb72984904c96574e902ce085c60a7543228e4f57633b83"
+    },
+    {
+      "id": "SPN-01B_run_expand",
+      "phase": "expand",
+      "hash": "df4a380c044a82aab6c8ca7485bf6a132a34f9347c514c865df02dd5cfffaf53"
     }
   ]
 }

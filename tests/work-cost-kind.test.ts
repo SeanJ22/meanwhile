@@ -5,7 +5,9 @@ import { capabilityLog } from "../lib/core/capability.ts";
 import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
 import { hunterFor } from "../lib/hunt/runtime.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
-import { WORK_DDL, workList } from "../lib/core/work.ts";
+import { WORK_DDL, WORK_RUN_DDL, workList } from "../lib/core/work.ts";
+import { keepRunsOnRows } from "../lib/control-plane/repository/row-run.ts";
+import { canonicalJson } from "../lib/control-plane/repository/types.ts";
 import { WORK_COST_KINDS, workCostKindOf } from "../lib/core/work-kinds.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { dispatchAutonomousTask, type AutonomousCoordinatorRuntime } from "../lib/control-plane/workers/coordinator.ts";
@@ -31,10 +33,10 @@ test("a row's kind is Ask question, Reader request, Sean's order or Planner, whi
 test("an Ask question and then a reader's request each hunt on the next tick, every charge carries its row's kind, and Admin sums it today inside the daily pot", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
-  for (const ddl of [...WORK_DDL, ...MODEL_CHARGES_DDL, ...MODEL_CHARGE_KIND_DDL]) await pg.exec(ddl);
+  for (const ddl of [...WORK_DDL, ...WORK_RUN_DDL, ...MODEL_CHARGES_DDL, ...MODEL_CHARGE_KIND_DDL]) await pg.exec(ddl);
   const rows = async (text: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
   const sql: Sql = { query: async (text, params = []) => await rows(text, params) };
-  const repos = { ...createMemoryRepositories(), spend: pgSpendRepository(sql) };
+  const repos = keepRunsOnRows({ ...createMemoryRepositories(), spend: pgSpendRepository(sql) }, rows);
   const now = () => new Date().toISOString();
   const list = workList(rows, { owner: "kind-test" });
   const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
@@ -59,6 +61,17 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
     return { item, task: task! };
   };
   const kinds = async () => (await readWorkKindSpend(sql))!;
+  /** The row says everything about its hunt that the old records do: the work item, the task, the lease and every attempt. */
+  const rowKeepsItsHunt = async (id: string) => {
+    const run = (await rows("SELECT run FROM work WHERE id = $1", [id]))[0]!.run as Record<string, unknown>;
+    const same = (kept: unknown, held: unknown) => assert.equal(canonicalJson(kept), canonicalJson(JSON.parse(JSON.stringify(held))));
+    same(run.item, (await repos.workItems.mustRead(id)).value);
+    same(run.task, (await repos.routeTasks.mustRead(id)).value);
+    same(run.lease, (await repos.leases.mustRead(id)).value);
+    const attempts = await repos.attempts.listWhere(["routeTaskId"], id);
+    assert.ok(attempts.length > 0, "the hunt made an attempt");
+    same(run.attempts, Object.fromEntries(attempts.map(attempt => [attempt.id, attempt.value])));
+  };
 
   // Tick one: an unanswered Ask question.
   await recordQuestionWork({ question: "Who voted for the school budget?", divisions: [division], place: "85701", subjectId: `${division}#board`,
@@ -67,7 +80,11 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   assert.equal((await claims.claim(true))?.taskIds.length, 1);
   const ask = await newest();
   assert.equal(ask.item.autonomousPlan?.workKind, "ask");
+  const askRow = (await rows("SELECT id FROM work WHERE kind = 'ask'"))[0]!.id;
+  assert.deepEqual([ask.item.id, ask.task.id], [askRow, askRow], "the row's id is the work item's id and the task's id");
+  assert.equal(canonicalJson((await rows("SELECT run FROM work WHERE id = $1", [askRow]))[0]!.run), "{\"item\":" + canonicalJson(JSON.parse(JSON.stringify(ask.item))) + ",\"task\":" + canonicalJson(JSON.parse(JSON.stringify(ask.task))) + "}", "a claimed row holds its work item and task before any hunt");
   await hunt(ask.item, ask.task, false);
+  await rowKeepsItsHunt(askRow as string);
   const charges = (await rows("SELECT work_kind, usd FROM cp_model_charges")) as { work_kind: string | null; usd: number }[];
   assert.ok(charges.length > 0 && charges.every(charge => charge.work_kind === "ask"), "every charge the hunt made says Ask question");
   const asked = charges.reduce((sum, charge) => sum + charge.usd, 0);
@@ -82,10 +99,25 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   const reader = await newest();
   assert.equal(reader.item.autonomousPlan?.workKind, "reader");
   await hunt(reader.item, reader.task, true);
+  await rowKeepsItsHunt(reader.task.id);
   const after = await kinds();
   assert.equal(after[0]!.usd, Math.round(asked * 1e4) / 1e4, "the Ask total did not move");
   assert.ok(after[1]!.usd !== null && after[1]!.usd > 0, "the reader request's hunt is Reader requests");
   assert.deepEqual(after.slice(2).map(k => k.usd), [null, null]);
   const total = (await rows("SELECT sum(usd) AS usd FROM cp_model_charges"))[0]!.usd as number;
   assert.ok(Math.abs((await readSpendWindow(repos, now())).windowUsd - total) < 1e-9, "both kinds are in the one daily pot");
+
+  // Tick three: a lane dies after its hunt ended but before the row was settled. The lease runs out, the row is reclaimed once, and it is not hunted again.
+  await list.sooner({ placeId: division, subjectId: `${division}#clerk`, subjectType: "body" });
+  assert.equal((await claims.claim(true))?.taskIds.length, 1);
+  const crashed = await newest();
+  await hunt(crashed.item, crashed.task, true);
+  const spent = (await rows("SELECT count(*)::int AS n FROM cp_model_charges"))[0]!.n;
+  await rows("UPDATE work SET lease_until = now() - interval '1 minute' WHERE status = 'taken'");
+  const next = hunterClaims({ list: workList(rows, { owner: "kind-test-2" }), repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
+  await next.select(["az"], false);
+  assert.equal(await next.claim(true), null, "the reclaimed row's hunt had ended, so it is finished and no task is handed out");
+  assert.equal(await next.claim(true), null, "and it is not claimed again");
+  assert.deepEqual((await rows("SELECT status, attempts FROM work WHERE id = $1", [crashed.task.id])).map(row => `${row.status}:${row.attempts}`), ["done:2"], "claimed twice, worked once");
+  assert.equal((await rows("SELECT count(*)::int AS n FROM cp_model_charges"))[0]!.n, spent, "no second charge");
 });

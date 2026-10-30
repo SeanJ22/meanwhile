@@ -2,6 +2,7 @@ import { capabilityLog } from "../../core/capability.ts";
 import { pgOwnerCostRefs } from "./owner-cost-refs.ts";
 import { pgOwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
+import { keepRunsOnRows } from "./row-run.ts";
 import { checkedValueQuery, hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
@@ -1952,7 +1953,7 @@ export async function createPgRepositories(
     };
     return stateRepos;
   }
-  return repositories;
+  return keepRunsOnRows(repositories, (text, params) => sql.query(text, [...params ?? []]) as Promise<Record<string, unknown>[]>);
 }
 
 export function controlPlaneUrlFromEnv(

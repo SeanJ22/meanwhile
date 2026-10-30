@@ -70,6 +70,8 @@ export interface RouteTask {
 }
 
 export function createRouteTask(input: {
+  /** A work row's own id, when the task stands for one row of the work list. */
+  id?: string;
   workItemId: string;
   routeId: string;
   routeLabel: string;
@@ -78,7 +80,7 @@ export function createRouteTask(input: {
   now: string;
 }): RouteTask {
   return {
-    id: routeTaskId(input.workItemId, input.routeId, input.target),
+    id: input.id ?? routeTaskId(input.workItemId, input.routeId, input.target),
     workItemId: input.workItemId,
     routeId: input.routeId,
     routeLabel: input.routeLabel,

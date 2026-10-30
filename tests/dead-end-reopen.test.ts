@@ -164,7 +164,7 @@ test("a hunt that leaves a blank open names what would unlock it, the list's clo
   await claims.select(["ma"], false);
   const queue = await claims.claim(true);
   assert.equal(queue?.taskIds.length, 1);
-  const base = { obligationId: "obligation-1", attemptId: "attempt-1", routeTaskId: queue!.taskIds[0]!, outcome: "WORKED" as const };
+  const base = { obligationId: "obligation-1", attemptId: "attempt-1", routeTaskId: queue!.taskIds[0]!, outcome: "WORKED" as const, detail: "ran" };
   unfilled.set("obligation-1:attempt-1", [
     { subjectId: pressed.subjectId!, field: "meeting_times", tried: "The town page", unlock: "Their agendas are on a platform nobody reads yet.", needs: { kind: "parser", name: "ecode360", platform: "ecode360", state: "ma" } },
     { subjectId: pressed.subjectId!, field: "phone", tried: "x", unlock: "Call them." }]);

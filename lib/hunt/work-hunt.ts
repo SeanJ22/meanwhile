@@ -17,6 +17,7 @@ export function plannedTaskOf(row: Pick<WorkRow, "value">): PlannedTask | null {
   return value !== null && typeof value === "object" && typeof value.routeTaskId === "string" ? { routeTaskId: value.routeTaskId, plain: value.plain === true } : null;
 }
 
+const CLAIMABLE = ["PENDING", "RECLAIMABLE"];
 const WHY = { ask: "A reader asked a question that Meanwhile could not answer from its data.", reader: "A reader asked to get this sooner.",
   order: "Sean ordered this hunt.", planner: "Open blanks here changed since the last hunt." } as const;
 
@@ -27,13 +28,13 @@ function huntOf(claim: WorkRow, now: string) {
   const day = claim.receivedAt.slice(0, 10);
   if (claim.kind === "ask") {
     const { question, place, divisions } = claim.value as AskQuestion;
-    const made = createWorkItem({ project: "freshness", question: "HAVE_IT", subject: claim.subjectId!,
+    const made = createWorkItem({ id: claim.id, project: "freshness", question: "HAVE_IT", subject: claim.subjectId!,
       obligation: `Find and publish a sourced answer${place ? ` for ZIP ${place}` : ""}: ${question}`, why: WHY.ask, contract, now });
     const plan: AutonomousWorkPlan = { ...huntPacketPlan(made.subject), workKind, readerQuestion: { origin: "ASK", text: question, place, divisions } };
     return { work: { ...made, autonomousPlan: plan }, label: "Find the answer to a reader's question" };
   }
   const government = claim.subjectId!.split("#")[0]!;
-  const made = createWorkItem({ project: "freshness", question: "HAVE_IT", subject: government,
+  const made = createWorkItem({ id: claim.id, project: "freshness", question: "HAVE_IT", subject: government,
     obligation: `Find and publish the facts missing for ${government}, asked for ${day} (${claim.id.slice(5, 13)})`, why: WHY[workKind], contract, now });
   return { work: { ...made, autonomousPlan: { ...huntPacketPlan(government), workKind } as AutonomousWorkPlan }, label: "Find the facts missing for this government" };
 }
@@ -47,11 +48,14 @@ export async function taskOfRow(repos: ControlPlaneRepositories, claim: WorkRow,
   const planned = plannedTaskOf(claim);
   if (planned !== null) {
     const task = await repos.routeTasks.readNarrowed(planned.routeTaskId, { state: true });
-    return task !== null && ["PENDING", "RECLAIMABLE"].includes((task.value as { state: string }).state) ? planned : null;
+    return task !== null && CLAIMABLE.includes((task.value as { state: string }).state) ? planned : null;
   }
   const { work, label } = huntOf(claim, now);
   if (!await repos.workItems.readNarrowed(work.id, { id: true })) await registerWorkItem(repos, work, now);
-  const task = createRouteTask({ workItemId: work.id, routeId: HUNT_PACKET_ROUTE_ID, routeLabel: label, target: work.subject, inherited: false, now });
-  if (!await repos.routeTasks.readNarrowed(task.id, { id: true })) await registerRouteTask(repos, task, now);
+  const task = createRouteTask({ id: claim.id, workItemId: work.id, routeId: HUNT_PACKET_ROUTE_ID, routeLabel: label, target: work.subject, inherited: false, now });
+  const held = await repos.routeTasks.readNarrowed(task.id, { state: true });
+  if (!held) await registerRouteTask(repos, task, now);
+  // A row whose hunt already ended (its lane died after the disposition, before the row was settled) is finished, never worked a second time.
+  else if (!CLAIMABLE.includes((held.value as { state: string }).state)) return null;
   return { routeTaskId: task.id, plain: false };
 }

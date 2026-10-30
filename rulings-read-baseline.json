@@ -718,26 +718,6 @@
       "table": "civic_data_candidates"
     },
     {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_clock_versions"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "lib/db/migration-phases.ts",
       "table": "civic_data_candidate_events"
     },

@@ -108,18 +108,18 @@ test("owner row fingerprints, count aggregates and activity patches preserve col
   try{
     for(const ddl of OWNER_ASSIGNMENT_ROWS_DDL)await db.exec(ddl);
     await db.exec("CREATE TABLE cp_owner_snapshots(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL)");
-    for(const value of[{é:"é",b:2,aa:1,abc:{yes:true,no:null},"😀":["a\\b","a \" b",null]},[1e-7,1e21,-1.25e-9,1e-30,0,-0,1.23e30]]){
+    for(const value of[{é:"é",b:2,aa:1,abc:{yes:true,no:null},"😀":["a\\b","a \" b",null]},[0,1,235_000,null,true,false]]){
       const [row]=(await db.query<{json:string}>("SELECT $1::jsonb::text AS json",[JSON.stringify(value)])).rows;
       assert.equal(ownerRowJson(value),row.json,"local fingerprint uses exactly the PostgreSQL representation");
     }
     const index={id:"freshness:ask-gap:body#CALENDAR_STALE",kind:"STANDING_OBLIGATION",lane:"ROUTINE",state:"WAITING",label:"One",subjectName:null,stateCode:"az",assignmentKeys:["hunt"],
       instructionStates:{"hunt#receipt":"WAITING"},lastActivityAt:null,band:1,overdue:false,waitingSince:at,eligibleAt:at,blocker:null,owner:"FLEET",nextAction:"Read source"} as AssignmentIndexRow;
     const obligation={active:true,eligibleAt:at,backoff:false,subjectId:"state-az",assignments:[]};
-    const make=(id:string,usd:import("../lib/control-plane/exact-sum.ts").ExactSum|null)=>({id,state:"az",builtAt:at,
-      group:{members:[id+"-member"],clause:null,obligation,usd,publications:[],items:[],scoutKeys:[]},
+    const make=(id:string)=>({id,state:"az",builtAt:at,
+      group:{members:[id+"-member"],clause:null,obligation,publications:[]},
       indexSegments:[{...index,id,from:null,until:"2026-10-30T18:00:00.000Z"},{...index,id,state:"FAILED" as const,from:"2026-10-30T18:00:00.000Z",until:null}],
-      part:assignmentPartOf([[id,{index:{...index,id},usd,obligation}]],at),nextAt:"2026-10-30T18:00:00.000Z"});
-    const entries=[make(index.id,{p:[1e-30,.1,.2],nan:1}),make("other",{p:[.1],pinf:1}),make("none",null)],repo=pgOwnerAssignmentRows(sql);
+      part:assignmentPartOf([[id,{index:{...index,id},usd:null,obligation}]],at),nextAt:"2026-10-30T18:00:00.000Z"});
+    const entries=[make(index.id),make("other"),make("none")],repo=pgOwnerAssignmentRows(sql);
     await repo.save(entries,[]);
     const heads=await repo.heads(entries.map(row=>row.id));
     assert.deepEqual(heads,entries.map(ownerAssignmentHeadOf).sort((a,b)=>a.id.localeCompare(b.id)));
@@ -133,7 +133,7 @@ test("owner row fingerprints, count aggregates and activity patches preserve col
     assert.equal(payload.some((patch:Record<string,unknown>)=>"group"in patch||"part"in patch||"indexSegments"in patch),false,"unchanged bodies never leave the process");
     assert.equal(payload.every((patch:Record<string,unknown>)=>"indexActivity"in patch),true);
     assert.deepEqual(await repo.read(entries.map(row=>row.id)),[...updated].sort((a,b)=>a.id.localeCompare(b.id)));
-    const current=await repo.heads(entries.map(row=>row.id)),moved=updated.map(row=>({...row,group:{...row.group,members:["moved"],scoutKeys:["new-key"]},indexSegments:row.indexSegments.map(segment=>({...segment,label:"New label"}))}));
+    const current=await repo.heads(entries.map(row=>row.id)),moved=updated.map(row=>({...row,group:{...row.group,members:["moved"]},indexSegments:row.indexSegments.map(segment=>({...segment,label:"New label"}))}));
     await repo.save(moved,[],[],current);assert.deepEqual(await repo.read(entries.map(row=>row.id)),[...moved].sort((a,b)=>a.id.localeCompare(b.id)));
     await assert.rejects(repo.save(updated,[],[{id:"missing-state",expectedRevision:7,value:{} as import("../lib/control-plane/owner-snapshot-totals.ts").StateTotals}],await repo.heads(entries.map(row=>row.id))),/Owner counts changed/);
     assert.deepEqual(await repo.read(entries.map(row=>row.id)),[...moved].sort((a,b)=>a.id.localeCompare(b.id)),"rejected counts roll back partial field updates");

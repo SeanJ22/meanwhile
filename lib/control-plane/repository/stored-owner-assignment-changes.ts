@@ -43,7 +43,7 @@ export function storedOwnerAssignmentChanges(get:()=>ControlPlaneRepositories):O
     }
     const owners=await repos.ownerAssignmentRows.heads(await repos.ownerAssignmentRows.find({members:[...items],clauses:[...groups]}));
     const known=new Set(owners.flatMap(row=>row.members)),byId=new Map(owners.map(row=>[row.id,{id:row.id,state:row.state}]));
-    for(const id of groups)byId.set(id,{id,state:stateCodeOf(id)??"other"});
+    for(const id of groups)byId.set(id,{id,state:stateCodeOf(id,"")??"other"});
     return {through:Object.values(cursors).map(cursor=>cursor.through).sort()[0]!,cursors,groups:[...byId.values()],
       items:[...await heldWorkItems(repos,[...items].filter(id=>!known.has(id)))],changedAttempts:[...attempts],changedWorkItems:[...changed],links};
   }};

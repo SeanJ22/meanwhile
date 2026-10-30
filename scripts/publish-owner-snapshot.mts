@@ -394,7 +394,7 @@ async function main(): Promise<void> {
   stepDone("campaign page readback collected");
   const fold = reads?.fold ?? null;
   if (!DRY_RUN && fold) {
-    const publications = await fold.publications();
+    const publications = await repos!.ownerAssignmentRows.publications();
     const [workerReadback, manualReadback] = await Promise.all([
       collectPublishedWorkerReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
         .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),

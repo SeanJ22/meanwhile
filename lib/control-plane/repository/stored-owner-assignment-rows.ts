@@ -1,4 +1,4 @@
-import { ownerAssignmentHeadOf, ownerAssignmentContributions, type OwnerAssignmentRow, type OwnerAssignmentRows } from "./owner-assignment-rows.ts";
+import { ownerReadbackItem, ownerAssignmentHeadOf, ownerAssignmentContributions, type OwnerAssignmentRow, type OwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import type { AggregateRepository } from "./types.ts";
 import type { StateTotals } from "../owner-snapshot-totals.ts";
 

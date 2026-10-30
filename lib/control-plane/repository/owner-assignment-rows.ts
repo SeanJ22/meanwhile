@@ -76,17 +76,13 @@ const parse = (value: unknown): OwnerAssignmentRow => (typeof value === "string"
 const ROW_FIELDS = `jsonb_build_object('id',id,'state',state_code,'builtAt',value->'builtAt',
   'group',value->'group','indexSegments',index_segments,'part',value->'part','nextAt',value->'nextAt')`;
 
-/** PostgreSQL jsonb text, including its byte-length key order and decimal number spelling. */
+/** PostgreSQL jsonb text for count rows: strings, booleans, nulls and integer counts. */
 export function ownerRowJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(ownerRowJson).join(", ")}]`;
   if (value !== null && typeof value === "object") return `{${Object.keys(value).filter(key => (value as Record<string, unknown>)[key] !== undefined)
     .sort((a,b) => Buffer.byteLength(a)-Buffer.byteLength(b) || Buffer.compare(Buffer.from(a),Buffer.from(b)))
     .map(key => `${JSON.stringify(key)}: ${ownerRowJson((value as Record<string, unknown>)[key])}`).join(", ")}}`;
-  const json = JSON.stringify(value) ?? "null";
-  if (typeof value !== "number" || !/e/i.test(json)) return json;
-  const [mantissa, exponent] = json.split(/e/i), negative = mantissa.startsWith("-"), digits = mantissa.replace(/[-.]/g,""),
-    point = mantissa.replace("-","").split(".")[0].length + Number(exponent);
-  return `${negative?"-":""}${point<=0?`0.${"0".repeat(-point)}${digits}`:point>=digits.length?digits+"0".repeat(point-digits.length):`${digits.slice(0,point)}.${digits.slice(point)}`}`;
+  return JSON.stringify(value) ?? "null";
 }
 const digest = (value: unknown): string => createHash("md5").update(ownerRowJson(value)).digest("hex");
 const fieldsOf = (row: OwnerAssignmentRow): Record<string, unknown> => ({

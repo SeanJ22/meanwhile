@@ -642,7 +642,6 @@ export class OwnerSnapshotFold {
   readonly #stateOfGroup = new Map<string, string>();
   /** Each assignment's index row, segment by segment over the instants the clock alone changes it at. */
   readonly #index = new Map<string, IndexSegment[]>();
-  readonly #groupOf = new Map<string, string>();
   /** States whose rows this publish wrote. */
   readonly #written = new Set<string>();
   /** Attempts changed since the last publish. */
@@ -783,11 +782,6 @@ export class OwnerSnapshotFold {
     return { items: this.#pipeline.items, linked: this.#pipeline.items - Object.keys(this.#pipeline.unlinked).length, verified: this.#pipeline.verified };
   }
 
-  /** Every work item with a publication outcome, as the public readbacks read it. */
-  publications(): Promise<readonly WorkItem[]> {
-    return this.#repos.ownerAssignmentRows.publications();
-  }
-
   /** Standing obligations by the state name each carries. */
   obligationsByState(): Record<string, number> {
     const out: Record<string, number> = {};
@@ -869,17 +863,11 @@ export class OwnerSnapshotFold {
           for(const[place,totals]of Object.entries(inbox.places))mergePlaceTotals(loaded.places[place]??=placeTotals(),totals);
           if(checkpoint)loaded.inboxRun=this.#inboxes.run;
         }
-        await this.#loadRows(inbox.groups);
-        await this.#loadRows(await this.#repos.ownerAssignmentRows.find({ members: inbox.items, clauses: inbox.groups }));
-        const targets = new Set(inbox.groups);
-        /* A new obligation takes in the created work items whose clause names it. */
-        for (const id of loaded.groups) { const clause = this.#groups.get(id)!.clause; if (clause !== null && targets.has(clause) && !this.#groups.has(clause)) targets.add(id); }
-        for (const item of inbox.items) { const held = this.#groupOf.get(item); if (held !== undefined) targets.add(held); }
-        const touched = targets.size;
-        await this.#derive([...targets], []);
-        const probes = [...await heldWorkItems(this.#repos, inbox.items.filter((item) => !this.#groupOf.has(item)))];
-        await this.#derive([], probes);
-        this.#input.log(`assignments: ${state} folded — ${touched} derived again, ${probes.length} work item(s) no assignment held`);
+        const targets=unique([...inbox.groups,...await this.#repos.ownerAssignmentRows.find({members:inbox.items,clauses:inbox.groups})]);
+        await this.#derive(targets,[]);
+        const owned=new Set([...this.#groups.values()].flatMap(group=>group.members)),probes=inbox.items.filter(id=>!owned.has(id));
+        await this.#derive([],probes);
+        this.#input.log(`assignments: ${state} folded — ${targets.length} derived again, ${probes.length} work item(s) no assignment held`);
         await this.#emit();
         if(checkpoint){
           this.#checkpointStates+=1;
@@ -942,7 +930,6 @@ export class OwnerSnapshotFold {
     this.#priorRows.clear();
     this.#stateOfGroup.clear();
     this.#index.clear();
-    this.#groupOf.clear();
     this.#replaced.clear();
   }
 
@@ -950,15 +937,11 @@ export class OwnerSnapshotFold {
     this.#groups.set(id, g);
     this.#stateOfGroup.set(id, state);
     this.#loaded.get(state)!.groups.add(id);
-    for (const m of g.members) this.#groupOf.set(m, id);
   }
 
   #dropGroup(id: string): void {
     this.#replaced.add(id);
     const state = this.#stateOfGroup.get(id);
-    for (const m of this.#groups.get(id)?.members ?? []) {
-      if (this.#groupOf.get(m) === id) this.#groupOf.delete(m);
-    }
     if (state !== undefined) this.#loaded.get(state)?.groups.delete(id);
     this.#groups.delete(id);
     this.#stateOfGroup.delete(id);
@@ -976,8 +959,8 @@ export class OwnerSnapshotFold {
   async #deriveBatch(targets:readonly string[],probes:readonly string[]):Promise<void>{
     const ids=new Set(targets);
     await this.#loadRows(targets);
-    await this.#loadRows(await this.#repos.ownerAssignmentRows.find({members:probes}));
-    for(const id of probes){const group=this.#groupOf.get(id);if(group)ids.add(group);}
+    const owners=await this.#repos.ownerAssignmentRows.find({members:probes});
+    await this.#loadRows(owners);for(const id of owners)ids.add(id);
     for(let round=0;;round++){
       if(round>16)throw new Error(`assignment membership did not settle for ${[...ids].slice(0,5).join(", ")}`);
       const src=await this.#repos.ownerAssignmentHeads.read({groups:[...ids],workItems:probes},this.#input.nowIso);

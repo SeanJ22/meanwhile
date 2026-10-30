@@ -11,7 +11,7 @@ import {
   type AssignmentView,
   type IndexSegment,
 } from "../lib/control-plane/assignment-view.ts";
-import { pipelineStatesOf } from "../lib/control-plane/assignment-read.ts";
+import { readEveryAssignmentSource } from "./helpers/assignment-sources.ts";
 import { ASK_GAP_NAMESPACE } from "../lib/control-plane/ask-gap-id.ts";
 import type { AskGapObservation } from "../lib/control-plane/ask-gap-observations.ts";
 import type { Attempt, AttemptCost, ExecutionLease, WorkerRef } from "../lib/control-plane/attempt.ts";
@@ -333,7 +333,7 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
     attribution,
     searches: fold.costs.searches[now.slice(0, 7)] ?? {},
     obligationsByState: fold.obligationsByState(),
-    publications: (await fold.publications()).map((w) => w.id).sort(),
+    publications: (await repos.ownerAssignmentRows.publications()).map((w) => w.id).sort(),
     rows: rowsAt(states, now),
   };
   await fold.saveTotals(priorRow);
@@ -341,15 +341,8 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
 }
 
 async function sourcesAt(repos: ControlPlaneRepositories, now: string, served: ServedReaderReadback | null): Promise<AssignmentSources> {
-  const values = async <T,>(repo: { list(): Promise<readonly { value: T }[]> }) => (await repo.list()).map((r) => r.value);
-  const attempts = await values(repos.attempts as never as { list(): Promise<readonly { value: Attempt }[]> });
-  const open = new Set(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
-  return { nowIso: now, obligations: await values(repos.obligations), occurrences: await values(repos.occurrences), workItems: await values(repos.workItems),
-    routeTasks: await values(repos.routeTasks), attempts, debts: await values(repos.debts),
-    leases: (await values(repos.leases)).filter((l) => open.has(l.routeTaskId)), dispositions: null, artifacts: await repos.artifacts.readAll(),
-    costs: await repos.costs.readAll(), scoutResults: await repos.scoutResults.readAll(), workerResults: await repos.workerResults.readAll(),
-    pipeline: pipelineStatesOf(await repos.promotionPipeline.readAll()), activation: null, servedReader: served, pilotZips: [],
-    askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) };
+  return {...await readEveryAssignmentSource(repos,now),servedReader:served,
+    askGapObservations:(await repos.askGapObservations.list()).map(row=>row.value)};
 }
 
 /** Every panel from every row, as the publisher computed it before it kept totals. */

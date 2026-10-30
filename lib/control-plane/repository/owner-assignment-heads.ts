@@ -13,11 +13,7 @@ export interface AssignmentHeadSeeds {
   readonly groups: readonly string[];
   readonly workItems: readonly string[];
 }
-export interface AssignmentHeadBatch {
-  readonly heads: readonly AssignmentHead[];
-  readonly members: ReadonlyMap<string, readonly string[]>;
-  readonly workItems: readonly WorkItem[];
-}
+export type AssignmentHeadBatch=Readonly<ReturnType<typeof assignmentHeadBatchFromSources>>&{readonly workItems:readonly WorkItem[]};
 export interface OwnerAssignmentHeads {
   read(seeds: AssignmentHeadSeeds, now: string): Promise<AssignmentHeadBatch>;
 }

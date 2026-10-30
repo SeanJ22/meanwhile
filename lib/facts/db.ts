@@ -97,6 +97,7 @@ export function factReader(): Query | null {
 export function installFactReader(query: Query | null | undefined): void {
   installed = query;
   serverReaderValue("place-combined", () => new Map()).clear();
+  serverReaderValue("place-rows", () => new Map()).clear();
 }
 
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>

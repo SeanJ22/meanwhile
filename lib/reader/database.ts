@@ -78,6 +78,7 @@ async function ballotHttpRead(connection: string, statement: Statement, deadline
 export function installReaderDatabaseQuery(query: ReadOnlyQuery | null | undefined): void {
   installed = query;
   serverReaderValue("place-combined", () => new Map()).clear();
+  serverReaderValue("place-rows", () => new Map()).clear();
 }
 
 /** Foreground ballots use read-only HTTP; other readers reuse their socket transaction. */

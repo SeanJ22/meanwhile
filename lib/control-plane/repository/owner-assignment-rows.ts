@@ -72,7 +72,6 @@ export const OWNER_ASSIGNMENT_ROWS_DDL = [
   "CREATE INDEX IF NOT EXISTS cp_owner_assignment_recent ON cp_owner_assignment_rows(state_code,assignment_state,lane,last_activity_at DESC,id)",
 ] as const;
 
-const parse = (value: unknown): OwnerAssignmentRow => (typeof value === "string" ? JSON.parse(value) : value) as OwnerAssignmentRow;
 const ROW_FIELDS = `jsonb_build_object('id',id,'state',state_code,'builtAt',value->'builtAt',
   'group',value->'group','indexSegments',index_segments,'part',value->'part','nextAt',value->'nextAt')`;
 
@@ -110,17 +109,17 @@ function rowPatch(row: OwnerAssignmentRow, before: OwnerAssignmentHead | undefin
 
 export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
   const rows = async (text: string, args: readonly unknown[]) =>
-    (await sql.query(text, args) as { value: unknown }[]).map(row => parse(row.value));
+    (await sql.query(text, args) as { value: unknown }[]).map(row => row.value as OwnerAssignmentRow);
   return {
     read: async ids => ids.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`, [ids]) : [],
     async heads(ids) {
       if (!ids.length) return [];
       return await sql.query(`SELECT id,state_code AS state,members,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
-        jsonb_build_object('g',md5(((value->'group')-'members'-'publications')::text),'m',md5(members::text),
-          'p',md5((value #> '{group,publications}')::text),'s',md5((SELECT jsonb_agg(segment-'lastActivityAt' ORDER BY ordinal)
+        jsonb_build_object('g',md5(((value->'group')-'members'-'publications'-'usd'-'items'-'scoutKeys')::text),'m',md5(members::text),
+          'p',md5((value #> '{group,publications}')::text),'s',md5((SELECT jsonb_agg(segment-'lastActivityAt'-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount' ORDER BY ordinal)
             FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),
           'a',md5((SELECT jsonb_agg(segment->'lastActivityAt' ORDER BY ordinal)
-            FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),'c',md5((value->'part')::text)) AS versions
+            FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),'c',md5(((value->'part')||'{"usd":null,"candidates":[]}'::jsonb)::text)) AS versions
         FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`,[ids]) as OwnerAssignmentHead[];
     },
     async contributions(ids) {
@@ -166,10 +165,11 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
               SELECT patch->>'id' AS id,patch->>'state' AS state,patch FROM jsonb_array_elements($1::jsonb) p(patch)
             ), changed AS (
               UPDATE cp_owner_assignment_rows r SET state_code=p.state,value=(r.value || (p.patch-'group'-'indexActivity')) ||
-                CASE WHEN p.patch ? 'group' THEN jsonb_build_object('group',((r.value->'group')-'usd'-'items'-'scoutKeys') || (p.patch->'group')) ELSE '{}'::jsonb END ||
-                CASE WHEN p.patch ? 'indexActivity' THEN jsonb_build_object('indexSegments',(
-                  SELECT jsonb_agg(segment || jsonb_build_object('lastActivityAt',p.patch->'indexActivity'->(ordinal-1)::integer) ORDER BY ordinal)
-                  FROM jsonb_array_elements(r.index_segments) WITH ORDINALITY s(segment,ordinal))) ELSE '{}'::jsonb END
+                jsonb_build_object('group',((r.value->'group')-'usd'-'items'-'scoutKeys')||coalesce(p.patch->'group','{}'::jsonb),
+                  'part',coalesce(p.patch->'part',r.value->'part')||'{"usd":null,"candidates":[]}'::jsonb,'indexSegments',(
+                  SELECT jsonb_agg((segment-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount') ||
+                    CASE WHEN p.patch ? 'indexActivity' THEN jsonb_build_object('lastActivityAt',p.patch->'indexActivity'->(ordinal-1)::integer) ELSE '{}'::jsonb END ORDER BY ordinal)
+                  FROM jsonb_array_elements(coalesce(p.patch->'indexSegments',r.index_segments)) WITH ORDINALITY s(segment,ordinal)))
               FROM incoming p WHERE r.id=p.id RETURNING r.id
             ) INSERT INTO cp_owner_assignment_rows(id,state_code,value)
               SELECT id,state,patch FROM incoming p WHERE NOT EXISTS(SELECT 1 FROM changed c WHERE c.id=p.id)`,[JSON.stringify(batch)]);

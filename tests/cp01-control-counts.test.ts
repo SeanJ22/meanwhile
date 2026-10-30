@@ -118,9 +118,10 @@ test("owner row fingerprints, count aggregates and activity patches preserve col
     const make=(id:string)=>({id,state:"az",builtAt:at,
       group:{members:[id+"-member"],clause:null,obligation,publications:[]},
       indexSegments:[{...index,id,from:null,until:"2026-10-30T18:00:00.000Z"},{...index,id,state:"FAILED" as const,from:"2026-10-30T18:00:00.000Z",until:null}],
-      part:assignmentPartOf([[id,{index:{...index,id},usd:null,obligation}]],at),nextAt:"2026-10-30T18:00:00.000Z"});
+      part:{...assignmentPartOf([[id,{index:{...index,id},usd:null,obligation}]],at),candidates:[]},nextAt:"2026-10-30T18:00:00.000Z"});
     const entries=[make(index.id),make("other"),make("none")],repo=pgOwnerAssignmentRows(sql);
-    await repo.save(entries,[]);
+    const legacy=entries.map(row=>({...row,group:{...row.group,usd:{p:[.1]},items:["old"],scoutKeys:["old"]},part:{...row.part,usd:{p:[.1]}},indexSegments:row.indexSegments.map(segment=>({...segment,assignmentRefs:[{key:"old"}],directDependentCount:9}))}));
+    await repo.save(legacy,[]);
     const heads=await repo.heads(entries.map(row=>row.id));
     assert.deepEqual(heads,entries.map(ownerAssignmentHeadOf).sort((a,b)=>a.id.localeCompare(b.id)));
     const actual=(await repo.contributions(entries.map(row=>row.id))).get("az")!,expected=ownerAssignmentContributions(entries).get("az")!;

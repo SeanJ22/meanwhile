@@ -86,7 +86,7 @@ export function pgOwnerAssignmentChanges(sql: Sql): OwnerAssignmentChanges {
     const [row] = await boundedQuery(sql, { operation: "cp_owner_assignment_rows.changes", callClass: "PAGE" }, OWNER_ASSIGNMENT_CHANGES_SQL,
       [JSON.stringify(windows), through, input.slackMs]) as { groups: [string, string | null][]; items: string[]; changed_attempts: string[];
         changed_work_items: string[]; links: [string, string | null][]; held: [string, string, number, string][] }[];
-    const cursors: Record<string, LogCursor> = { ...input.cursors };
+    const cursors: Record<string, LogCursor> = {};
     for (const [name] of sources) {
       const slots = [...(input.cursors[name]?.held ?? []).filter(([, , at]) => Date.parse(at) >= cutoff),
         ...row.held.filter(([source]) => source === name).map(([, key, version, at]) => [key, Number(version), new Date(at).toISOString()] as const)];

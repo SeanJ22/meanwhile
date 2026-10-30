@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { PLURAL_STATES } from "../plural/targets.ts";
+import { openStatesPerson } from "../../core/ids.ts";
 import type { Officeholder } from "../../officials/types.ts";
 import { canonicalCivicDataJson } from "../../civic-data/changes.ts";
 import type { SourceCheckEvidence } from "../../civic-data/types.ts";
@@ -70,7 +71,7 @@ export type LegiscanIdentityHolder = Pick<Officeholder,"id"|"personId"|"nativeId
   { provenance?: Officeholder["provenance"] | null };
 export function sourcePersonIds(holder: Pick<Officeholder,"id"|"personId"|"nativeIds">): string[] {
   return [...new Set([...(holder.nativeIds?.["ocd-person"] ?? []), holder.personId ?? "", holder.id].flatMap(value =>
-    nativePersonId(value) ? [value] : /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/.test(value) ? [`ocd-person/${value.split(":").at(-1)}`] : []))];
+    nativePersonId(value) ? [value] : openStatesPerson(value) ? [openStatesPerson(value)!.id] : []))];
 }
 /** Names, party, district and office title never participate in this crosswalk. */
 export function legiscanIdentityJoins(holders: readonly LegiscanIdentityHolder[], people: readonly Record<string, unknown>[]) {

@@ -1,4 +1,3 @@
-import {rosterHolderName} from "../facts/roster-name.ts";
 import { checkFact, isOfficialUrl, type CheckEntity, type Claim, type Provenance } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
@@ -11,6 +10,7 @@ import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import {fileEntityPlaces, type EntityPlace} from "../facts/entity-places.ts";
 import { resolveId } from "./resolve.ts";
+import { sendToDetective } from "../facts/identity-blank.ts";
 import { confirmFactSource, type FactConfirmation } from "../facts/confirmation.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
@@ -23,8 +23,6 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
 ) & {
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly capture?: WorkerPublicationCapture;
-  /** A loader's parsed source record: use the publisher's field without a quote search. */
-  readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
   /** Select the publisher's record and field in the attached saved JSON response. */
   readonly savedField?: { readonly idField: string; readonly id: number; readonly key: string;
     readonly form?: "text" | "date" | "membership" };
@@ -39,7 +37,6 @@ export function savedCopyFreshnessRefusal(fetchedAt: Date, windowHours: number, 
 }
 interface DoorOptions {
   readonly purge?: ReaderCachePurger;
-  readonly refusal?: (claim: PublishInput, reason: string) => Promise<void>;
 }
 
 const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
@@ -101,7 +98,10 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
   if (!kind || !government) return null;
   const school = kind === "school" || kind === "depschool";
   const name = `${government.name} ${school ? "school board" : "governing board"}`;
-  const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1 AND (id LIKE '%#governing' OR id LIKE '%#board') ORDER BY id LIMIT 1", [government.id]);
+  const [held, ...rivals] = await query("SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1 AND (id LIKE '%#governing' OR id LIKE '%#board') ORDER BY id LIMIT 5", [government.id]);
+  // Two held boards claim to be the government's governing board: writes go on to the first by id, and a detective is asked which is right.
+  if (rivals.length) await sendToDetective(query, { entityId: government.id, field: "identity:governing-body", reason: "IDENTITY_TIE",
+    candidates: [held!, ...rivals].map(row => String(row.id)), about: { government: government.id } });
   if (held) {
     if (String(held.name).endsWith(" governing")) {
       await query("UPDATE entity SET name=$2 WHERE id=$1 AND name=$3", [held.id, name, held.name]);
@@ -127,7 +127,6 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   options: DoorOptions = {}): Promise<DoorOutcome> {
   let changed: ReaderCacheScope | undefined;
   let confirmation: FactConfirmation | undefined;
-  let refusedClaim: PublishInput | undefined;
   const outcome = await db.transaction<DoorOutcome>(async (query) => {
     const requested = input.subjectId ?? input.entity!.id;
     const subjectId = await resolveId(requested, query) ?? await canonicalSubject(query, requested);
@@ -148,18 +147,17 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       if (body) entity = await readCheckEntity(query, body.id);
     }
     if (!entity) {
-      refusedClaim = { ...input, entity: input.entity ?? { id: requested, fullName: requested, stateName: null, hosts: [], externalIds: [] } };
       return { refused: "SUBJECT_NOT_FOUND" };
     }
     const copy = input.capture ? await saveCaptureCopy(query, input.capture) : input.copy;
     const official = officialSource(copy.finalUrl, entity.hosts, input.linkingPage);
     const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
     const campaign = input.provenance === "CAMPAIGN" && !isOfficialUrl(copy.finalUrl, []) && !isSourceApiUrl(copy.finalUrl);
-    const fast = official && acquisition === "loader" && !campaign;
+    const loaded = official && (acquisition === "loader" || acquisition === "checked") && !campaign;
+    // A filing or a money claim is always checked against the line it quotes, whatever its host.
+    const fast = loaded && acquisition === "loader" && input.provenance !== "FILING" && input.fieldKind !== "money";
     const provenance = input.provenance === "OWNER" ? "OWNER" : campaign ? "CAMPAIGN" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
-    const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;
-    const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
-    const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };
+    const c: PublishInput = { ...input, entity, provenance, copy };
     if (input.savedField) {
       const selector = input.savedField;
       const record = savedRecord(input);
@@ -170,7 +168,6 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
         : selector.form === "date" ? typeof raw === "string" ? raw.slice(0,10) : null
         : typeof raw === "string" ? raw.trim() : raw;
       if (!record || canonicalJson(expected) !== canonicalJson(c.value)) {
-        refusedClaim = c;
         return { refused: "SOURCE_FIELD_MISMATCH" };
       }
     }
@@ -190,7 +187,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id, f.checked_at,
       coalesce(s.fetched_at,f.checked_at) AS fetched_at,s.final_url AS source_url
       FROM own f LEFT JOIN source_copy s ON s.id=f.source_copy_id`,
-      [c.entity.id, c.field, JSON.stringify(c.value), c.valueText, c.quote, !fast && c.field === "agenda_url"]);
+      [c.entity.id, c.field, JSON.stringify(c.value), c.valueText, c.quote, !loaded && c.field === "agenda_url"]);
     const row = head?.status === "live" ? head : undefined;
     // Replaying an already checked source is a no-op, including after its freshness window.
     // It does not refresh the checked date, publish a value, or count another delivery.
@@ -202,7 +199,6 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       ? {ok:false as const,reason:"COPY_OUTSIDE_FRESHNESS_WINDOW"} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
-      refusedClaim = c;
       return { refused: verdict.reason };
     }
     const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
@@ -216,7 +212,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       : row?.source_url && (isOfficialUrl(String(row.source_url),entity.hosts) || isSourceApiUrl(String(row.source_url))) ? "OFFICIAL" : row?.provenance_kind;
     const decision = !row ? "PUBLISH" : row.same_value ? "CONFIRM" : decideDifferent(
       { value: row.agenda_value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string), sourceUrl: row.source_url as string },
-      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, fast ? undefined : c.field);
+      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, loaded ? undefined : c.field);
     if (decision === "CONFIRM") {
       if (row!.provenance_kind !== "OWNER" && rank[c.provenance] <= rank[row!.provenance_kind as Provenance]
         && (rank[c.provenance] < rank[row!.provenance_kind as Provenance] || c.copy.fetchedAt > new Date(row!.fetched_at as string))) {
@@ -253,64 +249,72 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     }
     return { decision, factId };
   });
-  // The work list can be on another database. Release the fact transaction before handing off a refusal.
-  if ("refused" in outcome && refusedClaim) await options.refusal?.(refusedClaim, outcome.refused);
   if (confirmation) await confirmFactSource(db,confirmation,options.purge);
   if (changed) await invalidateReaderCache(changed, options.purge, null);
   return outcome;
 }
 
-/** Absence from a complete official roster is a door decision, with the same place rebuild as an addition. */
-export async function retireRosterThroughDoor(db: FactDb & { readonly query: Query }, input: {
-  readonly bodyId: string; readonly copy: import("../facts/check.ts").SavedCopy;
-  readonly seated: readonly string[]; readonly producedBy: string; readonly sourcePrefix?: string;
-  readonly nativeScheme?: string; readonly purge?: ReaderCachePurger;
-  /** `bodyIds` are every source selector whose seats are this body's seats (a board and its folded calendar labels). */
-  readonly roster?: { readonly pages: readonly WorkerPublicationCapture[]; readonly bodyIds: readonly number[]; readonly day: string };
-  readonly freshness?: { readonly windowHours: number; readonly now: Date };
+/**
+ * A source read in full no longer shows a fact it used to: the fact moves to history and keeps the last date the source showed it.
+ * `copyId` retires facts last read from that saved page; without one, `sourceUrl` retires those read from any address starting with it.
+ * `stillShown` are the fields under `fieldPrefix` the source still shows. Facts the source showed after `at` and a value Sean typed stay.
+ * Callers read the source in full first, so a source that could not be read or changed shape never gets here and retires nothing;
+ * a saved page that was not answered with success or is an archive retires nothing either.
+ */
+export async function retireAbsent(db: FactDb, input: {
+  readonly subjectId: string; readonly fieldPrefix: string; readonly copyId?: number; readonly sourceUrl?: string;
+  readonly stillShown: readonly string[]; readonly at: Date; readonly purge?: ReaderCachePurger;
 }): Promise<number> {
-  if(input.freshness&&savedCopyFreshnessRefusal(input.copy.fetchedAt,input.freshness.windowHours,input.freshness.now))return 0;
   let changed: ReaderCacheScope | undefined;
   const count = await db.transaction(async query => {
-    const bodyId = await resolveId(input.bodyId,query) ?? input.bodyId;
-    const entity = await readCheckEntity(query,bodyId);
-    if (!entity || !officialSource(input.copy.finalUrl,entity.hosts)) return 0;
-    let seated=input.seated;
-    if(input.roster) {
-      const active=new Set<string>(),selectors=new Set(input.roster.bodyIds);
-      for(const page of input.roster.pages) {
-        if(!officialSource(page.evidence.canonicalUrl,entity.hosts) || !page.evidence.canonicalUrl.startsWith(input.sourcePrefix!)) throw Error("ROSTER_SOURCE_MISMATCH");
-        const records:unknown=JSON.parse(page.evidence.text);
-        if(!Array.isArray(records))throw Error("ROSTER_SOURCE_MISMATCH");
-        for(const record of records) {
-          if(!selectors.has(record.OfficeRecordBodyId))continue;
-          const name=rosterHolderName(record.OfficeRecordFullName);
-          if(!name)continue;
-          if(record.OfficeRecordStartDate?.slice(0,10)>input.roster.day || record.OfficeRecordEndDate && record.OfficeRecordEndDate.slice(0,10)<input.roster.day)continue;
-          active.add(String(record.OfficeRecordPersonId));
-        }
-      }
-      seated=[...active];
-    }
-    await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[canonicalJson([bodyId,"roster"])]);
-    const gone = await query(`WITH current AS MATERIALIZED (
-      SELECT id,checked_at,source_copy_id FROM checked_fact WHERE entity_id=$1 AND field LIKE 'member:%' AND status='live'
-    ) UPDATE fact f SET status='superseded',held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'
-      FROM source_copy s,current WHERE f.id=current.id
-      AND CASE WHEN $7::boolean THEN current.checked_at ELSE s.fetched_at END <=$6::timestamptz
-      AND f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
-      AND f.provenance_kind='OFFICIAL' AND s.id=current.source_copy_id
-      AND CASE WHEN $4::text IS NULL THEN s.url=$2 ELSE starts_with(s.url,$4) END
-      AND NOT (substr(f.field,8)=ANY($3::text[]))
-      AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id=substr(f.field,8)
-        AND x.scheme=$5 AND x.value=ANY($3::text[])) RETURNING f.id`,
-    [bodyId,input.copy.finalUrl,seated,input.sourcePrefix ?? null,input.nativeScheme ?? null,input.copy.fetchedAt.toISOString(),!!input.roster]);
+    const subjectId = await resolveId(input.subjectId, query) ?? input.subjectId;
+    const [copy] = input.copyId === undefined ? [] : await query("SELECT url,http_status,is_archive FROM source_copy WHERE id=$1", [input.copyId]);
+    const url = input.copyId === undefined ? input.sourceUrl : copy && !copy.is_archive && (copy.http_status === null || Number(copy.http_status) < 300) ? String(copy.url) : undefined;
+    if (!url) return 0;
+    await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [canonicalJson([subjectId, input.fieldPrefix])]);
+    const gone = await query(`UPDATE fact f SET status='superseded',held_reason='GONE_FROM_SOURCE'
+      FROM checked_fact c JOIN source_copy s ON s.id=c.source_copy_id
+      WHERE f.id=c.id AND f.entity_id=$1 AND starts_with(f.field,$2) AND f.status='live' AND f.provenance_kind<>'OWNER'
+      AND c.checked_at<=$5::timestamptz AND CASE WHEN $6::boolean THEN s.url=$3 ELSE starts_with(s.url,$3) END
+      AND NOT (f.field=ANY($4::text[])) RETURNING f.id`,
+    [subjectId, input.fieldPrefix, url, input.stillShown, input.at.toISOString(), input.copyId !== undefined]);
     if (gone.length) {
-      await enqueueReaderPlaces({entities:[bodyId]},query);
-      changed=await readerCacheScopeForEntity(query,bodyId);
+      await enqueueReaderPlaces({ entities: [subjectId] }, query);
+      changed = await readerCacheScopeForEntity(query, subjectId);
     }
     return gone.length;
   });
-  if (changed) await invalidateReaderCache(changed,input.purge,null);
+  if (changed) await invalidateReaderCache(changed, input.purge, null);
   return count;
+}
+
+/** A fact checked on a saved line failed: this producer's live fact for the field that was never checked moves to held with the reason, and readers stop seeing it. A value Sean typed stays. */
+export async function holdUnchecked(query: Query, input: { readonly entityId: string; readonly field: string; readonly producedBy: string; readonly reason: string }): Promise<boolean> {
+  const held = await query(`UPDATE fact f SET status='held',held_reason=$3 FROM checked_fact c
+    WHERE c.id=f.id AND f.entity_id=$1 AND f.field=$2 AND f.status='live' AND f.provenance_kind<>'OWNER' AND f.produced_by=$4 AND c.quote_start IS NULL
+    RETURNING f.id`, [input.entityId, input.field, input.reason, input.producedBy]);
+  return held.length > 0;
+}
+
+/**
+ * A source filed a fact under the name `from` before it filed it under the current one. Once the current name's fact is verified (`verified`, fact ids)
+ * the old name's live fact moves to history; where the current one failed its check (`failed`, subjects) the old one is held. A value Sean typed stays.
+ */
+export async function retireRenamed(db: FactDb, input: { readonly verified: readonly number[]; readonly failed: readonly string[]; readonly from: string;
+  readonly producedBy: string; readonly reason: string; readonly purge?: ReaderCachePurger }): Promise<void> {
+  const scopes: ReaderCacheScope[] = [];
+  await db.transaction(async query => {
+    const moved = input.verified.length ? await query(`UPDATE fact o SET status='superseded',held_reason='RENAMED_FIELD' FROM checked_fact m
+      WHERE m.id=ANY($1::bigint[]) AND m.status='live' AND m.quote_start IS NOT NULL AND o.entity_id=m.entity_id AND o.field=$2 AND o.status='live'
+      AND o.provenance_kind<>'OWNER' AND o.produced_by=$3 RETURNING o.entity_id`, [input.verified, input.from, input.producedBy]) : [];
+    const entities = moved.map(row => String(row.entity_id));
+    for (const subject of input.failed) {
+      const entityId = await resolveId(subject, query);
+      if (entityId && await holdUnchecked(query, { entityId, field: input.from, producedBy: input.producedBy, reason: input.reason })) entities.push(entityId);
+    }
+    if (!entities.length) return;
+    await enqueueReaderPlaces({ entities }, query);
+    for (const id of entities) scopes.push(await readerCacheScopeForEntity(query, id));
+  });
+  for (const scope of scopes) await invalidateReaderCache(scope, input.purge, null);
 }

@@ -8,6 +8,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A8.ts";
 import { SHARED_WORK_DDL } from "../lib/control-plane/repository/migrations/RB-A1.ts";
 import { workMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A5.ts";
+import { WORK_EXPAND } from "../lib/control-plane/repository/migrations/SPN-01B.ts";
 import { workList } from "../lib/core/work.ts";
 import { REJECT_REWRITE_FUNCTION_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
@@ -40,7 +41,7 @@ async function readerDatabase() {
   await db.exec(migration.replaceAll('--> statement-breakpoint',''));
   return db;
 }
-async function controlDatabase(withLeasedWork = false) {
+async function controlDatabase() {
   const db=new PGlite();
   await db.exec(JOB_BREAKER_DDL);
   for(const table of ['cp_work_items','cp_work_items_archive','cp_doors','cp_box_findings','cp_owner_snapshots','cp_runner_heartbeat'])
@@ -53,8 +54,9 @@ async function controlDatabase(withLeasedWork = false) {
   await db.exec(`CREATE TRIGGER cp_owner_snapshots_no_rewrite BEFORE DELETE ON cp_owner_snapshots
     FOR EACH ROW EXECUTE FUNCTION cp_reject_rewrite();`);
   for(const statement of SHARED_WORK_DDL)await db.exec(statement);
-  if(withLeasedWork)await db.exec(workMigrationDefinition());
+  await db.exec(workMigrationDefinition());
   await db.exec(countHourMigrationDefinition());
+  for(const statement of WORK_EXPAND)await db.exec(statement);
   await db.query(`INSERT INTO cp_admin_config VALUES('current',1,now(),$1::jsonb)`,[JSON.stringify(defaultAdminConfig(new Date().toISOString()))]);
   return db;
 }
@@ -163,10 +165,10 @@ test('Now shows observed facts from the installation hour as a lower bound and e
 });
 
 test('the merged work list counts completed work as done and delayed retries as scheduled',async()=>{
-  const db=await controlDatabase(true);
+  const db=await controlDatabase();
   try {
     const at=new Date(Date.now()+5*60_000),list=workList(async(text,params=[])=>query(db).query(text,params),{owner:'counter-test',now:()=>at});
-    const input={kind:'check' as const,placeId:'ocd-division/country:us/state:az/county:pima',subjectId:'body:pima',url:'https://www.pima.gov/contact',field:'phone',value:'520-724-4330',quote:'Phone: 520-724-4330',source:{report:'one'}};
+    const input={kind:'check' as const,origin:{from:'planner' as const},placeId:'ocd-division/country:us/state:az/county:pima',subjectId:'body:pima',url:'https://www.pima.gov/contact',field:'phone',value:'520-724-4330',quote:'Phone: 520-724-4330',source:{report:'one'}};
     const first=await list.add(input);
     const [leased]=await list.claim('check',1);
     assert.equal(leased!.id,first.id);assert.equal(await list.finish(leased!),true);
@@ -181,10 +183,10 @@ test('the merged work list counts completed work as done and delayed retries as 
     rows=await readCounts(query(db),window.from,window.through);
     assert.equal(rows.find(r=>r.family==='check'&&r.stage==='work list:SCHEDULED')!.total,1);
     assert.ok(!rows.some(r=>r.family==='check'&&r.stage==='work list:REFUSED'&&r.total>0),'a retry reason is not a terminal refusal');
-    const due=(await db.query<{not_before:Date}>('SELECT not_before FROM work_row WHERE id=$1',[retry!.id])).rows[0]!.not_before;
+    const due=(await db.query<{due_at:Date}>('SELECT due_at FROM work WHERE id=$1',[retry!.id])).rows[0]!.due_at;
     rows=await readCounts(query(db),window.from,window.through,new Date(due).toISOString());
     assert.equal(rows.find(r=>r.family==='check'&&r.stage==='work list:WAITING')!.total,1);
-    const direct=(await db.query<{n:number}>("SELECT count(*)::int n FROM work_row WHERE status='done'")).rows[0]!.n;
+    const direct=(await db.query<{n:number}>("SELECT count(*)::int n FROM work WHERE status='done'")).rows[0]!.n;
     assert.equal(rows.filter(r=>r.stage==='work list:DONE').reduce((n,r)=>n+r.total,0),direct);
   }finally{await db.close();}
 });
@@ -295,8 +297,8 @@ test('a waiting pile becomes owned Admin work and a brief item on the next hourl
     const rows=new Map(keeperRows(report,next));
     assert.match(renderToStaticMarkup(createElement(HourlyCounts,{data:rows.get('Facts live per hour (fact store)')!.hourlyCounts!})),/Oldest work waiting/);
     const states=[...REGISTRY_STATES,'US'];
-    await control.query(`INSERT INTO work_row(id,kind,state,not_before)
-      SELECT 'pile:'||state,'read',state,$2::timestamptz FROM unnest($1::text[]) AS s(state)`,[states,'2026-10-20T07:00:00Z']);
+    await control.query(`INSERT INTO work(id,kind,state,due_at)
+      SELECT 'pile:'||state,'lead',state,$2::timestamptz FROM unnest($1::text[]) AS s(state)`,[states,'2026-10-20T07:00:00Z']);
     for(let hour=2;hour<=4;hour++)await runLineKeeper(query(control),query(reader),new Date(Date.parse(first)+hour*3_600_000).toISOString());
     const retained=(await control.query<{n:number;states:number;bytes:number}>(`SELECT count(*)::int AS n,
       min((SELECT count(*) FROM jsonb_object_keys(oldest)))::int AS states,
@@ -306,9 +308,9 @@ test('a waiting pile becomes owned Admin work and a brief item on the next hourl
     assert.ok(retained.bytes<100_000,`${retained.bytes} bytes saved with waiting work in every state`);
     const finalAt=new Date(Date.parse(first)+4*3_600_000).toISOString(),window=countWindow(finalAt);
     const counts=await readCounts(query(control),window.from,window.through,finalAt);
-    const direct=(await control.query<{state:string;n:number}>('SELECT state,count(*)::int AS n FROM work_row GROUP BY state')).rows;
+    const direct=(await control.query<{state:string;n:number}>('SELECT state,count(*)::int AS n FROM work GROUP BY state')).rows;
     assert.equal(direct.length,57);
-    for(const row of direct)assert.equal(counts.filter(c=>c.state===row.state&&c.family==='read'&&c.stage==='work list:WAITING')
+    for(const row of direct)assert.equal(counts.filter(c=>c.state===row.state&&c.family==='lead'&&c.stage==='work list:WAITING')
       .reduce((n,c)=>n+c.total,0),row.n,`${row.state}: hourly Admin counts equal direct SQL`);
   }finally{await Promise.all([control.close(),reader.close()]);}
 });
@@ -393,32 +395,32 @@ test('work-list counts follow lease and due-time boundaries without another snap
 });
 
 
-test('RB-A1 work rows feed the same counters and oldest ages through scheduling, leasing, refusal and completion',async()=>{
+test('work rows feed the same counters and oldest ages through scheduling, leasing, refusal and completion',async()=>{
   const db=await controlDatabase();
   try {
     const due=new Date(Date.now()-2*3_600_000).toISOString();
-    await db.query(`INSERT INTO work_row(id,kind,state,not_before) VALUES('new-work','read','AZ',$1::timestamptz)`,[due]);
+    await db.query(`INSERT INTO work(id,kind,state,due_at) VALUES('new-work','lead','AZ',$1::timestamptz)`,[due]);
     const window=countWindow(new Date().toISOString());
     let rows=await readCounts(query(db),window.from,window.through);
-    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.total,1);
-    assert.equal((await readOldest(query(db))).find(r=>r.family==='read')!.oldestAt,due);
+    assert.equal(rows.find(r=>r.family==='lead'&&r.stage==='work list:WAITING')!.total,1);
+    assert.equal((await readOldest(query(db))).find(r=>r.family==='lead')!.oldestAt,due);
     const full=countWindow(new Date(Date.now()+2*3_600_000).toISOString());
     const recorded=await readCounts(query(db),full.from,full.through,full.through);
-    assert.equal(recorded.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.incoming,0,'the first complete control-plane hour is measured');
+    assert.equal(recorded.find(r=>r.family==='lead'&&r.stage==='work list:WAITING')!.incoming,0,'the first complete control-plane hour is measured');
     const lease=new Date(Date.now()+5*60_000).toISOString();
-    await db.query(`UPDATE work_row SET lease_until=$1::timestamptz,lease_owner='runner' WHERE id='new-work'`,[lease]);
+    await db.query(`UPDATE work SET status='taken',lease_until=$1::timestamptz,lease_owner='runner' WHERE id='new-work'`,[lease]);
     rows=await readCounts(query(db),window.from,window.through);
-    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.total,0);
-    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:LEASED')!.total,1);
+    assert.equal(rows.find(r=>r.family==='lead'&&r.stage==='work list:WAITING')!.total,0);
+    assert.equal(rows.find(r=>r.family==='lead'&&r.stage==='work list:LEASED')!.total,1);
     const expired=new Date(Date.parse(lease)+1).toISOString();
     rows=await readCounts(query(db),window.from,window.through,expired);
-    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:EXPIRED')!.total,1);
-    await db.exec(`UPDATE work_row SET lease_until=NULL,lease_owner=NULL,refusal='Source unavailable' WHERE id='new-work'`);
+    assert.equal(rows.find(r=>r.family==='lead'&&r.stage==='work list:EXPIRED')!.total,1);
+    await db.exec(`UPDATE work SET status='refused',lease_until=NULL,lease_owner=NULL,refusal='Source unavailable' WHERE id='new-work'`);
     rows=await readCounts(query(db),window.from,window.through);
-    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:REFUSED')!.total,1);
-    await db.exec(`DELETE FROM work_row WHERE id='new-work'`);
+    assert.equal(rows.find(r=>r.family==='lead'&&r.stage==='work list:REFUSED')!.total,1);
+    await db.exec(`DELETE FROM work WHERE id='new-work'`);
     rows=await readCounts(query(db),window.from,window.through,expired);
-    assert.ok(rows.filter(r=>r.family==='read').every(r=>r.total===0),'removing a row cancels its future clock changes too');
+    assert.ok(rows.filter(r=>r.family==='lead').every(r=>r.total===0),'removing a row cancels its future clock changes too');
     assert.ok((await db.query<{n:number}>('SELECT n FROM count_hour')).rows.every(r=>Number(r.n)>=0),'the shared nonnegative CountHour contract holds');
   }finally{await db.close();}
 });

@@ -1,4 +1,4 @@
-import { sharedNameForm } from "../identity/name-forms.ts";
+import { samePerson } from "../identity/match-person.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { decodeEntities } from "../sources/http.ts";
 import { freelyLicensedPortrait, type CommonsCandidacyIdentity, type PortraitVerification } from "./binding.ts";
@@ -32,7 +32,7 @@ export function wikidataCandidacyPortraitIdentity(identity: CommonsCandidacyIden
         : seat?.[1] === "sldu" ? /state senate|senatorial|legislative council/i.test(districtName)
           : /state house|assembly|house of representatives/i.test(districtName);
       return value("person").split("/").at(-1) === identity.wikidataId &&
-        sharedNameForm(value("personLabel"), name) !== null && state === identity.stateCode.toUpperCase() &&
+        samePerson({ id: "wikidata-label", name: value("personLabel"), seats: [office] }, { id: identity.candidacyId, name, seats: [office] }) && state === identity.stateCode.toUpperCase() &&
         (district ? districtNumber === district && (districtType || officeIdentity(value("officeLabel")) === office) && (!value("officeLabel") || officeIdentity(value("officeLabel")) === office) : officeIdentity(value("officeLabel")) === office) && Boolean(value("image"));
     });
     const images = [...new Set<string>(matches.map(row => row.image.value))];

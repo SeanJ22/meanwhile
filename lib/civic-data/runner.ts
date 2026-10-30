@@ -299,32 +299,6 @@ export function routineFailureDomainRotationSeed(startedAt: string): number {
   return Math.floor(parsed / ROUTINE_DATA_ADMISSION_MS);
 }
 
-/** A lane never admits more tasks than it holds, so a one-task lane counts once toward the bound. */
-export function routineFrontierPassBound(
-  tasks: readonly Pick<RoutineSourceTask, "acquisitionFailureDomain" | "contract">[] = ROUTINE_SOURCE_TASKS,
-): { readonly commandCount: number; readonly largestFailureDomainSize: number } {
-  routineFailureDomainCount(tasks);
-  const lanes = new Map<string, { windowed: boolean; size: number }>();
-  for (const task of tasks) {
-    const windowed = task.contract.schedule?.kind === "SITTING_WINDOW";
-    const lane = lanes.get(task.acquisitionFailureDomain) ?? { windowed: true, size: 0 };
-    lanes.set(task.acquisitionFailureDomain, { windowed: lane.windowed && windowed, size: lane.size + 1 });
-  }
-  const slots = [...lanes.values()].map(({ windowed, size }) =>
-    Math.min(size, windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : size));
-  return { commandCount: slots.reduce((sum, n) => sum + n, 0), largestFailureDomainSize: Math.max(...slots) };
-}
-
-export function routineFailureDomainCount(
-  tasks: readonly Pick<RoutineSourceTask, "acquisitionFailureDomain">[] = ROUTINE_SOURCE_TASKS,
-): number {
-  const domains = tasks.map(({ acquisitionFailureDomain }) => acquisitionFailureDomain);
-  if (domains.some((domain) => !domain || domain !== domain.trim() || /[\r\n]/.test(domain))) {
-    throw new Error("ROUTINE_FAILURE_DOMAIN_INVALID");
-  }
-  return new Set(domains).size;
-}
-
 export interface RoutineSupervisorHistoryIssue {
   readonly rowIndex: number;
   readonly digestId: string;

@@ -51,7 +51,7 @@ export async function enqueueLegistarMemberRecords(input:{facts:FactDb&{query:Qu
   const copies=new Map<string,MemberSource>();
   for(const {artifact} of raw.readings) {
     if(memberProbe(new URL(artifact.canonicalUrl)))continue;
-    const copyId=await input.facts.transaction(query=>saveSourceReference(query,{artifactId:artifact.id,url:artifact.canonicalUrl,
+    const copyId=await input.facts.transaction(query=>saveSourceReference(query,{key:`artifact:${artifact.id}`,url:artifact.canonicalUrl,
       finalUrl:artifact.canonicalUrl,fetchedAt:artifact.retrievedAt,httpStatus:200,contentHash:artifact.contentHash}));
     copies.set(artifact.canonicalUrl,{artifact:memberArtifactPointer(artifact),copyId});
   }
@@ -84,7 +84,7 @@ export async function enqueueLegistarMemberRecords(input:{facts:FactDb&{query:Qu
     };
     const route=new URL(url);route.search="";
     offered.push({kind:"check",subjectId:source,field:`${type}:${nativeId}`,placeId:owner?.ocdId??"ocd-division/country:us",state,url:route.href,value,
-      sources:[`source_copy:${value.source.copyId}`],source:{source:"Legistar members"},priority:type==="member"?20:10});
+      sources:[`source_copy:${value.source.copyId}`],source:{source:"Legistar members"},origin:{from:"loader"},priority:type==="member"?20:10});
     records++;
   };
   // Every returned record has one work row, including empty boards and vacant offices.

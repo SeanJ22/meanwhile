@@ -20,23 +20,5 @@ export interface ZctaPlace { readonly zcta: string; readonly placeId: string; re
 /** @public Current prebuilt reader page for one place. */
 export interface PlacePage { readonly placeId: string; readonly version: bigint; readonly builtAt: string; readonly body: unknown }
 
-export type WorkKind = "read" | "check" | "load" | "hunt" | "detect" | "audit";
-/** @public Shared work-list contract for the rebuild lanes. */
-export interface WorkRow {
-  readonly id: string;
-  readonly kind: WorkKind;
-  /** Postal state; national work uses US. */
-  readonly state: string;
-  readonly placeId: string | null;
-  readonly subjectId: string | null;
-  readonly url: string | null;
-  readonly sources: readonly string[];
-  readonly priority: number;
-  readonly notBefore: string;
-  readonly leaseUntil: string | null;
-  readonly leaseOwner: string | null;
-  readonly attempts: number;
-  readonly refusal: string | null;
-}
 /** @public Hourly counts of each step in each state. */
 export interface CountHour { readonly state: string; readonly hour: string; readonly step: string; readonly n: bigint }

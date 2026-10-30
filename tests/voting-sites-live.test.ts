@@ -34,7 +34,7 @@ test("an empty held answer gets live Google locations, hours, assignment and req
   assert.equal(answer.googleFallback?.reason, undefined);
 });
 
-test("every lookup is fresh, ZIPs never claim an assigned precinct, and a mismatched state is rejected", async () => {
+test("every lookup is fresh, a bare ZIP never goes to Google, and a mismatched state is rejected", async () => {
   let requests = 0;
   const fresh = { ...options, fetchImpl: (async (input: URL) => { requests++; return options.fetchImpl(input); }) as unknown as typeof fetch };
   await fillVotingSitesAnswer(empty, "private reader street", place, fresh);

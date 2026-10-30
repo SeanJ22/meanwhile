@@ -27,7 +27,7 @@ export async function runLegistarMemberWorkers(input:{list:ReturnType<typeof wor
       },60_000);
       try {
         const outcome=await input.run(claim,controller.signal);controller.signal.throwIfAborted();
-        if(outcome?.refused){await input.list.refuse(claim,outcome.refused);stats.refused++;}
+        if(outcome?.refused){await input.list.refuse(claim,outcome.refused,{kind:"parser",name:"legistar",platform:"legistar",text:outcome.refused});stats.refused++;}
         else {if(!await input.list.finish(claim,input.kind==="load"?LEGISTAR_MEMBER_CADENCE_MS:undefined))throw Error("WORK_LEASE_LOST");stats.done++;}
       }catch(error){stats.failed++;const detail=sanitizedErrorDiagnostic(error);await input.list.later(claim,detail);input.log?.(detail);}
       finally{clearInterval(timer);}

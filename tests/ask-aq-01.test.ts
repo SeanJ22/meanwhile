@@ -7,7 +7,8 @@ import { composeSittingAnswer } from "../lib/ask/sitting-answer.ts";
 import { withResponseLifetime } from "../lib/log/after-response.ts";
 import { meteredAskFetch } from "../lib/ask/cost.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { PGlite } from "@electric-sql/pglite";
+import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { composeDistrictAnswer, districtQuestion } from "../lib/ask/districts.ts";
 import { selectSitting } from "../lib/ask/select.ts";
 import type { Division } from "../lib/registry/types.ts";
@@ -142,19 +143,21 @@ test("AQ-01 recording model cost does not delay the reader response and is retai
   assert.equal(saved, true);
 });
 
-test("AQ-01 missing answers enter the existing acquisition queue once; read-only probes create no work", async () => {
-  const repos = createMemoryRepositories();
+test("AQ-01 missing answers become one reader-tier row in the work list while it is live; read-only probes create no work", async t => {
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  for (const ddl of WORK_DDL) await pg.exec(ddl);
+  const list = workList(async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows, { owner: "ask" });
   const input = { question: "Who voted for the school budget?", divisions: [tucson.ocdId!], place: "85701",
     subjectId: tucson.id, runClass: "ORGANIC", now: "2026-10-18T00:00:00Z" };
-  await recordQuestionWork({ ...input, runClass: "SYNTHETIC" }, repos);
-  assert.equal((await repos.workItems.list()).length, 0);
-  await recordQuestionWork(input, repos);
-  await recordQuestionWork(input, repos);
-  const rows = await repos.workItems.list();
+  await recordQuestionWork({ ...input, runClass: "SYNTHETIC" }, list);
+  assert.equal((await pg.query("SELECT 1 FROM work")).rows.length, 0);
+  await recordQuestionWork(input, list);
+  await recordQuestionWork({ ...input, now: "2026-10-18T00:00:05Z" }, list);
+  const { rows } = await pg.query<Record<string, unknown>>("SELECT kind,tier,status,state,subject_id,value,origin->>'from' AS origin FROM work");
   assert.equal(rows.length, 1);
-  assert.equal(rows[0].value.state, "OPEN");
-  assert.equal(rows[0].value.subject, tucson.id);
-  assert.match(rows[0].value.obligation, /85701.*Who voted for the school budget/);
+  assert.deepEqual({ ...rows[0], value: undefined }, { kind: "ask", tier: "reader", status: "waiting", state: "AZ", subject_id: tucson.id, value: undefined, origin: "ask" });
+  assert.deepEqual(rows[0]!.value, { question: "Who voted for the school budget?", place: "85701", divisions: [tucson.ocdId] });
 });
 
 test("AQ-01 district questions use every sourced division in a split ZIP", () => {

@@ -7,13 +7,11 @@ import { test } from "node:test";
 
 import {
   incumbencyLabel,
-  nameParts,
-  namesAgree,
-  namesAgreeLoosely,
   resolveContestIncumbency,
-  splitDisplayName,
   type SeatHolderRef,
 } from "../lib/ballot/incumbency.ts";
+import { samePerson } from "../lib/identity/match-person.ts";
+import { nameParts, splitDisplayName } from "../lib/identity/name-parts.ts";
 import { nhLegislativeHolders, nhSeatKeyFromTitle, refreshNhSeatHolders, sits } from "../lib/ballot/seat-holders.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
@@ -68,9 +66,11 @@ test("DERIVED CASE — Gregory M. Sargent and Daniel E. Innis, whom the first ma
 test("an initial is not a nickname — J. does not match James", () => {
   // The loose match must not become a first-letter match, or it would pair any
   // two people whose first names start with the same letter.
-  assert.equal(namesAgreeLoosely(nameParts("J.", "Smith"), nameParts("James", "Smith")), false);
-  assert.equal(namesAgreeLoosely(nameParts("Greg", "Sargent"), nameParts("Gregory", "Sargent")), true);
-  assert.equal(namesAgreeLoosely(nameParts("Greg", "Sargent"), nameParts("Gregory", "Sargeant")), false);
+  const loosely = (a: [string, string], b: [string, string]) => samePerson({ id: "a", name: nameParts(...a), seats: ["contest"] }, { id: "b", name: nameParts(...b), seats: ["contest"] }, { shortFirstNames: true });
+  assert.equal(loosely(["J.", "Smith"], ["James", "Smith"]), false);
+  assert.equal(loosely(["Greg", "Sargent"], ["Gregory", "Sargent"]), true);
+  assert.equal(loosely(["Greg", "Sargent"], ["Gregory", "Sargeant"]), false);
+  assert.equal(samePerson({ id: "a", name: nameParts("Greg", "Sargent"), seats: ["contest"] }, { id: "b", name: nameParts("Gregory", "Sargent"), seats: ["contest"] }), false, "outside a contest a short form is never inferred");
 });
 
 test("a generational suffix never lands in the surname", () => {

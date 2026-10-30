@@ -333,7 +333,7 @@ export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly
 }
 
 /** `true` keeps a top-level key whole; an object keeps only its named keys. Every other key is dropped. */
-export type RecordProjection = Readonly<Record<string, true | readonly string[]>>;
+export type RecordProjection = Readonly<Record<string, true | readonly string[] | { readonly count: true }>>;
 
 export function projectRecord(record: unknown, projection: RecordProjection): unknown {
   if (record === null || typeof record !== "object" || Array.isArray(record)) return record;
@@ -341,6 +341,10 @@ export function projectRecord(record: unknown, projection: RecordProjection): un
   for (const [key, value] of Object.entries(record as Record<string, unknown>)) {
     if (!Object.prototype.hasOwnProperty.call(projection, key)) continue;
     const keep = projection[key];
+    if (keep !== true && !Array.isArray(keep) && "count" in keep) {
+      out[key] = Array.isArray(value) ? value.length : value;
+      continue;
+    }
     if (keep === true || value === null || typeof value !== "object" || Array.isArray(value)) {
       out[key] = value;
       continue;
@@ -483,6 +487,8 @@ export interface ControlPlaneRepositories {
   readonly fieldManual: FieldManualRepository;
 
   readonly fixMap: FixMapRepository;
+  /** The events that tell dead ends something new can be done. */
+  readonly capabilities?: import("../../core/capability.ts").CapabilityLog;
 
   readonly websitePacing: WebsitePacing;
   /** The job transfer breaker's last saved check: each job's normal and its slow-downs this week. */

@@ -2,11 +2,11 @@
 import type { Attempt, ExecutionLease } from "./attempt.ts";
 import { unreachable, type ReadOutcome } from "./admin-data.ts";
 import { parseAskGapObligationId } from "./ask-gap-id.ts";
-import type { AssignmentSources } from "./assignment-view.ts";
+import type { AssignmentSources, AssignmentSummarySources, AssignmentArtifact, AssignmentCostHead, AssignmentScout, AssignmentWorkerResult } from "./assignment-view.ts";
 import type { CostEntry } from "./cost.ts";
 import { deriveItemState, isPipelineRecord, methodCandidateItemId, scoutResultItemId } from "./promotion/pipeline.ts";
 import type { ActivationGateReading, PipelineItemState, PromotionPipelineRecord } from "./promotion/types.ts";
-import { readByKeys, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord, type ControlPlaneRepositories, type DispositionCommit, type Persisted, type RecordProjection } from "./repository/types.ts";
+import type { AggregateRepository, AppendOnlyRepository, ArtifactRecord, ControlPlaneRepositories, DispositionCommit, Persisted, RecordProjection } from "./repository/types.ts";
 import type { RouteTask } from "./route-task.ts";
 import type { FreshnessDebt } from "./scheduler/debt.ts";
 import { occurrenceId, type FreshnessOccurrence, type StandingObligation } from "./scheduler/durable.ts";
@@ -140,10 +140,19 @@ async function inChunks<T>(ids: readonly string[], read: (chunk: string[]) => Pr
   return (await Promise.all(chunks.map(read))).flat();
 }
 
-/** A log's records under `keys`, in key then append order. */
-async function recordsUnder<T>(log: AppendOnlyRepository<T>, keys: readonly string[]): Promise<T[]> {
-  const lists = await inChunks(unique(keys), async (chunk) => [...(await readByKeys(log, chunk)).entries()]);
-  return lists.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)).flatMap(([, records]) => records);
+export const ASSIGNMENT_LOG_FIELDS = {
+  artifacts: { artifactId:true, workItemId:true, attemptId:true, recordedAt:true, canonicalUrl:true, byteLength:true, contentType:true, partial:true },
+  costs: { attemptId:true, workItemId:true, routeId:true, role:true, cost:["usd","requestCount","bytesFetched","durationMs"] },
+  scoutResults: { attemptId:true, workItemId:true, recordClass:true, outcome:true, recordedAt:true, refusal:true, candidates:true, findings:true,
+    distinctEvidenceRungs:true, worker:["modelReported"], rungs:{count:true}, nextRungs:{count:true} },
+  workerResults: { id:true, attemptId:true, workItemId:true, endedAt:true, modelReview:["model","escalation","validationError"],
+    result:["role","verdict","blockers","findings","warnings","actualRowCount","sourceRowCount","declaredRowCount","validatedRecordCount","survivingRecordCount","conclusion","nextAction"] },
+  promotionPipeline: { formatVersion:true, recordId:true, itemId:true, at:true, stage:true, source:true, recordClass:true, subjectId:true, atStage:true, reasons:true },
+} as const satisfies Readonly<Record<string, RecordProjection>>;
+async function recordsUnder<T, R>(log: AppendOnlyRepository<T>, keys: readonly string[], fields: RecordProjection): Promise<R[]> {
+  if (!keys.length) return [];
+  const lists = await needs(log.readKeys, "projected log read by key")(unique(keys), fields);
+  return [...lists].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).flatMap(([, records]) => records) as unknown as R[];
 }
 
 /** A clause `<obligation>#<round>` names the obligation a round's work item was opened against. */
@@ -153,7 +162,7 @@ export const clauseObligation = (clause: string): string | null => /^(.*)#(\d+)$
  * Every record the whole-plane join gives the seeded assignments, in the order a whole-table read returns it, so
  * `deriveAssignmentEntries` answers for them exactly as it would over every record.
  */
-export async function readAssignmentSubset(repos: ControlPlaneRepositories, base: AssignmentSubsetBase, seeds: AssignmentSeeds): Promise<AssignmentSources> {
+export async function readAssignmentSubset(repos: ControlPlaneRepositories, base: AssignmentSubsetBase, seeds: AssignmentSeeds): Promise<AssignmentSummarySources> {
   const narrowed = <T>(repo: { readonly readManyNarrowed?: AggregateRepository<T>["readManyNarrowed"] }, name: string, ids: readonly string[], projection: RecordProjection) =>
     inChunks(unique(ids), (chunk) => needs(repo.readManyNarrowed, name)(chunk, projection));
   const where = <T>(repo: { readonly listWhereIn?: AggregateRepository<T>["listWhereIn"] }, name: string, path: readonly string[], ids: readonly string[], projection: RecordProjection) =>
@@ -178,9 +187,9 @@ export async function readAssignmentSubset(repos: ControlPlaneRepositories, base
     narrowed(repos.debts, "debt read by id", obligationIds, DEBT_PROJECTION),
     where(repos.routeTasks, "route-task read by work item", ["workItemId"], owned, ROUTE_TASK_PROJECTION),
     where(repos.attempts, "attempt read by work item", ["workItemId"], owned, ASSIGNMENT_ATTEMPT_PROJECTION),
-    recordsUnder(repos.artifacts, owned).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
-    recordsUnder(repos.costs, owned).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
-    recordsUnder(repos.workerResults, owned).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
+    recordsUnder<ArtifactRecord, AssignmentArtifact>(repos.artifacts, owned, ASSIGNMENT_LOG_FIELDS.artifacts).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
+    recordsUnder<CostEntry, AssignmentCostHead>(repos.costs, owned, ASSIGNMENT_LOG_FIELDS.costs).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
+    recordsUnder<WorkerResultRecord, AssignmentWorkerResult>(repos.workerResults, owned, ASSIGNMENT_LOG_FIELDS.workerResults).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId))),
   ]);
   const heldTasks = new Set(taskRows.map((t) => t.id));
   const roundTasks = occurrences.map((o) => o.routeTaskId).filter((id) => !heldTasks.has(id));
@@ -193,8 +202,8 @@ export async function readAssignmentSubset(repos: ControlPlaneRepositories, base
   const attemptSet = new Set(attemptIds);
   const open = unique(attempts.filter((a) => a.outcome === null).map((a) => a.routeTaskId));
   const [scoutResults, pipelineRecords, leases] = await Promise.all([
-    recordsUnder(repos.scoutResults, seeds.scoutKeys(owned, attemptIds)).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId) || attemptSet.has(r.attemptId))),
-    base.pipeline ? recordsUnder(repos.promotionPipeline, seeds.pipelineItems(owned, attemptIds)) : null,
+    recordsUnder<ScoutResult, AssignmentScout>(repos.scoutResults, seeds.scoutKeys(owned, attemptIds), ASSIGNMENT_LOG_FIELDS.scoutResults).then((rows) => rows.filter((r) => ownedSet.has(r.workItemId) || attemptSet.has(r.attemptId))),
+    base.pipeline ? recordsUnder(repos.promotionPipeline, seeds.pipelineItems(owned, attemptIds), ASSIGNMENT_LOG_FIELDS.promotionPipeline) : null,
     inChunks(open, (chunk) => needs(repos.leases.readMany, "lease read by route task")(chunk)),
   ]);
   return {

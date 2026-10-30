@@ -20,7 +20,7 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
       if (field === "question") question = value;
       if (field === "lat" && value.trim()) lat = Number(value);
       if ((field === "lng" || field === "lon") && value.trim()) lng = Number(value);
-      if (/^(?:ocd-|congress:|statewide:|roster:|fec:|ballot-|legiscan:|plural:)/.test(value) ||
+      if (/^(?:ocd-|congress:|statewide:|roster:|fec:|ballot-|legiscan:|plural:|person:)/.test(value) ||
         ["subject", "target", "member", "meetingId", "candidate"].includes(field)) keys.add(value);
       if ((field === "zip" || field === "approximateLocation" || field === "address") && /^\d{5}$/.test(value)) { zip = value; keys.add(value); }
       const fecState = /^(?:fec:)?[HS]\d([A-Z]{2})\d{5}$/.exec(value)?.[1];

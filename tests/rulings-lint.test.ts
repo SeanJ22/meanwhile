@@ -13,6 +13,7 @@ function fixture(initial: Record<string, string> = {}) {
   const put = (file: string, source: string) => { mkdirSync(dirname(join(cwd, file)), { recursive: true }); writeFileSync(join(cwd, file), source); };
   git("init", "-q"); git("config", "user.name", "Codex"); git("config", "user.email", "codex@openai.com");
   for (const [file, source] of Object.entries(initial)) put(file, source);
+  put("lib/core/core.json", JSON.stringify({ tables: {}, other: [], dynamicWrites: [], dynamicTables: [] }));
   put("rulings-read-baseline.json", JSON.stringify({ reads: Object.entries(initial).flatMap(([file, source]) => recordReads(file, source)) }));
   git("add", "."); git("commit", "-qm", "fixture");
   const base = git("rev-parse", "HEAD");
@@ -171,4 +172,19 @@ test("RC-01: the existing feedback privacy rule covers public assets, API output
     ["public/contact.svg", encoded], ["app/api/contact/route.ts", PERSONAL_EMAIL],
     [".next/static/chunk.js", PERSONAL_EMAIL], ["lib/geo/outbound-agent.ts", PERSONAL_EMAIL],
   ]), ["public/contact.svg", "app/api/contact/route.ts", ".next/static/chunk.js"]);
+});
+
+test("a write to a core table from a file the core does not list fails the rulings check; a listed bypass cannot be added later", async () => {
+  const core = { tables: { fact: { writers: ["lib/core/door.ts"], bypass: [] as string[] } }, other: [], dynamicWrites: [], dynamicTables: [] };
+  const f = fixture({ "lib/core/door.ts": "await query(`UPDATE fact SET status = 'live'`);\n" });
+  try {
+    f.put("lib/core/core.json", JSON.stringify(core));
+    f.git("add", "."); f.git("commit", "-qm", "core");
+    const base = f.git("rev-parse", "HEAD");
+    assert.deepEqual(await checkRulings({ cwd: f.cwd, base }), []);
+    f.put("lib/facts/around.ts", "await query(`UPDATE fact SET status = 'live'`);\n");
+    assert.match((await checkRulings({ cwd: f.cwd, base })).join("\n"), /A new write to the core table fact in lib\/facts\/around\.ts/);
+    f.put("lib/core/core.json", JSON.stringify({ ...core, tables: { fact: { writers: core.tables.fact.writers, bypass: ["lib/facts/around.ts"] } } }));
+    assert.match((await checkRulings({ cwd: f.cwd, base })).join("\n"), /lib\/facts\/around\.ts was added as a bypass of fact/);
+  } finally { f.close(); }
 });

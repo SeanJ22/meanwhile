@@ -31,11 +31,12 @@ import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control
 import { MODELS } from "../lib/models.ts";
 import { paidWorkGuards } from "../lib/control-plane/workers/paid-work-guards.ts";
 import { hunterLaneArmingPath, laneArmingOf, writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming.ts";
-import { hunterQueuePath, writeHunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
 import { researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
+import { rowsOfPlanningState } from "../lib/control-plane/workers/hunter-claims.ts";
+import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, type HeldDiggerWorkItem } from "../lib/control-plane/workers/held-digger-priority.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -560,7 +561,6 @@ const intents = readIntents(intentLog);
 
 const planningRevision=await repos.planningControls?.revision(PLANNING_STATE)??0;
 if(!dry && !filteredCycle) {
-  writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)),{writtenAt:NOW,taskIds:[],plainTaskIds:[]});
   await applyHuntOrders(repos,PLANNING_STATE,NOW);
   await pending.step("box:changed", () => backfillBox(repos, NOW, `box-backfill:${PLANNING_STATE}`));
 }
@@ -2212,8 +2212,10 @@ async function runAutonomousWave() {
   const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : fleet;
   const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
-  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && (item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject)),
-    onSelectionSnapshot: items => { for (const item of items) if(item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject))workItemsById.set(item.id, item); },
+  // A packet is hunted here when an order funds its government. A hunt a row of the work list asked for is the hunters' own.
+  const huntable = (item: WorkItem) => item.autonomousPlan?.workKind === undefined && (item.autonomousPlan?.capability !== "hunt-packet" || activeHuntSubjects.has(item.subject));
+  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && huntable(item),
+    onSelectionSnapshot: items => { for (const item of items) if(huntable(item))workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });
 
@@ -2274,10 +2276,17 @@ async function runAutonomousWave() {
     const ordered = taskIds.filter(id => !failedTaskIds.has(id)).sort(queue.compare);
     if (!dry && !canary) {
       try {
-        writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)), { writtenAt: nowIso(), taskIds: ordered, plainTaskIds: ordered.filter(id => plainTaskIds.has(id)) });
-        console.log(`  hunter lane queue: ${ordered.length} task(s) written for the standing hunter lane (${ordered.filter(id => plainTaskIds.has(id)).length} plain-code)`);
+        // Each planned task is a row the hunters claim. One a named order covers is served in Sean's tier; a task still waiting from an earlier round is not added twice.
+        const rows = ordered.map((id, at) => ({
+          kind: "hunt" as const, tier: Number.isFinite(queue.rank(id)) ? "order" as const : "coverage" as const, state: rowsOfPlanningState(PLANNING_STATE),
+          placeId: metadata.get(id)?.subject.split("#")[0] ?? "ocd-division/country:us", subjectId: id, series: `task:${id}`, claimKey: NOW,
+          priority: ordered.length - at, value: { routeTaskId: id, plain: plainTaskIds.has(id) }, origin: { from: "planner" as const }, source: { source: "research round" } }));
+        const list = workList(controlPlaneQuery(), { owner: `round:${PLANNING_STATE}` });
+        let added = 0;
+        for (let at = 0; at < rows.length; at += 1_000) added += await list.ensure(rows.slice(at, at + 1_000));
+        console.log(`  hunter lane: ${added} of ${ordered.length} planned task(s) added to the work list (${ordered.filter(id => plainTaskIds.has(id)).length} plain-code)`);
       } catch (error) {
-        runtimeConditions.push(`the hunter lane's queue could not be written (${error instanceof Error ? error.message : String(error)}); the planned tasks remain owed`);
+        runtimeConditions.push(`the planned tasks could not be added to the work list (${error instanceof Error ? error.message : String(error)}); they remain owed`);
       }
     }
     return { ...planned, dispatches: [...queueFailures], scoutsAdmitted: 0, scoutsLimitedAdmitted: 0 };

@@ -16,6 +16,7 @@ import { completeWorkerTask, reconcileWorkerCompletions, type UncommittedWorkerR
 import { PolicyRefusal } from "../capability.ts";
 import { isProofProject, type COST_RESULT_WITHOUT_DISPOSITION, type CostEntry, type CostModelShare, type ModelRequestBound } from "../cost.ts";
 import { questionOfObligation } from "../work-question.ts";
+import type { WorkCostKind } from "../../core/work-kinds.ts";
 
 import { currentAssignmentRefs, type FreshnessObligation, type ScheduledObligation } from "./obligation.ts";
 
@@ -313,6 +314,8 @@ export async function dispatchOne(
     readonly costProject?: string;
     /** A proof or test run: its charges say so, and stay inside every total and ceiling. */
     readonly nonProduction?: boolean;
+    /** The work row the hunt runs from, written on every charge it makes. Absent: no row started it. */
+    readonly workKind?: WorkCostKind;
   },
 ): Promise<DispatchResult> {
   const timed = (value:string, floor:string, stage:string):string => {
@@ -410,7 +413,7 @@ export async function dispatchOne(
   /* Every charge says what it was for, and a proof run says it is one. */
   const purpose = chargePurposeOf(input.obligation.obligation);
   const project = input.costProject ?? "freshness";
-  const proof = input.nonProduction === true ? { nonProduction: true as const } : {};
+  const proof = { ...(input.nonProduction === true ? { nonProduction: true as const } : {}), ...(input.workKind ? { workKind: input.workKind } : {}) };
   const ledgerCost = async (cost: AttemptCost, resultKind: CostResultWithoutDisposition, at:string, byModel?: readonly CostModelShare[]): Promise<void> => {
     let source: string | null = null;
     try {

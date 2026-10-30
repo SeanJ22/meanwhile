@@ -551,13 +551,15 @@ function retractionVerdict(head: JournalEntry[], onDisk: string[], changes: Chan
   return evaluateMigrationImmutability({ changes, baseDescription: "a fixture merge base", baseJournal: base, headJournal: head, sqlTagsOnDisk: onDisk });
 }
 
-test("the two retracted PB-01 migrations are on the list with their reason, and nothing else is", () => {
-  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]), [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when]]);
-  for (const row of RETRACTED_MIGRATIONS) {
-    assert.match(row.why, /never applied/i);
+test("the two retracted PB-01 migrations and SPN-01A are on the list with their reason, and nothing else is", () => {
+  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]),
+    [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when], [78, "SPN-01A_merge_people", 1_792_834_201_100]]);
+  for (const row of RETRACTED_MIGRATIONS) assert.match(row.why, /never applied/i);
+  for (const row of RETRACTED_MIGRATIONS.slice(0, 2)) {
     assert.match(row.why, /ends at 0034 as of 2026-10-13/);
     assert.match(row.why, /cp_field_manual_entries/);
   }
+  assert.match(RETRACTED_MIGRATIONS[2].why, /RIVER-MERGEFIX-159_merge_people/);
 });
 
 test("deleting exactly the two retracted files and dropping exactly their journal entries passes", () => {
@@ -583,6 +585,17 @@ test("a retracted file that is modified or renamed instead of deleted is still r
   const renamed: ChangedEntry = { status: "renamed", path: "lib/db/migrations/0036_renamed.sql", from: `lib/db/migrations/${PB_SEED.tag}.sql`, raw: "R100" };
   assert.deepEqual(retractionVerdict(withRetracted, ["0000_alpha", "0001_beta", PB_RETIRE.tag, PB_SEED.tag], [modified]).violations.map((v) => v.rule), ["migration-modified"]);
   assert.ok(retractionVerdict(withRetracted, ["0000_alpha", "0001_beta", PB_RETIRE.tag, "0036_renamed"], [renamed]).violations.some((v) => v.rule === "migration-renamed"));
+});
+
+test("a retracted file replaced by changed SQL under a new tag passes, which git reports as a partial rename", () => {
+  const corrected: JournalEntry = { idx: 36, when: 1_790_889_600_005, tag: "0036_corrected" };
+  const rename = (score: string): ChangedEntry => ({ status: "renamed", path: "lib/db/migrations/0036_corrected.sql",
+    from: `lib/db/migrations/${PB_SEED.tag}.sql`, raw: `${score}\tlib/db/migrations/${PB_SEED.tag}.sql\tlib/db/migrations/0036_corrected.sql` });
+  const head = [...established, PB_RETIRE, corrected], onDisk = ["0000_alpha", "0001_beta", PB_RETIRE.tag, "0036_corrected"];
+  const verdict = retractionVerdict(head, onDisk, [rename("R077")]);
+  assert.equal(verdict.verdict, "pass", verdict.failures.join("\n"));
+  assert.ok(verdict.checked.some((line) => line.includes(PB_SEED.tag) && /retracted/.test(line)));
+  assert.deepEqual(retractionVerdict(head, onDisk, [rename("R100")]).violations.map((v) => v.rule), ["migration-renamed"], "the same SQL under a new name is still refused");
 });
 
 test("a retracted tag with a different `when` is not the retracted migration", () => {

@@ -30,8 +30,6 @@ import {
   type FilingAuthority,
   type FilingAuthorityLevel,
   type FilingRecordClass,
-  type FilingRegime,
-  type FilingRoutingRule,
   type OfficeLevel,
   type PlannedRoute,
 } from "./model.ts";
@@ -1092,105 +1090,4 @@ export function selectRegime(registry: FilingRegimeRegistry, query: RegimeQuery)
           `${regime.provenance.officialRecord.join("; ")}. The statute itself is not read from ` +
           `source here — ${regime.provenance.openQuestion ?? "and that is owed"}.`,
   };
-}
-
-/**
- * The custodian for one place inside a regime, or null when the rule is known
- * and the office holding it is not. Never falls back to the jurisdiction-wide
- * custodian.
- */
-export function selectCustodian(
-  regime: FilingRegimeRecord,
-  place: { county?: string | null; municipality?: string | null },
-): { custodian: RegimeCustodian | null; scopeAsked: string | null } {
-  if (regime.custodianScope === "JURISDICTION_WIDE") {
-    return { custodian: regime.custodians.find((c) => c.scopeKey === null) ?? null, scopeAsked: null };
-  }
-  const asked =
-    regime.custodianScope === "PER_COUNTY" ? (place.county ?? null) : (place.municipality ?? null);
-  if (asked === null || asked.trim().length === 0) {
-    return { custodian: null, scopeAsked: null };
-  }
-  const key = asked.trim().toLowerCase();
-  return {
-    custodian: regime.custodians.find((c) => (c.scopeKey ?? "").toLowerCase() === key) ?? null,
-    scopeAsked: asked,
-  };
-}
-
-/* ── Derived views ────────────────────────────────────────────────────────── */
-
-/**
- * The jurisdiction's `FilingRegime`, assembled from the registry rows. One
- * routing row per (regime, office level), so an office level differing from its
- * authority level stays visible.
- */
-export function jurisdictionFilingRegime(
-  registry: FilingRegimeRegistry,
-  jurisdiction: string,
-  asOf?: string | null,
-): FilingRegime | null {
-  const row = registry.jurisdictions.find((j) => j.jurisdiction === jurisdiction);
-  if (!row) return null;
-
-  const regimes = registry.regimes
-    .filter((r) => r.jurisdiction === jurisdiction)
-    .filter((r) => (asOf === null || asOf === undefined ? r.supersededBy === null : regimeEffectiveOn(r, asOf)));
-
-  const routing: FilingRoutingRule[] = [];
-  for (const regime of regimes) {
-    for (const officeLevel of regime.officeLevels) {
-      routing.push({
-        officeLevel,
-        authorityLevel: regime.authorityLevel,
-        custodianRole: regime.custodianRole,
-        quote:
-          regime.provenance.statutoryQuote ??
-          "NOT QUOTED — the filing-officer provision for this regime has not been read from source " +
-            "in this repository.",
-      });
-    }
-  }
-
-  return {
-    jurisdiction: row.jurisdiction,
-    statutoryBasis: row.statutoryBasis,
-    statutorySourceUrl: row.statutorySourceUrl,
-    statutoryReadOn: row.statutoryReadOn,
-    federated: row.federated,
-    filingJurisdictionCount: row.filingJurisdictionCount,
-    filingJurisdictionBreakdown: row.filingJurisdictionBreakdown,
-    denominatorSource: row.denominatorSource,
-    routing,
-  };
-}
-
-/** Every custodian and co-regulator in the registry, by authority id. */
-export function authoritiesById(registry: FilingRegimeRegistry): ReadonlyMap<string, FilingAuthority> {
-  const map = new Map<string, FilingAuthority>();
-  for (const regime of registry.regimes) {
-    for (const custodian of regime.custodians) map.set(custodian.authority.id, custodian.authority);
-    for (const coRegulator of regime.coRegulators) map.set(coRegulator.id, coRegulator);
-  }
-  return map;
-}
-
-/** One authority by id, or a thrown refusal. Callers are import-time constants in `authority.ts`. */
-export function requireAuthority(registry: FilingRegimeRegistry, id: string): FilingAuthority {
-  const found = authoritiesById(registry).get(id);
-  if (!found) {
-    throw new FilingRegimeRegistryInvalid(
-      [
-        issue(
-          "REGIME_FIELD_INVALID",
-          null,
-          `no custodian or co-regulator with id "${id}" is in the registry`,
-          "Code that names a custodian the data no longer carries would resolve to undefined and " +
-            "report an authority that does not exist.",
-        ),
-      ],
-      registry.source,
-    );
-  }
-  return found;
 }

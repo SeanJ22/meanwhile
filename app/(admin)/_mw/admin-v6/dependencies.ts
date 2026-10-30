@@ -27,11 +27,6 @@ export const SECTION_DEP = {
     owner: "Codex (admin-view)",
     need: "Stuck items for this scope with cause, age, what was tried, owner, next step and linked fix.",
   },
-  work: {
-    id: "DEP-WORK-ROWS",
-    owner: "Codex (admin-view)",
-    need: "Work rows by stage with server-side search, exact totals and cursor paging for this scope.",
-  },
   history: {
     id: "DEP-RECEIPT-HISTORY",
     owner: "Codex (gateway)",

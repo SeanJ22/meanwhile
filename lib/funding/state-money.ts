@@ -187,35 +187,6 @@ export function stateMoneyRecordKey(record: {
 }
 
 /**
- * Name agreement, deliberately conservative. Agencies file
- * `SURNAME, FORENAME MIDDLE SUFFIX`; ballots carry `Forename Surname`. Token
- * sets are compared after stripping punctuation, suffixes and single-letter
- * initials, with no fuzzy-distance threshold.
- */
-const SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
-
-export function nameTokens(name: string): string[] {
-  return name
-    .toLowerCase()
-    .replace(/[.,'’]/g, " ")
-    .split(/\s+/)
-    .map((t) => t.trim())
-    .filter((t) => t.length > 1 && !SUFFIXES.has(t));
-}
-
-export function namesAgree(a: string, b: string): boolean {
-  const ta = new Set(nameTokens(a));
-  const tb = new Set(nameTokens(b));
-  if (ta.size === 0 || tb.size === 0) return false;
-  // Every token of the SHORTER name must appear in the longer one. That admits
-  // a missing middle name and refuses a different surname.
-  const [small, large] = ta.size <= tb.size ? [ta, tb] : [tb, ta];
-  for (const t of small) if (!large.has(t)) return false;
-  // And a single shared token is not agreement — "Smith" is not a person.
-  return small.size >= 2;
-}
-
-/**
  * Office agreement compares classes, not words: an agency may file an office
  * category (`MUNICIPAL OFFICE`, `SCHOOL BOARD`) while the ballot carries the
  * title (`Member of the Township Committee`). Each side maps to a class; an

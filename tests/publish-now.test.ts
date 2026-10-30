@@ -131,8 +131,8 @@ test("publication admission filters and projects work-item metadata in the datab
 
 test("BX-12: the executable selects only publication work and never holds the routine singleton", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS \? PLACE_MAP_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
-  assert.match(runner, /PUBLISH_NOW \? \[\] : PLACE_MAPS \? laneSourceTasks\(ROUTINE_SOURCE_TASKS, true, \[\]\)\s+: await withNationalPlaceTasks/);
+  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS \? PLACE_MAP_SINGLETON_PORT : VOTING_SITES \? VOTING_SITES_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
+  assert.match(runner, /PUBLISH_NOW \? \[\] : PLACE_MAPS \? laneSourceTasks\(ROUTINE_SOURCE_TASKS, true, \[\]\)\s+: VOTING_SITES \? AUTOMATIC_REFRESH_TASKS\.filter\(isVotingSitesTask\)\s+: await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.(?:await routineJob\(ROUTINE_JOBS\.doorPublication, async \(\) => )?publishNowDoorTasks/);
   assert.doesNotMatch(runner, /publishChangedReaderEdge|publishNowEdgeChecks/);
 });
@@ -163,14 +163,14 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n  placeMapsLane\(runPlaceMaps\),\n  doorProbesLane\(runDoorProbes\),\n$/);
-  const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function runPlaceMaps("));
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n  placeMapsLane\(deadlineMs => runRoutineLane\("place-maps", deadlineMs\)\),\n  votingSitesLane\(deadlineMs => runRoutineLane\("voting-sites", deadlineMs\)\),\n  doorProbesLane\(runDoorProbes\),\n$/);
+  const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function runRoutineLane("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
   assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
   assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(hostname\(\), startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
   const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(routine, /const LANE = PUBLISH_NOW \? "publish-now" : PLACE_MAPS \? "place-maps" : "routine-civic-data";/);
+  assert.match(routine, /const LANE = PUBLISH_NOW \? "publish-now" : PLACE_MAPS \? "place-maps" : VOTING_SITES \? "voting-sites" : "routine-civic-data";/);
   assert.match(routine, /routineSupervisorCycleId\(hostname\(\), RUN_STARTED_AT, LANE\)/);
 });
 

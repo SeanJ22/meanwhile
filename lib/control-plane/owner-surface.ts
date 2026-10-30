@@ -407,8 +407,8 @@ export interface RoutineCivicDataReaderReadbackReference {
   readonly receipt: ReaderProjectionReadbackReceipt | null;
 }
 
-/** The standing runner's three supervisor lanes: the routine pass, publish-now and each state's place map. */
-export type RoutineSupervisorLane = "routine-civic-data" | "publish-now" | "place-maps";
+/** The standing runner's supervisor lanes: the routine pass, publish-now, each state's place map and where-to-vote reads. */
+export type RoutineSupervisorLane = "routine-civic-data" | "publish-now" | "place-maps" | "voting-sites";
 
 export interface RoutineCivicDataSupervisorOutcome {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
@@ -1097,7 +1097,6 @@ export interface OwnerCostRow {
 export interface OwnerSnapshotState {
   readonly builtAt: string;
   readonly allRowsIndex: readonly import("./assignment-view.ts").IndexSegment[];
-  readonly bodyAttempts: readonly import("./assignment-view.ts").BodyPublicationAttempt[];
   readonly spendByPlace: readonly import("./cost-panel.ts").SpendByPlaceRow[];
 }
 

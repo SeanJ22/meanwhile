@@ -70,6 +70,8 @@ export interface UnfilledBlank {
   readonly field: string;
   readonly tried: string;
   readonly unlock: string;
+  /** The kind of capability that would unlock it and where it applies, when the detective can name one. */
+  readonly needs?: import("../../core/capability.ts").Need;
 }
 
 /** Provider-reported usage, summed over the job's model turns. Null where unreported. `inputTokens` is the UNCACHED remainder. */

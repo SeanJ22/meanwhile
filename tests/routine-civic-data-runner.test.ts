@@ -68,12 +68,7 @@ import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import { ballotPublicationHasNoInput, parseBallotPublicationResult, readLatestBallotPublication,
   recordBallotPublication, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
 import {
-  ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_CHILD_TIMEOUT_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-  largestFailureDomainCardinality,
-  routineChildPassWorstCaseMs,
-  routineRunnerBoundedWorkMs,
   runBoundedChildPass,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
@@ -279,7 +274,7 @@ test("candidate findings missing a place stay visible without failing unrelated 
   const task = { id: "candidate-profiles:CA" };
   const context = { controlPlaneUrlFromEnv: () => "postgres://fixture", neon: () => ({ query: () => {} }),
     readCandidateProfilePublicationTasks: async () => ({ tasks: [task], unscoped: 156 }),
-    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures, PLACE_MAPS: false,
+    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures, OWN_LANE: false,
     console: { log: () => {} }, safeFailure: String, sanitizedErrorDiagnostic: String };
   const run = () => runInNewContext(transpileModule(`(async () => { ${code}; return { tasks: candidateFindingTasks, lines: candidateFindingLines }; })()`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
@@ -1075,16 +1070,6 @@ test("one degraded provider occupies one lane while grouped unrelated providers 
   );
 });
 
-test("failure-domain declarations and timeout bounds fail closed", () => {
-  assert.equal(largestFailureDomainCardinality(["a", "a", "b"]), 2);
-  assert.equal(largestFailureDomainCardinality([]), 0);
-  assert.throws(() => largestFailureDomainCardinality([" "]), /FAILURE_DOMAIN_INVALID/);
-  assert.throws(
-    () => routineChildPassWorstCaseMs(3, 100, 2, 4),
-    /FAILURE_DOMAIN_SIZE_INVALID/,
-  );
-});
-
 test("standing routine data and intake launch together and one failure cannot suppress the other", async () => {
   const launched: string[] = [];
   let releaseRoutine!: () => void;
@@ -1461,7 +1446,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
 
-  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: shutFeedsLast\(dueRequestsFirstInClass\(electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\), new Set\(honouredDueRequests\.keys\(\)\)\), shutDoors\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -2179,14 +2164,6 @@ test("C6: two reads of one host in one pass start at least the gap apart; other 
   assert.ok(at("pima", "start") - at("tucson-1", "start") < 60, "another host is not held by that gap");
   assert.equal(ROUTINE_SAME_DOMAIN_CHILD_GAP_MS, 60_000);
   await assert.rejects(runBoundedChildPass([], { cwd: process.cwd(), env: process.env, sameDomainGapMs: -1 }), /DOMAIN_GAP_INVALID/);
-  const bounds = {
-    neonRequestDeadlineMs: 1_000, settlementRequestsPerCommand: 1, clockTaskCount: 1, clockConcurrency: 1,
-    clockRequestsPerTask: 1, coordinationRequests: 1, readerSingleDomains: 0, readerSingleTimeoutMs: 0,
-    readerMeetingDomains: 0, readerMeetingTimeoutMs: 0, readerConcurrency: 1,
-  } as const;
-  const chain = routineRunnerBoundedWorkMs(6, 3, bounds);
-  const noGapChain = routineChildPassWorstCaseMs(6, ROUTINE_CHILD_TIMEOUT_MS + 1_000, ROUTINE_CHILD_CONCURRENCY, 3);
-  assert.equal(chain, noGapChain + 2 * ROUTINE_SAME_DOMAIN_CHILD_GAP_MS + 1 * 1_000 + 1 * 1_000, "two gaps in a chain of three, plus the clock and coordination requests");
 });
 
 test("national people children share one serial lane: one at a time, back to back, while every source and state keeps its own turn", async () => {

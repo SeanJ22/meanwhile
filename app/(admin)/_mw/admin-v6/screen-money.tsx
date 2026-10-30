@@ -227,6 +227,9 @@ export function MoneyScreen() {
           </div>
           <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>What the daily limit buys</span><span className={s.big}>{dialWords}</span></div>
+          {(spendData?.byWorkKind ?? [{ kind: "unread", label: "Today by kind of work", usd: null }]).map((k) => (
+            <div key={k.kind} className={s.row}><span className={s.eyebrow}>{k.kind === "unread" ? k.label : `Today: ${k.label}`}</span><span className={s.big}>{money(k.usd)}</span></div>
+          ))}
           <div className={s.row}>
             <span className={s.eyebrow}>By model tier</span>
             {sum.tiers === null ? <span className={s.big}>{DASH}</span> : sum.tiers.map((t) => <span key={t.name} className={s.small}>{t.name} <span className={s.mono}>{usd(t.usd)}</span></span>)}

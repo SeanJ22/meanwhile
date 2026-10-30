@@ -198,7 +198,7 @@ import {
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { factReader } from "../lib/facts/db.ts";
-import { PLACE_MAP_PASS_BUDGET_MS, PLACE_MAP_RUN_RESERVE_MS, PLACE_MAP_SETTLEMENT_MS, PLACE_MAP_SINGLETON_PORT, isPlaceMapTask, laneSourceTasks, placeMapLaunchOrder, placeMapRowsOwed } from "../lib/civic-data/place-map-lane.ts";
+import { PLACE_MAP_PASS_BUDGET_MS, PLACE_MAP_RUN_RESERVE_MS, PLACE_MAP_SETTLEMENT_MS, PLACE_MAP_SINGLETON_PORT, VOTING_SITES_SINGLETON_PORT, isPlaceMapTask, isVotingSitesTask, laneSourceTasks, placeMapLaunchOrder, placeMapRowsOwed } from "../lib/civic-data/place-map-lane.ts";
 import { placeMapHeldZips } from "../lib/place-map/counts.ts";
 
 
@@ -211,8 +211,8 @@ const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 /** The place-map lane: only each state's map, one at a time, on its own clock and budget. */
-const PLACE_MAPS = process.argv.includes("--place-maps");
-const LANE = PUBLISH_NOW ? "publish-now" : PLACE_MAPS ? "place-maps" : "routine-civic-data";
+const PLACE_MAPS = process.argv.includes("--place-maps"), VOTING_SITES = process.argv.includes("--voting-sites"), OWN_LANE = PLACE_MAPS || VOTING_SITES;
+const LANE = PUBLISH_NOW ? "publish-now" : PLACE_MAPS ? "place-maps" : VOTING_SITES ? "voting-sites" : "routine-civic-data";
 const HUNT_PROGRESS_WRITES_AT_ONCE = 16;
 /* Sources use the first two thirds of the pass; maintenance and settlement finish before its deadline.
    Publication already confirms each write. There is no inventory readback phase.
@@ -232,8 +232,8 @@ function routineJob<T>(job: RoutineJob, run: () => Promise<T>, fallback: T): Pro
   return runRoutineJob(job, run, id => { heldJobs.add(id); return fallback; });
 }
 
-if (PLACE_MAPS) {
-  // A state map reads no meeting door.
+if (OWN_LANE) {
+  // A state map or voting read needs no meeting door.
 } else if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
@@ -269,6 +269,7 @@ if (controlPlaneUrlFromEnv() !== null) {
   }
 }
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : PLACE_MAPS ? laneSourceTasks(ROUTINE_SOURCE_TASKS, true, [])
+  : VOTING_SITES ? AUTOMATIC_REFRESH_TASKS.filter(isVotingSitesTask)
   : await withNationalPlaceTasks(laneSourceTasks([
   ...ROUTINE_SOURCE_TASKS.filter((task) => task.id !== MEETING_DOORS_CONTRACT_ID),
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
@@ -303,8 +304,8 @@ step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
     return await acquireProcessSingleton(
-      PUBLISH_NOW ? "publish-now-runner" : PLACE_MAPS ? "place-map-runner" : "routine-civic-data-runner",
-      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS ? PLACE_MAP_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
+      PUBLISH_NOW ? "publish-now-runner" : PLACE_MAPS ? "place-map-runner" : VOTING_SITES ? "voting-sites-runner" : "routine-civic-data-runner",
+      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS ? PLACE_MAP_SINGLETON_PORT : VOTING_SITES ? VOTING_SITES_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
     );
   } catch (error) {
     if (!(error instanceof ProcessSingletonHeldError)) throw error;
@@ -342,7 +343,7 @@ function releaseChildMemory(id: string): void {
 }
 
 const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
-if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv() && !PLACE_MAPS) {
+if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv() && !OWN_LANE) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     if (!PUBLISH_NOW) {
@@ -368,7 +369,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv() && !PLACE_MAPS) {
 }
 
 // State geometry is served from the reader edge store; each pass puts there any committed file it does not hold yet.
-if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW && !PLACE_MAPS) {
+if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW && !OWN_LANE) {
   const edge = resolveReaderArtifactWriteStore();
   if (edge) {
     try {
@@ -380,7 +381,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW && !PLACE_MAPS) {
   }
 }
 
-const sharedBrowser = PUBLISH_NOW || PLACE_MAPS ? null : (await import("./scout-browse.mts")).sharedScoutBrowser();
+const sharedBrowser = PUBLISH_NOW || OWN_LANE ? null : (await import("./scout-browse.mts")).sharedScoutBrowser();
 const workerToolsHost = sharedBrowser && ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
   ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
     RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
@@ -520,7 +521,7 @@ function publishHeldBesideSources(failures: SupervisorFailure[], job: RoutineJob
 
 async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
 
-  if (PLACE_MAPS || FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
+  if (OWN_LANE || FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
@@ -683,8 +684,8 @@ async function persistSupervisorOutcome(input: {
     outcome,
     lines: [
       input.failures.length === 0
-        ? `${PLACE_MAPS ? "STATE PLACE MAP" : "ROUTINE CIVIC DATA"} CYCLE COMPLETED — ${input.taskReceipts.length} exact task receipt(s)`
-        : `${PLACE_MAPS ? "STATE PLACE MAP" : "ROUTINE CIVIC DATA"} SUPERVISOR FAILED — ${input.failures.length} task process/protocol failure(s)`,
+        ? `${PLACE_MAPS ? "STATE PLACE MAP" : VOTING_SITES ? "VOTING SITES" : "ROUTINE CIVIC DATA"} CYCLE COMPLETED — ${input.taskReceipts.length} exact task receipt(s)`
+        : `${PLACE_MAPS ? "STATE PLACE MAP" : VOTING_SITES ? "VOTING SITES" : "ROUTINE CIVIC DATA"} SUPERVISOR FAILED — ${input.failures.length} task process/protocol failure(s)`,
       `${input.verifiedSourceSuccesses} source task(s) promoted; ${input.verifiedSourceFailures} source task(s) held their own LKG.`,
       ...input.dueRequestLines,
       ...(input.crashedTasks ?? []).map((crash) => `${crash.taskId} ${crash.detail}; the child crashed and its work waits its retry.`),
@@ -899,7 +900,7 @@ try {
 }
 let candidateFindingTasks: readonly RoutineSourceTask[] = [];
 const candidateFindingLines: string[] = [];
-if (controlPlaneUrlFromEnv() && !PLACE_MAPS) try {
+if (controlPlaneUrlFromEnv() && !OWN_LANE) try {
   const sql = neon(controlPlaneUrlFromEnv()!);
   const waiting = await readCandidateProfilePublicationTasks((text, params) => sql.query(text, params), RUN_STARTED_AT);
   candidateFindingTasks = waiting.tasks;
@@ -1241,10 +1242,10 @@ for (const read of clockReads) {
   });
 }
 
-if (PLACE_MAPS && dueCandidates.length === 0) {
+if (OWN_LANE && dueCandidates.length === 0) {
   await flushLaunchDecisions();
   if (supervisorFailures.length === 0) {
-    console.log("place maps: every state's map is current");
+    console.log(`${LANE}: every state's read is current`);
     await endPassEarly(0);
   }
 }
@@ -1730,7 +1731,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
   }));
 }
 
-const factMaintenance = !PUBLISH_NOW && !PLACE_MAPS && ONLY === null
+const factMaintenance = !PUBLISH_NOW && !OWN_LANE && ONLY === null
   ? runFactMaintenance(Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 60_000)).catch(error => {
     supervisorFailures.push({ taskId: "fact-maintenance", code: "FACT_MAINTENANCE_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }) : Promise.resolve();
@@ -1753,11 +1754,11 @@ if (pass.error !== undefined) {
 await factMaintenance;
 await heldPublication;
 await flushLaunchDecisions();
-if (!PUBLISH_NOW && !PLACE_MAPS && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
+if (!PUBLISH_NOW && !OWN_LANE && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
   try { await routineJob(ROUTINE_JOBS.boxFactAudit, () => reviewPublishedBoxFacts(readerFactDb().query), undefined); }
   catch (error) { supervisorFailures.push({ taskId: "box-fact-audit", code: "BOX_AUDIT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) }); }
 }
-if (!PUBLISH_NOW && !PLACE_MAPS && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
+if (!PUBLISH_NOW && !OWN_LANE && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
   try { await routineJob(ROUTINE_JOBS.statePointerRetirement, async () => {
     const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(process.env.DATABASE_URL!);
     const query = (text: string, params: readonly unknown[]) => sql.query(text, [...params], { fetchOptions: {

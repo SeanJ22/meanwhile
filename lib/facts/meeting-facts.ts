@@ -67,6 +67,16 @@ export function agendaFileOnPage(text: string, url: string): { readonly valueTex
   return id && found ? { valueText: id, quote: found[0] } : null;
 }
 
+/** The part of an address the page writes as its publisher gave it: the address with the trailing parts the feed composed itself (city, a spelled-out state, ZIP) dropped one at a time, never past the street number. */
+export function addressOnPage(copy: SavedCopy, address: string): string | null {
+  const parts = address.split(/,\s*/);
+  for (let count = parts.length; count >= 2; count--) {
+    const text = parts.slice(0, count).join(", ");
+    if (/\d/.test(text) && lineOf(copy, text)) return text;
+  }
+  return null;
+}
+
 const CANCELED_WORD = /\bcancell?ed\b|\bcancell?ation\b/i;
 
 /** Where the page says this sitting is canceled: the publisher's own word beside the sitting's title, with the line that shows it. */
@@ -227,7 +237,10 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
     const canceled = canceledOnPage(copy.text, meeting);
     await claim("status", "CANCELED", canceled?.valueText ?? "canceled", canceled?.quote ?? null);
   } else if (input.canceledHeld) await retireAbsent(db, { subjectId: id, fieldPrefix: "status", copyId: copy.id, stillShown: [], at: copy.fetchedAt });
-  if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
+  if (meeting.location) {
+    const spoken = meeting.location.address ?? meeting.location.name;
+    await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, lineOf(copy, spoken) ? spoken : addressOnPage(copy, spoken) ?? spoken);
+  }
   else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
   if(meeting.mapPin?.pendingReplacement)count(await publishMeetingPinFact(db,{meeting,capture:input.pinCapture,registered:true,

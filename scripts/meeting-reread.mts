@@ -158,6 +158,8 @@ await Promise.all([...families].map(async ([family, meetings]) => {
   }
 }));
 for (const row of await db.query("SELECT split_part(entity_id, ':', 2) || '|' || field AS field, reason, count(*)::int AS n FROM blank GROUP BY 1,2")) report.blanks[`${row.field}:${row.reason}`] = Number(row.n);
+const blankField = args.find(arg => arg.startsWith("--show-blanks="))?.slice(14);
+if (blankField) for (const row of await db.query("SELECT entity_id, reason, detail FROM blank WHERE field = $1 AND detail LIKE '{%' LIMIT 3", [blankField])) console.error(`BLANK ${row.entity_id} ${row.reason} ${String(row.detail).slice(0, 700)}`);
 
 const bodies = new Map<string, Meeting>();
 for (const meeting of listings) if (meeting.bodyId) bodies.set(meeting.bodyId, meeting);

@@ -4,7 +4,7 @@ import test from "node:test";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishCapturedMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { agendaFileOnPage, canceledOnPage, publishMeetingFacts, sittingOnPage } from "../lib/facts/meeting-facts.ts";
+import { addressOnPage, agendaFileOnPage, canceledOnPage, publishMeetingFacts, sittingOnPage } from "../lib/facts/meeting-facts.ts";
 import { meetingEntityId } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -85,6 +85,15 @@ test("a CivicClerk agenda file is quoted by its number beside the word Agenda, a
     await publishMeetingFacts(db, { meeting: meeting({ ...minutes, startsAtOnPage: "2026-12-08T19:00:00Z", agendaUrl: file(7162) }), capture: page, producedBy: "test" }, clocks, NOW);
     assert.equal((await db.query("SELECT 1 FROM fact WHERE entity_id=$1 AND field='agenda_url'", [meetingEntityId(minutes.id)])).length, 0);
   } finally { await db.pg.close(); }
+});
+
+test("an address the feed composed from parts is quoted at the part the publisher wrote, and one with no street number on the page is not", async () => {
+  const API = "https://mitchellsd.api.civicclerk.com/v1/Events";
+  const page = capture('{"value":[{"id":1570,"eventName":"Planning Commission","startDateTime":"2026-12-08T19:00:00Z","eventLocation":{"address1":"Council Chambers, City Hall, 612 N Main St","city":"Mitchell","state":"SD","zipCode":"57301"}}]}', API);
+  const copy = { id: 1, finalUrl: API, text: page.evidence.text, fetchedAt: NOW, isArchive: false };
+  assert.equal(addressOnPage(copy, "Council Chambers, City Hall, 612 N Main St, Mitchell, South Dakota, 57301"), "Council Chambers, City Hall, 612 N Main St");
+  assert.equal(addressOnPage(copy, "Council Chambers, Mitchell, South Dakota, 57301"), null);
+  assert.equal(addressOnPage(copy, "9 Elsewhere Rd, Mitchell, South Dakota, 57301"), null);
 });
 
 test("a canceled sitting is a fact quoted from the publisher's own word beside its title, and it moves to history when the publisher stops saying it", async () => {

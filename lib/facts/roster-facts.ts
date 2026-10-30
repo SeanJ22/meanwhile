@@ -124,10 +124,14 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
       count({ blank: reason }, member.recordId, "name");
       continue;
     }
-    const personId = await resolvePerson(db, { name, state: body.state, places,placeId:places.length ? null : body.parentId,
+    const resolved = await resolvePerson(db, { name, state: body.state, places,placeId:places.length ? null : body.parentId,
       externalIds: [...(member.externalIds ?? []), ["roster-name:" + body.id, nameKey(name)],
         ...(body.id !== input.body.id ? [["roster-name:" + input.body.id, nameKey(name)] as const] : []),
-        ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] });
+        ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] },
+      clocks.retryMinutes("officeholder"));
+    // Several people fit equally: a detective has the question, and nobody is picked.
+    if (typeof resolved !== "string") { count({ blank: "IDENTITY_TIE" }, member.recordId, "name"); continue; }
+    const personId = resolved;
     seated.add(personId);
     tally.people.set(member.recordId, personId);
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };

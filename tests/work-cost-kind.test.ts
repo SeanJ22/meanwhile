@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
-import { openWorkHunts } from "../lib/hunt/work-hunt.ts";
+import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
 import { hunterFor } from "../lib/hunt/runtime.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
@@ -36,6 +36,7 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   const repos = { ...createMemoryRepositories(), spend: pgSpendRepository(sql) };
   const now = () => new Date().toISOString();
   const list = workList(rows, { owner: "kind-test" });
+  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, log: () => {} });
 
   const hunt = async (item: WorkItem, task: RouteTask, blanks: boolean) => {
     const runtime = { repos, now, rollingCeilingUsd: 100, scoutFor: (found: WorkItem, found_task: RouteTask) => hunterFor({ repos, root: process.cwd(), now,
@@ -61,7 +62,8 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   // Tick one: an unanswered Ask question.
   await recordQuestionWork({ question: "Who voted for the school budget?", divisions: [division], place: "85701", subjectId: `${division}#board`,
     runClass: "ORGANIC", now: now() }, list);
-  assert.equal(await openWorkHunts({ list, repos, now: now() }), 1);
+  await claims.select(["az"], false);
+  assert.equal((await claims.claim(true))?.taskIds.length, 1);
   const ask = await newest();
   assert.equal(ask.item.autonomousPlan?.workKind, "ask");
   await hunt(ask.item, ask.task, false);
@@ -75,7 +77,7 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
 
   // Tick two: a reader pressed "Want us to get this sooner?" and the next planner pass hunts it.
   await list.sooner({ placeId: division, subjectId: `${division}#board`, subjectType: "body" });
-  assert.equal(await openWorkHunts({ list, repos, now: now() }), 1);
+  assert.equal((await claims.claim(true))?.taskIds.length, 1);
   const reader = await newest();
   assert.equal(reader.item.autonomousPlan?.workKind, "reader");
   await hunt(reader.item, reader.task, true);

@@ -8,10 +8,8 @@ import { officeClassOf } from "../lib/funding/state-money.ts";
 import {
   CYCLE_2026,
   aggregateEntities,
-  azNamesAgree,
   azOfficeKey,
   detailQuery,
-  nameVariants,
   nextFilingDue,
   parseCommitteeRegister,
   parseEntityName,
@@ -89,31 +87,6 @@ test("the Arizona statewide offices added to the shared classifier cannot swallo
   assert.equal(officeClassOf("County Attorney"), "COUNTY");
   assert.equal(officeClassOf("Board of County Commissioners"), "COUNTY");
   assert.equal(officeClassOf("Member of the Board of Education"), "SCHOOL");
-});
-
-test("a quoted segment in a name is an alternate name, on either end", () => {
-  assert.ok(nameVariants('Nicholas "Nick" Myers').includes("Nick Myers"));
-  assert.ok(nameVariants('Rachel "Jones" Keshel').includes("Rachel Jones"));
-  assert.ok(nameVariants('Hollace "Holly" Lyon').includes("Hollace Lyon"));
-  assert.deepEqual(nameVariants("Katie Hobbs"), ["Katie Hobbs"], "a plain name expands to itself and nothing else");
-});
-
-test("the five real ballot names whose quoting used to manufacture an absence now match", () => {
-  const pairs: [string, string][] = [
-    ['Nicholas "Nick" Myers', "Nick Myers"],
-    ['Rachel "Jones" Keshel', "Rachel Jones"],
-    ['Hollace "Holly" Lyon', "Hollace Drage Lyon"],
-    ['Walter "Les" Presmyk', 'Walter "Les" Presmyk'],
-    ["Ryan Slawson", 'Fred "Ryan" Slawson'],
-  ];
-  for (const [ballot, filed] of pairs) {
-    assert.ok(azNamesAgree(filed, ballot), `${filed} and ${ballot} are one person as both publishers write them`);
-  }
-});
-
-test("a diminutive is NOT a quoted alternate, and is not guessed at", () => {
-  assert.equal(azNamesAgree("Thomas Chalres Horne", "Tom Horne"), false);
-  assert.equal(azNamesAgree("Smith, John", "Jane Smith"), false, "a shared surname is not a person");
 });
 
 test("the entity name is parsed off the portal's own markup", () => {

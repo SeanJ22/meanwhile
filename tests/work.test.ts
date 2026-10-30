@@ -252,3 +252,39 @@ test("a refused row hands its detective the same tier", async t => {
   const [detect] = await list.claim("detect", 1);
   assert.deepEqual([detect!.tier, detect!.priority, detect!.origin.from], ["reader", 4, "detective"]);
 });
+
+test("an order is on the list when it is accepted, stores each step once, and its finished row is retired on the planner's clock", async t => {
+  const { pg, query } = await open();
+  t.after(() => pg.close());
+  const at = new Date("2026-10-24T12:00:00Z");
+  const list = workList(query, { owner: "orders", now: () => at });
+  await list.order({ receiptId: "runner.pause:abc", label: "Pause the runner", at: at.toISOString() });
+  await list.order({ receiptId: "runner.pause:abc", label: "Pause the runner", at: "2026-10-24T12:00:09Z" });
+  assert.deepEqual((await list.readOrder("runner.pause:abc"))!.steps.map(step => step.step), ["Received", "Accepted"], "a replay is the same order");
+  assert.equal(await list.advanceOrder("runner.pause:abc", "In progress", "2026-10-24T12:01:00Z"), true);
+  assert.equal(await list.advanceOrder("runner.pause:abc", "In progress", "2026-10-24T12:02:00Z"), false, "a step is stored once");
+  assert.equal(await list.advanceOrder("runner.pause:abc", "Done", "2026-10-24T12:03:00Z", { words: "Paused." }), true);
+  const done = (await list.readOrder("runner.pause:abc"))!;
+  assert.deepEqual([done.done, done.final, done.steps.map(step => step.step)], [true, { words: "Paused." }, ["Received", "Accepted", "In progress", "Done"]]);
+  assert.equal(await list.retire({ rowsBefore: "2026-11-01T00:00:00Z", ordersBefore: "2026-10-01T00:00:00Z" }), 0, "an order is kept longer than other rows");
+  assert.equal(await list.retire({ rowsBefore: "2026-11-01T00:00:00Z", ordersBefore: "2026-11-01T00:00:00Z" }), 1);
+  assert.equal(await list.readOrder("runner.pause:abc"), null);
+});
+
+test("a finished repeating hunt comes back when asked for, and a claim can be narrowed to a state and checked for first", async t => {
+  const { pg, query } = await open();
+  t.after(() => pg.close());
+  let at = new Date("2026-10-24T12:00:00Z");
+  const list = workList(query, { owner: "repeat", now: () => at });
+  const place = "ocd-division/country:us/state:az/county:pima";
+  await list.ensure([{ kind: "hunt", tier: "coverage", placeId: place, subjectId: place, series: `blank:${place}`, claimKey: "one", origin: { from: "planner" }, source: { source: "planner" } }]);
+  assert.equal(await list.ready(["hunt"], { state: "WA" }), false);
+  assert.equal(await list.ready(["hunt"], { state: "AZ" }), true);
+  assert.equal((await list.claim(["ask", "hunt"], 5, { state: "WA" })).length, 0);
+  const [claim] = await list.claim(["ask", "hunt"], 5, { state: "az" });
+  assert.equal(await list.finish(claim!, 5 * 86_400_000), true);
+  at = new Date(at.getTime() + 3_600_000);
+  assert.equal(await list.spawnDue(), 0, "its dead-end clock has not run out");
+  assert.equal(await list.again([`blank:${place}`]), 1, "something new gave it a reason");
+  assert.equal(await list.ready(["hunt"], { state: "AZ" }), true);
+});

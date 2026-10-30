@@ -33,6 +33,7 @@ $$`;
 /** Hourly work-list stock, by state and kind, for the line keeper. */
 const COUNT_WORK_STOCK = `CREATE OR REPLACE FUNCTION count_work_stock() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
+  IF TG_OP='DELETE' AND OLD.status='done' THEN RETURN OLD; END IF;
   IF TG_OP='UPDATE' AND (OLD.state,OLD.kind,OLD.status,OLD.lease_until,OLD.due_at) IS NOT DISTINCT FROM (NEW.state,NEW.kind,NEW.status,NEW.lease_until,NEW.due_at)
     THEN RETURN NEW; END IF;
   PERFORM count_work_index_change(

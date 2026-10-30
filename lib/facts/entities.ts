@@ -1,6 +1,6 @@
 import { ensureGoverningBody } from "../core/door.ts";
 export { ensureGoverningBody } from "../core/door.ts";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseCsv } from "../reference/csv.ts";
@@ -16,6 +16,10 @@ import type { Entity } from "../core/shapes.ts";
 import { enqueueReaderPlaces } from "../reader/cache.ts";
 import { registeredPlaceIds } from "../place-map/build.ts";
 import { bodyNameKey, publishedBodyLabel } from "../civic-data/published-body-name.ts";
+import { ID_ALIAS, identityKeys, isSeatNameScheme, personId, strongestKeys, survivingIds } from "../core/ids.ts";
+import { matchPerson, type PersonEvidence } from "../identity/match-person.ts";
+import { foldAccents, parsePersonName } from "../identity/name-parts.ts";
+import { sendToDetective } from "./identity-blank.ts";
 
 interface EntityRow extends Entity {
   /** The registered government a reviewed door names as a board's owner. */
@@ -261,12 +265,26 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   [batch.entities.map(e => e.id),governments]);
 }
 
-/** Merged boards retain their former ids as data, so a later registration load cannot recreate them. */
-async function canonicalBodies(query: Query, batch: EntityBatch): Promise<EntityBatch> {
-  const ids = batch.entities.filter(row => row.kind === "body").map(row => row.id);
-  if (!ids.length) return batch;
-  const aliases = new Map((await query("SELECT value, entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = ANY($1::text[])", [ids]))
-    .map(row => [String(row.value), String(row.entity_id)]));
+/** Saves `alias` as another name for `survivor`, so a reader link, a stored reaction or a source that still says `alias` finds the survivor. */
+async function saveAlias(query: Query, survivor: string, alias: string): Promise<void> {
+  await query(`INSERT INTO entity_external_id (entity_id, scheme, value) VALUES ($1, '${ID_ALIAS}', $2)
+    ON CONFLICT (scheme, value) DO UPDATE SET entity_id = EXCLUDED.entity_id`, [survivor, alias]);
+}
+
+/** An id that was merged into another stays an alias, so a later load cannot recreate it; a person already held under the same Open States id is not added a second time. */
+async function canonicalEntities(query: Query, batch: EntityBatch): Promise<EntityBatch> {
+  const tracked = batch.entities.filter(row => row.kind === "body" || row.kind === "person");
+  if (!tracked.length) return batch;
+  const aliases = new Map(await survivingIds(query, tracked.map(row => row.id)));
+  const persons = new Set(tracked.filter(row => row.kind === "person").map(row => row.id));
+  const keyed = batch.externalIds.filter(([id]) => persons.has(id));
+  const held = keyed.length ? await query(`SELECT x.entity_id, x.scheme, x.value FROM entity_external_id x
+    JOIN unnest($1::text[], $2::text[]) w(scheme, value) ON x.scheme = w.scheme AND x.value = w.value`, [keyed.map(row => row[1]), keyed.map(row => row[2])]) : [];
+  const holder = new Map(held.map(row => [`${row.scheme}\u0000${row.value}`, String(row.entity_id)]));
+  for (const [id, scheme, value] of keyed) {
+    const other = holder.get(`${scheme}\u0000${value}`);
+    if (other && other !== id && !aliases.has(id)) { aliases.set(id, other); await saveAlias(query, other, id); }
+  }
   // An alias's target is already held with its verified name, government and territory.
   return { entities: batch.entities.filter(row => !aliases.has(row.id)),
     hosts: batch.hosts.filter(([id]) => !aliases.has(id)), externalIds: batch.externalIds.filter(([id]) => !aliases.has(id)),
@@ -282,15 +300,50 @@ interface PersonIds {
   readonly places?: readonly EntityPlace[];
 }
 
-/** One permanent id per person: any shared external id finds the same entity; a name alone never does. */
-export async function resolvePerson(db: FactDb, person: PersonIds): Promise<string> {
+/** The seats a set of keys puts a person in: the bodies whose rosters named them. */
+const seatsOf = (externalIds: readonly (readonly [string, string])[]) =>
+  externalIds.flatMap(([scheme]) => isSeatNameScheme(scheme) ? [scheme.slice("roster-name:".length)] : []);
+
+/** People already held that share an identifier with these, and (when asked) people of the same state with the same surname. */
+async function heldPeople(query: Query, person: PersonIds, namesakes: boolean): Promise<readonly (PersonEvidence & { readonly id: string })[]> {
+  const surname = parsePersonName(person.name).last;
+  const sharing = `SELECT x.entity_id FROM entity_external_id x JOIN unnest($1::text[], $2::text[]) w(scheme, value) ON x.scheme = w.scheme AND x.value = w.value`;
+  const named = `SELECT id FROM entity WHERE kind = 'person' AND state IS NOT DISTINCT FROM $3::char(2) AND lower(regexp_replace(name, '[.,''"\`]', ' ', 'g')) LIKE '%' || $4::text || '%'`;
+  const withNamesakes = namesakes && surname !== "";
+  const rows = await query(`WITH held AS (${sharing}${withNamesakes ? ` UNION ${named}` : ""})
+    SELECT e.id, e.name, e.state, coalesce(jsonb_agg(jsonb_build_array(x.scheme, x.value)) FILTER (WHERE x.scheme IS NOT NULL), '[]'::jsonb) AS external
+    FROM held JOIN entity e ON e.id = held.entity_id AND e.kind = 'person' LEFT JOIN entity_external_id x ON x.entity_id = e.id GROUP BY e.id`,
+  [person.externalIds.map(([scheme]) => scheme), person.externalIds.map(([, value]) => value), ...withNamesakes ? [person.state, surname] : []]);
+  return rows.map(row => {
+    const external = row.external as [string, string][];
+    return { id: String(row.id), name: foldAccents(String(row.name)), state: row.state as string | null, keys: identityKeys(String(row.id), external), seats: seatsOf(external) };
+  });
+}
+
+/**
+ * One permanent id per person. A shared identifier (Open States, bioguide, FEC, a state's filer id, a publisher's member id)
+ * finds the same entity; so does the same name in a seat the person already holds. A name alone never does: that person is
+ * added separately and a detective is asked. When several held people fit equally, nobody is picked: the question goes to
+ * a detective and the caller gets the candidates back.
+ */
+export async function resolvePerson(db: FactDb, person: PersonIds, retryMinutes = 24 * 60): Promise<string | { readonly tie: readonly string[] }> {
   return db.transaction(async query => {
     const schemes = person.externalIds.map(([scheme]) => scheme), values = person.externalIds.map(([, value]) => value);
-    const held = await query(`SELECT DISTINCT entity_id FROM entity_external_id x JOIN unnest($1::text[], $2::text[]) AS w(scheme, value)
-      ON x.scheme = w.scheme AND x.value = w.value ORDER BY entity_id`, [schemes, values]);
-    const openStates = person.externalIds.find(([scheme]) => scheme === "openstates")?.[1];
-    const id = held.length ? String(held[0]!.entity_id) : openStates ?? `ocd-person/${randomUUID()}`;
-    const added = !held.length ? await query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'person', $2, $3) ON CONFLICT (id) DO NOTHING RETURNING id", [id, person.name, person.state]) : [];
+    const probe: PersonEvidence = { id: "probe", name: foldAccents(person.name), state: person.state, keys: identityKeys(null, person.externalIds), seats: seatsOf(person.externalIds) };
+    let found = matchPerson(probe, await heldPeople(query, person, false));
+    // Namesakes are looked for only when no identifier or seat already settled it, so a refresh of a known person reads no more than before.
+    if (found.kind === "NEW" || found.kind === "NAME_ONLY") found = matchPerson(probe, await heldPeople(query, person, true));
+    const about = { name: person.name, state: person.state, externalIds: person.externalIds };
+    if (found.kind === "TIE") {
+      const candidates = found.candidates.map(candidate => candidate.id).sort();
+      await sendToDetective(query, { entityId: candidates[0]!, field: `identity:${strongestKeys(person.externalIds)[0]!.join(":")}`, reason: "IDENTITY_TIE",
+        candidates, about: { ...about, why: found.reason }, retryMinutes });
+      return { tie: candidates };
+    }
+    const id = found.kind === "MATCH" ? found.candidate.id : personId(person.state, person.externalIds);
+    const added = found.kind === "MATCH" ? [] : await query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'person', $2, $3) ON CONFLICT (id) DO NOTHING RETURNING id", [id, person.name, person.state]);
+    if (found.kind === "NAME_ONLY" && added.length) await sendToDetective(query, { entityId: id, field: "identity", reason: "IDENTITY_NAME_ONLY",
+      candidates: [id, ...found.candidates.map(candidate => candidate.id)], about, retryMinutes });
     const aliases = await query(`INSERT INTO entity_external_id (entity_id, scheme, value) SELECT $1, * FROM unnest($2::text[], $3::text[])
       ON CONFLICT (scheme, value) DO NOTHING RETURNING entity_id`, [id, schemes, values]);
     const places:EntityPlace[]=[...person.places ?? [],...(person.placeId?[{placeId:person.placeId,boundaryYear:0,basis:"SERVICE_AREA" as const}]:[])];
@@ -411,7 +464,7 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       }
     }
     await db.transaction(async query => {
-      const canonical=await canonicalBodies(query,batch),before=await batchStates(query,canonical);
+      const canonical=await canonicalEntities(query,batch),before=await batchStates(query,canonical);
       await insertEntities(query,canonical);
       await query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
         ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`registration:${st}`, hash]);
@@ -444,9 +497,9 @@ export function registeredStates(root: string): readonly string[] {
   return readdirSync(join(root, "data", "derived", "registration")).filter(name => /^[a-z]{2}\.json$/.test(name)).map(name => name.slice(0, 2)).sort();
 }
 
-/** The surviving board for an exact saved identity alias; people and native source identifiers are unchanged. */
-export async function canonicalBodyId(query: Query, id: string): Promise<string> {
-  const [alias] = await query("SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1", [id]);
+/** The surviving person or board for an exact saved identity alias; any other id is its own. */
+export async function canonicalEntityId(query: Query, id: string): Promise<string> {
+  const [alias] = await query(`SELECT entity_id FROM entity_external_id WHERE scheme = '${ID_ALIAS}' AND value = $1`, [id]);
   return alias ? String(alias.entity_id) : id;
 }
 
@@ -463,7 +516,7 @@ async function bodyGovernment(query: Query, id: string, named: string | null | u
 /** Mints an entity found after the backfill and returns its durable identity; aliased boards reuse the surviving entity.
  * A board hangs on its registered government, and a held board left on a bare state root moves to the government or local place a writer now names. */
 export async function ensureEntity(query: Query, row: EntityRow): Promise<string> {
-  const id = row.kind === "body" ? await canonicalBodyId(query, row.id) : row.id;
+  const id = row.kind === "body" || row.kind === "person" ? await canonicalEntityId(query, row.id) : row.id;
   if (id !== row.id) {
     if (row.places?.length) await fileEntityPlaces(query,id,row.places);
     return id;
@@ -577,13 +630,14 @@ const SCHOOL_DISTRICT_LAYERS = ["census-geoid:unsd", "census-geoid:elsd", "censu
 async function registeredGovernment(query: Query, id: string): Promise<string> {
   const school = /^government:US-([A-Z]{2}):nces:(\d{7})$/.exec(id);
   if (school) {
-    const [found] = await query(`SELECT g.id FROM entity_external_id x JOIN entity g ON g.parent_id = x.entity_id AND g.kind = 'government'
-      WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND g.state = $3 ORDER BY g.id LIKE '%:school:%' DESC, g.id LIMIT 1`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
-    if (found) return String(found.id);
+    const found = await query(`SELECT g.id, g.id LIKE '%:school:%' AS school FROM entity_external_id x JOIN entity g ON g.parent_id = x.entity_id AND g.kind = 'government'
+      WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND g.state = $3 ORDER BY school DESC, g.id LIMIT 5`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
+    const best = found.filter(row => row.school === found[0]?.school);
+    if (best.length) return heldFirst(query, id, best.map(row => String(row.id)));
     // A school district the registration never paired with a government is still a place: the place stands for its government, as it does for any board hung straight on a place.
-    const [place] = await query(`SELECT x.entity_id AS id FROM entity_external_id x JOIN entity p ON p.id = x.entity_id AND p.kind = 'place'
-      WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND p.state = $3 LIMIT 1`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
-    return place ? String(place.id) : id;
+    const places = await query(`SELECT x.entity_id AS id FROM entity_external_id x JOIN entity p ON p.id = x.entity_id AND p.kind = 'place'
+      WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND p.state = $3 ORDER BY x.entity_id LIMIT 5`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
+    return places.length ? heldFirst(query, id, places.map(row => String(row.id))) : id;
   }
   const census = /^government:US-([A-Z]{2}):cog:(\d+)$/.exec(id);
   if (census) {
@@ -594,18 +648,24 @@ async function registeredGovernment(query: Query, id: string): Promise<string> {
   return id;
 }
 
+/** The first of the held governments that fit one native id; when several fit equally, a detective is asked which is right. */
+async function heldFirst(query: Query, nativeId: string, candidates: readonly string[]): Promise<string> {
+  if (candidates.length > 1) await sendToDetective(query, { entityId: candidates[0]!, field: `identity:${nativeId}`, reason: "IDENTITY_TIE", candidates, about: { nativeId } });
+  return candidates[0]!;
+}
+
 /** The subject under the one board name: its government's registered id, then its tail. */
 export async function canonicalSubject(query: Query, subjectId: string): Promise<string> {
-  const body = await canonicalBodyId(query, subjectId);
+  const body = await canonicalEntityId(query, subjectId);
   if (body !== subjectId) return body;
   const { root, tail } = splitSubject(subjectId);
   const government = await registeredGovernment(query, root);
   // A committee whose name is the governing board's, however the page dressed it ("Our Governing Board", "Mayor and Council"), is that board.
   if (tail.startsWith("#body:")) {
     const context = await governmentContext(query, government);
-    if (governingBoardName(tail.slice(6).replace(/-/g, " "), context) !== null) return canonicalBodyId(query, `${government}${context.school ? "#board" : "#governing"}`);
+    if (governingBoardName(tail.slice(6).replace(/-/g, " "), context) !== null) return canonicalEntityId(query, `${government}${context.school ? "#board" : "#governing"}`);
   }
-  return canonicalBodyId(query, `${government}${tail}`);
+  return canonicalEntityId(query, `${government}${tail}`);
 }
 
 /** What the fact store says kind of government this is and what it is called, for reading a body's name against it. */
@@ -621,10 +681,13 @@ export async function placeBody(query: Query, id: string, place: string): Promis
 
 }
 
-/** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. */
+/** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. Two held bodies that fit equally are a question for a detective; writes go on to the first by id. */
 async function bodyUnder(query: Query, government: GovernmentRef, find: { readonly sql: string; readonly param: string }, id: string, name: string): Promise<BodyRef> {
-  const [held] = await query(`SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND (parent_id = $1 OR id LIKE $2) AND ${find.sql} LIMIT 1`,
+  const fits = await query(`SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND (parent_id = $1 OR id LIKE $2) AND ${find.sql} ORDER BY id LIMIT 5`,
     [government.id, `${government.placeId}#%`, find.param]);
+  if (fits.length > 1) await sendToDetective(query, { entityId: government.id, field: `identity:body:${find.param.toLowerCase()}`, reason: "IDENTITY_TIE",
+    candidates: fits.map(row => String(row.id)), about: { government: government.id, looking_for: find.param } });
+  const [held] = fits;
   if (held) {
     await placeBody(query, String(held.id), government.placeId);
     return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };

@@ -12,7 +12,7 @@ interface Reading { readonly at: string; readonly changedAt: string | null; read
 
 const KIND_WORDS: Readonly<Record<WorkKind, string>> = {
   fact: "Facts to publish", lead: "Links to read", hunt: "Blanks to hunt", recheck: "Sources to re-check", ask: "Reader questions",
-  slice: "Place pages to rebuild", detect: "Detective work", fix: "Fixes", load: "Source loads", check: "Claims to check",
+  slice: "Place pages to rebuild", detect: "Detective work", fix: "Fixes", load: "Source loads", check: "Claims to check", order: "Orders in progress",
 };
 const TIER_WORDS: Readonly<Record<WorkTier, string>> = {
   clock: "On the clock", order: "Sean's orders", reader: "Readers asked", coverage: "Least-complete places",

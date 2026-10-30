@@ -1364,20 +1364,8 @@
       "table": "cp_admin_config"
     },
     {
-      "file": "lib/control-plane/admin-view/fix-prevention-history.ts",
-      "table": "cp_obligations"
-    },
-    {
-      "file": "lib/control-plane/admin-view/fix-prevention-history.ts",
-      "table": "cp_work_items"
-    },
-    {
       "file": "lib/control-plane/admin-view/model-spend.ts",
       "table": "cp_log_costs"
-    },
-    {
-      "file": "lib/control-plane/admin-view/public-reader-observation-read.ts",
-      "table": "cp_work_items"
     },
     {
       "file": "lib/control-plane/admin-view/runner-progress-read.ts",
@@ -1406,30 +1394,6 @@
     {
       "file": "lib/control-plane/admin-view/v6-workers-read.ts",
       "table": "cp_log_owner_digests"
-    },
-    {
-      "file": "lib/control-plane/admin-view/worker-progress.ts",
-      "table": "cp_attempts"
-    },
-    {
-      "file": "lib/control-plane/admin-view/worker-progress.ts",
-      "table": "cp_leases"
-    },
-    {
-      "file": "lib/control-plane/admin-view/worker-progress.ts",
-      "table": "cp_log_scout_results"
-    },
-    {
-      "file": "lib/control-plane/admin-view/worker-progress.ts",
-      "table": "cp_log_worker_results"
-    },
-    {
-      "file": "lib/control-plane/admin-view/worker-progress.ts",
-      "table": "cp_route_tasks"
-    },
-    {
-      "file": "lib/control-plane/admin-view/worker-progress.ts",
-      "table": "cp_work_items"
     },
     {
       "file": "lib/control-plane/assignment-read.ts",
@@ -1906,10 +1870,6 @@
     {
       "file": "lib/control-plane/research-view.ts",
       "table": "cp_research_state"
-    },
-    {
-      "file": "lib/control-plane/scheduler/absence-reopen.ts",
-      "table": "cp_obligations"
     },
     {
       "file": "lib/control-plane/scheduler/cycle-selection.ts",

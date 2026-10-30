@@ -80,7 +80,7 @@ export async function settleFundingHoldingAnswer(
   if (plan.federal && !federalHeld) {
     return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
   }
-  if (!plan.federal && plan.state === null && !identityHeld && /^(?:statewide:|plural:|roster:)/.test(target)) {
+  if (!plan.federal && plan.state === null && !identityHeld && /^(?:statewide:|plural:|person:|roster:)/.test(target)) {
     return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
   }
 

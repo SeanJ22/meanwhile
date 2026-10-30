@@ -26,7 +26,8 @@ function person(id:string,changes:Partial<Officeholder>={}):Officeholder {
     websiteUrl:null,contactFormUrl:null,phone:null,email:null,campaignUrl:null,photo:null,
     provenance:{sourceUrl:`https://reference.example/${id}`,sourceOrg:"Reference fixture",collectedAt:at,verifiedAt:at},...changes};
 }
-const set=(...officeholders:Officeholder[]):OfficeholderSet=>({scope:"US-AZ",generatedAt:at,officeholders,divisions:[],unmatched:[]});
+const set=(...officeholders:Officeholder[]):OfficeholderSet=>({scope:"US-AZ",generatedAt:at,officeholders,unmatched:[],
+  divisions:officeholders.map(row=>({officeholderId:row.id,ocdId:`ocd-division/country:us/state:${row.state?.toLowerCase()}`,bodyId:null}))});
 
 test("a named-entity accent and the office's short title publish through the normal statewide source path",async()=>{
   const url="https://www.azcc.gov/commissioner/biography";
@@ -64,7 +65,16 @@ test("replayed sources retain the same durable records when optional fields were
   assert.deepEqual(first.officeholders[0].sourceHolders,JSON.parse(JSON.stringify(originals)));
   assert.deepEqual([reference,official],originals,"the publisher's original optional fields are not rewritten");
 });
-test("unique full name, office and state binds an association lead without merging namesakes in another state",()=>{
+test("a name with no seat to stand on joins no one; the pair waits for a detective",()=>{
+  const unseated={...set(person("association:lead")),divisions:[]};
+  const merged=mergePeopleSets([set(person("openstates:a")),unseated])!;
+  assert.equal(merged.officeholders.length,2,"the same name and office in no shared seat is not one person");
+  assert.deepEqual(merged.identityQuestions?.map(row=>[row.reason,row.personIds]),[["NAME_ONLY",["association:lead","openstates:a"]]]);
+  const bridged=mergePeopleSets([set(person("openstates:a",{nativeIds:{legiscan:["9"]}})),{...set(person("association:lead",{nativeIds:{legiscan:["9"]}})),divisions:[]}])!;
+  assert.equal(bridged.officeholders.length,1,"a shared identifier joins them with no seat at all");
+  assert.equal(bridged.identityQuestions,undefined);
+});
+test("the same name, office and seat binds an association lead without merging namesakes in another state",()=>{
   const merged=mergePeopleSets([set(person("openstates:a")),set(person("association:a")),set(person("association:b",{state:"NM"}))])!;
   assert.equal(merged.officeholders.length,2);
   assert.ok(merged.officeholders[0].nativeIds?.reader?.includes("association:a"));
@@ -176,7 +186,7 @@ test("multiple identity bridges preserve original person order and later aliases
   assert.ok(merged.disagreements?.some(disagreement => disagreement.personId === "a"));
 });
 
-test("source-name ambiguity still blocks a name-only join after an identity bridge combines the namesakes", () => {
+test("source-name ambiguity still blocks a name-and-seat join after an identity bridge combines the namesakes", () => {
   const a = person("namesake-a", { nativeIds: { votesmart: ["1"] } });
   const b = person("namesake-b", { nativeIds: { votesmart: ["2"] } });
   const third = person("unrelated", { name: "Other Person" });

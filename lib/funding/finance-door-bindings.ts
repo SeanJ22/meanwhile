@@ -1,6 +1,8 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { BallotSet } from "../ballot/types.ts";
-import { namesAgree, type MatchBasis, type StateMoneyRecord } from "./state-money.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { nameParts } from "../identity/name-parts.ts";
+import type { MatchBasis, StateMoneyRecord } from "./state-money.ts";
 import type { FinanceDoorRead, FinanceFiling } from "./finance-door-reader.ts";
 
 export interface BoundFinanceFiling {
@@ -34,8 +36,11 @@ export function bindFinanceDoorFilings(input: {
         const contest = ballot.contests.find(row => row.id === candidate.contestId && row.type === "CANDIDACY" && row.ocdId === filing.ocdId);
         if (!contest) return [];
         const office = (value: string) => value.toLowerCase().replace(/\s+/g, " ").trim();
+        // The office, jurisdiction and election year agree above, so they are the seat and term both names stand in.
+        const seat = [`${contest.ocdId}|${office(contest.title)}|${filing.electionYear}`];
         if (office(filing.office!) !== office(contest.title) ||
-            !namesAgree(filing.candidateName!, [candidate.givenName, candidate.familyName].filter(Boolean).join(" "))) return [];
+            !samePerson({ id: filing.committeeId, name: filing.candidateName!, seats: seat },
+              { id: candidate.id, name: nameParts(candidate.givenName, candidate.familyName), seats: seat })) return [];
         const match: MatchBasis = { registeredName: filing.registeredName,
           officeAsFiled: filing.office, officeOnBallot: contest.title,
           electionYearAsFiled: filing.electionYear, electionYearOnBallot: Number(ballot.election.date.slice(0, 4)),

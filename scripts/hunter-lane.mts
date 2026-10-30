@@ -1,11 +1,8 @@
 import { PLANNING_STATES } from "../lib/control-plane/scheduler/state-planning.ts";
-import { mkdirSync } from "node:fs";
-import { join } from "node:path";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { runLeaseWorkerProcesses, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
-import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { installNeonCircuitBreaker } from "../lib/control-plane/neon-circuit.ts";
@@ -15,15 +12,16 @@ import { anthropicTransport } from "../lib/control-plane/scheduler/scout-executo
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { durableSearchBudget } from "../lib/control-plane/discovery/search-runtime.ts";
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
-import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
-  stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
+import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
+import { HUNTER_CLAIM_LEASE_MS, HUNTER_CLAIM_RENEW_MS, hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
+import { controlPlaneQuery, workList } from "../lib/core/work.ts";
+import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
 
 
 const ROOT = process.cwd();
 
 const say = (line: string): void => { console.log(line); };
 const nowIso = (): string => new Date().toISOString();
-const wantsPostgres = process.argv.includes("--provider=postgres");
 let drain = false;
 process.on("message", message => {
   if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
@@ -33,37 +31,19 @@ process.on("message", message => {
 });
 process.on("SIGTERM", () => { drain = true; });
 
-let repos: ControlPlaneRepositories;
-if (wantsPostgres) {
-  installNeonCircuitBreaker(ROOT, nowIso);
-  installNeonRequestDeadline();
-  const url = controlPlaneUrlFromEnv();
-  if (url === null) { console.error("hunter lane: --provider=postgres was asked for and the control-plane URL is not set"); process.exit(1); }
-  repos = await createPgRepositories(url, nowIso(), { skipBootstrap: true });
-} else {
-  const store = join(ROOT, ".runtime", "control-plane", "freshness-shadow");
-  mkdirSync(store, { recursive: true });
-  repos = await createFileRepositories(store);
-}
+if (!process.argv.includes("--provider=postgres")) { console.error("hunter lane: the work list lives in Postgres; start it with --provider=postgres"); process.exit(1); }
+installNeonCircuitBreaker(ROOT, nowIso);
+installNeonRequestDeadline();
+const url = controlPlaneUrlFromEnv();
+if (url === null) { console.error("hunter lane: the control-plane URL is not set"); process.exit(1); }
+const repos: ControlPlaneRepositories = await createPgRepositories(url, nowIso(), { skipBootstrap: true });
 
-let stateIndex=-1;
-let state="system";
-let armingPath=hunterLaneArmingPath(ROOT,state);
-let queuePath=hunterQueuePath(armingPath);
-const selectedVersions=new Map<string,string>();
-const selectQueue=():string=>{
-  for(let count=0;count<PLANNING_STATES.length;count++) {
-    stateIndex=(stateIndex+1)%PLANNING_STATES.length;
-    const next=PLANNING_STATES[stateIndex];
-    const path=hunterLaneArmingPath(ROOT,next);
-    const queue=readHunterQueue(hunterQueuePath(path));
-    if("unread" in queue || queue.taskIds.length===0 || selectedVersions.get(next)===queue.writtenAt)continue;
-    state=next;armingPath=path;queuePath=hunterQueuePath(path);
-    selectedVersions.set(state,queue.writtenAt);
-    break;
-  }
-  return state;
-};
+let state = "system";
+let armingPath = hunterLaneArmingPath(ROOT, state);
+const claims = hunterClaims({ list: workList(controlPlaneQuery(), { owner: "hunter-lane", leaseMs: HUNTER_CLAIM_LEASE_MS }), repos, now: nowIso,
+  deadEndMs: () => deadEndWaitMs(repos), log: say });
+const keeper = setInterval(() => { void claims.keep().catch(error => say(`hunter lane: leases could not be renewed (${error instanceof Error ? error.message : String(error)})`)); }, HUNTER_CLAIM_RENEW_MS);
+keeper.unref();
 const providerQueue = new ModelProviderQueue({
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
@@ -78,8 +58,15 @@ const lane = hunterLane({
   sleep: ms => new Promise(done => setTimeout(done, ms)),
   stopRequested: () => drain,
   log: say,
-  readQueue: () => readHunterQueue(queuePath),
-  selectQueue,
+  selectState: async () => {
+    let paidOpen = false;
+    try { paidOpen = lane.current().closed === null; } catch { paidOpen = false; }
+    state = await claims.select(PLANNING_STATES, !paidOpen);
+    armingPath = hunterLaneArmingPath(ROOT, state);
+    return state;
+  },
+  claim: paidOpen => claims.claim(paidOpen),
+  endWave: () => claims.endWave(),
   arm: async () => {
     const armed = await armHunterLane({ repos,state, now: nowIso, armingPath, messages, batch, credentialConfigured: workerKey.length > 0,
       credentialVar: WORKER_CREDENTIAL_VAR, providerQueue, ownSpend,
@@ -115,8 +102,7 @@ const lane = hunterLane({
       const next = absorb();
       if (next === null) return [];
       for (const id of next.plainTaskIds) plain.add(id);
-      order.clear();
-      next.taskIds.forEach((id, index) => order.set(id, index));
+      for (const id of next.taskIds) order.set(id, order.size);
       return paidOpen ? next.taskIds : next.taskIds.filter(id => plain.has(id));
     };
     const progress = hunterLaneProgress({ log: say });
@@ -128,7 +114,7 @@ const lane = hunterLane({
       standing: { moreTasks, quietMs: HUNTER_JOB_QUIET_MS, retireAfterMs: HUNTER_WORKER_RETIRE_MS, onMoved: progress.step,
         onStuck: worker => { progress.stuck(); say(stuckWorkerLine(worker)); } },
       slots,
-      config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidOpen, searchEnabled: search !== null,
+      config: { root: ROOT, postgres: true, taskIds, modelEnabled: paidOpen, searchEnabled: search !== null,
         get ceilingUsd() { return lane.current().ceilingUsd; }, fundedSubjects: [...funded] },
       capacity: () => {
         const current = lane.current();
@@ -140,7 +126,8 @@ const lane = hunterLane({
 
       orderPending: async ids => !handingOut() ? [] : ids.filter(id => order.has(id) && (lane.current().closed === null || plain.has(id)))
         .sort((a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER)),
-      onDispatched: result => {
+      onDispatched: async result => {
+        await claims.settle(result);
         progress.taskDone();
         if (result.worker?.role !== "SCOUT") { say(`hunter lane: task done: ${result.routeTaskId ?? result.obligationId}; ${result.outcome ?? "NOT_RUN"}`); return; }
         const outcome = result.disposition === "INGESTED" ? "CAPTURED"

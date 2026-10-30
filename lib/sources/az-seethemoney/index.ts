@@ -24,7 +24,6 @@
  * and it returns numbers only.
  */
 
-import { namesAgree } from "../../funding/state-money.ts";
 import { OUTBOUND_CONTACT } from "../../geo/outbound-agent.ts";
 
 export const AGENCY = "Arizona Secretary of State — See The Money";
@@ -476,38 +475,4 @@ export function reconcileEntity(
     incomeDelta,
     expenseDelta,
   };
-}
-
-/**
- * A quoted segment in a name is an alternate name ("also known as"), not a name token. A name with a
- * quoted segment expands into the names it states, and `namesAgree` is applied unchanged to the pairs.
- * No rule here invents diminutives.
- */
-export function nameVariants(name: string): string[] {
-  const cleaned = name.replace(/<br\s*\/?>/gi, " ").replace(/\s+/g, " ").trim();
-  const quoted = [...cleaned.matchAll(/["“”]([^"“”]+)["“”]/g)].map((m) => m[1].trim()).filter(Boolean);
-  const withoutQuoted = cleaned.replace(/["“”][^"“”]+["“”]/g, " ").replace(/\s+/g, " ").trim();
-  if (quoted.length === 0) return [cleaned];
-  // The quoted part can stand in for either the given or the family name, and nothing in the string says
-  // which, so both readings are generated and `namesAgree` decides.
-  const variants = new Set<string>([withoutQuoted]);
-  const parts = withoutQuoted.split(" ").filter(Boolean);
-  for (const alt of quoted) {
-    if (parts.length >= 2) {
-      variants.add([alt, ...parts.slice(1)].join(" "));
-      variants.add([...parts.slice(0, -1), alt].join(" "));
-    } else {
-      variants.add(`${alt} ${parts[0] ?? ""}`.trim());
-    }
-  }
-  return [...variants].filter((v) => v.length > 0);
-}
-
-/**
- * Person identity, using the shared `namesAgree` test plus `nameVariants` on both sides: parsing, not
- * fuzz.
- */
-export function azNamesAgree(a: string, b: string): boolean {
-  for (const x of nameVariants(a)) for (const y of nameVariants(b)) if (namesAgree(x, y)) return true;
-  return false;
 }

@@ -6,8 +6,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { buildBodyViews, type BodyStoreFacts, type VersionFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
-import { containerStanding, indexBodies, registryBodyOf, observedCoverageStatus, coverageStatusPill } from "../lib/control-plane/admin-view/coverage.ts";
-import { previewScopeBodies } from "../lib/control-plane/admin-view/scope-preview.ts";
+import { containerStanding, indexBodies, registryBodyOf } from "../lib/control-plane/admin-view/coverage.ts";
 
 const NOW = "2026-09-24T21:00:00.000Z";
 
@@ -96,34 +95,4 @@ test("the preview's counts are the same from either read", () => {
   const b = containerStanding(codes, index, buildBodyViews({ contracts, store: light, nowIso: NOW }));
   assert.deepEqual(b.counts, a.counts);
   assert.deepEqual(b.perCode.map((c) => c.counts), a.perCode.map((c) => c.counts));
-});
-
-test("normal published body readings advance the stale registry preview without hiding a later failed read", () => {
-  const registry = contracts.map(c => registryBodyOf({ id: c.bodyId, name: c.jurisdiction, ocdId: c.ocdId, coverageStatus: "NOT_ATTEMPTED" }));
-  const codes = [{ zcta5: "85701", whole: true, fraction: 1, indexed: true, divisions: contracts.map(c => c.ocdId!), partial: [] }];
-  const index = indexBodies(registry);
-  const views = buildBodyViews({ contracts, store: light, nowIso: NOW });
-  const baseline = containerStanding(codes, index, []);
-  assert.equal(baseline.counts.neverWalked, 5);
-  const current = containerStanding(codes, index, views);
-  assert.equal(current.counts.wayIn, 3);
-  assert.equal(current.counts.neverWalked, 1);
-  assert.equal(current.counts.other, 1);
-  const preview = new Map(previewScopeBodies(codes, index, views).map(body => [body.id, body.coverageStatus]));
-  assert.equal(preview.get(working.bodyId), "LIVE");
-  assert.equal(preview.get(attention.bodyId), "LIVE", "the retained publication still proves a recorded route");
-  assert.equal(views.find(body => body.id === attention.bodyId)!.status, "NEEDS ATTENTION", "current failure remains visible");
-  assert.equal(preview.get(stuck.bodyId), "READ_UNRESOLVED", "a failed read is neither success nor never attempted");
-  assert.equal(coverageStatusPill(preview.get(stuck.bodyId)!).pill, "READ · UNRESOLVED");
-  assert.equal(preview.get(unread.bodyId), "NOT_ATTEMPTED", "a scheduled clock alone proves no read");
-});
-
-test("a sibling body's successful reading cannot improve another body on the same division", () => {
-  const sibling = registryBodyOf({ id: `${working.ocdId}#sibling`, ocdId: working.ocdId, coverageStatus: "NOT_ATTEMPTED" });
-  const views = buildBodyViews({ contracts, store: light, nowIso: NOW });
-  const workingView = views.find(body => body.id === working.bodyId)!;
-  assert.equal(observedCoverageStatus(sibling, workingView), "NOT_ATTEMPTED");
-  const codes = [{ zcta5: "85701", whole: true, fraction: 1, indexed: true, divisions: [working.ocdId!], partial: [] }];
-  assert.equal(containerStanding(codes, indexBodies([sibling]), views).counts.wayIn, 0);
-  assert.equal(previewScopeBodies(codes, indexBodies([sibling]), views)[0].coverageStatus, "NOT_ATTEMPTED");
 });

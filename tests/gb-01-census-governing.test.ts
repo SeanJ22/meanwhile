@@ -8,7 +8,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { REGISTRATION_SOURCE_SHA256 } from "../lib/registration/publication.ts";
 import { releaseManifestKey } from "../lib/sources/known-release.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { canonicalBodyId } from "../lib/facts/entities.ts";
+import { canonicalEntityId } from "../lib/facts/entities.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
@@ -237,9 +237,9 @@ test("LA Metro's boards filed under Oregon move to California with their ids and
       assert.equal((await db.query("SELECT count(*)::int n FROM entity_place WHERE entity_id=ANY($1::text[])", [oregon]))[0]!.n, 0);
       assert.deepEqual(await facts(), before, "ids, names and member facts are unchanged");
     }
-    assert.equal(await canonicalBodyId(db.query, `${metro}#body:la-metro-board-7`), la[7]);
-    assert.equal(await canonicalBodyId(db.query, `${LA}#body:la-metro-board-7`), la[7]);
-    assert.equal(await canonicalBodyId(db.query, `${metro}#body:oregon-metro-board-1`), `${metro}#body:oregon-metro-board-1`);
+    assert.equal(await canonicalEntityId(db.query, `${metro}#body:la-metro-board-7`), la[7]);
+    assert.equal(await canonicalEntityId(db.query, `${LA}#body:la-metro-board-7`), la[7]);
+    assert.equal(await canonicalEntityId(db.query, `${metro}#body:oregon-metro-board-1`), `${metro}#body:oregon-metro-board-1`);
     // The deployment queues every unbuilt place after its migrations; the runner's turn builds them.
     await queueUnbuiltPlacePages(db.query);
     await rebuildPlacePages({ db, purge, limit: Number.MAX_SAFE_INTEGER });

@@ -7,6 +7,7 @@ import { OFFICIAL_STATE_VOTE_SCOPES, readOfficialStateVotesProjection } from "..
 import { LEGISCAN_ATTRIBUTION, stateRollPublisher, type StateVotesSnapshot } from "../sources/legiscan/types.ts";
 import { officialStateRollCallTargetByState, type OfficialStateVoteScope } from "./authority.ts";
 import { stateVoteStateForMember } from "./reader-vote-visibility.ts";
+import { openStatesPerson } from "../core/ids.ts";
 import { seatHolderById } from "../registry/server.ts";
 import { readHeldPersonIdentity, type HeldPersonIdentity } from "../officials/person-read.ts";
 import { statePeopleScopeForId } from "../officials/people-identity.ts";
@@ -47,8 +48,7 @@ const defaultReaders: NativeMemberVoteReaders = {
 };
 
 function exactPersonId(member: string, holder: HeldPersonIdentity | null): string | null {
-  const uuid = /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/i.exec(member)?.[1];
-  const direct = uuid ? `ocd-person/${uuid}` : member;
+  const direct = openStatesPerson(member)?.id ?? member;
   if (PERSON_ID.test(direct)) return direct;
   const ids = [...new Set(holder?.nativeIds?.["ocd-person"] ?? [])];
   return ids.length === 1 && PERSON_ID.test(ids[0]) ? ids[0] : null;

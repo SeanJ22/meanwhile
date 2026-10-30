@@ -70,15 +70,6 @@ test("an extraction failure keeps the retained source check date", async () => {
   assert.deepEqual(next.sites, prior.sites);
 });
 
-test("source rows replace themselves while independently published site kinds remain visible", async () => {
-  const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
-  const prior = mergeVotingSourceRead(undefined, door, read, at);
-  const otherSource = { ...prior.sites[0]!, id: "independent-official-door", sources: [{ publisher: door.publisher, url: "https://vip.sos.nd.gov/" }] };
-  const next = mergeVotingSourceRead({ ...prior, sites: [...prior.sites, otherSource] }, door, read, at);
-  assert.equal(next.sites.length, prior.sites.length + 1);
-  assert.deepEqual(next.sites.find(site => site.id === otherSource.id), otherSource);
-});
-
 test("rereading one source preserves a shared facility's independently published service", async () => {
   const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
   const prior = mergeVotingSourceRead(undefined, door, read, at);

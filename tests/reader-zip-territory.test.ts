@@ -1,4 +1,5 @@
 import {fixturePlaceBuild} from "./helpers/place-build-row.ts";
+import { sittingRows } from "./helpers/meeting-fact-rows.ts";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import {syncBuiltinESMExports} from "node:module";
@@ -124,8 +125,8 @@ test("a canonical ZIP uses its private ready selection with one SQL read and no 
     stored=packReadyPlace(page);reads=[];
     assert.deepEqual(await call(),empty,"an empty inside set still excludes the complete known territory universe");
     const raw={division_ids:location.divisionIds,registry:page.registry,everyday_routing:null,registration_held:true,governments:[],divisions:page.divisions,
-      entities:bodies.map(b=>({id:b.id,division:b.ocdId??ROOT,kind:"body",state:"AZ"})),fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[{scope:"source:derived:family:US-AZ",payload:page.snapshot,current_version_id:"fixture",confirmation:null}],
-      archived_meetings:[],archived_documents:[],archived_document_links:[],agenda_texts:[],parts:{}};
+      entities:bodies.map(b=>({id:b.id,division:b.ocdId??ROOT,kind:"body",state:"AZ"})),fields:[],rosters:[],comments:[],sittings:sittingRows(page.meetings),
+      agenda_documents:[],agenda_document_links:[],agenda_texts:[],parts:{}};
     let customReads=0;
     installReaderDatabaseQuery(async statements=>Promise.all(statements.map(async statement=>{
       assert.equal(statement.text,PLACE_PAGES_SQL);customReads++;assert.deepEqual(statement.params[2],[]);

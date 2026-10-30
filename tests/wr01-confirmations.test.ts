@@ -15,6 +15,8 @@ const at = "2026-10-26T10:00:00.000Z";
 const later = (hour: number) => new Date(Date.parse(at)+hour*3_600_000).toISOString();
 const purge = async () => ({purged:true});
 const clocks = factClocks(null);
+/** The saved page every fact below is read from: it names the body and shows each value on a line of its own. */
+const PAGE = "Example Council Kentucky\nvalue\noffice_phone\noffice_email\n";
 
 async function countedDb() {
   const db = await factDb();
@@ -38,8 +40,8 @@ test("the door compares fingerprints without returning the held value, including
   const observed={...db,transaction:<T>(work:Parameters<typeof db.transaction<T>>[0])=>db.transaction(query=>work(async(text,params)=>{
     const rows=await query(text,params);if(text.includes("WITH head AS MATERIALIZED"))heads.push(...rows);return rows;
   }))};
-  const input={subjectId:"body",field:"large_value",fieldKind:"contact" as const,value:{a:"x".repeat(100_000),b:2},valueText:"value",quote:"",
-    provenance:"OFFICIAL" as const,producedBy:"wr-01",costUsd:0,copy:{id:1,finalUrl:"https://example.gov",fetchedAt:new Date(at),isArchive:false,text:""}};
+  const input={subjectId:"body",field:"large_value",fieldKind:"contact" as const,value:{a:"x".repeat(100_000),b:2},valueText:"value",quote:"value",
+    provenance:"OFFICIAL" as const,producedBy:"wr-01",costUsd:0,copy:{id:1,finalUrl:"https://example.gov",fetchedAt:new Date(at),isArchive:false,text:PAGE}};
   assert.equal((await door(observed,input,clocks,new Date(at),{purge}) as {decision:string}).decision,"PUBLISH");
   assert.equal((await door(observed,{...input,value:{b:2,a:input.value.a}},clocks,new Date(at),{purge}) as {decision:string}).decision,"CONFIRM");
   assert.ok(Buffer.byteLength(JSON.stringify(heads))<1500,"the held record never crosses the database connection");
@@ -51,9 +53,9 @@ async function seed(db: Awaited<ReturnType<typeof countedDb>>) {
   await db.query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key)
     SELECT id,'https://example.gov','https://example.gov',$1,$2,'source-'||id FROM generate_series(1,4) id`,[at,"a".repeat(64)]);
   for (const field of ["office_phone","office_email"]) await door(db,{subjectId:"body",field,fieldKind:"contact",value:field,valueText:field,
-    quote:"",provenance:"OFFICIAL",producedBy:"wr-01",costUsd:0,
-    copy:{id:1,finalUrl:"https://example.gov",fetchedAt:new Date(at),isArchive:false,text:""}},clocks,new Date(at),{purge});
-  return (await db.query("SELECT id,entity_id,field FROM fact ORDER BY id")).map(row=>({id:Number(row.id),entityId:String(row.entity_id),field:String(row.field),quote:""}));
+    quote:field,provenance:"OFFICIAL",producedBy:"wr-01",costUsd:0,
+    copy:{id:1,finalUrl:"https://example.gov",fetchedAt:new Date(at),isArchive:false,text:PAGE}},clocks,new Date(at),{purge});
+  return (await db.query("SELECT id,entity_id,field FROM fact ORDER BY id")).map(row=>({id:Number(row.id),entityId:String(row.entity_id),field:String(row.field),quote:String(row.field)}));
 }
 
 test("two later source checks advance reader dates and receipts with zero fact, entity or unchanged blank updates",async t=>{
@@ -64,14 +66,14 @@ test("two later source checks advance reader dates and receipts with zero fact, 
   const stored=await db.query("SELECT id,checked_at,source_copy_id,quote_start FROM fact ORDER BY id");
   await db.query("UPDATE updated_rows SET n=0");
   for(const hour of [1,2]){
-    assert.equal(await restampFacts(db,facts,{id:hour+1,text:"",fetchedAt:new Date(later(hour))}),2);
+    assert.equal(await restampFacts(db,facts,{id:hour+1,text:PAGE,fetchedAt:new Date(later(hour))}),2);
     await openBlank(db.query,blank);
     await db.query("UPDATE entity SET name=name WHERE id='body'");
     assert.deepEqual(await updates(db),zero);
     assert.deepEqual(await db.query("SELECT id,checked_at,source_copy_id,quote_start FROM fact ORDER BY id"),stored);
     const effective=await db.query("SELECT checked_at,source_copy_id FROM checked_fact ORDER BY id");
     assert.ok(effective.every(row=>new Date(row.checked_at as string).toISOString()===later(hour)&&Number(row.source_copy_id)===hour+1));
-    assert.equal(await restampFacts(db,facts,{id:hour+1,text:"",fetchedAt:new Date(later(hour))}),0);
+    assert.equal(await restampFacts(db,facts,{id:hour+1,text:PAGE,fetchedAt:new Date(later(hour))}),0);
   }
   await openBlank(db.query,{...blank,reason:"SOURCE_UNAVAILABLE"});
   assert.deepEqual((await updates(db))[0],{table_name:"blank",n:1});

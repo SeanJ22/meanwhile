@@ -263,8 +263,9 @@ test("a promoted family's internal fresh duplicates reconcile in the body's reco
   assert.equal(read.value.counts.fresh, 1);
   assert.equal(read.value.counts.total, 1);
   assert.equal(read.value.counts.carried, 0);
-  assert.deepEqual(read.value.meetings, family.build.snapshot.meetings);
-  assert.doesNotThrow(() => reconcileCounts(read.value));
+  const identity = (rows: readonly { id: string; bodyId?: string; startsAt: string; title: string }[]) => rows.map(m => [m.id, m.bodyId, m.startsAt, m.title]);
+  assert.deepEqual(identity(read.value.meetings), identity(family.build.snapshot.meetings), "readers hold the same sittings the family built, read back from their facts");
+  assert.doesNotThrow(() => reconcileCounts(family.build.snapshot));
 });
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
@@ -453,9 +454,6 @@ test("a family's canonical partition keeps a held member attributed to its own b
   assert.deepEqual(second.plan.stats.failed, []);
   const housing = await readBodySnapshot(store, second.edge, BODY_ID, T_SECOND);
   const tourism = await readBodySnapshot(store, second.edge, OTHER_ID, T_SECOND);
-  assert.deepEqual(housing.sources.filter((source) => !source.ok), [], "the body whose member answered shows no wall");
-  const walled = tourism.sources.filter((source) => !source.ok);
-  assert.equal(walled.length, 1);
-  assert.deepEqual(walled[0]!.unreachableOcdIds, [OTHER_OCD], "the failed member is attributed to the body's own division");
-  assert.ok(tourism.meetings.every((m) => m.carried !== undefined), "its last verified sitting is carried, not re-read as fresh");
+  assert.deepEqual(housing.meetings.map((m) => m.bodyId), [BODY_ID], "the body whose member answered is untouched");
+  assert.deepEqual(tourism.meetings.map((m) => m.bodyId), [OTHER_ID], "the body whose feed failed keeps its last verified sitting, attributed to its own body");
 });

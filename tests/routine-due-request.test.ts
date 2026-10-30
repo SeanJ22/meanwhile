@@ -184,7 +184,7 @@ test("the runner honours a request only in its ordinary pass: the same due check
   assert.match(runner, /const cadenceDue = routineTaskDue\(task, durableClock, admissionNowMs, sittingHot, observedEveryMs\);/);
   assert.match(runner, /if \(!FORCE && !taskDue && !inputDue && dueRequest === null/);
   assert.match(runner, /deadlineMs: routineDueRequestDeadlineMs\(\s+routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/);
-  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: shutFeedsLast\(electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\), shutDoors\)\) pendingRuns\.push/);
+  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: shutFeedsLast\(dueRequestsFirstInClass\(electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\), new Set\(honouredDueRequests\.keys\(\)\)\), shutDoors\)\) pendingRuns\.push/);
   assert.match(runner, /\.\.\.input\.dueRequestLines,/);
   assert.match(runner, /admitted by this ordinary pass/);
   const source = readFileSync("lib/civic-data/routine-due-request.ts", "utf8");

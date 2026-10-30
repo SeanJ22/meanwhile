@@ -124,6 +124,7 @@ import {
   DOOR_DERIVE_CONTRACT_IDS,
   parseRoutineDueRequests,
   routineDueRequestDeadlineMs,
+  dueRequestsFirstInClass,
   routineDueRequestFor,
   type RoutineDueRequest,
 } from "../lib/civic-data/routine-due-request.ts";
@@ -1267,7 +1268,7 @@ for (const { pending } of dueCandidates) {
 await flushLaunchDecisions();
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
 for (const { task } of PLACE_MAPS ? placeMapLaunchOrder(admitted)
-  : shutFeedsLast(electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs)), shutDoors)) pendingRuns.push(pendingByTaskId.get(task.id)!);
+  : shutFeedsLast(dueRequestsFirstInClass(electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs)), new Set(honouredDueRequests.keys())), shutDoors)) pendingRuns.push(pendingByTaskId.get(task.id)!);
 await recordHuntSourceProgressEach(pendingRuns.map(pending => pending.task), "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`

@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { parseUnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { ReadOnlyQuery, Statement, Row } from "../control-plane/admin-view/promoted-slices.ts";
@@ -30,7 +31,7 @@ const inFlight = serverReaderValue("canonical-in-flight-by-publication-v2", () =
 
 /** Only borrow an in-flight snapshot after an independent current fingerprint check. */
 async function sharedCanonicalRead(query: ReadOnlyQuery, statement: Statement, sources: NonNullable<Additional["sharedSources"]>) {
-  const selection = createHash("sha256").update(JSON.stringify([process.env.DATABASE_URL, statement, sources])).digest("hex");
+  const selection = createHash("sha256").update(JSON.stringify([storedKeyValue("DATABASE_URL"), statement, sources])).digest("hex");
   const params = [sources.keys, sources.translations];
   const current = async () => {
     const [[row]] = await query([{ text: PUBLICATION_FINGERPRINT, params }]);

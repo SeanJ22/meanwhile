@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 
@@ -5,13 +6,13 @@ export const STATE_RETIREMENT_KEY_ENV = "WTP_STATE_RETIREMENT_KEY";
 type UnitSeal = { readonly fileSha256: string; readonly originId: string; readonly originRecordClass: string;
   readonly originScope: string; readonly originReadModelHash: string; readonly state: string; readonly contractId: string };
 
-export function sealStateRetirementUnit(unit: UnitSeal, env: NodeJS.ProcessEnv = process.env): string {
-  const key = env[STATE_RETIREMENT_KEY_ENV];
+export function sealStateRetirementUnit(unit: UnitSeal, env: NodeJS.ProcessEnv = storedKeyEnvironment()): string {
+  const key = storedKeyEnvironment(env)[STATE_RETIREMENT_KEY_ENV];
   if (!key || !/^[a-f0-9]{64}$/.test(key)) throw new Error("STATE_RETIREMENT_PRODUCER_KEY_MISSING");
   return createHmac("sha256", Buffer.from(key, "hex")).update(canonicalCivicDataHash(unit)).digest("hex");
 }
 
-export function verifyStateRetirementUnitSeal(unit: UnitSeal, seal: string, env: NodeJS.ProcessEnv = process.env): void {
+export function verifyStateRetirementUnitSeal(unit: UnitSeal, seal: string, env: NodeJS.ProcessEnv = storedKeyEnvironment()): void {
   if (!/^[a-f0-9]{64}$/.test(seal) || !timingSafeEqual(Buffer.from(sealStateRetirementUnit(unit, env), "hex"), Buffer.from(seal, "hex")))
     throw new Error("STATE_RETIREMENT_UNIT_SEAL_INVALID");
 }

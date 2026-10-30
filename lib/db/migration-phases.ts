@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { CIVIC_DATA_STATUS_WRITE_TABLES } from "./schema.ts";
 
 export type MigrationPhase = "expand" | "contract";
@@ -28,7 +29,7 @@ export function migrationOutcomeOf(value: unknown): ProductionMigrationOutcome |
 
 /** Error output is displayed and stored only after private environment values and URLs are removed. */
 export function redactMigrationOutput(output: string, env: Record<string, string | undefined>): string {
-  for (const [name, value] of Object.entries(env)) {
+  for (const [name, value] of Object.entries(storedKeyEnvironment(env))) {
     if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) output = output.split(value).join("[private]");
   }
   return output.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s"'<>]+/gi, "[private URL]");

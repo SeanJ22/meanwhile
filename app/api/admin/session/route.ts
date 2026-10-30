@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
+import { storedKeyEnvironment, storedKeyValue } from "../../../../lib/core/keys-values.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * POST is the break-glass:
@@ -47,11 +49,12 @@ function backToLogin(request: NextRequest, why: string): NextResponse {
 }
 
 async function post(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
   // The path does not exist unless the owner turned it on, by the exact word.
-  if (!isBreakGlassEnabled(process.env)) {
+  if (!isBreakGlassEnabled(storedKeyEnvironment())) {
     return new NextResponse(null, { status: 404 });
   }
   if (!originAllowed(request.headers.get("origin"), ADMIN_ORIGIN)) {
@@ -80,8 +83,8 @@ async function post(request: NextRequest): Promise<NextResponse> {
   const window = breakGlassWindowVerdict(priorRecords, nowIso);
   if (!window.allowed) return backToLogin(request, "RATE_LIMITED");
 
-  const verdict = checkLogin(typeof submitted === "string" ? submitted : null, process.env[ADMIN_SECRET_VAR]);
-  const sessionKey = process.env[ADMIN_SESSION_KEY_VAR];
+  const verdict = checkLogin(typeof submitted === "string" ? submitted : null, storedKeyValue(ADMIN_SECRET_VAR));
+  const sessionKey = storedKeyValue(ADMIN_SESSION_KEY_VAR);
   const rejection: BreakGlassRejection | null = !verdict.ok
     ? verdict.reason
     : sessionKey

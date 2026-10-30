@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
@@ -14,6 +15,7 @@ const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+|plural:(?:[a-z]{2}:)?[a-f0-9-]+|ocd-person\/[a-f0-9-]+)$/;
 
 export const GET = readerRoute("/api/directory", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams;
 
   /* A missing or malformed `member` refuses with a stated reason; the empty answer is reserved for a real member we hold no record of. */

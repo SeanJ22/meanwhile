@@ -18,12 +18,12 @@ test("saved snapshots fetch only changes, retain the last complete read, and nev
     await db.exec(KEYS_DDL);
     process.env.ANTHROPIC_API_KEY = "stale-host-setting"; process.env.NODE_OPTIONS = "--no-warnings";
     await store.save("NODE_OPTIONS", "a-key-with-a-human-chosen-name", "signing", at);
-    await store.save("ANTHROPIC_API_KEY", "saved-website-key", "anthropic", at, false, "website");
-    await store.save("ANTHROPIC_API_KEY.runner", "saved-runner-key", "anthropic", at, false, "runner");
-    await store.save("CENSUS_API_KEY", "shared-source-key", "census", at, false, "website");
-    await store.save("WTP_PRODUCTION_DATABASE_URL_READONLY", "reader-connection", "postgres", at, false, "runner");
-    await store.save("WTP_PRODUCTION_DATABASE_URL_WRITE", "writer-connection", "postgres", at, false, "runner");
-    await store.save("NEON_BILLING_API_KEY", "billing-only-key", "neon", at, false, "runner");
+    await store.save("ANTHROPIC_API_KEY", "saved-website-key", "anthropic", at);
+    await store.save("ANTHROPIC_API_KEY.runner", "saved-runner-key", "anthropic", at);
+    await store.save("CENSUS_API_KEY", "shared-source-key", "census", at);
+    await store.save("WTP_PRODUCTION_DATABASE_URL_READONLY", "reader-connection", "postgres", at);
+    await store.save("WTP_PRODUCTION_DATABASE_URL_WRITE", "writer-connection", "postgres", at);
+    await store.save("NEON_BILLING_API_KEY", "billing-only-key", "neon", at);
     const cache = savedKeysCache(query, master, "runner", name => name !== "NEON_BILLING_API_KEY");
     statements.length = 0;
     installed = installSavedValues(await cache.refresh());
@@ -48,7 +48,7 @@ test("saved snapshots fetch only changes, retain the last complete read, and nev
     installSavedValues(await cache.refresh());
     assert.equal(statements.length, 1);
     assert.ok(!statements[0].includes("locked"));
-    await store.save("ANTHROPIC_API_KEY.runner", "replacement-key", "anthropic", at, false, "runner");
+    await store.save("ANTHROPIC_API_KEY.runner", "replacement-key", "anthropic", at);
     statements.length = 0;
     const a = cache.refresh(), b = cache.refresh();
     assert.equal(a, b);
@@ -61,7 +61,7 @@ test("saved snapshots fetch only changes, retain the last complete read, and nev
     assert.equal(storedKeyEnvironment().ANTHROPIC_API_KEY, undefined);
     assert.equal("ANTHROPIC_API_KEY" in storedKeyEnvironment(), false);
     assert.equal(Object.keys(storedKeyEnvironment()).includes("ANTHROPIC_API_KEY"), false);
-    await store.save("ANTHROPIC_API_KEY.runner", "new-key", "anthropic", at, false, "runner");
+    await store.save("ANTHROPIC_API_KEY.runner", "new-key", "anthropic", at);
     installSavedValues(await cache.refresh());
     await db.exec("UPDATE cp_keys SET locked='broken',version='new-invalid-version' WHERE name='ANTHROPIC_API_KEY.runner'");
     await assert.rejects(cache.refresh(), /could not be opened/);
@@ -80,7 +80,7 @@ test("saved snapshots fetch only changes, retain the last complete read, and nev
 
 
 test("local fixtures accept loopback only and never substitute a remote host setting", async () => {
-  const { installLocalDatabaseFixture } = await import("../lib/core/keys-local-fixture.ts");
+  const { installLocalDatabaseFixture, installDiagnosticDatabase } = await import("../lib/core/keys-local-fixture.ts");
   const previous = installSavedValues(undefined);
   try {
     installLocalDatabaseFixture(undefined);
@@ -88,6 +88,12 @@ test("local fixtures accept loopback only and never substitute a remote host set
     assert.throws(() => installLocalDatabaseFixture("postgres://fixture:fixture@remote.example/fixture"), /on this machine/);
     const local = "postgres://fixture:fixture@127.0.0.1:5432/fixture";
     installLocalDatabaseFixture(local);
+    assert.equal(storedKeyValue("DATABASE_URL"), local);
+    assert.throws(() => installDiagnosticDatabase("postgres://writer:p@remote.example/db"), /read-only/);
+    const readOnly = "postgres://readonly:p@remote.example/db", restore = installDiagnosticDatabase(readOnly);
+    assert.equal(storedKeyValue("DATABASE_URL"), readOnly); restore();
+    const enable = installDiagnosticDatabase(undefined);
+    assert.equal(storedKeyValue("DATABASE_URL"), undefined); enable();
     assert.equal(storedKeyValue("DATABASE_URL"), local);
   } finally { installSavedValues(previous); }
 });

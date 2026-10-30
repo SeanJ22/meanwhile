@@ -6,7 +6,6 @@ import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { importExistingKeys } from "../lib/core/keys-import.ts";
 import { handleKeys } from "../lib/core/keys-http.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "../lib/ops/origins.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -172,25 +171,6 @@ test("failed and overdue key checks appear in the brief and disappear after reco
   assert.match(keyProblems(await store.list(), "2026-10-31T12:00:00.000Z")[0].what, /overdue/);
 });
 
-test("imports preserve distinct runtime credentials and never replace an owner's saved change", async t => {
-  const { store } = await fixture(t);
-  // Signing checks exercise the real site's HMAC without external services.
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website");
-  assert.equal((await store.list()).length, 2);
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), "runner-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY.website"), "website-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", true, AT, "runner"), "runner-".repeat(8));
-  await store.save("WTP_ADMIN_SESSION_KEY", SECRET, "signing", AT);
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), SECRET);
-  assert.equal((await store.list()).length, 2);
-  await store.remove("WTP_ADMIN_SESSION_KEY", AT);
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), undefined, "the import cannot restore a deleted key");
-});
-
 test("undo restores the previous encrypted value, retests it, and keeps every value out of history", async t => {
   const { store } = await fixture(t);
   await store.save("Example", SECRET, "signing", AT);
@@ -290,19 +270,6 @@ test("known credentials cannot skip their provider check by choosing a different
     }
     assert.ok((await store.list()).every(row => row.service === "congress"));
   });
-});
-
-test("simultaneous runtime imports preserve both keys, and a later owner edit wins over a first import", async t => {
-  const { store } = await fixture(t);
-  await Promise.all([
-    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner"),
-    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website"),
-  ]);
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "runner"), "runner-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
-  await store.save("ANTHROPIC_API_KEY", SECRET, "signing", AT);
-  await importExistingKeys({ ANTHROPIC_API_KEY: "old-website-setting" }, store, AT, "website");
-  assert.equal(await store.read("ANTHROPIC_API_KEY", false, AT, "website"), SECRET);
 });
 
 test("the standing clock picks up saved keys on its next tick and tests again on the following day", async t => {

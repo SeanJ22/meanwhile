@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * The one place a browser is opened. `launchGuarded` is the only constructor;
  * `tests/browser-construction.test.ts` refuses any other script that calls
@@ -142,7 +143,7 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
    */
   const providerPolicy = resolveProviderPolicy({
     requested: spendsProviderQuota ?? null,
-    env: process.env as Record<string, string | undefined>,
+    env: storedKeyEnvironment() as Record<string, string | undefined>,
   });
   const provider = newProviderLedger(providerPolicy);
   if (providerPolicy.mode === "ALLOWED_BOUNDED") console.log(`  ${providerPolicy.says}`);

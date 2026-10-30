@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest, NextResponse } from "next/server";
 import { v6MoneySection } from "@/lib/control-plane/admin-view/v6-money-read.ts";
@@ -9,6 +10,7 @@ export const runtime = "nodejs";
 
 /** `admin-v6/money@1`: account readings, limits in force and per-hunt other-service costs. Read-only. */
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   return v6MoneyHuntsGet(request, { withSafety: true, project: v6MoneySection });
 }
 

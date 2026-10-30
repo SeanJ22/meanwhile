@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { EMPTY_SPEND } from "../spend-window.ts";
 import { neon } from "../../db/client.ts";
 import { join } from "node:path";
@@ -50,7 +51,7 @@ export const PLATFORM_CENSUS_NOTES_SQL = {
 /** The runner child admits one government or one directory page per worker and retains only their inventory cursors. */
 export async function runNationalPlatformCensus() {
   const root = process.env.WTP_PROJECT_ROOT ?? process.cwd();
-  const connection = controlPlaneUrlFromEnv(), readerConnection = process.env.DATABASE_URL;
+  const connection = controlPlaneUrlFromEnv(), readerConnection = storedKeyValue("DATABASE_URL");
   if (!connection || !readerConnection) throw new Error("The platform inventory databases are unavailable");
   // Leave a minute before the parent's no-progress wall, including a blocked database await.
   const deadline = Math.min(passDeadlineFromEnv(), Date.now() + CENSUS_LANE_BUDGET_MS - 60_000);

@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { askPlaybook, askPlaybookVersion, askSettings } from "../ask/runtime-settings.ts";
 import { ASK_CLASSIFIER_CAP_SETTING } from "../ask/model.ts";
 import { scrubFreeText } from "../log/scrub.ts";
@@ -153,7 +154,7 @@ export async function classifyQuestion(
   const hit = cache.get(key);
   if (hit) return hit;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = storedKeyValue("ANTHROPIC_API_KEY");
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
 
   const impl = meteredAskFetch(options.fetchImpl ?? fetch, "classifier", options.recordCost);

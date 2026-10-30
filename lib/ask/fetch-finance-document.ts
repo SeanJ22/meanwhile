@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { readFinanceDoor } from "../funding/finance-door-reader.ts";
 import { validFinanceDoorDetailSource } from "../funding/finance-detail-source.ts";
 import type { DoorRecord } from "../doors/registry.ts";
@@ -19,7 +20,7 @@ export async function fetchFinanceDocument(input: {
     if (url.protocol !== "https:" || url.username || url.password || !source.hosts.includes(url.hostname)) return unavailable;
     const headers: Record<string, string> = {};
     if (source.config.keyRef) {
-      const key = (input.env ?? process.env)[source.config.keyRef];
+      const key = storedKeyEnvironment((input.env ?? process.env))[source.config.keyRef];
       if (!key || !(source.config.keyParam || source.config.keyHeader) || source.config.keyParam && source.config.keyHeader) return unavailable;
       if (source.config.keyParam) url.searchParams.set(source.config.keyParam, key);
       if (source.config.keyHeader) headers[source.config.keyHeader] = key;

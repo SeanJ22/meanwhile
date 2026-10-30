@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 /** The paid-work guards in one place, so the round and the standing lane build the same guards from the same objects: Send and area budgets, the Fleet ceiling and provider circuits, provider rate limits, and paid worker capacity. Nothing here changes a limit or reads a setting. */
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -88,7 +89,7 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
       meetingStartsAt: priorities.flatMap(p => [...(p.meetingStartsAt ?? []), ...(p.readerImpactAt ? [p.readerImpactAt] : [])]),
       electionAt: priorities.flatMap(p => p.electionAt ?? []) };
     const eligible = batchEligibleForJob(context?.job ?? job, effectivePriority);
-    const batching = batchEnabledForJob("background-worker-research", context?.job ?? job, deps.batchEnv ?? process.env, effectivePriority);
+    const batching = batchEnabledForJob("background-worker-research", context?.job ?? job, deps.batchEnv ?? storedKeyEnvironment(), effectivePriority);
     const journal = taskId ? attemptBatchJournal(repos, taskId, deps.now) : undefined;
     const batch = journal ? deps.batch.withJournal(journal) : deps.batch;
     if (journal && await journal.read(batchRequestHash(request))) return { ...await batch(request), batchEligible: true };
@@ -154,7 +155,7 @@ export function paidWorkGuards(deps: PaidWorkGuardDeps) {
       electionAt: [...(priority.electionAt ?? []), ...(extra?.electionAt ?? [])],
       readerImpactAt: extra?.readerImpactAt };
     const eligible = routing.lane !== null && batchEligibleForJob(jobType, effectivePriority);
-    const batching = routing.lane !== null && batchEnabledForJob(routing.lane, jobType, deps.batchEnv ?? process.env, effectivePriority);
+    const batching = routing.lane !== null && batchEnabledForJob(routing.lane, jobType, deps.batchEnv ?? storedKeyEnvironment(), effectivePriority);
     const journal = attemptBatchJournal(repos, taskId, deps.now);
     // A request already sent to the batch service is collected, never sent twice, whatever its job now says.
     if (routing.lane !== null && await journal.read(batchRequestHash(request))) {

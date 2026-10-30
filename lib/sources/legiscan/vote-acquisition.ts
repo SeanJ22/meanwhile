@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { readCompleteResponse } from "../source-bytes.ts";
 import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, object, parseLegiscanDatasetList,
@@ -86,7 +87,7 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
   completedDataset?: (session: LegiscanSession) => Promise<LegiscanCompletedDataset | null>;
   onDataset?: (result: LegiscanDatasetResult) => Promise<void>;
   onVote?: (vote: PluralVoteFact) => Promise<void> }) {
-  const state = legiscanState(input.state), url = legiscanDatasetListUrl(state), fetchImpl = privateTransport(state, input.apiKey ?? process.env.LEGISCAN_API_KEY, input.fetchImpl ?? fetch);
+  const state = legiscanState(input.state), url = legiscanDatasetListUrl(state), fetchImpl = privateTransport(state, input.apiKey ?? storedKeyValue("LEGISCAN_API_KEY"), input.fetchImpl ?? fetch);
   const shared = { store: input.store, locks: input.locks, now: input.now, fetchImpl, sourceId: LEGISCAN_VOTES_SOURCE, parserVersion: LEGISCAN_VOTES_PARSER,
     signal: input.signal, allowedHosts: ["api.legiscan.com"] };
   const listing = await acquireKnownRelease({ ...shared, releaseId: `dataset-list:${state}`, url, maxBytes: 4 * 1024 * 1024, checkAfterMs: DAY,

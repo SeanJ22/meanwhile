@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { temporaryPath } from "./temporary-path.ts";
 import { versionedSelect } from "../db/versioned-query.ts";
 import { createHash } from "node:crypto";
@@ -194,7 +195,7 @@ interface CursorClient {
 export async function withRetirementSourceSnapshot<T>(client: CursorClient, read: (source: {
   query: (text: string, params: readonly unknown[]) => Promise<readonly Row[]>;
   streamRows: (text: string, params: readonly unknown[], onRow: (row: Row) => Promise<void>) => Promise<void>;
-}) => Promise<T>, connection=process.env.DATABASE_URL??"retirement-source"): Promise<T> {
+}) => Promise<T>, connection=storedKeyValue("DATABASE_URL")??"retirement-source"): Promise<T> {
   await client.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
   const selected=versionedSelect(connection);
   const query=(text:string,params:readonly unknown[])=>selected(async(text,params)=>(await client.query(text,[...params])).rows,text,params);

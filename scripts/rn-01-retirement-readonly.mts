@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -16,10 +18,10 @@ import { statePublicationPriorOf, withStateRecordHashes } from "../lib/civic-dat
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 
 // The production readonly role is mandatory. The normal prepare and merge run, but the publisher is never called.
-const [connectionFile, indexText, output] = process.argv.slice(2);
+const [indexText, output, connectionFile] = process.argv.slice(2);
 const index = Number(indexText);
-assert.ok(connectionFile && output && Number.isInteger(index) && RETIRED_STATE_POINTERS[index], "usage: readonly-url-file pointer-index output-json");
-process.env.DATABASE_URL = readFileSync(connectionFile, "utf8").trim();
+assert.ok(output && Number.isInteger(index) && RETIRED_STATE_POINTERS[index], "usage: pointer-index output-json [fixture-url-file]");
+installDiagnosticDatabase(connectionFile ? readFileSync(connectionFile, "utf8").trim() : storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY"));
 process.env.WTP_STATE_RETIREMENT_KEY = randomBytes(32).toString("hex");
 if (process.env.HTTPS_PROXY) {
   // Next's bundled CommonJS copies, loaded through their default export.
@@ -31,7 +33,7 @@ if (process.env.HTTPS_PROXY) {
     constructor(address: string, protocols: string[]) { super(address, protocols, { agent }); }
   } as unknown as typeof neonConfig.webSocketConstructor;
 }
-const client = new Client({ connectionString: process.env.DATABASE_URL, connectionTimeoutMillis: 10000 });
+const client = new Client({ connectionString: storedKeyValue("DATABASE_URL"), connectionTimeoutMillis: 10000 });
 const directory = await mkdtemp("/tmp/rn01-retirement-readonly-");
 const [family, recordClass, scope] = RETIRED_STATE_POINTERS[index];
 const rows: { state: string; records?: number; selections?: number; elapsedMs: number; status: string; decision?: string; verifier?: string; error?: string }[] = [];

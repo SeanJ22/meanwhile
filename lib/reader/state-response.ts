@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../core/keys-entry.ts";
 import { censusWorkDivision } from "../census-geography/division-id";
 import { selectGeographyVersion, currentRepresentationSelection } from "../census-geography/selection";
 import type { Division } from "../registry/types";
@@ -9,7 +10,8 @@ import { withReaderRoute } from "../db/reader-route";
 import { stateMemberDirectories, zipMemberDirectories } from "../reader/member-directories";
 import { readerStateCacheHeaders } from "../reader/cache";
 
-export function readerStateResponse(request: Request) {
+export async function readerStateResponse(request: Request) {
+  await loadWebsiteSavedKeys();
   return withPlaceMapReads(() => stateResponse(request));
 }
 

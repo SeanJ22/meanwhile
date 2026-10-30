@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { execFileSync, type ExecFileSyncOptionsWithStringEncoding } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { realpathSync } from "node:fs";
@@ -199,14 +200,14 @@ export function inspectRuntimeCheckout(
 }
 
 export function runtimeAuthorityEnvelope(
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment(),
 ): RuntimeAuthorityEnvelope | null {
-  const repo = env[RUNTIME_AUTHORITY_ENV.repo] ?? "";
-  const sha = (env[RUNTIME_AUTHORITY_ENV.sha] ?? "").toLowerCase();
-  const capability = env[RUNTIME_AUTHORITY_ENV.capability] ?? "";
-  const contract = env[RUNTIME_AUTHORITY_ENV.contract]?.trim() || null;
-  const parentPid = Number(env[RUNTIME_AUTHORITY_ENV.parentPid]);
-  const nonce = env[RUNTIME_AUTHORITY_ENV.nonce] ?? "";
+  const repo = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.repo] ?? "";
+  const sha = (storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.sha] ?? "").toLowerCase();
+  const capability = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.capability] ?? "";
+  const contract = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.contract]?.trim() || null;
+  const parentPid = Number(storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.parentPid]);
+  const nonce = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.nonce] ?? "";
   if (
     !isAbsolute(repo) ||
     !FULL_SHA.test(sha) ||
@@ -258,7 +259,7 @@ export function runtimeAuthorityIssue(input: {
 
 export function assertRuntimeAuthority(
   expectation: Omit<RuntimeAuthorityExpectation, "immediateParentPid"> & { readonly immediateParentPid?: number },
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment(),
   options: {
     readonly cwd?: string;
     readonly checkout?: RuntimeCheckoutFacts;
@@ -266,7 +267,7 @@ export function assertRuntimeAuthority(
   } = {},
 ): RuntimeAuthorityEnvelope {
   if (env.WTP_RUNTIME_MODE === "staging") {
-    if (env.WTP_DB_ROLE !== "local" || !env.DATABASE_URL || !env.WTP_CONTROL_PLANE_DATABASE_URL) {
+    if (env.WTP_DB_ROLE !== "local" || !storedKeyValue("DATABASE_URL", env) || !env.WTP_CONTROL_PLANE_DATABASE_URL) {
       throw new RuntimeAuthorityRefused("staging requires WTP_DB_ROLE=local and explicit staging database/control-plane URLs");
     }
     const existing = runtimeAuthorityEnvelope(env);
@@ -278,7 +279,7 @@ export function assertRuntimeAuthority(
       return existing;
     }
     const repo = resolve(/* turbopackIgnore: true */ options.cwd ?? process.cwd());
-    const sha = env[RUNTIME_AUTHORITY_ENV.sha] ?? execFileSync("git", ["rev-parse", "HEAD"], gitOptions(repo)).trim();
+    const sha = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.sha] ?? execFileSync("git", ["rev-parse", "HEAD"], gitOptions(repo)).trim();
     return { repo, sha, capability: expectation.capabilities[0]!, contract: expectation.contract ?? null,
       parentPid: process.ppid, nonce: randomBytes(32).toString("hex") };
   }
@@ -311,11 +312,11 @@ export function admittedRuntimeChildEnvironment(input: {
   readonly nonce?: string;
   readonly billingCollector?: boolean;
 }): NodeJS.ProcessEnv {
-  const env = input.parentEnv ?? process.env;
+  const env = input.parentEnv ?? storedKeyEnvironment();
   if (env.WTP_RUNTIME_MODE === "staging") {
     const parent = assertRuntimeAuthority({ capabilities: RUNTIME_AUTHORITY_CAPABILITIES }, env);
     return {
-      ...(input.billingCollector === true && input.capability === "CONSOLE_PUBLISHER" ? env : withoutBillingSecrets(env)),
+      ...storedKeyEnvironment((input.billingCollector === true && input.capability === "CONSOLE_PUBLISHER" ? env : withoutBillingSecrets(env))),
       [RUNTIME_AUTHORITY_ENV.repo]: parent.repo,
       [RUNTIME_AUTHORITY_ENV.sha]: parent.sha,
       [RUNTIME_AUTHORITY_ENV.capability]: input.capability,
@@ -324,13 +325,13 @@ export function admittedRuntimeChildEnvironment(input: {
       [RUNTIME_AUTHORITY_ENV.nonce]: input.nonce ?? randomBytes(32).toString("hex"),
     };
   }
-  const repo = env[RUNTIME_AUTHORITY_ENV.repo];
-  const sha = env[RUNTIME_AUTHORITY_ENV.sha];
+  const repo = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.repo];
+  const sha = storedKeyEnvironment(env)[RUNTIME_AUTHORITY_ENV.sha];
   if (!repo || !sha || !FULL_SHA.test(sha)) {
     throw new RuntimeAuthorityRefused("an admitted parent lacks exact repository/SHA facts");
   }
   return {
-    ...(input.billingCollector === true && input.capability === "CONSOLE_PUBLISHER" ? env : withoutBillingSecrets(env)),
+    ...storedKeyEnvironment((input.billingCollector === true && input.capability === "CONSOLE_PUBLISHER" ? env : withoutBillingSecrets(env))),
     [RUNTIME_AUTHORITY_ENV.repo]: repo,
     [RUNTIME_AUTHORITY_ENV.sha]: sha.toLowerCase(),
     [RUNTIME_AUTHORITY_ENV.capability]: input.capability,
@@ -343,7 +344,7 @@ export function admittedRuntimeChildEnvironment(input: {
 export function assertRegisteredRuntimeContract(
   contractId: string,
   kind: "routine" | "manual",
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment(),
 ): void {
   // The one-time federal people split publishes many place and member contracts under its own admission.
   if (runtimeAuthorityEnvelope(env)?.capability === "FEDERAL_PEOPLE_SPLIT") {
@@ -376,7 +377,7 @@ export function candidacyRegistryAuthority(authority: RuntimeAuthorityEnvelope, 
 
 export function assertSanctionedRuntimeAuthority(
   operation: string,
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment(),
 ): RuntimeAuthorityEnvelope {
   if (operation === "an intake limiter purge") {
     return assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] }, env);

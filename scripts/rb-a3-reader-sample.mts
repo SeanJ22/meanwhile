@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import { openLinkingCopy } from "../lib/facts/linking-copy.ts";
 import { neon } from "../lib/db/client.ts";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -138,7 +139,7 @@ export async function bindReaderSources(sample: Pick<ReaderSample, "values">, so
 if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
   const directory = resolve(process.argv[2] ?? ".scratch/rb-a3/snapshots/reader");
   if (!directory.includes("/.scratch/rb-a3/")) throw Error("Production copies belong in the approved ignored local directory");
-  const url = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+  const url = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
   if (!url || new URL(url).username !== "readonly") throw Error("The reader readonly connection is required");
   const sql = neon(url);
   const query = async (text: string, params: unknown[]) => (await sql.transaction([sql.query(text, params)], { readOnly: true }))[0] as Row[];

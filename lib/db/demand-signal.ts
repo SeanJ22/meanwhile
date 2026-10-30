@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 
 import { getDb } from "./index.ts";
@@ -45,7 +46,7 @@ export async function writeDemandSignal(row: StorableDemandSignal): Promise<bool
     );
   }
 
-  if (!process.env.DATABASE_URL) return false;
+  if (!storedKeyValue("DATABASE_URL")) return false;
 
   // No database is a state; the WRONG database is a misconfiguration.
   assertWriteAllowed("a demand signal");

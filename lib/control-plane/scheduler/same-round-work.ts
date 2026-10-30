@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 /** Schedules the rows a Send just wrote against the round's own clock, so the due ones join this round's work. Pure. */
 import { isScheduled, scheduleObligation } from "./obligation.ts";
 import type { StandingObligation } from "./durable.ts";
@@ -23,7 +24,7 @@ export interface SameRoundFold {
 export const FIRST_HUNT_NEXT_ROUND_SWITCH = "WTP_FIRST_HUNT_NEXT_ROUND";
 
 export function sameRoundFirstHuntEnabled(env: Readonly<Record<string, string | undefined>>): boolean {
-  return env[FIRST_HUNT_NEXT_ROUND_SWITCH] !== "1";
+  return storedKeyEnvironment(env)[FIRST_HUNT_NEXT_ROUND_SWITCH] !== "1";
 }
 
 export function foldNewWorkIntoRound(input: {

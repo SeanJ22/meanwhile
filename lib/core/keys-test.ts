@@ -22,7 +22,7 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
     case "lda": return { url: "https://lda.gov/api/v1/filings/?filing_year=2025&page_size=1", headers: { Authorization: `Token ${key}` }, accepts: b => array(record(b).results) };
     case "socrata": return { url: "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=1", headers: { "X-App-Token": key }, accepts: array };
     case "civic": return { url: `https://www.googleapis.com/civicinfo/v2/elections?key=${q}`, accepts: b => Array.isArray(record(b).elections) };
-    case "sam": return { url: `https://api.sam.gov/opportunities/v2/search?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && Array.isArray(record(b).opportunitiesData) };
+    case "sam": return { url: `https://api.sam.gov/opportunities/v2/search?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && (record(b).totalRecords === 0 || Array.isArray(record(b).opportunitiesData)) };
     case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: companion?.mapOrigin ?? PUBLIC_SITE_ORIGIN, Referer: `${companion?.mapOrigin ?? PUBLIC_SITE_ORIGIN}/` }, accepts: b => record(b).version === 8 && array(record(b).layers) };
     case "netlify": return { url: "https://api.netlify.com/api/v1/user", headers: { Authorization: `Bearer ${key}` }, accepts: b => typeof record(b).id === "string" };
     case "github": return { url: "https://api.github.com/user", headers: { Authorization: `Bearer ${key}`, "User-Agent": "Meanwhile keys check", Accept: "application/vnd.github+json" }, accepts: b => typeof record(b).login === "string" };
@@ -98,8 +98,8 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
 }
 
 export async function testDueKeys(store: KeysStore, at: string, name?: string,
-  check: typeof testKey = testKey, source?: "runner" | "website"): Promise<number> {
-  const due = await store.claimTests(at, name, source);
+  check: typeof testKey = testKey): Promise<number> {
+  const due = await store.claimTests(at, name);
   await Promise.all(due.map(async row => {
     let result: KeyTestResult;
     try {

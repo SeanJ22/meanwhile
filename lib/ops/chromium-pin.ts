@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /** The browser build is pinned, and a missing one is a named failure, never a skip. */
 import { accessSync, constants, existsSync, readdirSync, statSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
@@ -13,7 +14,7 @@ export const EXPECTED_CHROMIUM_REVISION = "1234";
 export type BrowserEnv = Readonly<Record<string, string | undefined>>;
 
 /** Where Playwright looks for browsers, honouring the override; the default differs per platform. */
-export function browsersRoot(env: BrowserEnv = process.env, platform: string = process.platform): string {
+export function browsersRoot(env: BrowserEnv = storedKeyEnvironment(), platform: string = process.platform): string {
   const override = env.PLAYWRIGHT_BROWSERS_PATH?.trim();
   if (override) return override;
   if (platform === "win32") {
@@ -99,7 +100,7 @@ function installedChromiums(
 
 /** What this machine can launch, returned as a value so a report can say which case happened. */
 export function resolveChromium(
-  env: BrowserEnv = process.env,
+  env: BrowserEnv = storedKeyEnvironment(),
   platform: string = process.platform,
 ): ChromiumResolution {
   const root = browsersRoot(env, platform);

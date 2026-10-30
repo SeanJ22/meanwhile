@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import BallotPage from "@/app/ballot/page";
 import { RouteCard } from "@/components/shell/route-card";
 
@@ -10,6 +11,7 @@ export default async function BallotCard({
 }: {
   searchParams: Promise<{ zip?: string }>;
 }) {
+  await loadWebsiteSavedKeys();
   const { zip } = await searchParams;
   return (
     <RouteCard kicker="Ballot" zip={zip}>

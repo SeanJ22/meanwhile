@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../../lib/core/keys-values.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * May only read the control plane, fetch production's build identity, and forward a confirmed action to
@@ -80,6 +82,7 @@ function gatewayDoor(request: NextRequest): ChatActionDoor {
 }
 
 async function post(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
@@ -88,7 +91,7 @@ async function post(request: NextRequest): Promise<NextResponse> {
   }
   const verdict = await verifySession(
     request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
-    process.env[ADMIN_SESSION_KEY_VAR],
+    storedKeyValue(ADMIN_SESSION_KEY_VAR),
     Math.floor(Date.now() / 1000),
   );
   if (!verdict.ok) {

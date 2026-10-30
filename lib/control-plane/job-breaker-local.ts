@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -15,8 +16,8 @@ function saveJson(path: string, value: unknown): void {
 export function saveBreakerSnapshot(path: string, snapshot: JobBreakerSnapshot): void { saveJson(path, snapshot); }
 
 /** How many times further apart the job's launches are now. 1 at its ordinary pace, or when the snapshot is missing or over two hours old. */
-export function jobSlowTimes(job: string, env: NodeJS.ProcessEnv = process.env, now = Date.now()): number {
-  const path = env[JOB_BREAKER_PATH_ENV];
+export function jobSlowTimes(job: string, env: NodeJS.ProcessEnv = storedKeyEnvironment(), now = Date.now()): number {
+  const path = storedKeyEnvironment(env)[JOB_BREAKER_PATH_ENV];
   if (!path || protectedJob(job)) return 1;
   try {
     const snapshot = JSON.parse(readFileSync(path, "utf8")) as Partial<JobBreakerSnapshot>, times = snapshot.jobs?.[job]?.times;
@@ -29,8 +30,8 @@ export function jobSlowTimes(job: string, env: NodeJS.ProcessEnv = process.env, 
  * (clamped to one minute to one hour). A slowed job waits `times` gaps after its last launch, at most an hour more than one
  * gap, so it never stops. `reserve` false only asks; true records the launch it admits.
  */
-export function admitJobLaunch(job: string, env: NodeJS.ProcessEnv = process.env, now = Date.now(), reserve = true): boolean {
-  const path = env[JOB_BREAKER_PATH_ENV];
+export function admitJobLaunch(job: string, env: NodeJS.ProcessEnv = storedKeyEnvironment(), now = Date.now(), reserve = true): boolean {
+  const path = storedKeyEnvironment(env)[JOB_BREAKER_PATH_ENV];
   if (!path || protectedJob(job)) return true;
   const file = join(`${path}.launches`, createHash("sha256").update(job).digest("hex")), times = jobSlowTimes(job, env, now);
   let last: { at: number; gap?: number } | null = null;

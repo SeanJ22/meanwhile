@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { readRolePlaybook } from "../playbooks.ts";
 import { indexScoutFindings, indexDetectiveFindings, indexReportedFinding } from "../box.ts";
 import { workAdapterQueue } from "./engineering-adapter.ts";
@@ -113,7 +114,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
           permission: artifact.permission, methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
           retrievalUrl: artifact.retrievalUrl, contentType: artifact.contentType } };
       };
-      const exaKey=(input.environment??process.env).EXA_API_KEY?.trim();
+      const exaKey=storedKeyValue("EXA_API_KEY", (input.environment??process.env))?.trim();
       if (task.routeId===EXA_AGENT_ROUTE_ID) {
         const packetNow=async()=>(await readGovernmentPackets([item.subject],now(),await readAskedGaps(input.repos,now()))).get(item.subject)??null;
         return exaAgentExecutor({key:exaKey,now,budget:input.searchBudget,packetNow,

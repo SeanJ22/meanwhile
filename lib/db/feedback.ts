@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import {
   FEEDBACK_MAX_CHARS,
   REPLY_TO_MAX_CHARS,
@@ -28,8 +29,8 @@ export type { FeedbackSurface };
 export type FeedbackSite = "live" | "tester";
 
 /** Both directions use the independent feedback branch once configured. */
-export function feedbackConnection(env: Readonly<Record<string, string | undefined>> = process.env): string | null {
-  return env.FEEDBACK_DATABASE_URL || env.DATABASE_URL || null;
+export function feedbackConnection(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): string | null {
+  return storedKeyValue("FEEDBACK_DATABASE_URL", env) || storedKeyValue("DATABASE_URL", env) || null;
 }
 
 const databases = new Map<string, ReturnType<typeof drizzle<typeof schema>>>();

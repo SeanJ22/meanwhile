@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * Renders the gated admin console locally and reads what it says.
  *
@@ -43,7 +44,7 @@ const MAX_CAPTURE_HEIGHT = 7000;
 if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(BASE)) {
   throw new Error(`admin:walk refuses ${BASE}: it reads a LOCAL server and never production.`);
 }
-const key = process.env.WTP_ADMIN_SESSION_KEY;
+const key = storedKeyValue("WTP_ADMIN_SESSION_KEY");
 if (!key) throw new Error("WTP_ADMIN_SESSION_KEY is not set, so no session can be minted and every page would redirect to the login.");
 
 const nowSeconds = Math.floor(Date.now() / 1000);

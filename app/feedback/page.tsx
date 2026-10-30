@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../lib/core/keys-entry.ts";
 import Link from "next/link";
 
 import { FeedbackForm } from "@/components/feedback/feedback-form";
@@ -16,6 +17,7 @@ export async function generateMetadata({ searchParams }: FeedbackPageProps) {
 export default async function FeedbackPage({
   searchParams,
 }: FeedbackPageProps) {
+  await loadWebsiteSavedKeys();
   const params = await searchParams;
   const context = feedbackContext(params);
   const sooner = params.intent === "sooner";

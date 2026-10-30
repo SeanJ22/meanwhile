@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import type { ScoreboardVitalHour } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { boundedQuery, type BoundableSql } from "../repository/request-bounds.ts";
 import { neon } from "../../db/client.ts";
@@ -20,7 +21,7 @@ GROUP BY h.hour,c.start ORDER BY h.hour DESC`;
 
 /** Reader triggers supply live facts; the runner supplies spending and its own activity. */
 export async function readVitalSigns(sql: BoundableSql, at: string,
-  reader:BoundableSql|null=process.env.DATABASE_URL?neon(process.env.DATABASE_URL,{readOnly:true}):null): Promise<readonly ScoreboardVitalHour[]> {
+  reader:BoundableSql|null=((connection) => connection ? neon(connection, {readOnly:true}) : null)(storedKeyValue("DATABASE_URL"))): Promise<readonly ScoreboardVitalHour[]> {
   const through = new Date(Math.floor(Date.parse(at) / 3_600_000) * 3_600_000).toISOString();
   const [rows,live] = await Promise.all([
     boundedQuery(sql, { operation: "vital-signs.admin", callClass: "PAGE" },

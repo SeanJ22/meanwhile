@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
+import { storedKeyEnvironment, storedKeyValue } from "../../../../lib/core/keys-values.ts";
 import { memberMeetingVoteQuestion, readMemberMeetingVotes } from "@/lib/ask/member-meeting-votes";
 import { readerMoneyReference, readerContestReference, readerMeasureReference, composeMissingContestStatements, composeMissingReaderFunding } from "@/lib/ask/reader-references";
 import { askResponse } from "@/lib/ask/response";
@@ -360,6 +362,7 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   const requestStarted = Date.now();
   const settingsStarted = performance.now();
   return withReaderTimeZone(request.headers.get("x-wtp-time-zone"), () => withPublishedAskSettings(async () => {
@@ -1089,7 +1092,7 @@ async function answerWithSettings(request: Request, started: number) {
   const ladder = synthesisLadder();
   const ladderKey = ladderIdentity(ladder);
   const writerCacheModel = `${ladderKey.model}:${askPlaybookVersion("ASK_WRITER")}`;
-  const callerKey = askCallerKey(process.env, markerFromRequest(request).runClass);
+  const callerKey = askCallerKey(storedKeyEnvironment(), markerFromRequest(request).runClass);
   const lapAt = (name: string, at: number) => { stageMs[name] = at - stageMark; stageMark = at; };
   type PackPath = Extract<Awaited<ReturnType<typeof answerPath>>, { kind: "PACK" }>;
 
@@ -1102,7 +1105,7 @@ async function answerWithSettings(request: Request, started: number) {
     writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, writerCacheModel, ladderKey.effort),
   });
 
-  const speculationEnabled = Boolean(process.env.ANTHROPIC_API_KEY) && process.env.WTP_ASK_SPECULATION !== "off";
+  const speculationEnabled = Boolean(storedKeyValue("ANTHROPIC_API_KEY")) && process.env.WTP_ASK_SPECULATION !== "off";
   const speculate = async (): Promise<Speculation> => {
     const reading = codeBestReading({ question, inventory, activeSubjects, priorSubjects });
     if (!reading) return { started: false, why: "no-code-reading" };

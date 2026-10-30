@@ -29,25 +29,21 @@ export function keysStore(query: KeysQuery, encryptionKey: string | undefined) {
     async list(includeDeleted = false): Promise<readonly KeyView[]> {
       return (await query(`SELECT ${PUBLIC_COLUMNS} FROM cp_keys ${includeDeleted ? "" : "WHERE NOT deleted"} ORDER BY name`)).map(view);
     },
-    async save(nameInput: string, value: string, service: KeyService, at: string, onlyIfAbsent = false, source?: string,
-      expected?: { readonly name: string; readonly version: string }): Promise<string> {
+    async save(nameInput: string, value: string, service: KeyService, at: string): Promise<string> {
       const name = keyName(nameInput);
       if (!Object.hasOwn(KEY_SERVICES, service)) throw new Error("Choose what the key is for.");
       const locked = lockKey(name, value, encryptionKey), version = randomUUID();
       const values = "$1,$2,$3,$4,$5,$6::timestamptz,$6::timestamptz,$7,jsonb_build_array(jsonb_build_object('at',$6::text,'before','No key','after','Saved key'))";
-      const written = await query(`INSERT INTO cp_keys(name,purpose,service,locked,version,changed_at,next_test_at,imported_from,history)
-        ${expected ? `SELECT ${values} FROM cp_keys donor WHERE donor.name=$8 AND donor.version=$9 AND NOT donor.deleted` : `VALUES(${values})`}
-        ON CONFLICT(name) ${onlyIfAbsent ? "DO NOTHING" : `DO UPDATE SET
+      await query(`INSERT INTO cp_keys(name,purpose,service,locked,version,changed_at,next_test_at,imported_from,history)
+        VALUES(${values})
+        ON CONFLICT(name) DO UPDATE SET
         purpose=EXCLUDED.purpose, service=EXCLUDED.service, locked=EXCLUDED.locked, version=EXCLUDED.version,
         changed_at=EXCLUDED.changed_at, tested_at=NULL, working=false, says='Waiting for its first test.',
         next_test_at=EXCLUDED.next_test_at, runner_read_at=NULL, deleted=false, previous=${BEFORE},imported_from=EXCLUDED.imported_from,
         history=jsonb_path_query_array(jsonb_build_array(jsonb_build_object('at',$6::text,'before',
-          CASE WHEN cp_keys.deleted THEN 'No key' ELSE 'Saved key' END,'after','Saved key')) || cp_keys.history,'$[0 to 19]')`} RETURNING version`,
-      [name, KEY_SERVICES[service], service, locked, version, at, [source ?? "owner"], ...(expected ? [expected.name, expected.version] : [])]);
-      return written[0] ? String(written[0].version) : "";
-    },
-    async markImported(name: string, source: string): Promise<void> {
-      await query("UPDATE cp_keys SET imported_from=array_append(imported_from,$2) WHERE name=$1 AND NOT ($2=ANY(imported_from))", [name, source]);
+          CASE WHEN cp_keys.deleted THEN 'No key' ELSE 'Saved key' END,'after','Saved key')) || cp_keys.history,'$[0 to 19]')`,
+      [name, KEY_SERVICES[service], service, locked, version, at, ["owner"]]);
+      return version;
     },
     async read(nameInput: string, runner = false, at = new Date().toISOString(), source?: "runner" | "website"): Promise<string | undefined> {
       const name = keyName(nameInput);
@@ -74,12 +70,11 @@ export function keysStore(query: KeysQuery, encryptionKey: string | undefined) {
             'after',CASE WHEN (previous->>'deleted')::boolean THEN 'No key' ELSE 'Saved key' END)) || history,'$[0 to 19]')
         WHERE name=$1 AND previous IS NOT NULL`, [keyName(nameInput), randomUUID(), at]);
     },
-    async claimTests(at: string, name?: string, source?: "runner" | "website"): Promise<readonly { name: string; version: string; service: KeyService; locked: string }[]> {
+    async claimTests(at: string, name?: string): Promise<readonly { name: string; version: string; service: KeyService; locked: string }[]> {
       // The short lease recovers after a killed test. Two runners cannot test the same version at once.
       const params: unknown[] = [at];
       let selection = "";
       if (name) { params.push(keyName(name)); selection += ` AND name=$${params.length}`; }
-      if (source) { params.push(source); selection += ` AND (cardinality(imported_from)=0 OR 'owner'=ANY(imported_from) OR $${params.length}=ANY(imported_from))`; }
       const rows = await query(`UPDATE cp_keys SET next_test_at=$1::timestamptz + interval '2 minutes'
         WHERE NOT deleted AND next_test_at <= $1::timestamptz ${selection}
         RETURNING name,version,service,locked`, params);
@@ -106,9 +101,4 @@ export function productionKeysStore(env: Readonly<Record<string, string | undefi
   if (!url) throw new Error("The Keys box cannot reach its saved keys.");
   const sql = neon(url);
   return keysStore(async (text, params) => await sql.query(text, params ? [...params] : []) as Record<string, unknown>[], env[KEYS_MASTER_ENV]);
-}
-
-/** Server and session entry point. Missing keys stay missing; no environment or Admin-HTTP fallback. */
-export async function readSavedKey(name: string, runner = false): Promise<string | undefined> {
-  return productionKeysStore().read(name, runner, new Date().toISOString(), runner ? "runner" : "website");
 }

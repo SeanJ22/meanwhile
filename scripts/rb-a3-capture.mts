@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { neon } from "../lib/db/client.ts";
@@ -46,7 +47,7 @@ try {
   assert(baseline);
 
   // Copy just this page's published registry metadata, through the authorized read-only role.
-  const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+  const connection = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
   assert(connection && new URL(connection).username === "readonly", "The specified reader readonly connection is required");
   const query = neon(connection);
   const rows = await query.query(`WITH root AS (

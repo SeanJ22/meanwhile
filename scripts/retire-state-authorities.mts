@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { Client } from "../lib/db/client.ts";
@@ -22,7 +23,7 @@ try {
     if (!Array.isArray(origins) || !origins.length) throw new Error("STATE_RETIREMENT_ORIGINS_INVALID");
     const { prepareRetirementStateInputs } = await import("../lib/civic-data/state-retirement-inputs.ts");
     const { withRetirementSourceSnapshot } = await import("../lib/civic-data/state-retirement-inputs.ts");
-    const connectionString = process.env.DATABASE_URL;
+    const connectionString = storedKeyValue("DATABASE_URL");
     if (!connectionString) throw new Error("STATE_RETIREMENT_DATABASE_UNAVAILABLE");
     const client = new Client({ connectionString });
     await client.connect();

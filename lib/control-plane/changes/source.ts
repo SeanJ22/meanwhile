@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 /**
  * Reads the changes from GitHub, server side and cached.
  *
@@ -161,10 +162,10 @@ async function liveReadingOf(
 export async function readChanges(options: ChangesOptions = {}): Promise<ChangesReading> {
   const nowMs = options.nowMs ?? (() => Date.now());
   if (!options.force && memo && nowMs() - memo.at < CHANGES_CACHE_SECONDS * 1000) return memo.reading;
-  const env = options.env ?? process.env;
+  const env = options.env ?? storedKeyEnvironment();
   const fetchImpl = options.fetchImpl ?? fetch;
   const observedAt = new Date(nowMs()).toISOString();
-  const token = (env[CHANGES_TOKEN_VAR] ?? env.GH_TOKEN ?? "").trim();
+  const token = (storedKeyValue(CHANGES_TOKEN_VAR, env) ?? storedKeyValue("GH_TOKEN", env) ?? "").trim();
   const remember = (reading: ChangesReading): ChangesReading => {
     memo = { at: nowMs(), reading };
     return reading;

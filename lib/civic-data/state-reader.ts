@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { stateBallotScope } from "./state-scopes.ts";
 import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
@@ -75,7 +76,7 @@ export async function readStateAuthorityEntry<T>(family: StateAuthorityFamily, s
     if (entry) {
       try {
         const result = await readPromotedCivicData<T>(recordClass, scope, { edge: entry });
-        const checkFederalAbsence = recordClass === "FEDERAL_DIRECTORY" && !edge?.edgeOnly && (query || process.env.DATABASE_URL);
+        const checkFederalAbsence = recordClass === "FEDERAL_DIRECTORY" && !edge?.edgeOnly && (query || storedKeyValue("DATABASE_URL"));
         if (result.kind === "PROMOTED" || result.kind === "NOT_RECORDED" && !checkFederalAbsence) return { source: "EDGE", result };
         if (result.kind === "STORE_UNREACHABLE") throw new Error(result.detail);
       } catch (error) { reportReaderStateFailure(family, state, edge?.stateAuthorities?.key?.(family, state) ?? key, error); }

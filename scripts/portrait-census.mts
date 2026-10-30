@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { neon } from "../lib/db/client.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
@@ -29,13 +31,13 @@ interface CensusPayload extends Partial<RegistryRuntimeReadModel> {
 
 // This measurement never writes to either production database.
 const file = process.argv.find(arg => arg.startsWith("--db-url-file="))?.split("=").slice(1).join("=");
-const connection = file ? (await readFile(file, "utf8")).trim() : process.env.DATABASE_URL!;
+const connection = file ? (await readFile(file, "utf8")).trim() : storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY")!;
 if (new URL(connection).username !== "readonly") throw Error("Portrait census requires the reader readonly role");
 const sql = neon(connection);
 const output = process.argv.find(arg => arg.startsWith("--output="))?.slice(9) ?? "/tmp/pt01-census";
 const requested = process.argv.find(arg => arg.startsWith("--state="))?.slice(8).toUpperCase();
 const reader=process.argv.includes("--reader");
-if(reader)process.env.DATABASE_URL=connection;
+if(reader)installDiagnosticDatabase(connection);
 const states = requested ? [requested] : (await sql`SELECT DISTINCT substring(scope from '^US-([A-Z]{2}):') AS state FROM civic_data_promotions WHERE record_class='REGISTRY_RUNTIME_BINDING' ORDER BY state`).map(row => row.state as string).filter(Boolean);
 const roles = requested === "US" ? ["President","Vice President","Cabinet"] : ["Congress", "Statewide", "Legislator", "County", "City", "School", "Candidate"];
 const counts: {state:string;role:string;withPhoto:number;withoutPhoto:number}[] = [];

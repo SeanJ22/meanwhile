@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { pgOwnerCostRefs } from "./owner-cost-refs.ts";
 import { pgOwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
@@ -1951,15 +1952,15 @@ export async function createPgRepositories(
 }
 
 export function controlPlaneUrlFromEnv(
-  env: NodeJS.ProcessEnv = process.env,
+  env: NodeJS.ProcessEnv = storedKeyEnvironment(),
 ): string | null {
-  const value = env[CONTROL_PLANE_URL_VAR];
+  const value = storedKeyEnvironment(env)[CONTROL_PLANE_URL_VAR];
   return typeof value === "string" && value.trim().length > 0 ? value : null;
 }
 
 export function controlPlaneTestUrlFromEnv(
-  env: NodeJS.ProcessEnv = process.env,
+  env: NodeJS.ProcessEnv = storedKeyEnvironment(),
 ): string | null {
-  const value = env[CONTROL_PLANE_TEST_URL_VAR];
+  const value = storedKeyEnvironment(env)[CONTROL_PLANE_TEST_URL_VAR];
   return typeof value === "string" && value.trim().length > 0 ? value : null;
 }

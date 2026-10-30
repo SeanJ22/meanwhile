@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** Read-only EPA replay. Production supplies registrations; every publication write is local. */
 import assert from "node:assert/strict";
 import { createHash, randomUUID } from "node:crypto";
@@ -70,10 +72,10 @@ async function diskBytes(root:string):Promise<number>{let bytes=0;for(const entr
 const safeError=(error:unknown)=>(error instanceof Error?error.message:String(error)).slice(0,1000);
 
 async function main() {
-  const started=realNow(),connection=urlFile?(await readFile(urlFile,"utf8")).trim():process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+  const started=realNow(),connection=urlFile?(await readFile(urlFile,"utf8")).trim():storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
   if(!connection||decodeURIComponent(new URL(connection).username)!=="readonly")throw Error("An existing production readonly-role connection is required.");
   installOpenDataReplayMap(connection);
-  process.env.DATABASE_URL=connection;
+  installDiagnosticDatabase(connection);
   // The production role supplies reads; disposable runner-cache writes stay off for this replay.
   process.env.WTP_CIVIC_READ_CACHE_URL="";
   const access=(await neon(connection).query("SELECT current_user::text AS role, has_table_privilege(current_user,'public.civic_data_candidates','INSERT, UPDATE, DELETE') AS can_write"))[0];

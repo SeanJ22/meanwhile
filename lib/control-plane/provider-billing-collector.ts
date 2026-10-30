@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 /** Server-side GET-only reporting, invoked by the existing snapshot publisher.
  * Never persists raw responses, credentials or provider error bodies. */
 import { createHash } from "node:crypto";
@@ -14,7 +15,7 @@ const text = (v: unknown): string => typeof v === "string" ? v : "";
 const safeId = (v: unknown, env: Readonly<Record<string, string | undefined>>): string => {
   const id = text(v);
   if (!id) return "";
-  return Object.values(env).includes(id) ? `key-${createHash("sha256").update(id).digest("hex").slice(0,12)}` : id.replace(/[^a-zA-Z0-9_.:-]/g, "").slice(0,100);
+  return Object.values(storedKeyEnvironment(env)).includes(id) ? `key-${createHash("sha256").update(id).digest("hex").slice(0,12)}` : id.replace(/[^a-zA-Z0-9_.:-]/g, "").slice(0,100);
 };
 const dayOf = (v: unknown): string => { const day = text(v).slice(0, 10); if (!/^\d{4}-\d\d-\d\d$/.test(day)) throw new Error("REPORT_SCHEMA"); return day; };
 const add = (map: Map<string, number>, key: string, value: number) => map.set(key, (map.get(key) ?? 0) + value);
@@ -66,7 +67,7 @@ export interface BillingCollectorInput {
 export async function collectProviderBilling(input: BillingCollectorInput): Promise<ProviderBillingSnapshot> {
   let env: Readonly<Record<string, string | undefined>>;
   let environmentError = false;
-  try { env = input.env ?? billingCollectorEnvironment(); }
+  try { env = input.env ?? await billingCollectorEnvironment(); }
   catch { env = {}; environmentError = true; }
   const fetcher = input.fetcher ?? fetch;
   const start = input.now.slice(0,7) + "-01T00:00:00.000Z";
@@ -80,7 +81,7 @@ export async function collectProviderBilling(input: BillingCollectorInput): Prom
     if (!response.ok) throw new Error(`REPORT_HTTP_${response.status}`);
     try { const value: unknown = await response.json(); return Array.isArray(value) ? { items: value } : object(value); } catch { throw new Error("REPORT_SCHEMA"); }
   };
-  const need = (name: string): string => { const value = env[name]?.trim(); if (!value) throw new Error(`MISSING_${name}`); return value; };
+  const need = (name: string): string => { const value = storedKeyEnvironment(env)[name]?.trim(); if (!value) throw new Error(`MISSING_${name}`); return value; };
   const utcDays: string[] = [];
   for (let t = Date.parse(start); t < Date.parse(input.now); t += 86_400_000) utcDays.push(new Date(t).toISOString().slice(0, 10));
   // A provider that reports the whole month charged nothing on a day it does not list.
@@ -119,7 +120,7 @@ export async function collectProviderBilling(input: BillingCollectorInput): Prom
     return reported(r, { reportedUsd: usd, units: [{ label: "Token usage cost (part of total)", value: tokenUsd, unit: "USD" }, ...[...units].map(([label,value]) => ({ label, value, unit: "tokens" }))], days: usdDays(byDay), accountIds: [...new Set([safeId(organization.id,env), ...usageRows.flatMap(x => [safeId(x.workspace_id,env),safeId(x.api_key_id,env)])].filter(Boolean))], source: "Anthropic Usage and Cost Admin API", detail: "Organization accrued costs in USD (provider cents converted). Includes non-token services separately from the token subtotal. Priority-tier costs are excluded by the provider. This is not a final invoice or the hunt's own spending; provider totals are never added to request-ledger estimates." });
   }
   async function exa(r: ProviderReading): Promise<ProviderReading> {
-    if (!env.EXA_SERVICE_API_KEY?.trim()) return searchEstimate(r, "api.exa.ai", "Exa", "MISSING_EXA_SERVICE_API_KEY");
+    if (!storedKeyValue("EXA_SERVICE_API_KEY", env)?.trim()) return searchEstimate(r, "api.exa.ai", "Exa", "MISSING_EXA_SERVICE_API_KEY");
     const headers = { "x-api-key": need(BILLING_KEYS.exa) }, host = "https://admin-api.exa.ai/team-management";
     const keys = await get(`${host}/api-keys`, headers);
     if (!Array.isArray(keys.apiKeys)) throw new Error("REPORT_SCHEMA");

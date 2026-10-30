@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** SH-01: read-only production check; no serving artifacts or acquisition writes.
  * WTP_PRODUCTION_DATABASE_URL_READONLY must name the production reader database.
  * Run with the repository's TypeScript/alias loader. An optional --output=PATH
@@ -16,7 +18,7 @@ import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { installPlaceMapQuery, readStateZipPlaces } from "../lib/place-map/reader.ts";
 import { readZipPostalAreas } from "../lib/place-map/locations.ts";
 
-const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+const connection = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
 if (!connection) throw new Error("WTP_PRODUCTION_DATABASE_URL_READONLY is required; refusing to use a local database.");
 const sql = neon(connection);
 const query = async (text: string, params: readonly unknown[] = []) =>
@@ -24,7 +26,7 @@ const query = async (text: string, params: readonly unknown[] = []) =>
 const [identity] = await query("SELECT current_user, current_setting('transaction_read_only') AS read_only", []);
 if (identity.current_user !== "readonly" || identity.read_only !== "on") throw new Error("A read-only production role and transaction are required.");
 // The diagnostic's only database access is the explicit read-only transport above.
-delete process.env.DATABASE_URL;
+installDiagnosticDatabase(undefined);
 delete process.env.WTP_ASSET_STORE;
 installPlaceMapQuery(query);
 const failures: { state: string; zip?: string; member?: string; division?: string; problem: string }[] = [];

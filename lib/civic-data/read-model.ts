@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { isTranslationProjection } from "./published-projection-base.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
@@ -375,7 +376,7 @@ export function civicDataReadNotInitialized(
 
 export function maySeedFixture(
   result: CivicDataReadResult<unknown>,
-  env: CivicDataFixtureEnvironment = process.env,
+  env: CivicDataFixtureEnvironment = storedKeyEnvironment(),
 ): boolean {
   return mayUseTestFixture(env) && (result.kind === "NOT_RECORDED" || (
     result.kind === "STORE_UNREACHABLE" &&
@@ -418,7 +419,7 @@ export async function readPromotedCivicData<T>(
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
     refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
     const selection = currentReaderSelection();
-    if (selection && process.env.DATABASE_URL) {
+    if (selection && storedKeyValue("DATABASE_URL")) {
       try {
         return readPromotedFromEdge<T>(recordClass, scope, await readReaderProjection(recordClass, scope, selection), now, options.maxAgeMs);
       } catch (error) {
@@ -426,7 +427,7 @@ export async function readPromotedCivicData<T>(
       }
     }
   }
-  if (!injected && !process.env.DATABASE_URL) {
+  if (!injected && !storedKeyValue("DATABASE_URL")) {
     return {
       kind: "STORE_UNREACHABLE",
       value: null,
@@ -535,7 +536,7 @@ export async function readPromotedCivicDataBatch<T>(
     }
     for (const scope of scopes) refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
   }
-  if (!injected && !process.env.DATABASE_URL) {
+  if (!injected && !storedKeyValue("DATABASE_URL")) {
     return scopes.map((scope) => ({
       kind: "STORE_UNREACHABLE",
       value: null,

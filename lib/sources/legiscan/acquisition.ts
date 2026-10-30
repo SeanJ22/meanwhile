@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 import { sourceFetch } from "../http.ts";
 import { mkdtemp,writeFile,rm } from "node:fs/promises";
 import { join } from "node:path";
@@ -20,7 +21,7 @@ interface SavedArchive {readonly context:string;readonly raw:RawCaptureRef;reado
 interface SavedBill {readonly context:string;readonly archiveHash:string;readonly name:string;readonly raw:RawCaptureRef;}
 /** Credentials never enter durable URLs, response evidence or diagnostics. Only bulk operations are exposed. */
 async function request(op:"getDatasetList"|"getDataset",params:Record<string,string>,options:BulkRequestOptions):Promise<BulkCapture> {
-  const key=options.key??process.env.LEGISCAN_API_KEY;
+  const key=options.key??storedKeyValue("LEGISCAN_API_KEY");
   if(!key) throw Error("LEGISCAN_API_KEY is not configured");
   const url=new URL(LEGISCAN_API); url.search=new URLSearchParams({op,...params}).toString();
   const requestedUrl=new URL(url); requestedUrl.searchParams.delete("access_key"); url.searchParams.set("key",key);
@@ -52,7 +53,7 @@ export async function acquireDataset(dataset:Dataset,options:BulkRequestOptions)
   const context=hash(JSON.stringify([LEGISCAN_BULK_PARSER,publicDataset]));
   const cache=(options.cache??runtimeCivicReadCache()).jobState(),vault=options.vault??netlifyEvidenceStoreFromEnv();
   const saved=vault?await cache.readCheckpoint<SavedArchive>("legiscan-bulk-archive",String(dataset.session_id)):null;
-  const after=Date.parse(process.env[SOURCE_CHECK_AFTER_ENV]??"");
+  const after=Date.parse(storedKeyEnvironment()[SOURCE_CHECK_AFTER_ENV]??"");
   let archive:Uint8Array|null=null,retrieval:Omit<BulkCapture,"body"|"rawHash">|null=null,responseHash:string|null=null;
   if(vault&&saved?.context===context&&(!Number.isFinite(after)||Date.parse(saved.retrieval.retrievedAt)>=after)){
     const held=await vault.get(saved.raw.vaultKey).catch(()=>null);

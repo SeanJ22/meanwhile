@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /**
  * The admin host is an alias on the same deploy as the reader site, so this file and `middleware.ts` are the whole
  * separation. Web Crypto, not `node:crypto`, so the Edge middleware and the route handlers share one implementation.
@@ -233,7 +234,7 @@ export const BREAK_GLASS_MAX_ATTEMPTS_PER_WINDOW = 5;
 export const BREAK_GLASS_WINDOW_SECONDS = 15 * 60;
 
 export function isBreakGlassEnabled(env: { readonly [name: string]: string | undefined }): boolean {
-  return env[BREAK_GLASS_FLAG_VAR] === BREAK_GLASS_ENABLED_VALUE;
+  return storedKeyEnvironment(env)[BREAK_GLASS_FLAG_VAR] === BREAK_GLASS_ENABLED_VALUE;
 }
 
 export type BreakGlassRejection =

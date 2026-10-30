@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { isExpired, type AttemptCost, type AttemptOutcome, type WorkerRef } from "../attempt.ts";
 import {
   abandonAttempt,
@@ -51,7 +52,7 @@ export interface WorkerBound {
 /** The wall on every hunter, below the worker process's own 10-minute kill timeout so the hunter saves its case file first. `WTP_HUNTER_WALL_MS` overrides it. */
 export const HUNTER_WALL_LIMIT_MS = 8 * 60_000;
 
-export function hunterWallLimitMs(env: Readonly<Record<string, string | undefined>> = process.env): number {
+export function hunterWallLimitMs(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): number {
   const raw = Number(env.WTP_HUNTER_WALL_MS);
   return Number.isSafeInteger(raw) && raw > 0 ? raw : HUNTER_WALL_LIMIT_MS;
 }

@@ -1,3 +1,4 @@
+import { selectSavedDatabase, storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { votePagesIssue } from "../lib/state-rollcalls/vote-page-model.ts";
 import { createVotePageSink } from "../lib/state-rollcalls/vote-page-writer.ts";
 /** Each child owns one state/source. Production connections are read-only;
@@ -8,7 +9,6 @@ import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { parseEnv } from "node:util";
 import { neon } from "../lib/db/client.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { currentPluralSessions, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
@@ -35,9 +35,10 @@ async function prepareMetadata() {
   try { for (const state of PLURAL_STATES) await readFile(resolve(directory, `${state}.json`)); return; }
   catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   await mkdir(directory, { recursive: true });
-  if (!process.env.PLURAL_API_KEY) throw new Error("The existing Open States API key is required to discover public archives.");
+  const apiKey = storedKeyValue("PLURAL_API_KEY");
+  if (!apiKey) throw new Error("The existing Open States API key is required to discover public archives.");
   for (let page = 1, maximum = 1; page <= maximum; page++) {
-    const response = await fetch(pluralJurisdictionsUrl(page), { headers: { "X-API-KEY": process.env.PLURAL_API_KEY }, signal: AbortSignal.timeout(60_000) });
+    const response = await fetch(pluralJurisdictionsUrl(page), { headers: { "X-API-KEY": apiKey }, signal: AbortSignal.timeout(60_000) });
     if (!response.ok) {
       await response.body?.cancel();
       throw new Error(`Open States catalog HTTP ${response.status}; retry after ${response.headers.get("retry-after") ?? "publisher backoff"}.`);
@@ -58,7 +59,7 @@ async function productionPriorIdentities(state: string, source: string) {
   try { rows = JSON.parse(await readFile(snapshotPath, "utf8")); }
   catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    const sql = neon(process.env.DATABASE_URL!);
+    const sql = neon(storedKeyValue("DATABASE_URL")!);
     const result = await sql.transaction([sql.query(`WITH RECURSIVE root AS MATERIALIZED (
       SELECT p.payload FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
       WHERE p.record_class='STATE_ROLL_CALL' AND p.scope=$1 AND p.source_id='plural-openstates-votes'
@@ -84,7 +85,7 @@ async function productionRoster(state: string) {
     assert.equal(saved.identity.role, "readonly"); assert.equal(saved.identity.read_only, "on"); assert.equal(saved.identity.can_write, false);
     return saved;
   } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
-  const sql = neon(process.env.DATABASE_URL!);
+  const sql = neon(storedKeyValue("DATABASE_URL")!);
   const [identity, rows] = await sql.transaction([
     sql.query(`SELECT current_user AS role,current_setting('transaction_read_only') AS read_only,
       EXISTS(SELECT 1 FROM pg_tables WHERE schemaname='public' AND has_table_privilege(current_user,quote_ident(schemaname)||'.'||quote_ident(tablename),'INSERT,UPDATE,DELETE')) AS can_write`, []),
@@ -223,10 +224,8 @@ async function auditState(state: string, source: string) {
 }
 
 async function main() {
-  const envFile = argument("env");
-  if (!envFile) throw new Error("An existing production readonly env file is required (--env=...)");
-  Object.assign(process.env, parseEnv(await readFile(envFile, "utf8")));
-  if (new URL(process.env.DATABASE_URL!).username !== "readonly") throw new Error("The production readonly role is required");
+  selectSavedDatabase("WTP_PRODUCTION_DATABASE_URL_READONLY");
+  if (new URL(storedKeyValue("DATABASE_URL")!).username !== "readonly") throw new Error("The production readonly role is required");
   process.env.WTP_VITAL_SIGNS_REPORT = "1";
   keepNeonBytesInProcess(); installDatabaseTransferCounter();
   const state = argument("state"), source = argument("source") ?? "openstates";
@@ -242,7 +241,7 @@ async function main() {
         catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
       }
       await new Promise<void>((resolveChild, reject) => {
-        const child = spawn(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", process.argv[1], `--env=${envFile}`, `--out=${output}`, `--source=${source}`, `--state=${state}`, ...(writer ? ["--phase=writer"] : [])], { stdio: ["ignore", "pipe", "pipe"], env: process.env });
+        const child = spawn(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", process.argv[1], `--out=${output}`, `--source=${source}`, `--state=${state}`, ...(writer ? ["--phase=writer"] : [])], { stdio: ["ignore", "pipe", "pipe"], env: storedKeyEnvironment() });
         let diagnostic = "";
         child.stdout.on("data", chunk => process.stdout.write(chunk)); child.stderr.on("data", chunk => { diagnostic += chunk; });
         child.on("error", reject);

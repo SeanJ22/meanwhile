@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** Read-only production replay: saved sources -> publication -> reader offices/cards, then the next scheduled day.
  * NODE_USE_ENV_PROXY=1 node --env-file=<readonly.env> --experimental-strip-types
  *   --import ./scripts/register-test-loader.mjs scripts/sp-01-check.mts
@@ -32,7 +34,7 @@ import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-sli
 import {installFactReader} from "../lib/facts/db.ts";
 import {publishMemberOffices} from "../lib/officials/member-offices-publication.ts";
 
-const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+const connection = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
 if (!connection) throw Error("WTP_PRODUCTION_DATABASE_URL_READONLY is required");
 const target = new URL(connection);
 assert.equal(target.username, "readonly");
@@ -47,7 +49,7 @@ const rows = async (text: string, params: readonly unknown[] = []) => (await que
 const [identity] = await rows("SELECT current_user, current_setting('transaction_read_only') read_only");
 assert.equal(identity.current_user, "readonly"); assert.equal(identity.read_only, "on");
 // Any accidental default database path must fail; only the explicit READ ONLY transport is installed.
-delete process.env.DATABASE_URL;
+installDiagnosticDatabase(undefined);
 delete process.env.WTP_ASSET_STORE;
 installReaderDatabaseQuery(query);
 installFactReader((text,params=[])=>rows(text,params));

@@ -2,7 +2,7 @@ import type { StyleSpecification } from "maplibre-gl";
 
 /**
  * Which basemap the map draws: MapTiler vector tiles, or nothing. There is no
- * substitute provider; with no key configured the caller renders "Basemap
+ * substitute provider; when the map server is unavailable the caller renders "Basemap
  * unavailable" over the fallback ground colour, so the failure is legible.
  */
 
@@ -15,12 +15,11 @@ export interface BasemapChoice {
 }
 
 /**
- * Null when no key is configured. The basemap follows the UI theme, so light
+ * Unavailable outside the production map server. The basemap follows the UI theme, so light
  * panels never sit over a dark map.
  */
 export function resolveBasemap(theme: "dark" | "light" = "dark"): BasemapChoice | null {
-  const key = process.env.NEXT_PUBLIC_MAPTILER_KEY;
-  if (!key) return null;
+  if (process.env.WTP_BUILD_CONTEXT !== "production") return null;
 
   const style =
     theme === "light"
@@ -29,7 +28,7 @@ export function resolveBasemap(theme: "dark" | "light" = "dark"): BasemapChoice 
 
   return {
     provider: "maptiler",
-    styleUrl: `https://api.maptiler.com/maps/${style}/style.json?key=${key}`,
+    styleUrl: `/api/maptiler/maps/${style}/style.json`,
   };
 }
 
@@ -39,11 +38,11 @@ export function basemapStyle(choice: BasemapChoice, software: boolean): StyleSpe
   return {
     version: 8,
     transition: { duration: 0, delay: 0 },
-    glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf${new URL(choice.styleUrl).search}`,
+    glyphs: "/api/maptiler/fonts/{fontstack}/{range}.pbf",
     sources: {
       basemap: {
         type: "raster",
-        url: choice.styleUrl.replace("/style.json?", "/tiles.json?"),
+        url: choice.styleUrl.replace("/style.json", "/tiles.json"),
         tileSize: 512,
       },
     },
@@ -57,7 +56,7 @@ export async function prefetchRasterOverview(choice: BasemapChoice, point: {lat:
   const longitude=((point.lng+180)%360+360)%360;
   const latitude=Math.max(-85.05112878,Math.min(85.05112878,point.lat))*Math.PI/180;
   const centerX=Math.floor(longitude/360*count),centerY=Math.floor((1-Math.asinh(Math.tan(latitude))/Math.PI)/2*count);
-  const response=await fetch(choice.styleUrl.replace("/style.json?","/tiles.json?"),{signal});
+  const response=await fetch(choice.styleUrl.replace("/style.json","/tiles.json"),{signal});
   if(!response.ok)return;
   const source=await response.json() as {tiles?:string[];minzoom?:number;maxzoom?:number};
   if(!source.tiles?.length||z<(source.minzoom??0)||z>(source.maxzoom??22))return;

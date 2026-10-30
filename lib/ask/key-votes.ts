@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { keyVotesForMember } from "../votes/key-votes-reader.ts";
 import { keyVotePositionKey } from "../votes/key-vote-positions.ts";
 import { KEY_VOTES_CRITERIA } from "../votes/key-votes.ts";
@@ -83,7 +84,7 @@ export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOffi
       if (own.kind === "STORE_UNREACHABLE") throw new Error(own.detail);
       for (const vote of own.kind === "PROMOTED" || own.kind === "BOOTSTRAP" ? own.value.votes : [])
         addSummary(vote.billUrl, summaryForBill(vote.billUrl));
-      if (process.env.DATABASE_URL) {
+      if (storedKeyValue("DATABASE_URL")) {
         const current = await readFederalRollCallsProjection();
         if (current.kind !== "PROMOTED") throw new Error("No proven current federal vote window");
         let cursor: string | null = null;

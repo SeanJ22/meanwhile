@@ -53,34 +53,15 @@ test("operational civic reads bind the explicit production read handle without r
     assert.throws(() => runtimeProductionReadEnvironment({ NODE_ENV: "test", DATABASE_URL: env.DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY: value }), /RUNTIME_CIVIC_READ_TARGET_(?:UNAVAILABLE|INVALID)$/);
 });
 
-test("standing runtime preserves configured GitHub credentials without invoking the CLI", () => {
-  const runCommand = (): never => { throw new Error("configured credentials must not be replaced"); };
-  assert.equal(runtimeGithubCredential({ root: ".", env: { GH_TOKEN: "configured", GITHUB_TOKEN: "other" }, runCommand }), "configured");
-  assert.equal(runtimeGithubCredential({ root: ".", env: { GITHUB_TOKEN: "other" }, runCommand }), "other");
+test("standing runtime resolves saved GitHub credentials in order", () => {
+  assert.equal(runtimeGithubCredential({ GH_TOKEN: "configured", GITHUB_TOKEN: "other" }), "configured");
+  assert.equal(runtimeGithubCredential({ GITHUB_TOKEN: "other" }), "other");
 });
 
-test("standing runtime reuses only the existing github.com CLI login in memory", () => {
-  const root = mkdtempSync(join(tmpdir(), "runtime-auth-"));
-  const calls: unknown[] = [];
-  const token = runtimeGithubCredential({ root, env: {}, runCommand: (exe, args, options) => {
-    calls.push([exe, args, options]);
-    return { status: 0, stdout: "fixture_cli_token\r\n", stderr: "" };
-  } });
-  assert.equal(token, "fixture_cli_token");
-  assert.deepEqual(calls, [["gh", ["auth", "token", "--hostname", "github.com"], { cwd: root, timeoutMs: 15_000 }]]);
-});
-
-test("missing, failed, malformed and multiple CLI credentials preserve the certification refusal", () => {
-  for (const result of [
-    { status: 1, stdout: "fixture_secret", stderr: "fixture_secret" },
-    { status: null, stdout: "fixture_secret", stderr: "timeout" },
-    { status: 0, stdout: "", stderr: "" },
-    { status: 0, stdout: "first_secret\nsecond_secret", stderr: "" },
-    { status: 0, stdout: "token: fixture_secret", stderr: "" },
-  ]) assert.equal(runtimeGithubCredential({ root: ".", env: {}, runCommand: () => result }), null);
-  assert.equal(runtimeGithubCredential({ root: ".", env: {}, runCommand: () => { throw new Error("fixture_secret"); } }), null);
+test("missing saved credentials preserve the release refusal", () => {
+  assert.equal(runtimeGithubCredential({}), null);
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(runner, /token: runtimeGithubCredential\(\{ root: ROOT, env: process\.env \}\)/);
+  assert.match(runner, /token: runtimeGithubCredential\(storedKeyEnvironment\(\)\)/);
   assert.equal(inspectRuntimeReleaseEvidence({ runningSha: TARGET, served: { sha: TARGET, how: "fixture", httpStatus: 200 }, checkRuns: null }).code, "SOFTWARE_CI_UNREADABLE");
 });
 

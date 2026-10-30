@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** An isolated, paid sample of the ordinary measure writer/checker. No reader
  * data or live Admin setting is written. Omit --run to inspect the selection. */
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
@@ -58,9 +59,9 @@ const plan = { mode: "ISOLATED_LOCAL_COPY", run, selections, nationwideHeldMeasu
 console.log("MEASURE_TRANSLATION_COST_PLAN=" + JSON.stringify(plan));
 if (!run) process.exit(0);
 
-const keyVariable = arg("key-env") ?? (process.env[WORKER_CREDENTIAL_VAR]?.trim() ? WORKER_CREDENTIAL_VAR : "ANTHROPIC_API_KEY");
+const keyVariable = arg("key-env") ?? (storedKeyValue(WORKER_CREDENTIAL_VAR)?.trim() ? WORKER_CREDENTIAL_VAR : "ANTHROPIC_API_KEY");
 if (!/^[A-Z][A-Z0-9_]*$/.test(keyVariable)) throw new Error("The model credential variable name is invalid.");
-const key = process.env[keyVariable]?.trim() ?? "";
+const key = storedKeyValue(keyVariable)?.trim() ?? "";
 if (!key) throw new Error(`${keyVariable} is not configured; no paid call was sent.`);
 const output = resolve(arg("output") ?? join(root, ".scratch", "ex-01-cost-check", now().replaceAll(":", "-")));
 await mkdir(output, { recursive: true });

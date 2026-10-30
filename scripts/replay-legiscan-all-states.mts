@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /** Read-only geographic replay: one current publisher dataset and one state's held people at a time. */
 import { readFile,writeFile,mkdir,rm,rename,copyFile } from "node:fs/promises";
 import {createReadStream} from "node:fs";
@@ -331,7 +332,7 @@ async function main(){
       await new Promise<void>((resolveChild,reject)=>{
         const child=spawn(process.execPath,["--max-old-space-size=4096","--experimental-strip-types","--import",join(root,"scripts/register-test-loader.mjs"),fileURLToPath(import.meta.url),
           `--state=${state}`,`--readonly-connection-file=${connectionFile}`,`--cache-dir=${cacheDir}`,`--output-dir=${outputDir}`,`--temp-dir=${temporaryDirectory}`,`--resume-publication=${arg("resume","false")}`,
-          ...(nativeConnectionFile?[`--native-postgres-file=${nativeConnectionFile}`]:[])],{cwd:root,env:process.env,stdio:"inherit"});
+          ...(nativeConnectionFile?[`--native-postgres-file=${nativeConnectionFile}`]:[])],{cwd:root,env:storedKeyEnvironment(),stdio:"inherit"});
         child.on("error",reject);child.on("close",(code,signal)=>code===0?resolveChild():reject(Error(`${state} replay child exited ${code}${signal?` (${signal})`:""}`)));
       }).catch(async error=>{await writeFile(stateFile(state),JSON.stringify({state,status:"FAILED",failure:{stage:"state worker",reason:failure(error)}},null,2));});
     }
@@ -358,7 +359,7 @@ async function runCardWorker(state:string){
   await new Promise<void>((resolveChild,reject)=>{
     const child=spawn(process.execPath,["--max-old-space-size=4096","--experimental-strip-types","--import",join(root,"scripts/register-test-loader.mjs"),fileURLToPath(import.meta.url),
       "--cards=true",`--card-state=${state}`,`--cache-dir=${cacheDir}`,`--output-dir=${outputDir}`,`--temp-dir=${process.env.TMPDIR}`,
-      ...(nativeConnectionFile?[`--native-postgres-file=${nativeConnectionFile}`]:[])],{cwd:root,env:process.env,stdio:"inherit"});
+      ...(nativeConnectionFile?[`--native-postgres-file=${nativeConnectionFile}`]:[])],{cwd:root,env:storedKeyEnvironment(),stdio:"inherit"});
     child.on("error",reject);child.on("close",(code,signal)=>code===0?resolveChild():reject(Error(`${state} card worker exited ${code}${signal?` (${signal})`:""}`)));
   });
 }

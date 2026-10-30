@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import {AsyncLocalStorage} from "node:async_hooks";
 import {spawnSync} from "node:child_process";
@@ -16,7 +18,7 @@ import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import type {Query} from "../lib/facts/publish.ts";
 
 const state=process.argv.find(arg=>arg.startsWith("--state="))?.slice(8);
-const production=process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,test=process.env.SRC_MN_TEST_DATABASE_URL,control=process.env.SRC_MN_TEST_CONTROL_PLANE_DATABASE_URL;
+const production=storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY"),test=process.env.SRC_MN_TEST_DATABASE_URL,control=process.env.SRC_MN_TEST_CONTROL_PLANE_DATABASE_URL;
 if(!production)throw new Error("The readonly production handle is required");
 if(process.argv.includes("--retirement")){
   let bytesRead=0;
@@ -44,7 +46,7 @@ if(process.argv.includes("--retirement")){
 if(!test || !control)throw new Error("Separate reader and control-plane production copies are required");
 assert.notEqual(new URL(test).hostname.replace("-pooler",""),new URL(production).hostname.replace("-pooler",""));
 process.env.SRC_MN_TEST_DATABASE_URL=test;
-process.env.DATABASE_URL=production;process.env.WTP_DB_ROLE="production";process.env.WTP_VITAL_SIGNS_REPORT="1";
+installDiagnosticDatabase(production);process.env.WTP_DB_ROLE="production";process.env.WTP_VITAL_SIGNS_REPORT="1";
 const reportPath=process.env.SRC_MN_CHECK_REPORT??"/tmp/src-mn-ready2-publisher-results.json";
 let productionResponseBytes=0;
 const databaseScope=new AsyncLocalStorage<"reader"|"control">();
@@ -82,7 +84,7 @@ if(!state){
     const from=process.argv.find(arg=>arg.startsWith("--from="))?.slice(7);
     const rows:Record<string,unknown>[]=from?await readFile(reportPath,"utf8").then(text=>JSON.parse(text).rows).catch(error=>{if(error.code==="ENOENT")return [];throw error;}):[];
     for(const source of CAMPAIGN_FINANCE_SOURCES.slice(from?CAMPAIGN_FINANCE_SOURCES.findIndex(source=>source.state===from):0)){
-      const child=spawnSync(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",import.meta.filename,`--state=${source.state}`],{encoding:"utf8",env:process.env});
+      const child=spawnSync(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",import.meta.filename,`--state=${source.state}`],{encoding:"utf8",env:storedKeyEnvironment()});
       if(child.status!==0){const path=`/tmp/src-mn-${source.state}-check-failure.log`;await writeFile(path,child.stderr);throw new Error(`${source.state} worker failed (${child.status}); details saved in ${path}`);}
       rows.push(JSON.parse(child.stdout.trim().split("\n").at(-1)!));
       await writeFile(reportPath,JSON.stringify({at:new Date().toISOString(),readerCopy:identity.branch,controllerProductionBytesRead:productionResponseBytes,controllerTestResponseBytes:traffic.reader.read,controllerTestRequestBytes:traffic.reader.sent,rows},null,2));

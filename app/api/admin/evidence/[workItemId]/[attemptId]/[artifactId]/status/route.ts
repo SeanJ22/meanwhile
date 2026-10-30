@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -17,6 +18,7 @@ const safeId = (id: string): boolean => /^[a-z][a-z0-9-]{1,120}$/.test(id);
 async function get(request: NextRequest, context: { params: Promise<{
   workItemId: string; attemptId: string; artifactId: string;
 }> }): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
     nowSeconds: Math.floor(Date.now() / 1000) });

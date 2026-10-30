@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** SRC-01 EPA proof: the real scheduled refreshEchoNational against the live publisher into isolated stores (production read-only for
  * registrations), then the normal GET /api/open-data reader in every US jurisdiction; run twice to prove the next scheduled run.
  * Usage: NODE_USE_ENV_PROXY=1 node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/src-01-epa-scheduled-runs.mts <work-root> */
@@ -27,12 +29,12 @@ import { compressedReplayVault } from "./lib/open-data-replay-vault.mts";
 const root = process.argv[2]; assert.ok(root, "work root required");
 const output = join(root, "epa-proof.json");
 await mkdir(root, { recursive: true });
-const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY!;
+const connection = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY")!;
 const access = (await neon(connection).query("SELECT current_user::text AS role, has_table_privilege(current_user,'public.civic_data_candidates','INSERT, UPDATE, DELETE') AS can_write"))[0];
 assert.match(String(access.role), /^readonly/); assert.equal(access.can_write, false);
 installOpenDataReplayMap(connection);
 const before = await neon(connection).query("SELECT count(*)::int AS promotions FROM civic_data_promotions WHERE source_id='epa-echo'");
-process.env.DATABASE_URL = connection; process.env.WTP_CIVIC_READ_CACHE_URL = "";
+installDiagnosticDatabase(connection); process.env.WTP_CIVIC_READ_CACHE_URL = "";
 const production = new PostgresRoutineDataStore();
 const joins = new Map<string, GovernmentJoin[]>(), registrations: Record<string, string> = {};
 for (const { usps } of US_JURISDICTIONS) {

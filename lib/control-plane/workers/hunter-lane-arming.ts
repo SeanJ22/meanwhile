@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { readPlanningIntents } from "../repository/pg-store.ts";
 import { ZERO_COST } from "../attempt.ts";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
@@ -33,7 +34,7 @@ export const HUNTER_LANE_REFRESH_MS = 5 * 60_000;
 
 if (HUNTER_LANE_ARMING_MAX_AGE_MS >= SETTLED_HOLD_RETENTION_MS) throw new Error("the lane's reading must be younger than the settled-hold retention");
 
-export function hunterLaneArmingPath(root: string, state: string, env: Readonly<Record<string, string | undefined>> = process.env): string {
+export function hunterLaneArmingPath(root: string, state: string, env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): string {
   const named = env.WTP_HUNTER_LANE_ARMING?.trim();
   if (!/^(?:[a-z]{2}|system)$/.test(state)) throw new Error("A hunter queue needs one state");
   return join(named ? dirname(named) : join(root, ".runtime", "hunter-lane"), state, "arming.json");

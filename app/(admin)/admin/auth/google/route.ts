@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
+import { storedKeyEnvironment, storedKeyValue } from "../../../../../lib/core/keys-values.ts";
 /**
  * The redirect URI is built from `ADMIN_ORIGIN`, never from the request: it must equal the registered URI
  * byte for byte, and a request's own host is what a prober controls. NOT_CONFIGURED is a 303 back to the
@@ -27,13 +29,14 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
 
-  const readiness = googleSignInReadiness(process.env);
-  const clientId = process.env[GOOGLE_CLIENT_ID_VAR];
-  const sessionKey = process.env[ADMIN_SESSION_KEY_VAR];
+  const readiness = googleSignInReadiness(storedKeyEnvironment());
+  const clientId = storedKeyValue(GOOGLE_CLIENT_ID_VAR);
+  const sessionKey = storedKeyValue(ADMIN_SESSION_KEY_VAR);
   if (!readiness.ready || !clientId || !sessionKey) {
     return NextResponse.redirect(new URL(loginPathFor("NOT_CONFIGURED"), ADMIN_ORIGIN), 303);
   }

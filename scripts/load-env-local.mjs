@@ -1,24 +1,19 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { KEY_NAMES } from "../lib/core/keys-model.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * `.env.local` into `process.env`, for the scripts `pnpm` runs without dotenv.
- * An existing value always wins: a CI environment's real values are never
- * overridden by the file.
- */
-export function loadEnvLocal(root = ROOT) {
-  const p = join(root, ".env.local");
-  if (!existsSync(p)) return false;
-  for (const line of readFileSync(p, "utf8").split("\n")) {
-    const m = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
-    if (!m) continue;
-    const [, k, raw] = m;
-    if (process.env[k] === undefined) {
-      process.env[k] = raw.trim().replace(/^["']|["']$/g, "");
-    }
+/** Local configuration and the two database-key bootstrap settings; service keys come from the Keys box. */
+export function loadEnvLocal(root = ROOT, environment = process.env) {
+  const path = join(root, ".env.local");
+  if (!existsSync(path)) return false;
+  for (const line of readFileSync(path, "utf8").split("\n")) {
+    const match = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
+    if (!match || Object.hasOwn(KEY_NAMES, match[1])) continue;
+    const [, name, raw] = match;
+    if (environment[name] === undefined) environment[name] = raw.trim().replace(/^["']|["']$/g, "");
   }
   return true;
 }

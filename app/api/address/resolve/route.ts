@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import {
   zipThisAddressResolvesTo,
@@ -42,6 +43,7 @@ async function contestIdsFor(ocdIds: readonly string[], selection: GeographySele
 }
 
 export const POST = readerRoute("/api/address/resolve", async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   let zip = "";
   let street = "";
   let houseNumber = "";

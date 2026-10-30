@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { execFileSync, spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { resolve } from "node:path";
@@ -17,11 +18,11 @@ if (recoveredInstall?.state === "REFUSED") {
   process.exit(2);
 }
 const child = spawn(process.execPath, [
-  `--env-file=${envFile}`, "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
+  ...(staging ? [`--env-file=${envFile}`] : []), "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
   "scripts/pilot-runner.mts", ...(staging ? ["--staging"] : ["--release-handoff"]), ...process.argv.slice(2),
 ], {
   cwd: root, stdio: "inherit", windowsHide: true,
-  env: { ...process.env, WTP_BILLING_ENV_FILE: envFile, ...(staging ? { WTP_RUNTIME_MODE: "staging" } : {
+  env: { ...storedKeyEnvironment(), ...(staging ? { WTP_RUNTIME_MODE: "staging" } : {
     WTP_RUNTIME_AUTHORITY_REPO: root, WTP_RUNTIME_AUTHORITY_SHA: sha,
     WTP_RUNTIME_AUTHORITY_CAPABILITY: "STANDING_PARENT",
     WTP_RUNTIME_AUTHORITY_PARENT_PID: String(process.pid), WTP_RUNTIME_AUTHORITY_NONCE: randomBytes(32).toString("hex") }) },

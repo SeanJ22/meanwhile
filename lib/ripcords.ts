@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "./core/keys-values.ts";
 /**
  * Named kill switches for features whose legal or policy question is open while the build itself is
  * sound. Every ripcord names its open question and who closes it. Pulling one is a filter over
@@ -122,7 +123,7 @@ for (const name of RIPCORD_NAMES) registerFeature(name.slice("ripcord.".length),
 /** Is this ripcord pulled? Env override first, committed state otherwise. */
 export function ripcordPulled(name: RipcordName): boolean {
   const ripcord = RIPCORDS[name];
-  const env = process.env[ripcord.envVar];
+  const env = storedKeyEnvironment()[ripcord.envVar];
   if (env === "pulled") return true;
   if (env === "live") return false;
   return !readFeature(name.slice("ripcord.".length), !ripcord.pulled);

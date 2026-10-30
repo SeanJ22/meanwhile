@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 /**
  * The feedback inbox: what a reader wrote, and what the owner did about it.
  *
@@ -270,9 +271,9 @@ export const STAGING_OWNER_ACTION =
 /** Open one environment's feedback store, or say precisely why not. `env` is injected for tests. */
 export function openFeedbackStore(
   environment: FeedbackEnvironment,
-  env: Record<string, string | undefined> = process.env,
+  env: Record<string, string | undefined> = storedKeyEnvironment(),
 ): StoreHandle {
-  const url = (env[FEEDBACK_STORE_VAR[environment]] ?? "").trim();
+  const url = (storedKeyValue(FEEDBACK_STORE_VAR[environment], env) ?? "").trim();
   if (url === "") {
     return {
       ok: false,
@@ -295,7 +296,7 @@ export function openFeedbackStore(
      * strings can name one endpoint. Uses `lib/ops/staging-isolation.ts`; an
      * identity that could not be established is refused (null is not false).
      */
-    const live = (env[PRODUCTION_FEEDBACK_URL_VAR] ?? "").trim();
+    const live = (storedKeyValue(PRODUCTION_FEEDBACK_URL_VAR, env) ?? "").trim();
     const bypass = {
       ok: false as const,
       reason: "SAME_STORE_AS_LIVE" as const,

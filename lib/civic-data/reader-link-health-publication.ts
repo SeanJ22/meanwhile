@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { getStore } from "@netlify/blobs";
 import { READER_ARTIFACT_STORE_NAME } from "../meetings/edge-store.ts";
 import { purgeReaderCacheTags } from "../reader/cache.ts";
@@ -11,7 +12,7 @@ export interface LinkHealthEdgeStore {
 }
 export function linkHealthEdgeStore(): LinkHealthEdgeStore {
   const siteID = process.env.NETLIFY_SITE_ID || process.env.NETLIFY_BLOBS_SITE_ID;
-  const token = process.env.NETLIFY_API_TOKEN || process.env.NETLIFY_BLOBS_TOKEN;
+  const token = storedKeyValue("NETLIFY_API_TOKEN") || storedKeyValue("NETLIFY_BLOBS_TOKEN");
   const store = getStore({ name: READER_ARTIFACT_STORE_NAME, consistency: "strong", ...(siteID && token ? { siteID, token } : {}) });
   return {
     async read() {

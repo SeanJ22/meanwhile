@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 /** Sequential fresh-process HTTP checks using the existing production readonly role.
  * NODE_USE_ENV_PROXY=1 node --env-file=/tmp/rs03-production.env --experimental-strip-types
  *   scripts/rs-03-representation-check.mts
@@ -10,7 +11,7 @@ import { neon, neonConfig } from "../lib/db/client.ts";
 import labels from "../data/reference/us-jurisdiction-labels.json" with { type: "json" };
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 
-const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+const connection = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
 if (!connection) throw new Error("The existing production readonly connection is required");
 const target = new URL(connection);
 assert.equal(target.username, "readonly");
@@ -46,7 +47,7 @@ const save = () => writeFile(`${output}/timings.json`,JSON.stringify({buildId,pr
 for (const state of selected) for (const [kind,ocdId] of [["state",state.root],["county",state.county!]] as const) {
   const launched=performance.now();
   const child=spawn(process.execPath,["node_modules/next/dist/bin/next","start","-p","3304","-H","127.0.0.1"],{
-    env:{...process.env,DATABASE_URL:connection,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"],
+    env:{...storedKeyEnvironment(),DATABASE_URL:connection,WTP_DB_ROLE:"production",WTP_VITAL_SIGNS_REPORT:"1",NODE_ENV:"production"},stdio:["ignore","pipe","pipe"],
   });
   let log=""; child.stdout.on("data",data=>{log+=data;}); child.stderr.on("data",data=>{log+=data;});
   try {

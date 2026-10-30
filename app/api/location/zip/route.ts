@@ -1,9 +1,11 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { rejectUnknown } from "@/lib/api/params";
 import { resolveZipLocation } from "@/lib/place-map/locations";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request): Promise<Response> {
+  await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams;
   const unknown = rejectUnknown(params, ["zip"]);
   const zips = params.getAll("zip");

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
@@ -81,7 +82,7 @@ export interface KnownReleaseOptions {
   readonly validate?: (bytes: Uint8Array, release: KnownRelease) => void | Promise<void>;
 }
 function requestedSourceCheckAfter(): string | undefined {
-  const value = process.env[SOURCE_CHECK_AFTER_ENV];
+  const value = storedKeyEnvironment()[SOURCE_CHECK_AFTER_ENV];
   return value && Number.isFinite(Date.parse(value)) ? value : undefined;
 }
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");

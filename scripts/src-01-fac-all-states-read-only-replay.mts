@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /** All FAC jurisdictions: production SELECTs and publisher GETs; promotion and reader artifacts stay local. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -252,7 +253,7 @@ if (state) {
     if (!reusable) {
       const args = [...process.execArgv, fileURLToPath(import.meta.url), `--state=${postal}`, `--at=${baseAt}`, `--cache=${cacheRoot}`, `--connection-file=${connectionFile}`, ...(savedOnly ? ["--saved"] : [])];
       await new Promise<void>(resolveChild => {
-        const child = spawn(process.execPath, args, { cwd: process.cwd(), env: process.env, stdio: ["ignore", "inherit", "inherit"] });
+        const child = spawn(process.execPath, args, { cwd: process.cwd(), env: storedKeyEnvironment(), stdio: ["ignore", "inherit", "inherit"] });
         child.once("exit", () => resolveChild());
       });
     }

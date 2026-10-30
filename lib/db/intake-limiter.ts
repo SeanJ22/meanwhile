@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 
 import { lt, sql } from "drizzle-orm";
@@ -48,7 +49,7 @@ export async function noteSubmission(
   now: Date = new Date(),
   space: LimiterSpace = "reactions",
 ): Promise<IntakeCounters | null> {
-  if (!process.env.DATABASE_URL) return null;
+  if (!storedKeyValue("DATABASE_URL")) return null;
 
   // Outside the try: a refused write is a misconfiguration, not LIMITER_UNAVAILABLE.
   assertWriteAllowed("an intake limiter counter");
@@ -94,7 +95,7 @@ export async function noteSubmission(
 export async function purgeExpiredLimiterState(
   now: Date = new Date(),
 ): Promise<number> {
-  if (!process.env.DATABASE_URL) return 0;
+  if (!storedKeyValue("DATABASE_URL")) return 0;
   assertWriteAllowed("an intake limiter purge");
   const cutoff = new Date(now.getTime() - 48 * 3600 * 1000).toISOString();
   const deleted = await getDb()

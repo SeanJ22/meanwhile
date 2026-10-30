@@ -1,11 +1,14 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../../lib/core/keys-values.ts";
 import { getStore } from "@netlify/blobs";
 
 export async function GET(_request: Request, context: { params: Promise<{ path: string[] }> }): Promise<Response> {
+  await loadWebsiteSavedKeys();
   const { path } = await context.params;
   if (!path || !["candidates", "officials"].includes(path[0]) || path.some(part => !/^[a-zA-Z0-9._-]+$/.test(part) || part === "." || part === "..")) {
     return new Response(null, { status: 404 });
   }
-  const siteID = process.env.WTP_BLOBS_SITE_ID, token = process.env.WTP_BLOBS_TOKEN;
+  const siteID = process.env.WTP_BLOBS_SITE_ID, token = storedKeyValue("WTP_BLOBS_TOKEN");
   // Hosted functions use Netlify's supplied context; the Linux host passes secrets.
   let store;
   try { store = getStore({ name: "meanwhile-portraits", ...(siteID && token ? { siteID, token } : {}) }); }

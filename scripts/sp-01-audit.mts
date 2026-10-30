@@ -1,3 +1,5 @@
+import { installDiagnosticDatabase } from "../lib/core/keys-local-fixture.ts";
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** Read-only production replay. See docs/sp-01/audit.md for commands and counting rules. */
 import assert from "node:assert/strict";
 import {mkdir, readFile, writeFile} from "node:fs/promises";
@@ -39,7 +41,7 @@ if(mode==="report"){
  console.log(JSON.stringify({totals,states:states.length,nextDayEqual:states.every(s=>s.nextDayEqual),before:audit.before,after:audit.after}));
  process.exit(0);
 }
-const connection=process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+const connection=storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
 if(!connection)throw Error("WTP_PRODUCTION_DATABASE_URL_READONLY required");
 const url=new URL(connection);assert.equal(url.username,"readonly");assert.match(url.hostname,/^ep-dry-river-axwtolzc(?:-pooler)?\./);
 const db=neon(connection);
@@ -48,7 +50,7 @@ const query:ReadOnlyQuery=async batch=>{statements+=batch.length;return db.trans
 const rows=async(text:string,params:readonly unknown[]=[])=> (await query([{text,params}]))[0];
 const [identity]=await rows("SELECT current_user,current_setting('transaction_read_only') read_only,now() at");
 assert.equal(identity.current_user,"readonly");assert.equal(identity.read_only,"on");
-delete process.env.DATABASE_URL;delete process.env.WTP_ASSET_STORE;
+installDiagnosticDatabase(undefined);delete process.env.WTP_ASSET_STORE;
 const parts=new CivicPayloadParts({existing:async()=>[],write:async()=>{throw Error("Replay cannot write");},
  read:async hashes=>await rows("SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])",[hashes])as {hash:string;payload:unknown}[]});
 

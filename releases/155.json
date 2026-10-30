@@ -7,7 +7,28 @@
   "steps": [
     "CP-01"
   ],
-  "ci": "preparing",
+  "ci": "running",
   "authorization": "Sean: Authorize one CP-01 release; protected release before READY, then a complete LIVE hour below 10 MB.",
-  "at": "2026-10-30T04:54:04.241020+00:00"
+  "at": "2026-10-30T04:54:04.241020+00:00",
+  "head_sha": "2dba6239985e9e5622cfd956971ace3aed3d08c7",
+  "pr": {
+    "number": 872,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/872"
+  },
+  "lanes": [
+    {
+      "lane": "cp-01",
+      "steps": [
+        "CP-01"
+      ],
+      "ready_sha": null,
+      "candidate_sha": "a7b5d676b75c170d3d71fbf72ac1d2d298829a6d",
+      "result_sha": "2dba6239985e9e5622cfd956971ace3aed3d08c7"
+    }
+  ],
+  "lines": {
+    "before": 690151,
+    "after": 690145
+  },
+  "updated_at": "2026-10-30T05:00:04.471163+00:00"
 }

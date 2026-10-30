@@ -2404,6 +2404,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
           const stateReport = await step(`${state} campaign-site chain`, () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
           repos,
+          list: workList(controlPlaneQuery(), { owner: "campaign-sites", leaseMs: 300_000 }),
           subjects,
 
           linkedCandidacies: linked,

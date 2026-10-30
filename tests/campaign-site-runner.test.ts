@@ -1,3 +1,5 @@
+import { PGlite } from "@electric-sql/pglite";
+import { LEAD_DDL, WORK_DDL, workList, type WorkList } from "../lib/core/work.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -341,12 +343,15 @@ function served() {
 
 interface Plane {
   readonly repos: ControlPlaneRepositories;
+  readonly list: WorkList;
   readonly vaultRoot: string;
   readonly requests: string[];
 }
 
 async function plane(t: { after: (fn: () => void) => void }): Promise<Plane> {
-  const repos = createMemoryRepositories();
+  const repos = createMemoryRepositories(), pg = new PGlite();
+  for (const ddl of [...WORK_DDL, ...LEAD_DDL]) await pg.exec(ddl);
+  const list = workList(async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows, { owner: "campaign-sites", leaseMs: 300_000 });
   const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-campaign-site-runner-"));
   t.after(() => rmSync(vaultRoot, { recursive: true, force: true, maxRetries: 3 }));
   const body = fixture("marginalia-tang-williams-lily.json");
@@ -370,7 +375,7 @@ async function plane(t: { after: (fn: () => void) => void }): Promise<Plane> {
     outcome: "ROUTE_CANDIDATE", routeId: "kapner-news", canonicalUrl: "https://patch.com/new-jersey/mendham/kapner-runs", artifactIds: [], recordedAt: "2026-09-21T02:24:00.000Z", summary: "a news story" });
   await appendTransition(repos, kapner, ctx, T0);
   await appendTransition(repos, news, ctx, T0);
-  return { repos, vaultRoot, requests: [] };
+  return { repos, list, vaultRoot, requests: [] };
 }
 
 async function cycle(p: Plane, now: string, extra: Partial<Parameters<typeof runCampaignSiteCycle>[0]> = {}, pages: Record<string, { status: number; body: string }> = served()) {
@@ -379,7 +384,7 @@ async function cycle(p: Plane, now: string, extra: Partial<Parameters<typeof run
   const vault = await indexVault(p.vaultRoot);
   const held = await heldMarginaliaAnswers(p.repos, p.vaultRoot, now, extra.subjects ?? committedSubjects());
   const report = await runCampaignSiteCycle({
-    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, now,
+    repos: p.repos, list: p.list, subjects: committedSubjects(), marginalia: held.responses, now,
     clock: () => (ms += 5), sleep: async (wait) => { ms += wait; },
     open: async (request) => { p.requests.push(request.url); return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
@@ -860,7 +865,7 @@ async function createSlow(t: { after: (fn: () => void) => void }, pages: Record<
   const runtime = servedRuntime(pages, T1);
   const vault = await indexVault(p.vaultRoot);
   const report = await runCampaignSiteCycle({
-    repos: p.repos, subjects: committedSubjects(), marginalia: [], now: T1,
+    repos: p.repos, list: p.list, subjects: committedSubjects(), marginalia: [], now: T1,
     clock: () => ms, sleep: async (wait) => { ms += wait; },
     open: async (request) => { requests += 1; ms += 61_000; return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,
@@ -922,7 +927,7 @@ test("held independent evidence advances before new leads and slow backlog reads
   const held = await heldMarginaliaAnswers(p.repos, p.vaultRoot, T2, committedSubjects());
   const requests: string[] = [];
   const report = await runCampaignSiteCycle({
-    repos: p.repos, subjects: committedSubjects(), marginalia: held.responses, now: T2,
+    repos: p.repos, list: p.list, subjects: committedSubjects(), marginalia: held.responses, now: T2,
     clock: () => ms, sleep: async (wait) => { ms += wait; },
     open: async (request) => { requests.push(request.url); ms += 5_000; return runtime.get(request); },
     vaultRoot: p.vaultRoot, heldVault: vault, methodVersion: 1,

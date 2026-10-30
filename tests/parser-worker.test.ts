@@ -149,7 +149,7 @@ test("every installed parser is found by its folder, and a link's kind of websit
 
 test("a person on a page is the one person the matcher finds, in the seat the page gives them, and is not made twice", async t => {
   const roster = (name: string) => `<html><body><h1>Board of Supervisors</h1><p>${name}, Chair</p></body></html>`;
-  const people: PlatformParser = { platform: "legistar-insite", parse: (page, lead) => {
+  const people: PlatformParser = { platform: "legistar-insite", parse: page => {
     const name = /<p>(.*), Chair<\/p>/.exec(page.raw)![1]!, quote = `${name}, Chair`, who = { name, ids: [["legistar:pima", "77"] as const] };
     return { links: [], facts: [
       { subjectHint: null, person: who, on: "body", field: "member:{person}", fieldKind: "officeholder", value: { name, office: "Chair" }, valueText: name, quote },

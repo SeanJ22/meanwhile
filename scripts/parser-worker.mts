@@ -10,7 +10,7 @@ import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { loadParsers } from "../lib/sources/parser-hook.ts";
-import { moveBoxLinks } from "../lib/sources/box-links.ts";
+import { moveBoxLinks, workStates } from "../lib/sources/box-links.ts";
 import { LEAD_LEASE_MS, runParserWorkers } from "../lib/sources/parser-worker.ts";
 
 prepareProductionCivicDataWrite();
@@ -48,7 +48,7 @@ try {
       // Links the hunters found move from the Box to the work list a few hundred at a time, so the move never adds to the hour's reads.
       if (Date.now() - movedAt >= 30_000) {
         movedAt = Date.now();
-        const moved = await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date() }).catch(error => { console.error(error); return 0; });
+        const moved = await moveBoxLinks({ box: repos.boxFindings, list, states: workStates(query), now: () => new Date() }).catch(error => { console.error(error); return 0; });
         if (moved) console.log(`Page readers: ${moved} links moved from the Box to the work list`);
       }
       const stats = await runParserWorkers({ concurrency: 4, maxClaims: 100, stopRequested, log: console.error, deps: {

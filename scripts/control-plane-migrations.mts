@@ -25,6 +25,7 @@ import { installKeys, keysMigrationDefinition } from "../lib/control-plane/repos
 import { WORK_MIGRATION_DECLARATIONS, contractWork, expandWork, oneWorkListContractDefinition, oneWorkListDefinition } from "../lib/control-plane/repository/migrations/SPN-01B.ts";
 import { addChargeWorkKind, workKindMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-cost.ts";
 import { addLeadClaimIndex, leadClaimMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01F.ts";
+import { addOrderHuntIndex, orderHuntMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B5.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
@@ -72,6 +73,8 @@ const MIGRATIONS = [
     definition: workKindMigrationDefinition, apply: addChargeWorkKind },
   { id: "SPN-01F_expand", source: "lib/control-plane/repository/migrations/SPN-01F.ts", declarations: ["lib/core/work.ts"],
     definition: leadClaimMigrationDefinition, apply: addLeadClaimIndex },
+  { id: "SPN-01B5_expand", source: "lib/control-plane/repository/migrations/SPN-01B5.ts", declarations: ["lib/core/work.ts"],
+    definition: orderHuntMigrationDefinition, apply: addOrderHuntIndex },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

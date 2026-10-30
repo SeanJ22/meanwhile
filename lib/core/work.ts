@@ -132,7 +132,6 @@ export const WORK_DDL = [
   `CREATE UNIQUE INDEX IF NOT EXISTS work_series_live ON work (series) WHERE series IS NOT NULL AND status IN ('waiting','taken')`,
   `CREATE INDEX IF NOT EXISTS work_repeat_due ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NOT NULL`,
   `CREATE INDEX IF NOT EXISTS work_done_old ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NULL`,
-  `CREATE INDEX IF NOT EXISTS work_order_hunt ON work (state) WHERE kind = 'hunt' AND (origin ? 'marks' OR origin ? 'ended') AND (status IN ('waiting','taken') OR repeat_ms IS NOT NULL)`,
   `CREATE INDEX IF NOT EXISTS work_reader_live ON work (priority DESC, received_at) WHERE tier = 'reader' AND status IN ('waiting','taken')`,
   `CREATE INDEX IF NOT EXISTS work_dead_end ON work (dead_since, id) WHERE dead_since IS NOT NULL`,
   `CREATE INDEX IF NOT EXISTS work_reopened ON work ((reopened->>'at') DESC) WHERE reopened IS NOT NULL`,
@@ -197,6 +196,11 @@ export const WORK_DDL = [
     FOR EACH STATEMENT EXECUTE FUNCTION work_waiting_count()`,
   `CREATE OR REPLACE TRIGGER work_waiting_delete AFTER DELETE ON work REFERENCING OLD TABLE AS old_rows
     FOR EACH STATEMENT EXECUTE FUNCTION work_waiting_count()`,
+] as const;
+
+/** The hunts Sean's money points at are found by state without walking the rest of the list. Applied by bootstrap and by the SPN-01B5 migration. */
+export const ORDER_HUNT_DDL = [
+  `CREATE INDEX IF NOT EXISTS work_order_hunt ON work (state) WHERE kind = 'hunt' AND (origin ? 'marks' OR origin ? 'ended') AND (status IN ('waiting','taken') OR repeat_ms IS NOT NULL)`,
 ] as const;
 
 /** Links wait for the reader of their kind of website: one index serves each kind's claim in tier order, newest first. Applied by bootstrap and by the SPN-01F migration. */

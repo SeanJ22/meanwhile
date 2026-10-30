@@ -8,7 +8,7 @@ import { Card, Empty, Loading } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
-interface Reading { readonly at: string; readonly changedAt: string | null; readonly rows: readonly Waiting[] }
+interface Reading { readonly at: string; readonly changedAt: string | null; readonly oldestLead: string | null; readonly rows: readonly Waiting[] }
 
 const KIND_WORDS: Readonly<Record<WorkKind, string>> = {
   fact: "Facts to publish", lead: "Links to read", hunt: "Blanks to hunt", recheck: "Sources to re-check", ask: "Reader questions",
@@ -17,6 +17,12 @@ const KIND_WORDS: Readonly<Record<WorkKind, string>> = {
 const TIER_WORDS: Readonly<Record<WorkTier, string>> = {
   clock: "On the clock", order: "Sean's orders", reader: "Readers asked", coverage: "Least-complete places",
 };
+
+/** How long ago, in the largest whole unit. */
+function waited(since: string, at: string): string {
+  const hours = Math.max(0, Math.floor((Date.parse(at) - Date.parse(since)) / 3_600_000));
+  return hours >= 48 ? `${Math.floor(hours / 24)} days` : hours >= 1 ? `${hours} hour${hours === 1 ? "" : "s"}` : "under an hour";
+}
 
 export function WorkWaiting() {
   const { reading, reload, status } = useReading<Reading>("/api/admin/v6/work-waiting");
@@ -38,6 +44,7 @@ export function WorkWaiting() {
           {WORK_TIERS.map(tier => <td key={tier} className={s.num}>{count(waiting(kind, tier))}</td>)}
         </tr>)}</tbody>
       </table></div>}
+      {reading.data.oldestLead && <p className={s.meta}>The oldest link to read has waited {waited(reading.data.oldestLead, reading.data.at)}; newer links are read first.</p>}
       <p className={s.meta}>Read {mst(reading.data.at)}{reading.data.changedAt ? ` · last changed ${mst(reading.data.changedAt)}` : ""}</p>
     </>}
   </Card>;

@@ -26,6 +26,7 @@ import { contractOwnerLive, expandOwnerLive, ownerLiveContractMigrationDefinitio
 import { WORK_MIGRATION_DECLARATIONS, contractWork, expandWork, oneWorkListContractDefinition, oneWorkListDefinition } from "../lib/control-plane/repository/migrations/SPN-01B.ts";
 import { addChargeWorkKind, workKindMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-cost.ts";
 import { addWorkRun, workRunMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01B-run.ts";
+import { addLeadClaimIndex, leadClaimMigrationDefinition } from "../lib/control-plane/repository/migrations/SPN-01F.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 function withProductionReader(migrate: (control: Sql, reader: Sql) => Promise<string>) {
@@ -74,6 +75,8 @@ const MIGRATIONS = [
   { id: "SPN-01B_cost_expand", source: "lib/control-plane/repository/migrations/SPN-01B-cost.ts", declarations: ["lib/control-plane/repository/model-charges.ts"],
     definition: workKindMigrationDefinition, apply: addChargeWorkKind },
   { id: "SPN-01B_run_expand", source: "lib/control-plane/repository/migrations/SPN-01B-run.ts", declarations: ["lib/core/work.ts"], definition: workRunMigrationDefinition, apply: addWorkRun },
+  { id: "SPN-01F_expand", source: "lib/control-plane/repository/migrations/SPN-01F.ts", declarations: ["lib/core/work.ts"],
+    definition: leadClaimMigrationDefinition, apply: addLeadClaimIndex },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

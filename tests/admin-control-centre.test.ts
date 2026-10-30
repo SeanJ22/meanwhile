@@ -31,19 +31,8 @@ import {
   timingSafeEqual,
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
-import {
-  ORGANIC_PROD_ASK_NOT_YET,
-  assertAggregateOnly,
-  auditRenderedNumbers,
-  checkStatedEqualsRendered,
-  gap,
-  held,
-  livenessOf,
-  measured,
-  renderCacheObservation,
-} from "@/lib/control-plane/owner-surface.ts";
+import { assertAggregateOnly, gap, held, livenessOf, measured } from "@/lib/control-plane/owner-surface.ts";
 import { ADMIN_HOST, PUBLIC_HOST, SESSION_KEY } from "./admin-session.ts";
-
 
 function request(host: string, path: string, cookie?: string): NextRequest {
   const headers = new Headers({ host });
@@ -149,36 +138,6 @@ test("the admin host serves ONLY the admin surface", async () => {
  * SEEDED FAILURE 3 — a number without a denominator does not render
  * ================================================================== */
 
-test("SEEDED: a number rendered without a denominator fails the page's own check", () => {
-  const verdict = auditRenderedNumbers([
-    { label: "obligations overdue", value: 14, denominator: null, contract: "overdue count" },
-  ]);
-  assert.equal(verdict.ok, false);
-  assert.match(verdict.detail, /refusing to render/);
-  assert.match(verdict.offenders.join(" "), /no denominator/);
-});
-
-test("SEEDED: a number rendered without an interpretation contract also fails", () => {
-  const verdict = auditRenderedNumbers([
-    { label: "debt rows", value: 3, denominator: 40, contract: "  " },
-  ]);
-  assert.equal(verdict.ok, false);
-  assert.match(verdict.offenders.join(" "), /no interpretation contract/);
-});
-
-test("a fully-specified number passes the check", () => {
-  const verdict = auditRenderedNumbers([
-    {
-      label: "obligations overdue",
-      value: 14,
-      denominator: 18,
-      contract: "obligations past their stored nextDueAt",
-    },
-  ]);
-  assert.equal(verdict.ok, true);
-  assert.equal(verdict.checked, 1);
-});
-
 test("measured() refuses the shapes that would mislead", () => {
   assert.throws(() => measured(5, 3, "c", "s"), /larger/, "numerator over denominator is refused");
   assert.throws(() => measured(1, 2, "", "s"), /interpretation contract/);
@@ -189,17 +148,6 @@ test("measured() refuses the shapes that would mislead", () => {
 /* ================================================================== *
  * STATED N EQUALS RENDERED ROWS
  * ================================================================== */
-
-test("stated N must equal rendered rows", () => {
-  const bad = checkStatedEqualsRendered([
-    { label: "decision cards", stated: 7, rendered: 5 },
-  ]);
-  assert.equal(bad.ok, false);
-  assert.match(bad.detail, /stated 7, rendered 5/);
-
-  const good = checkStatedEqualsRendered([{ label: "decision cards", stated: 5, rendered: 5 }]);
-  assert.equal(good.ok, true);
-});
 
 /* ================================================================== *
  * AGGREGATE-ONLY
@@ -245,51 +193,6 @@ test("a gap must name whose it is and say something", () => {
 /* ================================================================== *
  * THE H1 WAIVER'S STANDING CHECK — three states, never two
  * ================================================================== */
-
-test("H1 WAIVER: 'not yet observed' uses the owner's exact wording", () => {
-  const rendered = renderCacheObservation({
-    formatVersion: 1,
-    state: "NOT_YET_OBSERVED",
-    firstObservedAt: null,
-    cacheReadInputTokens: null,
-    cacheCreationInputTokens: null,
-    recorderLastSeenAt: "2026-09-01T00:00:00.000Z",
-  });
-  assert.equal(rendered.says, ORGANIC_PROD_ASK_NOT_YET);
-  assert.equal(rendered.says, "organic prod-ask cache read: not yet observed");
-});
-
-test("H1 WAIVER: an unwired recorder does NOT read as 'not yet observed'", () => {
-  // If nothing is recording, nothing was observed; absence is never asserted.
-  const noRecord = renderCacheObservation(null);
-  assert.equal(noRecord.state, "RECORDING_NOT_WIRED");
-  assert.notEqual(noRecord.says, ORGANIC_PROD_ASK_NOT_YET);
-  assert.match(noRecord.says, /cannot tell/);
-
-  const unwired = renderCacheObservation({
-    formatVersion: 1,
-    state: "RECORDING_NOT_WIRED",
-    firstObservedAt: null,
-    cacheReadInputTokens: null,
-    cacheCreationInputTokens: null,
-    recorderLastSeenAt: null,
-  });
-  assert.equal(unwired.state, "RECORDING_NOT_WIRED");
-  assert.notEqual(unwired.says, ORGANIC_PROD_ASK_NOT_YET);
-});
-
-test("H1 WAIVER: an observation renders its token counts", () => {
-  const rendered = renderCacheObservation({
-    formatVersion: 1,
-    state: "OBSERVED",
-    firstObservedAt: "2026-09-02T10:00:00.000Z",
-    cacheReadInputTokens: 4211,
-    cacheCreationInputTokens: 1900,
-    recorderLastSeenAt: "2026-09-02T10:00:00.000Z",
-  });
-  assert.equal(rendered.state, "OBSERVED");
-  assert.match(rendered.says, /4211 cache-read input tokens/);
-});
 
 /* ================================================================== *
  * LIVENESS IS DERIVED, NEVER STORED

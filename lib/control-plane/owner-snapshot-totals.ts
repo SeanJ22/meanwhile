@@ -1119,7 +1119,6 @@ export class OwnerSnapshotFold {
       const added=unique([...owners,...produced.keys()]).filter(id=>!ids.has(id));
       if(added.length){for(const id of added)ids.add(id);continue;}
       for(const[id,entry]of produced)await this.#load(stateOfEntry(id,entry));
-      for(const item of src.workItems)this.#noteWorkItem(item);
       for(const id of ids)this.#dropGroup(id);
       const heads=new Map(src.heads.map(head=>[head.id,head]));
       for(const id of ids){

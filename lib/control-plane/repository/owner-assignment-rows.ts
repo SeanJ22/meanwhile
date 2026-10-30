@@ -22,7 +22,7 @@ export interface OwnerStateWrite {
 
 export interface OwnerAssignmentRows {
   read(ids: readonly string[]): Promise<readonly OwnerAssignmentRow[]>;
-  find(input: { readonly members?: readonly string[]; readonly clauses?: readonly string[]; readonly dueAt?: string }): Promise<readonly OwnerAssignmentRow[]>;
+  find(input: { readonly members?: readonly string[]; readonly clauses?: readonly string[]; readonly dueAt?: string }): Promise<readonly string[]>;
   save(rows: readonly OwnerAssignmentRow[], removed: readonly string[], states?: readonly OwnerStateWrite[]): Promise<void>;
   scopeMembers(identities: readonly { readonly key: string; readonly ref: string }[]): Promise<ReadonlyMap<string, readonly string[]>>;
   publications(readbackOnly?: boolean): Promise<readonly WorkItem[]>;
@@ -65,7 +65,7 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
       if (input.members?.length) predicates.push(`members ?| $${params.push(input.members)}::text[]`);
       if (input.clauses?.length) predicates.push(`clause=ANY($${params.push(input.clauses)}::text[])`);
       if (input.dueAt) predicates.push(`next_at <= $${params.push(input.dueAt)}`);
-      return predicates.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE ${predicates.join(" OR ")} ORDER BY id`, params) : [];
+      return predicates.length ? (await sql.query(`SELECT id FROM cp_owner_assignment_rows WHERE ${predicates.join(" OR ")} ORDER BY id`, params) as { id: string }[]).map(row => row.id) : [];
     },
     async save(next, removed, states = []) {
       const write = async (connection: Sql) => {

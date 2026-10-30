@@ -16,7 +16,7 @@ import type { Entity } from "../core/shapes.ts";
 import { enqueueReaderPlaces } from "../reader/cache.ts";
 import { registeredPlaceIds } from "../place-map/build.ts";
 import { bodyNameKey, publishedBodyLabel } from "../civic-data/published-body-name.ts";
-import { ID_ALIAS, identityKeys, isSeatNameScheme, personId, saveAlias, strongestKeys, survivingIds } from "../core/ids.ts";
+import { ID_ALIAS, identityKeys, isSeatNameScheme, personId, strongestKeys, survivingIds } from "../core/ids.ts";
 import { matchPerson, type PersonEvidence } from "../identity/match-person.ts";
 import { foldAccents, parsePersonName } from "../identity/name-parts.ts";
 import { sendToDetective } from "./identity-blank.ts";
@@ -263,6 +263,12 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
     AND (root.entity_id=ANY($1::text[]) OR e.parent_id=ANY($2::text[])) AND root.place_id ~ '${BARE_ROOT}'
     AND EXISTS (SELECT 1 FROM entity_place local WHERE local.entity_id=root.entity_id AND local.place_id !~ '${BARE_ROOT}')`,
   [batch.entities.map(e => e.id),governments]);
+}
+
+/** Saves `alias` as another name for `survivor`, so a reader link, a stored reaction or a source that still says `alias` finds the survivor. */
+async function saveAlias(query: Query, survivor: string, alias: string): Promise<void> {
+  await query(`INSERT INTO entity_external_id (entity_id, scheme, value) VALUES ($1, '${ID_ALIAS}', $2)
+    ON CONFLICT (scheme, value) DO UPDATE SET entity_id = EXCLUDED.entity_id`, [survivor, alias]);
 }
 
 /** An id that was merged into another stays an alias, so a later load cannot recreate it; a person already held under the same Open States id is not added a second time. */

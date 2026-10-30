@@ -107,10 +107,3 @@ export async function survivingIds(query: Query, ids: readonly string[]): Promis
   const rows = await query(`SELECT value, entity_id FROM entity_external_id WHERE scheme = '${ID_ALIAS}' AND value = ANY($1::text[])`, [ids]);
   return new Map(rows.map(row => [String(row.value), String(row.entity_id)]));
 }
-
-/** Saves `alias` as another name for `survivor`, so a reader link, a stored reaction or a source that still says `alias` finds the survivor. */
-export async function saveAlias(query: Query, survivor: string, alias: string): Promise<void> {
-  if (survivor === alias) return;
-  await query(`INSERT INTO entity_external_id (entity_id, scheme, value) VALUES ($1, '${ID_ALIAS}', $2)
-    ON CONFLICT (scheme, value) DO UPDATE SET entity_id = EXCLUDED.entity_id`, [survivor, alias]);
-}

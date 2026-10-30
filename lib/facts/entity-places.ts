@@ -6,9 +6,9 @@ export interface EntityPlace extends Pick<SharedEntityPlace,"placeId" | "boundar
   readonly basis: "SERVICE_AREA" | "HOST_COUNTY";
 }
 
-/** File the same durable entity everywhere it serves. A county filing without a shape remains explicit. */
+/** File the same durable entity everywhere it serves. A county filing without a shape remains explicit. `removed` are the places it no longer serves. */
 export async function fileEntityPlaces(query: Query, entityId: string, places: readonly EntityPlace[], parentId?: string | null,
-  changedEntities:readonly string[]=[]): Promise<boolean> {
+  changedEntities:readonly string[]=[]): Promise<{ readonly moved: boolean; readonly removed: readonly string[] }> {
   const inserted=await query(`WITH RECURSIVE ancestors AS (
     SELECT id,kind,parent_id,ARRAY[id] AS path FROM entity WHERE id=$5
     UNION ALL SELECT e.id,e.kind,e.parent_id,a.path || e.id FROM entity e JOIN ancestors a ON e.id=a.parent_id
@@ -48,7 +48,7 @@ export async function fileEntityPlaces(query: Query, entityId: string, places: r
     AND EXISTS (SELECT 1 FROM entity_place local WHERE local.entity_id=root.entity_id
       AND local.place_id ~ '^ocd-division/country:us/(state|district|territory):[^/]+/') RETURNING place_id`, [entityId]);
   const moved=inserted.length+unknown.length+country.length+root.length>0;
-  if(moved || changedEntities.length)await enqueueReaderPlaces({entities:[...new Set([entityId,...changedEntities])],
-    places:[...unknown,...country,...root].map(row=>String(row.place_id))},query);
-  return moved;
+  const removed=[...unknown,...country,...root].map(row=>String(row.place_id));
+  if(moved || changedEntities.length)await enqueueReaderPlaces({entities:[...new Set([entityId,...changedEntities])],places:removed},query);
+  return {moved,removed};
 }

@@ -1,7 +1,6 @@
 /** COMPLETE only when every member passes `evaluateCompletion`; an assignment with no members, or a member not read, is never complete. */
-import { evaluateCompletion, type CompletionSnapshot, type RefusalCode } from "./completion.ts";
+import { type RefusalCode } from "./completion.ts";
 import type { AssignmentMembership as SendMembership } from "./expansion/assignment-budget.ts";
-import type { WorkItemState } from "./work-item.ts";
 import { instructionReceiptKey } from "./scheduler/obligation.ts";
 import type { PlaceOwedItem } from "../coverage/place-owed.ts";
 
@@ -56,62 +55,6 @@ export function memberObligations<T extends MemberCandidate>(obligations: readon
   return obligations
     .filter((o) => (o.assignments ?? []).some((m) => m.assignmentKey === assignmentKey))
     .sort((a, b) => a.id.localeCompare(b.id));
-}
-
-export function evaluateAssignmentCompletion(input: {
-  readonly assignmentKey: string;
-  readonly obligations: readonly MemberCandidate[];
-  readonly snapshotFor: (obligationId: string) => CompletionSnapshot | null;
-  readonly proposedState?: WorkItemState;
-}): AssignmentCompletion {
-  const members = memberObligations(input.obligations, input.assignmentKey);
-  if (members.length === 0) {
-    return {
-      kind: "NO_MEMBERS",
-      assignmentKey: input.assignmentKey,
-      says: "No obligation names this assignment, so nothing can be shown finished. An empty set of work is not evidence that the work is done.",
-    };
-  }
-  const proposed = input.proposedState ?? "VERIFIED_COMPLETE";
-  const exceptions: CompletionException[] = [];
-  const satisfied: { obligationId: string; clauses: readonly string[] }[] = [];
-  for (const member of members) {
-    const snapshot = input.snapshotFor(member.id);
-    if (snapshot === null) {
-      exceptions.push({
-        obligationId: member.id,
-        kind: "UNSETTLED",
-        codes: [],
-        says: "No work item was read for this obligation, so whether it is finished cannot be evaluated.",
-      });
-      continue;
-    }
-    const verdict = evaluateCompletion(snapshot, proposed);
-    if (verdict.mayComplete) {
-      satisfied.push({ obligationId: member.id, clauses: verdict.satisfied });
-      continue;
-    }
-    exceptions.push({
-      obligationId: member.id,
-      kind: "REFUSED",
-      codes: [...new Set(verdict.refusals.map((r) => r.code))],
-      says: verdict.refusals.map((r) => `${r.code} (${r.subject})`).join("; "),
-    });
-  }
-  return exceptions.length === 0
-    ? { kind: "COMPLETE", assignmentKey: input.assignmentKey, members: members.length, satisfied }
-    : { kind: "NOT_COMPLETE", assignmentKey: input.assignmentKey, members: members.length, settled: satisfied.length, exceptions };
-}
-
-export function assignmentCompletionWords(c: AssignmentCompletion): string {
-  if (c.kind === "NO_MEMBERS") return c.says;
-  if (c.kind === "COMPLETE") return `Complete: all ${c.members.toLocaleString("en-US")} member obligations passed the completion check.`;
-  const refused = c.refusedCount ?? c.exceptions.filter((e) => e.kind === "REFUSED").length;
-  const unsettled = c.unsettledCount ?? c.exceptions.length - c.exceptions.filter((e) => e.kind === "REFUSED").length;
-  return (
-    `Not complete: ${c.settled.toLocaleString("en-US")} of ${c.members.toLocaleString("en-US")} member obligations passed the completion check; ` +
-    `${refused.toLocaleString("en-US")} refused and ${unsettled.toLocaleString("en-US")} not yet settled remain.`
-  );
 }
 
 /** Settled only when worked to a disposition with no open failure, no recorded absence standing in for a record, and nothing in progress. */
@@ -257,9 +200,3 @@ export function evaluateMissionDone(input: {
     refusedCount: failing.length, unsettledCount: map.unfilled + unscheduled.length, map };
 }
 
-export function missionDoneWords(c: AssignmentCompletion): string {
-  if (c.kind === "NO_MEMBERS" || !c.map) return assignmentCompletionWords(c);
-  const owed = `${c.map.owed.toLocaleString("en-US")} owed`;
-  if (c.kind === "COMPLETE") return `Done: every one of ${owed} is filled or waiting on the government, and every door has its next read scheduled (${c.map.before.toLocaleString("en-US")} were open when the map was first read).`;
-  return `Not done: ${c.map.unfilled.toLocaleString("en-US")} of ${owed} still open (${c.map.before.toLocaleString("en-US")} when the map was first read).`;
-}

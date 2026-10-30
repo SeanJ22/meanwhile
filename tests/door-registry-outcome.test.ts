@@ -46,17 +46,17 @@ test("a corrected body keeps its registry door, read-now request and success clo
 test("a success and a failure are each written to their own door and nothing else changes", async () => {
   const repos = await seeded();
   const [a, b] = (await listDoors(repos.doors)).doors;
+  await repos.doors.compareAndSet(a.doorId, (await repos.doors.mustRead(a.doorId)).revision, { ...a, transportFailures: 2 }, AT);
   assert.equal(await recordDoorOutcome(repos.doors, a.doorId, "SUCCESS", "2026-10-04T13:00:00.000Z"), true);
   assert.equal(await recordDoorOutcome(repos.doors, a.doorId, "FAILURE", "2026-10-04T14:00:00.000Z"), true);
   const after = (await listDoors(repos.doors)).doors;
   const doorA = after.find((d) => d.doorId === a.doorId)!;
   const doorB = after.find((d) => d.doorId === b.doorId)!;
-  assert.equal(doorA.lastSuccessAt, "2026-10-04T13:00:00.000Z");
-  assert.equal(doorA.lastFailureAt, "2026-10-04T14:00:00.000Z");
+  assert.deepEqual([doorA.lastSuccessAt, doorA.lastFailureAt], ["2026-10-04T13:00:00.000Z", "2026-10-04T14:00:00.000Z"]);
+  assert.equal(doorA.transportFailures, 0, "a good read ends a run of unreachable reads, so one later blip cannot shut the door");
   assert.equal(doorA.status, a.status);
   assert.equal(doorA.editedAt, a.editedAt, "a system write is not a hand edit");
-  assert.equal(doorB.lastSuccessAt, null);
-  assert.equal(doorB.lastFailureAt, null);
+  assert.deepEqual([doorB.lastSuccessAt, doorB.lastFailureAt], [null, null]);
 });
 
 test("a family read records each member on its own door, and a door that is not in the registry is not invented", async () => {

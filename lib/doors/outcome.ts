@@ -41,7 +41,7 @@ export async function recordDoorOutcome(
     if (row === null || !isDoorRecord(row.value)) return false;
     const door = row.value;
     const next = outcome === "SUCCESS"
-      ? { ...door, lastSuccessAt: at, lastFailureReason: null, ...(sourceHistory ? {
+      ? { ...door, lastSuccessAt: at, lastFailureReason: null, transportFailures: 0, ...(sourceHistory ? {
         lastChangedAt: sourceHistory.lastChangedAt, observedChanges: sourceHistory.changes,
         observedChangeMinutes: sourceHistory.meanChangeMs === null ? null : sourceHistory.meanChangeMs / 60_000,
       } : changed ? observeChange(door, at) : {}) }

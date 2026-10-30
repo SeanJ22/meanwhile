@@ -1901,10 +1901,6 @@
     },
     {
       "file": "lib/control-plane/scheduler/durable.ts",
-      "table": "cp_admin_config"
-    },
-    {
-      "file": "lib/control-plane/scheduler/durable.ts",
       "table": "cp_debts"
     },
     {

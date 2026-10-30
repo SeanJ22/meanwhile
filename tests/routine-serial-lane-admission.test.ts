@@ -117,7 +117,7 @@ test("voting sites and the overdue backlog take turns for memory, so neither hol
     ...["IL", "TX", "AK"].map(state => candidate(site(state), clocks[state], true)),
   ];
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\)/);
+  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: shutFeedsLast\(dueRequestsFirstInClass\(electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\), new Set\(honouredDueRequests\.keys\(\)\)\), shutDoors\)\)/);
   const order = electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), now));
   assert.deepEqual(order.slice(0, 6).map(job => job.task.id.split(":")[0]), ["voting-sites", "meetings", "voting-sites", "meetings", "voting-sites", "meetings"]);
 

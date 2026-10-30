@@ -110,14 +110,6 @@ export function sittingWindowRereadMs(schedule: SittingWindowSchedule, hot: bool
   return hot === false ? schedule.baseEveryMs : schedule.hotEveryMs;
 }
 
-export function sittingWindowDueAtMs(
-  schedule: SittingWindowSchedule,
-  succeededMs: number,
-  hot: boolean | undefined,
-): number {
-  return succeededMs + sittingWindowRereadMs(schedule, hot) - ROUTINE_DATA_ADMISSION_MS;
-}
-
 export interface RoutineSourceContract extends Partial<DatabaseByteContract> {
   readonly id: string;
   readonly sourceId: SourceAuthorityId;

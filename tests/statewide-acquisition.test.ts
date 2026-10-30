@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { contestIncumbency } from "../lib/ballot/incumbency-resolve.ts";
-import { nameParts, namesAgree, resolveContestIncumbency } from "../lib/ballot/incumbency.ts";
+import { resolveContestIncumbency } from "../lib/ballot/incumbency.ts";
+import { samePerson } from "../lib/identity/match-person.ts";
+import { nameParts } from "../lib/identity/name-parts.ts";
 import { looksLikeFurniture, pickPortrait, pickPortraits } from "../lib/hunt/portrait-pick.ts";
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
@@ -103,13 +105,14 @@ test("a quoted nickname the RECORD ITSELF prints is read as a first name", () =>
   const serving = nameParts("Nick", "Myers");
   assert.deepEqual(filed.aliases, ["nick"]);
   assert.ok(
-    namesAgree(filed, serving),
+    samePerson({ id: "filed", name: filed, seats: ["commission"] }, { id: "serving", name: serving, seats: ["commission"] }),
     'Nicholas "Nick" Myers and Nick Myers are the same man, and the filing prints both',
   );
 });
 
 test("the alias is not a fuzzy match — the surname must still agree exactly", () => {
-  assert.equal(namesAgree(nameParts('Nicholas "Nick"', "Myers"), nameParts("Nick", "Meyers")), false);
+  assert.equal(samePerson({ id: "filed", name: nameParts('Nicholas "Nick"', "Myers"), seats: ["commission"] },
+    { id: "serving", name: nameParts("Nick", "Meyers"), seats: ["commission"] }), false);
 });
 
 test("REGRESSION: without the alias the whole Commission contest failed closed", () => {

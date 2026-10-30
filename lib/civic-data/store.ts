@@ -81,7 +81,6 @@ import {
   parseReaderProjectionReadback,
   sourceScopedReaderReadbackProjectionId,
 } from "./reader-readback.ts";
-import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { readLegiscanPublicationBase } from "../sources/legiscan/publication-base.ts";
 import {readPersonBillParts,type PersonBillPart} from "../sources/legiscan/person-reader.ts";
@@ -535,61 +534,6 @@ const TERMINAL_CANDIDATE_STATES = new Set<CandidateState>([
   "CANNOT_TELL",
 ]);
 const MAX_PROMOTION_CLOCK_SKEW_MS = 5 * 60 * 1_000;
-
-export interface PdcV2CanonicalMeetingFactEvidence {
-  readonly sha256: string;
-  readonly meetingRowCount: number;
-  readonly agendaDocumentRowCount: number;
-}
-
-export function pdcV2CanonicalMeetingFactEvidence(
-  payloads: readonly unknown[],
-): PdcV2CanonicalMeetingFactEvidence {
-  const meetings: Array<Readonly<Record<string, unknown>>> = [];
-  const agendaDocuments: AgendaDocument[] = [];
-  for (const payload of payloads) {
-    if (payload === null || typeof payload !== "object" || Array.isArray(payload)) {
-      throw new Error("PDC_V2_MEETING_FACT_PAYLOAD_INVALID");
-    }
-    const value = payload as { readonly meetings?: unknown; readonly agendaDocuments?: unknown };
-    if (!Array.isArray(value.meetings) || !Array.isArray(value.agendaDocuments)) {
-      throw new Error("PDC_V2_MEETING_FACT_PAYLOAD_INVALID");
-    }
-    for (const row of value.meetings) {
-      if (
-        row === null || typeof row !== "object" || Array.isArray(row) ||
-        typeof (row as { readonly id?: unknown }).id !== "string" ||
-        !(row as { readonly id: string }).id
-      ) throw new Error("PDC_V2_MEETING_FACT_PAYLOAD_INVALID");
-      meetings.push(row as Readonly<Record<string, unknown>>);
-    }
-    for (const row of value.agendaDocuments) {
-      if (
-        row === null || typeof row !== "object" || Array.isArray(row) ||
-        typeof (row as { readonly id?: unknown }).id !== "string" ||
-        !(row as { readonly id: string }).id
-      ) throw new Error("PDC_V2_MEETING_FACT_PAYLOAD_INVALID");
-      agendaDocuments.push(canonicalAgendaDocument(row as AgendaDocument));
-    }
-  }
-  meetings.sort((left, right) =>
-    (left.id as string).localeCompare(right.id as string) ||
-    canonicalCivicDataJson(left).localeCompare(canonicalCivicDataJson(right))
-  );
-  agendaDocuments.sort((left, right) =>
-    left.id.localeCompare(right.id) ||
-    canonicalCivicDataJson(left).localeCompare(canonicalCivicDataJson(right))
-  );
-  if (
-    new Set(meetings.map(({ id }) => id)).size !== meetings.length ||
-    new Set(agendaDocuments.map(({ id }) => id)).size !== agendaDocuments.length
-  ) throw new Error("PDC_V2_MEETING_FACT_IDENTITY_DUPLICATED");
-  return {
-    sha256: canonicalCivicDataHash({ meetings, agendaDocuments }),
-    meetingRowCount: meetings.length,
-    agendaDocumentRowCount: agendaDocuments.length,
-  };
-}
 
 function validEventInput(event: CandidateEvent): boolean {
   return Number.isFinite(Date.parse(event.at)) && event.detail.trim() !== "";

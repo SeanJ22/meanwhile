@@ -104,6 +104,8 @@ export function isRetiredRoutineMeetingAcquisition(
 /** Work instructions, never evidence or a readiness label. Stored with the owed WorkItem. */
 export interface AutonomousWorkPlan {
   /** Scrubbed Ask work, carried into the existing hunter's place brief. */
+  /** The work row this hunt runs from, as its cost records name it. Absent when no work row started it. */
+  readonly workKind?: import("../../core/work-kinds.ts").WorkCostKind;
   readonly readerQuestion?: { readonly origin: "ASK"; readonly text: string; readonly place: string | null; readonly divisions: readonly string[] };
   /** Sourced population of the subject, when held; used to order election-site blanks. */
   readonly subjectPopulation?: number;

@@ -15,7 +15,7 @@ export function PublicStatementsProfile({ subjectId, onProfile }: { subjectId: s
 }
 
 /** Native person IDs are hints; the server verifies the archive's exact key. */
-export const PRL_SUBJECT = /^(?:congress:[A-Z]\d{6}|plural:[a-z]{2}:[0-9a-f-]{36}|[a-z]{2}-(?:legislature|general-court):[A-Za-z0-9_-]+|fec:[HSP][A-Z0-9]{8})$/;
+export const PRL_SUBJECT = /^(?:congress:[A-Z]\d{6}|(?:plural|person):[a-z]{2}:[0-9a-f-]{36}|[a-z]{2}-(?:legislature|general-court):[A-Za-z0-9_-]+|fec:[HSP][A-Z0-9]{8})$/;
 
 /** Every fetch outcome settles to exactly one state, so a card never stays on "Loading". */
 export type StatementsLoad =

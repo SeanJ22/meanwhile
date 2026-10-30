@@ -2,6 +2,8 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeDemandSignal } from "@/lib/db/demand-signal";
+import { requestWorkSooner } from "@/lib/db/demand-work";
+import { afterResponse } from "@/lib/log/after-response";
 import { errorCodeOf, raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { currentReaderSelection } from "@/lib/db/reader-route";
@@ -125,13 +127,21 @@ async function postWithSettings(request: Request) {
   }
 
   try {
+    const marker = markerFromRequest(request);
     const stored = await writeDemandSignal({
       subjectType: submission.subjectType,
       subjectId: submission.subjectId,
       signal: submission.signal,
       ocdIds,
-      marker: markerFromRequest(request),
+      marker,
     });
+    // The reader is not kept waiting for the work list. The tap is already counted, and a failure to list it is logged.
+    if (stored) {
+      const subjectType = submission.subjectType, subjectId = submission.subjectId;
+      await afterResponse(() => requestWorkSooner({ subjectType, subjectId, ocdIds, marker }).catch(error => {
+        console.error("demand request was not put in the work list", { code: errorCodeOf(error), name: error instanceof Error ? error.name : "Error" });
+      }));
+    }
 
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {

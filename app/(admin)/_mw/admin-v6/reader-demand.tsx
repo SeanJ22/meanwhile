@@ -46,6 +46,18 @@ export function ReaderDemandPanel() {
             <Top caption="What people asked about" list={reading.data.askTopics} none="No question was recorded in this window." />
             <Top caption={`Wanted sooner (${reading.data.wantedSoonerTotal.toLocaleString("en-US")} presses)`} list={reading.data.wantedSooner} none="No one pressed “get this sooner”." />
           </div>
+          {reading.data.inLine && (
+            <div>
+              <h3 className={s.h3}>In line now, asked for sooner ({reading.data.inLine.waiting.toLocaleString("en-US")} waiting, {reading.data.inLine.working.toLocaleString("en-US")} being worked)</h3>
+              {reading.data.inLine.rows.length === 0 ? <Empty>No one is waiting on a press.</Empty> : (
+                <ol>
+                  {reading.data.inLine.rows.map((row) => (
+                    <li key={row.key}>{row.label} <span className={s.meta}>· {row.presses.toLocaleString("en-US")} {row.presses === 1 ? "press" : "presses"} · {row.working ? "being worked" : "waiting"} since {mst(row.since)}</span></li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          )}
           <p className={cx(s.p, s.meta)}>Read {mst(reading.data.observedAt)}</p>
         </>
       )}

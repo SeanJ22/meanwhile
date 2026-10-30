@@ -1,10 +1,11 @@
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
+import { ID_ALIAS } from "./ids.ts";
 
-/** Exact identity or saved alias. Unknown ids return null; ambiguous ids raise instead of picking a person. */
+/** Exact identity or saved alias. An id that was merged into another returns the survivor. Unknown ids return null; ambiguous ids raise instead of picking a person. */
 export async function resolveId(anyId: string, query: Query | null = factReader()): Promise<string | null> {
   if (!query) throw new Error("Reader identity database is unavailable");
-  const [exact] = await query(`SELECT coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=$1),
+  const [exact] = await query(`SELECT coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='${ID_ALIAS}' AND value=$1),
     (SELECT id FROM entity WHERE id=$1)) AS id`, [anyId]);
   if (exact?.id != null) return String(exact.id);
   const [row] = await query("SELECT reader_resolve_id($1) AS id", [anyId]);

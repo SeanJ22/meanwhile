@@ -6,11 +6,12 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
-import { legistarDoorQuery,legistarMemberWork,seedLegistarMemberWork } from "../lib/sources/legistar/members-queue.ts";
+import { legistarMemberWork,seedLegistarMemberWork } from "../lib/sources/legistar/members-queue.ts";
 import { loadLegistarMemberTenant,type MemberRecordWork } from "../lib/sources/legistar/members-loader.ts";
 import { legistarMemberPublisher } from "../lib/sources/legistar/members-worker.ts";
 import { runLegistarMemberWorkers } from "../lib/sources/legistar/members-work.ts";
 import { withFactConfirmations } from "../lib/facts/confirmation.ts";
+import { controlPlaneQuery } from "../lib/core/work.ts";
 
 prepareProductionCivicDataWrite();
 let drain=false;
@@ -20,11 +21,11 @@ const stopRequested=()=>drain||Date.now()>=passDeadlineFromEnv();
 const slots=routineProcessSlots({admissionsOpen:()=>!stopRequested()});
 const release=await slots.acquire("legistar-members-worker.mts",Date.now()+60_000);
 try {
-  const query=legistarDoorQuery(),connection=readerFactDb(),list=legistarMemberWork(query,`legistar-members:${process.pid}`);
+  const query=controlPlaneQuery(),connection=readerFactDb(),list=legistarMemberWork(query,`legistar-members:${process.pid}`);
   const facts={query:connection.query,transaction:<T,>(work:(query:typeof connection.query)=>Promise<T>)=>
     connection.transaction(query=>work((text,params)=>query(preparedStatement(text),params)))};
   const vault=new DurableEvidenceStore(join(process.cwd(),...VAULT_DIR));
-  await seedLegistarMemberWork(query);
+  await seedLegistarMemberWork(list,query);
   let adminVersion:string|undefined,clocks=factClocks(null);
   const settings=async()=>{
     const [row]=await query(`SELECT md5((value->'settings')::text) AS version FROM cp_admin_config WHERE id='current'`);
@@ -38,7 +39,7 @@ try {
   await settings();
   let publish=legistarMemberPublisher({facts,vault,clocks});
   const heartbeat=setInterval(()=>{console.log("Legistar members: workers running");},60_000);
-  const seed=setInterval(()=>{void seedLegistarMemberWork(query).then(settings).then(changed=>{if(changed)publish=legistarMemberPublisher({facts,vault,clocks});})
+  const seed=setInterval(()=>{void seedLegistarMemberWork(list,query).then(settings).then(changed=>{if(changed)publish=legistarMemberPublisher({facts,vault,clocks});})
     .catch(error=>{console.error(error);drain=true;});},60_000);
   try {
     await Promise.all([

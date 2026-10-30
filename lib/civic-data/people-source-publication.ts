@@ -126,7 +126,8 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   // A stated empty seat is a sourced record of its own.
   const records = people.length + vacancies.length;
   const excludedFacts = [...(input.excludedFacts ?? []), ...(input.gaps ?? []).map(gap=>({key:gap.sourceUrl,code:"PEOPLE_SOURCE_GAP",detail:gap.detail,record:gap})),
-    ...(input.roster.disagreements ?? []).map(row=>({key:row.key,code:"PEOPLE_FIELD_DISAGREEMENT",detail:`${row.field} has conflicting source values; the preferred value is published and BL-01 is owed the disagreement.`,record:row}))];
+    ...(input.roster.disagreements ?? []).map(row=>({key:row.key,code:"PEOPLE_FIELD_DISAGREEMENT",detail:`${row.field} has conflicting source values; the preferred value is published and BL-01 is owed the disagreement.`,record:row})),
+    ...(input.roster.identityQuestions ?? []).map(row=>({key:row.key,code:"PEOPLE_IDENTITY_UNRESOLVED",detail:`${row.personIds.length} records might be one person, but no identifier ties them (${row.reason}); they stay separate until a detective settles it.`,record:row}))];
   const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,
     ...(input.sourceProbe ? {sourceProbe:input.sourceProbe} : {}),...(input.changes?.length ? {changes:input.changes} : {})}));
   const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures,input.roster), normalizedHash = hash(readModel);

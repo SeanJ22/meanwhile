@@ -3,7 +3,7 @@ import test from "node:test";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { applyManualEdit, checkDoorDraft } from "../lib/doors/registry.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
-import { ballotFinanceObligations } from "../lib/control-plane/campaign-finance/obligations.ts";
+import { ballotFinanceObligations } from "../lib/control-plane/campaign-finance/ballot-obligations.ts";
 const at = "2026-10-05T23:00:00Z";
 function ballot(state: string): BallotSet {
   const ocdId = `ocd-division/country:us/state:${state.toLowerCase()}/place:alder`;

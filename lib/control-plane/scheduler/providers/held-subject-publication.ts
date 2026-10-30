@@ -119,7 +119,7 @@ async function publishDetails(input: HeldSubjectPublicationInput): Promise<HeldS
   }
   const roster = subject.subjectKind === "body" && rosterRows.length ? await publishRosterFacts(db, {
     body: { id, name: subject.bodyName, state, parentId: subject.divisionIds[0] ?? null }, capture,
-    complete: extracted.completeRoster && !rosterIdentityGaps.length, producedBy: "held-subject-digger", acquisition: "walker", purge: input.purge,
+    complete: extracted.completeRoster && !rosterIdentityGaps.length, producedBy: "held-subject-digger", purge: input.purge,
     shownMemberIds,
     members: rosterRows.map(row => ({ recordId: `held-roster:${fingerprint([id, nameKey(row.name), row.office])}`,
       fields: { ...row } })),

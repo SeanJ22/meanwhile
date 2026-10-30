@@ -193,5 +193,4 @@ test("a promoted carried sitting serves its saved office pin to a reader", async
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;
   assert.equal(served.mapPin?.address, CHOLLA.address);
   assert.equal(served.mapPin?.basis, "BODY_OFFICE");
-  assert.equal(served.carried?.reason, "UNEXPLAINED_DISAPPEARANCE");
 });

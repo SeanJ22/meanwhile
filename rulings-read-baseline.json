@@ -263,7 +263,7 @@
       "file": "scripts/ingest.ts",
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
-      "line": 1308
+      "line": 1306
     },
     {
       "file": "scripts/legistar-insite-minutes-ingest.mts",

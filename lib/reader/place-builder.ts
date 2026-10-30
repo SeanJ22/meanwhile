@@ -311,7 +311,7 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_object_agg(x.value,x.entity_id) FROM entity_external_id x JOIN bodies b ON b.id=x.entity_id
     WHERE x.scheme='body-alias'),'{}'::jsonb) AS body_aliases,
-  coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,
+  coalesce((SELECT jsonb_agg(to_jsonb(s) ORDER BY s.body_id,s.entity_id,s.field,s.status,s.checked_at) FROM sittings s),'[]'::jsonb) AS sittings,
   coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index) FROM agenda_full d),'[]'::jsonb) AS agenda_documents,
   coalesce((SELECT jsonb_agg(item ORDER BY ordinal_index) FROM agenda_links),'[]'::jsonb) AS agenda_document_links,
   coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts

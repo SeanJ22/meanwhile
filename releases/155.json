@@ -30,7 +30,7 @@
     "before": 690151,
     "after": 690145
   },
-  "updated_at": "2026-10-30T05:38:07.111529+00:00",
+  "updated_at": "2026-10-30T05:48:09.206688+00:00",
   "ci_run": 41005805432,
   "before": {
     "owner_peak_hour": "2026-10-29T20:00:00Z",
@@ -85,5 +85,21 @@
     "run": 41008674644,
     "conclusion": "success",
     "completed_at": "2026-10-30T05:35:10Z"
+  },
+  "zip_after": {
+    "phone": 46,
+    "tablet": 49,
+    "desktop": 50,
+    "same_50_zips": true,
+    "window_start": "2026-10-30T05:36:06Z",
+    "window_end": "2026-10-30T05:46:39Z",
+    "partial_run_failure": "Map provider ceiling100 hit on NM; that state\u2019s results discarded as invalid; retained30validstates, resumed20with existinghardceiling200; allresumedbrowserclosurespassed",
+    "admin_settings_changed": false
+  },
+  "runner_latest": {
+    "sha": "74e1fc2933fb246274d0e8528d5b2e862421cd3d",
+    "beat_at": "2026-10-30T05:47:18.880Z",
+    "staging": "READY",
+    "target": "8a17174f730c810892732fde1a946207a6853988"
   }
 }

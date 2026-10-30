@@ -41,6 +41,7 @@ export const KEY_SERVICES = {
   neon: "Database spending reports",
   "maptiler-service": "Map spending reports",
   "google-client": "Google sign-in application",
+  prlarchive: "PRL source archive",
   other: "Other service",
 } as const;
 export type KeyService = keyof typeof KEY_SERVICES;
@@ -56,13 +57,14 @@ export const KEY_NAMES: Readonly<Record<string, KeyService>> = {
   NETLIFY_AUTH_TOKEN: "netlify", NETLIFY_TOKEN: "netlify", WTP_GITHUB_READ_TOKEN: "github",
   GH_TOKEN: "github", GITHUB_TOKEN: "github", DATABASE_URL: "postgres",
   WTP_PRODUCTION_DATABASE_URL_WRITE: "postgres", WTP_PRODUCTION_DATABASE_URL_READONLY: "postgres",
-  FEEDBACK_DATABASE_URL: "postgres",
+  FEEDBACK_DATABASE_URL: "postgres", WTP_STAGING_DATABASE_URL_READONLY: "postgres",
+  WTP_CONTROL_PLANE_DATABASE_URL_READONLY: "postgres", WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL: "postgres",
   WTP_ADMIN_SECRET: "signing", WTP_ADMIN_SESSION_KEY: "signing", WTP_STAGING_MANIFEST_COOKIE: "signing",
   GOOGLE_OAUTH_CLIENT_SECRET: "googleoauth", ANTHROPIC_ADMIN_API_KEY: "anthropic-admin",
   EXA_SERVICE_API_KEY: "exa-admin", NEON_BILLING_API_KEY: "neon", NEON_API_KEY: "neon",
   GITHUB_BILLING_TOKEN: "github", NETLIFY_BILLING_TOKEN: "netlify",
   MAPTILER_SERVICE_TOKEN: "maptiler-service", GOOGLE_OAUTH_CLIENT_ID: "google-client",
-  PRL_ARCHIVE_S3_ACCESS_KEY_ID: "other", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: "other", WTP_MAPTILER_SMOKE_KEY: "maptiler",
+  PRL_ARCHIVE_S3_ACCESS_KEY_ID: "prlarchive", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: "prlarchive", WTP_MAPTILER_SMOKE_KEY: "maptiler",
 };
 
 export function knownKeyService(name: string): KeyService | undefined {

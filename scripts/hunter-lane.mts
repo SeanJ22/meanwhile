@@ -17,7 +17,7 @@ import { HUNTER_CLAIM_LEASE_MS, HUNTER_CLAIM_RENEW_MS, hunterClaims } from "../l
 import { capabilityLog, deadEndOf } from "../lib/core/capability.ts";
 import { installedParsers } from "./lib/installed-parsers.mts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
-import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
+import { deadEndWaitMs, duePackets } from "../lib/hunt/runtime.ts";
 
 
 const ROOT = process.cwd();
@@ -45,8 +45,11 @@ let armingPath = hunterLaneArmingPath(ROOT, state);
 const capabilities = capabilityLog(controlPlaneQuery());
 // A reader that is new or changed since the last lane is an event; one that is not is already on record.
 await capabilities.record(await installedParsers(), nowIso());
+// Money was pointed at the places the owner's orders fund; the arming names them, and a lane that could not arm funds none.
+const fundedPlaces = (): readonly string[] => { try { return lane.current().arming?.lifetimeHuntSubjects ?? []; } catch { return []; } };
 const claims = hunterClaims({ list: workList(controlPlaneQuery(), { owner: "hunter-lane", leaseMs: HUNTER_CLAIM_LEASE_MS }), repos, now: nowIso,
-  deadEndMs: () => deadEndWaitMs(repos), capabilities, log: say,
+  deadEndMs: () => deadEndWaitMs(repos), capabilities, log: say, funded: fundedPlaces,
+  due: async governmentId => (await duePackets(repos, [{ governmentId }], nowIso())).get(governmentId)?.due === true,
   deadEndOf: async result => deadEndOf((await controlPlaneQuery()("SELECT record->'unfilled' AS unfilled FROM cp_log_scout_results WHERE log_key = $1 AND record_id = $2",
     [result.obligationId, result.attemptId ?? ""]))[0]?.unfilled) });
 const keeper = setInterval(() => { void claims.keep().catch(error => say(`hunter lane: leases could not be renewed (${error instanceof Error ? error.message : String(error)})`)); }, HUNTER_CLAIM_RENEW_MS);

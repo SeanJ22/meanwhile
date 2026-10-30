@@ -159,7 +159,7 @@ test("a hunt that leaves a blank open names what would unlock it, the list's clo
   t.after(() => pg.close());
   const repos = createMemoryRepositories();
   const unfilled = new Map<string, unknown>();
-  const claims = hunterClaims({ list, repos, now: at, deadEndMs: async () => 5 * DAY, capabilities: log, log: () => {}, deadEndOf: async result => deadEndOf(unfilled.get(`${result.obligationId}:${result.attemptId}`)) });
+  const claims = hunterClaims({ list, repos, now: at, deadEndMs: async () => 5 * DAY, capabilities: log, log: () => {}, funded: () => [], due: async () => true, deadEndOf: async result => deadEndOf(unfilled.get(`${result.obligationId}:${result.attemptId}`)) });
   const pressed = await list.sooner({ placeId: place, subjectId: `${place}#board`, subjectType: "body" });
   await claims.select(["ma"], false);
   const queue = await claims.claim(true);

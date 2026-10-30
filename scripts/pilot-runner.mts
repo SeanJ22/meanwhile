@@ -1,4 +1,5 @@
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
+import { PLANNER_JOB } from "../lib/hunt/blank-planner.ts";
 import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
@@ -1277,6 +1278,17 @@ function drainMemberLane():void {
   if(memberLaneChild?.connected)memberLaneChild.send({kind:"RUNTIME_RELEASE_DRAIN"},error=>{if(error)console.error("Legistar member drain failed",error);});
 }
 
+/** The planner reads only the blanks that changed and keeps one standing hunt for each place that has open ones. */
+async function runPlannerLane(deadlineMs: number): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(PLANNER_JOB.id)) return;
+  const [run] = await runRuntimeChildren([{ id: PLANNER_JOB.id, databaseBytesPerRun: PLANNER_JOB.databaseBytesPerRun,
+    executable: process.execPath, args: [...TS_CHILD, "scripts/planner-lane.mts"],
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
+    cwd: CODE_ROOT, env: process.env, deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
+    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+  if (!run || run.status !== 0) throw new Error("PLANNER_LANE_EXITED: the changed blanks are read again on the next run");
+}
+
 const auditPasses = auditPassClock({
   statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
   codeRoot: () => CODE_ROOT,
@@ -1364,6 +1376,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   // The lane retires at its life; the wall covers the last task a worker still holds.
   { id: "legistar-members", everyMs: 60_000, budgetMs: 55*60_000, run: runMemberLane },
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
+  { id: PLANNER_JOB.id, everyMs: PLANNER_JOB.everyMs, budgetMs: PLANNER_JOB.budgetMs, run: runPlannerLane },
   placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
   placeMapsLane(runPlaceMaps),

@@ -76,6 +76,8 @@ export interface ClaimWhere {
   readonly state?: string;
   /** Only rows a plain-code worker can do: no paid model is needed. */
   readonly plainOnly?: boolean;
+  /** Rows marked unpaid (`value.paid` false) are served only for these subjects, the places money was pointed at; absent means no such limit. */
+  readonly fundedSubjects?: readonly string[];
 }
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
@@ -237,6 +239,7 @@ export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
     AND ($6::text IS NULL OR starts_with(subject_id,$6))
     AND ($7::text IS NULL OR state = $7)
     AND ($8::boolean IS NOT TRUE OR value->>'plain' = 'true')
+    AND ($9::text[] IS NULL OR value->>'paid' IS DISTINCT FROM 'false' OR subject_id = ANY($9::text[]))
   ORDER BY work_tier_rank(tier), priority DESC, due_at, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -448,7 +451,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
         taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
-          where.plainOnly ?? null])).map(row));
+          where.plainOnly ?? null, where.fundedSubjects ?? null])).map(row));
       }
       taken.sort(IN_TIER_ORDER);
       for (const extra of taken.splice(n)) await release(extra);
@@ -459,8 +462,9 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const at = timestamp();
       return (await query(`SELECT 1 AS ready FROM work WHERE kind = ANY($1::text[]) AND status = 'waiting' AND due_at <= $2::timestamptz
           AND ($3::text IS NULL OR state = $3) AND ($4::boolean IS NOT TRUE OR value->>'plain' = 'true')
+          AND ($5::text[] IS NULL OR value->>'paid' IS DISTINCT FROM 'false' OR subject_id = ANY($5::text[]))
         UNION ALL SELECT 1 FROM work WHERE kind = ANY($1::text[]) AND status = 'taken' AND lease_until <= $2::timestamptz AND ($3::text IS NULL OR state = $3) LIMIT 1`,
-      [kinds, at, where.state?.toUpperCase() ?? null, where.plainOnly ?? null])).length > 0;
+      [kinds, at, where.state?.toUpperCase() ?? null, where.plainOnly ?? null, where.fundedSubjects ?? null])).length > 0;
     },
     /** A claimed row goes back to waiting as if it had never been taken. */
     release,

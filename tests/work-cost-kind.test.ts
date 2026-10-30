@@ -37,7 +37,7 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   const repos = { ...createMemoryRepositories(), spend: pgSpendRepository(sql) };
   const now = () => new Date().toISOString();
   const list = workList(rows, { owner: "kind-test" });
-  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
+  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, funded: () => [], due: async () => true, log: () => {} });
 
   const hunt = async (item: WorkItem, task: RouteTask, blanks: boolean) => {
     const runtime = { repos, now, rollingCeilingUsd: 100, scoutFor: (found: WorkItem, found_task: RouteTask) => hunterFor({ repos, root: process.cwd(), now,

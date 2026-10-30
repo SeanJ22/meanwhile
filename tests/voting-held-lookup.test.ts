@@ -6,6 +6,7 @@ import { addCensusVotingGeographies, votingPlaceFromZip } from "../lib/ballot/vo
 import { POST } from "../app/api/voting-sites/route.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
@@ -40,7 +41,7 @@ async function holding(held: VotingSitesFile = file, heldState = "TX"): Promise<
   const candidate = votingSitesCandidate({ state: heldState, current: held, prior: null, failures: [],
     acquisition: await holdVotingRawEvidence({ rawBodies: [{ url: source.url, contentType: "application/json", bytes: new TextEncoder().encode(JSON.stringify(held)) }] }),
     successfulAuthorityReads: 1, requestedUrl: source.url, finalUrl: source.url, retrievedAt: at });
-  const outcome = await processRegisteredManualCandidate(store, `voting-sites:${heldState}`, candidate, at);
+  const outcome = await processRegisteredManualCandidate(store, stateBallotContractId("voting-sites", heldState), candidate, at);
   assert.ok(outcome.promoted);
   const projection = outcome.promoted;
   return { edgeOnly: true, stateAuthorities: { families: new Set(["voting-sites"]), load: async (family, state) => {
@@ -187,7 +188,9 @@ async function postWithCensusDown(edge: ReaderAuthorityEdgeBundle, census: "502"
     const url = new URL(String(input));
     if (url.hostname === "geocoding.geo.census.gov") {
       if (census === "502") return new Response("Bad Gateway", { status: 502 });
-      return await new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener("abort", () => reject(init.signal!.reason)));
+      // AbortSignal.timeout does not hold the event loop open by itself; a server's open socket would.
+      const open = setTimeout(() => {}, 10_000);
+      return await new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener("abort", () => { clearTimeout(open); reject(init.signal!.reason); }));
     }
     if (url.hostname === "www.googleapis.com") {
       google.push(url.pathname);

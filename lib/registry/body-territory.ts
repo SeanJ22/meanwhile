@@ -39,10 +39,6 @@ export interface BodyTerritorySelection {
 }
 export type BodyTerritory = BodyTerritoryFile | BodyTerritorySelection;
 
-export function selectBodyTerritory(point:[number,number],territory:BodyTerritoryFile|null):BodyTerritorySelection|null {
-  return territory ? {type:"BodyTerritorySelection",inside:[...bodyIdsAtPoint(point,territory)],known:[...bodyIdsWithTerritory(territory)]} : null;
-}
-
 /** Repo-relative, so the generator, the loader and the guard agree on one spelling. */
 export const BODY_TERRITORY_FILE = "data/states/az/geo/body-territories.geojson";
 

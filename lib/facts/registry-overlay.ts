@@ -48,7 +48,7 @@ export function bodyFieldsFromRows(rows: readonly Record<string, unknown>[]): Re
     else if (row.field === "office_address" || row.field === "office_phone" || row.field === "office_email" || row.field === "homepage") {
       const key = row.field === "office_address" ? "officeAddress" : row.field === "office_phone" ? "officePhone" : row.field === "office_email" ? "officeEmail" : "homepageUrl";
       Object.assign(held, { [key]: row.field === "homepage" ? siteUrl(String(row.value)) : String(row.value), fieldSources: { ...held.fieldSources, [key]: source } });
-    } else if (row.field === "mailing_address") held.provenance ??= source;
+    } else if (row.field === "mailing_address") Object.assign(held, { mailingAddress: String(row.value), provenance: held.provenance ?? source, fieldSources: { ...held.fieldSources, mailingAddress: source } });
     else if (row.field === "meeting_cadence") Object.assign(held, { meetingCadence: String(row.value), meetingCadenceSource: { sourceUrl: source.sourceUrl, collectedAt: at } });
     else held.agendaSourceRef = String(row.value);
   }

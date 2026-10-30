@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 import type { PGlite } from "@electric-sql/pglite";
 import { retireRenamed } from "../lib/core/door.ts";
+import { bodyContactRows } from "../lib/registry/body-contact.ts";
 import { CENSUS_GOVERNING_CURSOR, censusBoards, censusGoverningOrder, makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { REGISTRATION_SOURCE_SHA256 } from "../lib/registration/publication.ts";
@@ -125,7 +126,8 @@ test("one Oregon pass makes Portland's city, county and school boards through th
       ["or:school:portland-sch-dist-1j#board", "Portland School District 1J", "GOVERNING"],
     ]);
     const city = coverage.bodies.find(body => body.bodyId === "or:city:city-of-portland#governing")!;
-    assert.equal(city.officeContact?.address, undefined, "a published mailing address alone does not establish a physical office");
+    assert.equal(city.officeContact?.address, null, "a published mailing address alone does not establish a physical office");
+    assert.deepEqual(bodyContactRows(city).filter(row => /address/i.test(row.label)).map(row => row.label), ["Mailing address"], "it shows only as the mailing address");
   } finally { await pg.close(); }
 });
 

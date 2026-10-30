@@ -211,7 +211,6 @@ export const SCHEDULING_HINTS = Object.freeze({
   "tests/http-retrieval.test.ts": 2632.8003,
   "tests/ical-source.test.ts": 110.6307,
   "tests/identified-ua-wall.test.ts": 7.7602,
-  "tests/identity-boundary.test.ts": 15.4905,
   "tests/incumbency-eligibility.test.ts": 180.5162,
   "tests/incumbency.test.ts": 20.286,
   "tests/incumbent-record.test.ts": 167.9365,

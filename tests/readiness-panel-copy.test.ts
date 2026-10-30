@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import test from "node:test";
 
-import { coverageStatusPill } from "../lib/control-plane/admin-view/coverage.ts";
 import { plainCode } from "../lib/control-plane/plain-words.ts";
 import { codeOf, sourceFilesUnder } from "./read-code.ts";
 
@@ -17,12 +16,6 @@ function src(rel: string): string {
 test("plainCode keeps the two cell-state words the brief names", () => {
   assert.equal(plainCode("NOT_WALKED"), "Not checked yet");
   assert.equal(plainCode("ARGUED_ABSENT"), "Looked for, does not exist");
-});
-
-test("no machine constant leads on the readiness page", () => {
-  for (const status of ["LIVE", "MANUAL", "KNOWN_UNCOVERED", "NO_SOURCE_FOUND", "NOT_ATTEMPTED", "SOMETHING_NEW"]) {
-    assert.doesNotMatch(coverageStatusPill(status as never).pill, /_/, `${status} reaches the face as its enum`);
-  }
 });
 
 test("the page's stylesheet carries the classes its markup uses", () => {

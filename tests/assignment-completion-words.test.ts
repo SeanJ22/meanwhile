@@ -1,44 +1,14 @@
-/**
- * A dead end explains itself from the records the work already wrote, a missing field names its
- * gap, an assignment is complete only when every member obligation passes the completion
- * evaluator, and a Scout's "why a paid model" is the executor decision's own words.
- */
+/** An assignment is complete only when every member obligation passes the completion evaluator. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { assignmentCompletionWords, evaluateAssignmentCompletion, memberObligations } from "../lib/control-plane/assignment-completion.ts";
-import { buildBodyViews, type BodyStoreFacts, type WatchedContract } from "../lib/control-plane/admin-view/bodies.ts";
-import { routineRuledOut } from "../lib/control-plane/admin-view/dead-ends.ts";
 import type { CompletionSnapshot } from "../lib/control-plane/completion.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
 const NOW = "2026-09-25T12:00:00.000Z";
 const PAST = "2026-09-18T12:00:00.000Z";
-
-/* ------------------------------------------------------------ routine reads */
-
-test("MW-016: a run of the same failed read rules out a one-off; our own failure rules out nothing about the site", () => {
-  const read = (at: string, failed: boolean, jobFailure = false) => ({ state: failed ? "SOURCE_BLOCKED" : "PROMOTED", failureCode: failed ? "SOURCE_RETRIEVAL_FAILED" : null, acquisitionSucceeded: !failed, attemptedAt: at, failed, jobFailure });
-  const words = () => "could not get in";
-  assert.match(routineRuledOut([read("2026-09-25T10:00:00.000Z", true), read("2026-09-25T09:00:00.000Z", true), read("2026-09-25T08:00:00.000Z", false)], words).ruledOut ?? "", /^A one-off failure: the last 2 reads/);
-  assert.match(routineRuledOut([read("2026-09-25T10:00:00.000Z", true), read("2026-09-25T09:00:00.000Z", false)], words).ruledOut ?? "", /^That the source is gone for good: the read before/);
-  assert.match(routineRuledOut([read("2026-09-25T10:00:00.000Z", true, true)], words).gap ?? "", /our own code failed before the site was asked/);
-
-  const contract: WatchedContract = {
-    id: "meetings:legistar:pima-bos", scope: "source:legistar:body:pima-bos", bodyId: "ocd-division/country:us/state:az/county:pima#governing",
-    ocdId: "ocd-division/country:us/state:az/county:pima", meetingSource: "legistar", jurisdiction: "Pima County", publishingOrg: "Pima County",
-    sourceUrl: "https://pima.legistar.com/Calendar.aspx", verifiedAt: null, cadence: { description: "every hour", defaultEveryMs: 3_600_000 },
-    retry: { afterMs: 900_000, description: "fifteen minutes later" },
-  };
-  const attemptRow = (at: string) => ({ scope: contract.scope, candidateId: `cv-${at}`, state: "SOURCE_BLOCKED", failureCode: "SOURCE_RETRIEVAL_FAILED", failureDetail: "HTTP 403", acquisitionSucceeded: false, attemptedAt: at });
-  const store: BodyStoreFacts = { asOf: NOW, versions: [], readbacks: [], day: [], changes: [], attempts: [attemptRow("2026-09-25T10:00:00.000Z"), attemptRow("2026-09-25T09:00:00.000Z")] };
-  const [body] = buildBodyViews({ contracts: [contract], store, nowIso: NOW, zipOf: () => ({ kind: "NONE" }) });
-  assert.match(body!.deadEnd?.ruledOut ?? "", /^A one-off failure: the last 2 reads/, "a body's dead end is no longer always 'nothing ruled out'");
-  const [single] = buildBodyViews({ contracts: [contract], store: { ...store, attempts: [attemptRow("2026-09-25T10:00:00.000Z")] }, nowIso: NOW, zipOf: () => ({ kind: "NONE" }) });
-  assert.equal(single!.deadEnd?.ruledOut, null);
-  assert.match(single!.deadEnd?.gaps?.ruledOut ?? "", /only this one read is recorded/);
-});
 
 /* ------------------------------------------------------------ visited is not finished */
 

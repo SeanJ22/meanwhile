@@ -69,6 +69,7 @@ const PLACE_ROW_COLUMNS = ["registration_held","division_ids","agenda_texts","ev
   "governments","divisions","entities","fields","rosters","comments","sittings","meeting_rows","archived_meetings","archived_documents",
   "archived_document_links","parts","body_aliases"] as const;
 const groupOf = (column: string) => Object.entries(PLACE_ROW_GROUPS).find(([,columns]) => columns.includes(column))![0];
+const ELEMENT_COLUMNS = ["meeting_rows","archived_meetings","archived_documents","sittings","rosters","fields","entities"]; // Printed row by row.
 
 /** The place indexes lead to bodies; live facts and canonical source calendars are read together. */
 const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_places AS MATERIALIZED (
@@ -403,14 +404,6 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), everyday_routing AS MATERIALIZED (
   SELECT reader_payload_value(payload) AS value,xmin::text||':'||ctid::text AS version FROM civic_data_promotions
     WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD'
-), hashes(hash) AS (
-  SELECT ref#>>'{}' FROM (
-    SELECT payload FROM meeting_rows UNION ALL SELECT item FROM archived_meetings UNION ALL SELECT item FROM archived_documents
-  ) roots,LATERAL jsonb_path_query(payload,'strict $.**."$civicPayloadPart"','{}',true) ref
-  UNION
-  SELECT ref#>>'{}' FROM hashes
-    CROSS JOIN LATERAL (SELECT payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1) part,
-    LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
 , page AS MATERIALIZED (
 SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
@@ -464,25 +457,38 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   coalesce((SELECT jsonb_agg(to_jsonb(m)) FROM meeting_rows m),'[]'::jsonb) AS meeting_rows,
   coalesce((SELECT jsonb_agg(item) FROM archived_meetings),'[]'::jsonb) AS archived_meetings,
   coalesce((SELECT jsonb_agg(item) FROM archived_documents),'[]'::jsonb) AS archived_documents,
-  coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links,
-  coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts
+  coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links
+), elements AS MATERIALIZED (
+  -- County meetings, sittings and members sit on every page in it: with the stored page's rows held ($13), only rows it lacks are sent.
+  SELECT e.name,x.n,x.value,left(md5(x.value::text),16) AS print FROM page,LATERAL (VALUES ${ELEMENT_COLUMNS.map(column => `('${column}',page.${column})`).join(",")}) e(name,list),
+    LATERAL jsonb_array_elements(e.list) WITH ORDINALITY x(value,n)
 ), printed AS MATERIALIZED (
   -- Each group's print is taken here, beside the data; only a changed group crosses the connection.
   SELECT jsonb_build_object(${Object.entries(PLACE_ROW_GROUPS).map(([group,columns]) =>
-    `'${group}',md5(jsonb_build_array(${columns.map(column => `page.${column}`).join(",")})::text)`).join(",")}) AS prints FROM page
+    `'${group}',md5(jsonb_build_array(${columns.filter(column => column !== "parts").map(column => `page.${column}`).join(",")})::text)`).join(",")})
+    || coalesce((SELECT jsonb_object_agg(name||'[]',prints) FROM (SELECT name,jsonb_agg(print ORDER BY n) AS prints FROM elements WHERE $13::boolean GROUP BY name) e),'{}'::jsonb) AS prints FROM page
 ), held_prints AS MATERIALIZED (
   -- $12 is the prints of the stored page's own read; $13 lets unchanged groups stay behind when that page keeps its rows.
   SELECT coalesce((SELECT array_agg(g.key ORDER BY g.key) FROM jsonb_each(p.prints) g WHERE $12::jsonb IS NOT NULL
       AND (p.prints=$12::jsonb OR $13::boolean AND g.value=$12::jsonb->g.key)),'{}'::text[]) AS groups,
     coalesce($12::jsonb=p.prints,false) AS unchanged
   FROM printed p
+), sent AS MATERIALIZED (
+  SELECT name,jsonb_agg(value ORDER BY n) AS value FROM elements WHERE NOT ($13::boolean AND coalesce(($12::jsonb->(name||'[]')) ? print,false)) GROUP BY name
+), hashes(hash) AS (
+  SELECT ref#>>'{}' FROM sent,LATERAL jsonb_array_elements(sent.value) x(value),LATERAL jsonb_path_query(x.value,'strict $.**."$civicPayloadPart"','{}',true) ref
+    WHERE name IN ('meeting_rows','archived_meetings','archived_documents')
+  UNION
+  SELECT ref#>>'{}' FROM hashes CROSS JOIN LATERAL (SELECT payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1) part,
+    LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
 SELECT h.unchanged,CASE WHEN NOT h.unchanged THEN p.prints END AS prints,h.groups AS omitted,CASE WHEN ${!bodyFactsOnly} THEN (SELECT version FROM everyday_routing) END AS everyday_routing_version,
   ${PLACE_ROW_COLUMNS.map(column => column === "everyday_routing"
     // $11 is the routing version a rebuild turn already holds; that body does not cross the connection again.
     ? `CASE WHEN NOT h.unchanged AND (SELECT version FROM everyday_routing) IS DISTINCT FROM $11::text THEN page.everyday_routing END AS everyday_routing`
     : column === "body_aliases" ? `CASE WHEN NOT h.unchanged THEN page.body_aliases END AS body_aliases`
-    : `CASE WHEN NOT '${groupOf(column)}'=ANY(h.groups) THEN page.${column} END AS ${column}`).join(",\n  ")}
+    : `CASE WHEN NOT '${groupOf(column)}'=ANY(h.groups) THEN ${column === "parts" ? "coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb)"
+      : ELEMENT_COLUMNS.includes(column) ? `coalesce((SELECT value FROM sent WHERE name='${column}'),'[]'::jsonb)` : `page.${column}`} END AS ${column}`).join(",\n  ")}
 FROM page,printed p,held_prints h`;
 
 export const PLACE_PACKAGE_SQL = preparedStatement(placePackageSql(false));
@@ -511,7 +517,7 @@ export interface PlaceTurnReads {
 export interface PlacePagePrints {
   readonly build: string;
   readonly input: string;
-  readonly reads: Readonly<Record<string, Readonly<Record<string,string>>>>;
+  readonly reads: Readonly<Record<string, ReadPrints>>;
 }
 
 /** The stored page a rebuild compares with; its saved rows are read only when some of their groups changed. */
@@ -526,38 +532,45 @@ export interface UnchangedPlacePage {
   readonly prints: PlacePagePrints;
 }
 
+type ReadPrints = Readonly<Record<string,string|readonly string[]>>; // Group prints; each long list's row prints under "<column>[]".
 interface HeldRead {
-  readonly prints: Readonly<Record<string,string>>;
+  readonly prints: ReadPrints;
   /** Present when the stored page keeps this read's rows, so an unchanged group can stay behind. */
   readonly stored?: () => Promise<Record<string,unknown> | null>;
 }
 
 /** One place read. Against a held read, unchanged groups are not returned and `row` is null when no group changed. */
-async function readPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnReads,held?: HeldRead):
-  Promise<{ readonly prints: Readonly<Record<string,string>>; readonly row: Record<string,unknown> | null }> {
+async function readPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnReads,held?: HeldRead,keeps = held?.stored !== undefined):
+  Promise<{ readonly prints: ReadPrints; readonly row: Record<string,unknown> | null }> {
   const state = input.state.toUpperCase();
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const turn = shared?.everydayRouting;
   const [read] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
     input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? true,null,input.neighbors ?? false,input.namedDivisionIds ?? [],
-    turn?.version ?? null,held ? JSON.stringify(held.prints) : null,held?.stored !== undefined]);
+    turn?.version ?? null,held ? JSON.stringify(held.prints) : null,keeps]);
   if (!read) throw new Error("PLACE_PAGE_BUILD_FAILED");
   const {everyday_routing_version:version,unchanged,prints,omitted,...row} = read;
   if (held && unchanged === true) return {prints:held.prints,row:null};
   const kept = new Set(Array.isArray(omitted) ? omitted.map(String) : []);
-  const printed = (prints ?? {}) as Record<string,string>;
+  const printed = (prints ?? {}) as ReadPrints;
   if (shared && typeof version === "string") {
     if (version === turn?.version) row.everyday_routing = structuredClone(turn.value);
     else shared.everydayRouting = {version,value:structuredClone(row.everyday_routing)};
   }
-  const behind = [...kept].filter(group => group !== "everyday_routing" && group !== "body_aliases");
-  if (behind.length) {
-    const stored = await held?.stored?.();
-    if (!stored) return {prints:printed,row:(await readPlaceRow(input,query,shared)).row};
-    for (const group of behind) for (const column of PLACE_ROW_GROUPS[group] ?? []) row[column] = stored[column];
-    if (kept.has("meetings")) return {prints:printed,row};
+  const behind = [...kept].filter(group => PLACE_ROW_GROUPS[group] && group !== "everyday_routing" && group !== "body_aliases");
+  // Against a page that keeps its rows, each changed long list came back with only the rows the page lacks.
+  const partial = keeps && held !== undefined, whole = async () => ({prints:printed,row:(await readPlaceRow(input,query,shared)).row});
+  const stored = behind.length || partial ? await held?.stored?.() ?? null : undefined;
+  if (stored === null) return whole();
+  for (const group of behind) for (const column of PLACE_ROW_GROUPS[group]!) row[column] = stored![column];
+  const full = kept.has("meetings") ? row : await expandPlaceBuildRow(row);
+  if (partial) for (const column of ELEMENT_COLUMNS) if (!kept.has(groupOf(column))) {
+    const was = (held.prints[`${column}[]`] ?? []) as readonly string[], rows = stored![column] as unknown[], sent = (full[column] as unknown[]).values();
+    if (rows?.length !== was.length) return whole(); // A stored page always keeps the rows its prints name.
+    const byPrint = new Map(was.map((print,index) => [print,rows[index]]));
+    full[column] = ((printed[`${column}[]`] ?? []) as readonly string[]).map(print => byPrint.has(print) ? byPrint.get(print) : sent.next().value);
   }
-  return {prints:printed,row:await expandPlaceBuildRow(row)};
+  return {prints:printed,row:full};
 }
 
 async function expandPlaceBuildRow(row: Record<string,unknown>): Promise<Record<string,unknown>> {
@@ -567,13 +580,9 @@ async function expandPlaceBuildRow(row: Record<string,unknown>): Promise<Record<
 }
 
 
-export async function buildPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnReads): Promise<Record<string,unknown>> {
-  return (await readPlaceRow(input,query,shared)).row!;
-}
-
 /** Publication workers run this query; a reader runs it only for a place whose first page is still queued. */
 export async function buildPlacePackage(input: PlaceInput, query: Query) {
-  return composePlaceRow(input, await buildPlaceRow(input,query));
+  return composePlaceRow(input, (await readPlaceRow(input,query)).row!);
 }
 
 /** Until its first page is built, a place is composed from the same fact-store selection the builder reads, as before ready pages. */
@@ -632,10 +641,10 @@ export async function rebuildPageBody(id:string,kind:string,state:string,query:Q
   // A ZIP page keeps no saved rows, so its reads are all or nothing.
   const reads:[string,PlaceInput][]=zip?[["current",input]]:[["history",{...input,includeHistory:true}],
     ...(stateRoot?[["emptyHistory",{...input,divisionIds:[],includeHistory:true}] as [string,PlaceInput]]:[])];
-  const prints:Record<string,Readonly<Record<string,string>>>={},rows=new Map<string,Record<string,unknown>|null>();
+  const prints:Record<string,ReadPrints>={},rows=new Map<string,Record<string,unknown>|null>();
   for(const [key,read] of reads) {
     const prior=same?.prints.reads[key];
-    const out=await readPlaceRow(read,query,shared,prior?{prints:prior,...(zip?{}:{stored:()=>same!.row(key)})}:undefined);
+    const out=await readPlaceRow(read,query,shared,prior?{prints:prior,...(zip?{}:{stored:()=>same!.row(key)})}:undefined,!zip);
     prints[key]=out.prints;
     rows.set(key,out.row);
   }

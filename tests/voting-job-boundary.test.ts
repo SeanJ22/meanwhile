@@ -158,13 +158,6 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
     deadlineMs: at === "2026-10-24T08:00:00.000Z" ? deadline : clock + 10_000,
     fetch: fetchSource, geocode: async () => null, registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [source, second] });
   let bytesRead = 0;
-  // As PostgresRoutineDataStore.readVersioned: a proven read is reused until its pointer moves.
-  const versioned = new Map<string, { version: string; value: unknown }>();
-  Object.assign(store, { readVersioned: async (namespace: string, recordClass: "REGISTRATION", scope: string, read: () => Promise<unknown>) => {
-    const version = JSON.stringify(await store.readPromotionIdentity(recordClass, scope));
-    if (versioned.get(namespace + scope)?.version !== version) versioned.set(namespace + scope, { version, value: await read() });
-    return versioned.get(namespace + scope)!.value;
-  } });
   for (const name of Object.getOwnPropertyNames(MemoryRoutineDataStore.prototype).filter(name => /^read|^eventObservedAt$/.test(name))) {
     const original = (store as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[name]!.bind(store);
     t.mock.method(store as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>, name, async (...args: unknown[]) => {

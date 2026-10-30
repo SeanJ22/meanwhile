@@ -10,6 +10,7 @@ import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 import { serverReaderValue } from "./memory.ts";
 import { createHash } from "node:crypto";
 
+const refuse = (reason: string) => async (): Promise<never> => { throw new Error(reason); };
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
 type Additional = Statement & { readonly canonicalKeys?: true;
   readonly sharedSources?: { readonly keys: readonly string[]; readonly translations: string } };
@@ -127,8 +128,7 @@ export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], q
       if (!read) throw new Error("READER_GROUP_NOT_SELECTED");
       return read;
     },
-    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    readPromotion: refuse("READER_USES_CANONICAL_ENTRY"), readCandidate: refuse("READER_USES_CANONICAL_ENTRY"),
     async readPromotedEntry(recordClass, scope) {
       const read = stores.get(`${recordClass}:${scope}`);
       if (!read) throw new Error(`READER_SCOPE_NOT_SELECTED:${recordClass}:${scope}`);
@@ -201,11 +201,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   const rows = loaded.filter(row => row.row_kind === "promotion");
   const preloaded = Object.fromEntries(loaded.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row.part_payload]));
   if (rows.some(row => row.published !== true)) throw new Error("READER_PUBLISHED_POINTER_INVALID");
-  const parts = new CivicPayloadParts({
-    async existing() { throw new Error("READER_IS_READ_ONLY"); },
-    async write() { throw new Error("READER_IS_READ_ONLY"); },
-    async read() { throw new Error("READER_PARTS_MISSING"); },
-  });
+  const parts = new CivicPayloadParts({ existing: refuse("READER_IS_READ_ONLY"), write: refuse("READER_IS_READ_ONLY"), read: refuse("READER_PARTS_MISSING") });
   const values = await parts.loadOwned(rows, preloaded) as typeof rows;
   const decoded: { root: PromotedEdgeEntry }[] = values.map(row => ({ root: { kind: "PROMOTED", projection: {
     key: String(row.key), recordClass: row.record_class as RoutineRecordClass, scope: String(row.scope), sourceId: String(row.source_id),
@@ -227,8 +223,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   registerIntegrityCheckedEdgeEntries([...held.values()]);
   return {
     additionalRows: additionalRows ?? [], additionalEntries,
-    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    readPromotion: refuse("READER_USES_CANONICAL_ENTRY"), readCandidate: refuse("READER_USES_CANONICAL_ENTRY"),
     async readPromotedEntry(recordClass, scope) {
       const key = `${recordClass}:${scope}`;
       if (!keys.includes(key)) throw new Error(`READER_SCOPE_NOT_SELECTED:${key}`);

@@ -46,7 +46,7 @@ export const LOCK_FIRST_ATTEMPT = "500ms";
 /**
  * A migration takes every table it declares, in the mode its ALTERs need, before its first statement. Its request
  * queues ahead of later readers, but each ask gives up after LOCK_FIRST_ATTEMPT and releases what it got, then waits a
- * second and asks again. A place-page builder holds rebuild_queue and then reads entity; a publication writes entity
+ * second and asks again. A place-page builder holds place_page and then reads entity; a publication writes entity
  * and then queues pages; a migration holding one table while it waits for another deadlocks with one of them. Asking
  * this way, the migration backs off before PostgreSQL's deadlock check could cancel either of them, and it never
  * upgrades a lock it already holds. Its own statements then run under the caller's lock timeout again.

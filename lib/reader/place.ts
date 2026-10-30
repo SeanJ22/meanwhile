@@ -16,7 +16,7 @@ import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
 const identityCtes = `page_dependencies AS MATERIALIZED (
-  SELECT s.id AS page_id,d.entity_id FROM selected s JOIN place_page p ON p.place_id=s.id CROSS JOIN LATERAL unnest(coalesce(p.depends,ARRAY(SELECT o.entity_id FROM place_page_dependency o WHERE o.page_id=p.place_id))) AS d(entity_id)
+  SELECT s.id AS page_id,d.entity_id FROM selected s JOIN place_page p ON p.place_id=s.id CROSS JOIN LATERAL unnest(p.depends) AS d(entity_id)
   UNION SELECT id,id FROM selected
 ), page_headers AS MATERIALIZED (
   SELECT d.page_id,b.id AS original,c.id,c.name FROM page_dependencies d JOIN entity b ON b.id=d.entity_id AND b.kind='body'

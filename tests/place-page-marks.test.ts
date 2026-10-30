@@ -56,17 +56,3 @@ test("a change that arrives while a page builds keeps it marked, and a failed pu
     assert.equal(held!.waiting, true);
   } finally { await db.pg.close(); }
 });
-
-test("the old queue's marks and each page's dependencies move onto the pages, once, in place order", async () => {
-  const db = await seeded();
-  try {
-    await db.query("INSERT INTO place_page(place_id,context) VALUES($1,'{\"formatVersion\":1}'::jsonb)", [CITY]);
-    await db.query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$2),($1,$1)", [CITY, BOARD]);
-    await db.query("INSERT INTO rebuild_queue(place_id,priority) VALUES($1,5),($2,3)", [CITY, STATE]);
-    await rebuildPlacePages({ db, purge: async () => purged, limit: 1, concurrency: 1, timeBudgetMs: 4_000 });
-    const [moved] = await db.query("SELECT depends FROM place_page WHERE place_id=$1", [CITY]);
-    assert.ok((moved!.depends as string[]).includes(BOARD));
-    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE place_id=$1", [STATE])).length, 1, "a queued place with no page gets a marked row");
-    assert.equal((await db.query("SELECT position FROM pass_cursor WHERE name='place-pages:adopt'"))[0]!.position, "done");
-  } finally { await db.pg.close(); }
-});

@@ -162,7 +162,7 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
               SELECT patch->>'id' AS id,patch->>'state' AS state,patch FROM jsonb_array_elements($1::jsonb) p(patch)
             ), changed AS (
               UPDATE cp_owner_assignment_rows r SET state_code=p.state,value=(r.value || (p.patch-'group'-'indexActivity')) ||
-                CASE WHEN p.patch ? 'group' THEN jsonb_build_object('group',(r.value->'group'-'usd'-'items'-'scoutKeys') || (p.patch->'group')) ELSE '{}'::jsonb END ||
+                CASE WHEN p.patch ? 'group' THEN jsonb_build_object('group',((r.value->'group')-'usd'-'items'-'scoutKeys') || (p.patch->'group')) ELSE '{}'::jsonb END ||
                 CASE WHEN p.patch ? 'indexActivity' THEN jsonb_build_object('indexSegments',(
                   SELECT jsonb_agg(segment || jsonb_build_object('lastActivityAt',p.patch->'indexActivity'->(ordinal-1)::integer) ORDER BY ordinal)
                   FROM jsonb_array_elements(r.index_segments) WITH ORDINALITY s(segment,ordinal))) ELSE '{}'::jsonb END

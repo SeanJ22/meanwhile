@@ -709,8 +709,12 @@ test("native assignment heads match full indexes through archive joins, renewed 
     const earlier=round(world,"head-ties","earlier",{worker:MODEL,startedAt:at(T1,-2),obligation:"zz-ties"});
     round(world,"head-ties","later",{worker:PLAIN,startedAt:at(T1,-1)});
     world.attempts[world.attempts.indexOf(earlier)]={...earlier,endedAt:at(T1,-.5)};
+    round(world,"head-ties","older-live",{worker:PLAIN,startedAt:at(T1,-3),open:true,leaseUntil:at(T1,1)});
     const scout=world.scouts.find(row=>row.attemptId===earlier.id)!;
     world.scouts.push({...scout,recordedAt:at(T1,-.1),outcome:"EVIDENCE_FOUND",findings:[{}] as never},{...scout,recordedAt:at(T1,-.1),outcome:"NO_PROGRESS"});
+    world.workItems.push(workItem("head-attempt-tie","attempt ties"));
+    const tied=round(world,"head-attempt-tie","tie-first",{worker:PLAIN,startedAt:at(T1,-2)}),lastTied=round(world,"head-attempt-tie","tie-last",{worker:PLAIN,startedAt:at(T1,-1)});
+    world.attempts[world.attempts.indexOf(tied)]={...tied,endedAt:lastTied.endedAt};
     world.workItems.push(workItem("head-worker","worker ties"));
     const workerAttempt=round(world,"head-worker","worker",{worker:PLAIN,startedAt:at(T1,-1)}),worker=parserResult(workerAttempt);
     world.workerResults.push({...worker,id:"worker-one",endedAt:at(T1,-.01)},
@@ -737,6 +741,9 @@ test("native assignment heads match full indexes through archive joins, renewed 
       }
       const expected=deriveAssignmentEntries({...src,nowIso:now}),batch=await reader.read(seeds,now),actual=deriveAssignmentEntriesFromHeads(batch.heads,now);
       assert.deepEqual([...actual.keys()].sort(),[...expected.keys()].sort(),now);
+      assert.equal(batch.heads.find(row=>row.id==="head-ties")!.latest!.attempt.id,earlier.id,"latest activity wins over latest start");
+      assert.equal(batch.heads.find(row=>row.id==="head-attempt-tie")!.latest!.attempt.id,lastTied.id,"last canonical round wins an activity tie");
+      if(now===T1)assert.equal(actual.get("head-ties")!.index.state,"WORKING","an older live round wins over newer completed rounds");
       for(const[id,entry]of expected){assert.deepEqual(actual.get(id),{index:entry.index,horizon:entry.horizon,obligation:entry.obligation},`${now}: ${id}`);
         assert.deepEqual([...(batch.members.get(id)??[])].sort(),[...entry.members].sort(),`membership: ${id}`);}
     }

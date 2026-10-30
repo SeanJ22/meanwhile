@@ -6,8 +6,6 @@ import type { Attempt, ExecutionLease, WorkerRole } from "../lib/control-plane/a
 import {
   OBLIGATION_PROVIDER_PREFIXES,
   buildAssignmentView,
-  assignmentHeadBatchFromSources,
-  deriveAssignmentEntriesFromHeads,
   buildAssignments,
   assignmentCountClaims,
   assignmentRenderedNumbers,
@@ -270,23 +268,6 @@ function empty(): AssignmentSources {
   };
 }
 
-
-test("current heads keep live older rounds, renewed leases and last-activity outcome ordering", () => {
-  const old=attempt("old","a","work",{startedAt:PAST,endedAt:NOW});
-  const newer=attempt("newer","b","work",{startedAt:"2026-09-22T11:00:00.000Z",endedAt:"2026-09-22T11:30:00.000Z",outcome:"TIMED_OUT"});
-  const source={...empty(),workItems:[workItem("work")],attempts:[old,newer],routeTasks:[
-    routeTask("a","work",{disposition:disposition({disposition:"INGESTED",attemptId:old.id})}),routeTask("b","work") ]};
-  const entry=(src:AssignmentSources,clock=NOW)=>deriveAssignmentEntriesFromHeads(assignmentHeadBatchFromSources(src).heads,clock).get("work")!;
-  assert.equal(entry(source).index.state,"SUCCEEDED","latest activity wins even when another attempt started later");
-  assert.equal(entry({...source,attempts:[old,{...newer,endedAt:NOW}]}).index.state,"FAILED","the last canonical round wins an activity tie");
-  const open={...source,attempts:[{...old,endedAt:null,outcome:null},newer],leases:[{
-    id:old.leaseId,routeTaskId:old.routeTaskId,holder:"fixture",claimedAt:PAST,heartbeatAt:NOW,released:false,expiresAt:FUTURE}]};
-  assert.equal(entry(open).index.state,"WORKING","an older live round leads a newer completed one");
-  assert.equal(entry(open,FUTURE).index.state,"FAILED");
-  const renewed={...open,leases:open.leases.map(lease=>({...lease,expiresAt:"2026-09-24T12:00:00.000Z"}))};
-  assert.equal(entry(renewed,FUTURE).index.state,"WORKING","the due read honors a lease renewal");
-  assert.equal(entry(renewed,FUTURE).horizon,"2026-09-24T12:00:00.000Z");
-});
 
 test("repair successor costs and publication remain on the original Send assignment", () => {
   const parent = workItem("parent", { obligation: "hunt-root#1" });

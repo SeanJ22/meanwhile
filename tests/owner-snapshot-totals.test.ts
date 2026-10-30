@@ -1,3 +1,4 @@
+import { ownerReadbackItem } from "../lib/control-plane/repository/owner-assignment-rows.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
@@ -161,7 +162,7 @@ function initialWorld(): World {
       const open = s === rounds && i % 5 === 1;
       const worker = i % 3 === 0 ? MODEL : PLAIN;
       w.workItems.push(workItem(wi, `${id}#${s}`, { routeTaskIds: [`rt-${i}-${s}`], createdAt: startedAt,
-        ...(s === rounds && i % 9 === 0 ? { autonomousPlan: { publication: { contractId: "official-roster", bodyId: `ocd-division/country:us/state:${STATES[i % 10]}/place:p${i}` },
+        ...(s === rounds && i % 9 === 0 ? { autonomousPlan: { publication: { contractId: `registry-runtime:${STATES[i % 10].toUpperCase()}`, bodyId: `ocd-division/country:us/state:${STATES[i % 10]}/place:p${i}` },
           contract: { recordClass: "OFFICIAL_ROSTER" } } as never, publicationOutcome: { at: at(startedAt, 1), workerResultId: `wr-at-${i}-${s}`, status: "PUBLISHED",
           code: "PUBLISHED", detail: "fixture", candidateId: null, versionId: `v-${i}` } } : {}) }));
       w.occurrences.push({ id: `occ-${id}-${String(s).padStart(6, "0")}`, obligationId: id, sequence: s, dueAt: startedAt, workItemId: wi, routeTaskId: `rt-${i}-${s}`,
@@ -371,7 +372,7 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
     attribution: providerBillingAttribution({ now, costs, attempts, scopes, holds: {}, scopeMembers: exactScopeMembers(scopes, obligations), readings: read }),
     searches: searchLedgersOf(costs, now),
     obligationsByState: byState,
-    publications: sources.workItems.filter((w) => w.publicationOutcome).map((w) => w.id).sort(),
+    publications: sources.workItems.filter(ownerReadbackItem).map((w) => w.id).sort(),
     rows: { allRowsIndex },
   });
 }
@@ -524,7 +525,8 @@ test("a clock-only fold checks a silently renewed lease head before applying sav
     routeTaskId: attempt.routeTaskId, openedAt: at(T1, -0.25), closedAt: null, disposition: null, unresolvedReason: null } as FreshnessOccurrence);
   await seed(repos, w);
   // Production's semantic lease cursor deliberately ignores a valid live renewal.
-  const quiet = { ...repos, ownerLeaseChanges: { read: async () => T1 } };
+  repos.leases.listChangedSince=async()=>({rows:[],through:T1});
+  const quiet=repos;
   const one = await publish(quiet, T1, null, [], null);
   const settled = await publish(quiet, at(T1, 0.25), one.published, [], null);
   const held = (await repos.leases.read(attempt.routeTaskId))!;

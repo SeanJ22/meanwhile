@@ -25,6 +25,14 @@ export interface OwnerAssignmentHead {
   readonly versions: Readonly<Record<string, string>>;
 }
 
+const READBACK_CONTRACTS=["official-filings","comment-access","everyday-routing","ballot-navigation"];
+export const ownerReadbackItem=(item:WorkItem):boolean=>!!item.publicationOutcome&&item.publicationOutcome.status!=="HELD"&&(
+  READBACK_CONTRACTS.includes(item.autonomousPlan?.publication?.contractId??"")||
+  (/^registry-runtime:[A-Z]{2}$/.test(item.autonomousPlan?.publication?.contractId??"")&&item.autonomousPlan?.contract?.recordClass==="OFFICIAL_ROSTER"));
+export const ownerReadbackWhere=(value:string):string=>`${value} #>> '{publicationOutcome,status}' <> 'HELD' AND (
+  ${value} #>> '{autonomousPlan,publication,contractId}' IN (${READBACK_CONTRACTS.map(id=>`'${id}'`).join(",")}) OR
+  (${value} #>> '{autonomousPlan,publication,contractId}' ~ '^registry-runtime:[A-Z]{2}$' AND ${value} #>> '{autonomousPlan,contract,recordClass}'='OFFICIAL_ROSTER'))`;
+
 export interface OwnerStateWrite {
   readonly id: string;
   readonly expectedRevision: number | null;
@@ -38,7 +46,7 @@ export interface OwnerAssignmentRows {
   find(input: { readonly members?: readonly string[]; readonly clauses?: readonly string[]; readonly dueAt?: string }): Promise<readonly string[]>;
   save(rows: readonly OwnerAssignmentRow[], removed: readonly string[], states?: readonly OwnerStateWrite[], prior?: readonly OwnerAssignmentHead[]): Promise<void>;
   scopeMembers(identities: readonly { readonly key: string; readonly ref: string }[]): Promise<ReadonlyMap<string, readonly string[]>>;
-  publications(readbackOnly?: boolean): Promise<readonly WorkItem[]>;
+  publications(): Promise<readonly WorkItem[]>;
   clear(): Promise<void>;
 }
 
@@ -192,12 +200,10 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
       for (const row of rows) { const identity = `${row.key}\n${row.ref}`; out.set(identity,[...(out.get(identity) ?? []),row.subject]); }
       return out;
     },
-    async publications(readbackOnly = false) {
+    async publications() {
       const rows = await sql.query(`SELECT p.item FROM cp_owner_assignment_rows r
         CROSS JOIN LATERAL jsonb_array_elements(coalesce(r.value #> '{group,publications}','[]'::jsonb)) p(item)
-        ${readbackOnly ? `WHERE p.item #>> '{publicationOutcome,status}' <> 'HELD' AND (
-          p.item #>> '{autonomousPlan,publication,contractId}' IN ('official-filings','comment-access','everyday-routing','ballot-navigation') OR
-          (p.item #>> '{autonomousPlan,publication,contractId}' ~ '^registry-runtime:[A-Z]{2}$' AND p.item #>> '{autonomousPlan,contract,recordClass}'='OFFICIAL_ROSTER'))` : ""}
+        WHERE ${ownerReadbackWhere("p.item")}
         ORDER BY p.item->>'id'`, []) as {item:WorkItem}[];
       return rows.map(row => row.item);
     },

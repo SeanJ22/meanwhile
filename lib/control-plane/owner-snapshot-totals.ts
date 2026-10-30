@@ -7,6 +7,7 @@ import {
   assignmentPartOf,
   deriveAssignmentEntriesFromHeads,
   type AssignmentHead,
+  type AssignmentHeadEntry,
   type AssignmentSources,
   mergeAssignmentParts,
   pipelineLinked,
@@ -1137,7 +1138,7 @@ export class OwnerSnapshotFold {
     const out:IndexSegment[]=[];
     for(let at:string|null=this.#input.nowIso;at!==null;){
       if(out.length>64)throw new Error(`assignment ${head.id} names more than 64 instants its row changes at`);
-      const entry=deriveAssignmentEntriesFromHeads([head],at).get(head.id)!;
+      const entry:AssignmentHeadEntry=deriveAssignmentEntriesFromHeads([head],at).get(head.id)!;
       const last=out[out.length-1];
       if(last){const{from:_from,until:_until,...held}=last;if(JSON.stringify(held)===JSON.stringify(entry.index))out[out.length-1]={...last,until:entry.horizon};
         else out.push({...entry.index,from:at,until:entry.horizon});}

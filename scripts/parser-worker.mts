@@ -8,6 +8,7 @@ import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-pla
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
+import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { loadParsers } from "../lib/sources/parser-hook.ts";
 import { LEAD_LEASE_MS, runParserWorkers } from "../lib/sources/parser-worker.ts";
@@ -16,7 +17,10 @@ prepareProductionCivicDataWrite();
 let drain = false;
 process.on("SIGTERM", () => { drain = true; });
 process.on("message", message => { if (message && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") drain = true; });
-const stopRequested = () => drain || Date.now() >= passDeadlineFromEnv();
+// A database request settles within STANDING_NEON_REQUEST_DEADLINE_MS: claiming stops two before the pass deadline, work still running one before.
+const turnEndAt = passDeadlineFromEnv() - STANDING_NEON_REQUEST_DEADLINE_MS;
+const stopRequested = () => drain || Date.now() >= turnEndAt - STANDING_NEON_REQUEST_DEADLINE_MS;
+const turnEnd = Number.isFinite(turnEndAt) ? AbortSignal.timeout(Math.max(1, turnEndAt - Date.now())) : undefined;
 const slots = routineProcessSlots({ admissionsOpen: () => !stopRequested() });
 const release = await slots.acquire("parser-worker.mts", Date.now() + 60_000);
 try {
@@ -42,10 +46,11 @@ try {
     };
     while (!stopRequested()) {
       if (Date.now() - clocksAt >= 60_000) { await settings(); clocksAt = Date.now(); }
-      const stats = await runParserWorkers({ concurrency: 4, maxClaims: 100, stopRequested, log: console.error, deps: {
+      const stats = await runParserWorkers({ concurrency: 4, maxClaims: 100, stopRequested, turnEnd, log: console.error, deps: {
         list: workList(query, { owner: `parser:${process.pid}`, leaseMs: LEAD_LEASE_MS }), facts, repos, parsers, clocks, vault, fetch, now: () => new Date() } });
       if (stats.claimed) console.log(`Page readers: ${JSON.stringify(stats)}`);
       else await new Promise(done => setTimeout(done, 5_000));
     }
   } finally { clearInterval(heartbeat); }
 } finally { release(); }
+process.exit(0); // cut-off work may still hold a connection

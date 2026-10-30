@@ -110,9 +110,10 @@ export async function readLead(deps: LeadDeps, claim: WorkRow): Promise<LeadResu
 
 /** Claims links newest first within each tier, whichever of the installed kinds of website holds the first, and reads each with its parser. */
 export async function runParserWorkers(input: { readonly deps: LeadDeps; readonly concurrency: number; readonly maxClaims?: number;
-  readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void }) {
+  /** At the turn's end, a link still being read is cut off and goes back to waiting; it is not a failure. */
+  readonly turnEnd?: AbortSignal; readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void }) {
   const { deps } = input, platforms = [...deps.parsers.keys()];
-  const stats = { claimed: 0, read: 0, published: 0, links: 0, again: 0, refused: 0, failed: 0 };
+  const stats = { claimed: 0, read: 0, published: 0, links: 0, again: 0, refused: 0, failed: 0, released: 0 };
   let reserved = 0;
   const results = await runBoundedWorkPool(Array.from({ length: input.concurrency }, (_, index) => index), input.concurrency, async () => {
     while (!input.stopRequested() && reserved < (input.maxClaims ?? Infinity)) {
@@ -121,7 +122,7 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
       const [claim] = platform === null ? [] : await deps.list.claim("lead", 1, { platform });
       if (!claim) { reserved--; if (!input.sleep) break; await input.sleep(5_000); continue; }
       stats.claimed++;
-      const controller = new AbortController();
+      const controller = new AbortController(), signal = input.turnEnd ? AbortSignal.any([controller.signal, input.turnEnd]) : controller.signal;
       let renewing = false;
       const timer = setInterval(() => {
         if (renewing) return;
@@ -130,7 +131,10 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
           .catch(error => controller.abort(error)).finally(() => { renewing = false; });
       }, RENEW_MS);
       try {
-        const result = await readLead(deps, claim);
+        // A page that is slow to answer cannot hold the turn open past its end.
+        const result = await Promise.race([readLead(deps, claim), new Promise<never>((_, reject) => {
+          if (signal.aborted) reject(signal.reason); else signal.addEventListener("abort", () => reject(signal.reason), { once: true });
+        })]);
         controller.signal.throwIfAborted();
         const unlock = (kind: Unlock["kind"], text: string): Unlock => ({ kind, platform: platform ?? undefined, text });
         if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; }
@@ -141,6 +145,7 @@ export async function runParserWorkers(input: { readonly deps: LeadDeps; readonl
           stats.read++; stats.published += result.published; stats.links += result.links;
         }
       } catch (error) {
+        if (input.turnEnd?.aborted) { stats.released++; await deps.list.release(claim).catch(inner => input.log?.(sanitizedErrorDiagnostic(inner))); continue; }
         stats.failed++;
         const detail = sanitizedErrorDiagnostic(error);
         await deps.list.later(claim, detail);

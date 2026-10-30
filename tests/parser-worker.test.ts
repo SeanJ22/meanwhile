@@ -142,3 +142,16 @@ test("every installed parser is found by its folder, and a link's kind of websit
   }
   assert.equal(platformOf("https://files.thrillshare.com/documents/a.pdf?x=1"), "pdf", "a file's own type wins over its host");
 });
+
+test("a turn whose end arrives mid-batch ends cleanly: the links still being read go back to waiting, none marked failed, and none is claimed after", async t => {
+  const { facts, list, deps, requests } = await setup();
+  t.after(() => facts.pg.close());
+  await list.ensure(["a", "b", "c"].map(name => productionLead({ url: `https://${name}.legistar.com/Calendar.aspx` })));
+  const end = new AbortController(), asked: string[] = [];
+  const stuck: ProbeFetch = url => { asked.push(url); if (asked.length === 3) end.abort(); return new Promise(() => {}); };
+  const stats = await runParserWorkers({ deps: { ...deps, fetch: stuck }, concurrency: 3, turnEnd: end.signal, stopRequested: () => end.signal.aborted });
+  assert.deepEqual([stats.claimed, stats.released, stats.failed, stats.read], [3, 3, 0, 0]);
+  assert.equal(requests.length, 0);
+  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead' AND status = 'waiting' AND lease_owner IS NULL`))[0]!.n), 3);
+  assert.equal((await runParserWorkers({ deps, concurrency: 3, stopRequested: () => false })).claimed, 3, "the next turn claims them again");
+});

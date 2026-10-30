@@ -14,7 +14,8 @@ import { durableSearchBudget } from "../lib/control-plane/discovery/search-runti
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
 import { HUNTER_CLAIM_LEASE_MS, HUNTER_CLAIM_RENEW_MS, hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
-import { capabilityLog, deadEndOf, installedParsers } from "../lib/core/capability.ts";
+import { capabilityLog, deadEndOf } from "../lib/core/capability.ts";
+import { installedParsers } from "./lib/installed-parsers.mts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
 

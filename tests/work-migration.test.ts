@@ -11,7 +11,8 @@ import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/cont
 import { JOB_BREAKER_DDL } from "../lib/control-plane/repository/migrations/BB-01.ts";
 import { readCounts, readOldest } from "../lib/control-plane/line-keeper/read.ts";
 import { countWindow } from "../lib/counts/hour.ts";
-import { capabilityLog, installedParsers, reopenDeadEnds } from "../lib/core/capability.ts";
+import { capabilityLog, reopenDeadEnds } from "../lib/core/capability.ts";
+import { installedParsers } from "../scripts/lib/installed-parsers.mts";
 import { workList } from "../lib/core/work.ts";
 import { readReopenedItems } from "../lib/control-plane/admin-view/v6-stuck-reopened.ts";
 

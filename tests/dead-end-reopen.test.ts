@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
-import { CAPABILITY_DDL, REOPEN_BATCH, capabilitiesOfEntries, capabilityLog, deadEndOf, installedParsers, reopenDeadEnds, unlockOf, type Unlock } from "../lib/core/capability.ts";
+import { CAPABILITY_DDL, REOPEN_BATCH, capabilitiesOfEntries, capabilityLog, deadEndOf, reopenDeadEnds, unlockOf, type Unlock } from "../lib/core/capability.ts";
+import { installedParsers } from "../scripts/lib/installed-parsers.mts";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { WORK_DDL, workList, type WorkInput } from "../lib/core/work.ts";
 import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";

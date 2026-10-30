@@ -905,8 +905,8 @@ export class OwnerSnapshotFold {
     this.costs=await costs(this.#priorCosts,changed);
     if(!this.#rebuild){
       const due=await this.#repos.ownerAssignmentRows.find({dueAt:this.#input.nowIso});
-      await this.#acceptRows(due);
-      for(const row of due)this.#inboxes.group(row.state,row.id);
+      await this.#loadRows(due);
+      for(const id of due)this.#inboxes.group(this.#priorRows.get(id)!.state,id);
     }
     if(checkpoint){
       await this.#foldPipeline(this.#rebuild);
@@ -1152,7 +1152,7 @@ export class OwnerSnapshotFold {
           if(checkpoint)loaded.inboxRun=this.#inboxes.run;
         }
         await this.#loadRows(inbox.groups);
-        await this.#acceptRows(await this.#repos.ownerAssignmentRows.find({ members: inbox.items, clauses: inbox.groups }));
+        await this.#loadRows(await this.#repos.ownerAssignmentRows.find({ members: inbox.items, clauses: inbox.groups }));
         const targets = new Set(inbox.groups);
         /* A new obligation takes in the created work items whose clause names it. */
         for (const id of loaded.groups) { const clause = this.#groups.get(id)!.clause; if (clause !== null && targets.has(clause) && !this.#groups.has(clause)) targets.add(id); }
@@ -1182,12 +1182,7 @@ export class OwnerSnapshotFold {
   }
 
   async #loadRows(ids: readonly string[]): Promise<void> {
-    await this.#acceptRows(await this.#repos.ownerAssignmentRows.read(ids.filter(id => !this.#priorRows.has(id))));
-  }
-
-  async #acceptRows(rows: readonly OwnerAssignmentRow[]): Promise<void> {
-    for (const row of rows) {
-      if (this.#priorRows.has(row.id)) continue;
+    for (const row of await this.#repos.ownerAssignmentRows.read(unique(ids).filter(id => !this.#priorRows.has(id)))) {
       await this.#load(row.state);
       this.#priorRows.set(row.id, row);
       this.#setGroup(row.state, row.id, row.group);
@@ -1295,7 +1290,7 @@ export class OwnerSnapshotFold {
     const replay = new Replay();
     const recording = replay.recording(this.#repos);
     await this.#loadRows(targets);
-    await this.#acceptRows(await this.#repos.ownerAssignmentRows.find({ members: probes }));
+    await this.#loadRows(await this.#repos.ownerAssignmentRows.find({ members: probes }));
     for (const id of probes) { const group = this.#groupOf.get(id); if (group) ids.add(group); }
     for (let round = 0; ; round += 1) {
       if (round > 16) throw new Error(`assignment membership did not settle for ${[...ids].slice(0, 5).join(", ")}`);
@@ -1309,10 +1304,8 @@ export class OwnerSnapshotFold {
       const needed = new Set([...produced].map(([id, entry]) => stateOfEntry(id, entry)));
       for (const m of members) if (!this.#groupOf.has(m)) needed.add(this.#crossings[m] ?? homeOf(m, items.get(m)));
       const missingIds = [...produced.keys()].filter(id => !this.#priorRows.has(id));
-      const ownerRows = await this.#repos.ownerAssignmentRows.find({ members: [...members] });
-      const unseen = ownerRows.filter(row => !this.#priorRows.has(row.id));
-      await this.#loadRows(missingIds);
-      await this.#acceptRows(unseen);
+      const unseen = (await this.#repos.ownerAssignmentRows.find({ members: [...members] })).filter(id => !this.#priorRows.has(id));
+      await this.#loadRows([...missingIds, ...unseen]);
       if (unseen.length) continue;
       const unloaded = [...needed].filter((state) => !this.#loaded.has(state));
       if (unloaded.length > 0) {

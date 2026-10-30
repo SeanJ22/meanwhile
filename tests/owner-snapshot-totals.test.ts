@@ -27,6 +27,7 @@ import { billingAttributionOf, providerBillingAttribution } from "../lib/control
 import { searchLedgersOf } from "../lib/control-plane/provider-billing-collector.ts";
 import { exactScopeMembers } from "../lib/control-plane/provider-billing-scope-members.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import type { RouteTask } from "../lib/control-plane/route-task.ts";
 import type { FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
@@ -490,7 +491,7 @@ test("a steady publish reads only the rows changed since the last one and derive
       };
     } })])) as unknown as ControlPlaneRepositories;
   const now = at(T1, 1);
-  const due = await repos.ownerAssignmentRows.find({ dueAt: now });
+  const due = await repos.ownerAssignmentRows.read(await repos.ownerAssignmentRows.find({ dueAt: now }));
   const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos);
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assert.ok(derivedFor.has(obligationId(12)), "the assignment the new round belongs to is derived again");
@@ -504,7 +505,7 @@ test("a steady publish reads only the rows changed since the last one and derive
   loaded.clear();
   derivedFor.clear();
   const idle = at(T1, 9);
-  const expired = await repos.ownerAssignmentRows.find({ dueAt: idle });
+  const expired = await repos.ownerAssignmentRows.read(await repos.ownerAssignmentRows.find({ dueAt: idle }));
   const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos);
   const expiredIds = new Set(expired.map(row => row.id));
   assert.ok([...derivedFor].every(id => expiredIds.has(id)), "an idle publish only updates work-list deadlines that passed");
@@ -642,4 +643,11 @@ test("artifact-only receipts never read assignment history; execution or later w
   realMembership=true;await repos.workItems.put("capture-receipts",workItem("capture-receipts","standalone"),at(T1,1.5));
   const current=await publish(repos,at(T1,2),previous.published,[],null);
   assert.equal(current.view.summary.total,3);assert.ok(reads>0);assertSamePanels("later real membership",current.panels,await fromScratch(repos,at(T1,2),[],null,current.published.readings));
+});
+
+test("assignment membership seeks transfer keys before any saved row body is loaded",async()=>{
+  const queries:string[]=[];
+  const rows=pgOwnerAssignmentRows({query:async(text)=>{queries.push(text);return[{id:"held"}];}});
+  for(const seek of[{members:["member"]},{clauses:["obligation"]},{dueAt:T1}])assert.deepEqual(await rows.find(seek),["held"]);
+  assert.ok(queries.every(text=>/^SELECT id FROM cp_owner_assignment_rows/.test(text)));
 });

@@ -19,7 +19,7 @@ export function storedOwnerAssignmentRows(store: AggregateRepository<OwnerAssign
       const members = new Set(input.members), clauses = new Set(input.clauses);
       return (await values()).filter(row => row.group.members.some(id => members.has(id)) ||
         (row.group.clause !== null && clauses.has(row.group.clause)) ||
-        (input.dueAt !== undefined && row.nextAt !== null && row.nextAt <= input.dueAt));
+        (input.dueAt !== undefined && row.nextAt !== null && row.nextAt <= input.dueAt)).map(row => row.id);
     },
     async save(rows, removed, states = []) {
       const now = rows[0]?.builtAt ?? new Date().toISOString();

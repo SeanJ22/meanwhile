@@ -1,11 +1,16 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { ROUTINE_SOURCE_TASKS, routineSerialLane, routineTaskDue, routineTaskNextDueMs, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
+import { ROUTINE_SOURCE_TASKS, routinePassLaunchOrder, routineSerialLane, routineTaskDue, routineTaskNextDueMs, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
+import { electionLaunchOrder } from "../lib/civic-data/ballot-publication.ts";
+import { dueRequestsFirstInClass } from "../lib/civic-data/routine-due-request.ts";
+import { shutFeedsLast } from "../lib/doors/mission-refresh.ts";
+import type { DoorRecord } from "../lib/doors/registry.ts";
 import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { PLACE_MAP_PASS_BUDGET_MS, PLACE_MAP_RUN_RESERVE_MS, PLACE_MAP_SETTLEMENT_MS, isPlaceMapTask, laneSourceTasks,
-  placeMapLaunchOrder, placeMapRowsOwed, placeMapsLane } from "../lib/civic-data/place-map-lane.ts";
+  isVotingSitesTask, placeMapLaunchOrder, placeMapRowsOwed, placeMapsLane, votingSitesLane } from "../lib/civic-data/place-map-lane.ts";
 import { ROUTINE_PASS_BUDGET_MS } from "../lib/civic-data/contracts.ts";
 
 const MAPS = ROUTINE_SOURCE_TASKS.filter(isPlaceMapTask).map(task => ({ ...task, ...factRefreshBounds(task) }));
@@ -35,12 +40,12 @@ test("the lane is its own standing clock, independent of the routine pass's budg
   assert.ok(lane.budgetMs <= ROUTINE_PASS_BUDGET_MS, "a release restart never waits longer for it than for a routine pass");
   assert.ok(PLACE_MAP_RUN_RESERVE_MS - PLACE_MAP_SETTLEMENT_MS >= 15 * 60_000);
   assert.ok(PLACE_MAP_PASS_BUDGET_MS - PLACE_MAP_RUN_RESERVE_MS >= 10 * 60_000, "the lane has a launch window");
-  assert.match(pilot, /placeMapsLane\(runPlaceMaps\)/);
-  assert.match(pilot, /async function runPlaceMaps[\s\S]*?jobLaunchAllowed\("place-maps"\)[\s\S]*?"scripts\/routine-civic-data-runner\.mts", "--place-maps"/);
+  assert.match(pilot, /placeMapsLane\(deadlineMs => runRoutineLane\("place-maps", deadlineMs\)\)/);
+  assert.match(pilot, /async function runRoutineLane\(lane: "place-maps" \| "voting-sites"[\s\S]*?jobLaunchAllowed\(lane\)[\s\S]*?"scripts\/routine-civic-data-runner\.mts", `--\$\{lane\}`/);
   // The lane's run ends by its own deadline: maps start until its launch deadline and are ended just before it.
   assert.match(runner, /const PASS_LAUNCH_DEADLINE_MS = PLACE_MAPS \? PASS_DEADLINE_MS - PLACE_MAP_RUN_RESERVE_MS : /);
   assert.match(runner, /const SOURCE_CHILD_DEADLINE_MS = PLACE_MAPS \? PASS_DEADLINE_MS - PLACE_MAP_SETTLEMENT_MS : PASS_LAUNCH_DEADLINE_MS;/);
-  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS \? PLACE_MAP_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
+  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS \? PLACE_MAP_SINGLETON_PORT : VOTING_SITES \? VOTING_SITES_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   // Settlement is the routine runner's own: the same receipt checks, durable promotion check and launch log.
   assert.match(runner, /onSettled: async \(run, index\) => \{\s*await withDatabaseJob\(run\.id,/);
   assert.match(runner, /recordLaunchDecision\(task, "SKIP"/);
@@ -106,4 +111,44 @@ test("the lane runs maps smallest first, one at a time, each under its own job n
   // Each map asks the job breaker's pace under its own name before its clock is read; its child's launch records it.
   assert.match(runner, /const selectedTasks = offeredTasks\.filter\(task => \{\s*if \(admitJobLaunch\(task\.id, process\.env, Date\.now\(\), false\)\) return true;/);
   assert.ok(MAPS.every(task => task.contract.databaseBytesPerRun === 60_592_693), "each run states its database bytes");
+});
+
+test("where-to-vote reads run in their own lane: a 21-minute routine pre-launch no longer holds them, and the next pass keeps their clock", async () => {
+  const voting = AUTOMATIC_REFRESH_TASKS.filter(isVotingSitesTask).map(task => ({ ...task, ...factRefreshBounds(task) }));
+  assert.equal(voting.length, 56);
+  const others = AUTOMATIC_REFRESH_TASKS.filter(task => !isVotingSitesTask(task));
+  assert.deepEqual(laneSourceTasks(AUTOMATIC_REFRESH_TASKS, false, []), others, "the routine pass keeps every other task, in its order");
+  assert.equal(laneSourceTasks(AUTOMATIC_REFRESH_TASKS, false, ["--only=voting-sites:CO"]).length, AUTOMATIC_REFRESH_TASKS.length, "an owner refresh still reaches one");
+  const lane = votingSitesLane(async () => {});
+  assert.deepEqual([lane.id, lane.budgetMs], ["voting-sites", ROUTINE_PASS_BUDGET_MS]);
+  assert.match(pilot, /votingSitesLane\(deadlineMs => runRoutineLane\("voting-sites", deadlineMs\)\)/);
+  assert.match(runner, /: VOTING_SITES \? AUTOMATIC_REFRESH_TASKS\.filter\(isVotingSitesTask\)/);
+  // The lane skips the pass-wide work before launch: door install and sync, geometry, the browser, held publications, findings.
+  for (const skipped of [/if \(OWN_LANE\) \{/, /controlPlaneUrlFromEnv\(\) && !OWN_LANE\) \{/, /!PUBLISH_NOW && !OWN_LANE\) \{/,
+    /sharedBrowser = PUBLISH_NOW \|\| OWN_LANE \? null/, /if \(OWN_LANE \|\| FORCE \|\|/, /if \(controlPlaneUrlFromEnv\(\) && !OWN_LANE\) try \{/]) assert.match(runner, skipped);
+
+  // Production at 11:39Z: the routine pass reached its first launch 21 minutes in, past its 20-minute launch deadline.
+  const now = Date.parse("2026-10-30T12:00:00.000Z"), at = new Date(now).toISOString();
+  const shut = [{ doorId: "feed:voting-sites:AK", status: "SHUT", meeting: null, config: { contractId: "voting-sites:AK" } }] as unknown as DoorRecord[];
+  const order = (due: typeof voting) => shutFeedsLast(dueRequestsFirstInClass(electionLaunchOrder(routinePassLaunchOrder(due.map(task =>
+    ({ task, lastConsideredAt: null, owedAtMs: now - (task.id === "voting-sites:CO" ? 0 : HOUR) })), now)), new Set(["voting-sites:CO"])), shut);
+  const launch = async (deadlineMs: number) => {
+    const launched: string[] = [];
+    const results = await runBoundedChildPass(order(voting).map(({ task }) => ({ id: task.id, executable: process.execPath, args: [] })),
+      { cwd: process.cwd(), env: process.env, deadlineMs, concurrency: 56 }, async command => {
+        launched.push(command.id);
+        return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+      });
+    return { launched, deferred: results.filter(result => /PASS_TIME_BUDGET/.test(result.errorMessage ?? "")).length };
+  };
+  assert.deepEqual(await launch(Date.now() - 60_000), { launched: [], deferred: 56 }, "inside the routine pass, 21 minutes of pre-launch defers every state");
+  const own = await launch(Date.now() + 19 * 60_000);
+  assert.equal(own.deferred, 0, "in its own lane, every owed state launches inside the deadline");
+  assert.deepEqual([own.launched[0], own.launched.at(-1), own.launched.length], ["voting-sites:CO", "voting-sites:AK", 56], "read-now first, the shut feed last");
+
+  // Next pass: a state read now is not owed again until its installed clock comes round: hourly in the final week, twice daily before.
+  const read: RoutineTaskClock = { lastAttemptedAt: at, lastSucceededAt: at, lastSucceededObservedAt: at, lastSucceededParserVersion: voting[0]!.parserVersion };
+  assert.deepEqual([routineTaskDue(voting[0]!, read, now + HOUR / 2), routineTaskDue(voting[0]!, read, now + HOUR)], [false, true]);
+  const before = Date.parse("2026-10-20T12:00:00.000Z"), early = { ...read, lastAttemptedAt: new Date(before).toISOString(), lastSucceededObservedAt: new Date(before).toISOString() };
+  assert.equal(routineTaskNextDueMs(voting[0]!, early, before + 1000) - before, 12 * HOUR);
 });

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 
 import test from "node:test";
 
-import { MemoryRoutineDataStore, pdcV2CanonicalMeetingFactEvidence } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 import { fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 

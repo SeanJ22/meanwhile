@@ -14,7 +14,7 @@ const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.f
     OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')`;
 
 const FIELD = { title: "title", status: "status", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl",
-  posted_at: "postedAt", event_type: "eventType", ends_at: "endsAt" } as const;
+  posted_at: "postedAt", event_type: "eventType", ends_at: "endsAt", agenda_slot_empty: "agendaSlotObservedEmpty" } as const;
 /** A published link is its own fact, so each carries the page that shows it. */
 const factField = (field: string) => field.startsWith("link:") ? "publishedLink" : FIELD[field as keyof typeof FIELD];
 
@@ -151,11 +151,14 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
       : field==="mapPin" ? {mapPin:{...value as NonNullable<Meeting["mapPin"]>,meetingId:meeting.id}}
       : field==="online" ? {online:value as Meeting["online"],location:null,venueGap:undefined}
       : field==="endsAt" ? {endsAt:(value as {endsAt:string}).endsAt}
+      : field==="agendaSlotObservedEmpty" ? {agendaSlotObservedEmpty:value === true}
       : field==="publishedLink" ? {publishedLinks:[...(meeting.publishedLinks ?? []).filter(link=>link.href!==(value as {href:string}).href),
         {label:(value as {label:string}).label,href:(value as {href:string}).href}]} : { [field]: value as string };
     out[index] = { ...meeting, ...patch, fieldSources: { ...meeting.fieldSources, [field]: source } };
   }
   return out.map(meeting=>{
+    // A slot the publisher has since filled is no longer empty.
+    if(meeting.agendaUrl&&meeting.agendaSlotObservedEmpty){const {agendaSlotObservedEmpty:_filled,...rest}=meeting;meeting=rest;}
     const pin=meeting.mapPin;
     if(!pin)return meeting;
     const agrees=meeting.location ? pin.basis==="MEETING"&&repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)

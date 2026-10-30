@@ -120,6 +120,22 @@ test("the publisher's posting stamp, kind of sitting, end, and each published li
   } finally { await db.pg.close(); }
 });
 
+test("a Legistar agenda slot the record leaves null is a fact quoted from that record, and it is not empty once an agenda link stands", async () => {
+  const API = "https://webapi.legistar.com/v1/lewisville/events";
+  const page = capture('[{"EventId":4740,"EventBodyName":"Planning Commission","EventDate":"2026-12-08T00:00:00","EventTime":"1:00 PM","EventAgendaFile":null},{"EventId":4741,"EventAgendaFile":"https://x/a.pdf"}]', API);
+  const db = await seeded();
+  try {
+    const base = { id: "legistar:lewisville:4740", title: "Planning Commission", startsAt: "2026-12-08T13:00:00-06:00", timeZone: "America/Chicago", sourceUrl: API };
+    await publishMeetingFacts(db, { meeting: meeting({ ...base, agendaSlotObservedEmpty: true }), capture: page, producedBy: "test" }, clocks, NOW);
+    const rows = await db.query(MEETING_FACT_ROWS_SQL, [[BODY], "2026-01-01T00:00:00Z"]);
+    const header = () => ({ name: "Planning Commission", ocdId: OCD, jurisdiction: "Lewisville, TX" });
+    assert.equal(meetingsFromFactRows(rows, header, NOW)[0]?.agendaSlotObservedEmpty, true);
+    const other = { ...base, id: "legistar:lewisville:4741" };
+    await publishMeetingFacts(db, { meeting: meeting({ ...other, agendaSlotObservedEmpty: true }), capture: page, producedBy: "test" }, clocks, NOW);
+    assert.equal((await db.query("SELECT 1 FROM fact WHERE entity_id=$1 AND field='agenda_slot_empty'", [meetingEntityId(other.id)])).length, 0, "an event with an agenda file is not an empty slot");
+  } finally { await db.pg.close(); }
+});
+
 test("a canceled sitting is a fact quoted from the publisher's own word beside its title, and it moves to history when the publisher stops saying it", async () => {
   const FEED = "https://webapi.legistar.com/v1/lewisville/events";
   const said = '[{"EventId":9,"EventBodyName":"Planning Commission","EventComment":"Planning Commission - CANCELLED","EventDate":"2026-12-14T00:00:00","EventTime":"5:30 PM"}]';

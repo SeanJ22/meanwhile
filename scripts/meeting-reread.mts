@@ -68,7 +68,7 @@ function read(url: string) {
 const odata = (date: Date) => date.toISOString().replace(/\.\d+Z$/, "Z");
 const legistarDate = (date: Date) => `datetime'${date.toISOString().slice(0, 10)}'`;
 /** What a sitting's own calendar page cannot give: these ride on other facts, built after the calendar facts are right. */
-const EXTRAS = new Set(["acting body lost", "empty agenda slot lost", "listing alias lost", "field source lost", "carried note lost"]);
+const EXTRAS = new Set(["acting body lost", "listing alias lost", "field source lost", "carried note lost"]);
 const ONLY = args.find(arg => arg.startsWith("--only="))?.slice(7);
 const SOURCES = ["legistar-insite", "civicclerk", "legistar"];
 const unwrap = (meeting: Meeting) => ({ source: meeting.id.split(":")[0]!, origin: new URL(meeting.provenance.sourceUrl ?? "https://x.invalid"), client: meeting.id.split(":")[1]! });

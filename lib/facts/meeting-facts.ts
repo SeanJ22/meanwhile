@@ -61,6 +61,13 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   return null;
 }
 
+/** A Legistar event whose record names an agenda file and leaves it null: the publisher's place for the agenda was empty when the page was saved. */
+export function emptyAgendaSlotOnPage(text: string, meetingId: string): { readonly valueText: string; readonly quote: string } | null {
+  const event = /^legistar:[^:]+:(\d+)$/.exec(meetingId)?.[1];
+  const found = event ? new RegExp(`"EventId"\\s*:\\s*${event}\\b[^{}]*?"EventAgendaFile"\\s*:\\s*null`).exec(text) : null;
+  return found ? { valueText: '"EventAgendaFile":null', quote: found[0] } : null;
+}
+
 /** The publisher's own stamp of when it posted, as the page writes it: the instant to the second, or the iCalendar compact form of it. */
 export function postedOnPage(text: string, postedAt: string): { readonly valueText: string; readonly quote: string } | null {
   const page = normalizeText(text), instant = new Date(postedAt);
@@ -271,6 +278,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   else if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
   else if(!meeting.mapPin&&!meeting.location) count(await publishMeetingPinFact(db,{meeting,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
+  if (meeting.agendaSlotObservedEmpty) { const empty = emptyAgendaSlotOnPage(copy.text, meeting.id); await claim("agenda_slot_empty", true, empty?.valueText ?? "agenda slot empty", empty?.quote ?? null); }
   if (meeting.postedAt) { const on = postedOnPage(copy.text, meeting.postedAt); await claim("posted_at", meeting.postedAt, on?.valueText ?? meeting.postedAt, on?.quote ?? null); }
   if (meeting.eventType) await claim("event_type", meeting.eventType, meeting.eventType);
   if (meeting.endsAt) {

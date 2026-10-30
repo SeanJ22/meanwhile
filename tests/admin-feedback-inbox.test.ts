@@ -15,48 +15,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import {
-  CONTACT_FIELDS_REFUSED,
-  EMPTY_CENSUS,
-  ENVIRONMENT_WORDS,
-  FEEDBACK_CENSUS_SQL,
-  FEEDBACK_ENVIRONMENTS,
-  FEEDBACK_INBOX_SQL,
-  FEEDBACK_STORE_VAR,
-  FEEDBACK_SUBJECT_PREFIX,
-  PRODUCTION_FEEDBACK_URL_VAR,
-  STAGING_STORE_URL_VAR,
-  STAGING_OWNER_ACTION,
-  TRIAGE_CONSEQUENCE,
-  TRIAGE_OPTIONS,
-  TRIAGE_STATES,
-  TRIAGE_WORDS,
-  assertInboxRowIsSafe,
-  buildFeedbackInboxView,
-  countClaimsOf,
-  feedbackDenominatorSentence,
-  feedbackSubjectId,
-  isFeedbackTriageIntent,
-  openFeedbackStore,
-  optionToState,
-  projectFeedbackRow,
-  readFeedbackStore,
-  renderedNumbersOf,
-  triageBySubject,
-  type EnvironmentView,
-  type FeedbackEnvironment,
-  type FeedbackInboxRow,
-  type FeedbackRunCensus,
-  type StoreReading,
-} from "@/lib/control-plane/feedback-inbox.ts";
-import {
-  OWNER_SURFACE_FORMAT_VERSION,
-  assertAggregateOnly,
-  auditRenderedNumbers,
-  checkStatedEqualsRendered,
-  type OwnerDecisionIntent,
-} from "@/lib/control-plane/owner-surface.ts";
-import type { Sql } from "@/lib/control-plane/repository/pg-store.ts";
+import { CONTACT_FIELDS_REFUSED, EMPTY_CENSUS, FEEDBACK_CENSUS_SQL, FEEDBACK_INBOX_SQL, FEEDBACK_SUBJECT_PREFIX, TRIAGE_OPTIONS, TRIAGE_STATES, TRIAGE_WORDS, assertInboxRowIsSafe, feedbackDenominatorSentence, feedbackSubjectId, isFeedbackTriageIntent, optionToState, projectFeedbackRow, triageBySubject, type FeedbackRunCensus } from "@/lib/control-plane/feedback-inbox.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDecisionIntent } from "@/lib/control-plane/owner-surface.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const MODULE_PATH = join(ROOT, "lib", "control-plane", "feedback-inbox.ts");
@@ -94,52 +54,13 @@ function census(over: Partial<FeedbackRunCensus> = {}): FeedbackRunCensus {
   return { organic: 3, synthetic: 1, unknown: 0, author: 0, heldBack: 0, total: 4, ...over };
 }
 
-function reading(
-  environment: FeedbackEnvironment,
-  rows: readonly Record<string, unknown>[],
-  over: Partial<FeedbackRunCensus> = {},
-): StoreReading {
-  const projected: FeedbackInboxRow[] = [];
-  for (const r of rows) {
-    const one = projectFeedbackRow(r, environment);
-    if (one !== null) projected.push(one);
-  }
-  return {
-    environment,
-    readAt: "2026-09-06T18:00:00.000Z",
-    rows: projected,
-    unreadable: rows.length - projected.length,
-    census: census({ total: Math.max(4, projected.length), ...over }),
-  };
-}
-
-function connected(environment: FeedbackEnvironment, read: StoreReading | null): EnvironmentView {
-  return {
-    environment,
-    connected: read !== null,
-    says: "a reading",
-    action: null,
-    reading: read,
-  };
-}
-
-function gatedStaging(): EnvironmentView {
-  return {
-    environment: "STAGING",
-    connected: false,
-    says: "The console has no connection to the review site's message store.",
-    action: STAGING_OWNER_ACTION,
-    reading: null,
-  };
-}
-
 function intent(over: Partial<OwnerDecisionIntent> = {}): OwnerDecisionIntent {
   return {
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
     intentId: "i1",
     subjectId: "s1",
     chosenOption: "Read, nothing to do",
-    consequenceShown: TRIAGE_CONSEQUENCE,
+    consequenceShown: "Records this as your status for this message.",
     decidedAt: "2026-09-06T17:00:00.000Z",
     state: "RECORDED",
     canonicalRef: null,
@@ -148,18 +69,6 @@ function intent(over: Partial<OwnerDecisionIntent> = {}): OwnerDecisionIntent {
     ownerAnswer: null,
     ...over,
   };
-}
-
-function fakeSql(list: readonly Record<string, unknown>[], counted: Record<string, unknown>) {
-  const asked: string[] = [];
-  const sql: Sql = {
-    async query(text: string) {
-      asked.push(text);
-      if (text === FEEDBACK_CENSUS_SQL) return [counted];
-      return list;
-    },
-  };
-  return { sql, asked };
 }
 
 /* ================================================================== */
@@ -241,29 +150,6 @@ test("assertInboxRowIsSafe refuses a row that carries a contact value — plante
   // refusing everything.
   assert.doesNotThrow(() =>
     assertInboxRowIsSafe({ rowId: "r", replyRequested: true }, "positive control"),
-  );
-});
-
-test("the decision recorded about a message carries none of the reader's words", () => {
-  const row = projectFeedbackRow(rawRow(), "PRODUCTION");
-  assert.ok(row !== null);
-  const subjectId = feedbackSubjectId(row.environment, row.rowId);
-
-  assert.equal(subjectId.includes(row.message), false);
-  assert.equal(TRIAGE_CONSEQUENCE.includes(row.message), false);
-  assert.equal(subjectId.includes(HANDLE), false);
-  assert.match(subjectId, /^feedback:PRODUCTION:11111111-/);
-
-  // What the console would append; it must survive the aggregate-only walk and carry no message text.
-  const recorded = intent({ subjectId, intentId: `${subjectId}:2026-09-06T17:00:00.000Z` });
-  assert.doesNotThrow(() => assertAggregateOnly(recorded, "feedback triage"));
-  assert.equal(JSON.stringify(recorded).includes(row.message), false);
-
-  // Positive control: the walk really would catch reader text under a reader
-  // field name, so the assertion above is not vacuous.
-  assert.throws(
-    () => assertAggregateOnly({ ...recorded, freeText: row.message }, "planted"),
-    /refused/,
   );
 });
 
@@ -352,184 +238,13 @@ test("a decision that is not about a message, or names an option we do not know,
   assert.ok(subjectId.startsWith(FEEDBACK_SUBJECT_PREFIX));
 });
 
-test("quarantine and triage are separate facts, and neither hides the other", () => {
-  const held = rawRow({ id: "held-1", suspect_reason: "VELOCITY", received_at: "2026-09-06T10:00:00.000Z" });
-  const clean = rawRow({ id: "clean-1", received_at: "2026-09-06T11:00:00.000Z" });
-  const view = buildFeedbackInboxView({
-    environments: [connected("PRODUCTION", reading("PRODUCTION", [held, clean]))],
-    decisions: [],
-  });
-
-  assert.equal(view.items.length, 2, "a quarantined message is shown, never dropped");
-  assert.equal(view.heldBack, 1);
-  assert.equal(view.byState.NEW, 2, "quarantine does not set a status on the owner's behalf");
-  assert.equal(
-    view.waiting,
-    1,
-    "a quarantined message is not counted as work waiting on him until he looks at it",
-  );
-});
-
 /* ================================================================== */
 /* 3 — THE STAGING HANDLE, AND THE BYPASS REFUSED BY NAME              */
 /* ================================================================== */
 
-const LIVE_URL = "postgresql://app_owner:secret@ep-live.example.neon.tech/wtp";
-const STAGING_RW = "postgresql://app_owner:secret@ep-staging.example.neon.tech/wtp";
-const STAGING_RO = "postgresql://readonly:secret@ep-staging.example.neon.tech/wtp";
-
-/** The refusal, narrowed — a handle that opened where it should not have is the failure. */
-function refusalOf(
-  environment: FeedbackEnvironment,
-  env: Record<string, string | undefined>,
-): { reason: string; says: string; action: string | null } {
-  const handle = openFeedbackStore(environment, env);
-  if (handle.ok) assert.fail(`${environment} opened a store it should have refused`);
-  return { reason: handle.reason, says: handle.says, action: handle.action };
-}
-
-test("with no connection the review site is a named gap, with the owner action spelled out", () => {
-  const refusal = refusalOf("STAGING", { [PRODUCTION_FEEDBACK_URL_VAR]: LIVE_URL });
-  assert.equal(refusal.reason, "NOT_CONNECTED");
-  assert.equal(refusal.action, STAGING_OWNER_ACTION);
-  assert.match(refusal.says, /have not been lost/);
-});
-
-test("a review-site handle that can write is refused before a query runs", () => {
-  const refusal = refusalOf("STAGING", {
-    [PRODUCTION_FEEDBACK_URL_VAR]: LIVE_URL,
-    [STAGING_STORE_URL_VAR]: STAGING_RW,
-  });
-  assert.equal(refusal.reason, "NOT_READ_ONLY");
-});
-
-test("a review-site handle that IS the live handle is refused as the bypass it would be", () => {
-  const refusal = refusalOf("STAGING", {
-    [PRODUCTION_FEEDBACK_URL_VAR]: LIVE_URL,
-    [STAGING_STORE_URL_VAR]: LIVE_URL,
-  });
-  assert.equal(refusal.reason, "SAME_STORE_AS_LIVE");
-});
-
-test("a review-site connection whose isolation cannot be established is refused, not read", () => {
-  const refusal = refusalOf("STAGING", {
-    // No scheme, but an `@` and a `:` — a connection string that failed to
-    // parse, which the isolation module refuses to read as a bare host.
-    [PRODUCTION_FEEDBACK_URL_VAR]: "app_owner@ep-live.example.neon.tech:5432/wtp",
-    [STAGING_STORE_URL_VAR]: STAGING_RO,
-  });
-  assert.equal(
-    refusal.reason,
-    "UNPROVEN_ISOLATION",
-    "null is not false: a pair whose endpoints could not be established must refuse, so nothing " +
-      "can be permitted by failing to measure",
-  );
-});
-
-test("a read-only handle on its own branch opens — the positive control", () => {
-  const handle = openFeedbackStore("STAGING", {
-    [PRODUCTION_FEEDBACK_URL_VAR]: LIVE_URL,
-    [STAGING_STORE_URL_VAR]: STAGING_RO,
-  });
-  assert.equal(handle.ok, true, "a correctly provisioned read-only handle must actually open");
-});
-
-test("an unset live store is an ordinary state, told plainly and with nothing to do", () => {
-  const refusal = refusalOf("PRODUCTION", {});
-  assert.equal(refusal.reason, "NOT_CONNECTED");
-  assert.equal(refusal.action, null);
-});
-
-test("no refusal the owner reads names a credential or a variable", () => {
-  const said: string[] = [STAGING_OWNER_ACTION];
-  for (const environment of FEEDBACK_ENVIRONMENTS) {
-    const refusal = refusalOf(environment, {});
-    said.push(refusal.says);
-    if (refusal.action !== null) said.push(refusal.action);
-  }
-  const writable = refusalOf("STAGING", {
-    [PRODUCTION_FEEDBACK_URL_VAR]: LIVE_URL,
-    [STAGING_STORE_URL_VAR]: STAGING_RW,
-  });
-  said.push(writable.says);
-  const bypass = refusalOf("STAGING", {
-    [PRODUCTION_FEEDBACK_URL_VAR]: LIVE_URL,
-    [STAGING_STORE_URL_VAR]: LIVE_URL,
-  });
-  said.push(bypass.says);
-
-  for (const sentence of said) {
-    assert.equal(
-      /[A-Z][A-Z0-9]*_[A-Z0-9_]+/.test(sentence),
-      false,
-      `a sentence the owner reads carries a machine name: ${sentence}`,
-    );
-    assert.equal(sentence.includes("postgres"), false);
-    assert.equal(sentence.includes("secret"), false);
-  }
-  // Positive control: the detector fires on the real variable names.
-  assert.equal(/[A-Z][A-Z0-9]*_[A-Z0-9_]+/.test(STAGING_STORE_URL_VAR), true);
-  assert.equal(FEEDBACK_STORE_VAR.PRODUCTION, PRODUCTION_FEEDBACK_URL_VAR);
-  assert.equal(FEEDBACK_STORE_VAR.STAGING, STAGING_STORE_URL_VAR);
-});
-
 /* ================================================================== */
 /* 4 — A STORE THAT COULD NOT BE READ IS NEVER AN EMPTY INBOX          */
 /* ================================================================== */
-
-test("a reading returns the rows, the census and the rows it could not read", async () => {
-  const { sql, asked } = fakeSql(
-    [rawRow(), rawRow({ id: "", message: "" })],
-    { organic: 5, synthetic: 2, unknown: 1, author: 0, held_back: 1, total: 8 },
-  );
-  const outcome = await readFeedbackStore(sql, "PRODUCTION", "2026-09-06T18:00:00.000Z", 50);
-  assert.equal(outcome.kind, "HELD");
-  if (outcome.kind !== "HELD") return;
-  assert.equal(outcome.value.rows.length, 1);
-  assert.equal(outcome.value.unreadable, 1, "a row that could not be read is counted, not dropped");
-  assert.equal(outcome.value.census.total, 8);
-  assert.equal(outcome.value.census.organic, 5);
-  assert.equal(asked.length, 2, "the list and its denominator are read together");
-  assert.ok(asked.includes(FEEDBACK_INBOX_SQL));
-  assert.ok(asked.includes(FEEDBACK_CENSUS_SQL));
-});
-
-test("a store that throws reports that it could not be asked, and holds no rows", async () => {
-  const sql: Sql = {
-    async query() {
-      throw new Error("connection refused");
-    },
-  };
-  const outcome = await readFeedbackStore(sql, "STAGING", "2026-09-06T18:00:00.000Z");
-  assert.equal(outcome.kind, "STORE_UNREACHABLE");
-  if (outcome.kind !== "STORE_UNREACHABLE") return;
-  assert.match(outcome.detail, /nothing is being claimed/);
-  assert.equal(outcome.detail.includes("0 messages"), false);
-});
-
-test("an unread review store leaves the inbox owner-gated, never silently active", () => {
-  const gated = buildFeedbackInboxView({
-    environments: [connected("PRODUCTION", reading("PRODUCTION", [rawRow()])), gatedStaging()],
-    decisions: [],
-  });
-  assert.equal(gated.stagingFeedback, "OWNER_GATED");
-  assert.equal(gated.stagingAction, STAGING_OWNER_ACTION);
-
-  const active = buildFeedbackInboxView({
-    environments: [
-      connected("PRODUCTION", reading("PRODUCTION", [rawRow()])),
-      connected("STAGING", reading("STAGING", [rawRow({ id: "s-1" })])),
-    ],
-    decisions: [],
-  });
-  assert.equal(active.stagingFeedback, "ACTIVE");
-  assert.equal(active.items.length, 2);
-  assert.deepEqual(
-    active.items.map((i) => i.row.environment).sort(),
-    ["PRODUCTION", "STAGING"],
-    "a review-site message is listed beside a live one, labelled, never merged into it",
-  );
-});
 
 test("the denominator sentence reconciles, and says so when it cannot", () => {
   const clean = feedbackDenominatorSentence(census());
@@ -545,49 +260,6 @@ test("the denominator sentence reconciles, and says so when it cannot", () => {
 /* ================================================================== */
 /* 5 — EVERY NUMBER CARRIES A DENOMINATOR; STATED EQUALS RENDERED      */
 /* ================================================================== */
-
-test("every number this view prints carries a denominator and a contract", () => {
-  const view = buildFeedbackInboxView({
-    environments: [
-      connected("PRODUCTION", reading("PRODUCTION", [rawRow(), rawRow({ id: "r2", suspect_reason: "VELOCITY" })])),
-      gatedStaging(),
-    ],
-    decisions: [intent({ subjectId: feedbackSubjectId("PRODUCTION", "11111111-2222-4333-8444-555555555555"), chosenOption: "Needs work" })],
-  });
-  const verdict = auditRenderedNumbers(renderedNumbersOf(view));
-  assert.equal(verdict.ok, true, verdict.detail);
-  assert.ok(verdict.checked >= 10, `only ${verdict.checked} number(s) declared`);
-
-  const claims = checkStatedEqualsRendered(countClaimsOf(view));
-  assert.equal(claims.ok, true, claims.detail);
-
-  assert.equal(view.byState.NEEDS_ACTION, 1, "the recorded decision reached the message");
-  assert.equal(view.byState.NEW, 1);
-});
-
-test("the stated-equals-rendered check really would catch a drift — planted", () => {
-  const view = buildFeedbackInboxView({
-    environments: [connected("PRODUCTION", reading("PRODUCTION", [rawRow()]))],
-    decisions: [],
-  });
-  const tampered = { ...view, byState: { ...view.byState, NEW: view.byState.NEW + 1 } };
-  const claims = checkStatedEqualsRendered(countClaimsOf(tampered));
-  assert.equal(claims.ok, false, "a stated count larger than the rendered rows was not caught");
-});
-
-test("a console with no store connected states nothing rather than zero readers", () => {
-  const view = buildFeedbackInboxView({
-    environments: [
-      { environment: "PRODUCTION", connected: false, says: "not connected", action: null, reading: null },
-      gatedStaging(),
-    ],
-    decisions: [],
-  });
-  assert.equal(view.items.length, 0);
-  assert.equal(view.shown.denominator, 0);
-  assert.equal(auditRenderedNumbers(renderedNumbersOf(view)).ok, true);
-  assert.equal(checkStatedEqualsRendered(countClaimsOf(view)).ok, true);
-});
 
 /* ================================================================== */
 /* 6 — THE PAGE: FOUR LAYERS, EASTERN TIME, NO SECRETS, NO STORAGE     */

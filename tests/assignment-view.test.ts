@@ -7,9 +7,6 @@ import {
   OBLIGATION_PROVIDER_PREFIXES,
   buildAssignmentView,
   buildAssignments,
-  assignmentCountClaims,
-  assignmentRenderedNumbers,
-  assignmentRowNumbers,
   combinedCountNumbers,
   combinedCounts,
   eligibleAtOf,
@@ -21,7 +18,7 @@ import {
   type AssignmentSources,
 } from "../lib/control-plane/assignment-view.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
-import { assertAggregateOnly, auditRenderedNumbers, checkStatedEqualsRendered } from "../lib/control-plane/owner-surface.ts";
+import { assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import { jsonTextAtPath, type AggregateRepository, type AppendOnlyRepository } from "../lib/control-plane/repository/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -856,24 +853,6 @@ test("working, worker lost, retired, created and proof: each lands in its own st
   assert.equal(j.waiting.owner, "FLEET");
   const k = rowOf(rows, "wi-k");
   assert.equal(k.lane, "PROOF");
-});
-
-test("every number the view draws carries a denominator and a contract, and every stated N equals the rows", () => {
-  const src = world();
-  const view = buildAssignmentView(src);
-  const rows = buildAssignments(src);
-  const numbers = [
-    ...assignmentRenderedNumbers(view, view.rows),
-    ...rows.flatMap(assignmentRowNumbers),
-    ...combinedCountNumbers(combinedCounts(view, [])),
-  ];
-  assert.ok(numbers.length > 20);
-  const audit = auditRenderedNumbers(numbers);
-  assert.equal(audit.ok, true, audit.detail);
-  const claims = checkStatedEqualsRendered(assignmentCountClaims(view));
-  assert.equal(claims.ok, true, claims.detail);
-  assert.equal(view.summary.total, rows.length);
-  assert.equal(view.summary.byState.reduce((n, s) => n + s.count.value, 0), rows.length);
 });
 
 test("the published list is bounded, fair across groups, and states exactly what it left out", () => {

@@ -1,4 +1,4 @@
-import { ASK_GAP_CODES, ASK_GAP_CODE_WORDS, type AskGapCode } from "../ask/gap-codes.ts";
+import { ASK_GAP_CODES, type AskGapCode } from "../ask/gap-codes.ts";
 import { askGapNoteParts, askGapTitle, parseAskGapObligationId } from "./ask-gap-id.ts";
 import {
   ASK_GAP_OBSERVATION_WINDOW_DAYS,
@@ -15,16 +15,7 @@ import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
 import { displayNameOf, words } from "./display-name.ts";
 import { SERVED_READER_MAX_AGE_MS, servedWitness } from "./served-reader.ts";
 import { addExact, exactSum, exactValue, mergeExact, type ExactSum } from "./exact-sum.ts";
-import {
-  gap,
-  held,
-  measured,
-  type CountClaim,
-  type Gap,
-  type Held,
-  type Measured,
-  type RenderedNumber,
-} from "./owner-surface.ts";
+import { gap, held, measured, type Gap, type Held, type Measured, type RenderedNumber } from "./owner-surface.ts";
 import { plainCode } from "./plain-words.ts";
 import { formatEastern } from "./eastern-time.ts";
 import {
@@ -2860,36 +2851,8 @@ function summarize(part: AssignmentPart, totals: AssignmentViewTotals, published
   return { total, byState, byLane, groups, overdue, inBackoff, costs: totals.costs, pipeline: pipelineHeld, askGaps };
 }
 
-function pushHeld(out: RenderedNumber[], label: string, h: Held<Measured>): void {
-  if (h.held) out.push({ label, value: h.value.value, denominator: h.value.denominator, contract: h.value.contract });
-}
-
 function pushMeasured(out: RenderedNumber[], label: string, m: Measured): void {
   out.push({ label, value: m.value, denominator: m.denominator, contract: m.contract });
-}
-
-export function assignmentRowNumbers(row: AssignmentRow): RenderedNumber[] {
-  const out: RenderedNumber[] = [];
-  const at = `assignment ${row.id}`;
-  if (row.discovery.downloaded.held) pushMeasured(out, `${at} · complete downloads`, row.discovery.downloaded.value.complete);
-  if (row.parsing.parsed.held) pushHeld(out, `${at} · usable records`, row.parsing.parsed.value.usable);
-  if (row.verification.pipeline.held) {
-    const p = row.verification.pipeline.value;
-    pushMeasured(out, `${at} · passed verification`, p.passed);
-    pushMeasured(out, `${at} · needs more evidence`, p.needsMoreEvidence);
-    pushMeasured(out, `${at} · rejected on quality`, p.rejected);
-  }
-  if (row.delivery.approved !== null) pushHeld(out, `${at} · approved for promotion`, row.delivery.approved);
-  if (row.cost.dollars.kind === "MEASURED") pushHeld(out, `${at} · measured dollars`, row.cost.dollars.usd);
-  return out;
-}
-
-export function groupMeasures(g: AssignmentGroup): { readonly listed: Measured; readonly leftOut: Measured } {
-  const source = "the published assignment view's group counts";
-  return {
-    listed: measured(g.published, g.total, "assignments of this state and lane carried on the published list, of every one", source),
-    leftOut: measured(g.total - g.published, g.total, "assignments of this state and lane not on the published list — each still opens by id", source),
-  };
 }
 
 export interface AssignmentCounts {
@@ -2935,78 +2898,6 @@ export function combinedCounts(
   };
 }
 
-export function assignmentListRowNumbers(row: AssignmentListRow): RenderedNumber[] {
-  const out: RenderedNumber[] = [];
-  const at = `assignment ${row.id}`;
-  if (row.downloaded) pushMeasured(out, `${at} · complete downloads`, row.downloaded);
-  if (row.parsed?.usable) pushMeasured(out, `${at} · usable records`, row.parsed.usable);
-  if (row.cost.usd) pushMeasured(out, `${at} · measured dollars`, row.cost.usd);
-  return out;
-}
-
-export function assignmentRenderedNumbers(view: AssignmentView, renderedRows: readonly AssignmentListRow[] = []): RenderedNumber[] {
-  const out: RenderedNumber[] = [];
-  for (const s of view.summary.byState) pushMeasured(out, `assignments · ${STATE_WORDS[s.state].label}`, s.count);
-  for (const l of view.summary.byLane) pushMeasured(out, `assignments · ${LANE_WORDS[l.lane].label}`, l.count);
-  pushHeld(out, "assignments · overdue", view.summary.overdue);
-  pushHeld(out, "assignments · in failure backoff", view.summary.inBackoff);
-  pushHeld(out, "assignment costs · attributed", view.summary.costs.attributed);
-  pushHeld(out, "assignment costs · shared pre-warm", view.summary.costs.shared.usd);
-  pushHeld(out, "assignment costs · unattributed", view.summary.costs.unattributed.usd);
-  pushHeld(out, "assignment costs · unmeasured model rows", view.summary.costs.unmeasuredModelRows);
-  if (view.summary.pipeline.held) pushMeasured(out, "assignments · pipeline items linked", view.summary.pipeline.value.linked);
-  out.push(...askGapRenderedNumbers(view));
-  out.push({
-    label: "assignments · published rows",
-    value: view.selection.published,
-    denominator: view.summary.total,
-    contract: "assignments carried on the published list, of every assignment counted; the rest open by id",
-  });
-  for (const g of view.summary.groups) {
-    const m = groupMeasures(g);
-    pushMeasured(out, `assignments · listed ${g.state} ${g.lane}`, m.listed);
-    pushMeasured(out, `assignments · left out ${g.state} ${g.lane}`, m.leftOut);
-  }
-  for (const row of renderedRows) out.push(...assignmentListRowNumbers(row));
-  return out;
-}
-
-export function askGapCountWords(view: Pick<AssignmentView, "summary">): string {
-  const counted = view.summary.askGaps;
-  if (counted === undefined) return "Open Ask gaps are not counted on this published list: it was built before the count existed.";
-  if (!counted.held) return `Open Ask gaps are not counted: ${counted.gap.says}.`;
-  const told = counted.value.told;
-  const tellings =
-    told === undefined
-      ? " How often readers were told them is not on this list: the Ask-gap observations were not read for it."
-      : told.gaps.value === 0
-        ? ` No reader was told any of them in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days.`
-        : ` Readers were told ${told.gaps.value.toLocaleString("en-US")} of them in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days; most told: ` +
-          told.mostTold
-            .map((t) => `${displayNameOf(t.bodyId).short}, ${ASK_GAP_CODE_WORDS[t.code].toLowerCase()} — ${t.asks.value.toLocaleString("en-US")} of ${t.asks.denominator.toLocaleString("en-US")} tellings, latest ${t.lastDay}`)
-            .join(" · ") +
-          ".";
-  return (
-    `Open Ask gaps — ${counted.value.open.toLocaleString("en-US")}: ` +
-    counted.value.byCode.map((c) => `${ASK_GAP_CODE_WORDS[c.code].toLowerCase()} ${c.count.value.toLocaleString("en-US")}`).join(" · ") +
-    "." +
-    tellings
-  );
-}
-
-export function askGapRenderedNumbers(view: Pick<AssignmentView, "summary">): RenderedNumber[] {
-  const out: RenderedNumber[] = [];
-  const counted = view.summary.askGaps;
-  if (!counted?.held) return out;
-  for (const c of counted.value.byCode) pushMeasured(out, `open Ask gaps · ${c.code}`, c.count);
-  const told = counted.value.told;
-  if (told !== undefined) {
-    pushMeasured(out, "open Ask gaps · told to a reader", told.gaps);
-    for (const t of told.mostTold) pushMeasured(out, `open Ask gaps · tellings · ${t.bodyId}#${t.code}`, t.asks);
-  }
-  return out;
-}
-
 export function combinedCountNumbers(counts: AssignmentCounts): RenderedNumber[] {
   const out: RenderedNumber[] = [];
   if (counts.missing.length > 0) return out;
@@ -3015,18 +2906,3 @@ export function combinedCountNumbers(counts: AssignmentCounts): RenderedNumber[]
   return out;
 }
 
-export function assignmentCountClaims(view: AssignmentView): CountClaim[] {
-  const byState = view.summary.byState.reduce((n, s) => n + s.count.value, 0);
-  const byLane = view.summary.byLane.reduce((n, l) => n + l.count.value, 0);
-  const groups = view.summary.groups.reduce((n, g) => n + g.published, 0);
-  return [
-    { label: "assignments counted by state", stated: view.summary.total, rendered: byState },
-    { label: "assignments counted by lane", stated: view.summary.total, rendered: byLane },
-    { label: "published assignment rows", stated: view.selection.published, rendered: view.rows.length },
-    { label: "published rows by group", stated: view.selection.published, rendered: groups },
-    { label: "published plus omitted", stated: view.summary.total, rendered: view.selection.published + view.selection.omitted },
-    ...(view.summary.askGaps?.held
-      ? [{ label: "open Ask gaps by code", stated: view.summary.askGaps.value.open, rendered: view.summary.askGaps.value.byCode.reduce((n, c) => n + c.count.value, 0) }]
-      : []),
-  ];
-}

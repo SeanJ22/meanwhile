@@ -39,8 +39,6 @@ import {
 } from "./cost-panel.ts";
 import { ownerReadbackItem, type OwnerAssignmentHead, type OwnerAssignmentRow } from "./repository/owner-assignment-rows.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
-import type { AskGapCode } from "../ask/gap-codes.ts";
-import { askGapObligationId } from "./ask-gap-id.ts";
 import { deriveItemState, isPipelineRecord } from "./promotion/pipeline.ts";
 import type { PromotionPipelineRecord } from "./promotion/types.ts";
 import type { ProviderReading } from "./provider-billing.ts";

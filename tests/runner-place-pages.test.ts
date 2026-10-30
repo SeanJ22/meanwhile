@@ -185,8 +185,8 @@ test("a place-pages spike spaces its turns out and never stops them; it returns 
   }
 });
 
-test("the owner's pause, an unreadable pause and a failed turn leave pages queued without failing the runner", async () => {
-  const runner = await placePageRunner({ turnMs: 60 });
+test("the owner's pause, an unreadable pause and a failed turn leave pages queued without failing the runner", async t => {
+  const runner = await placePageRunner({ turnMs: 60, test: t });
   try {
     await runner.queuePlaces(0, 3);
     runner.setPause([{ kind: "INTENT", action: "PAUSE_RUNNER", intentId: "pause-1", requestedAt: "2026-10-26T12:00:00.000Z", note: null }]);
@@ -212,9 +212,10 @@ test("the owner's pause, an unreadable pause and a failed turn leave pages queue
 
 test("a place-page turn reserves its measured peak on the shared host memory", async () => {
   assert.equal(ROUTINE_ENTRY_PEAK_MIB["rebuild-place-pages.mts"], Math.ceil(835_284_992 / (1024 * 1024) * 1.05));
-  const reserve = (availableMiB: number) => routineProcessSlots({ availableBytes: () => availableMiB * MIB })
-    .acquire("rebuild-place-pages.mts", Date.now() + 50);
-  const release = await reserve(WORKER_MEMORY_HEADROOM_MIB + 837);
+  const reserve = (availableMiB: number, waitMs: number) => routineProcessSlots({ availableBytes: () => availableMiB * MIB })
+    .acquire("rebuild-place-pages.mts", Date.now() + waitMs);
+  // A turn that fits is given as long as a busy machine needs; one that does not fit waits its whole (short) allowance and is refused.
+  const release = await reserve(WORKER_MEMORY_HEADROOM_MIB + 837, 60_000);
   release();
-  await assert.rejects(reserve(WORKER_MEMORY_HEADROOM_MIB + 836), /WORKER_MEMORY_DEADLINE/, "a turn waits rather than starving other workers");
+  await assert.rejects(reserve(WORKER_MEMORY_HEADROOM_MIB + 836, 50), /WORKER_MEMORY_DEADLINE/, "a turn waits rather than starving other workers");
 });

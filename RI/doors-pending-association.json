@@ -1,0 +1,281 @@
+[
+ {
+  "id": "ri-cumberland-early",
+  "publisher": "Town of Cumberland Board of Canvassers",
+  "url": "https://www.cumberlandri.gov/187/Elections-Voting",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cumberland_town",
+   "name": "Cumberland",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400720080",
+   "population": 36405
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.cumberlandri.gov/187/Elections-Voting",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early voting and emergency mail ballot period at Cumberland Town Hall"
+   ],
+   "constants": {
+    "name": "Cumberland Town Hall",
+    "address": "45 Broad Street Cumberland, RI 02864",
+    "room": "Town Council Chambers, 2nd Floor",
+    "town": "Cumberland",
+    "days": "Monday-Friday. No weekends or holidays.",
+    "hours": "8:30 a.m. to 4:30 p.m.",
+    "locationNotes": "On November 2, 2026, early voting hours are 8:30 a.m. to 4:00 p.m."
+   }
+  },
+  "discoveredFrom": "https://www.cumberlandri.org/ (redirects to cumberlandri.gov) -> Elections & Voting"
+ },
+ {
+  "id": "ri-coventry-polling-places",
+  "publisher": "Town of Coventry Board of Canvassers",
+  "url": "https://www.coventryri.gov/sites/coventryri.gov/files/attachments/2026%20Polling%20Locations.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:kent/place:coventry_town",
+   "name": "Coventry",
+   "countyFips": "44003",
+   "countySubdivisionGeoid": "4400318640",
+   "population": 35688
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.coventryri.gov/board-canvassers",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "DISTRICT\\s+\\d[A-Z]\\s+.+?(?=\\s+DISTRICT\\s+\\d[A-Z]|$)",
+    "fields": {
+     "district": {
+      "pattern": "DISTRICT\\s+(\\d)[A-Z]",
+      "group": 1
+     },
+     "precinct": {
+      "pattern": "\\b(06\\d\\d)\\b",
+      "group": 1
+     },
+     "name": {
+      "pattern": "DISTRICT\\s+\\d[A-Z]\\s+(.+?)\\s+06\\d\\d\\b",
+      "group": 1
+     },
+     "street": {
+      "pattern": "\\b06\\d\\d\\s+(.+?)\\s*$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name",
+    "ward": "district"
+   },
+   "templates": {
+    "address": "{street}, Coventry, RI"
+   }
+  },
+  "discoveredFrom": "https://www.coventryri.gov/board-canvassers -> attachment '2026 Polling Locations'"
+ },
+ {
+  "id": "ri-middletown-early",
+  "publisher": "Town of Middletown Canvassing Authority",
+  "url": "https://www.middletownri.gov/AlertCenter.aspx",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:newport/place:middletown_town",
+   "name": "Middletown",
+   "countyFips": "44005",
+   "countySubdivisionGeoid": "4400545460",
+   "population": 17075
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.middletownri.gov/AlertCenter.aspx",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early Voting Now On Non-Holiday Weekdays Thru Nov. 2 At Middletown Town Hall"
+   ],
+   "constants": {
+    "name": "Middletown Town Hall",
+    "address": "350 East Main Road",
+    "town": "Middletown",
+    "days": "Vote early on non-holiday weekdays",
+    "hours": "8 am-4 pm through Monday, Nov. 2"
+   }
+  },
+  "discoveredFrom": "https://www.middletownri.gov/320/Canvassing-Authority-Voter-Registration -> Community Alert 'Early Voting Now Open' (Oct 14, 2026)"
+ },
+ {
+  "id": "ri-tiverton-early",
+  "publisher": "Town of Tiverton Board of Canvassers",
+  "url": "https://www.tiverton.ri.gov/m/newsflash/Home/Detail/116",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+   "name": "Tiverton",
+   "countyFips": "44005",
+   "countySubdivisionGeoid": "4400570880",
+   "population": 16359
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.tiverton.ri.gov/m/newsflash/Home/Detail/116",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Residents can now Early Vote at Town Hall"
+   ],
+   "constants": {
+    "name": "Tiverton Town Hall",
+    "address": "343 Highland Road Tiverton, RI 02878",
+    "town": "Tiverton",
+    "days": "between October 14 to November 2nd",
+    "hours": "from 8:30am - 4:00pm. (Monday - Friday)"
+   }
+  },
+  "discoveredFrom": "https://www.tiverton.ri.gov/m/newsflash news item 'Early Voting is Open' (Oct 14, 2026)"
+ },
+ {
+  "id": "ri-west-greenwich-early",
+  "publisher": "Town of West Greenwich Board of Canvassers",
+  "url": "https://www.wgtownri.org/176/Board-of-CanvassersElections",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:kent/place:west_greenwich_town",
+   "name": "West Greenwich",
+   "countyFips": "44003",
+   "countySubdivisionGeoid": "4400377720",
+   "population": 6528
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.wgtownri.org/176/Board-of-CanvassersElections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "ALL EARLY VOTING WILL TAKE PLACE IN THE TOWN COUNCIL CHAMBERS"
+   ],
+   "constants": {
+    "name": "Town Council Chambers",
+    "address": "280 Victory Highway West Greenwich RI 02817",
+    "town": "West Greenwich",
+    "days": "Early Voting 10/14 - 11/2",
+    "locationNotes": "Enter through door in back of building"
+   }
+  },
+  "discoveredFrom": "https://www.wgtownri.org/176/Board-of-CanvassersElections (2026 Election Dates); official because https://www.ri.gov/towns/ (State of Rhode Island portal) links wgtownri.org \u2014 save that page as the linkingPage copy"
+ },
+ {
+  "id": "ri-little-compton-polling-place",
+  "publisher": "Town of Little Compton Board of Canvassers",
+  "url": "https://littlecomptonri.org/government/boards_commissions/index.php",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+   "name": "Little Compton",
+   "countyFips": "44005",
+   "countySubdivisionGeoid": "4400542400",
+   "population": 3616
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://littlecomptonri.org/government/boards_commissions/index.php",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "textAssertions": [
+    "Polling location for all registered voters is located at"
+   ],
+   "constants": {
+    "name": "Wilbur McMahon School Gymnasium",
+    "address": "28 Commons",
+    "town": "Little Compton",
+    "hours": "open from 7 am to 8 pm"
+   }
+  },
+  "discoveredFrom": "https://littlecomptonri.org/government/boards_commissions/index.php (Board of Canvassers section); host linked from https://www.ri.gov/towns/"
+ },
+ {
+  "id": "ri-south-kingstown-early",
+  "publisher": "Town of South Kingstown Canvassing",
+  "url": "https://www.southkingstownri.gov/m/newsflash/home/detail/1893",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:south_kingstown_town",
+   "name": "South Kingstown",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400967460",
+   "population": 31931
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.southkingstownri.gov/m/newsflash/home/detail/1893",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Residents can vote early at South Kingstown Town Hall"
+   ],
+   "constants": {
+    "name": "South Kingstown Town Hall",
+    "address": "180 High Street Wakefield, RI 02879",
+    "town": "South Kingstown",
+    "days": "Monday through Friday",
+    "hours": "from 8:30 a.m. to 4:30 p.m."
+   }
+  },
+  "discoveredFrom": "https://www.southkingstownri.gov news flash 'Local Question #6' (Oct 14, 2026) states early voting is open"
+ }
+]

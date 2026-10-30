@@ -1,0 +1,1066 @@
+[
+ {
+  "id": "mt-yellowstone-polling-places-2026",
+  "publisher": "Yellowstone County Elections Department",
+  "url": "https://www.yellowstonecountymt.gov/elections/polling",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:yellowstone",
+   "name": "Yellowstone County",
+   "countyFips": "30111",
+   "population": 167146
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.yellowstonecountymt.gov/elections/",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "name": "Polling Place",
+    "precinct": "Precinct Map"
+   },
+   "templates": {
+    "address": "{Address}, {City}, MT"
+   },
+   "constants": {
+    "hours": "7:00 a.m. until 8:00 p.m."
+   }
+  },
+  "office": {
+   "name": "Yellowstone County Elections Department",
+   "url": "https://www.yellowstonecountymt.gov/elections/"
+  },
+  "discoveredFrom": "Web search for the county election office; county elections page (names the Nov 3, 2026 Federal General Election) and its Polling Places & Precincts page on yellowstonecountymt.gov (.gov)"
+ },
+ {
+  "id": "mt-gallatin-polling-places-2026",
+  "publisher": "Gallatin County Elections Department",
+  "url": "https://www.gallatinmt.gov/DocumentCenter/View/2179",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:gallatin",
+   "name": "Gallatin County",
+   "countyFips": "30031",
+   "population": 122713
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.gallatinmt.gov/257/Election-Department",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "title": "Gallatin County Precinct List 2026 Update",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "(?<!PCT )\\b\\d{2}[A-E] [A-Z](?:(?!PCT )[^\\d])*? (?:\\d+ |Tamarack St)[\\s\\S]*? (?:Bozeman/Four Corners|Gallatin Gateway|West Yellowstone|Three Forks|Big Sky|Bozeman|Belgrade|Manhattan)(?= |$)",
+    "fields": {
+     "precinct": {
+      "pattern": "^(\\d{2}[A-E])",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^\\d{2}[A-E] (.+?) (?=\\d+ |Tamarack St)",
+      "group": 1
+     },
+     "street": {
+      "pattern": "^\\d{2}[A-E] .+? ((?:\\d+ |Tamarack St)[\\s\\S]*)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "precinct": "precinct"
+   },
+   "templates": {
+    "address": "{street}, MT"
+   },
+   "constants": {
+    "hours": "7 a.m. to 8 p.m."
+   }
+  },
+  "office": {
+   "name": "Gallatin County Elections Department",
+   "address": "311 W. Main St., Room 210, Bozeman, MT 59715",
+   "url": "https://www.gallatinmt.gov/257/Election-Department"
+  },
+  "discoveredFrom": "Gallatin County Election Department page (gallatinmt.gov, .gov) names the November 3, 2026 Federal General Election and links 'Gallatin County Montana Precinct & Polling Place List' (DocumentCenter/View/2179, Precinct List 2026 Update PDF)"
+ },
+ {
+  "id": "mt-missoula-polling-places-2026",
+  "publisher": "Missoula County Elections Office",
+  "url": "https://www.missoulacounty.gov/departments/elections/current-election/",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:missoula",
+   "name": "Missoula County",
+   "countyFips": "30063",
+   "population": 119533
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.missoulacounty.gov/departments/elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "within": {
+     "pattern": "Where are the polling places\\?([\\s\\S]*?)</ul>",
+     "group": 1
+    },
+    "pattern": "<li\\b[^>]*>([\\s\\S]*?)</li>",
+    "group": 1,
+    "fields": {
+     "name": {
+      "pattern": "^([\\s\\S]*?)(?:&nbsp;|\\s|</strong>)*[-\u2013]\\s*\\d",
+      "group": 1
+     },
+     "address": {
+      "pattern": "[-\u2013]\\s*(\\d[\\s\\S]*?)(?:&nbsp;|\\s)*$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "address": "address"
+   },
+   "constants": {
+    "hours": "7 a.m. to 8 p.m."
+   }
+  },
+  "office": {
+   "name": "Missoula County Elections Office",
+   "address": "140 N. Russell St., Building B, Missoula, MT 59801",
+   "phone": "(406) 258-4751",
+   "url": "https://www.missoulacounty.gov/departments/elections"
+  },
+  "discoveredFrom": "Missoula County Elections department page (missoulacounty.gov, .gov) links its Current Election page, which names the November 3, 2026 Federal General Election and lists the 20 Election Day polling places"
+ },
+ {
+  "id": "mt-flathead-polling-places-2026",
+  "publisher": "Flathead County Election Department",
+  "url": "https://flatheadcounty.gov/application/files/4017/7930/1160/Flathead_County_2026_Polling_Places.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:flathead",
+   "name": "Flathead County",
+   "countyFips": "30029",
+   "population": 108454
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://flatheadcounty.gov/department-directory/election",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "title": "Flathead County 2026 Polling Places",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "\\b\\d{1,2}(?:, \\d{1,2})* [A-Z][^\\d]*? \\d+ [\\s\\S]*?\\b59\\d{3}\\b",
+    "fields": {
+     "precinct": {
+      "pattern": "^(\\d{1,2}(?:, \\d{1,2})*)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^\\d{1,2}(?:, \\d{1,2})* ([A-Z][^\\d]*?) \\d",
+      "group": 1
+     },
+     "address": {
+      "pattern": "^\\d{1,2}(?:, \\d{1,2})* [A-Z][^\\d]*? (\\d+ [\\s\\S]*\\b59\\d{3})$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "address": "address",
+    "precinct": "precinct"
+   }
+  },
+  "office": {
+   "name": "Flathead County Election Department",
+   "address": "800 S. Main Street, Kalispell, MT 59901",
+   "url": "https://flatheadcounty.gov/department-directory/election"
+  },
+  "discoveredFrom": "Flathead County Election Department page (flatheadcounty.gov, .gov) lists the 2026 Federal General Election (Nov 03, 7:00AM-8:00PM) and links 'Polling Places' (Flathead_County_2026_Polling_Places.pdf); the page names the date only as 'Nov 03 ... 2026', which the reader's date check does not match, so association is left unverified"
+ },
+ {
+  "id": "mt-cascade-polling-places-2026",
+  "publisher": "Cascade County Election Office",
+  "url": "https://www.cascadecountymt.gov/DocumentCenter/View/6771",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:cascade",
+   "name": "Cascade County",
+   "countyFips": "30013",
+   "population": 84511
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.cascadecountymt.gov/587/Cascade-County-Polling-And-Ballot-Drop-O",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "title": "Cascade County Montana Polling Places",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "\\b\\d{1,2}[A-Z]? HD \\d{3} SD \\d{3} .+? \\d+ .+? MT 59\\d{3}\\b",
+    "fields": {
+     "precinct": {
+      "pattern": "^(\\d{1,2}[A-Z]?)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "SD \\d{3} (.+?) \\d+ ",
+      "group": 1
+     },
+     "address": {
+      "pattern": "SD \\d{3} .+? (\\d+ .+? MT 59\\d{3})$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "address": "address",
+    "precinct": "precinct"
+   }
+  },
+  "office": {
+   "name": "Cascade County Election Office",
+   "address": "325 2nd Ave N, Room 100, Great Falls, MT 59401",
+   "url": "https://www.cascadecountymt.gov/587/Cascade-County-Polling-And-Ballot-Drop-O"
+  },
+  "discoveredFrom": "Cascade County 'Polling And Ballot Drop Off Places' page (cascadecountymt.gov, .gov) links 'Cascade County Polling Places' (DocumentCenter/View/6771); the PDF and page are undated, so election association is left unverified; the linked file is named 'Cascade-County-Polling-Places-2024' but it is the list the current page links, and its five sites match the five 2026 polling places the page names (Exhibition Hall, Belt, Cascade, Sun River, Vaughn)"
+ },
+ {
+  "id": "mt-lewis-and-clark-polling-places-2026",
+  "publisher": "Lewis and Clark County Elections Office",
+  "url": "https://www.lccountymt.gov/files/assets/county/v/5/treasurer-clerk-and-recorder/documents/elections/polling-places.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:lewis_and_clark",
+   "name": "Lewis and Clark County",
+   "countyFips": "30049",
+   "population": 72223
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.lccountymt.gov/Government/Clerk-and-Recorder-Treasurer/Elections",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "pdfColumns": [
+    {
+     "name": "precinct",
+     "x": 60
+    },
+    {
+     "name": "name",
+     "x": 125
+    },
+    {
+     "name": "location",
+     "x": 292
+    },
+    {
+     "name": "sd",
+     "x": 488
+    },
+    {
+     "name": "hd",
+     "x": 516
+    }
+   ],
+   "pdfRecordStart": {
+    "column": "precinct",
+    "pattern": "^\\d{1,2}$"
+   },
+   "pdfCenteredRecords": true,
+   "pdfTop": 675,
+   "columns": {
+    "name": "name",
+    "address": "location",
+    "precinct": "precinct"
+   },
+   "templates": {
+    "address": "{location}, MT"
+   },
+   "constants": {
+    "election": "2026 Federal Elections"
+   }
+  },
+  "office": {
+   "name": "Lewis and Clark County Elections Office",
+   "phone": "(406) 447-8339",
+   "url": "https://www.lccountymt.gov/Government/Clerk-and-Recorder-Treasurer/Elections"
+  },
+  "discoveredFrom": "Lewis and Clark County Elections page (lccountymt.gov, .gov; names the 2026 General Election on November 3) links 'Polling Places with Addresses (PDF)'; that link redirects to the current file titled 'Lewis and Clark County Polling Places Effective for 2026 Federal Elections'",
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "The site's firewall answers robots.txt and the page's older v/1 link with HTTP 403 for the reader's user agent, but serves the current v/5 file (the v/1 link's redirect target) with HTTP 200; the door reads the v/5 file directly."
+  }
+ },
+ {
+  "id": "mt-ravalli-polling-places-2026",
+  "publisher": "Ravalli County Elections Department",
+  "url": "https://ravallicounty.gov/155/Where-to-Vote",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:ravalli",
+   "name": "Ravalli County",
+   "countyFips": "30081",
+   "population": 45959
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://ravallicounty.gov/601/Federal-Elections",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "name": "Polling Place",
+    "precinct": "Precinct"
+   },
+   "templates": {
+    "address": "{Location}, MT"
+   },
+   "constants": {
+    "hours": "7 a.m. to 8 p.m."
+   }
+  },
+  "office": {
+   "name": "Ravalli County Elections Department",
+   "address": "215 S 4th St, Suite C, Hamilton, MT 59840",
+   "phone": "(406) 375-6550",
+   "email": "elections@rc.mt.gov",
+   "url": "https://ravallicounty.gov/145/Elections"
+  },
+  "discoveredFrom": "Ravalli County Elections page (ravallicounty.gov, .gov) lists the 2026 Federal General Election (November 3, 2026) and links 'Where to Vote (For Federal Elections Only)', which publishes the county's 8 polling places by precinct; the list itself is undated, so association is left unverified"
+ },
+ {
+  "id": "mt-silver-bow-polling-places-2026",
+  "publisher": "Butte-Silver Bow Clerk & Recorder / Elections",
+  "url": "https://www.bsbmt.gov/3483/Upcoming-Elections",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:silver_bow",
+   "name": "Silver Bow County",
+   "countyFips": "30093",
+   "population": 35411
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.bsbmt.gov/3483/Upcoming-Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "precinct": "Precinct Number",
+    "accessibilityNotes": "Accessibility Designation"
+   },
+   "transforms": {
+    "name": {
+     "column": "Polling Place Location",
+     "pattern": "^(.+?)\\s+\\d",
+     "group": 1
+    },
+    "address": {
+     "column": "Polling Place Location",
+     "pattern": "^.+?\\s+(\\d.*)$",
+     "group": 1
+    }
+   }
+  },
+  "office": {
+   "name": "Butte-Silver Bow Clerk & Recorder / Elections",
+   "address": "155 W Granite Street, Butte, MT 59701",
+   "phone": "(406) 497-6200",
+   "url": "https://www.bsbmt.gov/155/Clerk-RecorderElections"
+  },
+  "discoveredFrom": "Butte-Silver Bow site (bsbmt.gov, .gov; redirected from co.silverbow.mt.us) navigation 'Upcoming Elections' page, which publishes the 'Statement of the Location of Precinct Polling Places and Accessibility Designations for Silver Bow County for the November 3, 2026 Federal General Election'"
+ },
+ {
+  "publisher": "Lincoln County Election Office",
+  "url": "https://lincolncountymt.gov/polling-drop-off/",
+  "shape": "list-page",
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:lincoln",
+   "name": "Lincoln County",
+   "countyFips": "30053",
+   "population": 20525
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://lincolncountymt.gov/polling-drop-off/",
+  "electionAssociationVerified": false,
+  "matchingUnit": "COUNTY",
+  "office": {
+   "name": "Lincoln County Election Office",
+   "address": "418 Mineral Ave, Floor B - Election Center, Libby, MT 59923",
+   "phone": "(406) 283-2302",
+   "url": "https://lincolncountymt.gov/"
+  },
+  "discoveredFrom": "Lincoln County Elections site (lincolncountymt.gov, .gov; the county's election site linked from its Clerk & Recorder) 'Polling & Drop-Off' page listing the Eureka, Libby and Troy polling places and the three absentee drop boxes; the page is undated (updated 2026-09-22), so association is left unverified",
+  "id": "mt-lincoln-polling-places-2026",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "model": "ASSIGNED",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "within": {
+     "pattern": "Lincoln County Polling([\\s\\S]*?)PLEASE NOTE",
+     "group": 1
+    },
+    "pattern": "<p[^>]*>\\s*<strong[^>]*>[^<]+</strong>\\s*<br\\s*/?>\\s*[^<]+</p>\\s*<p[^>]*>\\s*<strong[^>]*>Election Day Hours</strong>\\s*<br\\s*/?>\\s*[^<]+</p>\\s*<p[^>]*>\\s*<strong[^>]*>Serving Precincts</strong>\\s*<br\\s*/?>\\s*[^<]+</p>",
+    "fields": {
+     "name": {
+      "pattern": "^<p[^>]*>\\s*<strong[^>]*>([^<]+)</strong>",
+      "group": 1
+     },
+     "address": {
+      "pattern": "^<p[^>]*>\\s*<strong[^>]*>[^<]+</strong>\\s*<br\\s*/?>\\s*([^<]+)</p>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "Election Day Hours</strong>\\s*<br\\s*/?>\\s*([^<]+)</p>",
+      "group": 1
+     },
+     "precinct": {
+      "pattern": "Serving Precincts</strong>\\s*<br\\s*/?>\\s*([^<]+)</p>",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "address": "address",
+    "hours": "hours",
+    "precinct": "precinct"
+   }
+  }
+ },
+ {
+  "publisher": "Lincoln County Election Office",
+  "url": "https://lincolncountymt.gov/polling-drop-off/",
+  "shape": "list-page",
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:lincoln",
+   "name": "Lincoln County",
+   "countyFips": "30053",
+   "population": 20525
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://lincolncountymt.gov/polling-drop-off/",
+  "electionAssociationVerified": false,
+  "matchingUnit": "COUNTY",
+  "office": {
+   "name": "Lincoln County Election Office",
+   "address": "418 Mineral Ave, Floor B - Election Center, Libby, MT 59923",
+   "phone": "(406) 283-2302",
+   "url": "https://lincolncountymt.gov/"
+  },
+  "discoveredFrom": "Lincoln County Elections site (lincolncountymt.gov, .gov; the county's election site linked from its Clerk & Recorder) 'Polling & Drop-Off' page listing the Eureka, Libby and Troy polling places and the three absentee drop boxes; the page is undated (updated 2026-09-22), so association is left unverified",
+  "id": "mt-lincoln-drop-boxes-2026",
+  "covers": [
+   "DROP_BOX"
+  ],
+  "model": "VOTE_CENTER",
+  "extraction": {
+   "format": "html",
+   "kind": "DROP_BOX",
+   "records": {
+    "within": {
+     "pattern": "Ballot Drop-Off([\\s\\S]*)$",
+     "group": 1
+    },
+    "pattern": "<p[^>]*>\\s*<strong[^>]*>[^<]+</strong>\\s*<br\\s*/?>[^<]+<br\\s*/?>[^<]+</p>\\s*<p[^>]*>\\s*<strong[^>]*>Hours\\s*(?:<br\\s*/?>\\s*</strong>|</strong>\\s*<br\\s*/?>)\\s*[^<]+",
+    "fields": {
+     "name": {
+      "pattern": "^<p[^>]*>\\s*<strong[^>]*>([^<]+)</strong>",
+      "group": 1
+     },
+     "street": {
+      "pattern": "</strong>\\s*<br\\s*/?>([^<]+)<br",
+      "group": 1
+     },
+     "city": {
+      "pattern": "</strong>\\s*<br\\s*/?>[^<]+<br\\s*/?>([^<]+)</p>",
+      "group": 1
+     },
+     "days": {
+      "pattern": "<strong[^>]*>Hours\\s*(?:<br\\s*/?>\\s*</strong>|</strong>\\s*<br\\s*/?>)\\s*([^<]+)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "days": "days"
+   },
+   "templates": {
+    "address": "{street}, {city}"
+   }
+  }
+ },
+ {
+  "publisher": "Lake County Election Department",
+  "url": "https://www.lakemt.gov/DocumentCenter/View/4771",
+  "shape": "file",
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:lake",
+   "name": "Lake County",
+   "countyFips": "30047",
+   "population": 32033
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.lakemt.gov/389/November-3-2026-Polling-Locations-and-Sa",
+  "electionAssociationVerified": true,
+  "matchingUnit": "COUNTY",
+  "title": "Notice of Location of Polling Place and Accessibility Designations for Lake County, MT for the November 3, 2026, General Election",
+  "office": {
+   "name": "Lake County Election Department",
+   "address": "106 4th Avenue E, Polson, MT 59860",
+   "url": "https://www.lakemt.gov/170/Elections"
+  },
+  "discoveredFrom": "Lake County site lakemt.gov (.gov; the older www.lakecounty-mt.org answers a Cloudflare challenge) Elections page links 'November 3, 2026, Polling Locations and Satellite Offices' (/389/...), which links the notice PDF DocumentCenter/View/4771",
+  "id": "mt-lake-polling-places-2026",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "model": "ASSIGNED",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "name": "name",
+    "precinct": "precinct"
+   },
+   "constants": {
+    "hours": "7:00 AM to 8:00 PM",
+    "election": "November 3, 2026, General Election"
+   },
+   "records": {
+    "within": {
+     "pattern": "PRECINCT POLLING PLACE ADDRESS([\\s\\S]*?)NOTICE OF LAKE COUNTY SATELLITE",
+     "group": 1
+    },
+    "pattern": "(?:[A-Z]{3}|ST I) \\d{2}(?: (?:&|-) \\d{2})? [^\\d]+? \\d+ .+?, MT 59\\d{3}",
+    "fields": {
+     "precinct": {
+      "pattern": "^((?:[A-Z]{3}|ST I) \\d{2}(?: (?:&|-) \\d{2})?)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^(?:[A-Z]{3}|ST I) \\d{2}(?: (?:&|-) \\d{2})? ([^\\d]+?) \\d",
+      "group": 1
+     },
+     "street": {
+      "pattern": "^(?:[A-Z]{3}|ST I) \\d{2}(?: (?:&|-) \\d{2})? [^\\d]+? (\\d+ .+?)(?: [AI])? (?:St\\. [A-Z][a-z]+|[A-Z][a-z]+), MT 59\\d{3}$",
+      "group": 1
+     },
+     "city": {
+      "pattern": " ((?:St\\. [A-Z][a-z]+|[A-Z][a-z]+), MT 59\\d{3})$",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, {city}"
+   }
+  }
+ },
+ {
+  "publisher": "Lake County Election Department",
+  "url": "https://www.lakemt.gov/DocumentCenter/View/4771",
+  "shape": "file",
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:lake",
+   "name": "Lake County",
+   "countyFips": "30047",
+   "population": 32033
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.lakemt.gov/389/November-3-2026-Polling-Locations-and-Sa",
+  "electionAssociationVerified": true,
+  "matchingUnit": "COUNTY",
+  "title": "Notice of Location of Polling Place and Accessibility Designations for Lake County, MT for the November 3, 2026, General Election",
+  "office": {
+   "name": "Lake County Election Department",
+   "address": "106 4th Avenue E, Polson, MT 59860",
+   "url": "https://www.lakemt.gov/170/Elections"
+  },
+  "discoveredFrom": "Lake County site lakemt.gov (.gov; the older www.lakecounty-mt.org answers a Cloudflare challenge) Elections page links 'November 3, 2026, Polling Locations and Satellite Offices' (/389/...), which links the notice PDF DocumentCenter/View/4771",
+  "id": "mt-lake-satellite-offices-2026",
+  "covers": [
+   "SATELLITE"
+  ],
+  "model": "VOTE_CENTER",
+  "extraction": {
+   "format": "pdf",
+   "kind": "SATELLITE",
+   "pdfColumns": [
+    {
+     "name": "date",
+     "x": 20
+    },
+    {
+     "name": "location",
+     "x": 185
+    },
+    {
+     "name": "hours",
+     "x": 440
+    }
+   ],
+   "pdfRecordStart": {
+    "column": "date",
+    "pattern": "^(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day, "
+   },
+   "pdfCenteredRecords": true,
+   "pdfTop": 378,
+   "pdfBottom": 210,
+   "columns": {
+    "date": "date",
+    "hours": "hours"
+   },
+   "transforms": {
+    "name": {
+     "column": "location",
+     "pattern": "^(.+?) \\d",
+     "group": 1
+    },
+    "address": {
+     "column": "location",
+     "pattern": "^.+? (\\d.*)$",
+     "group": 1
+    }
+   },
+   "constants": {
+    "election": "November 3, 2026, General Election"
+   }
+  }
+ },
+ {
+  "id": "mt-jefferson-polling-places-2026",
+  "publisher": "Jefferson County Clerk and Recorder / Election Administrator",
+  "url": "https://jeffersoncounty-mt.gov/wp-content/uploads/2026-polling-place.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:jefferson",
+   "name": "Jefferson County",
+   "countyFips": "30043",
+   "population": 12470
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://jeffersoncounty-mt.gov/elections/",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "title": "Jefferson County 2026 Polling Places",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "PRECINCTS? [^\\n]+\\n[^\\n]+\\n[^\\n]+\\n[^\\n]+, MT",
+    "fields": {
+     "precinct": {
+      "pattern": "^PRECINCTS? ([^\\n]+)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^[^\\n]+\\n([^\\n]+)",
+      "group": 1
+     },
+     "street": {
+      "pattern": "^[^\\n]+\\n[^\\n]+\\n([^\\n]+)",
+      "group": 1
+     },
+     "city": {
+      "pattern": "\\n([^\\n]+, MT)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "precinct": "precinct"
+   },
+   "templates": {
+    "address": "{street}, {city}"
+   }
+  },
+  "office": {
+   "name": "Jefferson County Elections",
+   "address": "102 S. Monroe, P.O. Box H, Boulder, MT 59632",
+   "phone": "(406) 225-4020",
+   "email": "elections@jeffersoncounty-mt.gov",
+   "url": "https://jeffersoncounty-mt.gov/elections/"
+  },
+  "discoveredFrom": "Jefferson County Elections page (jeffersoncounty-mt.gov, .gov) Quick Links '2026 Polling Places' (scanned PDF; read by the reader's OCR path)"
+ },
+ {
+  "id": "mt-teton-polling-places-2026",
+  "publisher": "Teton County Clerk & Recorder / Elections",
+  "url": "https://tetoncountymt.gov/clerk-recorder-elections/",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:teton",
+   "name": "Teton County",
+   "countyFips": "30099",
+   "population": 6269
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://tetoncountymt.gov/clerk-recorder-elections/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "within": {
+     "pattern": "POLLING PLACES FOR FEDERAL GENERAL ELECTION([\\s\\S]*?)</ul>",
+     "group": 1
+    },
+    "pattern": "<li>(Precinct [\\s\\S]*?)</li>",
+    "group": 1,
+    "fields": {
+     "precinct": {
+      "pattern": "^Precinct\\s+(\\d+)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^Precinct\\s+\\d+\\s+(.+?)\\s+(?:&#8211;|\u2013)",
+      "group": 1
+     },
+     "address": {
+      "pattern": "(?:&#8211;|\u2013)\\s+(.+?,\\s+[A-Za-z]+)\\s+(?:\\d|Noon)",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "((?:\\d{1,2}:\\d{2}\\s*[ap]\\.m\\.|Noon)\\s+(?:&#8211;|\u2013)\\s+\\d{1,2}:\\d{2}\\s+[ap]\\.m\\.)",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "precinct": "precinct",
+    "hours": "hours"
+   },
+   "templates": {
+    "address": "{address}, MT"
+   }
+  },
+  "office": {
+   "name": "Teton County Clerk & Recorder",
+   "address": "1 Main Avenue South, PO Box 610, Choteau, MT 59422",
+   "phone": "(406) 466-2693",
+   "url": "https://tetoncountymt.gov/clerk-recorder-elections/"
+  },
+  "discoveredFrom": "Teton County Clerk & Recorder/Elections page (tetoncountymt.gov, .gov) lists 'Teton County Polling Places for Federal General Election Tuesday, November 3, 2026'"
+ },
+ {
+  "id": "mt-beaverhead-polling-places-2026",
+  "publisher": "Beaverhead County Election Office",
+  "url": "https://beaverheadcountymt.gov/wp-content/uploads/2026/10/2026c-STATEMENT-OF-LOCATIONS-GENERAL-website-doc.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:beaverhead",
+   "name": "Beaverhead County",
+   "countyFips": "30001",
+   "population": 9524
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://beaverheadcountymt.gov/election-office/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "title": "Statement of Location for Beaverhead County Polling Places 2026 Federal General Election",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "pdfColumns": [
+    {
+     "name": "precinct",
+     "x": 60
+    },
+    {
+     "name": "street",
+     "x": 110
+    },
+    {
+     "name": "name",
+     "x": 258
+    },
+    {
+     "name": "open",
+     "x": 420
+    },
+    {
+     "name": "access",
+     "x": 485
+    }
+   ],
+   "pdfRecordStart": {
+    "column": "precinct",
+    "pattern": "^\\d{1,2}$"
+   },
+   "pdfTop": 600,
+   "pdfBottom": 366,
+   "columns": {
+    "name": "name",
+    "precinct": "precinct"
+   },
+   "templates": {
+    "address": "{street}, MT",
+    "hours": "{open} to 8:00 P.M."
+   }
+  },
+  "office": {
+   "name": "Beaverhead County Election Office",
+   "url": "https://beaverheadcountymt.gov/election-office/"
+  },
+  "discoveredFrom": "Beaverhead County Election Office page (beaverheadcountymt.gov, .gov) gives notice of the November 3, 2026 Federal General Election and links '2026 Federal General Election Polling Place Locations' (2026c Statement of Locations PDF)"
+ },
+ {
+  "id": "mt-carter-polling-places-2026",
+  "publisher": "Carter County Clerk and Recorder / Election Administrator",
+  "url": "https://cartercountymt.gov/departments/elections.php",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:carter",
+   "name": "Carter County",
+   "countyFips": "30011",
+   "population": 1428
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://cartercountymt.gov/departments/elections.php",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "Precinct #\\d+[\\s\\S]*?Polls open from[\\s\\S]*?</p>",
+    "fields": {
+     "precinct": {
+      "pattern": "Precinct #(\\d+)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "Precinct #\\d+(?:&nbsp;|\\s)*(?:&hellip;|\u2026|\\.)+([^,<]+),",
+      "group": 1
+     },
+     "address": {
+      "pattern": "Precinct #\\d+(?:&nbsp;|\\s)*(?:&hellip;|\u2026|\\.)+[^,<]+,\\s*([\\s\\S]+?)(?:&nbsp;|\\s)*Polls open",
+      "group": 1
+     },
+     "open": {
+      "pattern": "Polls open from(?:&nbsp;|\\s)*(\\d{1,2}:\\d{2})",
+      "group": 1
+     },
+     "close": {
+      "pattern": "(?:&ndash;|\u2013|-)\\s*(\\d{1,2}:\\d{2}\\s*[AP]M)",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "address": "address",
+    "precinct": "precinct"
+   },
+   "templates": {
+    "hours": "{open} to {close}"
+   }
+  },
+  "office": {
+   "name": "Carter County Clerk and Recorder",
+   "address": "PO Box 315, Ekalaka, MT 59324",
+   "url": "https://cartercountymt.gov/departments/elections.php"
+  },
+  "discoveredFrom": "Carter County Elections page (cartercountymt.gov, .gov) publishes the 'Statement of Location of Precinct Polling Places for the 2026 Federal General Election' for Tuesday, November 3, 2026"
+ },
+ {
+  "id": "mt-prairie-polling-places-2026",
+  "publisher": "Prairie County Clerk and Recorder / Elections",
+  "url": "https://prairiecountymt.gov/elections/",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:prairie",
+   "name": "Prairie County",
+   "countyFips": "30079",
+   "population": 1091
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://prairiecountymt.gov/elections/",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "within": {
+     "pattern": "Polling Places:</h2>([\\s\\S]*?)>download<",
+     "group": 1
+    },
+    "pattern": "<h3[^>]*>\\s*Precincts?\\s[^<]+(?:<br\\s*/?>)?\\s*</h3>[\\s\\S]*?<p>[^<]+</p>\\s*<p>[^<]+</p>",
+    "fields": {
+     "precinct": {
+      "pattern": "<h3[^>]*>\\s*Precincts?\\s+([^<]+?)\\s*(?:<br|</h3)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "<p>([^<]+)</p>\\s*<p>[^<]+</p>$",
+      "group": 1
+     },
+     "address": {
+      "pattern": "<p>([^<]+)</p>$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "address": "address",
+    "precinct": "precinct"
+   }
+  },
+  "office": {
+   "name": "Prairie County Elections",
+   "url": "https://prairiecountymt.gov/elections/"
+  },
+  "discoveredFrom": "Prairie County Elections page (prairiecountymt.gov, .gov) 'Polling Places' section, published alongside the Federal General Election 2026 sample ballots; the polling section itself is undated, so association is left unverified"
+ },
+ {
+  "id": "mt-madison-polling-places-2026",
+  "publisher": "Madison County Clerk and Recorder / Election Administrator",
+  "url": "https://www.madisoncountymt.gov/160/Polling-Places",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:madison",
+   "name": "Madison County",
+   "countyFips": "30057",
+   "population": 8917
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.madisoncountymt.gov/159/Election-Information",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "precinct": "Precinct",
+    "hours": "Voting Times"
+   },
+   "transforms": {
+    "name": {
+     "column": "Location",
+     "pattern": "^(.+?)(?:\\n|\\s+(?=\\d{3,}\\s))",
+     "group": 1
+    },
+    "address": {
+     "column": "Location",
+     "pattern": "^.+?(?:\\n|\\s+(?=\\d{3,}\\s))\\s*(\\d.*)$",
+     "group": 1
+    }
+   }
+  },
+  "office": {
+   "name": "Madison County Clerk and Recorder",
+   "address": "103 W Wallace St, First Floor, Virginia City, MT 59755",
+   "phone": "(406) 898-4406",
+   "url": "https://www.madisoncountymt.gov/159/Election-Information"
+  },
+  "discoveredFrom": "Madison County Election Information page (madisoncountymt.gov, .gov; shows the 2026 Federal General sample ballots) links 'Polling Places' (/160/Polling-Places), an undated table of precinct polling places and voting times"
+ }
+]

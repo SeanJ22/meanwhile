@@ -1,0 +1,1060 @@
+[
+ {
+  "id": "ri-providence-polling-places",
+  "publisher": "City of Providence Board of Canvassers",
+  "url": "https://www.providenceri.gov/wp-content/uploads/2026/07/Website-Posting-Polling-Places.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+   "name": "Providence",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400759000",
+   "population": 190934
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.providenceri.gov/canvassers/2026-election-information/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "precinct": "0",
+    "name": "1",
+    "ward": "7"
+   },
+   "templates": {
+    "address": "{2}, Providence, RI"
+   },
+   "pdfBottom": 50
+  },
+  "discoveredFrom": "https://www.providenceri.gov/board-of-canvassers/ -> 2026 Election Information page, 'Polling Places' link"
+ },
+ {
+  "id": "ri-cranston-polling-places",
+  "publisher": "City of Cranston Board of Canvassers",
+  "url": "https://www.cranstonri.gov/_resources/common/userfiles/file/Board%20of%20Canvassers/11-3-2026%20General%20Warrant.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+   "name": "Cranston",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400719180",
+   "population": 82934
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.cranstonri.gov/nov-3-2026-general-election-warrant-and-polling-places/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "pdfTop": 1245,
+   "pdfBottom": 695,
+   "pdfColumns": [
+    {
+     "name": "ward",
+     "x": 0
+    },
+    {
+     "name": "precinct",
+     "x": 170
+    },
+    {
+     "name": "districts",
+     "x": 250
+    },
+    {
+     "name": "location",
+     "x": 380
+    },
+    {
+     "name": "street",
+     "x": 915
+    }
+   ],
+   "columns": {
+    "precinct": "precinct",
+    "name": "location"
+   },
+   "transforms": {
+    "ward": {
+     "column": "ward",
+     "pattern": "^(\\d+)-",
+     "group": 1
+    }
+   },
+   "templates": {
+    "address": "{street}, Cranston, RI"
+   },
+   "constants": {
+    "hours": "7:00 A.M. UNTIL 8:00 P.M."
+   }
+  },
+  "discoveredFrom": "https://www.cranstonri.gov/ home page link 'Nov. 3, 2026 General Election Warrant & Polling Places'"
+ },
+ {
+  "id": "ri-warwick-early",
+  "publisher": "City of Warwick Board of Canvassers",
+  "url": "https://www.warwickri.gov/179/Board-of-Canvassers",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:kent/place:warwick_city",
+   "name": "Warwick",
+   "countyFips": "44003",
+   "countySubdivisionGeoid": "4400374300",
+   "population": 82823
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.warwickri.gov/179/Board-of-Canvassers",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Warwick Police Department",
+    "99 Veterans Memorial Drive",
+    "General Election 11/3/2026"
+   ],
+   "constants": {
+    "name": "Warwick Police Department, Community Room",
+    "address": "99 Veterans Memorial Drive",
+    "town": "Warwick",
+    "days": "beginning October 14; Monday - Friday",
+    "hours": "from 8:30am - 4:30pm; ending November 2 at 4:00 p.m."
+   }
+  },
+  "discoveredFrom": "https://www.warwickri.gov/ -> Board of Canvassers page (EARLY VOTING NOTICE)"
+ },
+ {
+  "id": "ri-pawtucket-early",
+  "publisher": "City of Pawtucket Board of Canvassers",
+  "url": "https://pawtucketri.gov/board-of-canvassers/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:pawtucket_city",
+   "name": "Pawtucket",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400754640",
+   "population": 75604
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://pawtucketri.gov/board-of-canvassers/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Pawtucket Visitors Center",
+    "175 Main Street",
+    "November 3, 2026"
+   ],
+   "constants": {
+    "name": "Pawtucket Visitors Center",
+    "address": "175 Main Street, Pawtucket, RI",
+    "town": "Pawtucket",
+    "days": "Wednesday October 14",
+    "hours": "8:00 a.m. \u2013 4:30 p.m. \u2013> November 2, 2026, 8:00 a.m. \u2013 4:00 p.m.",
+    "locationNotes": "ADDITIONAL EARLY VOTING HOURS WILL BE: SATURDAY, OCTOBER 24, 2026 FROM 8 AM TO 4: PM AND THURSDAY, OCTOBER 29, 2026 FROM 8 AM TO 7 PM"
+   }
+  },
+  "discoveredFrom": "https://pawtucketri.gov/board-of-canvassers/ (Early Voting section)"
+ },
+ {
+  "publisher": "City of East Providence Canvassing Authority",
+  "url": "https://eastprovidenceri.gov/news-announcements/canvassing/notice-general-election",
+  "shape": "list-page",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+   "name": "East Providence",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400722960",
+   "population": 47139
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://eastprovidenceri.gov/news-announcements/canvassing/notice-general-election",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "discoveredFrom": "https://eastprovidenceri.gov/departments/canvassing -> 'Notice of General Election' (Sept 30, 2026)",
+  "id": "ri-east-providence-polling-places",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "textAssertions": [
+    "TUESDAY, NOVEMBER 3, 2026"
+   ],
+   "records": {
+    "pattern": "(?<=>|\\n)\\s*\\d\\s+\\d{2}\\s+\\d{2}\\s+10\\d\\d\\s+[^<]+",
+    "fields": {
+     "ward": {
+      "pattern": "^\\s*(\\d)",
+      "group": 1
+     },
+     "precinct": {
+      "pattern": "(10\\d\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "10\\d\\d\\s+(.+?),?\\s+(?=\\d+\\s+[A-Za-z])",
+      "group": 1
+     },
+     "street": {
+      "pattern": "10\\d\\d\\s+.+?,?\\s+(\\d+\\s+[A-Za-z][^<]*?)\\s*$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name",
+    "ward": "ward"
+   },
+   "templates": {
+    "address": "{street}, East Providence, RI"
+   },
+   "constants": {
+    "hours": "7:00 AM To 8:00 PM"
+   }
+  }
+ },
+ {
+  "publisher": "City of East Providence Canvassing Authority",
+  "url": "https://eastprovidenceri.gov/news-announcements/canvassing/notice-general-election",
+  "shape": "list-page",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+   "name": "East Providence",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400722960",
+   "population": 47139
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://eastprovidenceri.gov/news-announcements/canvassing/notice-general-election",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "discoveredFrom": "https://eastprovidenceri.gov/departments/canvassing -> 'Notice of General Election' (Sept 30, 2026)",
+  "id": "ri-east-providence-early",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "EARLY VOTING CAN ONLY BE DONE AT EAST PROVIDENCE CITY HALL"
+   ],
+   "constants": {
+    "name": "EAST PROVIDENCE CITY HALL",
+    "address": "145 TAUNTON AVE, EAST PROVIDENCE, RI",
+    "room": "FIRST FLOOR",
+    "town": "East Providence",
+    "days": "COMMENCE WEDNESDAY, OCTOBER 14, 2026",
+    "hours": "MONDAY, TUESDAY, WEDNESDAY 8AM-4PM THURDAY 8AM-6PM FRIDAY 8AM-1PM SATURDAY\u2019S EARLY VOTING ONLY: 10/24 & 10/31 8AM-1PM"
+   }
+  }
+ },
+ {
+  "publisher": "City of Woonsocket Board of Canvassers",
+  "shape": "list-page",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city",
+   "name": "Woonsocket",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400780780",
+   "population": 43240
+  },
+  "electionDate": "2026-11-03",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "id": "ri-woonsocket-polling-places",
+  "url": "https://www.woonsocketri.gov/587/Polling-Locations",
+  "electionPageUrl": "https://www.woonsocketri.gov/587/Polling-Locations",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "name": "Name",
+    "precinct": "Precinct Code"
+   },
+   "templates": {
+    "address": "{Address}, Woonsocket, RI"
+   }
+  },
+  "discoveredFrom": "https://www.woonsocketri.gov/579/Board-of-Canvassers -> Polling Locations (November 3 2026)"
+ },
+ {
+  "publisher": "City of Woonsocket Board of Canvassers",
+  "shape": "list-page",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city",
+   "name": "Woonsocket",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400780780",
+   "population": 43240
+  },
+  "electionDate": "2026-11-03",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "id": "ri-woonsocket-early",
+  "url": "https://www.woonsocketri.gov/581/Early-Voting",
+  "electionPageUrl": "https://www.woonsocketri.gov/587/Polling-Locations",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early Voting at Woonsocket City Hall for the November 3 General Election"
+   ],
+   "constants": {
+    "name": "Woonsocket City Hall",
+    "address": "169 Main Street Woonsocket RI 02895",
+    "room": "3rd Floor in the Board of Canvassers Office",
+    "town": "Woonsocket",
+    "days": "Monday through Friday beginning October 14, 2026",
+    "hours": "Open 8:30AM to 4:30PM",
+    "locationNotes": "Ends at 4:00PM on November 2, 2026"
+   }
+  },
+  "discoveredFrom": "https://www.woonsocketri.gov/579/Board-of-Canvassers -> Early Voting"
+ },
+ {
+  "publisher": "Town of North Providence Board of Canvassers",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+   "name": "North Providence",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400751760",
+   "population": 34114
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://northprovidenceri.gov/attention-north-providence-voters-north-providence-midterm-primary-and-general-election-information/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "discoveredFrom": "WordPress search on northprovidenceri.gov -> post 'North Providence Midterm Primary and General Election Information' (Jul 27, 2026)",
+  "id": "ri-north-providence-polling-places",
+  "url": "https://northprovidenceri.gov/wp-content/uploads/2026/09/2022MASTER-POLLING-PLACES.pdf",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "24\\d\\d\\s+[^\\d][^\\n]*?029\\d\\d\\s+\\d\\s+\\d+\\s+\\d+\\s+\\d\\s+[A-E]\\b",
+    "fields": {
+     "precinct": {
+      "pattern": "^(24\\d\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^24\\d\\d\\s+(.*?[^\\s,])\\s*[-,]?\\s*(?=\\d+\\s+[A-Za-z])",
+      "group": 1
+     },
+     "street": {
+      "pattern": "^24\\d\\d\\s+.*?[^\\s,]\\s*[-,]?\\s*(\\d+\\s+[A-Za-z].*?)[\\s,*]*029\\d\\d\\s",
+      "group": 1
+     },
+     "zip": {
+      "pattern": "(029\\d\\d)\\s+\\d",
+      "group": 1
+     },
+     "council": {
+      "pattern": "029\\d\\d\\s+\\d\\s+\\d+\\s+\\d+\\s+(\\d)",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name",
+    "ward": "council"
+   },
+   "templates": {
+    "address": "{street}, North Providence, RI {zip}"
+   }
+  }
+ },
+ {
+  "publisher": "Town of North Providence Board of Canvassers",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+   "name": "North Providence",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400751760",
+   "population": 34114
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://northprovidenceri.gov/attention-north-providence-voters-north-providence-midterm-primary-and-general-election-information/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "discoveredFrom": "WordPress search on northprovidenceri.gov -> post 'North Providence Midterm Primary and General Election Information' (Jul 27, 2026)",
+  "id": "ri-north-providence-early",
+  "url": "https://northprovidenceri.gov/attention-north-providence-voters-north-providence-midterm-primary-and-general-election-information/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early voting will take place at North Providence Town Hall"
+   ],
+   "constants": {
+    "name": "North Providence Town Hall",
+    "address": "2000 Smith Street, North Providence RI, 02904",
+    "room": "Ground level in the Assembly RM (G-19)",
+    "town": "North Providence",
+    "days": "begins on Wednesday October 14, 2026, at 8:30 a.m.",
+    "hours": "normal business hours",
+    "locationNotes": "Early voting ends at 4:00 p.m. on November 2, 2026."
+   }
+  }
+ },
+ {
+  "id": "ri-north-kingstown-early",
+  "publisher": "Town of North Kingstown Board of Canvassers",
+  "url": "https://www.northkingstownri.gov/m/newsflash/home/detail/326",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:north_kingstown_town",
+   "name": "North Kingstown",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400951580",
+   "population": 27732
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.northkingstownri.gov/m/newsflash/home/detail/326",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early in-person voting started 10/14 at our Municipal Office Building"
+   ],
+   "constants": {
+    "name": "Municipal Office Building",
+    "address": "100 Fairway Drive",
+    "town": "North Kingstown",
+    "days": "started 10/14",
+    "hours": "regular weekday business hours (8:30 am - 4:30 pm), through 4:00 pm on Monday, November 2, 2026"
+   }
+  },
+  "discoveredFrom": "https://www.northkingstownri.gov/ home page news 'Early In-Person Voting: 2026 General Election'"
+ },
+ {
+  "id": "ri-newport-early",
+  "publisher": "City of Newport Canvassing Authority",
+  "url": "https://www.newportri.gov/living-in-newport/civic-life/elections",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:newport/place:newport_city",
+   "name": "Newport",
+   "countyFips": "44005",
+   "countySubdivisionGeoid": "4400549960",
+   "population": 25163
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.newportri.gov/living-in-newport/civic-life/elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "October 14 - Early voting begins in the second-floor conference room of Newport City Hall"
+   ],
+   "constants": {
+    "name": "Newport City Hall",
+    "address": "43 Broadway, Newport, RI 02840",
+    "room": "second-floor conference room",
+    "town": "Newport",
+    "days": "October 14 - Early voting begins",
+    "hours": "Early voting and emergency mail ballots will continue during regular business hours until 4:00 on November 2nd.",
+    "locationNotes": "October 28 - Extended early voting hours at City Hall until the 6:30 p.m. Council Meeting"
+   }
+  },
+  "discoveredFrom": "https://www.newportri.gov/ -> Living in Newport -> Civic Life -> Elections"
+ },
+ {
+  "publisher": "Town of Westerly Board of Canvassers",
+  "url": "https://westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions",
+  "shape": "file",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+   "name": "Westerly",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400977000",
+   "population": 23359
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "discoveredFrom": "https://westerlyri.gov/156/Canvassers-Elections -> 'Voter Information Booklet' (2026 FINAL)",
+  "id": "ri-westerly-polling-places",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "36\\d\\d\\s+\u2013\\s+.+?,\\s+\\d+[^,]+,\\s+(?:Westerly|Bradford)\\b",
+    "fields": {
+     "precinct": {
+      "pattern": "^(36\\d\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "^36\\d\\d\\s+\u2013\\s+(.+?),\\s+\\d",
+      "group": 1
+     },
+     "street": {
+      "pattern": ",\\s+(\\d+[^,]+),\\s+\\w+$",
+      "group": 1
+     },
+     "village": {
+      "pattern": ",\\s+(\\w+)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name"
+   },
+   "templates": {
+    "address": "{street}, {village}, RI"
+   },
+   "constants": {
+    "election": "November 3, 2026 General Election"
+   }
+  }
+ },
+ {
+  "publisher": "Town of Westerly Board of Canvassers",
+  "url": "https://westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions",
+  "shape": "file",
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:westerly_town",
+   "name": "Westerly",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400977000",
+   "population": 23359
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://westerlyri.gov/DocumentCenter/View/16385/2026-FINAL-Voter-Info-Booklet-with-Charter-Questions",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "discoveredFrom": "https://westerlyri.gov/156/Canvassers-Elections -> 'Voter Information Booklet' (2026 FINAL)",
+  "id": "ri-westerly-early",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "pdf",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Vote Early In-Person at the Westerly Police Station prior to Election Day"
+   ],
+   "constants": {
+    "name": "Westerly Police Department Community Room",
+    "address": "60 Airport Rd, Westerly",
+    "town": "Westerly",
+    "days": "Monday through Friday beginning Wednesday, October 14, 2026",
+    "hours": "from 8:30 am to 4:30 pm through Monday, November 2, 2026 from 8:30 am to 4:00 pm.",
+    "locationNotes": "Saturday hours will be available on October 24, 2026 from 9:00 am to 12:00 pm.",
+    "election": "November 3, 2026 General Election"
+   }
+  }
+ },
+ {
+  "id": "ri-bristol-early",
+  "publisher": "Town of Bristol Board of Canvassers",
+  "url": "https://www.bristolri.gov/385/Elections---Board-of-Canvassers",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:bristol_town",
+   "name": "Bristol",
+   "countyFips": "44001",
+   "countySubdivisionGeoid": "4400109280",
+   "population": 22493
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.bristolri.gov/385/Elections---Board-of-Canvassers",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early voting polling place Guiteras School Building"
+   ],
+   "constants": {
+    "name": "Guiteras School Building",
+    "address": "35 Washington Street",
+    "town": "Bristol",
+    "locationNotes": "Last day for General Election Early Voting: Monday, November 2, closes at 4:00 pm"
+   }
+  },
+  "discoveredFrom": "https://www.bristolri.gov/385/Elections---Board-of-Canvassers (GENERAL ELECTION 2026 section)"
+ },
+ {
+  "id": "ri-portsmouth-early",
+  "publisher": "Town of Portsmouth Canvassing",
+  "url": "https://www.portsmouthri.gov/1685/Early-Voting",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:newport/place:portsmouth_town",
+   "name": "Portsmouth",
+   "countyFips": "44005",
+   "countySubdivisionGeoid": "4400557880",
+   "population": 17871
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.portsmouthri.gov/1685/Early-Voting",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early Voting for the RI 2026 Statewide General Election begins on October 14"
+   ],
+   "constants": {
+    "name": "Town Hall",
+    "address": "2200 East Main Road, Portsmouth",
+    "room": "Council Chambers",
+    "town": "Portsmouth",
+    "election": "RI 2026 Statewide General Election",
+    "days": "begins on October 14 at Town Hall ENDS at 4:00PM on Monday, November 2",
+    "hours": "8:30AM to 4:30PM Thursday, 8:30AM to 6:30PM Friday, 8:30AM to 2:30PM"
+   }
+  },
+  "discoveredFrom": "https://www.portsmouthri.gov/139/Canvassing---Voter-Registration -> Early Voting"
+ },
+ {
+  "id": "ri-barrington-early",
+  "publisher": "Town of Barrington Board of Canvassers",
+  "url": "https://www.barrington.ri.gov/538/2026-Election-Information",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+   "name": "Barrington",
+   "countyFips": "44001",
+   "countySubdivisionGeoid": "4400105140",
+   "population": 17153
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.barrington.ri.gov/538/2026-Election-Information",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early voting is at Barrington Town Hall"
+   ],
+   "constants": {
+    "name": "Barrington Town Hall",
+    "address": "283 County Road",
+    "town": "Barrington",
+    "days": "Wednesday, October 14th to Monday, November 2nd (ends at 4:00 PM)",
+    "hours": "Monday, 8:30 AM to 7:00 PM Tuesday, Wednesday, Thursday, 8:30 AM to 4:30 PM Friday, 8:30 AM to noon"
+   }
+  },
+  "discoveredFrom": "https://barrington.ri.gov/170/Board-of-Canvassers-Elections -> 2026 Election Information"
+ },
+ {
+  "id": "ri-narragansett-early",
+  "publisher": "Town of Narragansett Board of Canvassers",
+  "url": "https://narragansettri.gov/244/Elections",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:narragansett_town",
+   "name": "Narragansett",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400948340",
+   "population": 14532
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://narragansettri.gov/244/Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early Voting for the November 3, 2026 General Election"
+   ],
+   "constants": {
+    "name": "Narragansett Town Hall",
+    "address": "25 Fifth Avenue Narragansett, RI 02882",
+    "room": "Large Boardroom, 2nd floor",
+    "town": "Narragansett",
+    "days": "October 14, 2026 - November 2, 2026 at 4:00pm",
+    "hours": "Monday - Friday 8:30am-4:30pm"
+   }
+  },
+  "discoveredFrom": "https://narragansettri.gov/244/Elections"
+ },
+ {
+  "id": "ri-narragansett-polling-places",
+  "publisher": "Town of Narragansett Board of Canvassers",
+  "url": "https://narragansettri.gov/244/Elections",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:narragansett_town",
+   "name": "Narragansett",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400948340",
+   "population": 14532
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://narragansettri.gov/244/Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "textAssertions": [
+    "Polling Locations"
+   ],
+   "records": {
+    "pattern": "<span>District 200\\d</span>[\\s\\S]*?<div[^>]*>(?:<span>)?\\d+ [^<]+",
+    "fields": {
+     "precinct": {
+      "pattern": "District (200\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "</h3>\\s*<div[^>]*>(?:<span>)?([^<]+)",
+      "group": 1
+     },
+     "street": {
+      "pattern": "<div[^>]*>(?:<span>)?(\\d+ [^<]+)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name"
+   },
+   "templates": {
+    "address": "{street}, Narragansett, RI"
+   }
+  },
+  "discoveredFrom": "https://narragansettri.gov/244/Elections"
+ },
+ {
+  "id": "ri-east-greenwich-polling-places",
+  "publisher": "Town of East Greenwich Board of Canvassers",
+  "url": "https://www.eastgreenwichri.gov/DocumentCenter/View/9044/Warning-for-Town-Meeting-General-Election-November-3-2026-PDF",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:kent/place:east_greenwich_town",
+   "name": "East Greenwich",
+   "countyFips": "44003",
+   "countySubdivisionGeoid": "4400322240",
+   "population": 14312
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.eastgreenwichri.gov/192/Voter-Registration-Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "PRECINCT \\d \u2013 [^,]+, \\d+ [A-Z ]+?(?= PRECINCT \\d| Whereas)",
+    "fields": {
+     "precinct": {
+      "pattern": "PRECINCT (\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "PRECINCT \\d \u2013 ([^,]+),",
+      "group": 1
+     },
+     "street": {
+      "pattern": ", (\\d+ [A-Z ]+)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name"
+   },
+   "templates": {
+    "address": "{street}, East Greenwich, RI"
+   },
+   "constants": {
+    "hours": "7:00AM to 8:00PM"
+   }
+  },
+  "discoveredFrom": "https://www.eastgreenwichri.gov/192/Voter-Registration-Elections -> 'Warning for Town Meeting General Election November 3, 2026 (PDF)'"
+ },
+ {
+  "id": "ri-east-greenwich-early",
+  "publisher": "Town of East Greenwich Board of Canvassers",
+  "url": "https://www.eastgreenwichri.gov/DocumentCenter/View/9012/Important-Voter-Deadlines-for-General-Election-November-3-PDF",
+  "shape": "file",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:kent/place:east_greenwich_town",
+   "name": "East Greenwich",
+   "countyFips": "44003",
+   "countySubdivisionGeoid": "4400322240",
+   "population": 14312
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.eastgreenwichri.gov/192/Voter-Registration-Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "pdf",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early voting will be available at"
+   ],
+   "constants": {
+    "name": "East Greenwich Town Hall",
+    "address": "125 Main Street",
+    "room": "Council Chambers \u2014 First Floor",
+    "town": "East Greenwich",
+    "hours": "Monday \u2014 Friday, 8:30 a.m. \u2014 4:30 p.m.",
+    "locationNotes": "Early voting ends at 4:00 p.m. on Monday, November 2."
+   }
+  },
+  "discoveredFrom": "https://www.eastgreenwichri.gov/192/Voter-Registration-Elections -> 'Important Voter Deadlines for General Election November 3 (PDF)' (scanned; read by the repo's OCR path)"
+ },
+ {
+  "id": "ri-richmond-early",
+  "publisher": "Town of Richmond Board of Canvassers",
+  "url": "https://www.richmondri.gov/m/newsflash/home/detail/1873",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:richmond_town",
+   "name": "Richmond",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400961160",
+   "population": 8020
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.richmondri.gov/m/newsflash/home/detail/1873",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "EARLY IN-PERSON VOTING"
+   ],
+   "constants": {
+    "name": "Richmond Town Hall",
+    "address": "5 Richmond Townhouse Road",
+    "town": "Richmond",
+    "days": "from October 14, 2026, to November 2, 2026",
+    "hours": "Mondays, Wednesdays and Thursdays from 8:30 A.M. until 4:00 P.M. and Tuesdays from 8:30 A.M. until 6:00 P.M.",
+    "locationNotes": "The polls will be closed on Fridays as the Town Hall is closed. The early voting period ends November 2, 2026, at 4:00 P.M."
+   }
+  },
+  "discoveredFrom": "https://www.richmondri.gov/345/Elections -> News Flash 'General Election Information' (Sept 17, 2026)"
+ },
+ {
+  "id": "ri-richmond-polling-places",
+  "publisher": "Town of Richmond Board of Canvassers",
+  "url": "https://www.richmondri.gov/m/newsflash/home/detail/1873",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:washington/place:richmond_town",
+   "name": "Richmond",
+   "countyFips": "44009",
+   "countySubdivisionGeoid": "4400961160",
+   "population": 8020
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.richmondri.gov/m/newsflash/home/detail/1873",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "textAssertions": [
+    "ELECTION DAY VOTING"
+   ],
+   "records": {
+    "pattern": "<li>All Electors in Richmond Voting[\\s\\S]*?</li>",
+    "fields": {
+     "precinct": {
+      "pattern": "District (29\\d\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "cast their ballot at the <strong>([^<&]+)",
+      "group": 1
+     },
+     "street": {
+      "pattern": "located at ([^<]+?)\\.?</li>",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "precinct": "precinct",
+    "name": "name"
+   },
+   "templates": {
+    "address": "{street}, Richmond, RI"
+   },
+   "constants": {
+    "hours": "7:00 A.M. until 8:00 P.M."
+   }
+  },
+  "discoveredFrom": "https://www.richmondri.gov/345/Elections -> News Flash 'General Election Information' (Sept 17, 2026)"
+ },
+ {
+  "id": "ri-cranston-early",
+  "publisher": "City of Cranston Board of Canvassers",
+  "url": "https://www.cranstonri.gov/departments/canvassing-department/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "RI",
+   "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+   "name": "Cranston",
+   "countyFips": "44007",
+   "countySubdivisionGeoid": "4400719180",
+   "population": 82934
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.cranstonri.gov/departments/canvassing-department/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "format": "html",
+   "kind": "EARLY_VOTING",
+   "textAssertions": [
+    "Early voting for the November 3, 2026 Rhode Island General Election begins"
+   ],
+   "constants": {
+    "name": "Peter T. Pastore, Jr. Youth Center",
+    "address": "155 Gansett Ave. in Cranston",
+    "town": "Cranston",
+    "days": "begins on Wednesday, October 14 and runs weekdays",
+    "hours": "from 8:30 a.m. to 4:30 p.m. through Monday, November 2",
+    "locationNotes": "Early voting is also open on Saturday, October 31 from 8:30 a.m. to 4:30 p.m."
+   }
+  },
+  "discoveredFrom": "https://www.cranstonri.gov/departments/canvassing-department/ (ELECTION NOTICE: CITY OF CRANSTON EARLY VOTING)"
+ }
+]

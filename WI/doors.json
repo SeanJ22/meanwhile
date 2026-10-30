@@ -1,0 +1,1555 @@
+[
+ {
+  "id": "wi-madison-in-person-absentee",
+  "publisher": "City of Madison Clerk's Office",
+  "url": "https://www.cityofmadison.com/clerk/elections-voting/voting/vote-absentee/in-person-absentee-voting-hours-and-locations",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:dane/place:madison_city",
+   "name": "Madison city",
+   "countyFips": "55025",
+   "countySubdivisionGeoid": "5502548000"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.cityofmadison.com/clerk/elections-voting/voting/vote-absentee/in-person-absentee-voting-hours-and-locations",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<li class=\"list-icon-item\">([\\s\\S]*?)</li>",
+    "group": 1,
+    "fields": {
+     "name": {
+      "pattern": "<h2 class=\"heading\">(.*?)</h2>",
+      "group": 1
+     },
+     "street": {
+      "pattern": "<div class=\"list-icon-body\">\\s*<p>(.*?)</p>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<div class=\"list-icon-body\">\\s*<p>.*?</p>(.*?)</div>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Madison, WI"
+   },
+   "constants": {
+    "town": "Madison"
+   }
+  },
+  "discoveredFrom": "Dane County Clerk In-Person Absentee page links City of Madison Clerk in-person absentee hours and locations page (cityofmadison.com, official city domain)"
+ },
+ {
+  "id": "wi-dane-county-in-person-absentee",
+  "publisher": "Dane County Clerk",
+  "url": "https://elections.countyofdane.com/How-To-Vote/In-Person-Absentee-Voting",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:dane",
+   "name": "Dane County",
+   "countyFips": "55025"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://elections.countyofdane.com/How-To-Vote/In-Person-Absentee-Voting",
+  "matchingUnit": "TOWN",
+  "delegation": "town",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "columns": {
+    "town": "Municipality",
+    "days": "Dates Open for In-Person Voting",
+    "hours": "Hours",
+    "locationNotes": "Dropbox"
+   },
+   "templates": {
+    "name": "{Municipality} {Location}",
+    "address": "{Address}, {Municipality}, Dane County, WI"
+   }
+  },
+  "discoveredFrom": "Dane County Clerk elections site (elections.countyofdane.com, run by Dane County, official .com county domain linked from countyofdane.com) > How to Vote > In-Person Absentee Voting",
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Page lists every Dane municipality except Madison (which links its own page); last update Oct 21, 2026; page says General Election but never prints Nov 3, 2026, so the reader leaves electionDate unverified."
+  }
+ },
+ {
+  "id": "wi-milwaukee-city-polling-places-gis",
+  "publisher": "City of Milwaukee Election Commission (City of Milwaukee ITMD map service)",
+  "url": "https://milwaukeemaps.milwaukee.gov/arcgis/rest/services/election/election_wards/MapServer/1",
+  "shape": "map-service",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:milwaukee_city",
+   "name": "Milwaukee city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507953000"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://city.milwaukee.gov/election",
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "id": "OBJECTID",
+    "name": "POLLING_PL",
+    "ward": "WARD",
+    "precinct": "WARD",
+    "locationNotes": "MAIN_ENTR",
+    "accessibilityNotes": "ACSBL_ENTR"
+   },
+   "templates": {
+    "address": "{ADDRESS}, Milwaukee, WI"
+   },
+   "constants": {
+    "town": "Milwaukee"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "City of Milwaukee public ArcGIS map service election/election_wards: layer 0 Polling places (187), layer 1 Voting wards with assigned polling place (356). The Election Commission pages on city.milwaukee.gov answer 403 (Cloudflare), so no reachable official page ties this layer to Nov 3, 2026."
+  },
+  "discoveredFrom": "https://milwaukeemaps.milwaukee.gov/arcgis/rest/services/election (City of Milwaukee GIS server folder list)"
+ },
+ {
+  "id": "wi-racine-city-in-person-absentee",
+  "publisher": "City of Racine Clerk (voteracine.org, City of Racine Voters Guide)",
+  "url": "https://voteracine.org/vote-absentee/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:racine/place:racine_city",
+   "name": "Racine city",
+   "countyFips": "55101",
+   "countySubdivisionGeoid": "5510166000"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://voteracine.org/vote-absentee/",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<h4 class=\"et_pb_module_header\"><span>[^<]*</span></h4>\\s*<div class=\"et_pb_blurb_description\"><p>\\d[^<]*</p>.*?</div>",
+    "fields": {
+     "name": {
+      "pattern": "<span>([^<]*)</span>",
+      "group": 1
+     },
+     "street": {
+      "pattern": "<div class=\"et_pb_blurb_description\"><p>(\\d[^<]*?)[.,]?\\s*(?:Racine,? WI\\s*\\d{5})?(?:,\\s*Room[^<]*)?</p>",
+      "group": 1
+     },
+     "room": {
+      "pattern": "<p>\\d[^<]*?,\\s*(Room[^<]*)</p>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<div class=\"et_pb_blurb_description\"><p>[^<]*</p>(.*?)</div>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Racine, WI"
+   },
+   "constants": {
+    "town": "Racine"
+   }
+  },
+  "discoveredFrom": "cityofracinewi.gov homepage links 'Election Dates & Polling Locations' and 'Election Information' to voteracine.org (City of Racine Voters Guide, run by the City Clerk)"
+ },
+ {
+  "id": "wi-racine-county-polling-places-gis",
+  "publisher": "Racine County (County Clerk election polling places map service)",
+  "url": "https://arcgis.racinecounty.gov/arcgis/rest/services/ElectionPollingPlaces/ElectionPollingPlaces/MapServer/0",
+  "shape": "map-service",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:racine",
+   "name": "Racine County",
+   "countyFips": "55101"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://racinecounty.maps.arcgis.com/apps/webappviewer/index.html?id=7aad4841c1c34ad590b01fd4637c144d",
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "delegation": "town",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "id": "POLLINGID",
+    "name": "NAME",
+    "hours": "OPERHOURS",
+    "accessibilityNotes": "HANDICAP",
+    "phone": "PHONE",
+    "email": "EMAIL",
+    "officeName": "CONTACT"
+   },
+   "templates": {
+    "address": "{FULLADD}, {CITY}, {STATE}"
+   },
+   "transforms": {
+    "town": {
+     "column": "NAME",
+     "pattern": "^((?:Town|Village|City) of (?:Mt Pleasant|Elmwood Park|North Bay|Wind Point|Union Grove|[A-Za-z]+))",
+     "group": 1
+    }
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Racine County public ArcGIS MapServer ElectionPollingPlaces layer 0 (45 polling places for all 17 Racine County municipalities), used by the county's public 'Racine County Election Polling Places' web map (item 7aad4841c1c34ad590b01fd4637c144d, modified 2025-12-08). racinecounty.gov answers 403 (Akamai), so no reachable county page ties the layer to Nov 3, 2026."
+  },
+  "discoveredFrom": "ArcGIS Online search 'polling places racine' -> Racine County Election Polling Places web app -> PollingPlaces web map -> arcgis.racinecounty.gov layer"
+ },
+ {
+  "id": "wi-green-bay-in-person-absentee",
+  "publisher": "City of Green Bay Clerk's Office",
+  "url": "https://www.greenbaywi.gov/655/Voters",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:brown/place:green_bay_city",
+   "name": "Green Bay city",
+   "countyFips": "55009",
+   "countySubdivisionGeoid": "5500931000"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.greenbaywi.gov/655/Voters",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "within": {
+     "pattern": "<tr class=\"textContent\">(.*?)</tr>",
+     "group": 1,
+     "fields": {
+      "days": {
+       "pattern": "data-th=\"Date\"><strong>([^<]+)</strong>",
+       "group": 1
+      }
+     }
+    },
+    "pattern": "<td\\s+headers=\"[^\"]*\"\\s+data-th=\"(?!Date\")[^\"]*\">(?!\u2014)[^<]*\\d[^<]*</td>",
+    "fields": {
+     "name": {
+      "pattern": "data-th=\"(.*?)\\s{2}",
+      "group": 1
+     },
+     "street": {
+      "pattern": "data-th=\"[^\"]*?\\s{2}(\\d[^\"]*?)(?:\\s+Room\\s+\\w+)?\"",
+      "group": 1
+     },
+     "room": {
+      "pattern": "data-th=\"[^\"]*?\\s(Room\\s+\\w+)\"",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "\">([^<]*)</td>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Green Bay, WI"
+   },
+   "constants": {
+    "town": "Green Bay"
+   }
+  },
+  "discoveredFrom": "greenbaywi.gov homepage 'VOTING' link -> /655/Voters (2026 election dates and In-Person Absentee Voting table)"
+ },
+ {
+  "id": "wi-vilas-county-polling-locations-gis",
+  "publisher": "Vilas County (county GIS polling locations service)",
+  "url": "https://maps.vilascountywi.gov/vilasgis/rest/services/Voting/Polling_Locations/FeatureServer/0",
+  "shape": "map-service",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:vilas",
+   "name": "Vilas County",
+   "countyFips": "55125"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://maps.vilascountywi.gov/vilasgis/rest/services/Voting/Polling_Locations/FeatureServer/0",
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "delegation": "town",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "id": "objectid",
+    "town": "city",
+    "hours": "operhours"
+   },
+   "templates": {
+    "name": "{city} {name}",
+    "address": "{fulladd}, {city}, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Vilas County's own ArcGIS server (maps.vilascountywi.gov, .gov) Voting/Polling_Locations: one polling place for each of the county's 15 municipalities (14 towns and the City of Eagle River). Layer carries no election date."
+  },
+  "discoveredFrom": "ArcGIS Online search 'polling wisconsin' -> item 'Polling Locations' (owner adamg.vilas) -> maps.vilascountywi.gov FeatureServer"
+ },
+ {
+  "id": "wi-sheboygan-city-polling-stations-gis",
+  "publisher": "City of Sheboygan (city ArcGIS Online 'Election Information' service)",
+  "url": "https://services2.arcgis.com/0V544hn3taBWOyaD/arcgis/rest/services/Election_Information/FeatureServer/1",
+  "shape": "map-service",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:sheboygan/place:sheboygan_city",
+   "name": "Sheboygan city",
+   "countyFips": "55117",
+   "countySubdivisionGeoid": "5511772975"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://services2.arcgis.com/0V544hn3taBWOyaD/arcgis/rest/services/Election_Information/FeatureServer/1",
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "id": "OBJECTID",
+    "name": "Name",
+    "ward": "Wards",
+    "locationNotes": "Notes"
+   },
+   "templates": {
+    "address": "{Address}, Sheboygan, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "City of Sheboygan ArcGIS Online org (owner CityOfSheboyganWI) Election_Information layer 1 Polling Stations (8, with wards), data last edited 2026-06-30. sheboyganwi.gov answers 403, so no reachable city page ties it to Nov 3, 2026."
+  },
+  "discoveredFrom": "ArcGIS Online search 'polling sheboygan' -> Election Information feature service (owner CityOfSheboyganWI)"
+ },
+ {
+  "id": "wi-fox-crossing-voting-wards-gis",
+  "publisher": "Village of Fox Crossing (village ArcGIS Online 'Voting Wards and Polling Places')",
+  "url": "https://services8.arcgis.com/QRGgMFUUVpQjjfGd/arcgis/rest/services/Voting/FeatureServer/1",
+  "shape": "map-service",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:winnebago/place:fox_crossing_village",
+   "name": "Fox Crossing village",
+   "countyFips": "55139",
+   "countySubdivisionGeoid": "5513926982"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "http://www.foxcrossingwi.gov/departments/clerks-office/election-information",
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "id": "OBJECTID",
+    "name": "POLLPLACE",
+    "ward": "WARDID",
+    "town": "MUNICIPALITY"
+   },
+   "templates": {
+    "address": "{POLLADDRESS}, Fox Crossing, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Voting wards (19) with assigned polling place, data edited 2026-07-30; each ward links the village clerk's election page."
+  },
+  "discoveredFrom": "ArcGIS Online search 'polling wisconsin' -> 'Voting Wards and Polling Places' (owner pohlinger_FC)"
+ },
+ {
+  "id": "wi-fond-du-lac-city-in-person-absentee",
+  "publisher": "City of Fond du Lac City Clerk",
+  "url": "https://www.fdl.wi.gov/administration/in-person-absentee-voting-hours-for-november-3rd-general-election/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:fond_du_lac/place:fond_du_lac_city",
+   "name": "Fond du Lac city",
+   "countyFips": "55039",
+   "countySubdivisionGeoid": "5503926275"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.fdl.wi.gov/administration/in-person-absentee-voting-hours-for-november-3rd-general-election/",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<p>In-person absentee voting for the November 3, 2026.*?</ul>",
+    "fields": {
+     "name": {
+      "pattern": "residents can come to the (City Clerk.{1,12}office)",
+      "group": 1
+     },
+     "street": {
+      "pattern": "located at (\\d[^,<]*?)\\.?,",
+      "group": 1
+     },
+     "room": {
+      "pattern": "located at \\d[^,<]*?,\\s*([^,<]*?),\\s*main lobby",
+      "group": 1
+     },
+     "days": {
+      "pattern": "will be starting on (.*?), weekdays only",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<ul>(.*?)</ul>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Fond du Lac, WI"
+   }
+  },
+  "discoveredFrom": "fdl.wi.gov homepage news item 'In-Person Absentee Voting Hours For November 3rd General Election'"
+ },
+ {
+  "id": "wi-wauwatosa-voting-locations",
+  "publisher": "City of Wauwatosa City Clerk",
+  "url": "https://wauwatosa.gov/departments/city-clerk/elections-voting/voting-locations/",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:wauwatosa_city",
+   "name": "Wauwatosa city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507984675"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://wauwatosa.gov/departments/city-clerk/elections-voting/voting-locations/",
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "name": "Polling Place",
+    "ward": "Ward",
+    "precinct": "Ward"
+   },
+   "templates": {
+    "address": "{Address}, Wauwatosa, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Ward-by-ward polling place table with districts 'Beginning April 2026' and a Highway 100 construction notice for Aug 2026-2027; the page does not print the Nov 3, 2026 date, so electionDate stays unverified."
+  },
+  "discoveredFrom": "wauwatosa.gov homepage 'Voting Locations' link"
+ },
+ {
+  "id": "wi-wauwatosa-in-person-absentee",
+  "publisher": "City of Wauwatosa City Clerk",
+  "url": "https://wauwatosa.gov/departments/city-clerk/elections-voting/absentee-voting/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:wauwatosa_city",
+   "name": "Wauwatosa city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507984675"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://wauwatosa.gov/departments/city-clerk/elections-voting/absentee-voting/",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "In-Person Absentee Hours.*?</ul>",
+    "fields": {
+     "election": {
+      "pattern": "<p>(November 3, General Election):</p>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<ul>(.*?)</ul>",
+      "group": 1
+     }
+    }
+   },
+   "constants": {
+    "name": "Wauwatosa City Hall",
+    "address": "7725 W. North Ave., Wauwatosa, WI 53213"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Page lists in-person absentee hours for 'November 3, General Election' at Wauwatosa City Hall (address printed on the same page); no year printed beside the date."
+  },
+  "discoveredFrom": "wauwatosa.gov Elections & Voting page link 'in-person absentee voting'"
+ },
+ {
+  "id": "wi-appleton-polling-locations",
+  "publisher": "City of Appleton City Clerk",
+  "url": "https://www.appletonwi.gov/government/departments/clerk/elections/polling_locations.php",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:outagamie/place:appleton_city",
+   "name": "Appleton city",
+   "countyFips": "55087",
+   "countySubdivisionGeoid": "5508702375"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.appletonwi.gov/government/departments/clerk/elections/index.php",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "<h2>District \\d+:.*?<!-- Business Map Ends -->",
+    "fields": {
+     "name": {
+      "pattern": "<h2>District \\d+:\\s*(.*?)</h2>",
+      "group": 1
+     },
+     "ward": {
+      "pattern": "<span style=\"font-size: 18px;\">(Wards?[^<]*)</span>",
+      "group": 1
+     },
+     "address": {
+      "pattern": "<i class=\"fa fa-map-marker\"></i>(.*?)\\s*</a>",
+      "group": 1
+     }
+    }
+   },
+   "constants": {}
+  },
+  "discoveredFrom": "appletonwi.gov Elections page (names November 3, 2026) links Polling Locations"
+ },
+ {
+  "id": "wi-appleton-in-person-absentee",
+  "publisher": "City of Appleton City Clerk",
+  "url": "https://www.appletonwi.gov/government/departments/clerk/elections/absentee_voting.php",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:outagamie/place:appleton_city",
+   "name": "Appleton city",
+   "countyFips": "55087",
+   "countySubdivisionGeoid": "5508702375"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.appletonwi.gov/government/departments/clerk/elections/index.php",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "In-person Absentee Voting will take place.*?</table>",
+    "fields": {
+     "room": {
+      "pattern": "at City Hall on the (6th floor)",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<table.*?</table>",
+      "group": 0
+     }
+    }
+   },
+   "constants": {
+    "name": "City Hall",
+    "address": "100 N Appleton St., Appleton, WI 54911"
+   }
+  },
+  "discoveredFrom": "appletonwi.gov Elections page (names November 3, 2026) links Absentee Voting"
+ },
+ {
+  "id": "wi-oshkosh-polling-locations",
+  "publisher": "City of Oshkosh City Clerk",
+  "url": "https://www.oshkoshwi.gov/CityClerk/Elections/PollingLocations.aspx",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:winnebago/place:oshkosh_city",
+   "name": "Oshkosh city",
+   "countyFips": "55139",
+   "countySubdivisionGeoid": "5513960500"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.oshkoshwi.gov/CityClerk/Elections/",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "<tr>\\s*<td scope=\"row\".*?</tr>",
+    "fields": {
+     "ward": {
+      "pattern": "</td>\\s*<td>([^<]*)</td>",
+      "group": 1
+     },
+     "name": {
+      "pattern": "(?:<td[^>]*>[^<]*(?:<br />[^<]*)?</td>\\s*){3}<td>([^<]*)<br",
+      "group": 1
+     },
+     "street": {
+      "pattern": "(?:<td[^>]*>[^<]*(?:<br />[^<]*)?</td>\\s*){3}<td>[^<]*<br />\\s*([^<]*)</td>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Oshkosh, WI"
+   }
+  },
+  "discoveredFrom": "oshkoshwi.gov City Clerk Elections page (names Nov 3, 2026 General Election) links Polling Locations"
+ },
+ {
+  "id": "wi-oshkosh-in-person-absentee",
+  "publisher": "City of Oshkosh City Clerk",
+  "url": "https://www.oshkoshwi.gov/CityClerk/InPersonAbsenteeVoting.aspx",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:winnebago/place:oshkosh_city",
+   "name": "Oshkosh city",
+   "countyFips": "55139",
+   "countySubdivisionGeoid": "5513960500"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.oshkoshwi.gov/CityClerk/InPersonAbsenteeVoting.aspx",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<p>Below are the dates and times for in person absentee voting.*?</div>",
+    "fields": {
+     "name": {
+      "pattern": "<span class=\"fw-semibold\">([^<,]*),",
+      "group": 1
+     },
+     "street": {
+      "pattern": "<span class=\"d-inline-block\">([^<]*)</span>",
+      "group": 1
+     },
+     "election": {
+      "pattern": "<h2>([^<]*2026[^<]*)</h2>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "</h2>(.*)",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Oshkosh, WI"
+   }
+  },
+  "discoveredFrom": "oshkoshwi.gov City Clerk Elections page links In Person Absentee Voting"
+ },
+ {
+  "id": "wi-waukesha-city-in-person-absentee",
+  "publisher": "City of Waukesha Clerk-Treasurer",
+  "url": "https://www.waukesha-wi.gov/departments/voting-elections.php",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:waukesha_city",
+   "name": "Waukesha city",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513384250"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.waukesha-wi.gov/departments/voting-elections.php",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<h3>In-Person Absentee Voting for the.*?</p>",
+    "fields": {
+     "election": {
+      "pattern": "<br />([^<]*2026[^<]*)</h3>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<ul>(.*?)</ul>",
+      "group": 1
+     },
+     "name": {
+      "pattern": "takes place at ([^,<]*),",
+      "group": 1
+     },
+     "address": {
+      "pattern": "takes place at [^,<]*,\\s*([^<]*?)\\.?</p>",
+      "group": 1
+     }
+    }
+   }
+  },
+  "discoveredFrom": "waukesha-wi.gov homepage 'Voting' link -> Voting & Elections page"
+ },
+ {
+  "id": "wi-eau-claire-polling-places",
+  "publisher": "City of Eau Claire City Clerk",
+  "url": "https://www.eauclairewi.gov/DocumentCenter/View/468/Polling-Places-and-Their-Wards-PDF",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:eau_claire/place:eau_claire_city",
+   "name": "Eau Claire city",
+   "countyFips": "55035",
+   "countySubdivisionGeoid": "5503522300"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.eauclairewi.gov/568/Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "format": "pdf",
+   "pdfColumns": [
+    {
+     "name": "SITE",
+     "x": 75
+    },
+    {
+     "name": "ADDRESS",
+     "x": 265
+    },
+    {
+     "name": "WARDS",
+     "x": 435
+    }
+   ],
+   "pdfRecordStart": {
+    "column": "ADDRESS",
+    "pattern": "^\\d"
+   },
+   "columns": {
+    "name": "SITE",
+    "ward": "WARDS",
+    "precinct": "WARDS"
+   },
+   "templates": {
+    "address": "{ADDRESS}, Eau Claire, WI"
+   }
+  },
+  "discoveredFrom": "eauclairewi.gov Elections page (names Nov 3, 2026) links 'Polling Places and their Wards (PDF)'"
+ },
+ {
+  "id": "wi-eau-claire-in-person-absentee",
+  "publisher": "City of Eau Claire City Clerk (City Elections)",
+  "url": "https://www.eauclairewi.gov/568/Elections",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:eau_claire/place:eau_claire_city",
+   "name": "Eau Claire city",
+   "countyFips": "55035",
+   "countySubdivisionGeoid": "5503522300"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.eauclairewi.gov/568/Elections",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<strong>Early Voting \\(In-Person Absentee Voting\\).*?Individuals may also register",
+    "fields": {
+     "name": {
+      "pattern": "Located in (City Elections Office) at",
+      "group": 1
+     },
+     "street": {
+      "pattern": "Located in City Elections Office at ([^<]*?)\\.?</strong>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<strong>HOURS:</strong></p>(.*?)<p><strong>There is an area",
+      "group": 1
+     },
+     "days": {
+      "pattern": "(It will begin on [^.]*2026)",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Eau Claire, WI"
+   }
+  },
+  "discoveredFrom": "eauclairewi.gov homepage 'Elections' link -> /568/Elections"
+ },
+ {
+  "id": "wi-west-allis-in-person-absentee",
+  "publisher": "City of West Allis City Clerk",
+  "url": "https://www.westalliswi.gov/page/elections",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:west_allis_city",
+   "name": "West Allis city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507985300"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.westalliswi.gov/page/elections",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "In-person absentee voting \\(early voting\\) for the Tuesday, November 3 General Election.*?</ul>",
+    "fields": {
+     "name": {
+      "pattern": "at (City Hall) \\(",
+      "group": 1
+     },
+     "street": {
+      "pattern": "at City Hall \\(([^)]*)\\)",
+      "group": 1
+     },
+     "days": {
+      "pattern": "General Election is ([^<]*?) at City Hall",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<ul>(.*?)</ul>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, West Allis, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Page names 'Tuesday, November 3 General Election' without the year, so electionDate stays unverified."
+  },
+  "discoveredFrom": "westalliswi.gov/elections redirects to /page/elections (City Clerk elections page, content embedded in page JSON)"
+ },
+ {
+  "id": "wi-greenfield-polling-locations",
+  "publisher": "City of Greenfield City Clerk",
+  "url": "https://www.ci.greenfield.wi.us/675/Elections",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:greenfield_city",
+   "name": "Greenfield city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507931175"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.ci.greenfield.wi.us/675/Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "name": "Facility Name",
+    "ward": "Wards",
+    "precinct": "Wards"
+   },
+   "templates": {
+    "address": "{Address}, Greenfield, WI"
+   }
+  },
+  "discoveredFrom": "ci.greenfield.wi.us homepage 'November 3, 2026 General Election' link -> /675/Elections"
+ },
+ {
+  "id": "wi-greenfield-in-person-absentee",
+  "publisher": "City of Greenfield City Clerk",
+  "url": "https://www.ci.greenfield.wi.us/675/Elections",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:greenfield_city",
+   "name": "Greenfield city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507931175"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.ci.greenfield.wi.us/675/Elections",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "Early in-person absentee voting is located in.*?</p>",
+    "fields": {
+     "name": {
+      "pattern": "located in (Greenfield City Hall) ",
+      "group": 1
+     },
+     "street": {
+      "pattern": "located in Greenfield City Hall ([^,]*?)\\.?,",
+      "group": 1
+     },
+     "room": {
+      "pattern": "Ave\\., ([^,]*, Room \\d+)",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<br><br>(.*?)</p>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Greenfield, WI"
+   }
+  },
+  "discoveredFrom": "ci.greenfield.wi.us /675/Elections"
+ },
+ {
+  "id": "wi-franklin-polling-places-notice",
+  "publisher": "City of Franklin City Clerk",
+  "url": "https://www.franklinwi.gov/Files/Elections/Notice-of-Election-Polling-Locations-and-Hours-11-3-2026.pdf",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:franklin_city",
+   "name": "Franklin city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507927300"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.franklinwi.gov/Elections.htm",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "format": "pdf",
+   "records": {
+    "pattern": "[A-Z][A-Za-z.' ]+?, \\d+ [^,]+?, Wards? \\d+(?:, \\d+)*",
+    "fields": {
+     "name": {
+      "pattern": "^([^,]+),",
+      "group": 1
+     },
+     "street": {
+      "pattern": ", (\\d+ [^,]+?)\\.?, Ward",
+      "group": 1
+     },
+     "ward": {
+      "pattern": "(Wards? [\\d, ]*\\d)",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Franklin, WI"
+   }
+  },
+  "discoveredFrom": "franklinwi.gov Elections page links 'Notice of Polling Locations and Hours for 11/3/2026'"
+ },
+ {
+  "id": "wi-milwaukee-south-cities-in-person-absentee-notice",
+  "publisher": "City of Franklin City Clerk (joint notice for Cudahy, Franklin, St. Francis and South Milwaukee)",
+  "url": "https://www.franklinwi.gov/Files/Elections/Notice-of-Absentee-Voting-for-11-3-2026-Election.pdf",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+   "name": "Milwaukee County",
+   "countyFips": "55079"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.franklinwi.gov/Elections.htm",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "format": "pdf",
+   "records": {
+    "pattern": "(?:Cudahy|Franklin|St\\. Francis|South Milwaukee) residents should call.*?(?= (?:Cudahy|Franklin|St\\. Francis|South Milwaukee) residents should call| The first day)",
+    "fields": {
+     "town": {
+      "pattern": "^(.*?) residents",
+      "group": 1
+     },
+     "name": {
+      "pattern": "appear at ([^,]*?City\\s+Hall),",
+      "group": 1
+     },
+     "street": {
+      "pattern": "City\\s+Hall, (\\d[^,]*?)\\.?,",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "(on weekdays between .*)$",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, {town}, WI"
+   }
+  },
+  "discoveredFrom": "franklinwi.gov Elections page links 'Notice of Voting by Absentee Ballot for November 3, 2026'",
+  "delegation": "town"
+ },
+ {
+  "id": "wi-oak-creek-voting-locations",
+  "publisher": "City of Oak Creek City Clerk",
+  "url": "https://www.oakcreekwi.gov/465/Voting-Locations",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:milwaukee/place:oak_creek_city",
+   "name": "Oak Creek city",
+   "countyFips": "55079",
+   "countySubdivisionGeoid": "5507958800"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.oakcreekwi.gov/465/Voting-Locations",
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "name": "Facility Name",
+    "address": "Address"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Table of six district polling locations; notes new District 1 site 'beginning in 2026'. Page does not print Nov 3, 2026."
+  },
+  "discoveredFrom": "oakcreekwi.gov Voting & Elections page links Voting Locations"
+ },
+ {
+  "id": "wi-brookfield-city-polling-places",
+  "publisher": "City of Brookfield City Clerk",
+  "url": "https://www.ci.brookfield.wi.us/212/Elections",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:brookfield_city",
+   "name": "Brookfield city",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513310025"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.ci.brookfield.wi.us/212/Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "<li>District \\d+ is Wards? [^<]*?Located at [^<]*</li>",
+    "fields": {
+     "ward": {
+      "pattern": "is (Wards? [^.]*)\\.",
+      "group": 1
+     },
+     "name": {
+      "pattern": "Located at (?:the )?(.*?), \\d",
+      "group": 1
+     },
+     "street": {
+      "pattern": ", (\\d+ [^,<]*?)\\.?</li>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Brookfield, WI"
+   }
+  },
+  "discoveredFrom": "ci.brookfield.wi.us homepage 'Elections' -> /212/Elections (ELECTION POLLING PLACES; lists 11/3/2026)"
+ },
+ {
+  "id": "wi-brookfield-city-in-person-absentee",
+  "publisher": "City of Brookfield City Clerk",
+  "url": "https://www.ci.brookfield.wi.us/510/Absentee-Voting",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:brookfield_city",
+   "name": "Brookfield city",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513310025"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.ci.brookfield.wi.us/510/Absentee-Voting",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "Location/Hours for In-Person Absentee Voting.*?Drop boxes",
+    "fields": {
+     "name": {
+      "pattern": "Location: ([^,]*),",
+      "group": 1
+     },
+     "address": {
+      "pattern": "Location: [^,]*, ([^<]*)<br>",
+      "group": 1
+     },
+     "days": {
+      "pattern": "Dates:(.*?)</strong>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "Hours:.*?</p>(.*)Drop boxes",
+      "group": 1
+     }
+    }
+   }
+  },
+  "discoveredFrom": "ci.brookfield.wi.us Elections page links Absentee Voting"
+ },
+ {
+  "id": "wi-west-bend-polling-locations",
+  "publisher": "City of West Bend City Clerk",
+  "url": "https://www.westbendwi.gov/city_clerk/polling_locations.php",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:washington/place:west_bend_city",
+   "name": "West Bend city",
+   "countyFips": "55131",
+   "countySubdivisionGeoid": "5513185350"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.westbendwi.gov/city_clerk/polling_locations.php",
+  "model": "ASSIGNED",
+  "matchingUnit": "PRECINCT",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "<h2>Aldermanic District[^<]*</h2>.*?<!-- Business Map Ends -->",
+    "fields": {
+     "precinct": {
+      "pattern": "<h2>(Aldermanic District[^<]*)</h2>",
+      "group": 1
+     },
+     "name": {
+      "pattern": "<span class=\"rz-business-desc\">\\s*(.*?)\\s*</span>",
+      "group": 1
+     },
+     "address": {
+      "pattern": "<i class=\"fa fa-map-marker\"></i>(.*?)\\s*</a>",
+      "group": 1
+     }
+    }
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Page lists 'Polling Places for the 2026 Election Year' by aldermanic district; Nov 3, 2026 not printed, so electionDate stays unverified."
+  },
+  "discoveredFrom": "westbendwi.gov homepage 'Polling Locations' link"
+ },
+ {
+  "id": "wi-new-berlin-in-person-absentee",
+  "publisher": "City of New Berlin City Clerk",
+  "url": "https://www.newberlinwi.gov/m/newsflash/home/detail/1286",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:new_berlin_city",
+   "name": "New Berlin city",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513356375"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.newberlinwi.gov/m/newsflash/home/detail/1286",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "will take place at&nbsp;<strong>.*?</ul>",
+    "fields": {
+     "name": {
+      "pattern": "<strong>([^<]*?) [\u2013-] [^<,]*,",
+      "group": 1
+     },
+     "room": {
+      "pattern": "<strong>[^<]*? [\u2013-] ([^<,]*),",
+      "group": 1
+     },
+     "street": {
+      "pattern": "<strong>[^<]*,\\s*(\\d[^<]*)</strong>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "<ul>(.*?)</ul>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, New Berlin, WI"
+   }
+  },
+  "discoveredFrom": "newberlinwi.gov homepage news flash 'In-Person Absentee Voting (IPAV) for the November 3rd General Election'"
+ },
+ {
+  "id": "wi-menomonee-falls-polling-places",
+  "publisher": "Village of Menomonee Falls Village Clerk",
+  "url": "https://www.menomoneefalls.gov/1140/Elections-Voting",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:menomonee_falls_village",
+   "name": "Menomonee Falls village",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513351000"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.menomoneefalls.gov/1140/Elections-Voting",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "name": "Polling Place",
+    "ward": "Ward",
+    "precinct": "Ward"
+   },
+   "templates": {
+    "address": "{Address}, Menomonee Falls, WI"
+   }
+  },
+  "discoveredFrom": "menomoneefalls.gov homepage 'Elections & Voting' link"
+ },
+ {
+  "id": "wi-menomonee-falls-in-person-absentee",
+  "publisher": "Village of Menomonee Falls Village Clerk",
+  "url": "https://www.menomoneefalls.gov/1140/Elections-Voting",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:menomonee_falls_village",
+   "name": "Menomonee Falls village",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513351000"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.menomoneefalls.gov/1140/Elections-Voting",
+  "electionAssociationVerified": true,
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "All in-person absentee voting \\(IPAV\\) takes place at.*?</td>\\s*<td>[^<]*",
+    "fields": {
+     "name": {
+      "pattern": "<em>([^<,]*),",
+      "group": 1
+     },
+     "street": {
+      "pattern": "<em>[^<,]*,\\s*([^<]*)</em>",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "</strong>,\\s*([^.]*?\\d:\\d\\d [ap]\\.m\\. to \\d+:\\d\\d [ap]\\.m\\.)",
+      "group": 1
+     },
+     "election": {
+      "pattern": "<strong>(November 3, 2026)</strong>",
+      "group": 1
+     },
+     "days": {
+      "pattern": "General Election</td>\\s*<td>([^<]*)",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Menomonee Falls, WI"
+   }
+  },
+  "discoveredFrom": "menomoneefalls.gov Elections & Voting page"
+ },
+ {
+  "id": "wi-new-berlin-polling-locations",
+  "publisher": "City of New Berlin City Clerk",
+  "url": "https://newberlinwi.gov/229/Voting-Districts-Polling-Locations",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:waukesha/place:new_berlin_city",
+   "name": "New Berlin city",
+   "countyFips": "55133",
+   "countySubdivisionGeoid": "5513356375"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://newberlinwi.gov/224/Elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "name": "Polling Location",
+    "ward": "Wards",
+    "precinct": "Wards"
+   },
+   "templates": {
+    "address": "{Address}, New Berlin, WI"
+   }
+  },
+  "discoveredFrom": "newberlinwi.gov Elections page (names Nov 3, 2026) links 'Voting Districts & Polling Locations'"
+ },
+ {
+  "id": "wi-beloit-polling-locations",
+  "publisher": "City of Beloit City Clerk",
+  "url": "https://www.beloitwi.gov/index.asp?SEC=5580A350-606C-4F3F-8CEE-0A9ECCD63528&DE=C1096859-BAC6-4BA3-AEDE-A48B72FAE2EF",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:rock/place:beloit_city",
+   "name": "Beloit city",
+   "countyFips": "55105",
+   "countySubdivisionGeoid": "5510506500"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.beloitwi.gov/elections",
+  "electionAssociationVerified": true,
+  "model": "ASSIGNED",
+  "matchingUnit": "WARD",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "<span style=\"font-size: 12pt;\">Wards? \\d[^<]*</span>",
+    "fields": {
+     "ward": {
+      "pattern": ">(Wards? \\d[\\d\\-, ]*\\d)",
+      "group": 1
+     },
+     "name": {
+      "pattern": "\\d(?:&nbsp;|\\s)+([A-Z][^<]*?),?\\s\\d+\\s[A-Za-z][^<]*</span>",
+      "group": 1
+     },
+     "street": {
+      "pattern": "\\s(\\d+\\s[A-Za-z][^<,]*)</span>",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Beloit, WI"
+   }
+  },
+  "discoveredFrom": "beloitwi.gov Election & Voter Information page (names Nov 3, 2026) links Election Day Information"
+ },
+ {
+  "id": "wi-neenah-in-person-absentee",
+  "publisher": "City of Neenah City Clerk",
+  "url": "https://www.ci.neenah.wi.us/early-in-person-voting-2/",
+  "shape": "list-page",
+  "covers": [
+   "EARLY_VOTING"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:winnebago/place:neenah_city",
+   "name": "Neenah city",
+   "countyFips": "55139",
+   "countySubdivisionGeoid": "5513955750"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.ci.neenah.wi.us/early-in-person-voting-2/",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "EARLY_VOTING",
+   "records": {
+    "pattern": "<strong>Early In-Person Voting</strong>.*?</div>",
+    "fields": {
+     "name": {
+      "pattern": ">(City Hall, Clerk.{1,8}Office), \\d",
+      "group": 1
+     },
+     "street": {
+      "pattern": "Office, (\\d+ [^<:]*):",
+      "group": 1
+     },
+     "hours": {
+      "pattern": ":</a></strong></p>(.*)",
+      "group": 1
+     }
+    }
+   },
+   "templates": {
+    "address": "{street}, Neenah, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "Post lists Tuesday Oct 20 - Friday Oct 30 hours at City Hall (weekday/date pairs match 2026) but prints no year or election date, so electionDate stays unverified."
+  },
+  "discoveredFrom": "ci.neenah.wi.us homepage 'Early In-Person Voting' post"
+ },
+ {
+  "id": "wi-sun-prairie-polling-places-gis",
+  "publisher": "City of Sun Prairie (city ArcGIS Online 'WardsAndElectionPollingPlaces')",
+  "url": "https://services3.arcgis.com/EgnL1bB7VxL4zhx7/arcgis/rest/services/WardsAndElectionPollingPlaces/FeatureServer/0",
+  "shape": "map-service",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "WI",
+   "ocdId": "ocd-division/country:us/state:wi/county:dane/place:sun_prairie_city",
+   "name": "Sun Prairie city",
+   "countyFips": "55025",
+   "countySubdivisionGeoid": "5502578600"
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://services3.arcgis.com/EgnL1bB7VxL4zhx7/arcgis/rest/services/WardsAndElectionPollingPlaces/FeatureServer/0",
+  "model": "ASSIGNED",
+  "matchingUnit": "TOWN",
+  "extraction": {
+   "kind": "ELECTION_DAY",
+   "columns": {
+    "id": "OBJECTID",
+    "name": "NAME",
+    "hours": "OPERHOURS"
+   },
+   "templates": {
+    "address": "{FULLADD}, {CITY}, WI"
+   }
+  },
+  "access": {
+   "status": "open",
+   "checkedAt": "2026-10-30",
+   "detail": "City of Sun Prairie ArcGIS Online layer 0 Polling Place (8 sites, 7:00am-8:00pm), data edited 2025-11-14; layer carries no election date."
+  },
+  "discoveredFrom": "ArcGIS Online search 'polling wisconsin' -> WardsAndElectionPollingPlaces (owner cityofsunprairie)"
+ }
+]

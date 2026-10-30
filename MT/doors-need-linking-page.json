@@ -1,0 +1,113 @@
+[
+ {
+  "id": "mt-sanders-polling-places-2026",
+  "publisher": "Sanders County Clerk and Recorder / Elections",
+  "url": "https://www.co.sanders.mt.us/DocumentCenter/View/20428/Polling-Place-and-Precint-Info-2026-PDF",
+  "shape": "file",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:sanders",
+   "name": "Sanders County",
+   "countyFips": "30089",
+   "population": 12959
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.co.sanders.mt.us/201/Elections",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "title": "Sanders County Polling Place and Precinct Information 2026",
+  "extraction": {
+   "format": "pdf",
+   "kind": "ELECTION_DAY",
+   "records": {
+    "pattern": "Sanders \\d-[A-Z ]+ #\\d \\d+ \\d+ .+? \\d+ .+? 59\\d{3} \\d+:\\d+ [ap]m - \\d+:\\d+ [ap]m",
+    "fields": {
+     "precinct": {
+      "pattern": "^Sanders (\\d-[A-Z ]+?) #",
+      "group": 1
+     },
+     "name": {
+      "pattern": "#\\d \\d+ \\d+ (.+?) \\d+ ",
+      "group": 1
+     },
+     "street": {
+      "pattern": "#\\d \\d+ \\d+ .+? (\\d+ .+? 59\\d{3}) \\d",
+      "group": 1
+     },
+     "hours": {
+      "pattern": "(\\d+:\\d+ [ap]m - \\d+:\\d+ [ap]m)$",
+      "group": 1
+     }
+    }
+   },
+   "columns": {
+    "name": "name",
+    "precinct": "precinct",
+    "hours": "hours"
+   },
+   "templates": {
+    "address": "{street}"
+   },
+   "constants": {
+    "date": "11/3/2026",
+    "election": "11/3/2026"
+   }
+  },
+  "office": {
+   "name": "Sanders County Elections",
+   "url": "https://www.co.sanders.mt.us/201/Elections"
+  },
+  "discoveredFrom": "Sanders County Elections page (co.sanders.mt.us; the county's .gov name sanderscounty.mt.gov 301-redirects to this host) links 'Polling Place and Precint Info 2026 (PDF)'. Not .gov: needs a saved official linking page before it can publish"
+ },
+ {
+  "id": "mt-richland-polling-places-2026",
+  "publisher": "Richland County Clerk and Recorder / Elections",
+  "url": "https://www.richland.org/polling-place-locations.html",
+  "shape": "list-page",
+  "covers": [
+   "ELECTION_DAY"
+  ],
+  "scope": {
+   "state": "MT",
+   "ocdId": "ocd-division/country:us/state:mt/county:richland",
+   "name": "Richland County",
+   "countyFips": "30083",
+   "population": 11283
+  },
+  "electionDate": "2026-11-03",
+  "electionPageUrl": "https://www.richland.org/elections.html",
+  "electionAssociationVerified": false,
+  "model": "ASSIGNED",
+  "matchingUnit": "COUNTY",
+  "extraction": {
+   "format": "html",
+   "kind": "ELECTION_DAY",
+   "tableIndex": 0,
+   "columns": {
+    "precinct": "Precinct No.",
+    "accessibilityNotes": "Accessibility Designation"
+   },
+   "transforms": {
+    "name": {
+     "column": "Polling Place",
+     "pattern": "^[\\s\\u200b]*([^\\n]+?)\\s*\\n",
+     "group": 1
+    },
+    "address": {
+     "column": "Polling Place",
+     "pattern": "\\n\\s*(?:Rural\\s*-\\s*)?([^\\n]+)$",
+     "group": 1
+    }
+   }
+  },
+  "office": {
+   "name": "Richland County Elections",
+   "url": "https://www.richland.org/elections.html"
+  },
+  "discoveredFrom": "Richland County site www.richland.org (the county's own site per the Census 2022 government-units directory; not .gov) Clerk & Recorder > Elections > 'Polling Place Locations' table. Needs a saved official .gov linking page before it can publish"
+ }
+]

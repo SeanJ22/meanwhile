@@ -7,7 +7,7 @@
   "steps": [
     "CP-01"
   ],
-  "ci": "tests-running",
+  "ci": "pass",
   "authorization": "Sean: Authorize one CP-01 release; protected release before READY, then a complete LIVE hour below 10 MB.",
   "at": "2026-10-30T04:54:04.241020+00:00",
   "head_sha": "2dba6239985e9e5622cfd956971ace3aed3d08c7",
@@ -30,7 +30,7 @@
     "before": 690151,
     "after": 690145
   },
-  "updated_at": "2026-10-30T05:10:51.871347+00:00",
+  "updated_at": "2026-10-30T05:29:35.107233+00:00",
   "ci_run": 41005805432,
   "before": {
     "owner_peak_hour": "2026-10-29T20:00:00Z",
@@ -54,5 +54,19 @@
     "production_database_reachable": false,
     "auth_or_settings_changed": false
   },
-  "smoke_plan": "Standing board/river README release step4 live fallback within five minutes of production deploy; observer and Chromium smoke ready."
+  "smoke_plan": "Standing board/river README release step4 live fallback within five minutes of production deploy; observer and Chromium smoke ready.",
+  "settled_at": "2026-10-30T05:30:00Z",
+  "merged_at": "2026-10-30T05:28:55Z",
+  "merge_sha": "8a17174f730c810892732fde1a946207a6853988",
+  "tested_pr_merge_sha": "dc7f57ef65e5cd1f7cfa8fc4034a92c434b2bc5e",
+  "river_sha": "2dba6239985e9e5622cfd956971ace3aed3d08c7",
+  "tests": {
+    "files": 1562,
+    "passed": 10736,
+    "skipped": 5,
+    "failed": 0,
+    "cancelled": 0
+  },
+  "schema_gate": "CP migration paths not applicable to reader-schema gate; new expand/contract tested on one-day production copy, automatic LIVE adoption still pending",
+  "ready": false
 }

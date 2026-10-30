@@ -145,12 +145,13 @@ export async function placeBodies(db: FactDb, state: string, purge?: ReaderCache
       detail: JSON.stringify({ candidates: question.candidates }), retryMinutes: 10 });
     const entities = [...new Set([...folded.map(move => move.survivor), ...hung.flatMap(move => [move.body, move.government]), ...placed])];
     if (!entities.length) return { merged: 0, hung: 0, asked: questions.length, scope: null };
-    await enqueueReaderPlaces({ entities, inOrder: true }, query);
+    for (let at = 0; at < entities.length; at += 200) await enqueueReaderPlaces({ entities: entities.slice(at, at + 200), inOrder: true }, query);
     const pages = await query(`SELECT page_id AS id FROM place_page_dependency WHERE entity_id=ANY($1::text[]) UNION SELECT place_id FROM place_page WHERE place_id=ANY($1::text[])`,
       [[...entities, ...gone]]);
     return { merged: folded.length, hung: hung.length, asked: questions.length, scope: { states: [state], entities: [...entities, ...gone], places: pages.map(row => String(row.id)) } };
   });
-  if (done.scope) await invalidateReaderCache(done.scope, purge, null);
+  // A state's repair can touch thousands of pages; their cached answers are purged a few hundred tags at a time.
+  if (done.scope) for (let at = 0; at === 0 || at < done.scope.places.length; at += 400) await invalidateReaderCache({ ...done.scope, places: done.scope.places.slice(at, at + 400) }, purge, null);
   return { merged: done.merged, hung: done.hung, asked: done.asked };
 }
 

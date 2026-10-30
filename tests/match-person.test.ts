@@ -77,10 +77,13 @@ test("names compare exactly: a middle initial matches its name, a nickname the r
   assert.equal(same("Smith, John", "Jane Smith"), false, "a shared surname is not a person");
   assert.equal(same("Smith", "Smith"), false, "a surname alone is not a name");
   assert.equal(same(foldAccents("Alma Hernández"), "Alma Hernandez"), true, "folded, an accent is not a different name");
+  assert.equal(same("Ralph C. Vick Jr.", "Ralph C. Vick V"), false, "different generational suffixes are two people");
+  assert.equal(same("Ralph C. Vick Jr.", "Ralph C. Vick"), true, "a missing suffix does not contradict one");
 });
 
 test("a comma form drops a trailing generational suffix", () => {
-  assert.deepEqual(parsePersonName("Haynes, Thomas J., III"), nameParts("Thomas J.", "Haynes"));
+  assert.deepEqual(parsePersonName("Haynes, Thomas J., III"), { ...nameParts("Thomas J.", "Haynes"), suffix: "iii" });
+  assert.deepEqual(parsePersonName("Thomas J. Haynes, III"), { ...nameParts("Thomas J.", "Haynes"), suffix: "iii" });
 });
 
 test("new people get one id style, built from the strongest key the source supplied", () => {

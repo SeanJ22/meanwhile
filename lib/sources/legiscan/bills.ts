@@ -2,6 +2,8 @@ import { personIdentityKeys } from "../../officials/people-identity.ts";
 import { US_JURISDICTIONS } from "../../coverage/states.ts";
 import type { Provenance } from "../types.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
+import { samePerson, type PersonEvidence } from "../../identity/match-person.ts";
+import { foldAccents } from "../../identity/name-parts.ts";
 import { legiscanIdentityJoins,type LegiscanIdentityHolder } from "./dataset.ts";
 import { LEGISCAN_BULK_PARSER,billScope } from "./current-sessions.ts";
 export { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billScope } from "./current-sessions.ts";
@@ -112,15 +114,15 @@ function personJoinIndex(people:readonly HeldPerson[]):PersonJoinIndex {
 }
 const normalizedName=(value:string)=>value.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^\p{L}\p{N}]+/gu," ").trim();
 const districtKey=(value:string)=>normalizedName(value).replace(/^(?:sd|hd|ad|wd|district|ward)\s*/,"").replace(/\bat large\b/g,"al").replace(/\b0+(?=\d)/g,"");
-function sameName(left:string,right:string):boolean {
-  const a=normalizedName(left).split(" "),b=normalizedName(right).split(" ");
-  if(a.join(" ")===b.join(" "))return true;
-  // The source often omits a middle name in `name` but supplies it in its components.
-  return a.length>=2&&b.length>=2&&a[0]===b[0]&&a.at(-1)===b.at(-1)&&(a.length===2||b.length===2);
+/** One sponsor and one held person, in one seat: the one matcher decides if the names are one person. A hyphenated surname may be printed by either half. */
+function sameName(left:string,right:string,seat:string):boolean {
+  const seen=(name:string):PersonEvidence=>({id:name,name:foldAccents(name).replace(/-/g," "),seats:[seat]});
+  return samePerson(seen(left),seen(right));
 }
 function matchesNameAndDistrict(sponsor:BillSponsor,person:HeldPerson):boolean {
   if(!sponsor.state||!sponsor.chamber||!sponsor.district||!person.name||person.level&&person.level!=="STATE"||person.state?.toUpperCase()!==sponsor.state)return false;
-  if(!sameName(sponsor.fullName??sponsor.name,person.name)&&!sameName(sponsor.name,person.name))return false;
+  const seat=`${sponsor.chamber}:${districtKey(sponsor.district)}`;
+  if(!sameName(sponsor.fullName??sponsor.name,person.name,seat)&&!sameName(sponsor.name,person.name,seat))return false;
   // A held LegiScan ID is authoritative, including when it disagrees with a name.
   const native=[...personIdentityKeys(person)].filter(key=>key.startsWith("legiscan:"));
   if(native.length&&!native.includes(`legiscan:${sponsor.peopleId}`))return false;

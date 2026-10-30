@@ -3,10 +3,10 @@ import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { foldAccents } from "../identity/name-parts.ts";
 
 type Holder = OfficialCandidacyBridgeRow["holder"];
-const fullName = (name: string) => name.normalize("NFKD").replace(/\p{M}/gu, "")
-  .toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const SINGLE_STATE_EXECUTIVES = new Set(["governor", "lieutenant_governor", "secretary_of_state", "attorney_general",
   "state_treasurer", "superintendent_of_public_instruction", "state_mine_inspector", "state_auditor", "state_comptroller",
   "insurance_commissioner", "chief_election_officer", "agriculture_commissioner", "public_lands_commissioner", "labor_commissioner"]);
@@ -20,12 +20,13 @@ export function sameSourcedExecutivePerson(left: Holder, right: Holder): boolean
   const office = officeIdentity(left.officeTitle);
   if (!executiveAuthority(left) || !executiveAuthority(right) ||
       !office || !SINGLE_STATE_EXECUTIVES.has(office) || officeIdentity(right.officeTitle) !== office ||
-      !left.sourceUrl || !right.sourceUrl || !officialPage(left) || !officialPage(right) ||
-      !fullName(left.name) || fullName(left.name) !== fullName(right.name)) return false;
+      !left.sourceUrl || !right.sourceUrl || !officialPage(left) || !officialPage(right)) return false;
   const a = [...new Set(left.divisions)], b = [...new Set(right.divisions)];
   if (a.length !== 1 || b.length !== 1 || a[0] !== b[0] ||
       !/^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(a[0]) ||
       !sameSeatDiscriminators(left.officeTitle, right.officeTitle, a[0])) return false;
+  const seen = (holder: Holder) => ({ id: holder.personId ?? holder.sourceUrl!, name: foldAccents(holder.name), seats: [`${a[0]}|${office}`] });
+  if (!samePerson(seen(left), seen(right))) return false;
   const keys = personIdentityKeys(left);
   const shared = [...personIdentityKeys(right)].some(key => keys.has(key));
   if (left.personId && right.personId && left.personId !== right.personId && !shared) return false;

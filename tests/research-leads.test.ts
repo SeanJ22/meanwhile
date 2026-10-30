@@ -3,7 +3,8 @@ import { aggregatePricedSpend } from "../lib/control-plane/fleet-safety.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { applyConfirmation, applyGatewayReply, confirmationOf, orderStepsReached, startReceipt } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+import { applyConfirmation, applyGatewayReply, confirmationOf, startReceipt } from "../app/(admin)/_mw/admin-v6/receipts.ts";
+import { openOrderBook } from "./helpers/order-book.ts";
 import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
 import { actionInput } from "../app/(admin)/_mw/admin-v6/contract.ts";
 import { readV6History } from "../lib/control-plane/admin-view/admin-v6-history.ts";
@@ -111,8 +112,10 @@ test("the gateway takes 5,000 rows and refuses 5,001 at once, saying why", async
   assert.match(over.receipt.says, /that is 5,001 links; one upload takes at most 5,000\. Split it/);
 });
 
-test("five rows flow end to end: parsed, ordered, held or tested, each with its reason, learned with the owner as source, and spread", async () => {
+test("five rows flow end to end: parsed, ordered, held or tested, each with its reason, learned with the owner as source, and spread", async t => {
   const repos = createMemoryRepositories();
+  const { pg, book } = await openOrderBook();
+  t.after(() => pg.close());
   // Already held: a saved capture, and a page a door reads.
   await repos.artifacts.append("artifacts", "a1", { artifactId: "a1", canonicalUrl: "https://www.tucsonaz.gov/clerk", recordedAt: NOW } as unknown as ArtifactRecord, NOW);
   await repos.doors.put("d-tucson", door("d-tucson", TUCSON, "tucson.legistar.com", { pageUrl: "https://tucson.legistar.com/Calendar.aspx" }), NOW);
@@ -146,14 +149,14 @@ test("five rows flow end to end: parsed, ordered, held or tested, each with its 
   assert.equal(order.rows[3]!.stateAbbr, "az");
 
   // Received, accepted, scheduled: the order card shows each row before anything is tested.
-  const waiting = await confirmReceipt(repos, out.receipt, Date.parse(NOW));
+  const waiting = await confirmReceipt(repos, out.receipt, Date.parse(NOW), undefined, book);
   assert.equal(waiting.state, "waiting");
   assert.deepEqual(waiting.progress, { done: 2, of: 5 });
   const sent = startReceipt({ key: "leads-key-e2e", def, target: "leads", targetName: "5 links", label: def.label, scopeKey: "us", scopeName: "United States", level: "global", at: NOW, simulated: false });
   const queued = applyGatewayReply(sent, def, 200, { ok: true, receipt: out.receipt, replayed: false, confirmation: waiting }, NOW);
   assert.equal(queued.status, "queued");
   assert.equal(queued.items.length, 5);
-  assert.equal(orderStepsReached(queued), 2, "accepted: the runner's plan is on the card");
+  assert.deepEqual(queued.orderSteps?.map(step => step.step), ["Received", "Accepted"], "accepted: the order is on the work list");
 
   const asked: string[] = [];
   const clock = passClock();
@@ -177,12 +180,12 @@ test("five rows flow end to end: parsed, ordered, held or tested, each with its 
   assert.equal(byLink.get("https://www.flagstaff.az.gov/missing-page")!.why, "The page wasn't found (404).");
 
   // Done: every row with its status and reason, in Admin's existing order tracking.
-  const finished = await confirmReceipt(repos, out.receipt, Date.parse(NOW));
+  const finished = await confirmReceipt(repos, out.receipt, Date.parse(NOW), undefined, book);
   assert.equal(finished.state, "applied");
   assert.equal(finished.words, "Done: 5 links: 2 already held, 2 work, 1 failed.");
   const shown = applyConfirmation(queued, confirmationOf({ confirmation: finished })!, NOW);
   assert.equal(shown.status, "done");
-  assert.equal(orderStepsReached(shown), 5);
+  assert.deepEqual(shown.orderSteps?.map(step => step.step), ["Received", "Accepted", "Done"], "each step is stored once, as it was reached");
   assert.deepEqual(shown.items.map((i) => `${i.label}: ${i.name}`), [
     "Failed: https://www.flagstaff.az.gov/missing-page",
     "Works: https://tucson.legistar.com/Departments.aspx",
@@ -317,8 +320,10 @@ test("pacing: lead tests and every other reader share one hourly count per small
   assert.equal((await orderOf(repos, busy.receipt.receiptId)).rows.filter((r) => r.state === "WORKS").length, 15);
 });
 
-test("pacing: a 429 with Retry-After from a lead holds that website for every reader, and another reader's 503 holds the leads", async () => {
+test("pacing: a 429 with Retry-After from a lead holds that website for every reader, and another reader's 503 holds the leads", async t => {
   const repos = createMemoryRepositories();
+  const { pg, book } = await openOrderBook();
+  t.after(() => pg.close());
   const clock = passClock();
   const out = await submit(ask("leads-key-wait", [
     { link: "https://busy.example.gov/a", notes: {} }, { link: "https://busy.example.gov/b", notes: {} }, { link: "https://other.example.gov/c", notes: {} },
@@ -351,11 +356,11 @@ test("pacing: a 429 with Retry-After from a lead holds that website for every re
   assert.match(flaky.why, /^The website asked us to wait; trying again after/);
   assert.ok(!asked.includes("https://flaky.example.gov/a"));
 
-  const working = await confirmReceipt(repos, out.receipt, Date.parse(NOW));
+  const working = await confirmReceipt(repos, out.receipt, Date.parse(NOW), undefined, book);
   assert.equal(working.state, "working");
   const card = applyConfirmation(startReceipt({ key: "k", def: actionDef("leads-send"), target: "leads", targetName: "3 links", label: "Send research leads", scopeKey: "us", scopeName: "United States", level: "global", at: NOW, simulated: false }), working, NOW);
   assert.equal(card.status, "running");
-  assert.equal(orderStepsReached(card), 4, "in progress");
+  assert.deepEqual(card.orderSteps?.map(step => step.step), ["Received", "Accepted", "In progress"]);
   assert.equal(card.items.filter((i) => i.label === "Waiting").length, 2);
 });
 

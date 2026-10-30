@@ -1,7 +1,7 @@
 /** A section that could not be read is null and adds no rows. */
 import { plainWords, hasTechnicalText } from "../../../../lib/control-plane/admin-view/plain-words.ts";
 import type { ActionRef, ClosedFix, FixView, Hunt, Lane, LookView, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
-import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
+import { ORDER_STEP_NAMES } from "../../../../lib/core/work-kinds.ts";
 import { mst, TASK_STAGES } from "./model.ts";
 import { stateName } from "../../../../lib/facts/entity-read.ts";
 
@@ -73,14 +73,14 @@ function sendOf(receipt: UiReceipt, sends: readonly SentInstruction[]): SentInst
 function orderRow(r: UiReceipt, nowMs:number): QueueRow {
   const late = !!r.finishBy && Date.parse(r.finishBy)<nowMs && !["done","partial","refused","failed"].includes(r.status);
   const failed = r.status === "refused" || r.status === "failed" || r.notPickedUp === true;
-  const reached = orderStepsReached(r);
+  const stored = r.orderSteps ?? [];
   const filter: QueueFilter = failed ? "needs-me" : r.status === "done" || r.status === "partial" ? "done"
-    : r.status === "running" || r.lifecycle.workStarted ? "in-progress" : r.plan?.resultsBy && reached === 3 ? "scheduled" : "waiting";
+    : r.status === "running" || r.lifecycle.workStarted ? "in-progress" : stored.at(-1)?.step === "Scheduled" ? "scheduled" : "waiting";
   const due = r.finishBy ? `Finish by ${mst(r.finishBy)}` : r.plan?.resultsBy ? mst(r.plan.resultsBy) : null;
   return {
     key: `order:${r.key}`, kind: "order", what: r.label, chip: late ? "Late" : r.statusWords, tone: failed || late ? "warn" : filter === "done" ? "good" : "neutral", filter,
     owner: r.plan ? r.plan.who : "—", due, next: late ? `Past its finish-by time. ${r.says}` : r.says,
-    progress: { done: reached, of: ORDER_STEPS.length, words: ORDER_STEPS[Math.max(0, reached - 1)] },
+    progress: { done: stored.length, of: ORDER_STEP_NAMES.length, words: stored.at(-1)?.step ?? ORDER_STEP_NAMES[0] },
     actions: [], open: null, at: r.sentAt, receipt: r, sendId: null,
   };
 }

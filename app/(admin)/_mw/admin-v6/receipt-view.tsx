@@ -4,7 +4,8 @@ import type { ReactElement } from "react";
 
 import { useV6 } from "./context.tsx";
 import { mst, type UiReceipt } from "./model.ts";
-import { acceptedLine, doneWithChange, oneSentence, ORDER_STEPS, orderStepsReached, STATUS_TONE, TAKE_BACK } from "./receipts.ts";
+import { ORDER_STEP_NAMES } from "../../../../lib/core/work-kinds.ts";
+import { acceptedLine, doneWithChange, oneSentence, STATUS_TONE, TAKE_BACK } from "./receipts.ts";
 import { ActionButton, cx, ReceiptChip, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
@@ -75,8 +76,8 @@ export function ReceiptCard(props: { readonly receipt: UiReceipt; readonly compa
           </div>
           {acceptedLine(r, mst) && <p className={cx(s.p, s.small)}>{acceptedLine(r, mst)}</p>}
           <div className={s.stepper} aria-label="Where this order is">
-            {ORDER_STEPS.map((label, n) => (
-              <span key={label} className={cx(s.stepChip, n < orderStepsReached(r) && s.stepChipOn)}>{label}</span>
+            {ORDER_STEP_NAMES.map(label => (
+              <span key={label} className={cx(s.stepChip, r.orderSteps?.some(reached => reached.step === label) && s.stepChipOn)}>{label}</span>
             ))}
           </div>
           <div className={s.small} role="progressbar" aria-label="Progress" aria-valuemin={0} aria-valuemax={r.progress?.of ?? 1}

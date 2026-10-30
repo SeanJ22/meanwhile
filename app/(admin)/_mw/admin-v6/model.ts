@@ -796,6 +796,8 @@ export interface UiReceipt {
   readonly change?: { readonly before: string; readonly after: string };
   readonly plan?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderPlan;
   readonly progress?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderProgress;
+  /** The steps the order's row on the work list has stored. */
+  readonly orderSteps?: readonly import("../../../../lib/core/work-kinds.ts").OrderStep[];
   readonly replayed: boolean;
   readonly sentAt: string;
   readonly words?: string;

@@ -30,15 +30,15 @@
     "before": 690151,
     "after": 690145
   },
-  "updated_at": "2026-10-30T05:29:35.107233+00:00",
+  "updated_at": "2026-10-30T05:38:07.111529+00:00",
   "ci_run": 41005805432,
   "before": {
     "owner_peak_hour": "2026-10-29T20:00:00Z",
     "owner_peak_bytes": 999322081,
     "owner_latest_active_hour": "2026-10-30T03:00:00Z",
     "owner_latest_active_bytes": 427368401,
-    "facts_a_day": 10368,
-    "facts_at": "2026-10-30T04:58:00Z",
+    "facts_a_day": 10488,
+    "facts_at": "2026-10-30T05:30:00Z",
     "all_jobs_six_hour_gb_per_hour": 4.812316413,
     "zips_under_3s": {
       "phone": 37,
@@ -68,5 +68,22 @@
     "cancelled": 0
   },
   "schema_gate": "CP migration paths not applicable to reader-schema gate; new expand/contract tested on one-day production copy, automatic LIVE adoption still pending",
-  "ready": false
+  "ready": false,
+  "production_live_sha": "8a17174f730c810892732fde1a946207a6853988",
+  "production_first_seen": "2026-10-30T05:32:42.332Z",
+  "netlify_deploy": "6ae42b1a253a749d143a52d9",
+  "smoke": {
+    "started_at": "2026-10-30T05:32:42.715Z",
+    "completed_at": "2026-10-30T05:33:26.249Z",
+    "all_endpoints_http_200": true,
+    "new_js_errors": 0,
+    "ballots_and_meetings_unchanged": true,
+    "ask_correct_with_ai_label_and_official_record": true,
+    "speed_claim": false
+  },
+  "main_ci": {
+    "run": 41008674644,
+    "conclusion": "success",
+    "completed_at": "2026-10-30T05:35:10Z"
+  }
 }

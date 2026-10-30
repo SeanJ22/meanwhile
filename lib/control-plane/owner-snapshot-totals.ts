@@ -11,7 +11,6 @@ import {
   type AssignmentClock,
   type AssignmentCostTotals,
   type AssignmentEntry,
-  type AssignmentListRow,
   type AssignmentPart,
   type AssignmentView,
   type IndexSegment,
@@ -195,8 +194,6 @@ export interface AssignmentTotals {
   readonly links: Readonly<Record<string, string>>;
   /** A work item's upstream work items, for each one that waits on others. */
   readonly dependencies: Readonly<Record<string, readonly string[]>>;
-  /** The list rows of the assignments the selection rule ranks first. */
-  readonly lists: Readonly<Record<string, AssignmentListRow>>;
   readonly pipeline: PipelineTotals;
 }
 
@@ -598,7 +595,6 @@ interface Loaded {
   inboxRun?: string;
 }
 
-type StateEntry = readonly [string, GroupTotals & Pick<AssignmentEntry, "index">];
 
 /** Subtract the replaced entries and add their new contributions; every other count stays in its small row. */
 export function updateAssignmentPart(prior: AssignmentPart, before: readonly AssignmentPart[], after: readonly AssignmentPart[], usdRows: number): AssignmentPart {
@@ -776,11 +772,9 @@ export class OwnerSnapshotFold {
   #checkpoint:OwnerSnapshotFoldInput["checkpoint"];
   readonly #ready:boolean;
   #savedRevision:number|null|undefined;
-  #keepLists=false;
   readonly #slackMs: number;
   readonly #rebuild: boolean;
   readonly #inboxes: Inboxes;
-  #servedReader: ServedReaderReadback | null;
   readonly #priorCosts: CostTotals | null;
   costs!: CostTotals;
   readonly #states: Record<string, StatePart>;
@@ -788,7 +782,6 @@ export class OwnerSnapshotFold {
   readonly #crossings: Record<string, string>;
   readonly #links: Record<string, string>;
   readonly #dependencies: Record<string, readonly string[]>;
-  readonly #lists: Map<string, AssignmentListRow>;
   #pipeline: PipelineTotals;
   #through: string;
   readonly #cursors: Record<string, LogCursor>;
@@ -817,7 +810,6 @@ export class OwnerSnapshotFold {
     this.#checkpoint=input.checkpoint;
     this.#ready=prior?.ownerWorkListReady??!prior?.initializing;
     this.#slackMs = input.slackMs ?? SNAPSHOT_CLOCK_OVERLAP_MS;
-    this.#servedReader = input.servedReader;
     const a = prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments : null;
     this.#rebuild = a === null || prior?.costs === null;
     this.#initialization=prior?.initialization??null;
@@ -836,7 +828,6 @@ export class OwnerSnapshotFold {
     this.#crossings = this.#rebuild ? {} : { ...a!.crossings };
     this.#links = this.#rebuild ? {} : { ...a!.links };
     this.#dependencies = this.#rebuild ? {} : { ...a!.dependencies };
-    this.#lists = new Map(this.#rebuild ? [] : Object.entries(a!.lists));
     this.#pipeline = this.#rebuild ? { cursor: { through: iso(0), held: [] }, items: 0, verified: 0, unlinked: {} } : structuredClone(a!.pipeline);
     this.#through = this.#rebuild ? iso(0) : a!.through;
     this.#cursors = this.#rebuild ? {} : structuredClone(a!.cursors ?? {});
@@ -967,29 +958,14 @@ export class OwnerSnapshotFold {
       this.costs.ledger.overhead);
   }
 
-  /** Readbacks affect only on-demand delivery rows, never persisted assignment counts. */
-  async readBack(next:ServedReaderReadback|null):Promise<void>{this.#servedReader=next;this.#lists.clear();}
-
   /** The national view from every state's part, as of each state's last fold. */
-  async view(input: Omit<Parameters<typeof assembleAssignmentView>[0], "nowIso" | "part" | "lists" | "totals">,
-    options: { readonly rows?: boolean } = {}): Promise<AssignmentView> {
-    let part = this.#part();
-    if (options.rows !== false) {
-      const candidates = (await Promise.all(Object.keys(this.#states).map(state => this.#repos.ownerAssignmentRows.candidates(state,this.#input.nowIso)))).flat();
-      part = { ...part,candidates: mergeAssignmentParts([{...assignmentPartOf([],this.#input.nowIso),candidates}],this.#input.nowIso).candidates };
-      this.#keepLists=true;
-      const missing = part.candidates.map(candidate=>candidate.id).filter(id=>!this.#lists.has(id));
-      if(missing.length){await this.#derive(missing,[]);this.#unload();}
-    }
+  async view(input: Omit<Parameters<typeof assembleAssignmentView>[0], "nowIso" | "part" | "lists" | "totals">): Promise<AssignmentView> {
     const pipeline = this.pipeline;
-    const view = assembleAssignmentView({ ...input, nowIso: this.#input.nowIso, part, lists: (id) => this.#lists.get(id),
+    const {geographicCounts:_geography,instructionCounts:_instructions,instructionCountsByReceipt:_receipts,...counts} = assembleAssignmentView({ ...input, nowIso: this.#input.nowIso,
+      part: mergeAssignmentParts(Object.values(this.#states).map(state => state.assignments),this.#input.nowIso), lists: () => undefined,
       totals: { costs: assignmentCostSummaryOf(this.costs.assignments), pipeline: { items: pipeline.items, linked: pipeline.linked },
         askGapObservations: this.#input.askGapObservations } });
-    if (options.rows === false) {
-      const {geographicCounts:_geography,instructionCounts:_instructions,instructionCountsByReceipt:_receipts,...counts}=view;
-      return counts;
-    }
-    return view;
+    return counts;
   }
 
   async saveTotals(prior:Persisted<OwnerSnapshotTotals>|null,initialization:OwnerSnapshotInitialization|null=null):Promise<void>{
@@ -1003,15 +979,11 @@ export class OwnerSnapshotFold {
   totals(): OwnerSnapshotTotals {
     return { formatVersion: OWNER_SNAPSHOT_TOTALS_FORMAT, costs: this.costs, assignments: { through: this.#through, cursors: this.#cursors,
       states: Object.fromEntries(Object.entries(this.#states).map(([state,part])=>[state,{builtAt:part.builtAt}])),
-      crossings: this.#crossings, links: this.#links, dependencies: this.#dependencies, lists: {}, pipeline: this.#pipeline } };
-  }
-
-  #part(): AssignmentPart {
-    return mergeAssignmentParts(Object.values(this.#states).map((s) => s.assignments), this.#input.nowIso);
+      crossings: this.#crossings, links: this.#links, dependencies: this.#dependencies, pipeline: this.#pipeline } };
   }
 
   #base(): AssignmentSubsetBase {
-    return { nowIso: this.#input.nowIso, activation: null, pilotZips: [], servedReader: this.#servedReader,
+    return { nowIso: this.#input.nowIso, activation: null, pilotZips: [], servedReader: this.#input.servedReader,
       askGapObservations: this.#input.askGapObservations, pipeline: true };
   }
 
@@ -1223,18 +1195,13 @@ export class OwnerSnapshotFold {
     }
   }
 
-  /** Each loaded state's assignments as they stand at this publish's clock. */
-  #entriesAt(loaded: Loaded): StateEntry[] {
-    return [...loaded.groups].sort().map((id) => [id, { ...this.#groups.get(id)!, index: segmentAt(this.#index.get(id)!, this.#input.nowIso) }] as const);
-  }
-
   /** Writes every loaded state's rows and part, then lets them go. */
   async #emit(): Promise<void> {
     const now = this.#input.nowIso;
     const saved: OwnerAssignmentRow[] = [];
     const removed = [...this.#priorRows.keys()].filter(id => !this.#groups.has(id));
     for (const [state, loaded] of this.#loaded) {
-      const entries = this.#entriesAt(loaded);
+      const entries = [...loaded.groups].sort().map(id => [id,{...this.#groups.get(id)!,index:segmentAt(this.#index.get(id)!,now)}] as const);
       const before = [...this.#priorRows.values()].filter(row => row.state === state);
       const after = entries.map(([id, entry]) => {
         const indexSegments = this.#index.get(id)!;
@@ -1292,10 +1259,7 @@ export class OwnerSnapshotFold {
       if (this.#groupOf.get(m) === id) this.#groupOf.delete(m);
       if (this.#crossings[m] === state) delete this.#crossings[m];
     }
-    if (state !== undefined) {
-      this.#loaded.get(state)?.groups.delete(id);
-      this.#lists.delete(id);
-    }
+    if (state !== undefined) this.#loaded.get(state)?.groups.delete(id);
     this.#groups.delete(id);
     this.#stateOfGroup.delete(id);
     this.#index.delete(id);
@@ -1387,7 +1351,6 @@ export class OwnerSnapshotFold {
           else this.#crossings[m] = state;
         }
         this.#index.set(id, await this.#segments(id, entry, replay));
-        if(this.#keepLists&&entry.list)this.#lists.set(id,entry.list);
       }
       return;
     }

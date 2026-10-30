@@ -5,6 +5,7 @@ import { assignmentPartOf, ASSIGNMENT_STATES, type AssignmentIndexRow } from "..
 import { expandControlCounts, contractControlCounts, OWNER_ASSIGNMENT_PARTS_SQL } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
 import { CONTROL_COUNT_TABLES, controlCounts } from "../lib/control-plane/repository/control-counts.ts";
 import { OWNER_ASSIGNMENT_ROWS_DDL, pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
+import { contractOwnerLive } from "../lib/control-plane/repository/migrations/CP-01-LIVE.ts";
 
 test("control counts follow committed changes and owner migration retires blobs only after fresh contract catchup", async () => {
   const db = new PGlite();
@@ -78,5 +79,24 @@ test("server-side owner migration contributions equal direct assignment counts f
     for(const row of(await db.query<{id:string;part:unknown}>("SELECT id,value->'part' AS part FROM cp_owner_assignment_rows")).rows)
       assert.deepEqual(row.part,expected.get(row.id),row.id);
     assert.equal((await db.query<{n:string}>(OWNER_ASSIGNMENT_PARTS_SQL)).rows[0].n,"0","retries retain already-computed work-row contributions");
+    await db.exec("CREATE TABLE cp_owner_snapshots(id text PRIMARY KEY,value jsonb NOT NULL,revision bigint NOT NULL DEFAULT 1,updated_at timestamptz NOT NULL)");
+    const clocks=(await db.query<{clocks:Record<string,number>}>(`SELECT jsonb_build_object(
+      'active',sum((value #>> '{part,clocks,active}')::bigint),'eligible',sum((value #>> '{part,clocks,eligible}')::bigint),
+      'overdue',sum((value #>> '{part,clocks,overdue}')::bigint),'backoff',sum((value #>> '{part,clocks,backoff}')::bigint)) AS clocks
+      FROM cp_owner_assignment_rows`)).rows[0].clocks;
+    const state={builtAt:at,places:{preserved:1},inboxRun:"preserved",part:{builtAt:at,assignments:{total:expected.size,clocks},spend:{preserved:2}}};
+    for(const[id,value]of [["totals:az",{...state,part:{...state.part,assignments:{...state.part.assignments,clocks:{...clocks,overdue:clocks.overdue-4}}}}],
+      ["totals:empty",state],["totals:exact",{...state,part:{...state.part,assignments:{...state.part.assignments,clocks:{active:0,eligible:0,overdue:0,backoff:0}}}}],
+      ["current",{publishedAt:at}],["totals",{formatVersion:4}]])
+      await db.query("INSERT INTO cp_owner_snapshots(id,value,updated_at) VALUES($1,$2,$3)",[id,JSON.stringify(value),at]);
+    const sql={query:async(text:string,params:readonly unknown[]=[]) => (await db.query(text,[...params])).rows};
+    await contractOwnerLive(sql);
+    const saved=async()=> (await db.query<{id:string;value:typeof state;revision:number;updated_at:Date}>("SELECT id,value,revision,updated_at FROM cp_owner_snapshots ORDER BY id")).rows;
+    const repaired=await saved();
+    assert.deepEqual(repaired.find(row=>row.id==='totals:az')!.value,state,"legacy drift is repaired from saved row contributions, preserving all other fields");
+    assert.deepEqual(repaired.find(row=>row.id==='totals:empty')!.value.part.assignments.clocks,{active:0,eligible:0,overdue:0,backoff:0});
+    assert.deepEqual(repaired.map(row=>[row.id,Number(row.revision)]),[["current",1],["totals",1],["totals:az",2],["totals:empty",2],["totals:exact",1]]);
+    await contractOwnerLive(sql);
+    assert.deepEqual(await saved(),repaired,"repeated contract preserves revisions and timestamps when counts already agree");
   }finally{await db.close();}
 });

@@ -197,7 +197,7 @@ function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
         says: "not read for the counts: each state's figures stand as of the last publish whose changed rows reached it; each state's index rows carry the instants they change at, so a reader shows them as they hold when read",
       },
     ],
-  }, { rows: false });
+  });
 }
 
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
@@ -412,7 +412,6 @@ async function main(): Promise<void> {
   let assignments: AssignmentPublication | undefined;
   if (fold) {
     try {
-      await fold.readBack(servedReader);
       assignments = { kind: "BUILT", view: await assignmentView(fold) };
     } catch (error) {
       // The error NAME only: a driver message can carry the connection string.

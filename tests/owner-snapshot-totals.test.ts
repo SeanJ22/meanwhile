@@ -6,7 +6,6 @@ import {
   buildAssignmentView,
   deriveAssignmentEntries,
   mergeAssignmentParts,
-  type AssignmentListRow,
   type AssignmentSources,
   type AssignmentView,
   type IndexSegment,
@@ -304,22 +303,15 @@ function rowsAt(states: ReadonlyMap<string, OwnerSnapshotState>, at: string) {
 
 /** One publish exactly as `scripts/publish-owner-snapshot.mts` composes it, every panel read back with each state's rows joined in. */
 async function publish(repos: ControlPlaneRepositories, now: string, prior: Published | null, scopes: readonly ExpansionScopeDecision[], served: ServedReaderReadback | null,
-  heldRows?: number, inspectionRepos = repos, listRows=true) {
+  heldRows?: number, inspectionRepos = repos) {
   const priorRow = await repos.ownerSnapshotTotals.read(OWNER_SNAPSHOT_TOTALS_ID);
   const askGapObservations = (await repos.askGapObservations.list()).map((r) => r.value);
   const fold = await OwnerSnapshotFold.fold(repos, priorRow?.value ?? null, { nowIso: now, slackMs: 0, servedReader: prior?.servedReader ?? null,
     askGapObservations, scopes, carried: prior?.readings ?? [], write: true, heldRows, log: () => {} });
   const read = readings(now, prior?.readings ?? []);
   const attribution = billingAttributionOf({ now, scopes, holds: {}, readings: read, hunts: fold.costs.hunts, windowOf: readingWindows(fold.costs, read, now) });
-  if(listRows)await fold.view({activation:null}); // Readback must invalidate already rendered delivery rows.
-  await fold.readBack(served);
-  const view = await fold.view({ activation: null },{rows:listRows});
-  const countOnly = await fold.view({ activation: null }, { rows: false });
-  const population = (summary: AssignmentView["summary"]) => ({ ...summary,
-    groups: summary.groups.map(({ published: _displayed, ...group }) => group) });
-  assert.deepEqual(population(countOnly.summary), population(view.summary),
-    "the runner's count-only snapshot has exactly the same population numbers as a lazy work-list view");
-  assert.deepEqual(countOnly.rows, [], "list rows are loaded only for the caller opening the list");
+  const view = await fold.view({ activation: null });
+  assert.deepEqual(view.rows, [], "the publisher reads counts; Admin loads its own keyed details");
   const totals = json(fold.totals());
   const states = new Map<string, OwnerSnapshotState>();
   const source = await sourcesAt(inspectionRepos, now, served);
@@ -384,24 +376,27 @@ async function fromScratch(repos: ControlPlaneRepositories, now: string, scopes:
 }
 
 /** The national view from scratch with each state's assignments as they stood at that state's last fold, which is what the view states. */
+function countsOf(view: AssignmentView): AssignmentView {
+  const {geographicCounts:_geography,instructionCounts:_instructions,instructionCountsByReceipt:_receipts,...counts}=view;
+  return {...counts,rows:[],summary:{...view.summary,groups:view.summary.groups.map(group=>({...group,published:0}))},
+    selection:{...view.selection,published:0,omitted:view.summary.total,trimmedForBytes:0}};
+}
 async function viewAsOfFolds(repos: ControlPlaneRepositories, published: Published, states: ReadonlyMap<string, OwnerSnapshotState>, now: string,
   servedAt: (at: string) => ServedReaderReadback | null): Promise<AssignmentView> {
   const parts = [];
-  const current=await sourcesAt(repos,now,servedAt(now)),latest=deriveAssignmentEntries(current);
-  const lists = new Map<string, AssignmentListRow>();
+  const current=await sourcesAt(repos,now,servedAt(now));
   for (const [state] of Object.entries(published.totals.assignments!.states)) {
     const ids = [...new Set(states.get(state)!.allRowsIndex.map(row => row.id))];
     for (const row of await repos.ownerAssignmentRows.read(ids)) {
       const own = [...deriveAssignmentEntries(await sourcesAt(repos, row.builtAt, servedAt(row.builtAt)))].filter(([id]) => id === row.id);
       parts.push(assignmentPartOf(own, row.builtAt));
-      for (const [id] of own) {const entry=latest.get(id);if(entry?.list)lists.set(id,entry.list);}
     }
   }
   const scratch = buildAssignmentView(current);
   const linked = scratch.summary.pipeline.held ? scratch.summary.pipeline.value.linked : null;
-  return json(assembleAssignmentView({ nowIso: now, part: mergeAssignmentParts(parts, now), lists: (id) => lists.get(id), activation: null,
+  return json(countsOf(assembleAssignmentView({ nowIso: now, part: {...mergeAssignmentParts(parts, now),candidates:[]}, lists: () => undefined, activation: null,
     totals: { costs: scratch.summary.costs, pipeline: linked && { items: linked.denominator, linked: linked.value },
-      askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) } }));
+      askGapObservations: (await repos.askGapObservations.list()).map((r) => r.value) } })));
 }
 
 function assertSamePanels(label: string, folded: Record<string, unknown>, scratch: Record<string, unknown>): void {
@@ -430,9 +425,9 @@ for (const [held, says] of [[undefined, "held in memory"], [1, "each written to 
   const one = await publish(repos, T1, null, [HUNT], served1, held);
   assertSamePanels("first publish", one.panels, await fromScratch(repos, T1, [HUNT], served1, one.published.readings));
   const { allRowsIndex: _rows, ...national } = json(buildAssignmentView(await sourcesAt(repos, T1, served1)));
-  assert.deepEqual(one.view, national, "first publish: with every state folded now, the view is exactly the from-scratch view");
+  assert.deepEqual(one.view, countsOf(national), "first publish: with every state folded now, the counts are exactly the from-scratch view");
   assert.ok(one.states.size > 5, "every state's rows are published on their own row");
-  assert.ok(one.view.summary.total > 40 && one.view.rows.length > 0, "the fixture publishes a real list");
+  assert.ok(one.view.summary.total > 40, "the fixture publishes a real assignment population");
   assert.equal(one.published.totals.costs!.skewed.length, 1, "the charge stamped an hour off its row is carried by itself");
   await between("after the first publish", one.states, T1);
 
@@ -496,7 +491,7 @@ test("a steady publish reads only the rows changed since the last one and derive
     } })])) as unknown as ControlPlaneRepositories;
   const now = at(T1, 1);
   const due = await repos.ownerAssignmentRows.find({ dueAt: now });
-  const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos,false);
+  const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos);
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assert.ok(derivedFor.has(obligationId(12)), "the assignment the new round belongs to is derived again");
   const allowed = new Set([obligationId(12), ...due.map(row => row.id)]);
@@ -505,12 +500,12 @@ test("a steady publish reads only the rows changed since the last one and derive
   assert.ok([...loaded].every(state => touchedStates.has(state)), "only affected states' small counts are read");
   assertSamePanels("steady publish", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
   /* A changed-row read starts where the last one began, so the publish right after a change reads it once more. */
-  const settled = await publish(watched, at(T1, 2), two.published, [HUNT], null, undefined, repos,false);
+  const settled = await publish(watched, at(T1, 2), two.published, [HUNT], null, undefined, repos);
   loaded.clear();
   derivedFor.clear();
   const idle = at(T1, 9);
   const expired = await repos.ownerAssignmentRows.find({ dueAt: idle });
-  const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos,false);
+  const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos);
   const expiredIds = new Set(expired.map(row => row.id));
   assert.ok([...derivedFor].every(id => expiredIds.has(id)), "an idle publish only updates work-list deadlines that passed");
   assert.deepEqual(whole, [], "no control-plane table is read whole");

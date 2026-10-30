@@ -41,7 +41,7 @@ test("control-plane migrations use only the declared production context and its 
 
 test("committed journal hashes cover each expand and contract definition", () => {
   const journal = JSON.parse(readFileSync("lib/control-plane/repository/migrations/meta/_journal.json", "utf8"));
-  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RIVER-KEYS_expand", "RIVER-KEYS-FX_expand", "RB-A5_expand", "RB-A8_expand", "RV-BOX_expand", "DB-03_expand", "DB-03A_expand", "BB-01_expand", "CP-01_counts_expand", "CP-01_counts_contract", "RB-A9_expand", "RIVER-DOORCFG-149_expand", "KB-01_expand", "CP-01-LIVE_expand"]);
+  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RIVER-KEYS_expand", "RIVER-KEYS-FX_expand", "RB-A5_expand", "RB-A8_expand", "RV-BOX_expand", "DB-03_expand", "DB-03A_expand", "BB-01_expand", "CP-01_counts_expand", "CP-01_counts_contract", "RB-A9_expand", "RIVER-DOORCFG-149_expand", "KB-01_expand", "CP-01-LIVE_expand", "CP-01-LIVE_contract"]);
   for (const row of journal.entries) assert.equal(row.hash, controlPlaneMigrationHash(process.cwd(), row.id));
 });
 

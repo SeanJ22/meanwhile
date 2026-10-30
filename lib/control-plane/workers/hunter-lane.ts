@@ -70,6 +70,8 @@ export interface HunterLaneLoopDeps {
   readonly runWave: (input: { readonly queue: HunterQueue; readonly paidOpen: boolean; readonly deadlineMs: number;
     readonly absorb: () => HunterQueue | null }) => Promise<readonly DispatchResult[]>;
   readonly stopRequested: () => boolean;
+  /** Paid work that is not a hunt, done between claims while paid work is open: the placement agent's turn. */
+  readonly between?: () => Promise<unknown>;
   readonly log: (line: string) => void;
   readonly lifeMs?: number;
   readonly refreshMs?: number;
@@ -132,6 +134,7 @@ export function hunterLane(deps: HunterLaneLoopDeps) {
         const selected = await deps.selectState();
         if (selected !== state) { state = selected; await rearm(); }
         const paidOpen = current!.closed === null;
+        if (paidOpen) await deps.between?.().catch(error => deps.log(`hunter lane: the placement agent's turn failed (${error instanceof Error ? error.message : String(error)})`));
         const q = await deps.claim(paidOpen);
         if (q === null) {
           if (deps.clock() - lastSaidMs >= HUNTER_LANE_IDLE_SAY_MS) {

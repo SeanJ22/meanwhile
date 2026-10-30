@@ -182,6 +182,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "ZP-01_expand": { phase: "expand", why: "Prioritizes queued ZIP pages by their held Census population before builders claim them.", lockFirst: ["rebuild_queue", "entity"] },
   "RB-A10_zip_locations": { phase: "expand", why: "Adds imported ZIP display points; existing memberships, identities and readers are unaffected." },
   "WR-01_fact_confirmations": { phase: "expand", why: "Adds scoped source confirmations and their reader view without rewriting existing facts." },
+  "SPN-01A_placement": { phase: "expand", why: "Indexes the placement agent's open questions so it finds the ones that are due without scanning every blank." },
   "SPN-01A_merge_people": { phase: "contract", why: "Merges person records that a shared Open States id or a listed key proves are one person, and a government's duplicate records of its own governing board, keeps every id as an alias of the survivor, and deletes the emptied duplicates once the readers and loaders that resolve aliases are serving.",
     contractStatementTimeoutMs: 60_000 },
   "RB-A9_legistar_members": {phase:"expand",why:"Adds Legistar publication counts and an index for targeted source updates ahead of bulk page rebuilding.",lockFirst:["fact","rebuild_queue"]},

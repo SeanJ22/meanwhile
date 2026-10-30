@@ -41,6 +41,8 @@ export interface ReaderCacheScope {
   /** Canonical state inputs changed; local fact and calendar publications do not consume this cache. */
   readonly statePackages?: boolean;
   readonly entities?: readonly string[];
+  /** Queue behind the backlog, not ahead of it: a bulk repair of held rows waits its turn. */
+  readonly inOrder?: boolean;
 }
 
 export const READER_NATIONAL_CACHE_TAG = "reader-national";
@@ -205,7 +207,7 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
         WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END
     WHERE (rebuild_queue.next_queued_at IS NULL AND (rebuild_queue.lease_token IS NOT NULL OR $5::boolean))
       OR rebuild_queue.built_generation=rebuild_queue.generation`,
-  [broad ? states : [],places,entities,broad && scope.national === true,!broad]);
+  [broad ? states : [],places,entities,broad && scope.national === true,!broad && scope.inOrder !== true]);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {

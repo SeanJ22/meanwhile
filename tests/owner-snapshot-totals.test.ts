@@ -700,6 +700,8 @@ test("native assignment heads match full indexes through archive joins, renewed 
     for(const name of["artifacts","worker_results","scout_results"])await db.exec(`CREATE TABLE cp_log_${name}(log_key text NOT NULL,position bigint NOT NULL,record jsonb NOT NULL,PRIMARY KEY(log_key,position))`);
     const repos=createMemoryRepositories(),world=initialWorld(),parent=world.workItems[0];
     world.workItems[0]={...parent,publicationOutcome:{...parent.publicationOutcome!,bodyIds:["body-good"]}};
+    const opened=world.occurrences.find(row=>row.closedAt===null)!,obIndex=world.obligations.findIndex(row=>row.id===opened.obligationId);
+    world.obligations[obIndex]={...world.obligations[obIndex],openOccurrenceId:opened.id};
     world.workItems.push(workItem("valid-directory",`${obligationId(1)}#1`,{subject:parent.subject,directoryParent:{workItemId:parent.id,bodyId:"body-good",versionId:"v"},
       autonomousPlan:{publication:{bodyId:"body-good"}} as never}),workItem("valid-repair",`${obligationId(1)}#1`,{subject:parent.subject,
       ...{planRepair:{parentWorkItemId:parent.id,authority:"WORK_INSTRUCTIONS_ONLY"}}} as Partial<WorkItem>));
@@ -721,9 +723,14 @@ test("native assignment heads match full indexes through archive joins, renewed 
     const workerAttempt=round(world,"head-worker","worker",{worker:PLAIN,startedAt:at(T1,-1)}),worker=parserResult(workerAttempt);
     world.workerResults.push({...worker,id:"worker-one",endedAt:at(T1,-.01)},
       {...worker,id:"worker-two",endedAt:at(T1,-1),result:{...worker.result,verdict:"FAILED",blockers:[{description:"last slot wins"}]} as never});
+    world.routeTasks.push({...world.routeTasks[0],id:"head-next",workItemId:"head-worker",createdAt:T1,state:"PENDING",attemptIds:[],disposition:null});
+    world.workItems.push(workItem("head-disposition","disposition"),workItem("head-invalid-attempt","invalid ended time"));
+    const disposed=round(world,"head-disposition","disposition",{worker:PLAIN,startedAt:at(T1,-1)}),task=world.routeTasks.findIndex(row=>row.id===disposed.routeTaskId);
+    world.routeTasks[task]={...world.routeTasks[task],disposition:{disposition:"INGESTED",attemptId:disposed.id,at:T1,artifactIds:disposed.artifactIds,observation:null,permission:"ALLOWED",transport:"REACHABLE",note:"held source"} as never};
+    const invalid=round(world,"head-invalid-attempt","invalid-ended",{worker:PLAIN,startedAt:at(T1,-1)});world.attempts[world.attempts.indexOf(invalid)]={...invalid,endedAt:"invalid-ended"};
     world.artifacts.push({...world.artifacts[0],artifactId:"invalid-time",workItemId:"head-worker",recordedAt:"not-a-time"});
     // Append identities are distinct even when multiple Scout results describe one attempt.
-    const extra=world.scouts.splice(-2);await seed(repos,world);
+    const extra=world.scouts.splice(-2);extra.push({...scout,recordedAt:"2026-10-17T11:00:00.000-04:00",outcome:"EVIDENCE_FOUND",findings:[{}] as never});await seed(repos,world);
     for(const[i,row]of extra.entries())await repos.scoutResults.append(row.obligationId,`tie-${i}`,row,row.recordedAt);
     const src=await sourcesAt(repos,T1,null),source=(name:keyof AssignmentSources)=>src[name] as readonly {id?:string;obligationId?:string;routeTaskId?:string}[];
     for(const [name,key]of[["obligations","obligations"],["debts","debts"],["leases","leases"],["attempts","attempts"],["work_items","workItems"],["route_tasks","routeTasks"],["occurrences","occurrences"]]as const){
@@ -745,6 +752,9 @@ test("native assignment heads match full indexes through archive joins, renewed 
       assert.deepEqual([...actual.keys()].sort(),[...expected.keys()].sort(),now);
       assert.equal(batch.heads.find(row=>row.id==="head-ties")!.latest!.attempt.id,earlier.id,"latest activity wins over latest start");
       assert.equal(batch.heads.find(row=>row.id==="head-attempt-tie")!.latest!.attempt.id,lastTied.id,"last canonical round wins an activity tie");
+      assert.equal(batch.heads.find(row=>row.id===opened.obligationId)!.openRound!.id,opened.id,"open occurrence survives the null-stripped projection");
+      assert.equal(batch.heads.find(row=>row.id==="head-worker")!.pendingTaskId,"head-next","pending task state survives the compact route projection");
+      assert.equal(batch.heads.find(row=>row.id==="head-disposition")!.latest!.disposition!.artifactCount,1,"applied disposition retains its evidence count");
       if(now===T1)assert.equal(actual.get("head-ties")!.index.state,"WORKING","an older live round wins over newer completed rounds");
       for(const[id,entry]of expected){assert.deepEqual(actual.get(id),{index:entry.index,horizon:entry.horizon,obligation:entry.obligation},`${now}: ${id}`);
         assert.deepEqual([...(batch.members.get(id)??[])].sort(),[...entry.members].sort(),`membership: ${id}`);}

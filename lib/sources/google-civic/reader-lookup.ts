@@ -20,6 +20,8 @@ function googlePoint(value: CivicJson): { lat: number; lng: number } | null {
 /** Adapt the shared source parser's safe projection; no second Google response parser. Sites Google did not place are recorded in `unplaced`. */
 function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace, unplaced: Map<string, BatchAddress>): VotingJurisdiction[] {
   if (!lookup.state || place.states.length > 0 && !place.states.includes(lookup.state)) return [];
+  // A Census-located street must be the town Google resolved; a ZIP-only place leaves Google's own geocode of the typed address.
+  if (place.precision === "ADDRESS" && place.towns.length && !place.towns.some(town => civicTownKey(town) === civicTownKey(lookup.town ?? ""))) return [];
   const sites: VotingSite[] = lookup.rows.flatMap(row => {
     const kind = row.kind === "POLLING_LOCATION" ? "ELECTION_DAY" : row.kind === "EARLY_VOTE_SITE" ? "EARLY_VOTING" : row.kind === "DROP_OFF_LOCATION" ? "DROP_BOX" : null;
     if (!kind) return [];
@@ -42,7 +44,7 @@ function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace,
   if (!sites.length) return [];
   return [{ ocdId: `${place.divisionIds.find(id => /\/county:/.test(id)) ?? `ocd-division/country:us/state:${lookup.state.toLowerCase()}`}#vip`,
     name: "Voting locations", state: lookup.state, model: "UNKNOWN", election: "November 3, 2026", electionDate: GOOGLE_CIVIC_ELECTION_DAY,
-    sites, assignedSiteIds: place.precision === "ADDRESS" ? sites.filter(site => site.kind === "ELECTION_DAY").map(site => site.id) : [],
+    sites, assignedSiteIds: sites.filter(site => site.kind === "ELECTION_DAY").map(site => site.id),
     sources: [{ publisher: "Google", title: GOOGLE_CIVIC_ATTRIBUTION, url: GOOGLE_CIVIC_DOCS, checkedAt: lookup.checkedAt },
       ...(lookup.electionOffices ?? []).flatMap(office => office.url ? [{ publisher: office.name, title: "Election office", url: office.url, checkedAt: lookup.checkedAt }] : [])],
     sourceOrg: GOOGLE_CIVIC_ATTRIBUTION, sourceUrl: GOOGLE_CIVIC_DOCS, collectedAt: lookup.checkedAt, refusal: null }];
@@ -60,12 +62,17 @@ async function placeWithCensus(jurisdictions: VotingJurisdiction[], unplaced: Ma
   } catch (error) { recordVotingFailure({ stage: "google-site-geocode", precision: place.precision, state: place.states[0] }, error); }
 }
 
+/** Google geocodes the typed address itself, so the request can start before Census or the ZIP has placed it. */
+export function startGoogleVotingLookup(address: string, options: CivicReadOptions = {}): Promise<CivicLookup> {
+  return lookupCivicAddress(address, new Set(), { ...options, signal: options.signal ?? AbortSignal.timeout(2200) });
+}
+
 /** Request-only fallback after the held-source check. No cache, publication, or address retention. */
-export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<{
+export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions & { lookup?: Promise<CivicLookup> } = {}): Promise<{
   jurisdictions: VotingJurisdiction[]; electionOffices: NonNullable<VotingSitesAnswer["electionOffices"]>; state: string | null; reason?: VotingFallbackReason;
 }> {
   const signal = options.signal ?? AbortSignal.timeout(2200);
-  const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal, expectedTowns: place.towns });
+  const lookup = await (options.lookup ?? startGoogleVotingLookup(address, { ...options, signal }));
   if (lookup.status === "OUTAGE") recordVotingFailure({ stage: "google-fallback", precision: place.precision, state: place.states[0] },
     new Error(lookup.reason ?? "Google voting information could not be read."));
   const unplaced = new Map<string, BatchAddress>();

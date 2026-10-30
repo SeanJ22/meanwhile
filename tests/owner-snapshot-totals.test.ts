@@ -689,7 +689,7 @@ test("native assignment heads match full indexes through archive joins, renewed 
       await db.exec(`CREATE VIEW cp_${name}_history AS SELECT * FROM cp_${name} UNION ALL SELECT * FROM cp_${name}_archive`);
     }
     for(const name of["obligations","debts","leases","attempts"])await db.exec(`CREATE TABLE cp_${name}(id text PRIMARY KEY,revision bigint NOT NULL,value jsonb NOT NULL)`);
-    await db.exec("CREATE TABLE cp_owner_assignment_rows(id text PRIMARY KEY,members jsonb NOT NULL)");
+    await db.exec("CREATE TABLE cp_owner_assignment_rows(id text PRIMARY KEY,members jsonb NOT NULL,clause text)");
     for(const name of["artifacts","worker_results","scout_results"])await db.exec(`CREATE TABLE cp_log_${name}(log_key text NOT NULL,position bigint NOT NULL,record jsonb NOT NULL,PRIMARY KEY(log_key,position))`);
     const repos=createMemoryRepositories(),world=initialWorld(),parent=world.workItems[0];
     world.workItems[0]={...parent,publicationOutcome:{...parent.publicationOutcome!,bodyIds:["body-good"]}};
@@ -758,12 +758,18 @@ test("native assignment heads match full indexes through archive joins, renewed 
         assert.deepEqual([...(batch.members.get(id)??[])].sort(),[...entry.members].sort(),`membership: ${id}`);}
     }
     const expected=deriveAssignmentEntries({...src,nowIso:T1}),wanted=[obligationId(0),"head-worker","cycle-a"];
-    for(const[id,entry]of expected)await db.query("INSERT INTO cp_owner_assignment_rows(id,members) VALUES($1,$2::jsonb)",[id,JSON.stringify(entry.members)]);
+    for(const[id,entry]of expected)await db.query("INSERT INTO cp_owner_assignment_rows(id,members,clause) VALUES($1,$2::jsonb,$3)",[id,JSON.stringify(entry.members),id==="wi-late"?obligationId(90):null]);
     const cold=await reader.read({groups:wanted,workItems:[]},T1),actual=deriveAssignmentEntriesFromHeads(cold.heads,T1);
     assert.deepEqual([...actual.keys()].sort(),[...wanted].sort(),"cold group reads find their saved members beside the source rows");
     for(const id of wanted)assert.deepEqual(actual.get(id),((entry)=>({index:entry.index,horizon:entry.horizon,obligation:entry.obligation}))(expected.get(id)!));
     assert.deepEqual(cold.owners,[],"requested owners are already held by the fold");
     await db.query("INSERT INTO cp_owner_assignment_rows(id,members) VALUES('prior-other-state',$1::jsonb)",[JSON.stringify([expected.get(wanted[0])!.members[0]])]);
     assert.deepEqual((await reader.read({groups:wanted,workItems:[]},T1)).owners,["prior-other-state"],"the database returns additional prior owners once, across every head's membership");
+    const late={...src.obligations[1],id:obligationId(90),occurrenceCount:0,openOccurrenceId:null};
+    await db.query("INSERT INTO cp_obligations(id,revision,value) VALUES($1,3,$2::jsonb)",[late.id,JSON.stringify(late)]);
+    const absorbed=await reader.read({groups:[late.id],workItems:[]},T1),entry=deriveAssignmentEntries({...src,obligations:[...src.obligations,late]}).get(late.id)!;
+    assert.deepEqual(absorbed.members.get(late.id),["wi-late"],"a newly registered obligation finds the existing standalone clause member beside its rows");
+    assert.deepEqual(absorbed.owners,["wi-late"],"the fold replaces the standalone owner's old contribution");
+    assert.deepEqual(deriveAssignmentEntriesFromHeads(absorbed.heads,T1).get(late.id),{index:entry.index,horizon:entry.horizon,obligation:entry.obligation});
   }finally{await db.close();}
 });

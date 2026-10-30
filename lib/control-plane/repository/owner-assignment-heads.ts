@@ -24,7 +24,7 @@ export interface OwnerAssignmentHeads {
 /** Local fixture stores share the production reducer; only the native adapter can reach Postgres. */
 export function storedOwnerAssignmentHeads(get: () => ControlPlaneRepositories): OwnerAssignmentHeads {
   return { async read(seeds, nowIso) {
-    const repos = get(), old = await repos.ownerAssignmentRows.read(seeds.groups);
+    const repos = get(), old = await repos.ownerAssignmentRows.read([...seeds.groups,...await repos.ownerAssignmentRows.find({clauses:seeds.groups})]);
     const unique = (ids: readonly (string | null | undefined)[]) => [...new Set(ids.filter((id): id is string => Boolean(id)))];
     const many = async <T>(repo: import("./types.ts").AggregateRepository<T>, ids: readonly string[], fields?: import("./types.ts").RecordProjection) =>
       fields ? (await repo.readManyNarrowed!(unique(ids), fields)).map(row => row.value as T) : (await repo.readMany!(unique(ids))).map(row => row.value);
@@ -103,6 +103,7 @@ seed_obligations AS MATERIALIZED (SELECT o.id FROM cp_obligations o JOIN request
 seed_members AS MATERIALIZED (
   SELECT unnest($2::text[]) AS id
   UNION SELECT jsonb_array_elements_text(r.members) FROM cp_owner_assignment_rows r WHERE r.id=ANY($1::text[])
+  UNION SELECT jsonb_array_elements_text(r.members) FROM cp_owner_assignment_rows r WHERE r.clause=ANY($1::text[])
   UNION SELECT o.value#>>'{workItemId}' FROM cp_occurrences_history o JOIN seed_obligations s ON s.id=o.value#>>'{obligationId}'
   UNION SELECT r.id FROM requested r WHERE NOT EXISTS(SELECT 1 FROM seed_obligations o WHERE o.id=r.id)
 ),

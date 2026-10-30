@@ -863,7 +863,7 @@ export class OwnerSnapshotFold {
           for(const[place,totals]of Object.entries(inbox.places))mergePlaceTotals(loaded.places[place]??=placeTotals(),totals);
           if(checkpoint)loaded.inboxRun=this.#inboxes.run;
         }
-        const targets=unique([...inbox.groups,...await this.#repos.ownerAssignmentRows.find({members:inbox.items,clauses:inbox.groups})]);
+        const targets=unique([...inbox.groups,...await this.#repos.ownerAssignmentRows.find({members:inbox.items})]);
         await this.#derive(targets,[]);
         const owned=new Set([...this.#groups.values()].flatMap(group=>group.members)),probes=inbox.items.filter(id=>!owned.has(id));
         await this.#derive([],probes);

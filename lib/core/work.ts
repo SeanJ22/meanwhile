@@ -453,6 +453,12 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async retire(input: { readonly rowsBefore: string; readonly ordersBefore: string; readonly limit?: number }): Promise<number> {
       return (await query(RETIRE_WORK_SQL, [input.rowsBefore, input.ordersBefore, input.limit ?? 5_000])).length;
     },
+    /** One state's waiting rows in a namespace of series that are not among the live ones are finished: what they stood for is gone. */
+    async retireSeries(namespace: string, live: readonly string[], state: string): Promise<number> {
+      return (await query(`UPDATE work SET status = 'done', done_at = $3::timestamptz, done_times = array_append(done_times, $3::timestamptz)
+        WHERE series >= $1 AND series < $1 || chr(1114111) AND status = 'waiting' AND state = $4 AND series <> ALL($2::text[]) RETURNING id`,
+      [namespace, live, timestamp(), state.toUpperCase()])).length;
+    },
     /** Makes the next row of every finished job that has come due again. */
     async spawnDue(limit = 1_000): Promise<number> {
       return (await query(SPAWN_WORK_SQL, [timestamp(), limit, []])).length;

@@ -37,6 +37,8 @@ import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
 import { rowsOfPlanningState } from "../lib/control-plane/workers/hunter-claims.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
+import { keepAskGapRows } from "../lib/control-plane/scheduler/ask-gap-rows.ts";
+import { ASK_GAPS_PROVIDER_ID } from "../lib/control-plane/ask-gap-id.ts";
 import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, type HeldDiggerWorkItem } from "../lib/control-plane/workers/held-digger-priority.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -679,6 +681,7 @@ if (ONLY !== null || IDS !== null) {
 }
 
 let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
+if (!dry && !filteredCycle) await keepAskGapRows(workList(controlPlaneQuery(), { owner: `round:${PLANNING_STATE}` }), units, registry.byProvider.find(provider => provider.providerId === ASK_GAPS_PROVIDER_ID)?.readFailure === null, PLANNING_STATE);
 finishPhase("references-and-registration");
 console.log(`  hunt packets: ${sync.all.filter(o => o.active && o.id.startsWith(HUNT_PACKET_NAMESPACE)).length} government(s) an order sent agents to`);
 console.log(

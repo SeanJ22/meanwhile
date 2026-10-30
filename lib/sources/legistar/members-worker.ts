@@ -58,13 +58,14 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
     await learnDoorChannel(input.facts.query,bodyId,`https://webapi.legistar.com/v1/${value.slug}/officerecords`);
     let published=0,refused:string|undefined;
     const publish=async(subjectId:string,field:string,claim:unknown,key:string,form:"text"|"date"|"membership"="text")=>{
-      const raw=record[key],line=typeof raw==="string"?exactLine(saved.evidence.text,key,raw):null;
+      const raw=record[key];
       const outcome:DoorOutcome=await publishLoaded(input.facts,{subjectId,field,fieldKind:"officeholder",value:claim,valueText:typeof claim==="string"?claim:memberName(record as unknown as MemberOffice)??"",
         provenance:"OFFICIAL",quote:typeof raw==="string"?raw:JSON.stringify(record),capture:saved,
         copy:{id:value.source.copyId,finalUrl:saved.evidence.canonicalUrl,fetchedAt:new Date(saved.observedAt),text:saved.evidence.text,isArchive:false},
         savedField:{idField:value.type==="body"?"BodyId":"OfficeRecordId",id:value.nativeId,key,form},producedBy:source,costUsd:0},
       // The value as the response writes it, between the quotes after the key.
-      line?{quote:line,valueText:line.slice(line.indexOf(":")+1).trim().replace(/^"|"$/g,"")}:null,input.clocks,new Date(now),{purge});
+      ()=>{const line=typeof raw==="string"?exactLine(saved.evidence.text,key,raw):null;
+        return line?{quote:line,valueText:line.slice(line.indexOf(":")+1).trim().replace(/^"|"$/g,"")}:null;},input.clocks,new Date(now),{purge});
       if("refused"in outcome)refused=outcome.refused;
       else if(outcome.decision==="PUBLISH")published++;
     };

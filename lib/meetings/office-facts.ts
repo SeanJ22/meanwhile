@@ -7,7 +7,7 @@ import { visibleText } from "../extract/visible-text.ts";
 import { captureProvenance } from "../facts/capture.ts";
 import { csvCells, csvWritten, isOfficialUrl, isOwnUrl, type SavedCopy } from "../facts/check.ts";
 import { readCheckEntity, siteUrl, stateName } from "../facts/entity-read.ts";
-import { openBlank, publishClaim, publishLoaded, type Clocks, type FactDb, type PublishOutcome, type Query } from "../facts/publish.ts";
+import { openBlank, publishClaim, publishLoaded, STALE, type Clocks, type FactDb, type PublishOutcome, type Query } from "../facts/publish.ts";
 import { pageCopy, saveCaptureCopy, saveReleaseCopy, saveSourceReference } from "../facts/source-copy.ts";
 import { censusAddressQuery } from "../geo/address-query.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
@@ -118,9 +118,6 @@ interface OfficeFactsInput {
   readonly readCapture?: (url: string) => Promise<WorkerPublicationCapture | null>;
 }
 
-const HELD_NCES_URL = "https://nces.ed.gov/ccd/files.asp";
-const HELD_NCES_AT = "2026-08-19T00:00:00.000Z";
-// Sean supplied this official archive; its source note records the immutable ZIP and unchanged source fields.
 const HELD_NCES_SHA256 = "376539484b400c0c6d72d100766dc7acacc8725f464556062e2920b3a9b6a64c";
 const NCES_ADDRESS = ["location_street1", "location_street2", "location_street3", "location_city", "location_state", "location_zip"] as const;
 const ncesSource = (url: string | null | undefined): url is string => !!url && ["nces.ed.gov", "ies.ed.gov"].includes(new URL(url).hostname);
@@ -150,12 +147,11 @@ async function heldNcesOfficeRows(targets: readonly Record<string, unknown>[]): 
   return { header, rows };
 }
 
-/** The NCES file as the publisher last confirmed it, carrying the rows we hold when it is the file we keep. Without a check, only our own attestation of the supplied file stands, and only for a row it holds. */
-async function ncesCopy(input: OfficeFactsInput, url: string, rows: string, inSuppliedRow: boolean): Promise<SavedCopy | null> {
+/** The NCES file as the publisher last confirmed it, carrying the rows we hold when it is the file we keep. Without a check there is no copy. */
+async function ncesCopy(input: OfficeFactsInput, url: string, rows: string): Promise<SavedCopy | null> {
   const check = await readReleaseCheck(input.vault, { sourceId: "nces-ccd", releaseId: url.split("/").at(-1)!, url });
-  const sha256 = check?.sha256 ?? (url === HELD_NCES_URL && inSuppliedRow ? HELD_NCES_SHA256 : null);
-  return sha256 === null ? null : input.facts.transaction(query => saveReleaseCopy(query, { name: "nces-ccd-directory", url, sha256,
-    checkedAt: check?.checkedAt ?? HELD_NCES_AT, text: sha256 === HELD_NCES_SHA256 ? rows : "" }));
+  return !check ? null : input.facts.transaction(query => saveReleaseCopy(query, { name: "nces-ccd-directory", url, sha256: check.sha256,
+    checkedAt: check.checkedAt, text: check.sha256 === HELD_NCES_SHA256 ? rows : "" }));
 }
 
 /** Saved directory fields, issuing-board letterheads and the government's own contact pages become ordinary contact facts. */
@@ -169,13 +165,16 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
   let heldNces: Awaited<ReturnType<typeof heldNcesOfficeRows>> = { header: "", rows: new Map() };
   try { heldNces = await heldNcesOfficeRows(targets); }
   catch (error) { report.failures.push(`Held NCES office rows could not be read: ${error instanceof Error ? error.message : String(error)}`); }
-  const known = new Set<string>(), processed = new Set<string>();
+  const known = new Set<string>(), processed = new Set<string>(), unchecked = new Set<string>();
   const entityIds = [...new Set(targets.flatMap(row => [String(row.id), ...(row.government_id ? [String(row.government_id)] : [])]))];
-  const values = await input.facts.query("SELECT entity_id,value#>>'{}' AS address,(SELECT fetched_at FROM source_copy WHERE id=f.source_copy_id) AS fetched_at FROM checked_fact f WHERE field='office_address' AND status='live' AND entity_id=ANY($1::text[])",
+  const values = await input.facts.query("SELECT entity_id,value#>>'{}' AS address,(SELECT fetched_at FROM source_copy WHERE id=f.source_copy_id) AS fetched_at,produced_by,quote_start IS NULL AS unchecked FROM checked_fact f WHERE field='office_address' AND status='live' AND entity_id=ANY($1::text[])",
     [entityIds]);
   const capturedAt = new Map(values.map(row => [String(row.entity_id), Date.parse(String(row.fetched_at))]));
   const knownAddress = new Map(values.map(row => [String(row.entity_id), row.address]));
-  for (const row of values) if (typeof row.address === "string" && streetOfficeAddress(row.address)) known.add(String(row.entity_id));
+  for (const row of values) {
+    if (typeof row.address === "string" && streetOfficeAddress(row.address)) known.add(String(row.entity_id));
+    if (row.unchecked && row.produced_by === "held-office-addresses") unchecked.add(String(row.entity_id));
+  }
   const routeOf = (value: unknown,upgrade=true): string | null => {
     if (typeof value !== "string" || !URL.canParse(siteUrl(value))) return null;
     const url = new URL(siteUrl(value));
@@ -228,11 +227,17 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
     if (structured && ncesSource(source.sourceUrl)) {
       // The row quoted is the file's own, and its address as written stands for the one registered when they agree.
       const held = ncesId === undefined ? undefined : heldNces.rows.get(ncesId);
-      const copy = await ncesCopy(input, source.sourceUrl, [heldNces.header, ...[...heldNces.rows.values()].map(row => row.row)].join("\n"), held?.address === address);
+      const copy = await ncesCopy(input, source.sourceUrl, [heldNces.header, ...[...heldNces.rows.values()].map(row => row.row)].join("\n"));
       if (copy) {
         const outcome = await publishLoaded(input.facts, { entity, field: "office_address", fieldKind: "contact", value: address,
           valueText: address, quote: address, provenance: "OFFICIAL", copy, producedBy: "held-office-addresses", costUsd: 0 },
-        copy.text && held?.written && held.address === address ? { quote: held.row, valueText: held.written } : null, input.clocks, checkedNow());
+        () => copy.text && held?.written && held.address === address ? { quote: held.row, valueText: held.written } : null, input.clocks, checkedNow());
+        if ("refused" in outcome && outcome.refused === STALE) {
+          // Nothing changes for readers; the file not being re-checked is one piece of fix work.
+          const days = Math.floor((checkedNow().getTime() - copy.fetchedAt.getTime()) / 86_400_000), note = `The NCES file hasn't been re-checked in ${days} days`;
+          if (!report.failures.includes(note)) report.failures.push(note);
+          return;
+        }
         await count(id, "refused" in outcome ? { blank: outcome.refused } : outcome);
         return;
       }
@@ -311,7 +316,7 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
       const source = row.registration_source as RegistryProvenance | undefined;
       const newerOffice = id === governmentId && source && row.registration_address !== knownAddress.get(id)
         && Date.parse(source.collectedAt) > (capturedAt.get(id) ?? -Infinity);
-      if (processed.has(id) || known.has(id) && !newerOffice) continue;
+      if (processed.has(id) || known.has(id) && !newerOffice && !unchecked.has(id)) continue;
       processed.add(id);
       try {
         const retry = retries.get(id), route = routeOf(homepage);

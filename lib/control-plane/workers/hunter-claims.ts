@@ -1,3 +1,4 @@
+import { REOPEN_BATCH, reopenDeadEnds, type CapabilityLog, type Unlock } from "../../core/capability.ts";
 import type { WorkList, WorkRow } from "../../core/work.ts";
 import { plannedTaskOf, taskOfRow } from "../../hunt/work-hunt.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -10,6 +11,8 @@ export const HUNTER_KINDS = ["ask", "hunt"] as const;
 /** A lease is renewed well inside its length, so a lane that dies frees its rows within minutes. */
 export const HUNTER_CLAIM_LEASE_MS = 5 * 60_000;
 export const HUNTER_CLAIM_RENEW_MS = 60_000;
+/** How often the list's own clock looks for dead ends to put back. */
+export const DEAD_END_CLOCK_MS = 5 * 60_000;
 
 /** The hunters' arming and budget reading is kept per planning state; national rows use the system one. */
 export const rowsOfPlanningState = (state: string): string => state === "system" ? "US" : state.toUpperCase();
@@ -24,14 +27,29 @@ export function hunterClaims(deps: {
   readonly now: () => string;
   /** How long a hunt that left blanks open waits before the same place is tried again. */
   readonly deadEndMs: () => Promise<number>;
+  readonly capabilities: CapabilityLog;
+  /** What the hunt's own record says would unlock the blanks it left open. */
+  readonly deadEndOf: (result: DispatchResult) => Promise<Unlock | undefined>;
   readonly log: (line: string) => void;
   readonly limit?: number;
 }) {
   const held = new Map<string, WorkRow>();
-  let state = "system";
+  let state = "system", clockedAt = 0;
+  /** The list's own clock: dead ends whose unlock appeared, or whose free try came due, go back on the list. */
+  const clock = async (): Promise<void> => {
+    const at = Date.parse(deps.now());
+    if (at - clockedAt < DEAD_END_CLOCK_MS) return;
+    clockedAt = at;
+    try {
+      const reopened = await reopenDeadEnds(deps.list, deps.capabilities, await deps.deadEndMs(), deps.now());
+      if (reopened) deps.log(`hunter lane: ${reopened} dead end(s) went back on the work list`);
+      if (reopened >= REOPEN_BATCH) clockedAt = 0;
+    } catch (error) { deps.log(`hunter lane: dead ends could not be reopened this turn (${error instanceof Error ? error.message : String(error)})`); }
+  };
   return {
     /** Moves the claims to another state's rows; a state with a row ready is chosen over the current one. */
     async select(states: readonly string[], plainOnly: boolean): Promise<string> {
+      await clock();
       const start = Math.max(0, states.indexOf(state)) + 1;
       for (let step = 0; step < states.length; step += 1) {
         const next = states[(start + step) % states.length]!;
@@ -63,7 +81,7 @@ export function hunterClaims(deps: {
       held.delete(result.routeTaskId!);
       if (result.outcome !== "WORKED") { await deps.list.later(row, result.detail.slice(0, 300) || "The hunt did not finish"); return; }
       // A planner's hunt comes back when its dead-end clock runs out; every other row asked once.
-      await deps.list.finish(row, row.origin.from === "planner" && plannedTaskOf(row) === null ? await deps.deadEndMs() : undefined);
+      await deps.list.finish(row, row.origin.from === "planner" && plannedTaskOf(row) === null ? await deps.deadEndMs() : undefined, await deps.deadEndOf(result));
     },
     /** Keeps the leases of rows whose hunts are still running. */
     async keep(): Promise<void> {

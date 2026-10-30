@@ -11,7 +11,10 @@ import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/cont
 import { JOB_BREAKER_DDL } from "../lib/control-plane/repository/migrations/BB-01.ts";
 import { readCounts, readOldest } from "../lib/control-plane/line-keeper/read.ts";
 import { countWindow } from "../lib/counts/hour.ts";
+import { capabilityLog, reopenDeadEnds } from "../lib/core/capability.ts";
+import { installedParsers } from "../scripts/lib/installed-parsers.mts";
 import { workList } from "../lib/core/work.ts";
+import { readReopenedItems } from "../lib/control-plane/admin-view/v6-stuck-reopened.ts";
 
 /** The control-plane database as it is in production before the one work list: the old list, its triggers and the hourly counts. */
 async function beforeTheOneList() {
@@ -99,4 +102,32 @@ test("the old list's rows move across, are counted once, and the old list can go
   assert.equal(second!.id, "check-b");
   assert.equal(await list.finish(second!), true);
   assert.equal((await query("SELECT count(*)::int n FROM work WHERE status='done'"))[0]!.n, 3);
+});
+
+test("a refused Legistar record from production is a dead end after the move, and the next Legistar reader puts it back on the list and Admin says so", async t => {
+  const db = await beforeTheOneList();
+  t.after(() => db.close());
+  const query = rows(db);
+  // The shape of a real refused row in production (Olympia, member 683), refused on October 29.
+  await db.query(`INSERT INTO work_row(id,kind,state,place_id,subject_id,field,url,priority,attempts,received_at,value,reports,refusal,status,refused_times)
+    VALUES('work-9dc32a2347901b642612a527ad2498d6c88180c746d8f5f4f4170a148987a0e5','check','US','ocd-division/country:us','legistar-members:olympia','member:683',
+    'https://webapi.legistar.com/v1/olympia/officerecords',20,1,'2026-10-29T06:52:45Z','{"slug":"olympia","type":"member","reason":"The source record has no unambiguous government binding"}',
+    '[{"url":"https://webapi.legistar.com/v1/olympia/officerecords","source":"Legistar members","placeId":"ocd-division/country:us","subjectId":"legistar-members:olympia"}]',
+    'The source record has no unambiguous government binding','refused',ARRAY['2026-10-29T07:26:07Z'::timestamptz])`);
+  await expandWork(sql(db));
+  const [dead] = await query("SELECT status, unlock, dead_since FROM work");
+  assert.deepEqual([dead!.status, dead!.unlock, new Date(dead!.dead_since as string).toISOString()], ["refused",
+    { kind: "parser", name: "legistar", platform: "legistar", text: "The source record has no unambiguous government binding" }, "2026-10-29T07:26:07.000Z"]);
+
+  // The first lane after the release announces the readers it has; the one for Legistar is newer than the dead end.
+  const log = capabilityLog(query), now = "2026-10-30T01:00:00.000Z";
+  await log.record(await installedParsers(), now);
+  assert.equal(await reopenDeadEnds(workList(query, { owner: "lane", now: () => new Date(now) }), log, 5 * 86_400_000, now), 1);
+  const [back] = await query("SELECT status, tier, refusal FROM work");
+  assert.deepEqual(back, { status: "waiting", tier: "coverage", refusal: null });
+  const [item] = await readReopenedItems(query, "2026-10-30T02:00:00.000Z");
+  assert.equal(item!.cause, "Reopened — unlocked by a new reader for legistar");
+  assert.equal(item!.title, "A dead end came back: The source record has no unambiguous government binding");
+  assert.equal(item!.next, "Back on the work list, waiting its turn.");
+  assert.equal(item!.tried, "It was waiting for a reader for legistar.");
 });

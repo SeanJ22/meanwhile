@@ -208,7 +208,7 @@ const defs: ActionDef[] = [
       title: `Stop ${ctx.targetName}`,
       level: "local",
       rows: [
-        ["What changes", "No new work for this hunt"],
+        ["What changes", "Hunters stop here. Free sources keep running."],
       ],
     }),
     gateway: { type: "expansion.scope.remove" },
@@ -216,12 +216,12 @@ const defs: ActionDef[] = [
   },
   {
     kind:"hunt-stop-state",label:"Stop every hunt in this state",needs:"spend",doneWords:"Stop requested. Waiting for the runner.",
-    preview:ctx=>({title:`Stop every hunt in ${ctx.targetName}`,level:"local",rows:[["Scope",ctx.targetName],["When","The next planning round"]]}),
+    preview:ctx=>({title:`Stop every hunt in ${ctx.targetName}`,level:"local",rows:[["Scope",ctx.targetName],["What changes","Hunters stop. Free sources keep running."],["When","The next planning round"]]}),
     gateway:{type:"expansion.scope.stopAll"},dependency:null,
   },
   {
     kind:"hunt-stop-all",label:"Stop every hunt",needs:"spend",doneWords:"Stop requested. Waiting for the runner.",
-    preview:()=>({title:"Stop every hunt",level:"global",rows:[["Scope","Every state"],["When","The next planning round"]]}),
+    preview:()=>({title:"Stop every hunt",level:"global",rows:[["Scope","Every state"],["What changes","Hunters stop. Free sources keep running."],["When","The next planning round"]]}),
     gateway:{type:"expansion.scope.stopAll"},dependency:null,
   },
   {

@@ -13,6 +13,7 @@
     "blank": {
       "writers": [
         "lib/core/door.ts",
+        "lib/db/move-blanks-up.ts",
         "lib/facts/publish.ts"
       ],
       "bypass": [
@@ -23,6 +24,12 @@
         "lib/meetings/office-facts.ts",
         "lib/meetings/pin-blanks.ts"
       ]
+    },
+    "capability": {
+      "writers": [
+        "lib/core/capability.ts"
+      ],
+      "bypass": []
     },
     "civic_data_candidate_events": {
       "writers": [

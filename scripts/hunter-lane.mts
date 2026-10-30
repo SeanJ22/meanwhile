@@ -14,6 +14,8 @@ import { durableSearchBudget } from "../lib/control-plane/discovery/search-runti
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
 import { HUNTER_CLAIM_LEASE_MS, HUNTER_CLAIM_RENEW_MS, hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
+import { capabilityLog, deadEndOf } from "../lib/core/capability.ts";
+import { installedParsers } from "./lib/installed-parsers.mts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { deadEndWaitMs } from "../lib/hunt/runtime.ts";
 
@@ -40,8 +42,13 @@ const repos: ControlPlaneRepositories = await createPgRepositories(url, nowIso()
 
 let state = "system";
 let armingPath = hunterLaneArmingPath(ROOT, state);
+const capabilities = capabilityLog(controlPlaneQuery());
+// A reader that is new or changed since the last lane is an event; one that is not is already on record.
+await capabilities.record(await installedParsers(), nowIso());
 const claims = hunterClaims({ list: workList(controlPlaneQuery(), { owner: "hunter-lane", leaseMs: HUNTER_CLAIM_LEASE_MS }), repos, now: nowIso,
-  deadEndMs: () => deadEndWaitMs(repos), log: say });
+  deadEndMs: () => deadEndWaitMs(repos), capabilities, log: say,
+  deadEndOf: async result => deadEndOf((await controlPlaneQuery()("SELECT record->'unfilled' AS unfilled FROM cp_log_scout_results WHERE log_key = $1 AND record_id = $2",
+    [result.obligationId, result.attemptId ?? ""]))[0]?.unfilled) });
 const keeper = setInterval(() => { void claims.keep().catch(error => say(`hunter lane: leases could not be renewed (${error instanceof Error ? error.message : String(error)})`)); }, HUNTER_CLAIM_RENEW_MS);
 keeper.unref();
 const providerQueue = new ModelProviderQueue({

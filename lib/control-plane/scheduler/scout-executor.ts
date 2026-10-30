@@ -42,6 +42,7 @@ import {
 } from "./scout-contract.ts";
 import { distinctEvidenceRungs, type ScoutResult, type ScoutRung, type ScoutStep, type ScoutStop, type UnfilledBlank } from "./scout-result.ts";
 import type { HuntRole } from "../../hunt/brief.ts";
+import { CAPABILITY_KINDS, needsOf } from "../../core/capability.ts";
 
 export interface ModelUsage {
   readonly input_tokens?: number;
@@ -245,6 +246,13 @@ const FINISH_SPEC: ScoutToolSpec = {
             field: { type: "string" },
             tried: { type: "string" },
             unlock: { type: "string", description: "What would let someone fill it: a page that is not posted yet, a records request, a person to ask." },
+            needs: {
+              type: "object",
+              description: "When a new capability would unlock it: which kind, and where it applies. Name at least one of name, state, platform or govKind.",
+              properties: { kind: { type: "string", enum: [...CAPABILITY_KINDS] }, name: { type: "string", description: "The platform, tool, source host or key." },
+                state: { type: "string" }, platform: { type: "string" }, govKind: { type: "string" } },
+              required: ["kind"],
+            },
           },
           required: ["subjectId", "field", "tried", "unlock"],
         },
@@ -465,7 +473,8 @@ function unfilledOf(input: unknown): UnfilledBlank[] {
   return rows.flatMap(row => {
     const r = (row ?? {}) as Record<string, unknown>;
     const text = (key: string) => typeof r[key] === "string" ? (r[key] as string).slice(0, 400) : "";
-    return text("subjectId") && text("field") ? [{ subjectId: text("subjectId"), field: text("field"), tried: text("tried"), unlock: text("unlock") }] : [];
+    const needs = needsOf(r.needs);
+    return text("subjectId") && text("field") ? [{ subjectId: text("subjectId"), field: text("field"), tried: text("tried"), unlock: text("unlock"), ...(needs ? { needs } : {}) }] : [];
   });
 }
 

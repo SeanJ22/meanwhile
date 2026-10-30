@@ -60,6 +60,23 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   return null;
 }
 
+/** A CivicClerk event names its agenda file by number, beside the word Agenda; the address the link is built from is not written on the page. */
+export function agendaFileOnPage(text: string, url: string): { readonly valueText: string; readonly quote: string } | null {
+  const id = /fileId=(\d+)/.exec(url)?.[1];
+  const found = id ? new RegExp(`"fileId"\\s*:\\s*${id}\\b[^{}]{0,200}?"type"\\s*:\\s*"[^"]*agenda[^"]*"`, "i").exec(text) : null;
+  return id && found ? { valueText: id, quote: found[0] } : null;
+}
+
+/** The part of an address the page writes as its publisher gave it: the address with the trailing parts the feed composed itself (city, a spelled-out state, ZIP) dropped one at a time, else the street part alone. Never a part with no street number. */
+export function addressOnPage(copy: SavedCopy, address: string): string | null {
+  const parts = address.split(/,\s*/);
+  for (let count = parts.length; count >= 1; count--) {
+    const text = parts.slice(0, count).join(", ");
+    if (/\d/.test(text) && lineOf(copy, text)) return text;
+  }
+  return parts.find(part => /^\d+\s+\S/.test(part) && part.length >= 8 && lineOf(copy, part)) ?? null;
+}
+
 const CANCELED_WORD = /\bcancell?ed\b|\bcancell?ation\b/i;
 
 /** Where the page says this sitting is canceled: the publisher's own word beside the sitting's title, with the line that shows it. */
@@ -112,7 +129,7 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
   const line = input.held?.quote ?? exactLine(copy.text, "matchedAddress", pin.matchedAddress!);
   for(let attempt=0;;attempt++)try{
     return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
-      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:"loader", costUsd:0}, clocks, now);
+      valueText:pin.matchedAddress!, quote:line ?? pin.matchedAddress!, copy, producedBy:input.producedBy, acquisition:"checked", costUsd:0}, clocks, now);
   }catch(error){
     const conflict=error as {code?:string;constraint?:string}|null;
     // Re-read after a rolled-back deadlock or competing first publication, using the same saved Census copy.
@@ -205,7 +222,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   const claim = async (field: string, value: unknown, valueText: string, quote: string | null = lineOf(copy, valueText)) =>
     count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote: quote ?? valueText, copy,
       // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
-      acquisition: field === "location" ? "walker" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      acquisition: field === "location" ? "walker" : "checked", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };
@@ -220,15 +237,24 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
     const canceled = canceledOnPage(copy.text, meeting);
     await claim("status", "CANCELED", canceled?.valueText ?? "canceled", canceled?.quote ?? null);
   } else if (input.canceledHeld) await retireAbsent(db, { subjectId: id, fieldPrefix: "status", copyId: copy.id, stillShown: [], at: copy.fetchedAt });
-  if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
-  else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
+  if (meeting.location) {
+    const spoken = meeting.location.address ?? meeting.location.name;
+    await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, lineOf(copy, spoken) ? spoken : addressOnPage(copy, spoken) ?? spoken);
+  }
+  else if(meeting.venueGap?.publishedText) {
+    const stated = meeting.venueGap.publishedText;
+    await claim("location",{name:stated,address:null}, lineOf(copy, stated) ? stated : addressOnPage(copy, stated) ?? stated);
+  }
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
   if(meeting.mapPin?.pendingReplacement)count(await publishMeetingPinFact(db,{meeting,capture:input.pinCapture,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
   else if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
   else if(!meeting.mapPin&&!meeting.location) count(await publishMeetingPinFact(db,{meeting,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
-  if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
+  if (meeting.agendaUrl) {
+    const byFile = lineOf(copy, meeting.agendaUrl) ? null : agendaFileOnPage(copy.text, meeting.agendaUrl);
+    await (byFile ? claim("agenda_url", meeting.agendaUrl, byFile.valueText, byFile.quote) : claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl));
+  }
   if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
   await keepJoinLinkWork(db.query,meeting,clocks);
   return tally;

@@ -29,7 +29,7 @@ import {
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import { registrationHeldReplayIsExact } from "../registration/held-evidence.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement } from "../ballot/voting-source-replacement-contract.ts";
-import type { VotingSitesFile } from "../ballot/voting-sites.ts";
+import type { VotingJurisdiction, VotingSite, VotingSitesFile } from "../ballot/voting-sites.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -359,16 +359,20 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     const checked = sourceChecks.some(check => check.passed &&
       check.consumer === `${VOTING_SOURCE_REPLACEMENT_VERIFIER} (source-scoped pre-promotion)`);
     const keys = new Set(evidence.map(row => row.key));
-    const previous = (prior?.candidate.readModel as VotingSitesFile | undefined)?.jurisdictions?.find(row => row.ocdId === proof?.jurisdictionId);
     const current = (candidate.readModel as VotingSitesFile).jurisdictions?.find(row => row.ocdId === proof?.jurisdictionId);
+    // The change set, built from the held prior, carries each removed site and any changed jurisdiction metadata
+    // exactly; metadata it leaves out has the same facts as the current jurisdiction. A held state's index has no payload.
+    const metadataKey = `jurisdiction:${proof?.jurisdictionId}`, changes = candidate.changeSet;
+    const previous = !prior || !changes || changes.added.some(delta => delta.key === metadataKey) ? undefined :
+      (changes.changed.find(delta => delta.key === metadataKey)?.before ?? current) as Omit<VotingJurisdiction, "sites"> | undefined;
     const covered = new Set(proof?.replaceSourceUrls ?? []);
     const valid = proof !== null && checked && candidate.sourceId === "voting-sites" &&
       previous?.electionDate === proof.electionDate && current?.electionDate === proof.electionDate &&
       keys.size === removed.length && evidence.length === removed.length && removed.every(delta => {
         const row = evidence.find(row => row.key === delta.key);
         if (row?.code !== "OFFICIAL_VOTING_SOURCE_REPLACED" || row.jurisdictionId !== proof.jurisdictionId || row.electionDate !== proof.electionDate) return false;
-        const site = previous.sites.find(site => delta.key === `site:${previous.ocdId}:${site.id}`);
-        if (!site || canonicalCivicDataHash(site) !== canonicalCivicDataHash(delta.before)) return false;
+        const site = delta.before as VotingSite | null;
+        if (!site || delta.key !== `site:${proof.jurisdictionId}:${site.id}`) return false;
         const sources = new Set(site.sources?.length ? site.sources.map(source => source.url) : [previous.sourceUrl]);
         return sources.size > 0 && new Set(row.sourceUrls).size === row.sourceUrls.length && row.sourceUrls.length === sources.size &&
           row.sourceUrls.every(url => sources.has(url) && covered.has(url));

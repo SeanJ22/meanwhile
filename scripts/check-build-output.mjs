@@ -2,7 +2,7 @@
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 
-import { attributeByProvenance } from "./attribute-client-bytes.mjs";
+import { attributeByProvenance, clientScriptFile } from "./attribute-client-bytes.mjs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -71,7 +71,7 @@ function clientCost(next) {
   let mapTransfer = 0;
   let missing = 0;
   for (const src of srcs) {
-    const file = join(next, src.replace(/^\/_next\//, ""));
+    const file = clientScriptFile(next, src);
     if (!existsSync(file)) {
       missing += 1;
       continue;
@@ -336,7 +336,7 @@ function evaluate({ root, budget }) {
     }
     if (client.missing > 0) {
       failures.push(
-        `${client.missing} chunk(s) referenced by the prerendered / are absent from .next — ` +
+        `${client.missing} chunk(s) referenced by the prerendered / are absent from .next or public — ` +
           "the measurement is incomplete and the page would 404 them.",
       );
     }

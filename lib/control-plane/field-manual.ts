@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 
+import { capabilitiesOfEntries } from "../core/capability.ts";
 import { stateOfPlace, type FixMapRow, type MethodWorks } from "../method/fix-map.ts";
 import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts";
 import { methodPlaceOf } from "../method/method-places.ts";
@@ -397,7 +398,7 @@ export function fieldManualLine(entry: FieldManualEntry): string {
   return `${entry.role}/${entry.kind} ${entry.outcome} (${where})${on}: ${entry.title}${door} — ${entry.summary}${seen}`.replace(/\s+/g, " ").trim();
 }
 
-export type FieldManualRepos = Pick<ControlPlaneRepositories, "fieldManual"> & Partial<Pick<ControlPlaneRepositories, "fixMap" | "adminConfig">>;
+export type FieldManualRepos = Pick<ControlPlaneRepositories, "fieldManual"> & Partial<Pick<ControlPlaneRepositories, "fixMap" | "adminConfig" | "capabilities">>;
 
 export interface FieldManualRead {
 
@@ -600,6 +601,8 @@ export async function writeFieldManual(
   try {
     const saved = await saveFieldManualEntries(repos, entries, now);
     await recordMethodResults(repos, entries, now);
+    // A reader, a method that worked or a source added is something new the dead ends can wait for; the five-day clock covers a missed event.
+    await repos.capabilities?.record(capabilitiesOfEntries(entries), now).catch(() => undefined);
     if (saved.error !== undefined) {
       await recordBankWriteFailure(repos, now);
       return { written: saved.written, error: saved.error };

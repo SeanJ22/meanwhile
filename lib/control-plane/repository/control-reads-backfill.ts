@@ -103,14 +103,10 @@ export function pgControlReadsBackfill(sql: Sql, manual?:()=>FieldManualRepos): 
     for (const [section,name] of Object.entries(ADMIN_SECTIONS)) {
       const held = await job(section); if (held?.completed) continue;
       const id = section === "methodStandings" ? "methodId" : section === "placeTargets" || section === "expansionScopes" ? "key" : "id";
-      const stopped=section==="expansionScopes"?`AND NOT EXISTS(SELECT 1 FROM cp_hunt_orders o
-          WHERE o.value->>'state'=ANY(ARRAY[$1]||ARRAY(SELECT lower(state_key) FROM jsonb_array_elements_text(coalesce(item->'planningStates','[]'::jsonb)) state_key))
-            AND (o.value->>'scopeKey' IS NULL OR o.value->>'scopeKey'=item->>'key')
-            AND o.value->>'requestedAt'>=coalesce(item->>'decidedAt',''))`:"";
       const rows = await sql.query(`WITH batch AS MATERIALIZED (
         SELECT c.id AS config_id,c.updated_at,item AS value,item->>'${id}' AS id FROM cp_admin_config c
         CROSS JOIN LATERAL jsonb_array_elements(coalesce(nullif(c.value->'${section}','null'::jsonb),'[]'::jsonb)) item
-        WHERE cp_control_state(item)=$1 AND item->>'${id}'>$2 ${stopped} ORDER BY item->>'${id}' LIMIT 100
+        WHERE cp_control_state(item)=$1 AND item->>'${id}'>$2 ORDER BY item->>'${id}' LIMIT 100
       ), saved AS (INSERT INTO cp_admin_${name}(config_id,id,updated_at,value)
         SELECT config_id,id,updated_at,value FROM batch ON CONFLICT(config_id,id) DO NOTHING RETURNING id)
         SELECT (SELECT count(*)::integer FROM saved) AS copied,count(*)::integer AS size,max(id) AS cursor FROM batch`,[state,held?.cursor ?? ""]) as { copied: number; size: number; cursor: string | null }[];

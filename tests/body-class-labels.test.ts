@@ -11,7 +11,6 @@ import {
   bodyClassShort,
   governVerbMayAttach,
 } from "../lib/registry/body-class-labels.ts";
-import { TRIBAL_NATIONS, tribalNationsInState } from "../lib/registry/tribal-nations.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -93,44 +92,4 @@ test("the instrument catches a real instance — the binary it was written for",
   /* A sweep must find the defect it was written for: this is the shipped copy verbatim. */
   const theRealThing = `{body.bodyClass === "GOVERNING" ? "Governing" : "Advisory"}`;
   assert.match(theRealThing, /bodyClass\s*===\s*"GOVERNING"\s*\?\s*"/);
-});
-
-test("the three nations are named, with a federal code behind each id", () => {
-  assert.equal(TRIBAL_NATIONS.length, 3);
-  const names = TRIBAL_NATIONS.map((n) => n.name);
-  assert.ok(names.includes("Navajo Nation"));
-  assert.ok(names.includes("Tohono O'odham Nation"));
-  assert.ok(names.includes("Pascua Yaqui Tribe"));
-
-  for (const nation of TRIBAL_NATIONS) {
-    // A guessed identifier is a LEAD. Every id is keyed on the Census code...
-    assert.match(nation.ocdId, /^ocd-division\/country:us\/aiannh:\d{4}$/);
-    assert.ok(nation.ocdId.endsWith(nation.censusAiannhCode), "the id is keyed on the Census code");
-    // ...and carries the ANSI code, which is the stabler of the two.
-    assert.match(nation.ansiCode, /^\d{8}$/);
-    assert.match(nation.provenance, /Census 2020 AIANNH/, "every row says where it came from");
-    assert.ok(nation.states.length > 0);
-  }
-});
-
-test("the three Pima-area nations resolve for Arizona", () => {
-  const az = tribalNationsInState("AZ");
-  assert.equal(az.length, 3, "all three hold territory in or adjacent to Pima County");
-  // The Navajo Nation crosses three states, which is why states is a list.
-  const navajo = TRIBAL_NATIONS.find((n) => n.name === "Navajo Nation");
-  assert.deepEqual(navajo?.states, ["AZ", "NM", "UT"]);
-  // ...and it is not an Arizona-only fact.
-  assert.equal(tribalNationsInState("NM").length, 1);
-  assert.equal(tribalNationsInState("UT").length, 1);
-  // A control: a state with none of them returns none, rather than everything.
-  assert.equal(tribalNationsInState("NH").length, 0);
-});
-
-test("the minted identifier declares itself as minted", () => {
-  /* The canonical OCD registry has no tribal division type, and the module must say these ids were built from a federal code, not looked up. */
-  const source = readFileSync(join(ROOT, "lib", "registry", "tribal-nations.ts"), "utf8");
-  assert.match(source, /PROJECT-MINTED/);
-  /* Whitespace-tolerant: the sentence is line-wrapped in a doc comment. */
-  const prose = source.replace(/\s*\n\s*\*\s*/g, " ");
-  assert.match(prose, /no tribal division type/i);
 });

@@ -4,6 +4,7 @@ import type { Query } from "../facts/publish.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { registryJurisdictions, REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import { WORK_KINDS, WORK_TIERS, type OrderStep, type WorkKind, type WorkStatus, type WorkTier } from "./work-kinds.ts";
+import type { StoredCapability, Unlock } from "./capability.ts";
 
 /** Why the row exists: Sean's order, a reader's request, an Ask question, or the code that planned it. */
 export type WorkOrigin =
@@ -75,6 +76,8 @@ export interface ClaimWhere {
   readonly state?: string;
   /** Only rows a plain-code worker can do: no paid model is needed. */
   readonly plainOnly?: boolean;
+  /** Only the links on this kind of website; the row's value names it. */
+  readonly platform?: string;
 }
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
@@ -111,6 +114,9 @@ export const WORK_DDL = [
     done_at timestamptz,
     done_times timestamptz[] NOT NULL DEFAULT '{}',
     refused_times timestamptz[] NOT NULL DEFAULT '{}',
+    unlock jsonb,
+    dead_since timestamptz,
+    reopened jsonb,
     CHECK ((lease_until IS NULL) = (lease_owner IS NULL))
   )`,
   `CREATE INDEX IF NOT EXISTS work_claim ON work (kind, work_tier_rank(tier), priority DESC, due_at, id) WHERE status = 'waiting'`,
@@ -120,6 +126,8 @@ export const WORK_DDL = [
   `CREATE INDEX IF NOT EXISTS work_repeat_due ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NOT NULL`,
   `CREATE INDEX IF NOT EXISTS work_done_old ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NULL`,
   `CREATE INDEX IF NOT EXISTS work_reader_live ON work (priority DESC, received_at) WHERE tier = 'reader' AND status IN ('waiting','taken')`,
+  `CREATE INDEX IF NOT EXISTS work_dead_end ON work (dead_since, id) WHERE dead_since IS NOT NULL`,
+  `CREATE INDEX IF NOT EXISTS work_reopened ON work ((reopened->>'at') DESC) WHERE reopened IS NOT NULL`,
   `CREATE INDEX IF NOT EXISTS work_oldest_waiting ON work (state, kind, due_at) WHERE status = 'waiting'`,
   `CREATE INDEX IF NOT EXISTS work_oldest_refused ON work (state, kind, due_at) WHERE status = 'refused'`,
   `CREATE TABLE IF NOT EXISTS count_hour (
@@ -183,6 +191,14 @@ export const WORK_DDL = [
     FOR EACH STATEMENT EXECUTE FUNCTION work_waiting_count()`,
 ] as const;
 
+/** Links wait for the reader of their kind of website: one index serves each kind's claim in tier order, newest first. Applied by bootstrap and by the SPN-01F migration. */
+export const LEAD_DDL = [
+  `CREATE INDEX IF NOT EXISTS work_lead_claim ON work ((value->>'platform'), work_tier_rank(tier), priority DESC, due_at, id) WHERE kind = 'lead' AND status = 'waiting'`,
+] as const;
+
+/** A link found later is read first within its tier: its priority is the seconds since 2026 began, which fit the column until 2094. */
+export const newestFirst = (foundAt: string): number => Math.max(0, Math.floor((Date.parse(foundAt) - Date.UTC(2026, 0, 1)) / 1000));
+
 function row(raw: Record<string, unknown>): WorkRow {
   const date = (at: unknown) => at === null || at === undefined ? null : new Date(at as string | Date).toISOString();
   return { id: String(raw.id), kind: raw.kind as WorkKind, tier: raw.tier as WorkTier, priority: Number(raw.priority), state: String(raw.state),
@@ -231,6 +247,7 @@ export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
     AND ($6::text IS NULL OR starts_with(subject_id,$6))
     AND ($7::text IS NULL OR state = $7)
     AND ($8::boolean IS NOT TRUE OR value->>'plain' = 'true')
+    AND ($9::text IS NULL OR value->>'platform' = $9)
   ORDER BY work_tier_rank(tier), priority DESC, due_at, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -265,6 +282,7 @@ const UPSERT_SQL = `ON CONFLICT (id) DO UPDATE SET
       ELSE (SELECT coalesce(jsonb_agg(DISTINCT item),'[]'::jsonb) FROM jsonb_array_elements(work.sources || EXCLUDED.sources) item) END,
     content_version = work.content_version + CASE WHEN ${VALUE_CHANGED_SQL} THEN 1 ELSE 0 END,
     status = CASE WHEN work.status <> 'taken' AND ${VALUE_CHANGED_SQL} THEN 'waiting' ELSE work.status END,
+    dead_since = CASE WHEN work.status <> 'taken' AND ${VALUE_CHANGED_SQL} THEN NULL ELSE work.dead_since END,
     due_at = CASE WHEN work.status <> 'taken' AND ${VALUE_CHANGED_SQL} THEN EXCLUDED.due_at
       WHEN work.status = 'waiting' AND ${MOVES_UP_SQL} THEN least(work.due_at, EXCLUDED.due_at) ELSE work.due_at END,
     refusal = CASE WHEN ${VALUE_CHANGED_SQL} THEN NULL ELSE work.refusal END,
@@ -302,7 +320,7 @@ const ADVANCE_ORDER_SQL = `UPDATE work SET steps = steps || jsonb_build_array(js
   WHERE id = $1 AND kind = 'order' AND NOT steps @> jsonb_build_array(jsonb_build_object('step',$2::text)) RETURNING id`;
 /** Finished rows are kept for a time; an order's row is kept longer, since Admin's history reads it. */
 const RETIRE_WORK_SQL = `WITH old AS (
-  SELECT id FROM work WHERE status = 'done' AND repeat_ms IS NULL
+  SELECT id FROM work WHERE status = 'done' AND repeat_ms IS NULL AND dead_since IS NULL
     AND done_at < CASE WHEN kind = 'order' THEN $2::timestamptz ELSE $1::timestamptz END ORDER BY done_at LIMIT $3
 ) DELETE FROM work w USING old WHERE w.id = old.id RETURNING w.id`;
 
@@ -312,13 +330,44 @@ const SPAWN_WORK_SQL = `WITH due AS MATERIALIZED (
     AND (done_at + repeat_ms * interval '1 millisecond' <= $1::timestamptz OR series = ANY($3::text[]))
   ORDER BY done_at, id FOR UPDATE SKIP LOCKED LIMIT $2
 ), spent AS (
-  UPDATE work w SET repeat_ms = NULL FROM due WHERE w.id = due.id RETURNING w.*, due.repeat_ms AS cadence, due.asked
+  UPDATE work w SET repeat_ms = NULL, dead_since = NULL FROM due WHERE w.id = due.id RETURNING w.*, due.repeat_ms AS cadence, due.asked
 )
 INSERT INTO work (${COLUMNS})
 SELECT 'work-' || md5(s.id || ':' || s.done_at::text), s.kind, s.tier, s.priority, s.state, s.place_id, s.subject_id, s.field, s.url, s.reports, s.sources,
   s.value, s.quote, CASE WHEN s.asked THEN $1::timestamptz ELSE s.done_at + s.cadence * interval '1 millisecond' END, $1::timestamptz, s.origin,
   ${RECEIVED_STEP("s.tier", "$1::timestamptz")}, coalesce(s.series, s.id)
 FROM spent s ON CONFLICT DO NOTHING RETURNING id`;
+
+/**
+ * A dead end goes back on the list as the same row, waiting and due now, and keeps what it waited for and what reopened it. A
+ * planned task is spent, so its row is asked again as the hunt for its place. A row whose series is live again is left alone.
+ */
+const reopenSql = (due: string) => `WITH due AS MATERIALIZED (
+  SELECT id FROM work WHERE dead_since IS NOT NULL AND status IN ('refused','done') AND ${due}
+    AND NOT EXISTS (SELECT 1 FROM work live WHERE live.series = work.series AND live.status IN ('waiting','taken'))
+  ORDER BY dead_since, id FOR UPDATE SKIP LOCKED LIMIT $2
+) UPDATE work w SET status = 'waiting', due_at = $1::timestamptz, dead_since = NULL, repeat_ms = NULL, refusal = NULL,
+  subject_id = CASE WHEN w.value ? 'routeTaskId' THEN w.place_id ELSE w.subject_id END,
+  value = CASE WHEN w.value ? 'routeTaskId' THEN 'null'::jsonb ELSE w.value END,
+  reopened = jsonb_build_object('at', $1::timestamptz, 'because', $3::text, 'waitedFor', w.unlock)
+FROM due WHERE w.id = due.id RETURNING w.id`;
+/** The dead ends a new capability unlocks: it names every place or thing the dead end names, they share at least one, and the dead end is older. */
+const UNLOCKED_BY_SQL = reopenSql(`unlock->>'kind' = $4 AND dead_since < $5::timestamptz
+    AND (unlock->>'name' IS NULL OR $6::text IS NULL OR unlock->>'name' = $6) AND (unlock->>'state' IS NULL OR $7::text IS NULL OR unlock->>'state' = $7)
+    AND (unlock->>'platform' IS NULL OR $8::text IS NULL OR unlock->>'platform' = $8) AND (unlock->>'govKind' IS NULL OR $9::text IS NULL OR unlock->>'govKind' = $9)
+    AND (unlock->>'name' IS NOT NULL AND $6::text IS NOT NULL OR unlock->>'state' IS NOT NULL AND $7::text IS NOT NULL
+      OR unlock->>'platform' IS NOT NULL AND $8::text IS NOT NULL OR unlock->>'govKind' IS NOT NULL AND $9::text IS NOT NULL)`);
+const STALE_SQL = reopenSql("dead_since <= $4::timestamptz");
+
+export interface ReopenInput {
+  readonly at: string;
+  readonly because: string;
+  readonly limit: number;
+  /** Dead ends this capability unlocks. */
+  readonly capability?: StoredCapability;
+  /** Dead ends waiting since this instant or earlier. */
+  readonly waitingSince?: string;
+}
 
 /** Each transition and its hourly count commit together. */
 export function workList(query: Query, options: { readonly owner: string; readonly leaseMs?: number; readonly now?: () => Date }) {
@@ -395,6 +444,12 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async again(series: readonly string[]): Promise<number> {
       return series.length ? (await query(SPAWN_WORK_SQL, [timestamp(), series.length, series])).length : 0;
     },
+    /** Dead ends that a new capability unlocks, or that have waited since the given instant, are made again now; the count is how many. */
+    async reopen(input: ReopenInput): Promise<number> {
+      const { capability: c } = input;
+      return (await query(c ? UNLOCKED_BY_SQL : STALE_SQL, [input.at, input.limit, input.because,
+        ...(c ? [c.kind, c.at, c.name ?? null, c.state ?? null, c.platform ?? null, c.govKind ?? null] : [input.waitingSince])])).length;
+    },
     /** The next rows of these kinds in tier order. A state, or only the rows that need no paid model, can be asked for. */
     async claim(kinds: WorkKind | readonly WorkKind[], n: number, narrowed: string | ClaimWhere = {}): Promise<readonly WorkRow[]> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
@@ -404,11 +459,19 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
         taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
-          where.plainOnly ?? null])).map(row));
+          where.plainOnly ?? null, where.platform ?? null])).map(row));
       }
       taken.sort(IN_TIER_ORDER);
       for (const extra of taken.splice(n)) await release(extra);
       return taken;
+    },
+    /** Which of these kinds of website holds the link a claim would serve first: the lowest tier, then the newest. Null when none has one waiting. */
+    async firstPlatform(platforms: readonly string[]): Promise<string | null> {
+      const [first] = await query(`SELECT p.platform FROM unnest($1::text[]) AS p(platform) CROSS JOIN LATERAL (
+          SELECT work_tier_rank(tier) AS rank, priority, due_at, id FROM work WHERE kind = 'lead' AND status = 'waiting' AND due_at <= $2::timestamptz
+            AND value->>'platform' = p.platform ORDER BY work_tier_rank(tier), priority DESC, due_at, id LIMIT 1
+        ) head ORDER BY head.rank, head.priority DESC, head.due_at, head.id LIMIT 1`, [platforms, timestamp()]);
+      return first ? String(first.platform) : null;
     },
     /** Whether a claim of these kinds would find a row: one waiting and due, or one whose lease has run out. */
     async ready(kinds: readonly WorkKind[], where: ClaimWhere = {}): Promise<boolean> {
@@ -426,7 +489,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
         WHERE id=$1 AND lease_owner=$2 AND status='taken' AND lease_until>$3::timestamptz RETURNING id`, [...fenced(claim), leaseMs])).length === 1;
     },
     /** With a cadence, the job repeats: its next row is made when that long has passed. */
-    async finish(claim: WorkRow, repeatMs?: number): Promise<boolean> {
+    async finish(claim: WorkRow, repeatMs?: number, deadEnd?: Unlock): Promise<boolean> {
       if (repeatMs !== undefined && (!Number.isSafeInteger(repeatMs) || repeatMs < 1)) throw new Error("WORK_INVALID_CADENCE");
       const [saved] = await query(`UPDATE work SET
         status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'waiting' END,
@@ -434,11 +497,14 @@ export function workList(query: Query, options: { readonly owner: string; readon
         done_times = CASE WHEN content_version = lease_version THEN array_append(done_times,$3::timestamptz) ELSE done_times END,
         done_at = CASE WHEN content_version = lease_version THEN $3::timestamptz ELSE done_at END,
         repeat_ms = CASE WHEN content_version = lease_version THEN $4::bigint ELSE repeat_ms END,
+        unlock = CASE WHEN content_version = lease_version THEN $5::jsonb ELSE unlock END,
+        dead_since = CASE WHEN content_version = lease_version AND $5::jsonb IS NOT NULL THEN $3::timestamptz END,
         due_at = CASE WHEN content_version <> lease_version THEN $3::timestamptz ELSE due_at END,
         steps = CASE WHEN tier = 'order' AND content_version = lease_version
           THEN steps || jsonb_build_array(jsonb_build_object('step','Done','at',$3::timestamptz)) ELSE steps END,
         lease_owner = NULL, lease_until = NULL, lease_version = NULL
-        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status,content_version`, [...fenced(claim), repeatMs ?? null]);
+        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status,content_version`,
+        [...fenced(claim), repeatMs ?? null, deadEnd ? canonicalJson(deadEnd) : null]);
       return Number(saved?.content_version) === claim.leaseVersion && saved?.status === "done";
     },
     async later(claim: WorkRow, reason: string): Promise<boolean> {
@@ -449,12 +515,14 @@ export function workList(query: Query, options: { readonly owner: string; readon
         WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING id`, [...fenced(claim), reason]);
       return saved !== undefined;
     },
-    async refuse(claim: WorkRow, reason: string): Promise<boolean> {
+    async refuse(claim: WorkRow, reason: string, deadEnd?: Unlock): Promise<boolean> {
       if (!reason.trim()) throw new Error("WORK_REASON_REQUIRED");
       const [saved] = await query(`WITH refused AS (
         UPDATE work SET status = CASE WHEN content_version = lease_version THEN 'refused' ELSE 'waiting' END,
           refusal = CASE WHEN content_version = lease_version THEN $4 ELSE NULL END,
           refused_times = CASE WHEN content_version = lease_version THEN array_append(refused_times,$3::timestamptz) ELSE refused_times END,
+          unlock = CASE WHEN content_version = lease_version THEN $5::jsonb ELSE unlock END,
+          dead_since = CASE WHEN content_version = lease_version AND $5::jsonb IS NOT NULL THEN $3::timestamptz END,
           lease_owner = NULL, lease_until = NULL, lease_version = NULL
         WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING *
       ), detective AS (
@@ -468,7 +536,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
           status = CASE WHEN work.status = 'taken' THEN 'taken' ELSE 'waiting' END,
           content_version = work.content_version + 1, value = EXCLUDED.value, quote = EXCLUDED.quote, url = EXCLUDED.url,
           due_at = EXCLUDED.due_at, refusal = NULL
-      ) SELECT status FROM refused`, [...fenced(claim), reason]);
+      ) SELECT status FROM refused`, [...fenced(claim), reason, deadEnd ? canonicalJson(deadEnd) : null]);
       return saved?.status === "refused";
     },
   };

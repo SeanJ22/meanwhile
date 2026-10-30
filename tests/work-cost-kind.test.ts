@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
+import { capabilityLog } from "../lib/core/capability.ts";
 import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
 import { hunterFor } from "../lib/hunt/runtime.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
@@ -36,7 +37,7 @@ test("an Ask question and then a reader's request each hunt on the next tick, ev
   const repos = { ...createMemoryRepositories(), spend: pgSpendRepository(sql) };
   const now = () => new Date().toISOString();
   const list = workList(rows, { owner: "kind-test" });
-  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, log: () => {} });
+  const claims = hunterClaims({ list, repos, now, deadEndMs: async () => 5 * 86_400_000, capabilities: capabilityLog(async () => []), deadEndOf: async () => undefined, log: () => {} });
 
   const hunt = async (item: WorkItem, task: RouteTask, blanks: boolean) => {
     const runtime = { repos, now, rollingCeilingUsd: 100, scoutFor: (found: WorkItem, found_task: RouteTask) => hunterFor({ repos, root: process.cwd(), now,

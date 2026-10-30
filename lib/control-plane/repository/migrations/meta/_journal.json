@@ -83,17 +83,22 @@
     {
       "id": "SPN-01B_expand",
       "phase": "expand",
-      "hash": "d9a22435cfdc051d7450c4d3d75d77fd301448d52e559f8895ff9c50c9c31c43"
+      "hash": "3136c90cb18d1097a03fb8c14fd798d43d31338dc80e91419217162c6b4bba65"
     },
     {
       "id": "SPN-01B_contract",
       "phase": "contract",
-      "hash": "6054aeb2089ab12df7c0de73ae1ac27e574b7fa00c1aa42f6cfa1744b733b8aa"
+      "hash": "8f025c1ad7b87455ea7442169926124d924b1f615c90041edbe916473d963221"
     },
     {
       "id": "SPN-01B_cost_expand",
       "phase": "expand",
       "hash": "e7b4b3c61a5a3343ecb72984904c96574e902ce085c60a7543228e4f57633b83"
+    },
+    {
+      "id": "SPN-01F_expand",
+      "phase": "expand",
+      "hash": "8486656169a79aef54f27c0e2e281db46c13c9c3651a2f755c1e1fcc9633a2f5"
     }
   ]
 }

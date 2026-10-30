@@ -20,9 +20,12 @@ import {
   sourceAcquisitionSecondsRemaining,
   sourceAcquisitionSleep,
 } from "./acquisition-deadline.ts";
+import { ABSENCE_MAX_HOLD_DEFAULT_DAYS } from "../control-plane/scheduler/absence-hold.ts";
 
 const REQUEST_SPACING_MS = 400;
 const MAX_RETRIES = 2;
+/** Rulings §2: no dead end waits more than 5 days. The pacer holds no source pace, so a site wall waits the longest. */
+const SITE_WALL_WAIT_MS = ABSENCE_MAX_HOLD_DEFAULT_DAYS * 86_400_000;
 
 /** A publisher's capacity is shared by its tenants, including CivicPlus custom government domains. */
 export function sourceHost(url: string, vendor?: string): string {
@@ -85,11 +88,12 @@ export function createSourceHostPacer(options: {
         || /\/(?:View\.ashx|FileStream\.ashx|MeetingDetail\.aspx)$|\/ImageRepository\/Document\b|\/AgendaCenter\/ViewFile\/(?:Agenda|Minutes)\b/i.test(address.pathname);
       const refusalKey = nativeResource ? `${origin}${address.pathname}`
         : document ? `${origin}#resource:${createHash("sha256").update(url).digest("hex")}` : origin;
-      if (state.refused[origin]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
-      if (refusalKey !== origin && state.refused[refusalKey]) {
-        const until = Date.parse(state.refused[refusalKey]);
-        if (until > clock()) throw new SourceReadDeferred(url, until, "RESOURCE_REFUSED");
-        delete state.refused[refusalKey];
+      // A site wall stores when it refused and reopens after the dead-end wait; a resource stores when it reopens.
+      for (const key of new Set([origin, refusalKey])) {
+        if (!state.refused[key]) continue;
+        const until = Date.parse(state.refused[key]) + (key === origin ? SITE_WALL_WAIT_MS : 0);
+        if (until > clock()) throw new SourceReadDeferred(url, until, key === origin ? "REFUSED" : "RESOURCE_REFUSED");
+        delete state.refused[key];
       }
       if (state.until > clock()) throw new SourceReadDeferred(url, state.until, "THROTTLED");
       if (state.routes[url] > clock()) throw new SourceReadDeferred(url, state.routes[url], "EMPTY");
@@ -124,7 +128,7 @@ export function createSourceHostPacer(options: {
       }
       const challenged = address.pathname !== "/robots.txt" && response.headers.get("cf-mitigated") === "challenge";
       if (response.status === 403 && (challenged || !keyedApiRequest(address, init?.headers))) {
-        // A document can become public later. A named site wall stays open for separate work.
+        // A document is asked again in an hour. A site wall is asked again after the dead-end wait, and a fresh refusal restarts it.
         const siteWall = refusalKey === origin || challenged;
         state.refused[siteWall ? origin : refusalKey] = new Date(siteWall ? now : Math.max(now + 3_600_000, retryAt)).toISOString();
       }

@@ -87,45 +87,6 @@ export interface FilingAuthority {
   readonly vendorPlatform: string | null;
 }
 
-/** One jurisdiction's complete filing routing table. */
-export interface FilingRegime {
-  /** Two-letter postal code, upper case, or "US" for the federal regime. */
-  readonly jurisdiction: string;
-  /** The statute that defines the filing officer, when read from source. */
-  readonly statutoryBasis: string | null;
-  readonly statutorySourceUrl: string | null;
-  readonly statutoryReadOn: string | null;
-  /** `true` when filing is split across custodians rather than centralised. */
-  readonly federated: boolean;
-  /**
-   * How many distinct filing jurisdictions the regime has, from the government's
-   * OWN table. Null when the denominator is not known — never estimated.
-   */
-  readonly filingJurisdictionCount: number | null;
-  readonly filingJurisdictionBreakdown: string | null;
-  readonly denominatorSource: string | null;
-  /** Office level -> the routing rule that governs it. */
-  readonly routing: readonly FilingRoutingRule[];
-}
-
-export interface FilingRoutingRule {
-  readonly officeLevel: OfficeLevel;
-  readonly authorityLevel: FilingAuthorityLevel;
-  /** The custodian role, in the statute's own words. */
-  readonly custodianRole: string;
-  /** The operative sentence, quoted. A paraphrase of a routing rule is a different routing rule. */
-  readonly quote: string;
-}
-
-/**
- * `RESOLVED`: the custodian is known by rule, with provenance. `OPEN`: the rule
- * is known and the office holding it is not. `NO_REGIME_ON_RECORD`: we do not
- * know which authority governs the contest (a claim about us, not a
- * government). Anything but `RESOLVED` keeps coverage open.
- */
-export const AUTHORITY_RESOLUTION_STATUSES = ["RESOLVED", "OPEN", "NO_REGIME_ON_RECORD"] as const;
-export type AuthorityResolutionStatus = (typeof AUTHORITY_RESOLUTION_STATUSES)[number];
-
 /* ── Committees ───────────────────────────────────────────────────────────── */
 
 export const COMMITTEE_TYPES = [
@@ -322,28 +283,6 @@ export type EvidenceBasis = (typeof EVIDENCE_BASES)[number];
 /** A measure's neutrality unit is the side, as a candidate contest's is the candidate. */
 export const MEASURE_SIDES = ["SUPPORT", "OPPOSE"] as const;
 export type MeasureSide = (typeof MEASURE_SIDES)[number];
-
-/**
- * Coverage of one side of one ballot question. A null `committeeUniverseSource`
- * means no register was read; an empty list with a source means none registered.
- */
-export interface MeasureSideCoverage {
-  readonly side: MeasureSide;
-  readonly committeeIds: readonly string[];
-  /**
-   * Where the committee universe for this side came from. **Null means the
-   * register was never read** — never "there are none".
-   */
-  readonly committeeUniverseSource: string | null;
-  readonly filingAuthorityResolved: boolean;
-  readonly filingAuthorityIds: readonly string[];
-  readonly filingsAcquired: readonly string[];
-  readonly acquisitionDepth: AcquisitionDepth;
-  readonly latestThroughDate: string | null;
-  readonly openRouteIds: readonly string[];
-  /** Required for any asymmetry against the other side, and it must cite a source. */
-  readonly asymmetryExplanation: AsymmetryExplanation | null;
-}
 
 /* ── The invariant, at the type level ─────────────────────────────────────── */
 
@@ -543,103 +482,4 @@ export interface PlannedRoute {
   /** The ladder rung this was attempted at, when it was attempted. */
   readonly rung: number | null;
   readonly lastAttemptedOn: string | null;
-}
-
-/** How deep acquisition actually went for one candidate. Ordered, low to high. */
-export const ACQUISITION_DEPTHS = [
-  /** Nothing walked. */
-  "NONE",
-  /** We know WHO the filing authority is. */
-  "AUTHORITY_RESOLVED",
-  /** We know which committee(s) belong to this candidacy. */
-  "COMMITTEE_IDENTIFIED",
-  /** We hold the committee's own summary totals. */
-  "SUMMARY_TOTALS",
-  /** We hold itemized transactions. */
-  "ITEMIZED_TRANSACTIONS",
-] as const;
-export type AcquisitionDepth = (typeof ACQUISITION_DEPTHS)[number];
-
-/** Why one candidate is covered differently from another. Required for any asymmetry, with a source. */
-export interface AsymmetryExplanation {
-  /** The filed, sourced reason. */
-  readonly reason: string;
-  /** Repo path, filing url, or authority page that SUPPORTS the reason. */
-  readonly sourceCitation: string;
-  readonly recordedOn: string;
-}
-
-export interface CandidateFinanceCoverage {
-  readonly candidacyId: string;
-  readonly displayName: string;
-  /** Committees identified for this candidacy. Empty is a real, reportable state. */
-  readonly committeeIds: readonly string[];
-  /** True only when the custodian is RESOLVED, never when it is assumed. */
-  readonly filingAuthorityResolved: boolean;
-  readonly filingAuthorityIds: readonly string[];
-  readonly filingsAcquired: readonly string[];
-  /**
-   * Periods the authority's own calendar says are due. Null means we do not know
-   * the denominator — which is itself a gap, never a zero.
-   */
-  readonly filingPeriodsExpected: readonly string[] | null;
-  readonly filingPeriodsMissing: readonly string[];
-  /** The latest date any acquired filing covers THROUGH. Null when nothing acquired. */
-  readonly latestThroughDate: string | null;
-  readonly acquisitionDepth: AcquisitionDepth;
-  readonly openRouteIds: readonly string[];
-  /** Unresolved identity questions — same name, two committees, and so on. */
-  readonly identityGaps: readonly string[];
-  /** Filings known to be amended where the amendment is not held. */
-  readonly amendmentGaps: readonly string[];
-  readonly asymmetryExplanation: AsymmetryExplanation | null;
-}
-
-export const COVERAGE_STATUSES = [
-  /** Work remains and is named. */
-  "OPEN",
-  /** Some candidates answered, others not. NEVER renderable at candidate level. */
-  "PARTIAL",
-  /** Every owed candidate answered, under the method version, as of a date. */
-  "COMPLETE_AS_OF",
-] as const;
-export type CoverageStatus = (typeof COVERAGE_STATUSES)[number];
-
-/** The per-contest obligation. The candidate universe is the denominator and comes from the ballot. */
-export interface CampaignFinanceCoverage {
-  readonly contestId: string;
-  readonly contestTitle: string;
-  readonly electionId: string;
-  readonly electionDate: string;
-  /** OCD-ID of the division voting on it. */
-  readonly jurisdictionOcdId: string;
-  readonly officeLevel: OfficeLevel;
-  /** Required, never defaulted; `coverage.ts` refuses completeness on anything but `RESOLVED`. */
-  readonly filingRegimeState: AuthorityResolutionStatus;
-  /** The routing rule selected, when one was. Null under `NO_REGIME_ON_RECORD`. */
-  readonly filingRegimeId: string | null;
-  /** Every candidacy on the ballot for this contest. The denominator. */
-  readonly candidateUniverse: readonly string[];
-  /** Where the denominator came from. A count with no source is not a denominator. */
-  readonly candidateUniverseSource: string;
-  readonly committeeUniverse: readonly string[];
-  /** Authorities we expect to hold records for this contest. */
-  readonly expectedFilingAuthorityIds: readonly string[];
-  readonly expectedFilingPeriods: readonly FilingPeriod[];
-  readonly filingsAcquired: readonly string[];
-  /** Named, not counted. "3 missing" is not a gap; three labels are. */
-  readonly filingsMissing: readonly string[];
-  readonly latestThroughDate: string | null;
-  readonly perCandidate: readonly CandidateFinanceCoverage[];
-  /**
-   * Required by `sideSymmetryCheck` on a measure contest; undefined means the
-   * side question was never asked and fails the check.
-   */
-  readonly measureSides?: readonly MeasureSideCoverage[];
-  readonly routes: readonly PlannedRoute[];
-  readonly identityGaps: readonly string[];
-  readonly amendmentGaps: readonly string[];
-  readonly status: CoverageStatus;
-  /** Set only with `COMPLETE_AS_OF`. The date the completeness is asserted as of. */
-  readonly completeAsOf: string | null;
 }

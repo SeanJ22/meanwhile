@@ -111,8 +111,14 @@ function quoteHolds(copy: SavedCopy, quote: string, valueText: string, kind: Fie
   const start = q ? copyText(copy).indexOf(q) : -1;
   if (start === -1) return "QUOTE_NOT_ON_SAVED_COPY";
   const value = normalizeText(valueText);
-  if (boundedIndexOf(q, value) === -1 && (kind !== "officeholder" || boundedIndexOf(q.toLowerCase(),value.toLowerCase()) === -1)) return "VALUE_NOT_IN_QUOTE";
+  if (boundedIndexOf(q, value) === -1 && !ownCells(copy.text, q, value) && (kind !== "officeholder" || boundedIndexOf(q.toLowerCase(),value.toLowerCase()) === -1)) return "VALUE_NOT_IN_QUOTE";
   return start;
+}
+
+/** The value is whole cells of a row of the saved CSV (a row as long as its header): a digit cell beside another digit cell is not one number. */
+function ownCells(copy: string, row: string, value: string): boolean {
+  const at = row.indexOf(value), end = at + value.length;
+  return at !== -1 && (at === 0 || row[at - 1] === ",") && (end === row.length || row[end] === ",") && csvCells(row).length === csvCells(copy.slice(0, copy.indexOf("\n"))).length;
 }
 
 /** The line of the saved copy that shows a value, exactly as saved (a long line is cut to the words around the value), to quote for it; null when the copy does not show the value on its own. */

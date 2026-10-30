@@ -62,7 +62,7 @@ export function huntBrief(packet: HuntPacket, context: {
     lines.push("", "NOTES FOR THIS KIND OF PLACE (optional reading):", ...context.notes.slice(0, NOTE_LINES).map(note => `- ${note}`));
   }
   lines.push("", context.role === "DETECTIVE"
-    ? "These blanks were left open by an earlier hunt. Find another route to each one, report what you find, then call finish."
+    ? "These blanks were left open by an earlier hunt. Find another route to each one, report what you find, then call finish. For a blank only something new could unlock (a reader for a kind of website, a tool, a source, a key, a method), say which in that blank's needs so it comes back when that arrives."
     : "Fill as many blanks as you can, reporting each fact as you find it, then call finish with one line.");
   return lines.join("\n");
 }

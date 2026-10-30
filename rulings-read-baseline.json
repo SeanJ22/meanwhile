@@ -149,7 +149,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1316
+      "line": 1317
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",
@@ -272,22 +272,16 @@
       "line": 233
     },
     {
-      "file": "scripts/replay-legiscan-all-states.mts",
+      "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
-      "fingerprint": "96ed04d68b2d6858bb32d31246223736a276bb355067be4eb009bf5e0e680b8b",
-      "line": 187
+      "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
+      "line": 853
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 854
-    },
-    {
-      "file": "scripts/routine-civic-data-runner.mts",
-      "kind": "readCandidate",
-      "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 863
+      "line": 862
     },
     {
       "file": "scripts/split-federal-people.mts",
@@ -718,26 +712,6 @@
       "table": "civic_data_candidates"
     },
     {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_clock_versions"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "lib/db/identity-domains.ts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "lib/db/migration-phases.ts",
       "table": "civic_data_candidate_events"
     },
@@ -1028,114 +1002,6 @@
     {
       "file": "scripts/portrait-census.mts",
       "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/replay-epa-all-states.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/replay-epa-sql.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/replay-legiscan-all-states.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rn-01-retirement-readonly.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rn-01-retirement-readonly.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rs-03-representation-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/sp-01-check.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/sp-01-check.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/sp-01-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/src-01-epa-scheduled-runs.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/src-01-epa-scheduled-runs.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/src-01-fac-all-states-read-only-replay.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/src-01-fac-all-states-read-only-replay.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/src-01-fec-all-states-read-only.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/src-01-fec-all-states-read-only.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/src-01-openfema-all-states-replay.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/src-money-check.mts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "scripts/src-money-check.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/src-money-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/state-votes-check.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/state-votes-check.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/state-votes-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/verify-federal-zips.mts",
-      "table": "civic_data_promotions"
     }
   ],
   "controlRecordReads": [
@@ -1232,10 +1098,6 @@
       "table": "cp_log_discovery_attempts"
     },
     {
-      "file": "lib/civic-data/national-government-finance.ts",
-      "table": "cp_work_items"
-    },
-    {
       "file": "lib/civic-data/owner-refresh.ts",
       "table": "cp_admin_config"
     },
@@ -1246,10 +1108,6 @@
     {
       "file": "lib/civic-data/routine-due-request.ts",
       "table": "cp_admin_config"
-    },
-    {
-      "file": "lib/civic-data/special-district-boundaries.ts",
-      "table": "cp_work_items"
     },
     {
       "file": "lib/civic-data/worker-ballot-contests.ts",
@@ -1901,10 +1759,6 @@
     },
     {
       "file": "lib/control-plane/scheduler/durable.ts",
-      "table": "cp_admin_config"
-    },
-    {
-      "file": "lib/control-plane/scheduler/durable.ts",
       "table": "cp_debts"
     },
     {
@@ -2366,10 +2220,6 @@
     {
       "file": "scripts/lib/held-meeting-child-input.ts",
       "table": "cp_doors"
-    },
-    {
-      "file": "scripts/measure-translation-cost-check.mts",
-      "table": "cp_admin_config"
     },
     {
       "file": "scripts/pilot-runner.mts",

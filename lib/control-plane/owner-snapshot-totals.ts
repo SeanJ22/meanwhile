@@ -904,9 +904,8 @@ export class OwnerSnapshotFold {
     }
     this.costs=await costs(this.#priorCosts,changed);
     if(!this.#rebuild){
-      const due=await this.#repos.ownerAssignmentRows.find({dueAt:this.#input.nowIso});
-      await this.#loadRows(due);
-      for(const id of due)this.#inboxes.group(this.#priorRows.get(id)!.state,id);
+      await this.#loadRows(await this.#repos.ownerAssignmentRows.find({dueAt:this.#input.nowIso}));
+      await this.#emit();
     }
     if(checkpoint){
       await this.#foldPipeline(this.#rebuild);

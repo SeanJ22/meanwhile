@@ -473,13 +473,14 @@ test("a steady publish reads only the rows changed since the last one and derive
   await seed(repos, c);
   const derivedFor = new Set<string>();
   const loaded = new Set<string>();
-  const whole: string[] = [];
+  const whole: string[] = [], histories: string[] = [];
   const watched = Object.fromEntries(Object.entries(repos).map(([name, repo]) => [name, typeof repo !== "object" || repo === null || name === "askGapObservations"
     || name === "ownerSnapshotTotals" ? repo : new Proxy(repo, { get(target, member, receiver) {
       const value = Reflect.get(target, member, receiver);
       if (typeof value !== "function") return value;
       return (...args: unknown[]) => {
         if (["list", "listNarrowed", "readAll", "readAllNarrowed", "keys"].includes(String(member))) whole.push(`${name}.${String(member)}`);
+        if (name === "artifacts" && member === "readKeys") histories.push("artifacts.readKeys");
         if (name === "occurrences" && member === "listWhereIn" && (args[0] as string[])[0] === "obligationId") for (const id of args[1] as string[]) derivedFor.add(id);
         if (name === "ownerSnapshotStateTotals" && member === "read") whole.push("ownerSnapshotStateTotals.read");
         if (name === "ownerSnapshotStateTotals" && member === "readNarrowed") {
@@ -495,20 +496,19 @@ test("a steady publish reads only the rows changed since the last one and derive
   const two = await publish(watched, now, one.published, [HUNT], null, undefined, repos);
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assert.ok(derivedFor.has(obligationId(12)), "the assignment the new round belongs to is derived again");
-  const allowed = new Set([obligationId(12), ...due.map(row => row.id)]);
-  assert.ok([...derivedFor].every(id => allowed.has(id)), "only changed assignments and expired work-list rows are derived");
+  assert.deepEqual([...derivedFor], [obligationId(12)], "only changed assignments are derived; saved segments advance clock-only rows");
   const touchedStates = new Set(["totals:nh", ...due.map(row => `totals:${row.state}`)]);
   assert.ok([...loaded].every(state => touchedStates.has(state)), "only affected states' small counts are read");
   assertSamePanels("steady publish", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
   /* A changed-row read starts where the last one began, so the publish right after a change reads it once more. */
   const settled = await publish(watched, at(T1, 2), two.published, [HUNT], null, undefined, repos);
   loaded.clear();
-  derivedFor.clear();
+  derivedFor.clear(); histories.length = 0;
   const idle = at(T1, 9);
   const expired = await repos.ownerAssignmentRows.read(await repos.ownerAssignmentRows.find({ dueAt: idle }));
   const three = await publish(watched, idle, settled.published, [HUNT], null, undefined, repos);
-  const expiredIds = new Set(expired.map(row => row.id));
-  assert.ok([...derivedFor].every(id => expiredIds.has(id)), "an idle publish only updates work-list deadlines that passed");
+  assert.ok(expired.length > 0, "the restart clock crosses saved assignment deadlines");
+  assert.deepEqual([...derivedFor, ...histories], [], "a fresh fold advances saved segments without assignment history reads");
   assert.deepEqual(whole, [], "no control-plane table is read whole");
   assertSamePanels("idle publish", three.panels, await fromScratch(repos, idle, [HUNT], null, three.published.readings));
 });

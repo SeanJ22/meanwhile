@@ -5,6 +5,9 @@ import { PGlite } from "@electric-sql/pglite";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { BLANK_PLANNER_CURSOR, keepPlannerList, planBlankChanges } from "../lib/hunt/blank-planner.ts";
 import { readPassCursor } from "../lib/facts/db.ts";
+import { capabilityLog } from "../lib/core/capability.ts";
+import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -84,4 +87,28 @@ test("a standing hunt is served only where money was pointed, and comes again on
   at = new Date(at.getTime() + 6 * DAY);
   assert.deepEqual(await keepPlannerList(list, at.getTime()), { spawned: 1, retired: 0 });
   assert.equal((await query("SELECT count(*)::int AS n FROM work WHERE series = $1 AND status = 'waiting'", [`blank:${COCONINO}`]))[0]!.n, 1, "its next row is made");
+});
+
+test("the hunters work a standing hunt only for a funded place whose blanks changed since its last hunt", async t => {
+  const { facts, query, blank, close } = await open();
+  t.after(close);
+  const at = new Date("2026-10-30T12:00:00Z");
+  const list = workList(query, { owner: "planner", now: () => at });
+  const repos = createMemoryRepositories();
+  await blank(`${PIMA}#board`, "agenda_url");
+  await planBlankChanges({ facts: facts.query, list, now: () => at.toISOString() });
+  const funded = [PIMA];
+  let changed = false;
+  const claims = hunterClaims({ list, repos, now: () => at.toISOString(), deadEndMs: async () => 5 * DAY, capabilities: capabilityLog(async () => []),
+    deadEndOf: async () => undefined, funded: () => funded, due: async () => changed, log: () => {} });
+
+  await claims.select(["az"], false);
+  assert.equal(await claims.claim(true), null, "money pointed, but the blanks are as the last hunt left them: the row waits out its clock");
+  assert.deepEqual(await query("SELECT status, repeat_ms::text AS repeat FROM work"), [{ status: "done", repeat: String(5 * DAY) }]);
+
+  at.setTime(at.getTime() + 6 * DAY);
+  await keepPlannerList(list, at.getTime());
+  changed = true;
+  assert.equal((await claims.claim(true))?.taskIds.length, 1, "money pointed and the blanks changed: the hunters take it as a task");
+  assert.equal((await repos.workItems.list()).length, 1);
 });

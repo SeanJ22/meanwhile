@@ -278,65 +278,6 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
-  meetings: {
-    storeClass: "CIVIC_CONTENT",
-    columns: {
-      ...nonIdentifying(
-        "id",
-        "division_vintage",
-        "body_name",
-        "title",
-        "starts_at",
-        "time_zone",
-        "location_name",
-        "location_lat",
-        "location_lng",
-        "online_label",
-        "online_join_url",
-        "agenda_url",
-        "jurisdiction",
-        "status",
-        "source_url",
-        "source_org",
-        "collected_at",
-        "verified_at",
-      ),
-      ocd_id: { space: "CIVIC_IDENTIFIER" },
-      location_address: {
-        space: "POSTAL_ADDRESS",
-        why:
-          "A public building's street address, published by the body on its own notice. It " +
-          "identifies a town hall, not a person.",
-      },
-    },
-  },
-
-  agenda_documents: {
-    storeClass: "CIVIC_CONTENT",
-    columns: {
-      ...nonIdentifying(
-        "id",
-        "meeting_id",
-        "division_vintage",
-        "document_url",
-        "content_hash",
-        "retrieved_at",
-        "content_type",
-        "extraction",
-        "extraction_note",
-        "source_url",
-        "source_org",
-        "collected_at",
-        "verified_at",
-      ),
-      ocd_id: { space: "CIVIC_IDENTIFIER" },
-      text: {
-        space: "PROSE",
-        why: "The body's own published agenda text, extracted verbatim.",
-      },
-    },
-  },
-
   speak_your_mind: {
     storeClass: "READER_COLLECTION",
     columns: {

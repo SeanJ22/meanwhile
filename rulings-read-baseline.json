@@ -1226,10 +1226,6 @@
       "table": "cp_log_costs"
     },
     {
-      "file": "lib/control-plane/admin-view/runner-progress-read.ts",
-      "table": "cp_log_owner_digests"
-    },
-    {
       "file": "lib/control-plane/admin-view/v6-agents-read.ts",
       "table": "cp_attempts"
     },
@@ -1715,19 +1711,7 @@
     },
     {
       "file": "lib/control-plane/research-view.ts",
-      "table": "cp_log_costs"
-    },
-    {
-      "file": "lib/control-plane/research-view.ts",
       "table": "cp_log_research_intents"
-    },
-    {
-      "file": "lib/control-plane/research-view.ts",
-      "table": "cp_log_scout_results"
-    },
-    {
-      "file": "lib/control-plane/research-view.ts",
-      "table": "cp_research_state"
     },
     {
       "file": "lib/control-plane/scheduler/cycle-selection.ts",

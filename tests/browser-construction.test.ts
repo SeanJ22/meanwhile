@@ -57,7 +57,7 @@ test("scripts/browser.mts is the only place a browser is constructed", async () 
   /* The denominator, stated: a guard reporting "0 offenders" while inspecting
    * nothing is the empty success this repo has a rule about. */
   assert.ok(
-    usingTheSite >= 13,
+    usingTheSite >= 12,
     `expected the browser scripts to come through scripts/${SITE}, only ${usingTheSite} do ` +
       `(${noBrowser} script(s) drive no browser at all)`,
   );

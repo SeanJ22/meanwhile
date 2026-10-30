@@ -136,10 +136,9 @@ export function routineDueRequestFor(
     routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 
+/** A due request is read now: ahead of ordinary due work, never behind the instant its task already owed. */
 export function routineDueRequestDeadlineMs(deadlineMs: number | undefined, request: RoutineDueRequest | null): number | undefined {
-  if (request === null) return deadlineMs;
-  const dueMs = Date.parse(request.dueAt);
-  return deadlineMs === undefined || Number.isNaN(deadlineMs) ? dueMs : Math.min(deadlineMs, dueMs);
+  return request === null ? deadlineMs : Number.NEGATIVE_INFINITY;
 }
 
 function openAt(request: RoutineDueRequest, nowMs: number): boolean {

@@ -96,7 +96,7 @@ import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
-import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { readNowDueRequests, settleReadNow, shutFeedsLast } from "../lib/doors/mission-refresh.ts";
 import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/known-release.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
@@ -992,6 +992,7 @@ if (!FORCE) {
   }
 }
 
+let shutDoors: Awaited<ReturnType<typeof readRunnerDoors>> = [];
 if (!FORCE && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
@@ -1001,6 +1002,7 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
 
     const derive = editDeriveDueRequests(await readRunnerDoors(doorRepos.doors, ["origin"], "MANUAL", "requests"), new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
+    shutDoors = await readRunnerDoors(doorRepos.doors, ["status"], "SHUT", "requests");
     if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);
   } catch (error) {
     console.log(`RCD_DUE_REQUEST doors marked to be read now CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; every task keeps its normal schedule`);
@@ -1265,7 +1267,7 @@ for (const { pending } of dueCandidates) {
 await flushLaunchDecisions();
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
 for (const { task } of PLACE_MAPS ? placeMapLaunchOrder(admitted)
-  : electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
+  : shutFeedsLast(electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs)), shutDoors)) pendingRuns.push(pendingByTaskId.get(task.id)!);
 await recordHuntSourceProgressEach(pendingRuns.map(pending => pending.task), "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`

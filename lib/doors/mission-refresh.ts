@@ -116,6 +116,12 @@ export function readNowDueRequests(
   return requests;
 }
 
+/** Work whose feed door is shut launches after all open work: its own next good read is what reopens the door. */
+export function shutFeedsLast<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[], doors: readonly DoorRecord[]): T[] {
+  const shut = new Set(doors.flatMap(door => door.status === "SHUT" && door.meeting == null ? doorPartitionIds(door) : []));
+  return [...jobs.filter(job => !shut.has(job.task.id)), ...jobs.filter(job => shut.has(job.task.id))];
+}
+
 /**
  * Clear the marks that are spent: the door has recorded an outcome since the mark (`recordDoorOutcome` writes
  * `lastSuccessAt` or `lastFailureAt` and leaves `updatedAt`, the mark's own time, alone), or the mark is older than the

@@ -5,11 +5,10 @@ import { resolveScopes } from "../control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../census-geography/scope-lookup.ts";
 import { loadPublishedAreaLookupState } from "../census-geography/area-lookup.ts";
 import { readIntents } from "../control-plane/scheduler/research-policy.ts";
-import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import type { NationalPlaceTask } from "./place-source-task.ts";
 import type { RoutineSourceTask } from "../civic-data/runner.ts";
-import { dueNationalPlaceZips, nationalPlaceJobs, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
+import { dueNationalPlaces, nationalPlaceJobs, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
 import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
 
 export async function resolveNationalPlaceSendScopes(sends: readonly ExpansionScopeDecision[], zips: readonly string[]) {
@@ -45,9 +44,8 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
       const sends=scopes.scopes.filter(scope=>scope.sourceWorkVersion===1);
       if(!sends.length)continue;
       const resolved=await resolveScopes(sends,await loadPublishedScopeLookupState(sends.map(send=>send.geography)),null);
-      const admitted=admittedHuntSourceScopes(resolved.scopes,now);
-      const selected=admitted.flatMap(scope=>scope.kind==="RESOLVED"?[...scope.zctas]:[]);
-      for(const [zip,request] of nationalPlaceSendRequests(admitted,selected,now)) {
+      const selected=resolved.scopes.flatMap(scope=>scope.kind==="RESOLVED"?[...scope.zctas]:[]);
+      for(const [zip,request] of nationalPlaceSendRequests(resolved.scopes,selected,now)) {
         const prior=requested.get(zip);
         requested.set(zip,{requestedAt:prior && prior.requestedAt>request.requestedAt?prior.requestedAt:request.requestedAt,
           instructions:[...new Set([...(prior?.instructions??[]),...request.instructions])]});
@@ -76,8 +74,10 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   }
   const jobs: RoutineSourceTask[] = [];
   for (const places of groups.values()) {
-    const due = await dueNationalPlaceZips(repos, places, now, requests);
-    for (const zip of await orderNationalPlaceWork(repos, due, now)) jobs.push(...nationalPlaceJobs([places.find(place => place.zip === zip)!], requests.get(zip)));
+    const due = new Map((await dueNationalPlaces(repos, places, now, requests)).map(place => [place.zip, place.lastWorkedAt]));
+    for (const zip of await orderNationalPlaceWork(repos, [...due.keys()], now)) {
+      jobs.push(...nationalPlaceJobs([{ ...places.find(place => place.zip === zip)!, lastWorkedAt: due.get(zip) ?? null }], requests.get(zip)));
+    }
   }
   return [...tasks, ...jobs];
 }

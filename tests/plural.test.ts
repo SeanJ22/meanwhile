@@ -24,10 +24,11 @@ import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
 import { placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
-import { routineTaskDue } from "../lib/civic-data/runner.ts";
-import { nationalPlaceJobs, dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress, nationalPlaceSendRequests } from "../lib/hunt/place-source-task.ts";
+import { readRoutineTaskClocks, routineTaskDue } from "../lib/civic-data/runner.ts";
+import { nationalPlaceJobs, dueNationalPlaces, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress, nationalPlaceSendRequests } from "../lib/hunt/place-source-task.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
-import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { expansionScopesOf, isHunt, type ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { applyHuntOrders, HUNT_STATES, requestHuntStop } from "../lib/control-plane/hunt-orders.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { nationalPlaceWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
@@ -127,8 +128,8 @@ test("a cross-state ZIP preserves independent state contracts and durable clocks
   const repos = createMemoryRepositories(), now = "2026-10-01T00:00:00.000Z";
   await repos.obligations.put(places[0].id, standing({ id: places[0].id, subjectId: "zip:86515", recordClass: "OFFICIAL_ROSTER",
     routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: now }, now), now);
-  assert.deepEqual(await dueNationalPlaceZips(repos, [places[0]], now, new Map()), []);
-  assert.deepEqual(await dueNationalPlaceZips(repos, [places[1]], now, new Map()), ["86515"]);
+  assert.deepEqual((await dueNationalPlaces(repos, [places[0]], now, new Map())).map(place => place.zip), []);
+  assert.deepEqual((await dueNationalPlaces(repos, [places[1]], now, new Map())).map(place => place.zip), ["86515"]);
 });
 
 test("a saved Send starts beside a long routine job and reaches every ZIP before the routine backlog", async () => {
@@ -229,13 +230,13 @@ test("a newer applicable Send wakes a settled no-progress place once without bor
   const future = placeSend("03060", "2026-10-01T04:00:00.000Z", "send:future");
   const unrelated = placeSend("03301", "2026-10-01T02:30:00.000Z", "send:elsewhere");
   const unchanged = nationalPlaceSendRequests([resolvedPlaceSend(older)], ["03060", "03101"], now);
-  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now, unchanged), []);
+  assert.deepEqual((await dueNationalPlaces(repos, placeTasks(["03060", "03101"]), now, unchanged)).map(place => place.zip), []);
   assert.equal((await scheduleNationalPlace(repos, row, now, true, unchanged.get("03060")) as { nextDueAt: string }).nextDueAt,
     "2026-10-02T01:00:00.000Z", "unchanged Send respects the actual INGESTED no-progress completion");
   const requests = nationalPlaceSendRequests([resolvedPlaceSend(older), resolvedPlaceSend(newer), resolvedPlaceSend(future), resolvedPlaceSend(unrelated)],
     ["03060", "03101"], now);
   assert.deepEqual([...requests], [["03060", { requestedAt: newer.budgetStartedAt, instructions: ["send:older", "send:new"] }]]);
-  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101", "03060"]), now, requests), ["03060"]);
+  assert.deepEqual((await dueNationalPlaces(repos, placeTasks(["03060", "03101", "03060"]), now, requests)).map(place => place.zip), ["03060"]);
   const scheduled = await scheduleNationalPlace(repos, row, now, true, requests.get("03060"));
   assert.equal("nextDueAt" in scheduled && scheduled.nextDueAt, now);
   const first = await openOccurrence(repos, { obligation: row, dueAt: now, now });
@@ -248,7 +249,7 @@ test("a newer applicable Send wakes a settled no-progress place once without bor
     disposition: "INGESTED", attemptId: "fresh-hunt", at: now, artifactIds: [], observation: null,
     permission: "ALLOWED", transport: "REACHABLE", note: JSON.stringify({ placeProgress: false }) } }, now);
   await closeOccurrence(repos, { occurrenceId: first.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now, workedAt: now });
-  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now, requests), [], "completion after the saved request consumes its wake");
+  assert.deepEqual((await dueNationalPlaces(repos, placeTasks(["03060", "03101"]), now, requests)).map(place => place.zip), [], "completion after the saved request consumes its wake");
   assert.equal((await repos.obligations.mustRead(row.id)).value.occurrenceCount, 2);
 });
 
@@ -265,14 +266,18 @@ test("Send wake uses the original hunt instant and only valid resolved scope rec
   assert.equal(nationalPlaceSendRequests([], ["03060"], now).size, 0, "absence never defaults to now");
 });
 
-test("the admitted worker rereads the saved Send and publishes once through its ordinary lease", async t => {
+test("with every hunt stopped in every state, the admitted worker rereads the saved Send and publishes once through its ordinary lease", async t => {
   const repos = createMemoryRepositories();
-  const completedAt = "2026-10-01T01:00:00.000Z", requestedAt = "2026-10-01T02:00:00.000Z";
+  const completedAt = "2026-10-01T01:00:00.000Z", requestedAt = "2026-10-01T02:00:00.000Z", stoppedAt = "2026-10-01T02:30:00.000Z";
   let now = "2026-10-01T03:00:00.000Z";
   await settledPlace(repos, "03060", completedAt);
   await settledPlace(repos, "03101", completedAt);
   const send = placeSend("03060", requestedAt, "send:03060");
   await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [send] }, now);
+  await requestHuntStop(repos, { receiptId: "stop-every-hunt", at: stoppedAt, actor: "owner" });
+  for (const state of HUNT_STATES) await applyHuntOrders(repos, state, stoppedAt);
+  const [kept] = expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { expansionScopes: true })).value).scopes;
+  assert.deepEqual([isHunt(kept!), kept!.receiptId, kept!.sourceWorkVersion], [false, "send:03060", 1], "the hunt ended; the place keeps its free Send");
   const dataset: BuiltDataset = { formatVersion: 1, builtAt: completedAt, coverage: "Two fixture ZIPs in New Hampshire", zctaUniverse: ["03060", "03101"],
     scopes: [{ type: "county", version: "county:2020", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
       versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "fixture",
@@ -294,7 +299,7 @@ test("the admitted worker rereads the saved Send and publishes once through its 
   };
   installPlaceReader(t);
   t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
-  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now), ["03060"], "process admission reads the actual saved Send");
+  assert.deepEqual((await dueNationalPlaces(repos, placeTasks(["03060", "03101"]), now)).map(place => place.zip), ["03060"], "process admission reads the actual saved Send");
   let acquired = 0, published = 0;
   const input: Parameters<typeof runNationalPlaceTask>[0] = { tools: { repos, store: new MemoryEvidenceStore(), now: () => now,
     spaceOut: async () => {}, openBytes: async request => ({ status: 200,
@@ -329,11 +334,59 @@ test("the admitted worker rereads the saved Send and publishes once through its 
   const newest = (await repos.routeTasks.list()).find(task => task.value.disposition?.attemptId === attempts[0].id)!;
   assert.equal(newest.value.disposition?.disposition, "INGESTED");
   assert.match(newest.value.disposition?.note ?? "", /"placeProgress":false/);
-  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now), []);
+  assert.deepEqual((await dueNationalPlaces(repos, placeTasks(["03060", "03101"]), now)).map(place => place.zip), []);
   assert.deepEqual(await runNationalPlaceTask(input), []);
   assert.equal(acquired, 1, "unchanged saved Send cannot acquire or publish twice");
   assert.equal((await repos.obligations.mustRead("national-place:03101")).value.occurrenceCount, 1, "another ZIP stays settled");
   assert.ok(lookupReads >= 3, "outer admission and actual worker both use the scoped published lookup");
+});
+
+test("a routine run works a due national place on its own obligation clock, and the runner reports that clock", async t => {
+  installPlaceLookup(t);
+  t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
+  const repos = createMemoryRepositories(), lastWorked = "2026-10-01T01:00:00.000Z";
+  await settledPlace(repos, "03060", lastWorked);
+  let now = "2026-10-02T09:00:00.000Z";
+  const stateRun = "2026-10-02T08:30:00.000Z";
+  const stateClock = { lastAttemptedAt: stateRun, lastSucceededAt: stateRun, lastSucceededObservedAt: stateRun };
+  const places = placeTasks(["03060"]);
+  const passJob = async () => {
+    const due = await dueNationalPlaces(repos, places, now);
+    return { due, jobs: nationalPlaceJobs(due.map(place => ({ ...places.find(row => row.zip === place.zip)!, lastWorkedAt: place.lastWorkedAt }))) };
+  };
+
+  const before = await passJob();
+  assert.deepEqual(before.due, [{ zip: "03060", lastWorkedAt: lastWorked }], "a day after its last work the obligation is due");
+  const [read] = await readRoutineTaskClocks(before.jobs, async () => stateClock);
+  assert.equal(read.clock?.lastSucceededObservedAt, lastWorked, "the runner's clock is the obligation's last work, not the state roster run");
+  assert.equal(routineTaskDue(before.jobs[0], read.clock, Date.parse(now)), true, "a fresh state roster run cannot hold the due place back");
+  const { obligation: _owned, ...sharedClockJob } = before.jobs[0];
+  assert.equal(routineTaskDue(sharedClockJob, stateClock, Date.parse(now)), false, "the shared state clock alone would have skipped it");
+
+  const worked = "2026-10-02T09:01:00.000Z";
+  const reports = await runNationalPlaceTask({ tools: { repos, store: new MemoryEvidenceStore(), now: () => now, spaceOut: async () => {},
+    openBytes: async request => ({ status: 200, bytes: Buffer.from(request.url.endsWith("/robots.txt") ? "User-agent: *\nAllow: /" : "id,name\n1,Fixture Official\n"),
+      contentType: "text/plain", finalUrl: request.url, durationMs: 1, transportError: null }) },
+    store: new MemoryRoutineDataStore(), places, readPublished: async () => [],
+    publish: async () => { assert.fail("this fixture publishes nothing"); },
+    acquire: async value => {
+      const saved = await value.readSource("https://fixture.gov/officials.csv", value.knowledge!);
+      now = worked;
+      const sources = { officials: [], gaps: [], electionFields: [], electionDocuments: [], documents: [saved] };
+      return { zip: value.zip, divisions: [], sources, publication: null, publications: [], electionPublications: [],
+        items: [], work: [], open: [], blanks: [], families: { officials: true, elections: true }, knowledge: value.knowledge!,
+        inherited: { subjects: 0, fields: 0, publishedFields: 0, knowledgeEntries: 0 }, conditions: [] };
+    } });
+  assert.equal(reports.length, 1);
+  assert.equal((await repos.obligations.mustRead("national-place:03060")).value.lastWorkedAt, worked, "the obligation records when it was really worked");
+  assert.deepEqual((await passJob()).due, [], "the worked place waits its cadence");
+
+  now = "2026-10-03T09:02:00.000Z";
+  const next = await passJob();
+  assert.deepEqual(next.due, [{ zip: "03060", lastWorkedAt: worked }]);
+  const [again] = await readRoutineTaskClocks(next.jobs, async () => stateClock);
+  assert.deepEqual(again.clock, { lastAttemptedAt: worked, lastSucceededAt: worked, lastSucceededObservedAt: worked },
+    "the next pass reports the time the place was really worked");
 });
 
 test("ranking one ZIP in a district reads its whole saved scope without admitting the other ZIP", async t => {
@@ -496,8 +549,8 @@ test("a national API completes its geography walk beyond ten requests and reuses
     const row = await repos.obligations.mustRead(`national-place:${zip}`);
     await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, lastWorkedAt: worked[index] }, tools.now());
   }
-  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101", "03301", "03431", "03431"]), tools.now()),
-    ["03431", "03301", "03101"]);
+  assert.deepEqual(await dueNationalPlaces(repos, placeTasks(["03060", "03101", "03301", "03431", "03431"]), tools.now()),
+    [{ zip: "03431", lastWorkedAt: null }, { zip: "03301", lastWorkedAt: worked[2] }, { zip: "03101", lastWorkedAt: worked[1] }]);
 
   const beforeFresh = requests;
   assert.deepEqual(await runNationalPlaceTask({ ...input, places: placeTasks(["03060"]) }), []);

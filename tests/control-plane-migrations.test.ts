@@ -135,11 +135,11 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     assert.deepEqual((await sql.query("SELECT id FROM cp_occurrences_archive")).map(row=>row.id),["az"]);
     assert.deepEqual((await sql.query("SELECT id FROM cp_admin_place_targets")).map(row=>row.id),["st:az"]);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,7);
-    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az"],"a recorded stop cannot be undone by copying an older scope; a later Send survives");
+    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az","st:az"],"a stop never drops a place's Send; the runner's stop order ends its paid hunt");
     assert.equal((await jobs.runState("az")).copied,0);
     for(const state of PLANNING_STATES)await runStateControlBackfill(jobs,state,()=>{});
     await jobs.finish(PLANNING_STATES);
-    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az","st:nh"]);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["cross-nh","new-az","st:az","st:nh"]);
     assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,0);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,18);
     assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["BB-01_expand","CP-01_counts_expand","CP-01_expand","DB-03A_expand","DB-03_expand","DT-01_expand","KB-01_expand","RB-A1_expand","RB-A5_expand","RB-A8_expand","RB-A9_expand","RIVER-DOORCFG-149_expand","RIVER-KEYS-FX_expand","RIVER-KEYS_expand","RV-BOX_expand","SPN-01B_cost_expand","SPN-01B_expand"]);

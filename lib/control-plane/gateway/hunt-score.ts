@@ -2,7 +2,7 @@ import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { readPlaceOwed } from "../admin-view/place-owed-read.ts";
 import { scorePlace } from "../admin-view/place-scorecard.ts";
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
-import { scopeKeyOf, expansionScopesOf, type ExpansionScopeGeography } from "../expansion/scopes.ts";
+import { scopeKeyOf, expansionScopesOf, isHunt, type ExpansionScopeGeography } from "../expansion/scopes.ts";
 import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, placeTargetOf } from "./admin-config.ts";
 import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
@@ -51,7 +51,7 @@ export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:P
       const assignments=(state?.value as {assignments?:AssignmentCycleReading}|undefined)?.assignments;
       const scopes=config?expansionScopesOf(config):null;
       const assignment=assignments?.assignments.find(a=>a.key===score.scopeKey&&a.ref===(score.assignmentRef??receipt.receiptId));
-      const stopped=Boolean(scopes&&scopes.malformed===0&&!scopes.scopes.some(s=>s.key===score.scopeKey));
+      const stopped=Boolean(scopes&&scopes.malformed===0&&!scopes.scopes.some(s=>s.key===score.scopeKey && isHunt(s)));
       finished &&= stopped||assignment?.completion?.kind==="COMPLETE";
       completedAt=assignments?.at??completedAt;
       goals.set(score.placeKey,placeTargetOf(config,score.placeKey)?.goalPercent??100);

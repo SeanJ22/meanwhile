@@ -94,6 +94,38 @@ test("a private document can be checked later; an explicit site challenge stops 
   assert.equal(calls, 2);
 });
 
+test("a site wall reopens on its own within 5 days: a 200 clears it, a fresh refusal restarts the wait", async () => {
+  const day = 86_400_000, refusedAt = Date.parse("2026-10-20T12:00:00Z");
+  let now = refusedAt, status = 403, calls = 0;
+  const store = memoryHostState(), pacer = createSourceHostPacer({ store, clock: () => now, spacingMs: 0 });
+  const read: typeof fetch = async () => { calls++; return new Response(null, { status }); };
+  const held = (until: number) => (e: unknown) => e instanceof SourceReadDeferred && e.reason === "REFUSED" && e.until === until;
+  await pacer.fetch("https://walled.gov/meetings", {}, read);
+  now += 5 * day - 1;
+  await assert.rejects(pacer.fetch("https://walled.gov/agendas", {}, read), held(refusedAt + 5 * day), "it says when it will be tried again");
+  assert.equal(calls, 1);
+  now += 1;
+  await pacer.fetch("https://walled.gov/agendas", {}, read);
+  assert.equal(calls, 2, "the wall reopens after its wait");
+  await assert.rejects(pacer.fetch("https://walled.gov/meetings", {}, read), held(now + 5 * day), "a fresh refusal starts a new wait");
+  now += 5 * day; status = 200;
+  assert.equal((await pacer.fetch("https://walled.gov/meetings", {}, read)).status, 200);
+  await store.withHost("walled.gov", undefined, async state => assert.deepEqual(state.refused, {}, "a 200 clears the wall"));
+  assert.equal((await pacer.fetch("https://walled.gov/agendas", {}, read)).status, 200);
+  assert.equal(calls, 4);
+});
+
+test("a site wall saved before walls reopened is read again on the first try", async () => {
+  const root = await mkdtemp(join(tmpdir(), "site-wall-")), clock = () => Date.parse("2026-10-29T12:00:00Z");
+  try {
+    await fileHostState(root).withHost("oldwall.gov", undefined, async state => { state.refused["https://oldwall.gov"] = "2026-09-01T00:00:00.000Z"; });
+    const response = await createSourceHostPacer({ store: fileHostState(root), clock, spacingMs: 0 })
+      .fetch("https://oldwall.gov/meetings", {}, async () => new Response("calendar"));
+    assert.equal(response.status, 200);
+    await fileHostState(root).withHost("oldwall.gov", undefined, async state => assert.deepEqual(state.refused, {}));
+  } finally { await rm(root, { recursive: true, force: true }); }
+});
+
 test("a keyed API's 403 stays with its caller; other records and later cycles still read", async () => {
   const pacer = createSourceHostPacer({ store: memoryHostState(), spacingMs: 0 });
   let calls = 0, refuse = true;

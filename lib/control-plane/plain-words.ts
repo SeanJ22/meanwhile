@@ -54,7 +54,6 @@ export const PLAIN_WORDS: Readonly<Record<string, PlainWord>> = {
 
   ACTIVE: { words: "Active", means: "The runner is working on schedule." },
   PAUSED: { words: "Paused", means: "You paused it. It stays paused until you resume it." },
-  "SCHEDULED BLACKOUT": { words: "Scheduled quiet period" },
   "CIRCUIT BROKEN": { words: "A provider is paused" },
 
   REFUSED_BY_HOST: {

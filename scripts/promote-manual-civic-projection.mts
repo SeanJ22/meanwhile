@@ -1,3 +1,4 @@
+import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve, join } from "node:path";
@@ -31,7 +32,7 @@ if (process.argv.includes("--candidate-findings")) {
   if (!connection) throw new Error("CANDIDATE_FINDINGS_CONTROL_PLANE_UNCONFIGURED");
   const now = new Date().toISOString(), store = new PostgresRoutineDataStore();
   const repos = await createPgRepositories(connection, now, { skipBootstrap: true }), sql = neon(connection);
-  const { report, receipt } = await runCandidateProfileFindingsJob({ state: target.state, store, repos, now,
+  const { report, receipt } = await runCandidateProfileFindingsJob({ state: target.state, store, repos, now, list: workList(controlPlaneQuery(), { owner: `candidate-findings:${process.pid}`, leaseMs: 300_000 }),
     query: (text, params) => sql.query(text, params),
     readHeld: ids => heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"), ids, connection) });
   console.log("RCD_CANDIDATE_FINDINGS=" + JSON.stringify(report));

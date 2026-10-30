@@ -8,6 +8,8 @@ import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
+import { LEAD_DDL, WORK_DDL, workList } from "../lib/core/work.ts";
+import { moveBoxLinks } from "../lib/sources/box-links.ts";
 import { summarizeCommentPages } from "../lib/facts/comment-summary.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
@@ -44,15 +46,18 @@ async function world() {
   const clocks = factClocks(null);
   const noFetch = async () => { throw new Error("the page is held inside its clock"); };
   const handed = await publishBoxFindings({ repos, facts, vault, fetch: noFetch, store: new MemoryRoutineDataStore(), clocks, now: NOW, limit: 10 });
-  return { facts, repos, vault, clocks, handed };
+  for (const ddl of [...WORK_DDL, ...LEAD_DDL]) await facts.pg.exec(ddl);
+  const list = workList(facts.query, { owner: "summary", leaseMs: 300_000, now: () => new Date(NOW) });
+  return { facts, repos, vault, clocks, handed, list };
 }
 const summary = RULES.join(" ");
 
 test("a long page about taking part becomes the board's plain-English comment rule: each sentence quoted from the page and checked by a second model", async () => {
-  const { facts, repos, vault, clocks, handed } = await world();
+  const { facts, repos, vault, clocks, handed, list } = await world();
   // Intake hands the page to the comment-rules writer when it arrives; the publisher spends no turn on it and never publishes it as a link.
   assert.deepEqual([handed.looked, handed.handed, handed.published], [0, 0, 0], "the page is handed to the comment-rules writer at intake, not published as a link");
   assert.equal((await repos.boxFindings.list())[0]!.value.waitingFor?.reason, COMMENT_SUMMARY_LEAD);
+  assert.equal(await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date(NOW) }), 1, "the page moves to the work list for the comment-rules writer");
   let calls = 0;
   const transportFor = () => async (request: ModelRequest) => {
     calls++;
@@ -60,7 +65,7 @@ test("a long page about taking part becomes the board's plain-English comment ru
     return reply(request, request.tools[0].name === "write_text_translation" ? { text: summary, sentences }
       : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) });
   };
-  const report = await summarizeCommentPages({ repos, facts, vault, clocks, now: NOW, limit: 10, transportFor });
+  const report = await summarizeCommentPages({ repos, list, facts, vault, clocks, now: NOW, limit: 10, transportFor });
   assert.deepEqual([report.looked, report.published, calls], [1, 1, 2], JSON.stringify(report));
   const rows = await facts.query(`SELECT e.id, f.field, f.value_text, f.quote, f.status, f.produced_by, s.url FROM fact f JOIN entity e ON e.id = f.entity_id JOIN source_copy s ON s.id = f.source_copy_id
     WHERE e.parent_id = $1 ORDER BY f.field`, [BREWTON]);
@@ -68,29 +73,30 @@ test("a long page about taking part becomes the board's plain-English comment ru
     [`${BREWTON}#governing`, "comment:detail", "live", URL], [`${BREWTON}#governing`, "comment:period", "live", URL]]);
   assert.equal(rows[0]!.value_text, summary);
   assert.equal(rows[0]!.quote, RULES[0], "the fact quotes the page's own passage");
-  assert.equal((await repos.boxFindings.list())[0]!.value.state, "built");
+  assert.equal((await facts.query("SELECT status FROM work WHERE kind = 'fact'"))[0]!.status, "done");
 });
 
 test("a sentence the checker will not support, or a quote that is not on the page, publishes nothing and the page waits", async () => {
   for (const mode of ["unsupported", "invented quote"] as const) {
-    const { facts, repos, vault, clocks } = await world();
+    const { facts, repos, vault, clocks, list } = await world();
+    await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date(NOW) });
     const transportFor = () => async (request: ModelRequest) => {
       const sentences = RULES.map(text => ({ field: "text", text, quote: mode === "invented quote" ? `${text} Fees apply.` : text }));
       return reply(request, request.tools[0].name === "write_text_translation" ? { text: summary, sentences }
         : { checked: sentences.map(({ field, text }, at) => ({ field, text, supported: at !== 1 })) });
     };
-    const report = await summarizeCommentPages({ repos, facts, vault, clocks, now: NOW, limit: 10, transportFor });
+    const report = await summarizeCommentPages({ repos, list, facts, vault, clocks, now: NOW, limit: 10, transportFor });
     assert.equal(report.published, 0, mode);
     assert.deepEqual(await facts.query("SELECT 1 FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1", [BREWTON]), [], mode);
-    const [row] = await repos.boxFindings.list();
-    assert.equal(row!.value.state, "waiting", mode);
-    assert.equal(row!.value.attempts.at(-1)?.outcome, "failed", mode);
+    const [row] = await facts.query("SELECT status, refusal FROM work WHERE kind = 'fact'");
+    assert.deepEqual([row!.status, typeof row!.refusal], ["waiting", "string"], mode);
   }
 });
 
 test("when paid model work is closed the page waits and nothing is published", async () => {
-  const { facts, repos, vault, clocks } = await world();
-  const report = await summarizeCommentPages({ repos, facts, vault, clocks, now: NOW, limit: 10, transportFor: () => async () => { throw new Error("The owner's model ceiling is reached"); } });
+  const { facts, repos, vault, clocks, list } = await world();
+  await moveBoxLinks({ box: repos.boxFindings, list, now: () => new Date(NOW) });
+  const report = await summarizeCommentPages({ repos, list, facts, vault, clocks, now: NOW, limit: 10, transportFor: () => async () => { throw new Error("The owner's model ceiling is reached"); } });
   assert.deepEqual([report.published, Object.keys(report.held).length], [0, 1]);
-  assert.equal((await repos.boxFindings.list())[0]!.value.waitingFor?.reason, COMMENT_SUMMARY_LEAD);
+  assert.equal((await facts.query("SELECT status FROM work WHERE kind = 'fact'"))[0]!.status, "waiting");
 });

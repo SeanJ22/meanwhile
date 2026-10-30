@@ -1,3 +1,4 @@
+import type { WorkList } from "../../core/work.ts";
 import { findHeldCapture, readHeldBytes, type HeldVaultArtifact, type VaultIndex } from "../evidence/read-only-vault.ts";
 import { readByKeys, type ControlPlaneRepositories } from "../repository/types.ts";
 import {
@@ -40,6 +41,7 @@ export async function withinWallTime<T>(work: Promise<T>, ms: number): Promise<{
 
 interface CampaignSiteCycleInput {
   readonly repos: ControlPlaneRepositories;
+  readonly list: WorkList;
   readonly subjects: ReadonlyMap<string, CampaignSiteSubject>;
   /** Candidacies whose promoted profile already carries a campaign link: their leads are read after every other candidacy's. */
   readonly linkedCandidacies?: ReadonlySet<string>;
@@ -109,6 +111,7 @@ export async function runCampaignSiteCycle(input: CampaignSiteCycleInput): Promi
   });
   const chain = await projectCampaignSiteChains(input.repos, {
       subjects: input.subjects,
+      list: input.list,
       linkedCandidacies: input.linkedCandidacies,
       marginalia: input.marginalia,
       readLead,

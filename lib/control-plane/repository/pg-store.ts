@@ -12,6 +12,7 @@ import { archivedAggregateRepository, createPgDispatchState, workItemStateFilter
 import { pgSpendRepository } from "./model-charges.ts";
 import { pgControlReadsBackfill } from "./control-reads-backfill.ts";
 import { PUBLISHER, type BoxFinding, type BoxRepository } from "../box.ts";
+import { SITE_WALK_LEAD } from "../../facts/finding-slots.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
@@ -1037,10 +1038,13 @@ export const BOX_DUE_SQL = `WITH RECURSIVE slotted AS (
   ORDER BY turn, rank, id LIMIT $3`;
 const BOX_WAITING_SQL = `SELECT id FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
 
-// A government's boards are every subject from `<government>` up to `<government>#...`; the store collates in C, so `#` then `$` bounds them in the subject index.
-const BOX_UNDER_SQL = `WITH under AS MATERIALIZED (SELECT id, value FROM cp_box_findings
-    WHERE value #>> '{subjectId}' = $3 OR (value #>> '{subjectId}' > $3 || '#' AND value #>> '{subjectId}' < $3 || '$'))
-  SELECT id FROM under WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
+export const BOX_LINKS_SQL = `SELECT id, value->'fact'->>'value' AS url, value->>'subjectId' AS subject_id, value->>'sourceUrl' AS found_on, value->>'lastRecordedAt' AS found_at,
+  substr(value #>> '{origins,0,resultKey}', 13) AS government_id, left(value #>> '{origins,0,resultKey}', 12) AS result_kind
+  FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
+/** Findings moved to the work list leave the Box in one statement, the way a builder's finish does. */
+export const BOX_MOVED_SQL = `UPDATE cp_box_findings SET revision = revision + 1, updated_at = $2::timestamptz,
+  value = value || jsonb_build_object('state', 'built', 'claim', null, 'refusal', null, 'publicationId', null, 'buildResultId', 'lead')
+  WHERE id = ANY($1::text[]) AND value->>'state' = 'waiting' RETURNING id`;
 
 function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1050,8 +1054,10 @@ function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxReposit
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
     due: async ({ slots, now, limit }) => rows("boxDue",BOX_DUE_SQL,[JSON.stringify(slots),now,Math.max(0,Math.trunc(limit))]),
     waitingFor: async (reason, limit, subjectIds) => rows("boxWaitingFor",BOX_WAITING_SQL,[reason,Math.max(0,Math.trunc(limit)),subjectIds??null]),
-    waitingUnder: async (reason, limit, governmentIds) => (await Promise.all([...new Set(governmentIds)].map(async id =>
-      rows("boxWaitingUnder",BOX_UNDER_SQL,[reason,Math.max(0,Math.trunc(limit)),id])))).flat(),
+    waitingLinks: async limit => (await run("boxWaitingLinks", "PAGE", BOX_LINKS_SQL, [SITE_WALK_LEAD, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]).map(row => ({
+      id: String(row.id), url: String(row.url ?? ""), subjectId: String(row.subject_id), foundOn: row.found_on as string | null, foundAt: String(row.found_at),
+      governmentId: row.result_kind === "hunt:packet:" ? String(row.government_id) : null })),
+    moved: async (ids, now) => ids.length ? (await run("boxMoved", "POINT", BOX_MOVED_SQL, [ids, now]) as unknown[]).length : 0,
   };
 }
 

@@ -26,7 +26,7 @@ export interface LdaRoster { versionId: string; members: LdaRosterMember[] }
 export type LdaHonoreeJoin =
   | { status: "JOINED"; rosterVersionId: string; matchedName: string; nameForm: string; rules: string[];
       chamber: "senate" | "house"; state: string; sourceUrl: string; sourceOrg: string; checkedAt: string }
-  | { status: "UNJOINED"; reason: "NO_HONOREE" | "NO_CONTRIBUTIONS" | "ROSTER_UNAVAILABLE" | "NO_MATCH" | "AMBIGUOUS_MATCH"; detail: string };
+  | { status: "UNJOINED"; reason: "NO_HONOREE" | "NO_CONTRIBUTIONS" | "ROSTER_UNAVAILABLE" | "NO_MATCH" | "NAME_ONLY" | "AMBIGUOUS_MATCH"; detail: string };
 export interface FederalFact {
   id: string;
   kind: "MEMBER" | "BILL" | "COMMITTEE_REFERRAL" | "BILL_TEXT" | "BILL_TEXT_LINK" | "RULE" | "LOBBYING_CONTRIBUTION" | "UNPARSED";

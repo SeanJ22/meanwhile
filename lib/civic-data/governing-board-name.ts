@@ -151,3 +151,7 @@ export function governingBoardName(raw: string, context: GoverningContext = {}):
 }
 
 export const isGoverningBoardName = (raw: string, context: GoverningContext = {}): boolean => governingBoardName(raw, context) !== null;
+
+/** What a government's id says about its kind, for reading a body's name against it. */
+export const governingContext = (id: string, name: string | null): GoverningContext =>
+  ({ name, school: /:(?:school|depschool):|school_district:|:nces:/.test(id), special: /:special:/.test(id), county: /:county:|\/county:[^/]+$/.test(id) });

@@ -76,6 +76,10 @@ export interface ClaimWhere {
   readonly state?: string;
   /** Only rows a plain-code worker can do: no paid model is needed. */
   readonly plainOnly?: boolean;
+  /** Only the rows this reader takes (a kind of website, or a handoff); the row's value names it. */
+  readonly platform?: string;
+  /** Only rows about these subjects. */
+  readonly subjects?: readonly string[];
   /** Rows marked unpaid (`value.paid` false) are served only for these subjects, the places money was pointed at; absent means no such limit. */
   readonly fundedSubjects?: readonly string[];
 }
@@ -191,6 +195,14 @@ export const WORK_DDL = [
     FOR EACH STATEMENT EXECUTE FUNCTION work_waiting_count()`,
 ] as const;
 
+/** Links wait for the reader of their kind of website: one index serves each kind's claim in tier order, newest first. Applied by bootstrap and by the SPN-01F migration. */
+export const LEAD_DDL = [
+  `CREATE INDEX IF NOT EXISTS work_lead_claim ON work ((value->>'platform'), work_tier_rank(tier), priority DESC, due_at, id) WHERE kind = 'lead' AND status = 'waiting'`,
+] as const;
+
+/** A link found later is read first within its tier: its priority is the seconds since 2026 began, which fit the column until 2094. */
+export const newestFirst = (foundAt: string): number => Math.max(0, Math.floor((Date.parse(foundAt) - Date.UTC(2026, 0, 1)) / 1000));
+
 function row(raw: Record<string, unknown>): WorkRow {
   const date = (at: unknown) => at === null || at === undefined ? null : new Date(at as string | Date).toISOString();
   return { id: String(raw.id), kind: raw.kind as WorkKind, tier: raw.tier as WorkTier, priority: Number(raw.priority), state: String(raw.state),
@@ -239,7 +251,9 @@ export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
     AND ($6::text IS NULL OR starts_with(subject_id,$6))
     AND ($7::text IS NULL OR state = $7)
     AND ($8::boolean IS NOT TRUE OR value->>'plain' = 'true')
-    AND ($9::text[] IS NULL OR value->>'paid' IS DISTINCT FROM 'false' OR subject_id = ANY($9::text[]))
+    AND ($9::text IS NULL OR value->>'platform' = $9)
+    AND ($10::text[] IS NULL OR subject_id = ANY($10))
+    AND ($11::text[] IS NULL OR value->>'paid' IS DISTINCT FROM 'false' OR subject_id = ANY($11::text[]))
   ORDER BY work_tier_rank(tier), priority DESC, due_at, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -451,11 +465,19 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
         taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
-          where.plainOnly ?? null, where.fundedSubjects ?? null])).map(row));
+          where.plainOnly ?? null, where.platform ?? null, where.subjects ?? null, where.fundedSubjects ?? null])).map(row));
       }
       taken.sort(IN_TIER_ORDER);
       for (const extra of taken.splice(n)) await release(extra);
       return taken;
+    },
+    /** Which of these kinds of website holds the link a claim would serve first: the lowest tier, then the newest. Null when none has one waiting. */
+    async firstPlatform(platforms: readonly string[]): Promise<string | null> {
+      const [first] = await query(`SELECT p.platform FROM unnest($1::text[]) AS p(platform) CROSS JOIN LATERAL (
+          SELECT work_tier_rank(tier) AS rank, priority, due_at, id FROM work WHERE kind = 'lead' AND status = 'waiting' AND due_at <= $2::timestamptz
+            AND value->>'platform' = p.platform ORDER BY work_tier_rank(tier), priority DESC, due_at, id LIMIT 1
+        ) head ORDER BY head.rank, head.priority DESC, head.due_at, head.id LIMIT 1`, [platforms, timestamp()]);
+      return first ? String(first.platform) : null;
     },
     /** Whether a claim of these kinds would find a row: one waiting and due, or one whose lease has run out. */
     async ready(kinds: readonly WorkKind[], where: ClaimWhere = {}): Promise<boolean> {

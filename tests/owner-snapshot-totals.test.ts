@@ -690,3 +690,67 @@ test("assignment membership seeks transfer keys before any saved row body is loa
   for(const seek of[{members:["member"]},{clauses:["obligation"]},{dueAt:T1}])assert.deepEqual(await rows.find(seek),["held"]);
   assert.ok(queries.every(text=>/^SELECT id FROM cp_owner_assignment_rows/.test(text)));
 });
+
+test("native assignment heads match full indexes through archive joins, renewed leases and outcome ties",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite"),db=new PGlite();
+  const {pgOwnerAssignmentHeads}=await import("../lib/control-plane/repository/owner-assignment-heads.ts");
+  const {deriveAssignmentEntriesFromHeads}=await import("../lib/control-plane/assignment-view.ts");
+  try{
+    for(const name of["work_items","route_tasks","occurrences"]){
+      for(const suffix of["","_archive"])await db.exec(`CREATE TABLE cp_${name}${suffix}(id text PRIMARY KEY,revision bigint NOT NULL,value jsonb NOT NULL)`);
+      await db.exec(`CREATE VIEW cp_${name}_history AS SELECT * FROM cp_${name} UNION ALL SELECT * FROM cp_${name}_archive`);
+    }
+    for(const name of["obligations","debts","leases","attempts"])await db.exec(`CREATE TABLE cp_${name}(id text PRIMARY KEY,revision bigint NOT NULL,value jsonb NOT NULL)`);
+    await db.exec("CREATE TABLE cp_owner_assignment_rows(id text PRIMARY KEY,members jsonb NOT NULL)");
+    for(const name of["artifacts","worker_results","scout_results"])await db.exec(`CREATE TABLE cp_log_${name}(log_key text NOT NULL,position bigint NOT NULL,record jsonb NOT NULL,PRIMARY KEY(log_key,position))`);
+    const repos=createMemoryRepositories(),world=initialWorld(),parent=world.workItems[0];
+    world.workItems[0]={...parent,publicationOutcome:{...parent.publicationOutcome!,bodyIds:["body-good"]}};
+    world.workItems.push(workItem("valid-directory",`${obligationId(1)}#1`,{subject:parent.subject,directoryParent:{workItemId:parent.id,bodyId:"body-good",versionId:"v"},
+      autonomousPlan:{publication:{bodyId:"body-good"}} as never}),workItem("valid-repair",`${obligationId(1)}#1`,{subject:parent.subject,
+      ...{planRepair:{parentWorkItemId:parent.id,authority:"WORK_INSTRUCTIONS_ONLY"}}} as Partial<WorkItem>));
+    for(const[id,other]of[["cycle-a","cycle-b"],["cycle-b","cycle-a"]])world.workItems.push(workItem(id,"cycle",{subject:"same",...{planRepair:{parentWorkItemId:other,authority:"WORK_INSTRUCTIONS_ONLY"}}} as Partial<WorkItem>));
+    for(const[id,other]of[["directory-cycle-a","directory-cycle-b"],["directory-cycle-b","directory-cycle-a"]])world.workItems.push(workItem(id,`${obligationId(1)}#1`,{subject:"same",
+      directoryParent:{workItemId:other,bodyId:"cycle-body",versionId:"v"},autonomousPlan:{publication:{bodyId:"cycle-body"}} as never,
+      publicationOutcome:{status:"PUBLISHED",at:T1,bodyIds:["cycle-body"]} as never}));
+    world.workItems.push(workItem("head-ties","ties"));
+    const earlier=round(world,"head-ties","earlier",{worker:MODEL,startedAt:at(T1,-2),obligation:"zz-ties"});
+    round(world,"head-ties","later",{worker:PLAIN,startedAt:at(T1,-1)});
+    world.attempts[world.attempts.indexOf(earlier)]={...earlier,endedAt:at(T1,-.5)};
+    const scout=world.scouts.find(row=>row.attemptId===earlier.id)!;
+    world.scouts.push({...scout,recordedAt:at(T1,-.1),outcome:"EVIDENCE_FOUND",findings:[{}] as never},{...scout,recordedAt:at(T1,-.1),outcome:"NO_PROGRESS"});
+    world.workItems.push(workItem("head-worker","worker ties"));
+    const workerAttempt=round(world,"head-worker","worker",{worker:PLAIN,startedAt:at(T1,-1)}),worker=parserResult(workerAttempt);
+    world.workerResults.push({...worker,id:"worker-one",endedAt:at(T1,-.01)},
+      {...worker,id:"worker-two",endedAt:at(T1,-1),result:{...worker.result,verdict:"FAILED",blockers:[{description:"last slot wins"}]} as never});
+    world.artifacts.push({...world.artifacts[0],artifactId:"invalid-time",workItemId:"head-worker",recordedAt:"not-a-time"});
+    // Append identities are distinct even when multiple Scout results describe one attempt.
+    const extra=world.scouts.splice(-2);await seed(repos,world);
+    for(const[i,row]of extra.entries())await repos.scoutResults.append(row.obligationId,`tie-${i}`,row,row.recordedAt);
+    const src=await sourcesAt(repos,T1,null),source=(name:keyof AssignmentSources)=>src[name] as readonly {id?:string;obligationId?:string;routeTaskId?:string}[];
+    for(const [name,key]of[["obligations","obligations"],["debts","debts"],["leases","leases"],["attempts","attempts"],["work_items","workItems"],["route_tasks","routeTasks"],["occurrences","occurrences"]]as const){
+      for(const[i,row]of source(key).entries())await db.query(`INSERT INTO cp_${name}${["work_items","route_tasks","occurrences"].includes(name)&&i%2?"_archive":""}(id,revision,value) VALUES($1,2,$2::jsonb)`,
+        [name==="debts"?row.obligationId:name==="leases"?row.routeTaskId:row.id,JSON.stringify(row)]);
+    }
+    const logs={artifacts:src.artifacts.map(record=>({key:record.workItemId,record})),worker_results:src.workerResults.map(record=>({key:record.workItemId,record})),
+      scout_results:src.scoutResults.map(record=>({key:record.obligationId,record}))};
+    for(const[name,rows]of Object.entries(logs)){const positions=new Map<string,number>();for(const row of rows){const pos=(positions.get(row.key)??0)+1;positions.set(row.key,pos);
+      await db.query(`INSERT INTO cp_log_${name}(log_key,position,record) VALUES($1,$2,$3::jsonb)`,[row.key,pos,JSON.stringify(row.record)]);}}
+    const reader=pgOwnerAssignmentHeads({query:async(text,params=[])=>{return(await db.query(text,[...params])).rows;}});
+    const seeds={groups:[],obligations:src.obligations.map(row=>row.id),workItems:src.workItems.map(row=>row.id)};
+    for(const now of[T1,at(T1,2),T2,T3]){
+      if(now===at(T1,2)){
+        const renewed=src.leases!.find(row=>row.expiresAt===at(T1,1))!;(renewed as {expiresAt:string}).expiresAt=at(T1,5);
+        await db.query("UPDATE cp_leases SET value=$2::jsonb,revision=revision+1 WHERE id=$1",[renewed.routeTaskId,JSON.stringify(renewed)]);
+      }
+      const expected=deriveAssignmentEntries({...src,nowIso:now}),batch=await reader.read(seeds,now),actual=deriveAssignmentEntriesFromHeads(batch.heads,now);
+      assert.deepEqual([...actual.keys()].sort(),[...expected.keys()].sort(),now);
+      for(const[id,entry]of expected){assert.deepEqual(actual.get(id),{index:entry.index,horizon:entry.horizon,obligation:entry.obligation},`${now}: ${id}`);
+        assert.deepEqual([...(batch.members.get(id)??[])].sort(),[...entry.members].sort(),`membership: ${id}`);}
+    }
+    const expected=deriveAssignmentEntries({...src,nowIso:T1}),wanted=[obligationId(0),"head-worker","cycle-a"];
+    for(const[id,entry]of expected)await db.query("INSERT INTO cp_owner_assignment_rows(id,members) VALUES($1,$2::jsonb)",[id,JSON.stringify(entry.members)]);
+    const cold=await reader.read({groups:wanted,obligations:[],workItems:[]},T1),actual=deriveAssignmentEntriesFromHeads(cold.heads,T1);
+    assert.deepEqual([...actual.keys()].sort(),[...wanted].sort(),"cold group reads find their saved members beside the source rows");
+    for(const id of wanted)assert.deepEqual(actual.get(id),((entry)=>({index:entry.index,horizon:entry.horizon,obligation:entry.obligation}))(expected.get(id)!));
+  }finally{await db.close();}
+});

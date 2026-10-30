@@ -966,6 +966,7 @@ export const placeBoundaries = pgTable("place_boundary", {
   sourceUrls: jsonb("source_urls").notNull().default([]), checkedAt: timestamp("checked_at", { withTimezone: true }).notNull(),
 }, t => [primaryKey({ columns: [t.placeId, t.boundaryYear] }), index("place_boundary_point_idx").using("gist", t.bounds),
   index("place_boundary_host_idx").on(t.hostCountyId).where(sql`${t.countyAttachment}`),
+  index("place_boundary_host_county_ref").on(t.hostCountyId).where(sql`${t.hostCountyId} IS NOT NULL`),
   check("place_boundary_shape_bounds", sql`(${t.geometry} IS NULL) = (${t.bounds} IS NULL)`),
   check("place_boundary_county_attachment", sql`NOT ${t.countyAttachment} OR (${t.hostCountyId} IS NOT NULL AND ${t.geometry} IS NULL)`)]);
 export const placeMapCountCache = pgTable("place_map_counts", {

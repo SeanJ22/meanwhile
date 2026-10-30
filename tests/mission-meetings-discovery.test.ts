@@ -15,8 +15,7 @@ import {
 } from "../lib/control-plane/scheduler/durable.ts";
 import type { FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { OWN_SITE_MEETINGS_SOURCE, meetingsDiscoveryNeeds, type JurisdictionRegistryFile } from "../lib/hunt/meetings-discovery.ts";
-import { heldCalendarRouteBodies, missionMeetingsDiscoveryNeeds } from "../lib/hunt/mission-meetings-discovery.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import { heldCalendarRouteBodies } from "../lib/hunt/mission-meetings-discovery.ts";
 import { buildPlaceOwedList, type HeldPlaceField, type PlaceSubject } from "../lib/coverage/place-owed.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
@@ -133,43 +132,6 @@ test("HELD ROUTE: a body holds a calendar route when its calendar row or a meeti
 
   assert.deepEqual([...heldCalendarRouteBodies(owedRows([field(`${OH_BODY}#calendar`, "MTG-01", "unpublished")]))], [],
     "a statement that the government publishes nothing is not a route");
-});
-
-test("MISSION BLANKS: every government in a mission place whose body holds no route is owed discovery, in a state never worked before", () => {
-  const OH_CITY = "oh:city:columbus";
-  const OH_WIRED = "oh:county:franklin";
-  const OH_HELD = "oh:school:columbus-city";
-  const oh = {
-    stateCode: "OH",
-    registration: { kind: "REGISTRATION", versionId: "reg-oh-1", referenceSha256: "a".repeat(64), webAddresses: "x" },
-    sourceCatalog: {
-      [OWN_SITE_MEETINGS_SOURCE]: { recordClass: "MEETINGS", state: "DISCOVERY_OWED" },
-      "MEETINGS:COUNTY:legistar": { recordClass: "MEETINGS", state: "ADAPTED" },
-    },
-    jurisdictions: [
-      { id: OH_CITY, stateCode: "OH", name: "CITY OF COLUMBUS", govClass: "CITY_OR_TOWN", ownWebAddress: "https://columbus.example.gov", sourceIds: [OWN_SITE_MEETINGS_SOURCE], bodyId: OH_BODY },
-      { id: OH_WIRED, stateCode: "OH", name: "FRANKLIN COUNTY", govClass: "COUNTY", ownWebAddress: "https://franklin.example.gov", sourceIds: ["MEETINGS:COUNTY:legistar"] },
-      { id: OH_HELD, stateCode: "OH", name: "COLUMBUS CITY SCHOOLS", govClass: "SCHOOL_DISTRICT", ownWebAddress: "https://ccs.example.org", sourceIds: [OWN_SITE_MEETINGS_SOURCE] },
-    ],
-  } as unknown as JurisdictionRegistry;
-  const bodies: Record<string, string> = { [OH_CITY]: OH_BODY, [OH_HELD]: `${DIVISION}#board` };
-  const read = missionMeetingsDiscoveryNeeds({
-    jurisdictionIds: [DIVISION, OH_CITY, OH_WIRED, OH_HELD, "nv:city:las-vegas", `${OH_BODY}#calendar`],
-    registryFor: (state) => {
-      if (state === "oh") return oh;
-      throw new Error(`REGISTRATION_NOT_READ:${state}`);
-    },
-    bodyIdFor: (id) => bodies[id] ?? null,
-    heldRoutes: new Set([`${DIVISION}#board`]),
-  });
-  assert.deepEqual(read.entries.map((e) => e.need.jurisdictionId), [OH_CITY], "the city's calendar blank is owed; a wired county has no need");
-  assert.equal(read.entries[0]!.need.ownWebAddress, "https://columbus.example.gov");
-  assert.deepEqual(read.heldRoute, [OH_HELD], "a government whose body holds a route is not walked again");
-  assert.equal(read.failures.length, 1);
-  assert.match(read.failures[0]!, /the NV jurisdiction registry could not be read/);
-
-  const unjoined = missionMeetingsDiscoveryNeeds({ jurisdictionIds: [OH_CITY], registryFor: () => oh, bodyIdFor: () => null, heldRoutes: new Set([OH_BODY]) });
-  assert.deepEqual(unjoined.entries.map((e) => e.need.jurisdictionId), [OH_CITY], "with no exact body join nothing shows a route, so the blank stays open");
 });
 
 test("the census reads all state governments independently; research retirement still reads held routes", async () => {

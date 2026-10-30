@@ -19,7 +19,6 @@ import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { FIRST_BACKOFF_MINUTES, recordFailure, type FreshnessDebt } from "../scheduler/debt.ts";
 import { isRetiredRoutineMeetingAcquisition, scheduleAutonomousAcquisition, type AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { isScheduled } from "../scheduler/obligation.ts";
-import type { FreshnessObligation } from "../scheduler/obligation.ts";
 import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import type { AcquirerTaskSpec } from "./research-types.ts";
 import type { WorkerResultRecord } from "./types.ts";
@@ -54,56 +53,6 @@ export interface AutonomousDecision {
 export function autonomousCycleAllowed(input: { readonly dry: boolean; readonly canary: boolean;
   readonly only: string | null; readonly ids: ReadonlySet<string> | null; readonly runnerPaused: boolean }): boolean {
   return !input.dry && !input.canary && input.only === null && input.ids === null && !input.runnerPaused;
-}
-
-export function exactInstructionAutonomousWorkIds(input: {
-  obligations: readonly FreshnessObligation[]; occurrences: readonly FreshnessOccurrence[];
-  workItems: readonly WorkItem[]; assignmentKey: string; receiptId: string;
-}): ReadonlySet<string> {
-  const owners = new Map(input.obligations.map(row => [row.id, row] as const));
-  const roots = new Set<string>();
-  const conflicted = new Set<string>();
-  const occurrenceCounts = new Map<string, number>();
-  for (const occurrence of input.occurrences) {
-    const count = (occurrenceCounts.get(occurrence.workItemId) ?? 0) + 1;
-    occurrenceCounts.set(occurrence.workItemId, count);
-    // Normal IDs include the occurrence sequence; duplicate ownership of one
-    // WorkItem is inconsistent retained data, never a reason to pick a receipt.
-    if (count > 1) { conflicted.add(occurrence.workItemId); continue; }
-    const openedAt = Date.parse(occurrence.openedAt);
-    if (!Number.isFinite(openedAt)) { conflicted.add(occurrence.workItemId); continue; }
-    const marks = (owners.get(occurrence.obligationId)?.assignments ?? [])
-      .filter(mark => mark.assignmentKey === input.assignmentKey);
-    if (marks.some(mark => !Number.isFinite(Date.parse(mark.at)))) { conflicted.add(occurrence.workItemId); continue; }
-    const effective = marks.filter(mark => Date.parse(mark.at) <= openedAt);
-    if (!effective.length) continue;
-    const latestAt = Math.max(...effective.map(mark => Date.parse(mark.at)));
-    const latestRefs = new Set(effective.filter(mark => Date.parse(mark.at) === latestAt).map(mark => mark.ref));
-    if (latestRefs.size !== 1) { conflicted.add(occurrence.workItemId); continue; }
-    if (latestRefs.has(input.receiptId)) roots.add(occurrence.workItemId);
-  }
-  const byId = new Map(input.workItems.map(item => [item.id, item] as const));
-  const admitted = new Set<string>();
-  for (const item of input.workItems) {
-    const explicit = item.autonomousPlan?.ownerInstructions?.includes(input.receiptId) === true;
-    let current: WorkItem | undefined = item;
-    const seen = new Set<string>();
-    let inherited = false;
-    let ambiguous = false;
-    while (current && !seen.has(current.id)) {
-      if (conflicted.has(current.id)) { ambiguous = true; break; }
-      if (roots.has(current.id)) inherited = true;
-      seen.add(current.id);
-      const link: { readonly parentWorkItemId: string; readonly authority: string } | undefined =
-        (current as WorkItem & { readonly planRepair?: {
-        readonly parentWorkItemId: string; readonly authority: string;
-      } }).planRepair;
-      const parent: WorkItem | undefined = link?.authority === "WORK_INSTRUCTIONS_ONLY" ? byId.get(link.parentWorkItemId) : undefined;
-      current = parent?.project === item.project && parent.subject === item.subject ? parent : undefined;
-    }
-    if (!ambiguous && (explicit || inherited)) admitted.add(item.id);
-  }
-  return admitted;
 }
 
 export function assertAutonomousPlanIdentity(item: WorkItem, plan: AutonomousWorkPlan): void {

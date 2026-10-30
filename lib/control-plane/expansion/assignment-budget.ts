@@ -1,6 +1,5 @@
 import type { AssignmentCompletion } from "../assignment-completion.ts";
 import { isFundedHunt } from "../scheduler/hunt-continuation.ts";
-import { aggregatePricedSpend, type PricedCharge } from "../fleet-safety.ts";
 import type { SpendQuery, SpendRepository } from "../spend-window.ts";
 import type { ObligationAssignment } from "../scheduler/obligation.ts";
 import type { ResearchIntent } from "../scheduler/research-policy.ts";
@@ -157,38 +156,6 @@ export interface AssignmentSpend {
   readonly unmeasured: number;
   /** Of the rows counted, how many named no obligation and were counted by their subject. */
   readonly bySubject: number;
-}
-
-/** One assignment's model-backed spend in a window, by the rule in the header. */
-export function assignmentSpend(charges: readonly PricedCharge[], members: AssignmentMembers, since: string, until: string): AssignmentSpend {
-  const joinedAt = new Map<string, number>();
-  const subjectJoinedAt = new Map<string, number>();
-  for (const m of [...members.created.values(), ...members.reordered.values()]) {
-    const t = Date.parse(m.joinedAt);
-    joinedAt.set(m.obligationId, t);
-    subjectJoinedAt.set(m.subjectId, Math.min(subjectJoinedAt.get(m.subjectId) ?? Number.POSITIVE_INFINITY, t));
-  }
-  const byObligation: PricedCharge[] = [];
-  const bySubject: PricedCharge[] = [];
-  for (const entry of charges) {
-    const at = Date.parse(entry.at);
-    if (entry.obligationId !== null) {
-      const joined = joinedAt.get(entry.obligationId);
-      if (joined !== undefined && at >= joined) byObligation.push(entry);
-      continue;
-    }
-    const joined = entry.jurisdiction === null ? undefined : subjectJoinedAt.get(entry.jurisdiction);
-    if (joined !== undefined && at >= joined) bySubject.push(entry);
-  }
-  /* The Fleet's own model-backed and window rule, for both halves. */
-  const named = aggregatePricedSpend(byObligation, since, until);
-  const unnamed = aggregatePricedSpend(bySubject, since, until);
-  return {
-    usd: named.usd === null || unnamed.usd === null ? null : named.usd + unnamed.usd,
-    measured: named.measured + unnamed.measured,
-    unmeasured: named.unmeasured + unnamed.unmeasured,
-    bySubject: unnamed.measured + unnamed.unmeasured,
-  };
 }
 
 /* ------------------------------------------------------------ the gate */

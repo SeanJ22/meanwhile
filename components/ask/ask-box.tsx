@@ -311,7 +311,7 @@ export function AskBox({
     try {
       const response = await fetch("/api/ask/grounded", {
         method: "POST",
-        headers: { "content-type": "application/json", "x-wtp-time-zone": Intl.DateTimeFormat().resolvedOptions().timeZone },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({
           question,
           confirmation,

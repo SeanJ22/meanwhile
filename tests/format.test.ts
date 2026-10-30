@@ -8,7 +8,10 @@ import {
   locationLine,
   meetingHeadline,
 } from "../lib/map/format.ts";
+import { statedVenueText } from "../lib/meetings/online.ts";
+import { isTestSitting } from "../lib/meetings/placeholder.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { plainText } from "../lib/text/plain-text.ts";
 
 /** A source that titles the sitting without a body name and publishes the address as the venue name renders one what-first headline over one address line. */
 
@@ -70,14 +73,33 @@ test("BC-12: dates spell out, including inside ranges", () => {
 });
 
 
-test("meeting dates and clocks follow the reader across midnight and daylight saving", () => {
-  const meeting = meetingWith({ startsAt: "2026-11-01T06:30:00.000Z", timeZone: "UTC" });
-  assert.equal(formatMeetingDate(meeting, "America/Los_Angeles"), "Sat, October 31st, 2026");
-  assert.match(formatMeetingTime(meeting, "America/Los_Angeles"), /^11:30 PM PDT$/);
-  assert.equal(formatMeetingDate(meeting, "America/New_York"), "Sun, November 1st, 2026");
-  assert.match(formatMeetingTime(meeting, "America/New_York"), /^1:30 AM EST$/);
-  assert.match(formatMeetingTime(meeting, "Europe/Berlin"), /^7:30 AM GMT\+1$/);
-  const dayOnly = meetingWith({ startsAt: "2026-11-01T00:00:00.000Z", timeZone: "UTC", startPrecision: "DAY" });
-  assert.equal(formatMeetingDate(dayOnly, "America/Los_Angeles"), "Sun, November 1st, 2026");
-  assert.equal(formatMeetingTime(dayOnly, "America/Los_Angeles"), "Time not posted — check the agenda");
+test("a meeting reads on its own body's clock, with the zone, wherever the reader is", () => {
+  const meeting = meetingWith({ startsAt: "2026-11-01T06:30:00.000Z", timeZone: "America/Los_Angeles" });
+  assert.equal(formatMeetingDate(meeting), "Sat, October 31st, 2026");
+  assert.equal(formatMeetingTime(meeting), "11:30 PM PDT");
+  assert.equal(formatMeetingTime(meetingWith({ startsAt: "2026-08-11T16:30:00Z", timeZone: "America/Los_Angeles" })), "9:30 AM PDT");
+  assert.equal(formatMeetingTime(meetingWith({ startsAt: "2026-11-18T23:00:00Z", timeZone: "America/Phoenix" })), "4:00 PM MST");
+  const dayOnly = meetingWith({ startsAt: "2026-11-01T00:00:00.000Z", timeZone: "America/Los_Angeles", startPrecision: "DAY" });
+  assert.equal(formatMeetingDate(dayOnly), "Sat, October 31st, 2026");
+  assert.equal(formatMeetingTime(dayOnly), "Time not posted — check the agenda");
+});
+
+test("a venue pasted as markup reads as plain text, and a placeholder venue names no place", () => {
+  const pasted = '<p data-pasted="true">Cochise County Complex<br>1415 W. Melody Lane<br>Bisbee, Arizona 85603</p><p>or virtually</p>'
+    + '<div style=\'font-size: 20px;\'><a href="https://teams.microsoft.com/l/x" target="_blank"><u>Join the meeting now</u></a></div>';
+  const line = locationLine(pasted, pasted);
+  assert.ok(!/[<>]|style=|data-pasted/.test(line), line);
+  assert.match(line, /Cochise County Complex, 1415 W\. Melody Lane, Bisbee, Arizona 85603, or virtually, Join the meeting now \(https:\/\/teams\.microsoft\.com\/l\/x\)/);
+  assert.equal(plainText("Parks &amp; Recreation&nbsp;Board"), "Parks & Recreation Board");
+  assert.equal(plainText("AT&T Park <5 minutes away"), "AT&T Park <5 minutes away");
+  assert.equal(plainText("&lt;script&gt;x&lt;/script&gt;"), "<script>x</script>");
+  assert.equal(plainText("<script>alert(1)</script>Room 4<style>p{}</style>"), "Room 4");
+  assert.equal(statedVenueText({ kind: "STATED_NOT_PLACED", publishedText: "TEST", publisher: "x" }), null);
+  assert.equal(statedVenueText({ kind: "STATED_NOT_PLACED", publishedText: "test test test", publisher: "x" }), null);
+  assert.equal(statedVenueText({ kind: "STATED_NOT_PLACED", publishedText: "Testing Center, 4 Main St", publisher: "x" }), "Testing Center, 4 Main St");
+});
+
+test("a sitting the publisher titled as a test is not a meeting; a real title that contains the word is", () => {
+  for (const title of ["Test", "TEST", "Test Meeting", "TEST MEETING", "testing", "Test."]) assert.equal(isTestSitting({ title }), true, title);
+  for (const title of ["Testing Center Advisory Board", "Regular Meeting", "Contest Review Panel", "Board of Supervisors"]) assert.equal(isTestSitting({ title }), false, title);
 });

@@ -75,7 +75,7 @@ export function BallotAsk({
     try {
       const res = await fetch("/api/ask/grounded", {
         method: "POST",
-        headers: { "content-type": "application/json", "x-wtp-time-zone": Intl.DateTimeFormat().resolvedOptions().timeZone },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({
           question,
           confirmation,

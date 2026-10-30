@@ -90,7 +90,6 @@ import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
 import { readableSitting } from "@/lib/ask/meeting-time";
-import { withReaderTimeZone } from "@/lib/ask/reader-clock";
 import { bareNameIsUnheld } from "@/lib/ask/name-lookup";
 import {
   contactForOfficeholder,
@@ -362,13 +361,13 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
   const requestStarted = Date.now();
   const settingsStarted = performance.now();
-  return withReaderTimeZone(request.headers.get("x-wtp-time-zone"), () => withPublishedAskSettings(async () => {
+  return withPublishedAskSettings(async () => {
     const settingsMs = performance.now() - settingsStarted;
     console.log(askModelStartupLine());
     const response = await answerWithSettings(request, requestStarted);
     response.headers.append("Server-Timing", `settings;dur=${Math.round(settingsMs)}`);
     return response;
-  }));
+  });
 });
 
 async function answerWithSettings(request: Request, started: number) {

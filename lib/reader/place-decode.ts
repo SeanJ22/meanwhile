@@ -1,3 +1,4 @@
+import { isTestSitting } from "../meetings/placeholder.ts";
 import { federalMoneyGovernmentDivision } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
@@ -177,7 +178,8 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
       title: String(title.value),startsAt: date.startsAt,timeZone: date.timeZone,...(date.precision ? { startPrecision: date.precision } : {}),location: null,agendaUrl: null,
       jurisdiction: "Local",status: "SCHEDULED",provenance: { sourceUrl,sourceOrg: new URL(sourceUrl).hostname,collectedAt: at,verifiedAt: at } });
   }
-  const overlaid = withSittingFacts(meetings,[...sittings.values()].flat()).sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
+  // A sitting its publisher titled "Test" is a calendar placeholder, not a meeting to attend.
+  const overlaid = withSittingFacts(meetings,[...sittings.values()].flat()).filter(m => !isTestSitting(m)).sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
   const accounting = accountCarriedCollapses(snapshots,snapshots.flatMap(s => s.sources),[...exact.dropped,...merged.dropped]);
   const snapshotHeldAt = snapshots.map(s => s.generatedAt).sort().at(-1) ?? null;
   // The placeholder only satisfies the snapshot shape for the search; readers get `snapshotHeldAt`.

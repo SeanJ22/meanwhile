@@ -1,9 +1,10 @@
 import { formatDateLong } from "../text/format-date.ts";
+import { plainText } from "../text/plain-text.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import type { SittingShape } from "./lexical-reading.ts";
 import { overLengthBudget } from "./length-contract.ts";
 import type { HeldMeetingAction } from "./meeting-outcomes.ts";
-import { displayDate, displayZoneOf, localDate, localTime, startTimePosted, zoneOf } from "./meeting-time.ts";
+import { localDate, localTime, startTimePosted, zoneOf } from "./meeting-time.ts";
 import type { ValidationVerdict } from "./validate.ts";
 
 export interface ComposableSitting {
@@ -19,7 +20,7 @@ export interface ComposableSitting {
 
 export function sittingVenue(sitting: ComposableSitting): string {
   return sitting.location
-    ? [...new Set([sitting.location.name, sitting.location.address].filter(Boolean))].join(", ")
+    ? [...new Set([sitting.location.name, sitting.location.address].map(part => plainText(part ?? "").replace(/\n/g, ", ")).filter(Boolean))].join(", ")
     : "";
 }
 
@@ -182,7 +183,7 @@ export function plainGapStatement(statement: string, zone: string | null): strin
   return statement.replace(new RegExp(ISO_INSTANT_SOURCE, "g"), (_all: string, at: string | undefined, iso: string) => {
     if (!Number.isFinite(Date.parse(iso))) return _all;
     const sitting = { startsAt: iso, timeZone: zone };
-    const day = displayDate(sitting);
+    const day = localDate(sitting);
     return `${at ? "on " : ""}${formatDateLong(day) ?? day} at ${localTime(sitting)}`;
   });
 }
@@ -242,12 +243,12 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
       const chosen = input.sittings[0];
       const meetings = input.records.filter(record => record.kind === "MEETING");
       if (input.sittings.some(sitting => sitting.status === "CANCELED" || !zoneOf(sitting).known ||
-        sitting.timeZone !== chosen.timeZone || localDate(sitting) !== localDate(chosen) || displayDate(sitting) !== displayDate(chosen) ||
+        sitting.timeZone !== chosen.timeZone || localDate(sitting) !== localDate(chosen) ||
         !meetings.some(record => record.id === sitting.id && record.sourceUrl && !record.meetingListingIdentity))) return null;
-      const day = new Intl.DateTimeFormat("en-US", { timeZone: displayZoneOf(chosen).zone, month: "long", day: "numeric",
-        ...(new Date(input.now).getUTCFullYear() !== Number(displayDate(chosen).slice(0, 4)) ? { year: "numeric" } : {}) }).format(new Date(chosen.startsAt));
+      const day = new Intl.DateTimeFormat("en-US", { timeZone: zoneOf(chosen).zone, month: "long", day: "numeric",
+        ...(new Date(input.now).getUTCFullYear() !== Number(localDate(chosen).slice(0, 4)) ? { year: "numeric" } : {}) }).format(new Date(chosen.startsAt));
       const slots = input.sittings.map(sitting => `${eventTitle(sitting.title)}${startTimePosted(sitting)
-        ? ` at ${new Intl.DateTimeFormat("en-US", { timeZone: displayZoneOf(sitting).zone, hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(new Date(sitting.startsAt))}`
+        ? ` at ${new Intl.DateTimeFormat("en-US", { timeZone: zoneOf(sitting).zone, hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(new Date(sitting.startsAt))}`
         : " (time not posted)"}`);
       const answer = `${subjectName} meets on ${day}: ${slots.join("; ")}. We don't have the agenda details yet.`;
       if (overLengthBudget(answer)) return null;
@@ -274,11 +275,11 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   if (!record || record.meetingListingIdentity) return null;
   const upcoming = Date.parse(chosen.startsAt) >= input.now;
   const day = new Intl.DateTimeFormat("en-US", {
-    timeZone: displayZoneOf(chosen).zone, month: "long", day: "numeric",
-    ...(new Date(input.now).getUTCFullYear() !== Number(displayDate(chosen).slice(0, 4)) ? { year: "numeric" } : {}),
+    timeZone: zoneOf(chosen).zone, month: "long", day: "numeric",
+    ...(new Date(input.now).getUTCFullYear() !== Number(localDate(chosen).slice(0, 4)) ? { year: "numeric" } : {}),
   }).format(new Date(chosen.startsAt));
   const time = startTimePosted(chosen) ? ` at ${new Intl.DateTimeFormat("en-US", {
-    timeZone: displayZoneOf(chosen).zone, hour: "numeric", minute: "2-digit", timeZoneName: "short",
+    timeZone: zoneOf(chosen).zone, hour: "numeric", minute: "2-digit", timeZoneName: "short",
   }).format(new Date(chosen.startsAt))}` : "; the start time isn't posted";
   const title = eventTitle(chosen.title);
   const titled = /^(?:the|a|an)\s/i.test(title) ? title : `the ${title}`;

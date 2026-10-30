@@ -1,5 +1,6 @@
 import type { Meeting } from "@/lib/sources/types";
 import { formatDateLong, spellOutDates } from "@/lib/text/format-date";
+import { plainText } from "@/lib/text/plain-text";
 import { readerText } from "@/lib/text/reader-names";
 
 /**
@@ -97,8 +98,8 @@ export function locationLine(
   address: string | null | undefined,
 ): string {
   // Compare the source text, then case what renders: a name that carries the address cases as one.
-  const n = (name ?? "").trim();
-  const a = (address ?? "").trim();
+  const n = plainText(name ?? "").replace(/\n/g, ", ");
+  const a = plainText(address ?? "").replace(/\n/g, ", ");
   if (!n) return readerText(a, "address");
   if (!a || n.includes(a)) return readerText(n, "address");
   if (a.includes(n)) return readerText(a, "address");
@@ -179,10 +180,9 @@ export function formatDateMDY(iso: string): string {
 }
 
 /**
- * Meeting clocks and their calendar dates use the reader's time zone.
- * A caller rendering on the server supplies the reader zone after hydration.
+ * A meeting is shown in its own body's zone, never the reader's: a resident
+ * sees the time on the clock in the room, with its zone ("9:30 AM PDT").
  */
-
 type MeetingFormatters = {
   weekday: Intl.DateTimeFormat;
   date: Intl.DateTimeFormat;
@@ -206,20 +206,14 @@ function formatsForZone(timeZone: string): MeetingFormatters {
 }
 
 export function formatMeetingDate(
-  // Widened to the two fields it reads so other row types share this formatter.
-  meeting: Pick<Meeting, "startsAt" | "timeZone"> & Partial<Pick<Meeting, "startPrecision">>,
-  timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
+  // Widened to the field it reads so other row types share this formatter.
+  meeting: Pick<Meeting, "startsAt" | "timeZone">,
 ): string {
-  /*
-   * The date spells out here too, with the weekday. The calendar date is
-   * resolved in the reader's zone; slicing the ISO string would read whatever
-   * offset it carries and can land an evening meeting on the previous day.
-   */
+  // The calendar date resolves in the meeting's zone; slicing the ISO string would read whatever offset it carries.
   const d = new Date(meeting.startsAt);
-  const formats = formatsForZone(meeting.startPrecision === "DAY" ? meeting.timeZone : timeZone);
-  const weekday = formats.weekday.format(d);
+  const formats = formatsForZone(meeting.timeZone);
   const local = formats.date.format(d);
-  return `${weekday}, ${formatDateLong(local) ?? local}`;
+  return `${formats.weekday.format(d)}, ${formatDateLong(local) ?? local}`;
 }
 
 /**
@@ -241,10 +235,10 @@ export function meetingLocalDate(meeting: CalendarSafeMeeting): string {
   return formatsForZone(meeting.timeZone).date.format(new Date(meeting.startsAt));
 }
 
-export function formatMeetingTime(meeting: Pick<Meeting, "startsAt" | "timeZone"> & Partial<Pick<Meeting, "startPrecision">>, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
+export function formatMeetingTime(meeting: Pick<Meeting, "startsAt" | "timeZone"> & Partial<Pick<Meeting, "startPrecision">>): string {
   // The single choke point for a meeting's clock.
   if (meeting.startPrecision === "DAY") return TIME_NOT_POSTED;
-  return formatsForZone(timeZone).time.format(new Date(meeting.startsAt));
+  return formatsForZone(meeting.timeZone).time.format(new Date(meeting.startsAt));
 }
 
 /** "in 3 days", "tomorrow", "12 days ago". */

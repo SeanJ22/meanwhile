@@ -1,4 +1,6 @@
 import { copy } from "../design/copy.ts";
+import { plainText } from "../text/plain-text.ts";
+import { hasPublishedVenue } from "./venue-text.ts";
 import type { Meeting, MeetingLocation, MeetingVenueGap, OnlineAccess } from "@/lib/sources/types";
 
 /**
@@ -53,8 +55,8 @@ export function venueNotStatedLine(publisher: string): string {
 
 /** The place the publisher stated, verbatim, or null when its page states none. */
 export function statedVenueText(gap: MeetingVenueGap): string | null {
-  const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
-  return stated ? stated : null;
+  const stated = gap.kind === "STATED_NOT_PLACED" ? plainText(gap.publishedText ?? "").replace(/\n/g, ", ") : "";
+  return hasPublishedVenue(stated) ? stated : null;
 }
 
 /** A stated place renders as the publisher's words, never a pin; a page that states none gets the publisher's gap. */

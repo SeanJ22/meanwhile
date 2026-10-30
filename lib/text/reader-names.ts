@@ -8,6 +8,8 @@
  * Pure and client-safe: no registry, no geometry, no fetch.
  */
 
+import { plainText } from "./plain-text.ts";
+
 const SMALL_WORDS = new Set(["of", "and", "the", "for", "on", "in", "to", "at", "by", "a", "an", "or", "as", "but", "nor", "with", "from"]);
 
 /** The shared, deliberately short list of acronyms readers should still see. */
@@ -46,7 +48,8 @@ function nameWord(word: string): string {
  * Sentence text keeps existing mixed-case spellings and restores held names
  * supplied by the card; no source record or quotation is ever rewritten.
  */
-export function readerText(raw: string, mode: ReaderTextMode = "title", knownNames: readonly string[] = []): string {
+export function readerText(published: string, mode: ReaderTextMode = "title", knownNames: readonly string[] = []): string {
+  const raw = plainText(published);
   // A lone capital in mixed-case text ("Hearing Room A") is a label the source chose, not shouting.
   const mixedCase = /\p{Ll}/u.test(raw);
   // Licence names such as "CC BY 4.0" and "CC BY-SA" are codes, written as published.

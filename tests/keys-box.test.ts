@@ -7,7 +7,8 @@ import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { importExistingKeys } from "../lib/core/keys-import.ts";
+import { importExistingKeys, importRuntimeKeys } from "../lib/core/keys-import.ts";
+import initializer from "../netlify/functions/line-keeper-initialize.mts";
 import { handleKeys } from "../lib/core/keys-http.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "../lib/ops/origins.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -245,4 +246,110 @@ test("the standing clock picks up saved keys on its next tick and tests again on
   at = "2026-10-30T12:01:00.000Z";
   clock.tick(Date.parse(at)); await clock.waitForIdle();
   assert.equal(checked, 2);
+});
+
+test("runtime copy records only names, imports function-only signing settings, and preserves absence evidence", async t => {
+  const { store } = await fixture(t), reports: import("../lib/control-plane/owner-surface.ts").OwnerDigestRecord[] = [];
+  const env = { WTP_ADMIN_SECRET: SECRET, WTP_ADMIN_SESSION_KEY: "session-secret", WTP_STAGING_MANIFEST_COOKIE: "staging-cookie" };
+  const event = (context: string) => ({ deploy: { context, publishedAt: AT } });
+  const copy = () => importRuntimeKeys(env, "website", AT, store, async record => { reports.push(record); });
+  const seed = async () => {};
+  await initializer.deploySucceeded(event("deploy-preview"), copy, seed);
+  assert.equal((await store.list()).length, 0, "preview deploys never copy their values into production");
+  await initializer.deploySucceeded(event("production"), copy, seed);
+  for (const name of Object.keys(env)) assert.equal((await store.list()).find(row => row.name === name)?.working, true);
+  assert.ok(reports[0].lines[0].includes("WTP_ADMIN_SESSION_KEY"));
+  assert.ok(reports[0].lines[1].includes("WTP_CONTROL_PLANE_DATABASE_URL_READONLY"));
+  assert.equal(JSON.stringify(reports).includes(SECRET), false);
+  await importRuntimeKeys(env, "website", AT, store, async record => { reports.push(record); });
+  assert.equal(reports.length, 1, "an unchanged process inventory is recorded once");
+});
+
+test("the running runner imports its existing CLI login without asking for a token", async t => {
+  const { store } = await fixture(t);
+  const previous = globalThis.fetch;
+  globalThis.fetch = (async (_url, init) => {
+    assert.equal(new Headers(init?.headers).get("authorization"), "Bearer existing_cli_login");
+    return Response.json({ login: "fixture-owner" });
+  }) as typeof fetch;
+  t.after(async () => { globalThis.fetch = previous; });
+  await keysRunnerPass(store, AT, { env: { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", GH_TOKEN: "" },
+    github: () => "existing_cli_login", report: async record => { assert.equal(JSON.stringify(record).includes("existing_cli_login"), false); } });
+  assert.equal(await store.read("GH_TOKEN"), "existing_cli_login");
+  assert.equal((await store.list())[0].working, true);
+  await keysRunnerPass(store, AT, { env: { NODE_ENV: "test", WTP_RUNTIME_MODE: "production" },
+    github: () => { throw new Error("the saved login must be reused"); }, report: async () => {} });
+});
+
+test("the PRL archive key pair uses a bounded signed list and never records its secret", async t => {
+  const { store } = await fixture(t), previous = globalThis.fetch;
+  const oldEndpoint = process.env.PRL_ARCHIVE_S3_ENDPOINT, oldBucket = process.env.PRL_ARCHIVE_S3_BUCKET;
+  process.env.PRL_ARCHIVE_S3_ENDPOINT = "https://archive.example.test"; process.env.PRL_ARCHIVE_S3_BUCKET = "source-bucket";
+  t.after(async () => {
+    globalThis.fetch = previous;
+    if (oldEndpoint === undefined) delete process.env.PRL_ARCHIVE_S3_ENDPOINT; else process.env.PRL_ARCHIVE_S3_ENDPOINT = oldEndpoint;
+    if (oldBucket === undefined) delete process.env.PRL_ARCHIVE_S3_BUCKET; else process.env.PRL_ARCHIVE_S3_BUCKET = oldBucket;
+  });
+  globalThis.fetch = (async (url, init) => {
+    assert.equal(new URL(String(url)).searchParams.get("max-keys"), "1");
+    assert.match(new Headers(init?.headers).get("authorization")!, /AWS4-HMAC-SHA256 Credential=fixture_id/);
+    assert.equal(JSON.stringify(init?.headers).includes(SECRET), false);
+    return new Response("<ListBucketResult><IsTruncated>false</IsTruncated></ListBucketResult>");
+  }) as typeof fetch;
+  await importExistingKeys({ PRL_ARCHIVE_S3_ACCESS_KEY_ID: "fixture_id", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: SECRET }, store, AT);
+  assert.equal((await store.list()).filter(row => row.working).length, 2);
+  assert.equal(JSON.stringify(await store.list()).includes(SECRET), false);
+  globalThis.fetch = (async () => new Response(null, { status: 403 })) as typeof fetch;
+  assert.equal((await testKey("prlarchive", SECRET, fetch, { archiveAccessId: "fixture_id", archiveSecret: SECRET })).working, false);
+});
+
+test("key checks use current provider routes, reporting scope and the dedicated map test origin", async t => {
+  const { store } = await fixture(t);
+  await store.save("WTP_MAPTILER_SMOKE_KEY", SECRET, "maptiler", AT);
+  await testDueKeys(store, AT, undefined, async (service, value, _fetch, companion) => testKey(service, value,
+    (async (_url, init) => {
+      assert.equal(new Headers(init?.headers).get("origin"), "http://maptiler-smoke.localhost");
+      return Response.json({ version: 8, layers: [{}] });
+    }) as typeof fetch, companion));
+  assert.equal((await store.list())[0].working, true);
+  for (const [service, path, body] of [
+    ["lda", "https://lda.gov/api/v1/filings/", { results: [{}] }],
+    ["sam", "https://api.sam.gov/opportunities/v2/search", { totalRecords: 0, opportunitiesData: [] }],
+    ["neon", "https://console.neon.tech/api/v2/users/me/organizations", { organizations: [] }],
+  ] as const) {
+    assert.equal((await testKey(service, SECRET, (async (url, init) => {
+      assert.equal(String(url).split("?")[0], path);
+      assert.equal(init?.redirect, "error");
+      return Response.json(body);
+    }) as typeof fetch)).working, true);
+  }
+  assert.equal((await testKey("neon", SECRET, (async url => {
+    assert.equal(new URL(String(url)).searchParams.get("org_id"), "existing-billing-account");
+    return Response.json({ projects: [] });
+  }) as typeof fetch, { neonOrganization: "existing-billing-account" })).working, true);
+});
+
+
+test("the website copy imports its configured feedback and control-plane read handles and tests the connections", async t => {
+  const { db, store } = await fixture(t);
+  const { neonConfig } = await import("../lib/db/client.ts");
+  const previous = neonConfig.fetchFunction, oldReport = process.env.WTP_VITAL_SIGNS_REPORT;
+  process.env.WTP_VITAL_SIGNS_REPORT = "1";
+  t.after(async () => { neonConfig.fetchFunction = previous;
+    if (oldReport === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = oldReport; });
+  neonConfig.fetchFunction = async (_url: RequestInfo | URL, init?: RequestInit) => {
+    const request = JSON.parse(String(init?.body));
+    const execute = async (statement: { query: string; params?: unknown[] }) => {
+      const result = await db.query<Record<string, unknown>>(statement.query, statement.params);
+      return { command: "SELECT", rowCount: result.rows.length, rowAsArray: true, fields: result.fields,
+        rows: result.rows.map(row => result.fields.map(({ name }) => row[name] == null ? null : typeof row[name] === "boolean" ? row[name] ? "t" : "f" : typeof row[name] === "object" ? JSON.stringify(row[name]) : String(row[name]))) };
+    };
+    if (!request.queries) return Response.json(await execute(request));
+    const results = []; for (const statement of request.queries) results.push(await execute(statement));
+    return Response.json({ results });
+  };
+  const names = ["FEEDBACK_DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL", "WTP_STAGING_DATABASE_URL_READONLY"];
+  await importExistingKeys(Object.fromEntries(names.map(name => [name, "postgresql://readonly:fixture@db.example.neon.tech/fixture"])), store, AT, "website");
+  assert.deepEqual((await store.list()).map(row => row.name), [...names].sort());
+  assert.ok((await store.list()).every(row => row.working));
 });

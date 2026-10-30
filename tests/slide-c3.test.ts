@@ -4,7 +4,7 @@ import test from "node:test";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishCapturedMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { canceledOnPage, publishMeetingFacts, sittingOnPage } from "../lib/facts/meeting-facts.ts";
+import { agendaFileOnPage, canceledOnPage, publishMeetingFacts, sittingOnPage } from "../lib/facts/meeting-facts.ts";
 import { meetingEntityId } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -65,6 +65,25 @@ test("a publisher that writes the local clock with a trailing Z is quoted as it 
     await publishMeetingFacts(db, { meeting: meeting(other), capture: page, producedBy: "test" }, clocks, NOW);
     assert.equal((await db.query("SELECT 1 FROM fact WHERE entity_id=$1 AND field='starts_at'", [meetingEntityId(other.id)])).length, 0);
     assert.equal((await db.query("SELECT reason FROM blank WHERE entity_id=$1 AND field='starts_at'", [meetingEntityId(other.id)]))[0]?.reason, "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY");
+  } finally { await db.pg.close(); }
+});
+
+test("a CivicClerk agenda file is quoted by its number beside the word Agenda, and a number beside another kind of file is not an agenda", async () => {
+  const API = "https://auburnwa.api.civicclerk.com/v1/Events";
+  const page = capture('{"value":[{"id":2210,"eventName":"Human Services Committee","startDateTime":"2026-12-08T19:00:00Z","publishedFiles":[{"id":0,"fileId":7051,"publishTo":null,"type":"Agenda","name":"Agenda","streamUrl":null},{"id":0,"fileId":7162,"type":"Minutes","name":"Minutes","streamUrl":null}]}]}', API);
+  const file = (id: number) => `https://auburnwa.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=${id},plainText=false)`;
+  assert.deepEqual(agendaFileOnPage(page.evidence.text, file(7051)), { valueText: "7051", quote: '"fileId":7051,"publishTo":null,"type":"Agenda"' });
+  assert.equal(agendaFileOnPage(page.evidence.text, file(7162)), null);
+  assert.equal(agendaFileOnPage(page.evidence.text, file(9999)), null);
+  const db = await seeded();
+  try {
+    const base = { id: "civicclerk:auburn:2210", title: "Human Services Committee", startsAt: "2026-12-08T11:00:00-08:00", timeZone: "America/Los_Angeles", sourceUrl: API };
+    await publishMeetingFacts(db, { meeting: meeting({ ...base, startsAtOnPage: "2026-12-08T19:00:00Z", agendaUrl: file(7051) }), capture: page, producedBy: "test" }, clocks, NOW);
+    const [agenda] = await db.query("SELECT value, quote, quote_start IS NOT NULL AS checked FROM fact WHERE entity_id=$1 AND field='agenda_url' AND status='live'", [meetingEntityId(base.id)]);
+    assert.deepEqual([agenda?.value, agenda?.checked], [file(7051), true]);
+    const minutes = { ...base, id: "civicclerk:auburn:2211" };
+    await publishMeetingFacts(db, { meeting: meeting({ ...minutes, startsAtOnPage: "2026-12-08T19:00:00Z", agendaUrl: file(7162) }), capture: page, producedBy: "test" }, clocks, NOW);
+    assert.equal((await db.query("SELECT 1 FROM fact WHERE entity_id=$1 AND field='agenda_url'", [meetingEntityId(minutes.id)])).length, 0);
   } finally { await db.pg.close(); }
 });
 

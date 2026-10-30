@@ -60,6 +60,13 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   return null;
 }
 
+/** A CivicClerk event names its agenda file by number, beside the word Agenda; the address the link is built from is not written on the page. */
+export function agendaFileOnPage(text: string, url: string): { readonly valueText: string; readonly quote: string } | null {
+  const id = /fileId=(\d+)/.exec(url)?.[1];
+  const found = id ? new RegExp(`"fileId"\\s*:\\s*${id}\\b[^{}]{0,200}?"type"\\s*:\\s*"[^"]*agenda[^"]*"`, "i").exec(text) : null;
+  return id && found ? { valueText: id, quote: found[0] } : null;
+}
+
 const CANCELED_WORD = /\bcancell?ed\b|\bcancell?ation\b/i;
 
 /** Where the page says this sitting is canceled: the publisher's own word beside the sitting's title, with the line that shows it. */
@@ -228,7 +235,10 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   else if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
   else if(!meeting.mapPin&&!meeting.location) count(await publishMeetingPinFact(db,{meeting,registered:true,
     geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
-  if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
+  if (meeting.agendaUrl) {
+    const byFile = lineOf(copy, meeting.agendaUrl) ? null : agendaFileOnPage(copy.text, meeting.agendaUrl);
+    await (byFile ? claim("agenda_url", meeting.agendaUrl, byFile.valueText, byFile.quote) : claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl));
+  }
   if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
   await keepJoinLinkWork(db.query,meeting,clocks);
   return tally;

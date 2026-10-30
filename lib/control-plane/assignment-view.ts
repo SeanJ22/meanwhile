@@ -514,14 +514,14 @@ export interface AssignmentHead {
   readonly item:(Pick<WorkItem,"id"|"project"|"subject"|"obligation"|"state"|"createdAt"> & {readonly lastTransitionAt:string|null;readonly manualSourceGap?:Pick<NonNullable<WorkItem["manualSourceGap"]>,"assignmentKey"|"instructionReceipt">})|null;
   readonly proof:boolean;
   readonly live:readonly {readonly attempt:AssignmentHeadAttempt;readonly lease:AssignmentHeadLease}[];
-  readonly latest:{readonly attempt:AssignmentHeadAttempt;readonly lease:AssignmentHeadLease|null;readonly leaseRead:boolean;
+  readonly latest:{readonly attempt?:AssignmentHeadAttempt;readonly lease?:AssignmentHeadLease|null;readonly leaseRead?:boolean;
     readonly disposition:AssignmentHeadDisposition|null;readonly policyDenial:RouteTask["policyDenial"]|null;
-    readonly scout:AssignmentHeadScout|null;readonly worker:{readonly endedAt:string;readonly result:OutcomeWorker<AssignmentWorkerResult["result"]>}|null;
+    readonly scout:AssignmentHeadScout|null;readonly worker?:{readonly endedAt:string;readonly result:OutcomeWorker<AssignmentWorkerResult["result"]>}|null;
   }|null;
   readonly laneRole:WorkerRef["role"]|null;readonly pendingTaskId:string|null;
   readonly publication:Pick<NonNullable<WorkItem["publicationOutcome"]>,"status"|"at"|"code"|"recovery"> & {readonly detail?:string} |null;
   readonly occurrenceCount:number;
-  readonly openRound:{readonly id:string;readonly sequence:number;readonly openedAt:string;readonly dueAt:string;readonly reached:boolean}|null;
+  readonly openRound:{readonly sequence:number;readonly openedAt:string;readonly id?:string;readonly dueAt?:string;readonly reached?:boolean}|null;
   readonly lastActivityAt:string|null;
 }
 const countOf = (value: number | readonly unknown[]): number => typeof value === "number" ? value : value.length;
@@ -1099,9 +1099,9 @@ function outcomeFromHead(head: NonNullable<AssignmentHead["latest"]>, now: numbe
   if(d){if(head.scout&&(head.scout.refusal===null||head.scout.refusal.length===0))return fromScout(head.scout,clipAt);return fromDisposition(d,clipAt);}
   if(head.policyDenial)return {state:"BLOCKED",code:"POLICY_DENIED",says:`Our own policy refused a capability this route needs: ${clip(head.policyDenial.reason,clipAt)}`,
     at:head.policyDenial.at,owner:"ENGINEERING",nextAction:clip(head.policyDenial.requiredChange,clipAt)};
-  const last=head.attempt;
+  const last=head.attempt!, lease=head.lease!;
   if (last.outcome === null) {
-    const live = !head.leaseRead ? null : head.lease !== null && head.lease.id === last.leaseId && !head.lease.released && ms(head.lease.expiresAt) > now;
+    const live = !head.leaseRead ? null : lease !== null && lease.id === last.leaseId && !lease.released && ms(lease.expiresAt) > now;
     return live === null
       ? {
           state: "UNKNOWN",
@@ -2046,7 +2046,10 @@ function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | nul
   const retryAt = backoff ? (head.debt?.retryAt ?? null) : null;
   const eligibleAt = active ? eligibleAtOf(dueAt, retryAt) : null;
   const overdue = !active ? false : eligibleAt === null ? null : ms(eligibleAt) <= now;
-  const openRound = head.openRound ? {id:head.openRound.id,openedAt:head.openRound.openedAt,dueAt:head.openRound.dueAt,reached:head.openRound.reached} : null;
+  const round = head.openRound;
+  const openRound = round?.id !== undefined && round.dueAt !== undefined && round.reached !== undefined
+    ? {id:round.id,openedAt:round.openedAt,dueAt:round.dueAt,reached:round.reached} : null;
+  const clock = {overdue, dueAt, retryAt, eligibleAt, backoff, openRound};
 
   const stepWords = (state: AssignmentState, outcome: RoundOutcome | null): string =>
     nextStepWords({ state, outcome, overdue, dueAt, retryAt, eligibleAt, backoff: backoff !== null, band });
@@ -2059,15 +2062,10 @@ function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | nul
         waiting: {
           waiting: false,
           since: out.at,
-          overdue,
-          dueAt,
-          retryAt,
-          eligibleAt,
-          backoff,
+          ...clock,
           blocker: { kind: "NONE", says: "Nothing is blocking it: a worker holds it now." },
           owner: out.owner,
           nextAction: out.nextAction,
-          openRound,
         },
       };
   }
@@ -2095,8 +2093,8 @@ function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | nul
 
   if (outcome === null) {
     const neverDispatched = head.debt?.cause === "NEVER_DISPATCHED" && head.debt.consecutiveFailures > 0;
-    const blocker = openRound
-      ? `Round ${head.openRound?.sequence ?? ""} was opened ${openRound.openedAt} and no worker has reached it yet.`
+    const blocker = round
+      ? `Round ${round.sequence} was opened ${round.openedAt} and no worker has reached it yet.`
       : head.occurrenceCount > 0
         ? `${plural(head.occurrenceCount, "round")} opened and closed without any worker reaching them.`
         : overdue === false
@@ -2107,14 +2105,10 @@ function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | nul
       stateSays: head.occurrenceCount === 0 ? "Registered and never reached by a worker." : "Opened and never reached by a worker.",
       waiting: {
         waiting: overdue !== false,
-        since: overdue ? eligibleAt : overdue === false ? null : (openRound?.openedAt ?? null),
-        overdue,
-        dueAt,
-        retryAt,
-        eligibleAt,
-        backoff,
+        since: overdue ? eligibleAt : overdue === false ? null : (round?.openedAt ?? null),
+        ...clock,
         blocker:
-          overdue === false && !openRound
+          overdue === false && !round
             ? { kind: "NONE", says: blocker }
             : {
                 kind: "NAMED",
@@ -2124,7 +2118,6 @@ function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | nul
               },
         owner: "RUNNER",
         nextAction: stepWords("WAITING", outcome),
-        openRound,
       },
     };
   }
@@ -2157,18 +2150,22 @@ function deriveStanding(head: AssignmentHead, now: number, band: 1 | 2 | 3 | nul
     waiting: {
       waiting: state !== "SUCCEEDED" || overdue === true || backoff !== null,
       since,
-      overdue,
-      dueAt,
-      retryAt,
-      eligibleAt,
-      backoff,
+      ...clock,
       blocker,
       owner: askGap?.owner ?? (state === "SUCCEEDED" ? "RUNNER" : outcome.owner),
       nextAction: askGap?.nextAction ?? argued ?? stepWords(state, outcome),
-      openRound,
     },
   };
 }
+
+const WORK_ITEM_CLOCK = {
+  overdue: null,
+  dueAt: null,
+  retryAt: null,
+  eligibleAt: null,
+  backoff: null,
+  openRound: null,
+} as const;
 
 function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derived {
   const out=liveOutcome(head,now);
@@ -2176,7 +2173,7 @@ function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derive
       return {
         state: "WORKING",
         stateSays: out.says,
-        waiting: { waiting: false, since: out.at, overdue: null, dueAt: null, retryAt: null, eligibleAt: null, backoff: null, blocker: { kind: "NONE", says: "Nothing is blocking it: a worker holds it now." }, owner: "FLEET", nextAction: out.nextAction, openRound: null },
+        waiting: { waiting: false, since: out.at, ...WORK_ITEM_CLOCK, blocker: { kind: "NONE", says: "Nothing is blocking it: a worker holds it now." }, owner: "FLEET", nextAction: out.nextAction },
       };
   }
 
@@ -2192,18 +2189,13 @@ function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derive
       waiting: {
         waiting: reading.state !== "SUCCEEDED",
         since: transitionAt,
-        overdue: null,
-        dueAt: null,
-        retryAt: null,
-        eligibleAt: null,
-        backoff: null,
+        ...WORK_ITEM_CLOCK,
         blocker:
           reading.state === "SUCCEEDED"
             ? { kind: "NONE", says: "Nothing is blocking it." }
             : { kind: "NAMED", says: clip(why, clips.text) },
         owner: reading.owner,
         nextAction: reading.state === "BLOCKED" && outcome?.nextAction ? outcome.nextAction : reading.next,
-        openRound: null,
       },
     };
   }
@@ -2215,15 +2207,10 @@ function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derive
       waiting: {
         waiting: true,
         since: item?.createdAt ?? null,
-        overdue: null,
-        dueAt: null,
-        retryAt: null,
-        eligibleAt: null,
-        backoff: null,
+        ...WORK_ITEM_CLOCK,
         blocker: { kind: "NAMED", says: pending ? `Step ${pending} is queued and no worker has taken it.` : "No step of this work has been taken by a worker." },
         owner: "FLEET",
         nextAction: "The fleet's next worker takes the queued step.",
-        openRound: null,
       },
     };
   }
@@ -2234,15 +2221,10 @@ function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derive
       waiting: {
         waiting: true,
         since: outcome.at,
-        overdue: null,
-        dueAt: null,
-        retryAt: null,
-        eligibleAt: null,
-        backoff: null,
+        ...WORK_ITEM_CLOCK,
         blocker: { kind: "NAMED", says: `Step ${pending} is queued and no worker has taken it yet.` },
         owner: "FLEET",
         nextAction: "The fleet's next worker takes the queued step.",
-        openRound: null,
       },
     };
   }
@@ -2253,11 +2235,7 @@ function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derive
     waiting: {
       waiting: state !== "SUCCEEDED",
       since: state === "SUCCEEDED" ? null : outcome.at,
-      overdue: null,
-      dueAt: null,
-      retryAt: null,
-      eligibleAt: null,
-      backoff: null,
+      ...WORK_ITEM_CLOCK,
       blocker:
         state === "SUCCEEDED"
           ? { kind: "NONE", says: "Nothing is blocking it." }
@@ -2266,7 +2244,6 @@ function deriveWorkItem(head: AssignmentHead, now: number, clips: Clips): Derive
             : { kind: "NAMED", says: outcome.says },
       owner: outcome.owner,
       nextAction: outcome.nextAction || (state === "SUCCEEDED" ? "Nothing further is queued for this work item." : "The fleet decides the next step."),
-      openRound: null,
     },
   };
 }

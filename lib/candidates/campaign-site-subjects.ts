@@ -1,4 +1,5 @@
-import { sharedNameForm } from "../identity/name-forms.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { nameParts } from "../identity/name-parts.ts";
 import { registrableDomain } from "./campaign-site-verifier.ts";
 import type { CandidateUniverse } from "../hunt/candidate-universe.ts";
 import type { CampaignSiteSubject } from "../control-plane/promotion/campaign-site-chain.ts";
@@ -60,7 +61,8 @@ export function campaignSiteSubjects(input: {
       for (const lineup of input.lineups ?? []) {
         if (!contests.has(lineup.contestId)) continue;
         for (const nominee of lineup.nominees) {
-          if (sharedNameForm(nominee.name, `${c.givenName} ${c.familyName}`) !== null) keys.add(`${lineup.contestId}|${nominee.name}`);
+          if (samePerson({ id: nominee.name, name: nominee.name, seats: [lineup.contestId] },
+            { id: c.pilotIds[0] ?? nominee.name, name: nameParts(c.givenName, c.familyName), seats: [lineup.contestId] })) keys.add(`${lineup.contestId}|${nominee.name}`);
         }
       }
       const domains = new Set<string>();

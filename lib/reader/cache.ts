@@ -97,7 +97,7 @@ function publicationStates(models: readonly unknown[]): string[] {
     if (Array.isArray(value)) { for (const item of value) visit(item, key); }
     else if (value && typeof value === "object") { for (const [name, item] of Object.entries(value)) visit(item, name); }
     else if (typeof value === "string" && /^(?:officeholderId|personId)$/.test(key)) {
-      const state = /^(?:plural:([a-z]{2}):|([a-z]{2})-(?:legislature|general-court):)/i.exec(value);
+      const state = /^(?:(?:plural|person):([a-z]{2}):|([a-z]{2})-(?:legislature|general-court):)/i.exec(value);
       for (const found of registryJurisdictions(state?.[1] ?? state?.[2])) states.add(found);
     }
     else if (typeof value === "string" && /^(?:states?|stateFips|state_fips|statefp|jurisdiction|ocdId|bodyId|divisionId|ocdDivisionId|placeId|scope)$/.test(key)) {

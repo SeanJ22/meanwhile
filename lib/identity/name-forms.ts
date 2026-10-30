@@ -1,8 +1,10 @@
 /**
- * Personal-name forms, as a parse, never as a similarity score. Each function
- * expands one published name into a finite set of exact strings, each labelled
- * with the annotation rule that produced it; reconciliation is string equality
- * between two such sets. No edit distance, token-subset test or "closest".
+ * Personal-name forms, for reading a published name. Each function expands one published name into a finite set of
+ * exact strings, each labelled with the annotation rule that produced it; two names are written alike only when two
+ * such strings are equal. No edit distance, token-subset test or "closest".
+ *
+ * Written alike is not the same person. Which record a person is gets decided by `matchPerson` in
+ * lib/identity/match-person.ts, from identifiers and seats, and never from a name alone.
  *
  * - `AS_PUBLISHED`: after Unicode and whitespace normalisation only.
  * - `NICKNAME_REMOVED`: a quoted segment (`"Nick"`) is a publisher's
@@ -119,20 +121,4 @@ export function nameForms(raw: string): NameForm[] {
   }
 
   return [...out.values()];
-}
-
-/**
- * Do two published names share at least one exact form, and which one? The
- * shared form with the shortest rule chain, or `null`.
- */
-export function sharedNameForm(a: string, b: string): NameForm | null {
-  const bKeys = new Map(nameForms(b).map((f) => [f.form, f]));
-  let best: NameForm | null = null;
-  for (const form of nameForms(a)) {
-    const other = bKeys.get(form.form);
-    if (!other) continue;
-    const rules = form.rules.length <= other.rules.length ? form.rules : other.rules;
-    if (best === null || rules.length < best.rules.length) best = { form: form.form, rules };
-  }
-  return best;
 }

@@ -1,4 +1,5 @@
-import { nameParts, namesAgree, splitDisplayName } from "../ballot/incumbency.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { nameParts, splitDisplayName } from "../identity/name-parts.ts";
 import { nameTokens } from "../officials/person-name.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";
@@ -20,10 +21,10 @@ export function sameRosterPerson(left: RosterMember, right: RosterMember, divisi
   const keys = personIdentityKeys(left);
   const shared = [...personIdentityKeys(right)].some(key => keys.has(key));
   if (left.id === right.id) return true;
-  // resolvePerson also mints ocd-person UUIDs for separate fact extractions.
+  // The fact store gives each separate extraction its own person id.
   // Those entity keys are retained aliases; different publisher IDs below are
   // the evidence that two sourced people are distinct.
-  const factEntity = (id: string) => /^ocd-person\/[a-f0-9]{8}-[a-f0-9-]{27}$/i.test(id);
+  const factEntity = (id: string) => /^(?:ocd-person\/[a-f0-9]{8}-[a-f0-9-]{27}|person:[a-z]{2}:.+)$/i.test(id);
   if (left.personId && right.personId && left.personId !== right.personId && !shared &&
       !(factEntity(left.personId) || factEntity(right.personId))) return false;
   for (const [source, ids] of Object.entries(left.nativeIds ?? {})) {
@@ -31,10 +32,11 @@ export function sameRosterPerson(left: RosterMember, right: RosterMember, divisi
     if (source !== "reader" && ids.length && other?.length && !ids.some(id => other.includes(id))) return false;
   }
   if (shared) return true;
-  if (!namesAgree(comparable(left.name), comparable(right.name)) ||
-      !sameSeatDiscriminators(left.officeTitle, right.officeTitle, division, { allowUnspecified: true })) return false;
+  // One body, so the same seat means the same discriminators and a compatible office.
   const a = officeIdentity(left.officeTitle, division), b = officeIdentity(right.officeTitle, division);
-  return !a || !b || a === b;
+  const sameSeat = sameSeatDiscriminators(left.officeTitle, right.officeTitle, division, { allowUnspecified: true }) && (!a || !b || a === b);
+  const evidence = (member: RosterMember, seat: string) => ({ id: member.id, name: comparable(member.name), keys: personIdentityKeys(member), seats: [seat] });
+  return samePerson(evidence(left, sameSeat ? "this seat" : "left seat"), evidence(right, sameSeat ? "this seat" : "right seat"));
 }
 
 function mergeRosterPeople(roster: BodyRoster): BodyRoster {

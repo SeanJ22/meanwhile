@@ -8,6 +8,8 @@
  * Pure and client-safe: no registry, no geometry, no fetch.
  */
 
+import { statePartyName } from "../ballot/party-codes.ts";
+
 const SMALL_WORDS = new Set(["of", "and", "the", "for", "on", "in", "to", "at", "by", "a", "an", "or", "as", "but", "nor", "with", "from"]);
 
 /** The shared, deliberately short list of acronyms readers should still see. */
@@ -262,12 +264,16 @@ const PARTY_FAMILIES: ReadonlyArray<readonly [RegExp, string]> = [
   [/^(?:pnd|party not designated)$/i, "Party Not Designated"],
 ];
 
-export function readerPartyLabel(raw: string | null | undefined): string | null {
+export function readerPartyLabel(raw: string | null | undefined, state?: string | null): string | null {
   if (raw === null || raw === undefined) return null;
   const text = raw.replace(/\s+/g, " ").trim();
   if (text === "") return null;
   return text.split(/\s*\/\s*/).map(party => {
     for (const [pattern, label] of PARTY_FAMILIES) if (pattern.test(party)) return label;
+    // A code the state publishes a name for shows the name; any other code shows as the source wrote it.
+    const named = statePartyName(state, party);
+    if (named) return named;
+    if (/^[A-Z]{2,4}$/.test(party)) return party;
     return readerText(party);
   }).join(" / ");
 }

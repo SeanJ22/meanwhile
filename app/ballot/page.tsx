@@ -137,9 +137,13 @@ import { questionForTargetType } from "@/lib/signal/reactions";
 import { ballotDateText, builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
+  datePassed,
   isUpcoming,
   windowOf,
 } from "@/lib/ballot/dated-events";
+import { dateHeading } from "@/lib/ballot/date-heading";
+import { stateToday } from "@/lib/ballot/state-time-zone";
+import { PassedMark } from "@/components/ballot/date-passed";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
   BallotSet,
@@ -848,6 +852,7 @@ export default readerRoute("/ballot", async function BallotPage({
         set &&
         (() => {
           const reg = registrationLinkFor(set.election.state, registrationLinks);
+          const today = stateToday(set.election.state);
           const regStep = dates.steps.find((s) =>
             /registration deadline/i.test(s.label),
           );
@@ -879,7 +884,8 @@ export default readerRoute("/ballot", async function BallotPage({
                       {formatDateMDY(regStep.date)}
                     </span>
 
-                    {isUpcoming({ start: regStep.date, end: null }) && (
+                    {datePassed(regStep.date, today) && <PassedMark />}
+                    {isUpcoming({ start: regStep.date, end: null }, today) && (
                       <>
                         {" "}
                         <AddToCalendar
@@ -902,9 +908,10 @@ export default readerRoute("/ballot", async function BallotPage({
                     <span className="font-mono t-body font-semibold">
                       {formatDateMDY(earlyStep.date)}
                     </span>
+                    {datePassed(earlyStep.date, today) && <PassedMark />}
                     {(() => {
                       const w = windowOf(earlyStep.date);
-                      if (!w || !isUpcoming(w)) return null;
+                      if (!w || !isUpcoming(w, today)) return null;
                       return (
                         <>
                           {" "}
@@ -953,6 +960,7 @@ export default readerRoute("/ballot", async function BallotPage({
         })()}
       {navigationStates.filter(state => navigation.has(state)).map(state => {
         const info = navigation.get(state);
+        const today = stateToday(state);
         const calendar = electionDatesFor(state, info?.dates ?? [], set?.election.state === state ? set.election.date : "2026-11-03");
         const registrationRequired = !calendar?.steps.some(step => step.label === "Voter registration" &&
           /\b(?:do(?:es)?(?:\s+not|n['’]t)\s+require\s+(?:voter\s+)?registration|(?:voter\s+)?registration\s+is\s+not\s+required)\b/i.test(step.detail ?? ""));
@@ -996,15 +1004,16 @@ export default readerRoute("/ballot", async function BallotPage({
                 return <div key={audience} data-deadline-audience={audience}>
                 {audience === "MILITARY_OVERSEAS" && <h4 className="mt-4 font-semibold">Military and overseas voters</h4>}
               <ul className="mt-3 space-y-3">
-                {calendarableSteps(steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
-                  <p className="font-semibold">{step.label}</p>
+                {calendarableSteps(steps, today).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
+                  <p className="font-semibold">{dateHeading(step)}</p>
                   {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
                     {formatDateMDY(step.date.replaceAll(" – ", ", "))}
+                    {datePassed(step.date, today) && <PassedMark />}
                   </p>}
                   {step.detail && <p className="t-body" data-navigation-detail>{ballotDateText(step.detail)}</p>}
                   {window && upcoming && !window.end && <AddToCalendar event={{
                     id: `ballot-${state}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-                    title: `${step.label} (${state})`, allDayDate: window.start,
+                    title: `${dateHeading(step)} (${state})`, allDayDate: window.start,
                     description: ballotDateText(step.detail) ?? undefined,
                   }} />}
                 </li>)}
@@ -1048,7 +1057,7 @@ export default readerRoute("/ballot", async function BallotPage({
       {dates && (
         <Card title="Voting dates" className="mt-6 lg:max-w-2xl" sources={[{ what: "Election dates", provenance: { sourceUrl: dates.sourceUrl, sourceOrg: dates.sourceOrg, collectedAt: dates.collectedAt, verifiedAt: null } }]}>
           <ul className="mt-2.5 space-y-1.5">
-            {calendarableSteps(dates.steps).map(({ step, window, upcoming }) => (
+            {calendarableSteps(dates.steps, stateToday(dates.state)).map(({ step, window, upcoming }) => (
 
               <li
                 key={step.label}
@@ -1059,6 +1068,7 @@ export default readerRoute("/ballot", async function BallotPage({
                   <span className="font-mono text-[0.75rem] text-signal">
                     {formatDateMDY(step.date)}
                   </span>
+                  {datePassed(step.date, stateToday(dates.state)) && <PassedMark />}
 
                   {window && upcoming && (
                     <>
@@ -1158,7 +1168,7 @@ export default readerRoute("/ballot", async function BallotPage({
                         <CandidateCard name={name}
                           partyLine={<>
                             {candidate.partyLabel !== null && <span style={{ color: partyColorVar(candidate.partyLabel) }}>
-                              {readerPartyLabel(candidate.partyLabel)}
+                              {readerPartyLabel(candidate.partyLabel, set?.election.state)}
                             </span>}
                             {candidate.slogan && <> · <span className="italic">&ldquo;{candidate.slogan}&rdquo;</span></>}
                           </>}
@@ -1168,7 +1178,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           filingSources={candidate.sources}
                           nameSlot={<IncumbentName holder={holder} name={name} context={context} />}
                           battlecardSlot={<BallotBattlecard name={name}
-                            partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
+                            partyLine={readerPartyLabel(candidate.partyLabel, set?.election.state)} partyLabel={readerPartyLabel(candidate.partyLabel, set?.election.state)}
                             card={card} links={links} targetKey={candidate.id} filingSource={candidate.provenance}
                             contestTitle={readerText(office)} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(memberContest)}
@@ -1194,11 +1204,11 @@ export default readerRoute("/ballot", async function BallotPage({
                     {earlierFilings.get(contest.id)!.map(candidate => {
                       const provenance = candidate.filing?.provenance ?? candidate.provenance;
                       return <li key={candidate.id} data-filing-candidacy={candidate.id}>
-                        <CandidateCard name={ballotCandidateDisplayName(candidate)} partyLine={readerPartyLabel(candidate.partyLabel)}
+                        <CandidateCard name={ballotCandidateDisplayName(candidate)} partyLine={readerPartyLabel(candidate.partyLabel, set?.election.state)}
                           card={availableCardForCandidacy(candidate.id)} holder={resolvedHolder(candidate.id)} links={availableLinksForCandidacy(candidate.id)}
                           derivedBlurb={availableDerivedBlurbFor(candidate.id)} filedSiteUrl={candidate.websiteUrl} filingProvenance={provenance}
                           battlecardSlot={<BallotBattlecard name={ballotCandidateDisplayName(candidate)}
-                            partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
+                            partyLine={readerPartyLabel(candidate.partyLabel, set?.election.state)} partyLabel={readerPartyLabel(candidate.partyLabel, set?.election.state)}
                             card={availableCardForCandidacy(candidate.id)} links={availableLinksForCandidacy(candidate.id)} targetKey={candidate.id}
                             filingSource={provenance} contestTitle={readerText(contest.title)} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}

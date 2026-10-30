@@ -30,6 +30,12 @@ export function isUpcoming(window: DatedWindow, today: string = phoenixToday()):
   return (window.end ?? window.start) >= today;
 }
 
+/** A dated row has passed once every date it names is before today. A row with no date never passes. */
+export function datePassed(date: string, today: string): boolean {
+  const found = date.match(ISO);
+  return !!found && found.every(day => day < today);
+}
+
 export function calendarableSteps<T extends { label: string; date: string }>(
   steps: readonly T[],
   today: string = phoenixToday(),

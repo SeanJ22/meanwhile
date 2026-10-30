@@ -24,6 +24,9 @@ export interface VotingSourceReplacement {
   readonly replaceSourceUrls: readonly string[];
 }
 
+/** A group re-reads its documents, those it supersedes, and the verified election page each of its rows also cites. */
+export const votingSourceGroupUrls = (doors: readonly VotingSourceDoor[]): string[] => [...new Set(doors.flatMap(door => [door.url, ...(door.supersedes ?? []), ...(door.electionAssociationVerified ? [door.electionPageUrl] : [])]))];
+
 export function votingSourceReplacement(value: unknown): VotingSourceReplacement | null {
   if (!value || typeof value !== "object") return null;
   const proof = (value as { sourceReplacement?: unknown }).sourceReplacement;
@@ -36,7 +39,7 @@ export function votingSourceReplacement(value: unknown): VotingSourceReplacement
   if (row.doors.some(door => !door || typeof door !== "object" || typeof door.id !== "string" || typeof door.url !== "string" ||
       !door.scope || door.scope.ocdId !== row.jurisdictionId || door.electionDate !== row.electionDate ||
       !Array.isArray(door.covers) || !door.covers.length || !door.covers.some((kind: string) => !["CANDIDATE_LIST", "BALLOT_MEASURES"].includes(kind)))) return null;
-  const declared = new Set(row.doors.flatMap(door => [door.url, ...(door.supersedes ?? [])]));
+  const declared = new Set(votingSourceGroupUrls(row.doors));
   if (declared.size !== row.replaceSourceUrls.length || row.replaceSourceUrls.some(url => !declared.has(url))) return null;
   return row as VotingSourceReplacement;
 }

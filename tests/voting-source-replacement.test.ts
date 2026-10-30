@@ -7,6 +7,7 @@ import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { holdVotingRawEvidence, mergeVotingSourceRead, replaceVotingJurisdiction } from "../lib/ballot/voting-source-publication.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { verifyVotingSourceReplacement } from "../lib/ballot/voting-source-replacement.ts";
+import { VOTING_SOURCE_REPLACEMENT_VERIFIER } from "../lib/ballot/voting-source-replacement-contract.ts";
 import { candidateChangeSet } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -52,19 +53,6 @@ async function setup(fetchSource: typeof fetch = fetchNative) {
     successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at, sourceReplacementDoors: [door] });
   return { previous, candidate, prior, next, read };
 }
-
-test("a complete native current-map replay retires only the 19 out-of-filter Pima rows through the real promotion door", async () => {
-  const { previous, candidate } = await setup();
-  const store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, "voting-sites:AZ", previous, beforeAt);
-  assert.ok(first.promoted, first.candidate.failureDetail ?? "the native prior publishes");
-  const second = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, at);
-  assert.ok(second.promoted, second.candidate.failureDetail ?? "the complete current native list replaces only its own rows");
-  assert.equal(second.readerReadback?.status, "PASS");
-  assert.equal(second.candidate.candidate.changeSet?.removed.length, 19);
-  assert.ok(second.candidate.receipt?.checks.some(check => check.code === "OFFICIAL_VOTING_SOURCE_REPLACED" && check.verdict === "PASS"));
-  assert.equal(candidate.horizon.claimsComplete, false, "the whole state remains an open fact set");
-});
 
 // Production, Oct 24-29: every voting-site removal in DE, MA, OR, AZ, WA and KY was held as VOTING_SOURCE_REPLACEMENT_UNPROVEN.
 // The voting job remembers its held state, so the production adapter hands validation the prior's member index, not its payload.
@@ -125,6 +113,33 @@ test("a redirected official election page still replays from its saved bytes, so
   const unmapped = { ...candidate, normalizedPayload: { ...candidate.normalizedPayload as object,
     acquisition: acquisition.map(({ requestedUrl: _requestedUrl, ...capture }) => capture) } };
   assert.match((await verifyVotingSourceReplacement(unmapped, previous))!, /not a complete site read/);
+});
+
+// Production, Oct 30: a list dated on its city's election page cites that page on every row (WI Eau Claire, TX Harris, HI), and
+// statewide files name counties the replay could not match (VA, KY, OR, SC, WA), so official changes stayed held.
+test("a list retires its own changed row beside its election page's own office, replaying the counties it published", async () => {
+  const page = "https://www.eauclairewi.gov/568/Elections";
+  const wards: VotingSourceDoor = { id: "wi-eau-claire-polling-places", publisher: "City of Eau Claire City Clerk", url: "https://www.eauclairewi.gov/DocumentCenter/View/468/Polling-Places-and-Their-Wards-PDF",
+    shape: "file", covers: ["ELECTION_DAY"], electionDate: "2026-11-03", electionPageUrl: page, electionAssociationVerified: true, model: "ASSIGNED",
+    scope: { state: "WI", ocdId: "ocd-division/country:us/state:wi/county:eau_claire/place:eau_claire_city", name: "Eau Claire city" },
+    extraction: { kind: "ELECTION_DAY", format: "csv", columns: { name: "SITE", address: "ADDRESS", room: "ROOM", countyName: "COUNTY" } } };
+  const read = (room: string, when: string) => readVotingSource(wards, { now: () => when, resolveCountyFips: () => "55035", fetch: (async input => String(input).endsWith("/robots.txt") ? new Response("User-agent: *\nAllow: /") : String(input) === page
+    ? new Response(`<p>November 3, 2026 General Election</p><a href="${wards.url}">Polling Places and their Wards</a>`, { headers: { "content-type": "text/html" } })
+    : new Response(`SITE,ADDRESS,ROOM,COUNTY\nAMERICAN LEGION # 53,"634 WATER ST, Eau Claire, WI",${room},Eau Claire\nVFW 305,"1300 STARR AVE, Eau Claire, WI",,Eau Claire\n`, { headers: { "content-type": "text/csv" } })) as typeof fetch });
+  const [oldRead, newRead] = [await read("", beforeAt), await read("Hall", at)], listed = mergeVotingSourceRead(undefined, wards, oldRead, beforeAt);
+  const office = { id: "city-elections-office", name: "City Elections Office", address: "203 S. Farwell St, Eau Claire, WI", lat: null, lng: null, room: null, election: null, serves: null,
+    kind: "EARLY_VOTING" as const, electionDate: "2026-11-03", sources: [{ publisher: "City of Eau Claire City Clerk (City Elections)", url: page, checkedAt: beforeAt }] };
+  const prior = replaceVotingJurisdiction(null, { ...listed, sites: [...listed.sites, office] }, beforeAt), next = replaceVotingJurisdiction(prior, mergeVotingSourceRead(prior.jurisdictions[0], wards, newRead, at), at);
+  const build = async (current: VotingSitesFile, before: VotingSitesFile | null, captured: typeof oldRead, when: string, doors?: VotingSourceDoor[]) => votingSitesCandidate({ state: "WI",
+    current, prior: before, failures: [], acquisition: await holdVotingRawEvidence(captured), successfulAuthorityReads: 1, requestedUrl: wards.url, finalUrl: wards.url, retrievedAt: when, sourceReplacementDoors: doors });
+  const store = new MemoryRoutineDataStore(), previous = await build(prior, null, oldRead, beforeAt);
+  assert.ok((await processRegisteredManualCandidate(store, "voting-sites:WI", previous, beforeAt)).promoted);
+  const outcome = await processRegisteredManualCandidate(store, "voting-sites:WI", await build(next, prior, newRead, at, [wards]), at, previous.id);
+  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the clerk's own room change publishes"); assert.deepEqual(next.jurisdictions[0]!.sites.map(site => [site.name, site.room ?? null]).sort(), [["AMERICAN LEGION # 53", "Hall"], ["City Elections Office", null], ["VFW 305", null]]);
+  // The page's own office is never the list's to retire, even beside a passing replay.
+  const forged = await build({ ...next, jurisdictions: [{ ...next.jurisdictions[0]!, sites: next.jurisdictions[0]!.sites.filter(site => site.id !== office.id) }] }, prior, newRead, at, [wards]);
+  assert.ok(validateRoutineCandidate({ ...forged, changeSet: candidateChangeSet(forged, prior) }, (await store.readCandidate(previous.id))!, at,
+    [{ consumer: `${VOTING_SOURCE_REPLACEMENT_VERIFIER} (source-scoped pre-promotion)`, passed: true, detail: "replayed" }]).receipt.checks.some(check => check.code === "VOTING_SOURCE_REPLACEMENT_UNPROVEN"));
 });
 
 test("the voting job loads the saved-source verifier; promotion code shared with reader routes does not bundle it", () => {

@@ -8,6 +8,7 @@ import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 import type { VotingSourceDoor } from "./voting-source-types.ts";
 import { votingSourceManifestHash } from "./voting-source-hash.ts";
+import { votingSourceGroupUrls } from "./voting-source-replacement-contract.ts";
 
 const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
 
@@ -188,7 +189,7 @@ export function votingSitesCandidate(input: {
     door.scope.ocdId === replacement.scope.ocdId && door.electionDate === replacement.electionDate) &&
     removedSites.every(row => row.jurisdiction.ocdId === replacement.scope.ocdId)
     ? { jurisdictionId: replacement.scope.ocdId, electionDate: replacement.electionDate, doors: replacementDoors,
-      replaceSourceUrls: [...new Set(replacementDoors.flatMap(door => [door.url, ...(door.supersedes ?? [])]))] } : null;
+      replaceSourceUrls: votingSourceGroupUrls(replacementDoors) } : null;
   const removalEvidence = sourceReplacement ? removedSites.map(({ jurisdiction, site }) => ({
     key: `site:${jurisdiction.ocdId}:${site.id}`, code: "OFFICIAL_VOTING_SOURCE_REPLACED" as const,
     jurisdictionId: jurisdiction.ocdId, electionDate: sourceReplacement.electionDate,

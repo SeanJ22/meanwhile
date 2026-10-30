@@ -55,7 +55,7 @@ const firstNames = (name: ComparableName): string[] => [name.first, ...(name.ali
 
 /** Exact surname and first name (or a nickname the record prints); a middle name matches its own initial, and a missing middle never disqualifies. */
 function sameName(a: ComparableName, b: ComparableName): boolean {
-  if (!a.last || a.last !== b.last || a.suffix && b.suffix && a.suffix !== b.suffix) return false;
+  if (!a.last || a.last !== b.last) return false;
   const firstsB = firstNames(b);
   if (!firstNames(a).some(first => firstsB.includes(first))) return false;
   if (!a.middles.length || !b.middles.length) return true;

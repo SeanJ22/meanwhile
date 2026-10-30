@@ -8,10 +8,7 @@ export interface ComparableName {
   middles: string[];
   last: string;
   aliases?: string[];
-  /** A generational suffix the name prints (jr, sr, ii, iii, iv, v). Two names that print different ones are two people. */
-  suffix?: string;
 }
-export type ParsedName = Required<Omit<ComparableName, "suffix">> & Pick<ComparableName, "suffix">;
 
 const clean = (s: string) => s.toLowerCase().replace(/[.,'"`]/g, " ").replace(/\s+/g, " ").trim();
 
@@ -19,7 +16,7 @@ const clean = (s: string) => s.toLowerCase().replace(/[.,'"`]/g, " ").replace(/\
 export const foldAccents = (name: string): string => name.normalize("NFKD").replace(/\p{M}/gu, "");
 
 /** Drops case, punctuation and generational suffixes; middle names come back separately. A name the record prints in double quotes or parentheses is an alias; an apostrophe never delimits one. */
-export function nameParts(given: string, family: string): ParsedName {
+export function nameParts(given: string, family: string): Required<ComparableName> {
   const aliases: string[] = [];
   const givenWithoutAliases = String(given ?? "")
     .replace(/[“"]([^”"]+)[”"]/g, (_match, inner: string) => {
@@ -53,15 +50,7 @@ export function splitDisplayName(display: string): { givenName: string; familyNa
 }
 
 /** A name as an agency or a ballot prints it: `SURNAME, FORENAME MIDDLE` or `Forename Middle Surname`. */
-export function parsePersonName(printedName: string): ParsedName {
-  // A suffix after a comma ("Ebert, III") is part of the name, not the start of a surname-first name.
-  const display = printedName.replace(/,\s*(jr|sr|ii|iii|iv)\.?\s*$/i, " $1");
-  const printed = display.trim().split(/\s+/), tail = printed.at(-1)!.toLowerCase().replace(/[.,]/g, "");
-  const parts = withoutSuffix(display);
-  return printed.length > 1 && NAME_SUFFIXES.has(tail) ? { ...parts, suffix: tail } : parts;
-}
-
-function withoutSuffix(display: string): ParsedName {
+export function parsePersonName(display: string): Required<ComparableName> {
   const comma = display.indexOf(",");
   if (comma > 0) {
     const [family, ...rest] = display.split(",");

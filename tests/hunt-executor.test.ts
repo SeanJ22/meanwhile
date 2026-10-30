@@ -81,7 +81,8 @@ test("a hunter reports facts as found; the Box holds them before finish and the 
     turn([{ type: "tool_use", id: "t1", name: "report_finding", input: { subjectId: BOARD, field: "MTG-01", value: "first Tuesday, 9 a.m.",
       sourceUrl: PAGE_URL, sentence: "The Board meets on the first Tuesday of each month at 9 a.m." } }]),
     turn([{ type: "tool_use", id: "t2", name: "finish", input: { summary: "Found the meeting schedule.",
-      unfilled: [{ subjectId: BOARD, field: "MTG-02", tried: "the board page", unlock: "the clerk's agenda page" }] } }]),
+      unfilled: [{ subjectId: BOARD, field: "MTG-02", tried: "the board page", unlock: "the clerk's agenda page", needs: { kind: "parser", platform: " ECode360 ", state: "AZ" } },
+        { subjectId: BOARD, field: "MTG-03", tried: "the board page", unlock: "a call", needs: { kind: "wish" } }] } }]),
   ]);
   const outcome = await h.run();
   assert.equal(outcome.kind, "DISPOSED", outcome.detail);
@@ -89,7 +90,8 @@ test("a hunter reports facts as found; the Box holds them before finish and the 
   assert.equal((await h.repos.boxFindings.list()).length, 1);
   assert.equal(h.results.length, 1);
   assert.equal(h.results[0]!.narrative, "Found the meeting schedule.");
-  assert.deepEqual(h.results[0]!.unfilled?.map(u => u.field), ["MTG-02"]);
+  assert.deepEqual(h.results[0]!.unfilled?.map(u => [u.field, u.needs ?? null]), [["MTG-02", { kind: "parser", platform: "ecode360", state: "az" }], ["MTG-03", null]],
+    "a need is kept when it names a kind of capability and where it applies, in lower case");
   assert.ok(outcome.artifacts?.some(artifact => artifact.canonicalUrl === PAGE_URL), "the cited page's capture is recorded with the job");
   assert.equal(h.requests.length, 2);
   assert.equal(h.requests[1]!.system, h.requests[0]!.system, "the static prefix is identical on every turn");

@@ -76,6 +76,10 @@ export interface ExpansionScopeDecision {
   readonly previous: { readonly priority: number; readonly budgetUsd: number } | null;
 }
 
+/** A hunt is a Send with a hunt budget or paid work. A stopped hunt stays as a $0 Send that only carries free source work. */
+export const isHunt = (scope: Pick<ExpansionScopeDecision, "budgetUsd" | "budgetStartedAt">): boolean =>
+  scope.budgetUsd > 0 || scope.budgetStartedAt !== undefined;
+
 export function scopeKeyOf(geography: Pick<ExpansionScopeGeography, "version" | "geoid">): string {
   return `${geography.version}/${geography.geoid}`;
 }

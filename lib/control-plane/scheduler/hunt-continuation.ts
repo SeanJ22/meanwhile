@@ -15,7 +15,7 @@ export interface ContinuingHunt {
 }
 
 /** A funded Send is a hunt with its own lifetime dollar allowance. Every funded Send gets the same rules:
- * it continues between ordinary cycles, runs through any scheduled blackout, and its allowance replaces
+ * it continues between ordinary cycles, and its allowance replaces
  * older rolling limits on the work it covers. */
 export function isFundedHunt(scope: { readonly budgetStartedAt?: string | null; readonly budgetUsd: number }): boolean {
   return Boolean(scope.budgetStartedAt) && scope.budgetUsd > 0;

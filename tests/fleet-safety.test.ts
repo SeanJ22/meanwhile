@@ -18,7 +18,6 @@ import {
   aggregateModelSpend,
   classifyProviderFailure,
   operationalNightAt,
-  scheduledBlackoutAt,
   modelRequestWorstCaseUsd,
   pricedModelCharge,
 } from "../lib/control-plane/fleet-safety.ts";
@@ -960,21 +959,6 @@ test("transient 429/5xx/network failures make one call and back off", async () =
         new Date(Date.parse(NIGHT) + error.retryAfterMs).toISOString());
     }
   }
-});
-
-test("Saturday nights dispatch normally", () => {
-  const before = "2026-09-06T00:59:59.000Z"; // Saturday 17:59:59 Phoenix.
-  const during = "2026-09-06T01:00:00.000Z"; // Saturday 18:00 Phoenix.
-  const sundayMorning = "2026-09-06T12:59:59.000Z"; // Sunday 05:59:59 Phoenix.
-  const after = "2026-09-06T13:00:00.000Z";
-  assert.equal(scheduledBlackoutAt(before), false);
-  assert.equal(scheduledBlackoutAt(during), false);
-  assert.equal(scheduledBlackoutAt(sundayMorning), false);
-  assert.equal(scheduledBlackoutAt(after), false);
-
-  const controller = fundedController({ now: during, spend: aggregatePricedSpend([], new Date(Date.parse(during) - 24 * 3_600_000).toISOString(), during), clock: () => Date.parse(during) });
-  assert.equal(controller.snapshot(during).status, "ACTIVE");
-  assert.equal(controller.admitDispatch("blackout-work").admit, true);
 });
 
 test("Admin standing projection exposes ACTIVE, PAUSED and CIRCUIT BROKEN", () => {

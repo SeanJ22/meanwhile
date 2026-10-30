@@ -1,4 +1,5 @@
 import { ballotCandidateDisplayName } from "./name-case.ts";
+import { samePerson, type PersonEvidence } from "../identity/match-person.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";
 import type { BallotSet, Candidacy, Contest } from "./types.ts";
@@ -9,6 +10,8 @@ export type BallotWithTickets = BallotSet;
 const nameKey = (name: string) => name.normalize("NFKC").toLocaleLowerCase("en-US")
   .replace(/[.’']/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const personName = (candidate: Candidacy) => ballotCandidateDisplayName({ ...candidate, ticket: undefined });
+/** A candidacy as the one matcher reads it: a name in a contest. Two are one person when the matcher says so. */
+const personEvidence = (candidate: Candidacy): PersonEvidence => ({ id: candidate.id, name: personName(candidate), seats: [candidate.contestId] });
 const jointOffice = /governor\s*(?:and|&|\/)\s*(?:lieutenant|lt\.?)\s*governor|president\s*(?:and|&|\/)\s*vice\s*president/i;
 const sources = (...rows: readonly (readonly Provenance[])[]) => [...new Map(rows.flat().map(row =>
   [JSON.stringify(row), row])).values()];
@@ -122,23 +125,14 @@ export function withCandidateTickets(set: BallotSet): BallotSet {
     lead.ticket.runningMate.aliases = [...new Set([...ballotCandidateAliases(mate), ...lead.runningMateAliases ?? []])];
     pairedMates.set(mate.id, lead.contestId);
   }
-  const byName = new Map<string, Candidacy[]>();
-  const addName = (row: Candidacy) => {
-    for (const name of new Set([nameKey(personName(row)), nameKey(ballotCandidateDisplayName(row))])) {
-      const key = `${row.contestId}\0${name}`;
-      byName.set(key, [...byName.get(key) ?? [], row]);
-    }
-  };
-  for (const row of rows) addName(row);
   for (const lineup of set.generalLineup?.contests ?? []) {
     const contest = contestById.get(lineup.contestId);
     if (!contest) continue;
     for (const nominee of lineup.nominees) {
-      const name = nameKey(nominee.name), leadName = nameKey(nominee.name.split(/\s*\/\s*/)[0]);
-      const matching = [...new Set([...(byName.get(`${contest.id}\0${name}`) ?? []),
-        ...(byName.get(`${contest.id}\0${leadName}`) ?? [])])].filter(row =>
-        (nameKey(ballotCandidateDisplayName(row)) === name || nameKey(personName(row)) === name ||
-          row.ticket && nameKey(personName(row)) === leadName));
+      const name = nameKey(nominee.name), lead = nominee.name.split(/\s*\/\s*/)[0]!;
+      const matching = rows.filter(row => row.contestId === contest.id && (nameKey(ballotCandidateDisplayName(row)) === name ||
+        samePerson(personEvidence(row), { id: "nominee", name: nominee.name, seats: [contest.id] }) ||
+        row.ticket && samePerson(personEvidence(row), { id: "nominee", name: lead, seats: [contest.id] })));
       const provenance = nominee.provenance ?? { sourceUrl: set.generalLineup!.canvass.url,
         sourceOrg: set.generalLineup!.canvass.issuedBy, collectedAt: set.generalLineup!.canvass.readAt, verifiedAt: null };
       const key = `${lineup.contestId}|${nominee.name}`;
@@ -148,20 +142,20 @@ export function withCandidateTickets(set: BallotSet): BallotSet {
         row.aliases = [...new Set([...ballotCandidateAliases(row), key])];
         row.sources = sources([row.provenance, ...row.sources ?? []], [provenance]);
         row.slogan ??= nominee.note;
-      } else { const row = inlineTicket(candidate, contest); rows.push(row); addName(row); }
+      } else rows.push(inlineTicket(candidate, contest));
     }
   }
   const candidacies: Candidacy[] = [];
-  const personGroups = new Map<string, Candidacy[]>();
+  const kept = new Map<string, Candidacy[]>();
   for (const row of rows) {
     if (pairedMates.has(row.id)) continue;
-    const key = `${row.contestId}\0${nameKey(personName(row))}`;
-    const group = personGroups.get(key) ?? [];
-    const samePerson = group.find(candidate =>
+    const group = kept.get(row.contestId) ?? [];
+    const same = group.find(candidate =>
       (!candidate.personId || !row.personId || candidate.personId === row.personId) &&
-      (!candidate.ticket || !row.ticket || nameKey(personName(candidate.ticket.runningMate)) === nameKey(personName(row.ticket.runningMate))));
-    if (samePerson) Object.assign(samePerson, mergePerson(samePerson, row));
-    else { candidacies.push(row); group.push(row); personGroups.set(key, group); }
+      (!candidate.ticket || !row.ticket || samePerson(personEvidence(candidate.ticket.runningMate), personEvidence(row.ticket.runningMate))) &&
+      samePerson(personEvidence(candidate), personEvidence(row)));
+    if (same) Object.assign(same, mergePerson(same, row));
+    else { candidacies.push(row); group.push(row); kept.set(row.contestId, group); }
   }
   const suppressed = new Set(contests.filter(contest => {
     const raw = set.candidacies.filter(row => row.contestId === contest.id);

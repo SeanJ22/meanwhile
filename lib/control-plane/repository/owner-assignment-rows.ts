@@ -19,7 +19,6 @@ export interface OwnerAssignmentRow {
 export interface OwnerAssignmentHead {
   readonly id: string;
   readonly state: string;
-  readonly clause: string | null;
   readonly subjectId: string | null;
   readonly versions: Readonly<Record<string, string>>;
 }
@@ -90,7 +89,7 @@ const fieldsOf = (row: OwnerAssignmentRow): Record<string, unknown> => ({
   a: row.indexSegments.map(segment => segment.lastActivityAt), c: row.part,
 });
 export function ownerAssignmentHeadOf(row: OwnerAssignmentRow): OwnerAssignmentHead {
-  return {id:row.id,state:row.state,clause:row.group.clause,subjectId:row.group.obligation?.subjectId??null,
+  return {id:row.id,state:row.state,subjectId:row.group.obligation?.subjectId??null,
     versions:Object.fromEntries(Object.entries(fieldsOf(row)).map(([key,value])=>[key,digest(value)]))};
 }
 export function ownerAssignmentContributions(rows: readonly OwnerAssignmentRow[]): ReadonlyMap<string,AssignmentPart> {
@@ -113,13 +112,15 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
     read: async ids => ids.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`, [ids]) : [],
     async heads(ids) {
       if (!ids.length) return [];
-      return await sql.query(`SELECT id,state_code AS state,clause,value #>> '{group,obligation,subjectId}' AS "subjectId",
-        jsonb_build_object('g',md5(((value->'group')-'members'-'publications'-'usd'-'items'-'scoutKeys')::text),'m',md5(members::text),
-          'p',md5((value #> '{group,publications}')::text),'s',md5((SELECT jsonb_agg(segment-'lastActivityAt'-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount' ORDER BY ordinal)
+      const rows=await sql.query(`SELECT id,state_code AS state,value #>> '{group,obligation,subjectId}' AS "subjectId",
+        encode(decode(concat(md5(((value->'group')-'members'-'publications'-'usd'-'items'-'scoutKeys')::text),md5(members::text),
+          md5((value #> '{group,publications}')::text),md5((SELECT jsonb_agg(segment-'lastActivityAt'-'assignmentRefs'-'lastAttemptAt'-'directDependentCount'-'readyAfterThisSettlesCount' ORDER BY ordinal)
             FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),
-          'a',md5((SELECT jsonb_agg(segment->'lastActivityAt' ORDER BY ordinal)
-            FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),'c',md5(((value->'part')||'{"usd":null,"candidates":[]}'::jsonb)::text)) AS versions
-        FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`,[ids]) as OwnerAssignmentHead[];
+          md5((SELECT jsonb_agg(segment->'lastActivityAt' ORDER BY ordinal)
+            FROM jsonb_array_elements(index_segments) WITH ORDINALITY s(segment,ordinal))::text),md5(((value->'part')||'{"usd":null,"candidates":[]}'::jsonb)::text)),'hex'),'base64') AS fingerprint
+        FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`,[ids]) as {id:string;state:string;subjectId:string|null;fingerprint:string}[];
+      return rows.map(({fingerprint,...row})=>{const hex=Buffer.from(fingerprint,"base64").toString("hex");
+        return {...row,versions:Object.fromEntries(["g","m","p","s","a","c"].map((key,i)=>[key,hex.slice(i*32,(i+1)*32)]))};});
     },
     async contributions(ids) {
       if (!ids.length) return new Map();

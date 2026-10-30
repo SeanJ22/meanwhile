@@ -891,7 +891,6 @@ export class OwnerSnapshotFold {
     for (const row of await this.#repos.ownerAssignmentRows.heads(unique(ids).filter(id => !this.#priorRows.has(id)))) {
       await this.#load(row.state);
       this.#priorRows.set(row.id,row);
-      this.#setGroup(row.state,row.id,{members:[],clause:row.clause,obligation:null,publications:[]});
     }
   }
 

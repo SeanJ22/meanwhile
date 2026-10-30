@@ -93,6 +93,8 @@ test("an address the feed composed from parts is quoted at the part the publishe
   const copy = { id: 1, finalUrl: API, text: page.evidence.text, fetchedAt: NOW, isArchive: false };
   assert.equal(addressOnPage(copy, "Council Chambers, City Hall, 612 N Main St, Mitchell, South Dakota, 57301"), "Council Chambers, City Hall, 612 N Main St");
   assert.equal(addressOnPage(copy, "Council Chambers, Mitchell, South Dakota, 57301"), null);
+  assert.equal(addressOnPage(copy, "Annex - Council Chambers, 612 N Main St, Mitchell, South Dakota, 57301"), "612 N Main St");
+  assert.equal(addressOnPage(copy, "Room 2, Mitchell, SD"), null);
   assert.equal(addressOnPage(copy, "9 Elsewhere Rd, Mitchell, South Dakota, 57301"), null);
 });
 

@@ -67,14 +67,14 @@ export function agendaFileOnPage(text: string, url: string): { readonly valueTex
   return id && found ? { valueText: id, quote: found[0] } : null;
 }
 
-/** The part of an address the page writes as its publisher gave it: the address with the trailing parts the feed composed itself (city, a spelled-out state, ZIP) dropped one at a time, never past the street number. */
+/** The part of an address the page writes as its publisher gave it: the address with the trailing parts the feed composed itself (city, a spelled-out state, ZIP) dropped one at a time, else the street part alone. Never a part with no street number. */
 export function addressOnPage(copy: SavedCopy, address: string): string | null {
   const parts = address.split(/,\s*/);
-  for (let count = parts.length; count >= 2; count--) {
+  for (let count = parts.length; count >= 1; count--) {
     const text = parts.slice(0, count).join(", ");
     if (/\d/.test(text) && lineOf(copy, text)) return text;
   }
-  return null;
+  return parts.find(part => /^\d+\s+\S/.test(part) && part.length >= 8 && lineOf(copy, part)) ?? null;
 }
 
 const CANCELED_WORD = /\bcancell?ed\b|\bcancell?ation\b/i;

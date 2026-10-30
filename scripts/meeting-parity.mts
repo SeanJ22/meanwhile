@@ -11,6 +11,7 @@ import { writeFileSync } from "node:fs";
 import { MEETING_FACT_ROWS_SQL } from "../lib/facts/meeting-read.ts";
 import { composeSittings } from "../lib/reader/sittings.ts";
 import { differences, type Shown } from "../lib/facts/meeting-parity.ts";
+import { calendarStatus, type CalendarDoor } from "../lib/meetings/calendar-status.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { Query } from "../lib/facts/publish.ts";
 
@@ -29,6 +30,19 @@ const query: Query = async (text, params = []) => {
   return body.rows.map(row => Array.isArray(row) ? Object.fromEntries(body.fields!.map((field, index) => [field.name, row[index]])) : row as Record<string, unknown>);
 };
 
+/** The control plane's door records, read only: a place's last-checked time and dark sources come from the doors that read its calendars. */
+const CP_URL = process.env.WTP_CONTROL_PLANE_DATABASE_URL_READONLY;
+async function doorsFor(bodyIds: readonly string[], ocdIds: readonly string[]): Promise<CalendarDoor[]> {
+  if (!CP_URL || (!bodyIds.length && !ocdIds.length)) return [];
+  const response = await fetch(`https://${new URL(CP_URL).hostname}/sql`, { method: "POST", headers: { "Neon-Connection-String": CP_URL, "Neon-Batch-Read-Only": "true", "Content-Type": "application/json" },
+    body: JSON.stringify({ query: `SELECT value->>'doorId' AS "doorId", value->>'kind' AS kind, value->>'ocdId' AS "ocdId", value->'bodyIds' AS "bodyIds", value->>'status' AS status,
+      value->>'lastSuccessAt' AS "lastSuccessAt", value->>'lastFailureAt' AS "lastFailureAt" FROM cp_doors WHERE value->>'doorId' LIKE 'meetings:%'
+      AND (EXISTS (SELECT 1 FROM jsonb_array_elements_text(value->'bodyIds') b WHERE b = ANY($1::text[])) OR value->>'ocdId' = ANY($2::text[]))`, params: [bodyIds, ocdIds] }), signal: AbortSignal.timeout(110_000) });
+  const body = await response.json() as { rows?: unknown[]; fields?: { name: string }[]; message?: string };
+  if (!body.rows) throw new Error(body.message ?? "door read failed");
+  return body.rows.map(row => (Array.isArray(row) ? Object.fromEntries((body.fields ?? []).map((field, index) => [field.name, row[index]])) : row) as unknown as CalendarDoor);
+}
+
 /** One ZIP in each state, the same ones for the same seed. */
 async function pickZips(): Promise<{ zip: string; state: string }[]> {
   const rows = await query(`SELECT l.zip, l.postal::jsonb->>'state' AS state FROM zip_location l
@@ -39,7 +53,7 @@ async function pickZips(): Promise<{ zip: string; state: string }[]> {
 }
 
 
-interface ApiPlace { meetings: Shown[]; snapshot: { generatedAt: string; failed: { source: string }[] } | null; coverage: { bodies: { bodyId?: string }[] } }
+interface ApiPlace { meetings: Shown[]; snapshot: { generatedAt: string; failed: { source: string }[] } | null; coverage: { bodies: { bodyId?: string }[] }; governingOcdIds?: string[] }
 async function apiPlace(zip: string): Promise<ApiPlace> {
   for (let attempt = 0; ; attempt++) {
     const response = await fetch(`${SITE}/api/meetings?zip=${zip}`, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(60_000) });
@@ -51,7 +65,7 @@ async function apiPlace(zip: string): Promise<ApiPlace> {
 const inWindow = (m: { startsAt: string }) => { const at = Date.parse(m.startsAt); return at >= FROM && at <= TO; };
 
 const zips = await pickZips();
-const placeLosses = { lastCheckedLost: 0, lastCheckedOlder: 0, failedNoteLost: 0 };
+const placeLosses = { lastCheckedLost: 0, lastCheckedOlder: 0, failedNoteLost: 0, carriedNoteLost: 0 };
 const report = { site: SITE, at: NOW.toISOString(), zips: zips.length, before: 0, matched: 0, missing: 0, changed: 0, added: 0, byKind: {} as Record<string, number>, missingBySource: {} as Record<string, number>, perZip: [] as unknown[] };
 const differing: { zip: string; state: string; differences: string[]; meeting: Shown }[] = [];
 const bump = (map: Record<string, number>, key: string) => { map[key] = (map[key] ?? 0) + 1; };
@@ -72,16 +86,15 @@ for (const { zip, state } of zips) {
     const diff = differences(meeting, found);
     if (diff.length) { changed++; differing.push({ zip, state, differences: diff, meeting }); for (const kind of diff) bump(report.byKind, kind); } else matched++;
   }
-  // A place shows when its sources were last checked, and which of them are dark. Both come from the fact store's own record.
+  // A place shows when its sources were last checked, which of them are dark, and which sittings are carried: from the doors that read its calendars.
   const placeBodies = [...new Set([...bodies.keys(), ...place.coverage.bodies.flatMap(body => body.bodyId ? [body.bodyId] : [])])];
-  const placeRows = placeBodies.length ? await query(MEETING_FACT_ROWS_SQL, [placeBodies, new Date(FROM).toISOString()]) : [];
-  const checked = placeRows.map(row => Date.parse(String(row.checked_at))).filter(Number.isFinite);
-  const factChecked = checked.length ? Math.max(...checked) : null;
+  const status = calendarStatus(await doorsFor(placeBodies, place.governingOcdIds ?? []), { bodyIds: placeBodies, divisionIds: place.governingOcdIds ?? [] }, held);
   if (place.snapshot) {
-    if (factChecked === null) placeLosses.lastCheckedLost++;
-    else if (factChecked < Date.parse(place.snapshot.generatedAt) - DAY) placeLosses.lastCheckedOlder++;
-    if (place.snapshot.failed.length) placeLosses.failedNoteLost++;
+    if (status.lastCheckedAt === null) placeLosses.lastCheckedLost++;
+    else if (Date.parse(status.lastCheckedAt) < Date.parse(place.snapshot.generatedAt) - DAY) placeLosses.lastCheckedOlder++;
+    if (place.snapshot.failed.length && !status.failed.length) placeLosses.failedNoteLost++;
   }
+  placeLosses.carriedNoteLost += shown.filter(meeting => meeting.carried && ![meeting.id, ...meeting.mergedMeetingIds ?? []].some(id => status.carried.has(id) || held.some(sitting => status.carried.has(sitting.id) && (sitting.id === id || sitting.mergedMeetingIds?.includes(id))))).length;
   const added = held.filter(meeting => !ids.has(meeting.id) && ![meeting.id, ...meeting.mergedMeetingIds ?? []].some(id => shown.some(s => s.id === id || s.mergedMeetingIds?.includes(id)))).length;
   report.before += shown.length; report.matched += matched; report.missing += missing; report.changed += changed; report.added += added;
   report.perZip.push({ zip, state, before: shown.length, matched, missing, changed, added });

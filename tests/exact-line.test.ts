@@ -77,6 +77,10 @@ test("a CSV row writes an address from its first cell to its last filled one, an
   for (const value of [csvWritten(header, row, "address1", "zip4")!, "www.example.gov"]) {
     assert.equal(checkFact({ entity: example, fieldKind: "contact", provenance: "OFFICIAL", valueText: value, quote: row, copy }, now, clocks.windowHours).ok, true, value);
   }
+  const next = "SUPT1777,SUPT1777,135 N COURT ST,,PRATTVILLE,AL,36067,3049,318", written = "135 N COURT ST,,PRATTVILLE,AL,36067,3049";
+  assert.equal(boundedIndexOf(next, written), -1, "in prose, a number followed by a comma and three digits goes on");
+  assert.equal(checkFact({ entity: example, fieldKind: "contact", provenance: "OFFICIAL", valueText: written, quote: next,
+    copy: copyOf("id,title,address1,address2,city,state,zip,zip4,pop\n" + next) }, now, clocks.windowHours).ok, true, "in a row of the saved CSV, it is whole cells");
   assert.equal(boundedIndexOf("rate $1,500 paid", "500"), -1);
   assert.equal(boundedIndexOf("rate $1,500 paid", "1"), -1);
   assert.equal(boundedIndexOf("rate 12.5 paid", "5"), -1);

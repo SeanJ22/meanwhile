@@ -27,6 +27,11 @@ export function runnerCycleOf(value: unknown): RunnerCycle | null {
     lastError: cycle.lastError?.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s]+/gi, "[redacted URL]") ?? null };
 }
 
+/** What a beat carries forward from the one before when it has nothing newer. */
+const carried = (previous: RunnerHeartbeat | null, input: Pick<RunnerHeartbeat, "memory" | "neonBytes" | "readCache">) => ({
+  memory: input.memory ?? previous?.memory ?? null, neonBytes: input.neonBytes ?? previous?.neonBytes ?? null,
+  readCache: input.readCache ?? previous?.readCache ?? null });
+
 export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
   readonly at: string; readonly startedAt: string; readonly testedSha: string | null; readonly host: string;
   readonly finishedAt?: string; readonly exitCode?: number | null; readonly signal?: string | null;
@@ -34,12 +39,11 @@ export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
 
   readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
 
-  readonly neonBytes?: RunnerHeartbeat["neonBytes"];
+  readonly neonBytes?: RunnerHeartbeat["neonBytes"]; readonly readCache?: RunnerHeartbeat["readCache"];
 }): CycleHeartbeat {
   return {
     ...previous,
-    memory: input.memory ?? previous?.memory ?? null,
-    neonBytes: input.neonBytes ?? previous?.neonBytes ?? null,
+    ...carried(previous, input),
     formatVersion: previous?.formatVersion ?? 1,
     beatAt: input.at, lastCycleStartedAt: input.startedAt,
     lastCycleFinishedAt: input.finishedAt ?? previous?.lastCycleFinishedAt ?? null,
@@ -58,7 +62,7 @@ export function standingHeartbeat(previous: RunnerHeartbeat | null, input: {
   readonly codeIdentity: RunnerHeartbeat["codeIdentity"];
   readonly releaseStaging: RunnerHeartbeat["releaseStaging"];
   readonly memory?: RunnerHeartbeat["memory"];
-  readonly neonBytes?: RunnerHeartbeat["neonBytes"];
+  readonly neonBytes?: RunnerHeartbeat["neonBytes"]; readonly readCache?: RunnerHeartbeat["readCache"];
 }): RunnerHeartbeat {
   return {
     formatVersion: 1, lastCycleStartedAt: null, lastCycleFinishedAt: null, nextCycleDueAt: null, lastCycleOk: null,
@@ -67,8 +71,7 @@ export function standingHeartbeat(previous: RunnerHeartbeat | null, input: {
     // An identity read for older code would mislead; an unreadable one is shown as unknown.
     codeIdentity: input.codeIdentity,
     releaseStaging: input.releaseStaging,
-    memory: input.memory ?? previous?.memory ?? null,
-    neonBytes: input.neonBytes ?? previous?.neonBytes ?? null,
+    ...carried(previous, input),
   };
 }
 
@@ -115,30 +118,19 @@ export function runnerStanding(
       ? "No heartbeat has ever been recorded."
       : `Last beat ${ago(heartbeat.beatAt, nowIso)}.`;
 
+  const stand = (state: RunnerStandingState, level: HealthLevel, headline: string, detail: string,
+    control: RunnerStanding["control"] = "PAUSE_RUNNER", pause: RunnerStanding["pause"] = null, sinceBeatMinutes = liveness.sinceMinutes): RunnerStanding =>
+    ({ state, level, headline, detail, sinceBeatMinutes, pause, control });
+
   const activeCircuits = safety?.providerCircuits.filter((c) => Date.parse(c.eligibleAt) > Date.parse(nowIso)) ?? [];
   if (activeCircuits.length > 0) {
     const circuits = activeCircuits.map((c) => `${c.provider} until ${c.eligibleAt}: ${c.condition}`).join("; ");
-    return {
-      state: "CIRCUIT BROKEN",
-      level: "RED",
-      headline: "CIRCUIT BROKEN",
-      detail: `${beatSentence} Automated affected work is deferred without retrying. ${circuits}`,
-      sinceBeatMinutes: liveness.sinceMinutes,
-      pause: null,
-      control: "PAUSE_RUNNER",
-    };
+    return stand("CIRCUIT BROKEN", "RED", "CIRCUIT BROKEN", `${beatSentence} Automated affected work is deferred without retrying. ${circuits}`);
   }
 
   if (safety?.status === "PAUSED" && !runnerPause.paused) {
-    return {
-      state: "PAUSED",
-      level: "AMBER",
-      headline: "PAUSED",
-      detail: `${beatSentence} The latest Fleet safety snapshot records the standing runner paused; its detailed owner intent was not readable here.`,
-      sinceBeatMinutes: liveness.sinceMinutes,
-      pause: null,
-      control: "RESUME_RUNNER",
-    };
+    return stand("PAUSED", "AMBER", "PAUSED",
+      `${beatSentence} The latest Fleet safety snapshot records the standing runner paused; its detailed owner intent was not readable here.`, "RESUME_RUNNER");
   }
 
   if (runnerPause.paused && runnerPause.intent) {
@@ -147,72 +139,28 @@ export function runnerStanding(
       runnerPause.honored !== null ||
       (heartbeat?.pause?.intentId === intent.intentId);
     const why = intent.note ? ` Reason: ${intent.note}.` : " No reason was written down.";
-    return {
-      state: "PAUSED",
-      level: "AMBER",
-      headline: "Paused by you",
-      detail:
-        `Paused ${ago(intent.requestedAt, nowIso)} by ${intent.actor}.${why} ` +
+    return stand("PAUSED", "AMBER", "Paused by you",
+      `Paused ${ago(intent.requestedAt, nowIso)} by ${intent.actor}.${why} ` +
         (acknowledged
           ? "The runner acknowledged the pause and is idling."
           : "The runner has not acknowledged it yet — it was stopped, or it has not looked. ") +
         ` ${beatSentence}`,
-      sinceBeatMinutes: liveness.sinceMinutes,
-      pause: {
-        intentId: intent.intentId,
-        since: intent.requestedAt,
-        note: intent.note,
-        by: intent.actor,
-        acknowledged,
-      },
-      control: "RESUME_RUNNER",
-    };
+      "RESUME_RUNNER", { intentId: intent.intentId, since: intent.requestedAt, note: intent.note, by: intent.actor, acknowledged });
   }
 
   switch (liveness.state) {
     case "ALIVE":
-      return {
-        state: safety?.status === "ACTIVE" ? "ACTIVE" : "ALIVE",
-        level: "GREEN",
-        headline: safety?.status === "ACTIVE" ? "ACTIVE" : "Running",
-        detail: `${beatSentence} Cycles are on schedule.`,
-        sinceBeatMinutes: liveness.sinceMinutes,
-        pause: null,
-        control: "PAUSE_RUNNER",
-      };
+      return stand(safety?.status === "ACTIVE" ? "ACTIVE" : "ALIVE", "GREEN", safety?.status === "ACTIVE" ? "ACTIVE" : "Running",
+        `${beatSentence} Cycles are on schedule.`);
     case "LATE":
-      return {
-        state: "LATE",
-        level: "AMBER",
-        headline: "Late — no pause recorded",
-        detail:
-          `${beatSentence} That is past the late threshold and no pause is recorded, so either a cycle is overrunning or the runner stopped. ` +
-          "If you stopped it on purpose, record the pause below so this reads as yours.",
-        sinceBeatMinutes: liveness.sinceMinutes,
-        pause: null,
-        control: "PAUSE_RUNNER",
-      };
+      return stand("LATE", "AMBER", "Late — no pause recorded",
+        `${beatSentence} That is past the late threshold and no pause is recorded, so either a cycle is overrunning or the runner stopped. ` +
+          "If you stopped it on purpose, record the pause below so this reads as yours.");
     case "SILENT":
-      return {
-        state: "SILENT",
-        level: "RED",
-        headline: "Silent — no pause recorded",
-        detail:
-          `${beatSentence} Nothing says this was deliberate: no pause is recorded. ` +
-          "If you stopped it on purpose, record the pause below and this turns amber; if you did not, the runner has failed and needs restarting.",
-        sinceBeatMinutes: liveness.sinceMinutes,
-        pause: null,
-        control: "PAUSE_RUNNER",
-      };
+      return stand("SILENT", "RED", "Silent — no pause recorded",
+        `${beatSentence} Nothing says this was deliberate: no pause is recorded. ` +
+          "If you stopped it on purpose, record the pause below and this turns amber; if you did not, the runner has failed and needs restarting.");
     default:
-      return {
-        state: "NEVER_BEAT",
-        level: "UNKNOWN",
-        headline: "No heartbeat on record",
-        detail: liveness.detail,
-        sinceBeatMinutes: null,
-        pause: null,
-        control: "PAUSE_RUNNER",
-      };
+      return stand("NEVER_BEAT", "UNKNOWN", "No heartbeat on record", liveness.detail, "PAUSE_RUNNER", null, null);
   }
 }

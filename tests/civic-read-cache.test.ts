@@ -2,15 +2,16 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, readdir, rm, stat, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 import { fork } from "node:child_process";
 import { once } from "node:events";
 import { CivicReadCache, runtimeCivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { civicReadCopyStore, saveCivicReadCopy, startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
+import { civicReadCopyStore, startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 
+const stores = new Map<string, ReturnType<typeof civicReadCopyStore>>();
 function cache(root: string) {
-  return new CivicReadCache({ read: key => readFile(join(root, key + ".json"), "utf8"),
-    write: (key, saved) => saveCivicReadCopy(root, key, saved) });
+  const store = stores.get(root) ?? stores.set(root, civicReadCopyStore(root)).get(root)!;
+  return new CivicReadCache({ read: key => readFile(join(root, key + ".json"), "utf8"), write: (key, saved) => store.write(key, saved) });
 }
 
 test("local job continuations survive eviction of unrelated disposable source copies", async t => {
@@ -134,7 +135,8 @@ test("corrupt or unwritable disposable copies fall back to the actual database r
   assert.deepEqual(await cache(blocked).rows(input), [{ hash: "hash", payload: { verified: true } }]);
 });
 
-test("the runner's one copy host serves every child, and a child that inherits it starts no other", async t => {
+/** A scratch directory as the working directory and a reader database named, with no copy host inherited; all of it restored afterwards. */
+async function hostEnvironment(t: TestContext): Promise<void> {
   const saved = { ...process.env };
   const cwd = process.cwd();
   const root = await scratch(t);
@@ -147,6 +149,10 @@ test("the runner's one copy host serves every child, and a child that inherits i
   process.env.DATABASE_URL = "postgresql://local:local@ep-cache-host.invalid/neondb";
   delete process.env.WTP_CIVIC_READ_CACHE_URL;
   delete process.env.WTP_CIVIC_READ_CACHE_TOKEN;
+}
+
+test("the runner's one copy host serves every child, and a child that inherits it starts no other", async t => {
+  await hostEnvironment(t);
   const runner = await startCivicReadCacheHost();
   const url = process.env.WTP_CIVIC_READ_CACHE_URL;
   assert.match(url ?? "", /^http:\/\/127\.0\.0\.1:\d+$/);
@@ -161,6 +167,25 @@ test("the runner's one copy host serves every child, and a child that inherits i
   assert.equal(read, false, "a second process reads the part from the runner's copy");
   await runner.close();
   assert.equal(process.env.WTP_CIVIC_READ_CACHE_URL, undefined);
+});
+
+test("the copy host counts the lookups it answered, missed and lost, its evictions, and its oldest unread copy", async t => {
+  await hostEnvironment(t);
+  const host = await startCivicReadCacheHost({ maxBytes: 40_000_000 });
+  t.after(() => host.close());
+  const at = (n: number, init: RequestInit = {}) => fetch(`${process.env.WTP_CIVIC_READ_CACHE_URL}/${n.toString(16).padStart(64, "0")}`,
+    { ...init, headers: { authorization: process.env.WTP_CIVIC_READ_CACHE_TOKEN! } });
+  assert.equal((await at(1, { method: "PUT", body: "x".repeat(30_000_000) })).status, 204);
+  assert.equal((await (await at(1)).text()).length, 30_000_000);
+  const lost = await at(1);
+  await lost.body!.cancel();
+  while (host.stats()!.timeouts < 1) await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal((await at(2, { method: "PUT", body: "y".repeat(15_000_000) })).status, 204);
+  assert.equal((await at(1)).status, 404, "the copy the second write pushed out is a miss");
+  assert.equal((await at(3)).status, 404);
+  assert.deepEqual({ ...host.stats()!, since: "", oldestAgeMs: 0 },
+    { since: "", hits: 2, misses: 2, timeouts: 1, bytes: 15_000_000, capBytes: 40_000_000, evicted: 1, oldestAgeMs: 0 });
+  assert.ok(host.stats()!.oldestAgeMs! < 60_000 && Date.parse(host.stats()!.since) > 0);
 });
 
 async function diskBytes(root: string): Promise<number> {

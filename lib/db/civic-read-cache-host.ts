@@ -10,18 +10,22 @@ export const CIVIC_READ_COPY_MAX_BYTES = 64 * 1024 ** 2;
 
 type CopyBody = string | AsyncIterable<Uint8Array>;
 
+/** The copy host's own counts since it started: lookups answered, lookups with no copy, lookups the caller gave up on, and the store's state. */
+export interface ReadCacheReading { readonly since: string; readonly hits: number; readonly misses: number; readonly timeouts: number;
+  readonly bytes: number; readonly capBytes: number; readonly evicted: number; readonly oldestAgeMs: number | null }
+
 /** One writer owns the entire disposable directory, including old database
  * namespaces. Reserve space before writing each chunk; oldest copies go first. */
 export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX_BYTES, maxCopyBytes = CIVIC_READ_COPY_MAX_BYTES) {
   if (!Number.isSafeInteger(maxBytes) || maxBytes <= 0 || !Number.isSafeInteger(maxCopyBytes) || maxCopyBytes <= 0) throw new Error("CIVIC_READ_CACHE_LIMIT_INVALID");
   const entries = new Map<string, { size: number; at: number }>();
-  let used = 0, queue = Promise.resolve();
+  let used = 0, evicted = 0, queue = Promise.resolve();
   const makeRoom = async (bytes: number): Promise<void> => {
     if (used + bytes <= maxBytes) return;
     for (const [path, entry] of entries) {
       if (used + bytes <= maxBytes) break;
       try { await unlink(path); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
-      used -= entry.size; entries.delete(path);
+      used -= entry.size; evicted += 1; entries.delete(path);
     }
     if (used + bytes > maxBytes) throw new Error("CIVIC_READ_CACHE_FULL");
   };
@@ -52,8 +56,10 @@ export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX
     /** A copy that was read is the newest, so the oldest unread copies go first. */
     touch(key: string): void {
       const path = join(root, key + ".json"), entry = entries.get(path);
-      if (entry) { entries.delete(path); entries.set(path, entry); }
+      if (entry) { entries.delete(path); entries.set(path, { ...entry, at: Date.now() }); }
     },
+    /** What the store holds now: disk bytes, copies evicted since it started, and how long its least recently used copy has gone unread. */
+    stats: () => ({ bytes: used, capBytes: maxBytes, evicted, oldestAgeMs: entries.size ? Math.round(Date.now() - entries.values().next().value!.at) : null }),
     write(key: string, body: CopyBody): Promise<void> {
       const work = queue.then(async () => {
         await ready;
@@ -89,33 +95,28 @@ export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX
   };
 }
 
-const stores = new Map<string, ReturnType<typeof civicReadCopyStore>>();
-/** Only the supervisor touches disposable files; source doors stay off disk. */
-export async function saveCivicReadCopy(root: string, key: string, saved: string): Promise<void> {
-  const store = stores.get(root) ?? stores.set(root, civicReadCopyStore(root)).get(root)!;
-  try { await store.write(key, saved); } catch { /* A disposable copy cannot fail the actual database read. */ }
-}
-
 /** Host-local copy sink inherited by every child. Each use still checks the
  * database content fingerprint. Disk copies, temporary writes and individual bodies are bounded. */
-export async function startCivicReadCacheHost(options: { readonly maxBytes?: number; readonly maxCopyBytes?: number } = {}): Promise<{ close: () => Promise<void> }> {
+export async function startCivicReadCacheHost(options: { readonly maxBytes?: number; readonly maxCopyBytes?: number } = {}): Promise<{ close: () => Promise<void>; stats: () => ReadCacheReading | null }> {
   const database = process.env.DATABASE_URL;
-  if (!database || (process.env.WTP_CIVIC_READ_CACHE_URL && process.env.WTP_CIVIC_READ_CACHE_TOKEN)) return { close: async () => {} };
+  if (!database || (process.env.WTP_CIVIC_READ_CACHE_URL && process.env.WTP_CIVIC_READ_CACHE_TOKEN)) return { close: async () => {}, stats: () => null };
   const root = join(process.cwd(), ".runtime", "civic-read-cache");
   const namespace = createHash("sha256").update(database).digest("hex");
   const store = civicReadCopyStore(root, options.maxBytes, options.maxCopyBytes);
   await store.ready.catch(error => console.error(`Read cache unavailable; collection continues: ${error instanceof Error ? error.name : "error"}`));
   const token = randomUUID();
+  const since = new Date().toISOString(), lookups = { hits: 0, misses: 0, timeouts: 0 };
   const server = createServer(async (request, response) => {
     if (!["GET", "PUT"].includes(request.method ?? "") || request.headers.authorization !== token || !/^\/(?:checkpoint\/)?[a-f0-9]{64}$/.test(request.url ?? "")) {
       response.writeHead(404).end(); return;
     }
-    const key = namespace + request.url!;
+    const key = namespace + request.url!, lookup = request.method === "GET" && !request.url!.startsWith("/checkpoint/");
+    if (lookup) response.on("close", () => { if (!response.writableFinished) lookups.timeouts += 1; });
     try {
       const file = join(root, key + ".json");
       if (request.method === "GET") {
         await stat(file);
-        if (!request.url!.startsWith("/checkpoint/")) store.touch(key);
+        if (lookup) { lookups.hits += 1; store.touch(key); }
         response.writeHead(200, { "content-type": "application/json" });
         await pipeline(createReadStream(file), response); return;
       }
@@ -139,6 +140,7 @@ export async function startCivicReadCacheHost(options: { readonly maxBytes?: num
       await store.write(key, request);
       response.writeHead(204).end();
     } catch {
+      if (lookup && !response.headersSent) lookups.misses += 1;
       if (!response.headersSent) response.writeHead(request.method === "GET" ? 404 : 503).end();
       else response.destroy();
     }
@@ -156,5 +158,5 @@ export async function startCivicReadCacheHost(options: { readonly maxBytes?: num
     delete process.env.WTP_CIVIC_READ_CACHE_URL;
     delete process.env.WTP_CIVIC_READ_CACHE_TOKEN;
     await new Promise<void>(resolve => server.close(() => resolve()));
-  } };
+  }, stats: () => ({ since, ...lookups, ...store.stats() }) };
 }

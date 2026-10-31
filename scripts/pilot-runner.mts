@@ -189,7 +189,7 @@ if (provider === "postgres") {
   assertRuntimeAuthority({ capabilities: ["STANDING_PARENT"] });
 }
 
-await startCivicReadCacheHost();
+const readCacheHost = await startCivicReadCacheHost();
 
 function standingChildEnvironment(
   capability: Parameters<typeof admittedRuntimeChildEnvironment>[0]["capability"],
@@ -1169,6 +1169,7 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
     if (!repos) return;
 
     const memory = await hostMemoryReading().catch(() => null);
+    const readCache = readCacheHost.stats();
     let neonBytes: RunnerHeartbeat["neonBytes"] = null;
     try { neonBytes = neonBytesReading(); } catch {  }
     let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
@@ -1183,9 +1184,9 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
       const next = { ...(startedAt === null
         ? standingHeartbeat(current?.value ?? null, { at, testedSha: RUNNING_CODE_SHA, host: hostname(), codeIdentity,
-          releaseStaging: releaseStaging.status(), memory, neonBytes })
+          releaseStaging: releaseStaging.status(), memory, neonBytes, readCache })
         : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
-          testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
+          testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes, readCache,
           ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal,
             nextCycleDueAt: new Date(Date.parse(at) + (exit.code === 0 ? INTERVAL_MIN : Math.min(INTERVAL_MIN, 10)) * 60_000).toISOString() } : {}) })), jobs: jobRuns.merged(current?.value.jobs) };
       try {

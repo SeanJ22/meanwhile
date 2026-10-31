@@ -58,22 +58,23 @@ test("startup and the standing clock write the running code, at most once a minu
     host: "meanwhile-runner", codeIdentity: { verdict: "RUNNER_BEHIND_EXECUTABLE", runnerTestedSha: "8664f367eee4009fb9cc893a2092581efc48a52a" },
     cycle: { startedAt: "2026-10-26T00:47:36.258Z", finishedAt: "2026-10-26T01:54:09.583Z", exitCode: 1, signal: null, lastError: "old" } };
   await repos.runnerHeartbeat.put("pilot-runner", previous as never, previous.beatAt);
-  const running = "9352c8e143db00d1623735f02e8c419d1c697278";
+  const running = "9352c8e143db00d1623735f02e8c419d1c697278", reading = { since: "s", hits: 3, misses: 1, timeouts: 0, bytes: 9, capBytes: 99, evicted: 2, oldestAgeMs: 5 };
   let identityReads = 0;
   const staging = { targetSha: "a".repeat(40), state: "FAILED", code: "STAGING_TIMED_OUT", detail: "stuck", startedAt: "x", at: "y" };
   const context = createContext({ provider: "postgres", currentCycleErrors: "", process, RUNNER_ID: "pilot-runner", CODE_ROOT: ".",
     RUNNING_CODE_SHA: running, nativeAbortLine: () => null, neonReadFailureLine: () => null, ownerRepositories: async () => repos,
-    hostMemoryReading: async () => null, neonBytesReading: () => null, hostname: () => "meanwhile-runner",
+    hostMemoryReading: async () => null, neonBytesReading: () => null, readCacheHost: { stats: () => reading }, hostname: () => "meanwhile-runner",
     readCodeIdentity: (input: { runnerTestedSha: string }) => { identityReads += 1; return { verdict: "CONSISTENT", runnerTestedSha: input.runnerTestedSha }; },
     releaseStaging: { status: () => staging }, standingHeartbeat, liveCycleHeartbeat, jobRuns: new JobRunBook(), boundedBeat, BEAT_BOUND_MS: 45_000, lateBeat: () => {},
     console: { error: (line: string) => { throw new Error(line); } }, Date });
   runInContext(stripTypeScriptTypes(`${write}\n${clock}`), context);
   await runInContext("standingBeat()", context);
   await runInContext("standingBeat()", context);
-  const beat = (await repos.runnerHeartbeat.read("pilot-runner"))!.value as unknown as typeof previous & { releaseStaging: unknown };
+  const beat = (await repos.runnerHeartbeat.read("pilot-runner"))!.value as unknown as typeof previous & { releaseStaging: unknown; readCache: unknown };
   assert.equal(beat.testedSha, running);
   assert.deepEqual(beat.codeIdentity, { verdict: "CONSISTENT", runnerTestedSha: running });
   assert.deepEqual(beat.releaseStaging, staging, "a failed staging rides on the heartbeat Admin reads");
+  assert.deepEqual(beat.readCache, reading, "the heartbeat carries the read-cache host's counts");
   assert.equal(identityReads, 1, "a second beat inside the minute writes nothing");
   assert.ok(Date.parse(beat.beatAt) > Date.parse(previous.beatAt));
   for (const key of ["lastCycleStartedAt", "lastCycleFinishedAt", "lastCycleOk", "cycle"] as const) assert.deepEqual(beat[key], previous[key]);

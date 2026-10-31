@@ -172,6 +172,9 @@ export interface RunnerHeartbeat {
   /** When each job the runner schedules last started, finished or failed; the line keeper flags the ones that stopped finishing. */
   readonly jobs?: import("./job-runs.ts").JobRuns | null;
 
+  /** The runner's read-cache host: lookups answered, missed and given up on, evictions, disk bytes against the cap, and how long its least recently used copy has gone unread. */
+  readonly readCache?: import("../db/civic-read-cache-host.ts").ReadCacheReading | null;
+
   readonly neonBytes?: {
     readonly lastFullHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;
     readonly currentHour: import("../db/transfer-by-caller.ts").NeonBytesSummary | null;

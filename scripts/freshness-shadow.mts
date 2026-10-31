@@ -1199,6 +1199,7 @@ if (dispatchOrdering !== null) {
 }
 
 const standingById = new Map(sync.all.map((o) => [o.id, o]));
+let knownOpen: Promise<ReadonlySet<string>> | undefined;
 const openOccurrenceInStep = async (
   row: ScheduledObligation,
 ): Promise<boolean | { readonly settled: SettledOccurrence }> => {
@@ -1217,7 +1218,8 @@ const openOccurrenceInStep = async (
     if (resumed !== null) {
       occurrenceByObligation.set(id, { id: resumed.id, routeTaskId: resumed.routeTaskId });
     } else {
-      const occ = await openOccurrence(repos, { obligation, dueAt: row.nextDueAt, now: NOW });
+      const occ = await openOccurrence(repos, { obligation, dueAt: row.nextDueAt, now: NOW,
+        knownOpen: await (knownOpen ??= repos.dispatchState.openAmong?.(sync.all.flatMap(o => o.openOccurrenceId ?? []))) });
       if (occ === null) return false;
       occurrenceByObligation.set(id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     }

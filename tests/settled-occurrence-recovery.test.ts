@@ -19,12 +19,11 @@ import { ConcurrentModification, type ControlPlaneRepositories } from "../lib/co
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
 import { dispatchOne, sweepExpiredLeases, type RunWork } from "../lib/control-plane/scheduler/dispatch.ts";
 import {
-  closeSettledOccurrence,
-  findSettledOccurrences,
   loadDebts,
   openOccurrence,
   persistDebts,
   resumeOpenOccurrence,
+  scanOccurrences,
   settledRouteTaskIds,
   standing,
 } from "../lib/control-plane/scheduler/durable.ts";
@@ -176,7 +175,7 @@ async function cycleAt(
   const open = new Map<string, { id: string; routeTaskId: string }>();
   let ran = 0;
   const settledOccurrences = options.scan
-    ? await findSettledOccurrences(repos, { obligations: rows, settledRouteTaskIds: settledRouteTaskIds(await repos.routeTasks.list()) })
+    ? (await scanOccurrences(repos, { obligations: rows, settledRouteTaskIds: settledRouteTaskIds(await repos.routeTasks.list()), neverClaimedRouteTaskIds: new Set() })).settled
     : undefined;
   const cycle = await runCycle({
     repos,
@@ -870,27 +869,3 @@ test("BEFORE DISPATCH: a recovered row is withheld from its lane, so an open lan
   }
 });
 
-test("findSettledOccurrences names exactly the open occurrences whose RouteTask is settled, each confirmed by a fresh read", async () => {
-  for (const [label, repos] of await eachStore("wtp-settled-")) {
-    await interrupted(repos, obligation("ob-settled"), disposes("WALKED_NO_YIELD"));
-    await repos.obligations.put("ob-open", standing(obligation("ob-open", { subjectId: "wtp-body/open" }), T0), T0);
-    await openOccurrence(repos, { obligation: (await repos.obligations.mustRead("ob-open")).value, dueAt: T0, now: T0 });
-    await interrupted(repos, obligation("ob-closed", { subjectId: "wtp-body/closed" }), disposes("WALKED_NO_YIELD"));
-
-    const obligations = (await repos.obligations.list()).map((row) => row.value);
-    const routeTasks = await repos.routeTasks.list();
-    const closing = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-closed")).value, await repos.dispatchState.readOpen({ obligationIds: ["ob-closed"] }));
-    assert.equal(closing?.kind, "SETTLED");
-    if (closing?.kind === "SETTLED") await closeSettledOccurrence(repos, { settled: closing.settled, now: T1 });
-
-    const found = await findSettledOccurrences(repos, { obligations, settledRouteTaskIds: settledRouteTaskIds(routeTasks) });
-    assert.deepEqual(found.map((s) => s.obligationId), ["ob-settled"], `${label}: only the settled one still open`);
-    const confirmed = await resumeOpenOccurrence(repos, (await repos.obligations.mustRead("ob-settled")).value, await repos.dispatchState.readOpen({ obligationIds: ["ob-settled"] }));
-    assert.deepEqual(found[0], confirmed?.kind === "SETTLED" ? confirmed.settled : null, `${label}: exactly what a lane's resume reads`);
-    assert.deepEqual(
-      await findSettledOccurrences(repos, { obligations, settledRouteTaskIds: new Set() }),
-      [],
-      `${label}: a listing that names no settled RouteTask yields no candidate`,
-    );
-  }
-});

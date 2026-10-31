@@ -140,6 +140,24 @@ function selectedZipStore(state: string, canonical: Awaited<ReturnType<typeof re
     selected.has(`${recordClass}:${scope}`) ? Promise.resolve(selected.get(`${recordClass}:${scope}`)!) : canonical.readPromotedEntry!(recordClass,scope)};
 }
 
+/** A state's delegation on its own: its directory and the campaign-site record, never the whole state. */
+export async function readStateDelegation(state: string): Promise<CivicDataReadResult<FederalDirectoryReadModel>> {
+  const store = await readCanonicalShelf([{ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) }, memberContextPointers[0]]);
+  const [federal, campaigns] = await Promise.all([readStateFederalDirectory(state, { store }), readCuratedReaderProjection("campaign-sites", { store }, "ALL")]);
+  return stateFederalRead(federal, campaigns);
+}
+
+/** The state's delegation with each member's campaign site, and any portrait a state roster holds for them. */
+function stateFederalRead(federal: CivicDataReadResult<FederalDirectoryReadModel>, campaigns: Awaited<ReturnType<typeof readCuratedReaderProjection>>, roster: OfficeholderSet | null = null): CivicDataReadResult<FederalDirectoryReadModel> {
+  if (federal.kind !== "PROMOTED" && federal.kind !== "BOOTSTRAP") return federal;
+  const withPortraits = roster ? { ...federal.value, roster: withFederalPortraits(federal.value.roster, roster) } : federal.value;
+  const sites = campaigns.kind === "PROMOTED" || campaigns.kind === "BOOTSTRAP" ? campaigns.value.records as unknown as CampaignSiteProjectionRecord[] : [];
+  const campaignsByPerson = new Map(sites.flatMap(row => typeof row.site.url === "string" ? [[row.officeholderId, row.site.url] as const] : []));
+  const value = { ...withPortraits, roster: { ...withPortraits.roster, officeholders: withPortraits.roster.officeholders.map(holder => ({ ...holder,
+    campaignUrl: holder.campaignUrl ?? [...personIdentityKeys(holder)].flatMap(key => campaignsByPerson.get(key) ?? []).at(0) ?? null })) } };
+  return { kind: "BOOTSTRAP", value, metadata: federal.metadata, detail: "The state's current delegation, loaded with its offices and contact details." };
+}
+
 async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, composition: StateComposition, ballotOnly: boolean): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   const presidentRead = zip ? Promise.resolve(null) : nationalPresident().catch(() => null);
@@ -208,17 +226,8 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const roster = people.kind === "PROMOTED" || people.kind === "BOOTSTRAP" ? people.value.roster : null;
   const authoritative = official?.kind === "PROMOTED" || official?.kind === "BOOTSTRAP" ? official.value.roster : null;
   const legislativePeople = statePeopleWithLegislativeAuthority(roster, authoritative, runtime.value.statewideExecutives);
-  const heldFederal = federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP" ? federal.value : null;
-  const directoryWithPortraits = heldFederal && roster ? { ...heldFederal, roster: withFederalPortraits(heldFederal.roster, roster) } : heldFederal;
-  const sites = campaigns.kind === "PROMOTED" || campaigns.kind === "BOOTSTRAP" ? campaigns.value.records as unknown as CampaignSiteProjectionRecord[] : [];
-  const campaignsByPerson = new Map(sites.flatMap(row => typeof row.site.url === "string" ? [[row.officeholderId, row.site.url] as const] : []));
-  const directory = directoryWithPortraits ? { ...directoryWithPortraits, roster: { ...directoryWithPortraits.roster,
-    officeholders: directoryWithPortraits.roster.officeholders.map(holder => ({ ...holder,
-      campaignUrl: holder.campaignUrl ?? [...personIdentityKeys(holder)].flatMap(key => campaignsByPerson.get(key) ?? []).at(0) ?? null,
-    })),
-  } } : null;
-  const federalRead = directory ? { kind: "BOOTSTRAP" as const, value: directory, metadata: federal.metadata,
-    detail: "The state's current delegation, loaded with its offices and contact details." } : federal;
+  const federalRead = stateFederalRead(federal, campaigns, roster);
+  const directory = federalRead.kind === "PROMOTED" || federalRead.kind === "BOOTSTRAP" ? federalRead.value : null;
   composition.resolveAuthorities({ registryRead: runtime, federalRead });
   const officeMembers = [...new Set([...(roster?.officeholders ?? []), ...(authoritative?.officeholders ?? []),
     ...(directory?.roster.officeholders ?? []), ...runtime.value.bodyRosters.flatMap(row => row.members),

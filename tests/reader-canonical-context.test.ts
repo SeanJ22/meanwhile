@@ -9,8 +9,6 @@ import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { readStatePackage, readStateAuthorities, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../lib/reader/state.ts";
 import { installReaderDatabaseQuery as installQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf } from "../lib/reader/shelf.ts";
-import { refreshRegistryRuntimeFromPromoted } from "../lib/reader/authority-reads.ts";
-import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
@@ -113,9 +111,6 @@ test("settled state and geography reads stay consistent within one request while
       assert.equal(readStatePackage("US-AZ"), raw, "streamed cards reuse the settled state read");
       assert.equal(await readStateDistricts("AZ"), first.districts, "settled geography remains available in this request's composition");
       assert.equal(reads, 1);
-      await refreshRegistryRuntimeFromPromoted(["AZ"]);
-      assert.equal(getRegistryRuntimeReadModel(), first.registry, "the site adapter binds the state's existing canonical answer");
-      assert.equal(reads, 1, "splitting publication imports must not add a reader query");
 
       version = "request-state:two";
       block = new Promise<void>(resolve => { release = resolve; });

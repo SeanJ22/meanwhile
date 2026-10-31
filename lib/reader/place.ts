@@ -53,14 +53,19 @@ const PLACE_SELECTION = `WITH requested_bodies AS (
       OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
 ), ${identityCtes}`;
 
-/**
- * The saved pages of a selection. Given the print of the answer a server already holds ($10), it returns that print alone while the pages and the
- * aliases they depend on are unchanged. Otherwise it returns the pages, leaving out the rows of those a server already holds ($11, as id:version:kind).
- */
-export const PLACE_PAGES_SQL = `${PLACE_SELECTION}, printed AS (
+/** What the saved pages of a selection and the aliases they depend on come to, as one short text. */
+const PAGES_PRINT = `printed AS (
   SELECT md5(coalesce(string_agg(s.id||':'||coalesce(p.version::text,'-')||':'||(${identityHeaders('s.id')})::text,',' ORDER BY s.id),'')) AS print
     FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id WHERE e.state=$1::char(2) OR e.state IS NULL
-), pages AS (
+)`;
+/** The print alone, so asking again about an answer a server already holds costs one short text. Its parameters are the selection's first seven. */
+export const PLACE_PRINT_SQL = `${PLACE_SELECTION}, ${PAGES_PRINT} SELECT print FROM printed`;
+
+/**
+ * The saved pages of a selection, leaving out the rows of those a server already holds ($10, as id:version:kind). The requested boards
+ * and the print of the whole selection come once, on its first row.
+ */
+export const PLACE_PAGES_SQL = `${PLACE_SELECTION}, ${PAGES_PRINT}, pages AS (
 SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,p.version,
   coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) AS row,
   ${identityHeaders('s.id')} AS body_headers,
@@ -74,10 +79,8 @@ SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state
 )
 SELECT pages.page_id,pages.page_kind,pages.built_at,pages.version,CASE WHEN held.saved THEN NULL ELSE pages.row END AS row,held.saved AS held,
   pages.body_headers,CASE WHEN first.lead THEN pages.body_ids END AS body_ids,CASE WHEN first.lead THEN (SELECT print FROM printed) END AS print
-  FROM pages CROSS JOIN LATERAL (SELECT pages.row IS NOT NULL AND pages.page_id||':'||pages.version||':'||pages.page_kind=ANY($11::text[]) AS saved) held
-  CROSS JOIN LATERAL (SELECT pages.page_id=(SELECT min(page_id) FROM pages) AS lead) first
-  WHERE (SELECT print FROM printed) IS DISTINCT FROM $10::text
-UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,(SELECT print FROM printed) WHERE (SELECT print FROM printed)=$10::text`;
+  FROM pages CROSS JOIN LATERAL (SELECT pages.row IS NOT NULL AND pages.page_id||':'||pages.version||':'||pages.page_kind=ANY($10::text[]) AS saved) held
+  CROSS JOIN LATERAL (SELECT pages.page_id=(SELECT min(page_id) FROM pages) AS lead) first`;
 
 /** A combined answer is kept in this server's memory while the print of its pages is unchanged, and never for long, since sittings are read against the clock. */
 const COMBINED_KEPT = 24, COMBINED_MS = 60_000;
@@ -153,9 +156,9 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
     input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false];
   const key=JSON.stringify([params,input.placeId??null]),kept=remember?combined.get(key):undefined;
   const shape=JSON.stringify(params.slice(6)),prefix=`${shape}|`;
-  const read=async(have:readonly string[])=>query(PLACE_PAGES_SQL,[...params,kept && Date.now()-kept.at<COMBINED_MS ? kept.print : null,have]);
+  if(kept && Date.now()-kept.at<COMBINED_MS && (await query(PLACE_PRINT_SQL,params.slice(0,7)))[0]?.print===kept.print)return kept.place;
+  const read=async(have:readonly string[])=>query(PLACE_PAGES_SQL,[...params,have]);
   let rows=await read(remember?[...heldRows.keys()].filter(held=>held.startsWith(prefix)).map(held=>held.slice(prefix.length)):[]);
-  if(kept && rows.length===1 && rows[0]!.page_id===null && kept.print===rows[0]!.print)return kept.place;
   const rowKey=(row:Record<string,unknown>)=>`${prefix}${row.page_id}:${row.version}:${row.page_kind}`;
   if(rows.some(row=>row.held===true && !heldRows.has(rowKey(row))))rows=await read([]);
   const withRows=rows.map(row=>row.held===true?{...row,row:heldRows.get(rowKey(row))}:row);

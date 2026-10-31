@@ -3,7 +3,7 @@ import {createHash} from "node:crypto";
 import test from "node:test";
 import {buildPlacePackage,rebuildPlacePages} from "../lib/reader/place-builder.ts";
 import {PLACE_PAGES_SQL,readPlacePackage,type PlaceInput} from "../lib/reader/place.ts";
-import {unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
+import {packPlaceContext,unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
 import type {FactDb,Query} from "../lib/facts/publish.ts";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 
@@ -66,7 +66,7 @@ test("the real worker transfers only the requested compressed context and keeps 
         const rows=await query(text,params);
         bytes.set(label,Buffer.byteLength(JSON.stringify(rows)));
         for(const {row} of rows) {
-          assert.equal((row as {encoding:string}).encoding,"br-json-v1");
+          assert.match((row as {encoding:string}).encoding,/^(br-json-v1|dfl-dict-v1)$/);
           const decoded=unpackPlaceContextRow(row);
           if(!input.includeAgenda) {
             assert.deepEqual(decoded.archived_documents,[]);
@@ -106,4 +106,14 @@ test("the real worker transfers only the requested compressed context and keeps 
     }
     t.diagnostic(JSON.stringify({sourceAgendaBytes:Buffer.byteLength(agendaText),readings}));
   }finally{await pg.close();}
+});
+
+test("a small saved page is kept against the shared dictionary, a large one in brotli, and both read back exactly",()=>{
+  const small={division_ids:[CITY],divisions:[{ocdId:CITY,label:"Wire fixture"}],entities:[],meeting_rows:[]};
+  const large={...small,sittings:Array.from({length:400},(_,i)=>({entity_id:`meeting:${i}`,value:createHash("sha256").update(String(i)).digest("hex")})),meeting_rows:[]};
+  const packed=packPlaceContext({formatVersion:1,current:small,history:large}) as Record<string,Record<string,{encoding:string}>>;
+  assert.equal(packed.current!.brief!.encoding,"dfl-dict-v1");
+  assert.equal(packed.history!.brief!.encoding,"br-json-v1");
+  assert.deepEqual(unpackPlaceContextRow(packed.current!.brief),{...small,agenda_texts:[],archived_documents:[],archived_document_links:[]});
+  assert.deepEqual(unpackPlaceContextRow(packed.history!.full),large);
 });

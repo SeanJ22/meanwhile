@@ -188,6 +188,20 @@ test("body-facts-only reads retain local facts without claiming that their indep
   assert.deepEqual(result.governments, []);
 });
 
+test("a board folded into a board that was itself folded resolves to the last, keeping its sittings and seating each member once", () => {
+  const WORKSHOP = `${CITY}#body:workshop`, MIDDLE = `${CITY}#governing`, LAST = `${CITY}#body:council`;
+  const partition = (body: string, meetings: Row[]) => ({ scope: `source:legistar:body:${encodeURIComponent(body)}`, current_version_id: body, confirmation: null,
+    payload: { formatVersion: 1, generatedAt: AT, meetings, agendaDocuments: [], sources: [] } });
+  const city = page(CITY, [entity(MIDDLE), entity(LAST)], { body_aliases: { [WORKSHOP]: MIDDLE, [MIDDLE]: LAST },
+    rosters: [{ body_id: MIDDLE, person_id: "ana", shown_id: "legistar:ana", body_name: "Council", person: { "term_start:old": 1 } },
+      { body_id: LAST, person_id: "ana", shown_id: "legistar:ana", body_name: "Council" }],
+    meeting_rows: [partition(WORKSHOP, [sitting("legistar:one", WORKSHOP)]), partition(MIDDLE, [sitting("legistar:one", MIDDLE)])] });
+  const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY] }, [city]);
+  assert.deepEqual(entries(result.entities).map(body => body.id), [LAST]);
+  assert.deepEqual(entries(result.rosters).map(row => [row.body_id, row.person_id]), [[LAST, "ana"]]);
+  assert.deepEqual(entries(result.meeting_rows).map(row => entries(model(row.payload).meetings).map(meeting => meeting.bodyId)), [[LAST], [LAST]]);
+});
+
 test("saved current and history contexts keep meetings, agendas and members from folded calendar labels",async()=>{
   const alias=`${CITY}#body:city-council-special-meeting`;
   const full=(id:string,startsAt:string)=>({...sitting(id,alias),bodyName:'City Council Special Meeting',title:'Council sitting',startsAt,

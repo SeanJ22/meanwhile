@@ -2,6 +2,7 @@ import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } fro
 import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { readCanonicalShelf } from "../reader/canonical.ts";
+import { readStatePersonStore } from "../reader/state.ts";
 import { readStateRegistryAuthority } from "../reader/authority-reads.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
@@ -10,7 +11,7 @@ import { heldOfficialStateLegislatorsFromRead, readStatePeopleProjection } from 
 import { readStateFederalDirectory } from "./federal-directory-read-model.ts";
 import { federalDirectoryScope } from "./federal-directory-data-plane.ts";
 import { indexByOfficeholderId, type SeatHolder } from "./lookup.ts";
-import { personIdentityKeys, statePeopleScopeForId, statePeopleSourcePointers } from "./people-identity.ts";
+import { personIdentityKeys, statePeopleScopeForId } from "./people-identity.ts";
 
 const requests = new WeakMap<object, Map<string, Promise<readonly SeatHolder[]>>>();
 
@@ -22,7 +23,7 @@ export async function readHeldPersonIdentity(id: string, options: PromotedCivicD
   if (!options.store && currentReaderAuthorityEdge()) return seatHolderById(id);
   const scope = statePeopleScopeForId(id);
   const states = selectedRegistryStates();
-  const key = scope ?? (id.startsWith("congress:") ? `congress:${states.join("|")}` : null);
+  const key = scope ? `${scope}|${id}` : id.startsWith("congress:") ? `congress:${states.join("|")}` : null;
   if (key) {
     const selection = currentReaderSelection();
     const reads = selection && !options.store ? requests.get(selection) ?? new Map<string, Promise<readonly SeatHolder[]>>() : null;
@@ -31,8 +32,7 @@ export async function readHeldPersonIdentity(id: string, options: PromotedCivicD
     if (!pending) {
       pending = (async (): Promise<readonly SeatHolder[]> => {
         if (scope) {
-          const store = options.store ?? await readCanonicalShelf(statePeopleSourcePointers(scope));
-          const read = await readStatePeopleProjection(scope, { ...options, store });
+          const read = await readStatePeopleProjection(scope, { ...options, store: options.store ?? await readStatePersonStore(scope, id) });
           if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
           return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? heldOfficialStateLegislatorsFromRead(scope, read).seats : [];
         }

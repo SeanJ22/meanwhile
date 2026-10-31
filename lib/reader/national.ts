@@ -8,6 +8,8 @@ import { federalDirectoryScope, federalDirectoryProjectionIssues, type FederalDi
 import type { OfficeholderSet } from "../officials/types.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import { readStateFederalDirectory, withFederalPortraits } from "../officials/federal-directory-read-model.ts";
+import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
+import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 
 /** Current national executive memberships (the President, the Vice President and the Cabinet); historical holders remain retrievable separately. */
 export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet | null {
@@ -89,8 +91,16 @@ async function loadFederalState(state: string): Promise<FederalDirectoryReadMode
   return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value : null;
 }
 
+/** The one national routing record every place shows, as published, or null when none is. */
+async function loadEverydayRouting(): Promise<EverydayRoutingProjection | null> {
+  const read = await readEverydayRoutingProjection({ store: await readCanonicalShelf([EVERYDAY_ROUTING_POINTER]) });
+  if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
+  return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value : null;
+}
+
 const pointerKey = (pointer: { recordClass: string; scope: string }) => `${pointer.recordClass}:${pointer.scope}`;
 const president = shelfPart("president", () => publicationVersion(nationalPresidentPointers().map(pointerKey)), loadNationalPresident);
+const routing = shelfPart("everyday-routing", () => publicationVersion([pointerKey(EVERYDAY_ROUTING_POINTER)]), loadEverydayRouting);
 const congress = shelfPart("congress", () => publicationVersion(REGISTRY_STATES.map(state => pointerKey({ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) }))), loadNationalCongress);
 
 /** The President, Vice President and Cabinet, held in this server's memory and read again only when they are published again. */
@@ -102,5 +112,7 @@ export function nationalFederalState(state: string): Promise<FederalDirectoryRea
   if (!part) states.set(state, part = shelfPart(`federal:${state}`, () => publicationVersion([pointerKey({ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) })]), () => loadFederalState(state)));
   return part.read();
 }
+/** The national everyday routing, held in this server's memory the same way, so no saved page carries its own copy. */
+export const nationalEverydayRouting = routing.read;
 /** Congress, whole and by state, held in this server's memory the same way. */
 export const nationalCongress = congress.read;

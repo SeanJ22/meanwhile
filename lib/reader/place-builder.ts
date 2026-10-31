@@ -1,27 +1,19 @@
-import type { VersionedRowRetention } from "../db/versioned-query.ts";
-import { sharedPlaceBuildRead, type PlaceBuildTransfer } from "./place-build-transfer.ts";
-import { readPlaceBuild, reusePlaceBuild, type PlaceBuildRead } from "./place-build-reuse.ts";
 import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
-import { EVERYDAY_ROUTING_POINTER } from "../routing/everyday-data-plane.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import type { Query } from "../facts/publish.ts";
 import { ROSTER_PERSON_FIELDS } from "../facts/roster-read.ts";
 import type { PlaceInput } from "./place-types.ts";
 import type { FactDb } from "../facts/publish.ts";
-import { preparedStatement, readerFactDb } from "../facts/db.ts";
+import { preparedStatement, readPassCursor, readerFactDb, writePassCursor } from "../facts/db.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
-import { packPlaceContext, packReadyPlace, unpackPlaceContextRow } from "./place-ready.ts";
-import type { PlacePackage } from "./place-types.ts";
-import { readZipLocation } from "../place-map/locations.ts";
-import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
-import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/body-territory.ts";
+import { packPlaceContext, unpackPlaceContextRow } from "./place-ready.ts";
+import type {} from "./place-types.ts";
 
-const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const rosterPersonFieldsSql = ROSTER_PERSON_FIELDS.map(field => `'${field}'`).join(",");
 const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
   `'source:${encodeURIComponent(route.meetingSource)}:body:${encodeURIComponent(route.bodyId)}'`).join(",") || "NULL";
@@ -59,13 +51,12 @@ const agendaDocumentLinksSql = (owned = "true") => `coalesce((
  */
 const PLACE_ROW_GROUPS: Readonly<Record<string, readonly string[]>> = {
   meetings: ["agenda_texts","meeting_rows","archived_meetings","archived_documents","parts"],
-  everyday_routing: ["everyday_routing"],
   // Printed so a fold changes the page; always returned, since the stored context does not keep it.
   body_aliases: ["body_aliases"],
   ...Object.fromEntries(["registration_held","division_ids","publication_attempts","registry","governments","divisions","entities",
     "fields","rosters","comments","sittings","archived_document_links"].map(column => [column,[column]])),
 };
-const PLACE_ROW_COLUMNS = ["registration_held","division_ids","agenda_texts","everyday_routing","publication_attempts","registry",
+const PLACE_ROW_COLUMNS = ["registration_held","division_ids","agenda_texts","publication_attempts","registry",
   "governments","divisions","entities","fields","rosters","comments","sittings","meeting_rows","archived_meetings","archived_documents",
   "archived_document_links","parts","body_aliases"] as const;
 const groupOf = (column: string) => Object.entries(PLACE_ROW_GROUPS).find(([,columns]) => columns.includes(column))![0];
@@ -401,14 +392,10 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), agenda_texts AS MATERIALIZED (
   SELECT (row_number() OVER (ORDER BY value)-1)::integer AS text_id,value
     FROM (SELECT DISTINCT value FROM agenda_text_candidates WHERE jsonb_typeof(value)='string') unique_texts
-), everyday_routing AS MATERIALIZED (
-  SELECT reader_payload_value(payload) AS value,xmin::text||':'||ctid::text AS version FROM civic_data_promotions
-    WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD'
 )
 , page AS MATERIALIZED (
 SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
   coalesce((SELECT jsonb_agg(value ORDER BY text_id) FROM agenda_texts),'[]'::jsonb) AS agenda_texts,
-  CASE WHEN ${!bodyFactsOnly} THEN (SELECT value FROM everyday_routing) END AS everyday_routing,
   '[]'::jsonb AS publication_attempts,
   CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
     || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(
@@ -459,22 +446,22 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   coalesce((SELECT jsonb_agg(item) FROM archived_documents),'[]'::jsonb) AS archived_documents,
   coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links
 ), elements AS MATERIALIZED (
-  -- County meetings, sittings and members sit on every page in it: with the stored page's rows held ($13), only rows it lacks are sent.
+  -- County meetings, sittings and members sit on every page in it: with the stored page's rows held ($12), only rows it lacks are sent.
   SELECT e.name,x.n,x.value,left(md5(x.value::text),16) AS print FROM page,LATERAL (VALUES ${ELEMENT_COLUMNS.map(column => `('${column}',page.${column})`).join(",")}) e(name,list),
     LATERAL jsonb_array_elements(e.list) WITH ORDINALITY x(value,n)
 ), printed AS MATERIALIZED (
   -- Each group's print is taken here, beside the data; only a changed group crosses the connection.
   SELECT jsonb_build_object(${Object.entries(PLACE_ROW_GROUPS).map(([group,columns]) =>
     `'${group}',md5(jsonb_build_array(${columns.filter(column => column !== "parts").map(column => `page.${column}`).join(",")})::text)`).join(",")})
-    || coalesce((SELECT jsonb_object_agg(name||'[]',prints) FROM (SELECT name,jsonb_agg(print ORDER BY n) AS prints FROM elements WHERE $13::boolean GROUP BY name) e),'{}'::jsonb) AS prints FROM page
+    || coalesce((SELECT jsonb_object_agg(name||'[]',prints) FROM (SELECT name,jsonb_agg(print ORDER BY n) AS prints FROM elements WHERE $12::boolean GROUP BY name) e),'{}'::jsonb) AS prints FROM page
 ), held_prints AS MATERIALIZED (
-  -- $12 is the prints of the stored page's own read; $13 lets unchanged groups stay behind when that page keeps its rows.
-  SELECT coalesce((SELECT array_agg(g.key ORDER BY g.key) FROM jsonb_each(p.prints) g WHERE $12::jsonb IS NOT NULL
-      AND (p.prints=$12::jsonb OR $13::boolean AND g.value=$12::jsonb->g.key)),'{}'::text[]) AS groups,
-    coalesce($12::jsonb=p.prints,false) AS unchanged
+  -- $11 is the prints of the stored page's own read; $12 lets unchanged groups stay behind when that page keeps its rows.
+  SELECT coalesce((SELECT array_agg(g.key ORDER BY g.key) FROM jsonb_each(p.prints) g WHERE $11::jsonb IS NOT NULL
+      AND (p.prints=$11::jsonb OR $12::boolean AND g.value=$11::jsonb->g.key)),'{}'::text[]) AS groups,
+    coalesce($11::jsonb=p.prints,false) AS unchanged
   FROM printed p
 ), sent AS MATERIALIZED (
-  SELECT name,jsonb_agg(value ORDER BY n) AS value FROM elements WHERE NOT ($13::boolean AND coalesce(($12::jsonb->(name||'[]')) ? print,false)) GROUP BY name
+  SELECT name,jsonb_agg(value ORDER BY n) AS value FROM elements WHERE NOT ($12::boolean AND coalesce(($11::jsonb->(name||'[]')) ? print,false)) GROUP BY name
 ), hashes(hash) AS (
   SELECT ref#>>'{}' FROM sent,LATERAL jsonb_array_elements(sent.value) x(value),LATERAL jsonb_path_query(x.value,'strict $.**."$civicPayloadPart"','{}',true) ref
     WHERE name IN ('meeting_rows','archived_meetings','archived_documents')
@@ -482,11 +469,8 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   SELECT ref#>>'{}' FROM hashes CROSS JOIN LATERAL (SELECT payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1) part,
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
-SELECT h.unchanged,CASE WHEN NOT h.unchanged THEN p.prints END AS prints,h.groups AS omitted,CASE WHEN ${!bodyFactsOnly} THEN (SELECT version FROM everyday_routing) END AS everyday_routing_version,
-  ${PLACE_ROW_COLUMNS.map(column => column === "everyday_routing"
-    // $11 is the routing version a rebuild turn already holds; that body does not cross the connection again.
-    ? `CASE WHEN NOT h.unchanged AND (SELECT version FROM everyday_routing) IS DISTINCT FROM $11::text THEN page.everyday_routing END AS everyday_routing`
-    : column === "body_aliases" ? `CASE WHEN NOT h.unchanged THEN page.body_aliases END AS body_aliases`
+SELECT h.unchanged,CASE WHEN NOT h.unchanged THEN p.prints END AS prints,h.groups AS omitted,
+  ${PLACE_ROW_COLUMNS.map(column => column === "body_aliases" ? `CASE WHEN NOT h.unchanged THEN page.body_aliases END AS body_aliases`
     : `CASE WHEN NOT '${groupOf(column)}'=ANY(h.groups) THEN ${column === "parts" ? "coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb)"
       : ELEMENT_COLUMNS.includes(column) ? `coalesce((SELECT value FROM sent WHERE name='${column}'),'[]'::jsonb)` : `page.${column}`} END AS ${column}`).join(",\n  ")}
 FROM page,printed p,held_prints h`;
@@ -495,23 +479,16 @@ export const PLACE_PACKAGE_SQL = preparedStatement(placePackageSql(false));
 const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
 
 /**
- * Change when the same read composes into a different page, so pages whose reads are unchanged compose again.
- * A change to the read's own SQL changes the build print by itself.
+ * Change when the same facts compose into a different page, so pages whose reads are unchanged compose again. The read's own
+ * packing is not part of it: a page stays valid across a change of the read while its group prints still match. A page saved
+ * before this tag existed carries a hash of its read instead, and is accepted as this composition.
  */
-const PLACE_PAGE_COMPOSITION = "place-page-composition:1";
-const PLACE_PAGE_BUILD = createHash("sha256").update(PLACE_PACKAGE_SQL).update(PLACE_PAGE_COMPOSITION).digest("hex").slice(0,32);
-
-/**
- * Records every page carries whole, held for one rebuild turn. The national
- * everyday-routing projection is the same ~25 KB on every page in the country;
- * each page's query reads its current row version in the page's own snapshot
- * and returns the body only when that version is not the one already held.
- */
-export interface PlaceTurnReads {
-  transfers?: Map<string, PlaceBuildTransfer>;
-  retention?: VersionedRowRetention;
-  everydayRouting?: { readonly version: string; readonly value: unknown };
-}
+const PLACE_PAGE_BUILD = "place-page-composition:1";
+const sameBuild = (build: string) => build === PLACE_PAGE_BUILD || /^[0-9a-f]{32}$/.test(build);
+/** Groups an earlier read printed that no read returns now; a page is rewritten only when a current group changes. */
+const RETIRED_GROUPS = ["everyday_routing"];
+const rowPrinted = (prints: ReadPrints) => Object.keys(prints).some(group => group.endsWith("[]"));
+const withoutRetired = (prints: ReadPrints): ReadPrints => Object.fromEntries(Object.entries(prints).filter(([group]) => !RETIRED_GROUPS.includes(group)));
 
 /** What a stored page was built from: the builder, its selection, and each read's group prints by context key. */
 export interface PlacePagePrints {
@@ -540,26 +517,21 @@ interface HeldRead {
 }
 
 /** One place read. Against a held read, unchanged groups are not returned and `row` is null when no group changed. */
-async function readPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnReads,held?: HeldRead,keeps = held?.stored !== undefined):
+async function readPlaceRow(input: PlaceInput,query: Query,held?: HeldRead,keeps = held?.stored !== undefined):
   Promise<{ readonly prints: ReadPrints; readonly row: Record<string,unknown> | null }> {
   const state = input.state.toUpperCase();
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
-  const turn = shared?.everydayRouting;
   const [read] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
     input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? true,null,input.neighbors ?? false,input.namedDivisionIds ?? [],
-    turn?.version ?? null,held ? JSON.stringify(held.prints) : null,keeps]);
+    held ? JSON.stringify(held.prints) : null,keeps]);
   if (!read) throw new Error("PLACE_PAGE_BUILD_FAILED");
-  const {everyday_routing_version:version,unchanged,prints,omitted,...row} = read;
+  const {unchanged,prints,omitted,...row} = read;
   if (held && unchanged === true) return {prints:held.prints,row:null};
   const kept = new Set(Array.isArray(omitted) ? omitted.map(String) : []);
   const printed = (prints ?? {}) as ReadPrints;
-  if (shared && typeof version === "string") {
-    if (version === turn?.version) row.everyday_routing = structuredClone(turn.value);
-    else shared.everydayRouting = {version,value:structuredClone(row.everyday_routing)};
-  }
-  const behind = [...kept].filter(group => PLACE_ROW_GROUPS[group] && group !== "everyday_routing" && group !== "body_aliases");
+  const behind = [...kept].filter(group => PLACE_ROW_GROUPS[group] && group !== "body_aliases");
   // Against a page that keeps its rows, each changed long list came back with only the rows the page lacks.
-  const partial = keeps && held !== undefined, whole = async () => ({prints:printed,row:(await readPlaceRow(input,query,shared)).row});
+  const partial = keeps && held !== undefined, whole = async () => ({prints:printed,row:(await readPlaceRow(input,query)).row});
   const stored = behind.length || partial ? await held?.stored?.() ?? null : undefined;
   if (stored === null) return whole();
   for (const group of behind) for (const column of PLACE_ROW_GROUPS[group]!) row[column] = stored![column];
@@ -585,66 +557,38 @@ export async function buildPlacePackage(input: PlaceInput, query: Query) {
   return composePlaceRow(input, (await readPlaceRow(input,query)).row!);
 }
 
-/** Until its first page is built, a place is composed from the same fact-store selection the builder reads, as before ready pages. */
-export async function composeUnbuiltPlace(input:PlaceInput,query:Query):Promise<{place:PlacePackage;territory?:BodyTerritorySelection|null}> {
-  const flags={...input,includeAgenda:input.includeAgenda ?? false};
-  if(!input.placeId || !/^zip:\d{5}$/.test(input.placeId))return {place:await buildPlacePackage(flags,query)};
-  const {input:selected,territory}=await placeBuildSelection(input.placeId,'place',input.state.toUpperCase());
-  return {place:await buildPlacePackage({...flags,...selected},query),territory};
-}
-
 export interface StoredPlacePage {
   readonly formatVersion: 1;
   readonly current: Record<string,unknown>;
   readonly history?: Record<string,unknown>;
   readonly emptyCurrent?: Record<string,unknown>;
   readonly emptyHistory?: Record<string,unknown>;
-  readonly readyCurrent: PlacePackage;
-  readonly readyHistory?: PlacePackage;
-  readonly territory?: BodyTerritorySelection|null;
   /** What this page was built from; saved with its context so the next rebuild can tell what changed. */
   readonly prints?: PlacePagePrints;
 }
 
-/** A ZIP page selects from the shared place map, the same selection used by the public endpoint. */
-export async function placeBuildInput(id:string,kind:string,state:string):Promise<PlaceInput> {
-  return (await placeBuildSelection(id,kind,state)).input;
-}
-
-async function placeBuildSelection(id:string,kind:string,state:string):Promise<{input:PlaceInput;territory?:BodyTerritorySelection|null}> {
-  if (/^zip:\d{5}$/.test(id)) {
-    const zip=id.slice(4),point=await readZipLocation(zip);
-    if(!point)throw new Error(`Place geometry is missing for ZIP ${zip}`);
-    const location=await readerLocation(point.lat,point.lng,zip);
-    const territory=selectBodyTerritory([point.lng,point.lat],await readerTerritory(state));
-    return {input:{state,placeId:id,divisionIds:location.divisionIds,namedDivisionIds:location.fringe,
-      bodyIds:territoryBodies(point.lat,point.lng,territory)},territory};
-  }
-  return {input:{state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]}};
-}
-
-export async function buildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads):Promise<StoredPlacePage> {
-  return await rebuildPageBody(id,kind,state,query,shared) as StoredPlacePage;
+export async function buildPageBody(id:string,kind:string,state:string,query:Query):Promise<StoredPlacePage> {
+  return await rebuildPageBody(id,kind,state,query) as StoredPlacePage;
 }
 
 /**
  * Against a held page, each read returns only its changed groups; the rest come from the page's saved rows. A page
  * whose builder, selection and every group match is reported unchanged without reading or composing it.
  */
-export async function rebuildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads,
+export async function rebuildPageBody(id:string,kind:string,state:string,query:Query,
   held?:HeldPlacePage):Promise<StoredPlacePage|UnchangedPlacePage> {
-  const {input:selected,territory}=await placeBuildSelection(id,kind,state),zip=/^zip:\d{5}$/.test(id);
-  const input:PlaceInput=zip?{...selected,includeAgenda:false}:selected;
+  const input:PlaceInput={state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]};
   const stateRoot=kind==='place' && /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id);
-  const frame={build:PLACE_PAGE_BUILD,input:createHash("sha256").update(JSON.stringify({input,territory:territory ?? null})).digest("hex").slice(0,32)};
-  const same=held?.prints.build===frame.build && held.prints.input===frame.input ? held : undefined;
-  // A ZIP page keeps no saved rows, so its reads are all or nothing.
-  const reads:[string,PlaceInput][]=zip?[["current",input]]:[["history",{...input,includeHistory:true}],
+  // The selection's print keeps the form pages were saved with, so every saved page stays valid.
+  const frame={build:PLACE_PAGE_BUILD,input:createHash("sha256").update(JSON.stringify({input,territory:null})).digest("hex").slice(0,32)};
+  const same=held && sameBuild(held.prints.build) && held.prints.input===frame.input ? held : undefined;
+  const reads:[string,PlaceInput][]=[["history",{...input,includeHistory:true}],
     ...(stateRoot?[["emptyHistory",{...input,divisionIds:[],includeHistory:true}] as [string,PlaceInput]]:[])];
   const prints:Record<string,ReadPrints>={},rows=new Map<string,Record<string,unknown>|null>();
   for(const [key,read] of reads) {
     const prior=same?.prints.reads[key];
-    const out=await readPlaceRow(read,query,shared,prior?{prints:prior,...(zip?{}:{stored:()=>same!.row(key)})}:undefined,!zip);
+    // A page printed before long lists had row prints is read whole, as it was; a page with no long list is small.
+    const out=await readPlaceRow(read,query,prior && rowPrinted(prior)?{prints:withoutRetired(prior),stored:()=>same!.row(key)}:undefined,true);
     prints[key]=out.prints;
     rows.set(key,out.row);
   }
@@ -653,14 +597,10 @@ export async function rebuildPageBody(id:string,kind:string,state:string,query:Q
   // A read that printed nothing leaves the page without prints; its next rebuild reads it whole.
   const kept=Object.values(prints).every(read=>Object.keys(read).length>0);
   for(const [key,read] of reads) if(rows.get(key)===null)
-    rows.set(key,(zip?null:await same!.row(key)) ?? (await readPlaceRow(read,query,shared)).row);
-  const history=zip?undefined:rows.get("history")!;
-  const current=history?currentPlaceRow(history):rows.get("current")!;
+    rows.set(key,(await same!.row(key)) ?? (await readPlaceRow(read,query)).row);
+  const history=rows.get("history")!;
   const emptyHistory=stateRoot?rows.get("emptyHistory")!:undefined;
-  const readyCurrent=await composePlaceRow(input,structuredClone(current));
-  return {formatVersion:1,current,readyCurrent,
-    ...(zip?{territory}:{}),
-    ...(history?{history,readyHistory:await composePlaceRow({...input,includeHistory:true},structuredClone(history))}:{}),
+  return {formatVersion:1,current:currentPlaceRow(history),history,
     ...(emptyHistory?{emptyCurrent:currentPlaceRow(emptyHistory),emptyHistory}:{}),...(kept?{prints:printed}:{})};
 }
 
@@ -680,22 +620,14 @@ export interface RebuildOptions {
   readonly buildRevision?: string;
 }
 
-const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
-  SELECT n FROM generate_series(1,4) AS n WHERE NOT EXISTS (
-    SELECT 1 FROM rebuild_queue q WHERE q.lease_slot=n AND q.lease_until>=clock_timestamp()
-  ) ORDER BY n LIMIT 1
-), next AS (
-  SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
-  WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp())
-    AND NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id AND p.built_at>=$2::timestamptz)
-  ORDER BY (q.next_queued_at IS NOT NULL AND q.place_id ~ '^ocd-division/country:us/(state|territory|district):[a-z]{2}/' AND q.place_id NOT LIKE '%#%') DESC,
-    q.priority DESC,(q.next_queued_at IS NOT NULL) DESC,
-    (q.next_queued_at IS NOT NULL AND q.place_id NOT LIKE 'zip:%') DESC,
-    q.next_queued_at DESC NULLS LAST,q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
-) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
-  FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
-  RETURNING q.place_id,q.generation,q.built_generation,e.kind,e.state,
-    EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) AS has_page`;
+/** Takes the most urgent marked page nobody holds. The mark it took comes back, so a mark made while the page builds survives. */
+const CLAIM_PAGE_SQL = `WITH next AS (
+  SELECT p.place_id FROM place_page p
+  WHERE p.stale_at IS NOT NULL AND (p.lease_until IS NULL OR p.lease_until<clock_timestamp()) AND (NOT p.context ? 'formatVersion' OR p.built_at<$2::timestamptz)
+  ORDER BY p.priority DESC,p.stale_at,p.place_id FOR UPDATE SKIP LOCKED LIMIT 1
+) UPDATE place_page p SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes'
+  FROM next,entity e WHERE p.place_id=next.place_id AND e.id=p.place_id
+  RETURNING p.place_id,p.stale_at::text AS marked,e.kind,e.state,p.context ? 'formatVersion' AS has_page`;
 
 /** The stored page's prints, and its saved rows by context key when a changed group needs the unchanged rest. */
 async function heldPlacePage(id:string,query:Query):Promise<HeldPlacePage|undefined> {
@@ -708,119 +640,138 @@ async function heldPlacePage(id:string,query:Query):Promise<HeldPlacePage|undefi
   }};
 }
 
+const ADOPT_CURSOR = "place-pages:adopt";
+const ADOPT_PAGES = 500;
+
+/**
+ * Carries the retired queue's marks and each page's dependencies onto the page rows themselves, a few hundred pages a step in
+ * place order, from the old tables' own rows. A page keeps what it was built with; only marks and dependencies move.
+ */
+async function adoptHeldPages(db: FactDb, deadline: number): Promise<void> {
+  while (Date.now()<deadline) {
+    const finished=await db.transaction(async query=>{
+      const after=await readPassCursor(query,ADOPT_CURSOR) ?? "";
+      if(after==="done")return true;
+      const [chunk]=await query(`WITH chunk AS (SELECT place_id FROM place_page WHERE place_id>$1 AND place_id NOT LIKE 'zip:%' ORDER BY place_id LIMIT $2),
+        moved AS (UPDATE place_page p SET depends=ARRAY(SELECT d.entity_id FROM place_page_dependency d WHERE d.page_id=p.place_id ORDER BY 1),
+          stale_at=coalesce(p.stale_at,q.queued_at),priority=coalesce(q.priority,p.priority) FROM chunk
+          LEFT JOIN rebuild_queue q ON q.place_id=chunk.place_id AND (q.built_generation IS NULL OR q.generation>q.built_generation)
+          WHERE p.place_id=chunk.place_id AND p.depends IS NULL RETURNING p.place_id)
+        SELECT (SELECT count(*)::int FROM chunk) AS n,(SELECT max(place_id) FROM chunk) AS last`,[after,ADOPT_PAGES]);
+      const last=Number(chunk?.n)===ADOPT_PAGES ? String(chunk!.last) : null;
+      await query(`INSERT INTO place_page(place_id,stale_at,priority) SELECT q.place_id,q.queued_at,q.priority FROM rebuild_queue q
+        JOIN entity e ON e.id=q.place_id WHERE q.place_id>$1 AND ($2::text IS NULL OR q.place_id<=$2) AND q.place_id NOT LIKE 'zip:%'
+          AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) ON CONFLICT DO NOTHING`,[after,last]);
+      await writePassCursor(query,ADOPT_CURSOR,last ?? "done");
+      return false;
+    });
+    if(finished)return;
+  }
+}
+
+const STRIP_CURSOR = "place-pages:strip";
+/** One look at a time: at most this much of saved rows is read, then nothing for the pause, so the pass costs about 24 MB an hour whatever the turn rate. */
+const STRIP_BYTES = 8_000_000, STRIP_PAUSE_MS = 20 * 60_000, STRIP_PAGES = 25;
+
+/** A saved page without the national routing record, or null when it holds none. The record is the same on every page and is read from the shelf. */
+export function withoutRoutingRecord(context: Record<string,unknown>): Record<string,unknown> | null {
+  const raw: Record<string,unknown> = { formatVersion: context.formatVersion };
+  let held = false;
+  for (const key of ["current","history","emptyCurrent","emptyHistory"]) if (context[key]) {
+    const { everyday_routing, ...row } = unpackPlaceContextRow((context[key] as Record<string,unknown>).full);
+    held ||= everyday_routing !== undefined;
+    raw[key] = row;
+  }
+  return held ? { ...packPlaceContext(raw), ...(context.prints ? { prints: context.prints } : {}) } : null;
+}
+
+/**
+ * Saved pages are kept in the shape they were built in; one that still carries the routing record reads about 5 KB larger. In place
+ * order, behind everything marked, this saves each such page again without it from its own saved rows, nothing rebuilt and no
+ * version moved. Pages built by this builder carry its composition tag and are not read.
+ */
+async function stripRoutingRecords(db: FactDb): Promise<void> {
+  const held = JSON.parse(await db.transaction(query => readPassCursor(query,STRIP_CURSOR)) ?? "{}") as { after?: string; done?: boolean; at?: number };
+  if (held.done || Date.now() - (held.at ?? 0) < STRIP_PAUSE_MS) return;
+  let after = held.after ?? "", read = 0, finished = false;
+  while (read < STRIP_BYTES && !finished) await db.transaction(async query => {
+    const pages = await query(`SELECT place_id,context FROM place_page WHERE place_id>$1 AND place_id NOT LIKE 'zip:%' AND context ? 'formatVersion'
+      AND coalesce(context->'prints'->>'build','')<>$3 ORDER BY place_id LIMIT $2 FOR UPDATE SKIP LOCKED`,[after,STRIP_PAGES,PLACE_PAGE_BUILD]);
+    for (const page of pages) {
+      read += JSON.stringify(page.context).length; after = String(page.place_id);
+      const stripped = withoutRoutingRecord(page.context as Record<string,unknown>);
+      if (stripped) await query("UPDATE place_page SET context=$2::jsonb WHERE place_id=$1",[page.place_id,JSON.stringify(stripped)]);
+    }
+    finished = pages.length === 0;
+    await writePassCursor(query,STRIP_CURSOR,JSON.stringify(finished ? { done: true } : { after, at: Date.now() }));
+  });
+}
+
 export interface RebuildTurn { readonly rebuilt:number; readonly failed:number; readonly remaining:number; readonly unchanged?:number }
 
-/** Leases separate slow building and CDN work from writers' short fact transactions. */
+/** Takes marked pages in order of urgency and builds each from a single snapshot; a page marked again while it builds stays marked. */
 export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<RebuildTurn> {
   const db=options.db ?? readerFactDb(),purge=options.purge ?? purgeReaderCacheTags;
   const limit=Math.max(1,options.limit ?? 128),concurrency=Math.max(1,Math.min(options.concurrency ?? 4,limit));
   const deadline=Date.now()+(options.timeBudgetMs ?? 240_000);
-  // One turn builds hundreds of pages; a record every page carries crosses the connection once per version.
-  const shared:PlaceTurnReads={};
-  // Use the database clock for both ends of the pass, including a place deleted from the queue and requeued by a writer.
+  await adoptHeldPages(db,Date.now()+Math.floor((deadline-Date.now())/4));
   const [pass]=await db.transaction(query=>query("SELECT clock_timestamp()::text AS started_at"));
   let started=0,rebuilt=0,unchanged=0,failed=0;
   const work=async()=>{
     while(started<limit && Date.now()<deadline) {
       started++;
       const token=randomUUID();
-      const claim=await db.transaction(async query=>{
-        await query("SELECT pg_advisory_xact_lock(hashtextextended('place-page-rebuild-slots',0))");
-        await query(`UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=NULL
-          WHERE lease_slot IS NOT NULL AND lease_until<clock_timestamp()`);
-        return (await query(CLAIM_PAGE_SQL,[token,pass!.started_at]))[0];
-      });
+      const claim=(await db.transaction(query=>query(CLAIM_PAGE_SQL,[token,pass!.started_at])))[0];
       if(!claim)return;
       const id=String(claim.place_id),state=String(claim.state ?? "US");
-      let built=claim.has_page===true && claim.built_generation!=null && String(claim.built_generation)===String(claim.generation);
       try {
-        if(!built) {
-          const prepared=await db.transaction<{body?:StoredPlacePage|UnchangedPlacePage;read?:PlaceBuildRead}>(async query=>{
-            await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
-            await query("SET LOCAL plan_cache_mode=force_custom_plan");
-            if (!/^zip:\d{5}$/.test(id)) {
-              const held=claim.has_page===true?await heldPlacePage(id,query):undefined;
-              return {body:await rebuildPageBody(id,String(claim.kind),state,query,shared,held)};
-            }
-            const {input:selected,territory}=await placeBuildSelection(id,String(claim.kind),state);
-            const input={...selected,includeAgenda:false};
-            const stateRoot=input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
-            shared.transfers ??= new Map();
-            let transfer=shared.transfers.get(state);
-            if(!transfer){
-              shared.retention ??= {rows:new Map(),bytes:0};
-              transfer=sharedPlaceBuildRead(`${randomUUID()}:${state}`,shared.retention);shared.transfers.set(state,transfer);
-            }
-            const read=await readPlaceBuild((text,params=[])=>transfer!(query,text,params),PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
-              false,false,false,null,false,input.namedDivisionIds ?? [],null,null,false],territory,options.buildRevision,id);
-            if (read.reused) return {read};
-            const current=await expandPlaceBuildRow(read.row!);
-            const readyCurrent=await composePlaceRow(input,structuredClone(current));
-            return {read,body:{formatVersion:1,current,readyCurrent,territory}};
-          });
-          // Writers can queue a newer generation while the snapshot is being read.
-          // Lock its lease only after leaving that snapshot, in this short transaction.
-          await db.transaction(async query=>{
-            // A worker whose lease expired cannot replace a newer worker's page.
-            const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
-            if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
-            if (prepared.read?.reused) {
-              await reusePlaceBuild(query,id,prepared.read.reused,prepared.read.fingerprint);
-            } else if(prepared.body && "unchanged" in prepared.body) {
-              await query("UPDATE place_page SET built_at=clock_timestamp() WHERE place_id=$1",[id]);
-            } else {
-              const {readyCurrent,readyHistory,territory,prints,...rawContext}=prepared.body as StoredPlacePage;
-              const context={...(/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext)),...(prints?{prints}:{})};
-              await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context,build_fingerprint)
-                VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb,$5)
-                ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-                  body=excluded.body,history_body=excluded.history_body,context=excluded.context,build_fingerprint=excluded.build_fingerprint`,
-              [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),prepared.read?.fingerprint ?? null]);
-              const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
-                !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
-              const dependencies=new Set<string>([id,...rows.flatMap(row=>[
-                ...row.division_ids as string[] ?? [],
-                ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
-                ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
-                  [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
-                    .filter((value):value is string=>typeof value==='string')),
-                ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
-              ])]);
-              await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
-              await query(`INSERT INTO place_page_dependency(page_id,entity_id)
-                SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
-            }
-            await query(`UPDATE rebuild_queue q SET built_generation=$3::bigint,priority=e.page_priority
-              FROM entity e WHERE q.place_id=$1 AND q.lease_token=$2 AND e.id=q.place_id`,[id,token,claim.generation]);
-            await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
-          });
-          built=true;
-          if(prepared.body && "unchanged" in prepared.body)unchanged++;
-          rebuilt++;
-        }
+        const body=await db.transaction(async query=>{
+          await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
+          await query("SET LOCAL plan_cache_mode=force_custom_plan");
+          const held=claim.has_page===true?await heldPlacePage(id,query):undefined;
+          return rebuildPageBody(id,String(claim.kind),state,query,held);
+        });
+        await db.transaction(async query=>{
+          // A worker whose lease expired cannot replace a newer worker's page.
+          const [lease]=await query("SELECT place_id FROM place_page WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
+          if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
+          if("unchanged" in body) await query("UPDATE place_page SET built_at=clock_timestamp() WHERE place_id=$1",[id]);
+          else {
+            const {prints,...rawContext}=body;
+            const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
+              !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
+            const dependencies=new Set<string>([id,...rows.flatMap(row=>[
+              ...row.division_ids as string[] ?? [],
+              ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
+              ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
+                [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
+                  .filter((value):value is string=>typeof value==='string')),
+              ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
+            ])]);
+            await query(`UPDATE place_page SET version=version+1,built_at=clock_timestamp(),context=$2::jsonb,
+              depends=ARRAY(SELECT id FROM entity WHERE id=ANY($3::text[]) ORDER BY id) WHERE place_id=$1`,
+            [id,JSON.stringify({...packPlaceContext(rawContext),...(prints?{prints}:{})}),[...dependencies]]);
+          }
+          await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
+        });
         const purged=await purge(readerCacheTags({places:[id]}));
         if(!purged.purged)throw new Error(purged.detail ?? "Place page cache purge failed");
-        await db.transaction(async query=>{
-          await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
-          // A later generation waits from its own first arrival, so a hot place
-          // cannot repeatedly take the oldest slot ahead of untouched places.
-          await query(`UPDATE rebuild_queue SET queued_at=coalesce(next_queued_at,queued_at),
-            lease_token=NULL,lease_slot=NULL,lease_until=NULL,next_queued_at=NULL
-            WHERE place_id=$1 AND lease_token=$2`,[id,token]);
-        });
+        await db.transaction(query=>query(`UPDATE place_page p SET stale_at=CASE WHEN p.stale_at=$3::timestamptz THEN NULL ELSE p.stale_at END,
+          priority=e.page_priority,lease_token=NULL,lease_until=NULL FROM entity e WHERE p.place_id=$1 AND p.lease_token=$2 AND e.id=p.place_id`,[id,token,claim.marked]));
+        if("unchanged" in body)unchanged++;
+        rebuilt++;
       } catch(error) {
         failed++;
         console.error("Place page rebuild failed",{place:id,detail:error instanceof Error?error.message:String(error)});
-        // A failed build retains the ready page; a failed purge leaves its built replacement queued.
-        await db.transaction(query=>query(`UPDATE rebuild_queue SET
-          queued_at=CASE WHEN $3::boolean THEN coalesce(next_queued_at,queued_at) ELSE queued_at END,
-          next_queued_at=CASE WHEN $3::boolean THEN NULL ELSE next_queued_at END,
-          lease_token=NULL,lease_slot=NULL,lease_until=clock_timestamp()+interval '1 minute'
-          WHERE place_id=$1 AND lease_token=$2`,[id,token,built]));
+        // A failed build keeps the page it had; either way the mark stays and the page is tried again in a minute.
+        await db.transaction(query=>query(`UPDATE place_page SET lease_token=NULL,lease_until=clock_timestamp()+interval '1 minute'
+          WHERE place_id=$1 AND lease_token=$2`,[id,token]));
       }
     }
   };
   await Promise.all(Array.from({length:concurrency},work));
-  const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
-  return {rebuilt,failed,remaining:Number(remaining?.n ?? 0),...(unchanged?{unchanged}:{})};
+  // The pass never holds a turn's result back; it resumes where it stopped.
+  await stripRoutingRecords(db).catch(error=>console.error("Place page routing strip failed",{detail:error instanceof Error?error.message:String(error)}));
+  const [more]=await db.transaction(query=>query("SELECT EXISTS(SELECT 1 FROM place_page WHERE stale_at IS NOT NULL AND (lease_until IS NULL OR lease_until<clock_timestamp())) AS more"));
+  return {rebuilt,failed,remaining:more?.more===true?1:0,...(unchanged?{unchanged}:{})};
 }

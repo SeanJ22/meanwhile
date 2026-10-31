@@ -188,8 +188,7 @@
         "lib/funding/state-publication.ts",
         "lib/meetings/pin-blanks.ts",
         "lib/place-map/load.ts",
-        "lib/reader/page-subjects.ts",
-        "scripts/prepare-place-pages.mts"
+        "lib/reader/page-subjects.ts"
       ]
     },
     "entity_external_id": {
@@ -301,18 +300,13 @@
     "place_page": {
       "writers": [
         "lib/reader/place-builder.ts",
-        "lib/reader/place-build-reuse.ts"
+        "lib/reader/cache.ts"
       ],
       "bypass": []
     },
     "place_page_dependency": {
-      "writers": [
-        "lib/reader/place-builder.ts",
-        "lib/reader/place-build-reuse.ts"
-      ],
-      "bypass": [
-        "scripts/prepare-place-pages.mts"
-      ]
+      "writers": [],
+      "bypass": []
     },
     "place_slice": {
       "writers": [
@@ -365,13 +359,8 @@
       ]
     },
     "rebuild_queue": {
-      "writers": [
-        "lib/reader/cache.ts",
-        "lib/reader/place-builder.ts"
-      ],
-      "bypass": [
-        "scripts/prepare-place-pages.mts"
-      ]
+      "writers": [],
+      "bypass": []
     },
     "saved_ballot_picks": {
       "writers": [

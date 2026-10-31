@@ -38,17 +38,17 @@ test("a newer source for an unchanged value rebuilds its pages and an exact repl
   const db = await seeded();
   try {
     await door(db, input(), clocks, now, { purge });
-    await db.query("DELETE FROM rebuild_queue");
+    await db.query("UPDATE place_page SET stale_at=NULL");
     const next = new Date(now.getTime() + 3_600_000);
     await db.query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key)
       VALUES(3,'https://example.gov/council','https://example.gov/council',$1,$2,'confirmation')`, [next.toISOString(), "b".repeat(64)]);
     const claim = input({ copy: { ...input().copy, id: 3, fetchedAt: next } });
     assert.equal((await door(db, claim, clocks, next, { purge }) as { decision: string }).decision, "CONFIRM");
-    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
+    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
     assert.equal(Number((await db.query("SELECT source_copy_id FROM checked_fact WHERE status='live'"))[0]!.source_copy_id), 3);
-    await db.query("DELETE FROM rebuild_queue");
+    await db.query("UPDATE place_page SET stale_at=NULL");
     await door(db, claim, clocks, next, { purge });
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
   } finally { await db.pg.close(); }
 });
 
@@ -57,15 +57,15 @@ test("scheduled source restamps queue the body and served places without queuing
   try {
     const result = await door(db, input(), clocks, now, { purge });
     assert.ok("factId" in result && result.factId !== null);
-    await db.query("DELETE FROM rebuild_queue");
+    await db.query("UPDATE place_page SET stale_at=NULL");
     const next = new Date(now.getTime() + 3_600_000);
     const facts = [{ id: result.factId, entityId: input().entity.id, field: "office_phone", quote: "520-555-0100" }];
     const copy = { id: 1, text: "Call 520-555-0100", fetchedAt: next };
     assert.equal(await restampFacts(db, facts, copy), 1);
-    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
-    await db.query("DELETE FROM rebuild_queue");
+    assert.deepEqual((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
+    await db.query("UPDATE place_page SET stale_at=NULL");
     assert.equal(await restampFacts(db, facts, copy), 0);
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
   } finally { await db.pg.close(); }
 });
 
@@ -127,12 +127,12 @@ test("an official field publishes without reading or searching the page text, an
     const snapshot = () => db.query(`SELECT jsonb_build_object('facts',(SELECT jsonb_agg(f) FROM fact f),
       'watermarks',(SELECT jsonb_agg(w) FROM fact_watermark w),'sources',(SELECT jsonb_agg(s) FROM source_copy s),
       'blanks',(SELECT jsonb_agg(b) FROM blank b),'flags',(SELECT jsonb_agg(o) FROM owner_flag o),
-      'queues',(SELECT jsonb_agg(q) FROM rebuild_queue q),'counts',(SELECT jsonb_agg(c) FROM count_hour c)) AS value`);
+      'queues',(SELECT jsonb_agg(q) FROM place_page q WHERE q.stale_at IS NOT NULL),'counts',(SELECT jsonb_agg(c) FROM count_hour c)) AS value`);
     const before = await snapshot();
     assert.deepEqual(await door(db, claim, clocks, new Date(now.getTime() + 3_600_000), { purge }), { decision: "CONFIRM", factId: 1 });
     assert.deepEqual(await snapshot(), before);
     assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id"), [{ place_id: input().entity.id }, { place_id: "place-one" }, { place_id: "place-two" }]);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL ORDER BY place_id"), [{ place_id: input().entity.id }, { place_id: "place-one" }, { place_id: "place-two" }]);
     assert.deepEqual(await db.query(`SELECT state,sum(n)::int AS n FROM count_hour
       WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
         AND substring(step FROM 4)::jsonb->>2='in' GROUP BY state`), [{ state: "AZ", n: 1 }]);

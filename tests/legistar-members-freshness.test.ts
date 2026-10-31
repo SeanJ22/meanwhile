@@ -53,7 +53,7 @@ test("source records flow through claimed work, preserve identity, and retire de
   assert.ok(after.length<before.length);
   assert.deepEqual(await f.facts.query("SELECT id FROM entity ORDER BY id"),ids);
   assert.ok((await f.facts.query("SELECT 1 FROM fact WHERE held_reason='GONE_FROM_SOURCE'")).length>0);
-  assert.ok((await f.facts.query("SELECT 1 FROM rebuild_queue")).length>=0);
+  assert.ok((await f.facts.query("SELECT 1 FROM place_page WHERE stale_at IS NOT NULL")).length>=0);
 });
 
 test("tenant completion makes a new row at twelve hours and another family cannot be claimed",async t=>{

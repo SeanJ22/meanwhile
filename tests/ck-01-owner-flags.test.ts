@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {factDb} from "./helpers/fact-db.ts";
 import {flagReaderRecord,readOwnerFlags,resolveOwnerFlag,readerRecordsWithOwnerChoices,withOwnerValues} from "../lib/facts/owner-flags.ts";
-import {publishClaim,type FactDb,type Query} from "../lib/facts/publish.ts";
+import {publishClaim} from "../lib/facts/publish.ts";
 import {factClocks} from "../lib/facts/clocks.ts";
 const NOW="2026-10-20T06:45:00Z";
 const record={id:"office-1",officeholderId:"person-1",office:{phone:"555-123-4567",address:"City Hall"},sourceUrl:"https://clerk.example.gov/"};
@@ -19,49 +19,10 @@ test("a flag leaves the record live; all four owner choices persist and typed fi
  assert.deepEqual(await readerRecordsWithOwnerChoices(db.query,"member-offices",[record]),choice==='REMOVE'?[{...record,office:{...record.office,phone:"555-987-6543"},fieldSources:{'office.phone':{sourceUrl:"",sourceOrg:"Sean",collectedAt:new Date(NOW).toISOString(),verifiedAt:new Date(NOW).toISOString(),provenance:"OWNER"}}}]:[record]);
  await resolveOwnerFlag(db,{id:Number(flags[0].id),choice,...(choice==='TYPED_VALUE'?{values:{'office.phone':"555-987-6543"}}:{})},NOW,async()=>{purges++;return{purged:true};});
  assert.deepEqual(await readOwnerFlags(db.query),[]);
- assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],"legacy owner choices do not change a place-builder input");
+ assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"),[],"legacy owner choices do not change a place-builder input");
  }
  assert.equal(purges,4,"legacy reader caches still receive every owner answer");
  assert.deepEqual(await readerRecordsWithOwnerChoices(db.query,"member-offices",[record]),[]);
- }finally{await db.pg.close();}
-});
-
-test("a fact removal and flag answer roll back when durable queuing fails, then retry commits them with the consuming pages",async()=>{
- const db=await factDb();
- const city="ocd-division/country:us/state:az/place:example",body="owner-queue-body",own="zip:85001",unrelated="zip:85002";
- try{
- await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Example','AZ',NULL),($2,'body','Council','AZ',$1),($3,'place','Consuming ZIP','AZ',NULL),($4,'place','Unrelated ZIP','AZ',NULL)",[city,body,own,unrelated]);
- await db.query("INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id",[[own,unrelated]]);
- await db.query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$2)",[own,body]);
- await db.query("INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key) VALUES($1,$1,$2,$3,'saved')",[record.sourceUrl,NOW,"b".repeat(64)]);
- await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by)
-  VALUES($1,'office_phone','"555-123-4567"','555-123-4567','live','OFFICIAL',1,'555-123-4567',$2,$2,'test')`,[body,NOW]);
- await flagReaderRecord(db.query,{...fact,id:"fact-store:1",family:"fact-store",record:{id:"1"}},{reason:"This published office phone is wrong."});
- let rejectQueue=true,queueAttempts=0,outsideReads=0;
- const wrapped:FactDb&{readonly query:Query}={
-  query:async()=>{outsideReads++;throw Error("Owner geography must use the fact transaction.");},
-  transaction:run=>db.transaction(query=>run(async(text,params)=>{
-   if(text.includes("INSERT INTO rebuild_queue")){queueAttempts++;if(rejectQueue)throw Error("QUEUE_UNAVAILABLE");}
-   return query(text,params);
-  })),
- };
- const purges:string[][]=[];
- const purge=async(tags:readonly string[])=>{purges.push([...tags]);return{purged:true};};
- await assert.rejects(resolveOwnerFlag(wrapped,{id:1,choice:"REMOVE"},NOW,purge),/QUEUE_UNAVAILABLE/);
- assert.deepEqual(await db.query("SELECT status,held_reason FROM fact WHERE id=1"),[{status:"live",held_reason:null}]);
- assert.deepEqual(await db.query("SELECT resolved,resolved_at FROM owner_flag WHERE id=1"),[{resolved:null,resolved_at:null}]);
- assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[]);
- assert.deepEqual(purges,[],"a rolled-back owner answer purges no reader cache");
- rejectQueue=false;
- assert.deepEqual(await resolveOwnerFlag(wrapped,{id:1,choice:"REMOVE"},NOW,purge),
-  {factId:1,entityId:body,readerId:null,family:null,detail:"This published office phone is wrong."});
- assert.deepEqual(await db.query("SELECT status,held_reason FROM fact WHERE id=1"),[{status:"pulled",held_reason:"OWNER_REMOVED"}]);
- assert.equal((await db.query("SELECT resolved FROM owner_flag WHERE id=1"))[0].resolved,"REMOVE");
- assert.deepEqual((await db.query("SELECT place_id,generation::int AS generation FROM rebuild_queue ORDER BY place_id")),
-  [body,city,own].sort().map(place_id=>({place_id,generation:1})),"only the body, its place and its consuming ZIP are queued, once");
- assert.deepEqual(purges,[["reader-state:AZ"]]);
- assert.equal(queueAttempts,2);
- assert.equal(outsideReads,0);
  }finally{await db.pg.close();}
 });
 
@@ -79,7 +40,7 @@ test("KEEP and SEND_FLEET preserve live facts and cache purges without queuing u
   await resolveOwnerFlag(db,{id:Number(flag.id),choice},NOW,async tags=>{purges.push([...tags]);return{purged:true};});
   assert.deepEqual(await db.query("SELECT value,status FROM fact WHERE id=1"),[{value:"555-123-4567",status:"live"}]);
   assert.deepEqual(await readOwnerFlags(db.query),[]);
-  assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],`${choice} changes no place-builder input`);
+  assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"),[],`${choice} changes no place-builder input`);
  }
  assert.deepEqual(purges,[["reader-state:AZ"],["reader-state:AZ"]]);
  }finally{await db.pg.close();}

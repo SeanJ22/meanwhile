@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -20,7 +19,6 @@ import {
   validateNjVoteArchiveFinalUrl,
   validateNjVotingRecordsIndexFinalUrl,
   type NjFloorArchiveRow,
-  type NjMemberVoteRow,
   type NjSessionParticipant,
   type ParsedNjVoteArchive,
 } from "../lib/sources/nj-legislature/rollcalls.ts";

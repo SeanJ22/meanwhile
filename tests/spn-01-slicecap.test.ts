@@ -1,0 +1,33 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+import { WORK_DDL, workList } from "../lib/core/work.ts";
+import { owedMs, runSliceLane, SLICE_BYTES_PER_HOUR } from "../lib/reader/slice-lane.ts";
+import { factDb } from "./helpers/fact-db.ts";
+
+const MIGRATION = readFileSync(new URL("../lib/db/migrations/SPN-01D_place_slice.sql", import.meta.url), "utf8").replaceAll("--> statement-breakpoint", "");
+const ONE = "ocd-division/country:us/state:az/place:p001";
+
+test("the lane builds places nobody asked for only while it owes no time, and marked slices never wait", async () => {
+  const db = await factDb();
+  try {
+    await db.pg.exec(MIGRATION);
+    for (const ddl of WORK_DDL) await db.pg.exec(ddl);
+    await db.query("INSERT INTO entity(id,kind,name,state) SELECT 'ocd-division/country:us/state:az/place:p'||lpad(n::text,3,'0'),'place','P','AZ' FROM generate_series(1,150) n");
+    const list = workList(db.query, { owner: "cap-test" });
+    let now = 1_000_000, built = 0;
+    const total = { built: 0, written: 0, backfilled: 0 };
+    const look = async (advance = 0) => {
+      now += advance; let stop = 0;
+      await runSliceLane({ list, facts: db.query, stopRequested: () => stop++ >= 1, log: () => {}, clock: () => now, sleep: async () => {}, total });
+      const gained = total.backfilled - built; built = total.backfilled; return gained;
+    };
+    assert.equal(await look(), 100, "the first look builds a hundred places");
+    assert.ok(owedMs(SLICE_BYTES_PER_HOUR / 1.2) === 3_600_000 && owedMs(0) === 0 && owedMs(1) > 0, "the hour's allowance takes the whole hour; any read takes some time");
+    assert.equal(await look(1), 0, "while the time owed has not run out, no place nobody asked for is built");
+    await list.touch([{ kind: "slice", placeId: ONE, subjectId: ONE, field: "bodies", origin: { from: "loader" }, source: { source: "test" } }]);
+    const marked = total.built; await look(1);
+    assert.ok(total.built > marked, "a marked slice is rebuilt while the tab is open");
+    assert.equal(await look(3_600_000), 50, "once the time owed has passed, the fifty left are built");
+  } finally { await db.pg.close(); }
+});

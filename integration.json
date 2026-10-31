@@ -4711,5 +4711,17 @@
     "release": 168,
     "ci": "pass",
     "at": "2026-10-31T04:24:23Z"
+  },
+  {
+    "lane": "spn-01-slicecap",
+    "steps": [
+      "SPN-01"
+    ],
+    "ready_sha": "33e51c712e0b8d1d66972ea6491d2bccfce413d1",
+    "merge_sha": "430527ad28ea00b07aeec3366c8acad20ab38362",
+    "river_sha": "741c3566ab07b0544c376b4fa87ef413bea56c88",
+    "release": 169,
+    "ci": "pass",
+    "at": "2026-10-31T11:27:51Z"
   }
 ]

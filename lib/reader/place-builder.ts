@@ -13,6 +13,8 @@ import type { PlaceInput } from "./place-types.ts";
 import type { FactDb } from "../facts/publish.ts";
 import { preparedStatement, readerFactDb } from "../facts/db.ts";
 import { createHash, randomUUID } from "node:crypto";
+import { processNeonBytes as __pn } from "../db/transfer-by-caller.ts";
+const __bytes = () => __pn().reduce((n, p) => n + p.bytes.reader + p.bytes["control-plane"], 0);
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { packPlaceContext, packReadyPlace, unpackPlaceContextRow } from "./place-ready.ts";
@@ -740,7 +742,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
             await query("SET LOCAL plan_cache_mode=force_custom_plan");
             if (!/^zip:\d{5}$/.test(id)) {
               const held=claim.has_page===true?await heldPlacePage(id,query):undefined;
-              return {body:await rebuildPageBody(id,String(claim.kind),state,query,shared,held)};
+              const __b0 = __bytes(); const __r = {body:await rebuildPageBody(id,String(claim.kind),state,query,shared,held)}; console.error('BYTES',id,__bytes()-__b0); return __r;
             }
             const {input:selected,territory}=await placeBuildSelection(id,String(claim.kind),state);
             const input={...selected,includeAgenda:false};

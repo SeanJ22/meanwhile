@@ -11,6 +11,7 @@ import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { buildPlacePackage } from "./place-builder.ts";
 import { readStoredZipPage } from "./stored-zip-page.ts";
+import { readSlicedRows } from "./place-slices.ts";
 import { mergePlaceRows } from "./place-compose.ts";
 import { currentPlaceRow,type BodyHeaders } from "./place-identity.ts";
 import { unpackPlaceContextRow } from "./place-ready.ts";
@@ -168,6 +169,15 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
   const key=JSON.stringify([params,input.placeId??null]),kept=remember?combined.get(key):undefined;
   const shape=JSON.stringify(params.slice(6)),prefix=`${shape}|`;
   if(kept && Date.now()-kept.at<COMBINED_MS && (await query(PLACE_PRINT_SQL,params.slice(0,7)))[0]?.print===kept.print)return kept.place;
+  // The national routing record is held once in this server's memory, not in each saved page.
+  const routing=()=>input.bodyFactsOnly||input.meetingIds!==undefined?null:nationalEverydayRouting().catch(error=>{console.error("READER_ROUTING_UNAVAILABLE",error);return null;});
+  const sliced = await readSlicedRows(input, [...new Set([...input.divisionIds, ...input.namedDivisionIds ?? []])], query);
+  if (sliced) {
+    const merged = mergePlaceRows(input, sliced.rows.map(row => ({ ...currentPlaceRow(row, sliced.headers, input.placeId !== undefined), page_id: row.page_id, page_kind: row.page_kind, built_at: row.built_at })));
+    const place = { ...await composePlaceRow(input, merged), everydayRouting: await routing() };
+    pageIds.set(place, sliced.pages);
+    return place;
+  }
   const read=async(have:readonly string[])=>{
     const [{read:out}={}]=await query(PLACE_PAGES_SQL,[...params,have]);
     const {print,bodies,headers,held,pages}=out as {print:string;bodies:string[];headers:BodyHeaders;held:string[];pages:[string,string,string,number|null,unknown][]};
@@ -179,8 +189,6 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
   let {rows,print,bodies,headers}=await read(remember?[...heldRows.keys()].filter(held=>held.startsWith(prefix)).map(held=>held.slice(prefix.length)):[]);
   if(rows.some(row=>row.held && !heldRows.has(rowKey(row))))({rows,print,bodies,headers}=await read([]));
   const withRows=rows.map(row=>row.held?{...row,row:heldRows.get(rowKey(row))}:row);
-  // The national routing record is held once in this server's memory, not in each saved page.
-  const routing=()=>input.bodyFactsOnly||input.meetingIds!==undefined?null:nationalEverydayRouting().catch(error=>{console.error("READER_ROUTING_UNAVAILABLE",error);return null;});
   // A selection with a place that has no saved content yet is answered as it was before saved pages: a ZIP by its own stored page while it
   // has one (nothing writes that page now), anything else assembled live from the fact store. This goes when every place is built.
   if(withRows.some(row=>!row.row)) {

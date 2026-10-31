@@ -7,6 +7,7 @@ import { currentReaderAuthorityEdge, currentStateLegislatorsEdge, refuseDatabase
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
 import { readFederalDirectoryProjection } from "../reader/authority-reads.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
+import { readStatePersonStore } from "../reader/state.ts";
 import { federalOfficeRecordsForMember, officeRecordsForHolder, officesForMember, type MemberOfficeRecord } from "./member-offices.ts";
 import { fromMemberOffice, type OfficeLocation } from "./office-locations.ts";
 import { personIdentityKeys, statePeopleScopeForId } from "./people-identity.ts";
@@ -30,20 +31,14 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
   const aliases = new Set([officeholderId]);
   let knownPerson = false;
   if (jurisdiction) {
-    let roster: import("./types.ts").OfficeholderSet | undefined;
-    if (!options.store && !currentReaderAuthorityEdge()) {
-      const { readStatePackage } = await import("../reader/state.ts");
-      roster = (await readStatePackage(jurisdiction.slice(3))).people ?? undefined;
-    } else {
-      const edge = options.store ? null : currentStateLegislatorsEdge();
-      const served = edge ? await edge.load(jurisdiction) : null;
-      roster = served?.value?.roster;
-      if (!served) {
-        refuseDatabaseInEdgeOnlyContext(`The ${jurisdiction} member offices`);
-        const read = await readStatePeopleProjection(jurisdiction, options);
-        if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
-        if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") roster = read.value.roster;
-      }
+    const edge = options.store ? null : currentStateLegislatorsEdge();
+    const served = edge ? await edge.load(jurisdiction) : null;
+    let roster = served?.value?.roster;
+    if (!served) {
+      refuseDatabaseInEdgeOnlyContext(`The ${jurisdiction} member offices`);
+      const read = await readStatePeopleProjection(jurisdiction, { ...options, store: options.store ?? (currentReaderAuthorityEdge() ? undefined : await readStatePersonStore(jurisdiction, officeholderId)) });
+      if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
+      if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") roster = read.value.roster;
     }
     const matches = roster?.officeholders.filter(holder => personIdentityKeys(holder).has(officeholderId)) ?? [];
     if (matches.length === 1) {

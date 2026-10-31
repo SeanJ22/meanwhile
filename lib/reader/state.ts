@@ -21,7 +21,7 @@ import { readCanonicalShelf, readCanonicalPackages } from "./canonical.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
-import { personIdentityKeys } from "../officials/people-identity.ts";
+import { personIdentityKeys, statePeopleSourcePointers } from "../officials/people-identity.ts";
 import { statePeopleWithLegislativeAuthority } from "./state-people.ts";
 import { readCuratedReaderProjection, type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
 import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
@@ -322,6 +322,18 @@ const selectedDivisionsSql = `SELECT unnest($2::text[]) AS id UNION SELECT subst
 function zipSourcePointers(state: string) {
   return [{recordClass:"FEDERAL_DIRECTORY" as const,scope:federalDirectoryScope(state)},
     ...PEOPLE_SOURCE_IDS.map(source=>({recordClass:peopleSourceRecordClass(source),scope:peopleSourceScope(`US-${state}`,source)}))];
+}
+
+/** One person's records in each of the state's people sources and the official members of their seats, which enter as a ZIP's districts do: never the whole state's people. */
+export async function readStatePersonStore(jurisdiction: string, id: string): Promise<CivicDataReadStore> {
+  const query = readerDatabaseQuery(), keys = statePeopleSourcePointers(jurisdiction).map(pointer => `${pointer.recordClass}:${pointer.scope}`), params: unknown[] = [keys, id], refuse = () => Promise.reject(new Error("READER_USES_SELECTED_ENTRY"));
+  if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
+  const cte = (statement: { text: string; params: readonly unknown[] }) => { const offset = params.length; params.push(...statement.params); return statement.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + offset}`); };
+  const official = cte(zipOfficialStatement(jurisdiction.slice(3), [])), sources = cte({ ...zipSourcesStatement(jurisdiction.slice(3), []), params: [keys.slice(1), []] });
+  const [rows] = await query([{ params, text: `WITH state_geography AS (SELECT ARRAY(SELECT 'CURATED_READER_RECORD:US:plain-english-translations:'||(reader_payload_node(d.item)->>'ocdId') FROM civic_data_promotions p,
+      LATERAL reader_payload_members(reader_payload_node(reader_payload_node(p.payload)->'roster')->'divisions') d WHERE p.key=($1::text[])[2] AND reader_payload_node(d.item)->>'officeholderId'=$2::text) AS canonical_keys),
+    zip_official AS (${official}), zip_people AS (SELECT jsonb_build_object('roster',jsonb_build_object('officeholders',jsonb_build_array(jsonb_build_object('id',$2::text,'personId',$2::text)))) AS payload), person AS (${sources}) SELECT * FROM person UNION ALL SELECT * FROM zip_official` }]);
+  return { readPromotion: refuse, readCandidate: refuse, readPromotedEntry: async (recordClass, scope) => selectedStateEntry(recordClass, scope, rows.find(row => row.key === `${recordClass}:${scope}`)) };
 }
 
 /** Exact identities and name ambiguity stay closed across sources before the ordinary people merge. */

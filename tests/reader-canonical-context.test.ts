@@ -12,7 +12,7 @@ import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
-import { PLACE_PAGES_SQL } from "../lib/reader/place.ts";
+import { BALLOT_PLACE_PAGES_SQL } from "../lib/ballot/place-package-until-nov-4.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
@@ -332,9 +332,9 @@ test("the ballot submits state and place reads before its independent auxiliary 
       return [rows];
     }
     if (family === "place") {
-      assert.equal(statement.text,PLACE_PAGES_SQL);
+      assert.equal(statement.text,BALLOT_PLACE_PAGES_SQL);
       const divisions=statement.params[1] as string[];
-      return [[{page_id:divisions[0],page_kind:"place",built_at:"2026-10-19T00:00:00.000Z",body_ids:statement.params[2],row:{
+      return [[{page_id:divisions[0],page_kind:"place",built_at:"2026-10-19T00:00:00.000Z",body_ids:statement.params[2] as string[],row:{
         division_ids:divisions,entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],parts:{},governments:[],divisions:[],registration_held:false,
       }}]];
     }

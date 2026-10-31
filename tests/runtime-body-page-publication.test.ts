@@ -52,7 +52,7 @@ test("a later runtime publication gives its new board a queued ready page while 
     assert.equal(await resolveId(FOREIGN_ALIAS,query),"foreign-council");
     assert.equal(await resolveId(NEW_BODY,query),NEW_BODY);
     assert.ok((await readHeldBodyIds({states:["AZ"],query})).has(NEW_BODY));
-    assert.ok((await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1",[NEW_BODY])).length,
+    assert.ok((await query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1",[NEW_BODY])).length,
       "publication seeds the board before the same state's rebuild request is queued");
     const result=await rebuildPlacePages({db:{transaction:run=>pg.transaction(tx=>run(async(text,params=[])=>(await tx.query<Record<string,unknown>>(text,[...params])).rows))},
       limit:32,concurrency:1,purge:async()=>({purged:true})});

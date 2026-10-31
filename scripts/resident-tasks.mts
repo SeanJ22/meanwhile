@@ -273,7 +273,7 @@ try {
   await asker?.close();
 }
 
-const pass = taskPass(runs, now, reader.runId, IF_QUEUED ? queued : queued.filter((z) => zips.includes(z)));
+const pass = taskPass(runs, now, reader.runId, queued);
 if (DRY) {
   for (const run of pass.runs) {
     console.log(`  ${run.verdict}  ${run.says}`);

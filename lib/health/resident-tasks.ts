@@ -328,12 +328,12 @@ export function taskTargets(tasks: readonly ResidentTask[], zips: readonly strin
 }
 
 /**
- * The ZIPs for one pass: every published ZIP never run before comes first
- * (a newly published place is queued for its first run), then the day's
- * rotating sample of the rest, up to `count` (queued ZIPs are never dropped).
+ * The ZIPs for one pass, at most `count`: the first `count` published ZIPs never
+ * run before come first (a newly published place is queued for its first run),
+ * sorted, then any room left from the day's rotating sample of the rest.
  */
 export function chooseTaskZips(published: readonly string[], everRun: ReadonlySet<string>, count: number, now: string): { zips: string[]; queued: string[] } {
-  const queued = [...new Set(published)].filter((zip) => !everRun.has(zip)).sort();
+  const queued = [...new Set(published)].filter((zip) => !everRun.has(zip)).sort().slice(0, count);
   const rest = sampleZips(published.filter((zip) => !queued.includes(zip)), Math.max(0, count - queued.length), now);
   return { zips: [...queued, ...rest], queued };
 }

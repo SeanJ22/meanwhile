@@ -10,10 +10,9 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
-import { laneTurn } from "../lib/ops/lane-turn.ts";
+import { laneTurn, slotOrLeave } from "../lib/ops/lane-turn.ts";
 import { loadParsers, type PlatformParser } from "../lib/sources/parser-hook.ts";
-import { LEAD_ATTEMPTS, parserStats, runParserWorkers, type LeadDeps } from "../lib/sources/parser-worker.ts";
+import { LEAD_ATTEMPTS, runParserWorkers, type LeadDeps } from "../lib/sources/parser-worker.ts";
 import { PLATFORM_PATTERNS, platformOf } from "../lib/sources/platform-of.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -145,28 +144,23 @@ test("every installed parser is found by its folder, and a link's kind of websit
   assert.equal(platformOf("https://files.thrillshare.com/documents/a.pdf?x=1"), "pdf", "a file's own type wins over its host");
 });
 
-test("a turn whose end arrives mid-batch ends cleanly: the links still being read go back to waiting, none marked failed, and none is claimed after", async t => {
-  const { facts, list, deps, requests } = await setup();
+test("a page that never answers goes back to the list after its read limit, and a failed write back is logged: the other links are still read", { timeout: 20_000 }, async t => {
+  const { facts, list, deps } = await setup({});
   t.after(() => facts.pg.close());
   await list.ensure(["a", "b", "c"].map(name => productionLead({ url: `https://${name}.legistar.com/Calendar.aspx` })));
-  const end = new AbortController(), asked: string[] = [];
-  const stuck: ProbeFetch = url => { asked.push(url); if (asked.length === 3) end.abort(); return new Promise(() => {}); };
-  const stats = await runParserWorkers({ deps: { ...deps, fetch: stuck }, concurrency: 3, turnEnd: end.signal, stopRequested: () => end.signal.aborted });
-  assert.deepEqual([stats.claimed, stats.released, stats.failed, stats.read], [3, 3, 0, 0]);
-  assert.equal(requests.length, 0);
-  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead' AND status = 'waiting' AND lease_owner IS NULL`))[0]!.n), 3);
-  assert.equal((await runParserWorkers({ deps, concurrency: 3, stopRequested: () => false })).claimed, 3, "the next turn claims them again");
+  const log: string[] = [], later = (claim: Parameters<typeof list.later>[0], reason: string) => claim.url?.includes("//b.") ? Promise.reject(new Error("database went away")) : list.later(claim, reason);
+  const fetch: ProbeFetch = (url, init) => url.includes("//a.") ? new Promise(() => {}) : deps.fetch(url, init);
+  const stats = await runParserWorkers({ deps: { ...deps, fetch, list: { ...list, later } }, concurrency: 1, readMs: 30, stopRequested: () => false, log: line => log.push(line) });
+  assert.deepEqual([stats.claimed, stats.again, stats.failed], [3, 2, 1], "the stuck page and the unreadable one both went back; only the failed write counts as failed");
+  assert.ok(log.some(line => line.includes("database went away")));
+  assert.match(String((await facts.query(`SELECT refusal FROM work WHERE url LIKE '%//a.%'`))[0]?.refusal), /^READ_TIMED_OUT/);
 });
 
-test("a release drain lets the link being read finish, claims no other, and the minute line has moved on", async t => {
-  const { facts, list, deps } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
-  t.after(() => facts.pg.close());
-  await list.ensure([productionLead()]);
-  const stats = parserStats(), turn = laneTurn(() => `Page readers: ${stats.claimed} claimed, ${stats.read} read`), lines: string[] = [];
-  turn.beat(line => lines.push(line));
-  await runParserWorkers({ deps: { ...deps, fetch: (url, init) => { turn.ask(); return deps.fetch(url, init); } }, concurrency: 1, stats, stopRequested: turn.asked });
-  turn.beat(line => lines.push(line));
-  assert.deepEqual([stats.claimed, stats.read, stats.failed, stats.released], [1, 1, 0, 0]);
-  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead' AND status = 'waiting'`))[0]!.n), 8, "its new links wait for the restarted lane");
-  assert.ok(lines[0] !== lines[1] && progressLines()(`${lines[1]}\n`) === 1);
+test("a lane waits for memory until its claiming would stop, and its idle clock starts only once it holds memory", async () => {
+  let at = 0;
+  const turn = laneTurn(() => "line", () => at), until = Date.now() + 55 * 60_000;
+  await slotOrLeave(turn, "parser-worker.mts", until, { acquire: async (_entry, deadline) => { assert.equal(deadline, until, "the wait runs to the turn's own end, not a minute"); at += 20 * 60_000; return () => {}; } });
+  assert.equal(turn.stop(), false, "twenty minutes waiting for memory are not idle time");
+  at += 5 * 60_000;
+  assert.equal(turn.stop(), true);
 });

@@ -6,7 +6,6 @@ type Page = { readonly row: Row; readonly order: number; readonly at: number };
 const records = (value: unknown): Row[] => Array.isArray(value) ? value as Row[] : [];
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 const record = (value: unknown): Row => value && typeof value === "object" && !Array.isArray(value) ? value as Row : {};
-const latest = (pages: readonly Page[]): Page | undefined => [...pages].sort((a, b) => a.at - b.at || a.order - b.order).at(-1);
 
 /** An identity is kept once across overlapping ready pages; distinct records keep their own identity. */
 function unique(rows: readonly Row[], key: (row: Row) => string): Row[] {
@@ -144,7 +143,6 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
 
   const archivedByPage = new Map(ordered.map(page => [page, records(page.row.archived_meetings).filter(meeting => owns(page, meeting.bodyId)).map(meeting=>canonicalRow(meeting))]));
   const archived = [...archivedByPage.values()].flat();
-  const last = latest(active)!;
   const allDivisions = unique(pages.flatMap(page => records(page.row.divisions)), row => String(row.ocdId));
   return {
     body_aliases: aliases,

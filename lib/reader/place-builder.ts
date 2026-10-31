@@ -482,7 +482,7 @@ const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
  * Change when the same read composes into a different page, so pages whose reads are unchanged compose again.
  * A change to the read's own SQL changes the build print by itself.
  */
-const PLACE_PAGE_COMPOSITION = "place-page-composition:1";
+const PLACE_PAGE_COMPOSITION = "place-page-composition:2";
 const PLACE_PAGE_BUILD = createHash("sha256").update(PLACE_PACKAGE_SQL).update(PLACE_PAGE_COMPOSITION).digest("hex").slice(0,32);
 
 /** What a stored page was built from: the builder, its selection, and each read's group prints by context key. */

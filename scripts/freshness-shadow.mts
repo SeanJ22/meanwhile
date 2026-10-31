@@ -1591,7 +1591,7 @@ if (dispatchTargets.length > 0) {
   }
 }
 
-if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(storedKeyEnvironment())) {
+if (dispatchWrittenThisCycle.size > 0 && sameRoundFirstHuntEnabled(process.env)) {
   try {
     const written = [...dispatchWrittenThisCycle.keys()];
     materialized = {ids:await readMaterializedPlanningIds(repos,fundedRefs)};

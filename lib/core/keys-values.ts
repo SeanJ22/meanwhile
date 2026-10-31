@@ -31,6 +31,7 @@ export function storedKeyValue(name: string, injected?: Environment): string | u
 }
 
 const environment = new Proxy(process.env, {
+  set: (target, field, value) => !declared.has(String(field)) && Reflect.set(target, field, value, target),
   get(target, field) {
     if (field === KEY_ENVIRONMENT) return true;
     if (typeof field === "string" && declared.has(field)) return storedKeyValue(field);

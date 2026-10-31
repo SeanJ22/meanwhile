@@ -15,7 +15,7 @@ export function prepareProductionCivicDataWrite(
   env: WritableEnvironment = storedKeyEnvironment(),
 ): WriteHandle {
   const handle = resolveProductionWriteHandle(env);
-  if (storedKeyEnvironment(env) === storedKeyEnvironment() && env.WTP_RUNTIME_MODE !== "staging") selectSavedDatabase("WTP_PRODUCTION_DATABASE_URL_WRITE");
+  if (storedKeyEnvironment(env) === storedKeyEnvironment()) selectSavedDatabase(env.WTP_RUNTIME_MODE === "staging" ? undefined : "WTP_PRODUCTION_DATABASE_URL_WRITE");
   else env.DATABASE_URL = handle.connection;
   if (env.WTP_RUNTIME_MODE === "staging") env.WTP_DB_ROLE = "local";
   else env.WTP_DB_ROLE = "production";

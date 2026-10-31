@@ -346,26 +346,26 @@ function withEnv<T>(vars: Record<string, string | undefined>, run: () => T): T {
   }
 }
 
-test("no key means no basemap — never a silent substitute provider", () => {
-  const choice = withEnv({ NEXT_PUBLIC_MAPTILER_KEY: undefined }, () => resolveBasemap("dark"));
+test("local and preview builds keep the fallback basemap", () => {
+  const choice = withEnv({ WTP_BUILD_CONTEXT: undefined }, () => resolveBasemap("dark"));
   assert.equal(choice, null);
 });
 
 test("the basemap follows the theme, and each theme has its own default", () => {
-  const [dark, light] = withEnv({ NEXT_PUBLIC_MAPTILER_KEY: "k-test" }, () =>
+  const [dark, light] = withEnv({ WTP_BUILD_CONTEXT: "production" }, () =>
     withEnv({ NEXT_PUBLIC_MAPTILER_STYLE: undefined, NEXT_PUBLIC_MAPTILER_STYLE_LIGHT: undefined }, () => [
       resolveBasemap("dark"),
       resolveBasemap("light"),
     ]),
   );
   assert.equal(dark?.provider, "maptiler");
-  assert.match(dark!.styleUrl, /\/maps\/basic-v2-dark\/style\.json\?key=k-test$/);
-  assert.match(light!.styleUrl, /\/maps\/basic-v2\/style\.json\?key=k-test$/);
+  assert.match(dark!.styleUrl, /^\/api\/maptiler\/maps\/basic-v2-dark\/style\.json$/);
+  assert.match(light!.styleUrl, /^\/api\/maptiler\/maps\/basic-v2\/style\.json$/);
   assert.notEqual(dark!.styleUrl, light!.styleUrl, "one style for both themes is the defect");
 });
 
 test("dark is the default theme, so a caller that forgets does not get a light map", () => {
-  const choice = withEnv({ NEXT_PUBLIC_MAPTILER_KEY: "k-test", NEXT_PUBLIC_MAPTILER_STYLE: undefined }, () =>
+  const choice = withEnv({ WTP_BUILD_CONTEXT: "production", NEXT_PUBLIC_MAPTILER_STYLE: undefined }, () =>
     resolveBasemap(),
   );
   assert.match(choice!.styleUrl, /basic-v2-dark/);
@@ -374,7 +374,7 @@ test("dark is the default theme, so a caller that forgets does not get a light m
 test("a configured style overrides the default, per theme", () => {
   const [dark, light] = withEnv(
     {
-      NEXT_PUBLIC_MAPTILER_KEY: "k-test",
+      WTP_BUILD_CONTEXT: "production",
       NEXT_PUBLIC_MAPTILER_STYLE: "custom-dark",
       NEXT_PUBLIC_MAPTILER_STYLE_LIGHT: "custom-light",
     },
@@ -392,13 +392,13 @@ test("the fallback style draws ground and nothing else, so the map still initial
 });
 
 test("software graphics use the same themed MapTiler map as raster tiles and retain interactive district labels", () => {
-  const choice = { provider: "maptiler" as const, styleUrl: "https://api.maptiler.com/maps/custom-dark/style.json?key=fixture" };
+  const choice = { provider: "maptiler" as const, styleUrl: "/api/maptiler/maps/custom-dark/style.json" };
   assert.equal(basemapStyle(choice, false), choice.styleUrl);
   const style = basemapStyle(choice, true);
   assert.notEqual(typeof style, "string");
   if (typeof style === "string") throw new Error("Expected raster style");
-  assert.equal(style.glyphs, "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=fixture");
-  assert.deepEqual(style.sources.basemap, { type: "raster", url: "https://api.maptiler.com/maps/custom-dark/tiles.json?key=fixture", tileSize: 512 });
+  assert.equal(style.glyphs, "/api/maptiler/fonts/{fontstack}/{range}.pbf");
+  assert.deepEqual(style.sources.basemap, { type: "raster", url: "/api/maptiler/maps/custom-dark/tiles.json", tileSize: 512 });
   const districts = withDistricts(style, ["congressional"], "NH");
   assert.ok(districts.layers.some(layer => layer.type === "symbol" && layer.id.startsWith("district-")));
   assert.ok(districts.layers.some(layer => layer.id === "basemap"));

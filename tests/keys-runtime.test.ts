@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { savedKeysRuntime } from "../lib/core/keys-runtime.ts";
-import { installSavedValues, storedKeyValue } from "../lib/core/keys-values.ts";
+import { installSavedValues, storedKeyValue, storedKeyEnvironment } from "../lib/core/keys-values.ts";
 
 test("direct runtime reads honor their role, record real openings, refresh changes and retain the last complete snapshot", async () => {
   const db = new PGlite(), master = "42".repeat(32), at = new Date().toISOString();
@@ -23,6 +23,7 @@ test("direct runtime reads honor their role, record real openings, refresh chang
     const website = savedKeysRuntime(query, master, "website", () => now, message => warnings.push(message));
     await website.refresh();
     assert.equal(storedKeyValue("ANTHROPIC_API_KEY"), "saved-ai");
+    assert.throws(() => { storedKeyEnvironment().ANTHROPIC_API_KEY = "legacy"; }, TypeError);
     assert.equal(storedKeyValue("WTP_PRODUCTION_DATABASE_URL_WRITE"), undefined);
     assert.equal(storedKeyValue("NEON_BILLING_API_KEY"), undefined);
     assert.equal((await store.list())[0].runnerReadAt, null, "website reads do not claim a runner read");

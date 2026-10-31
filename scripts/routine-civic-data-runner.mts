@@ -919,7 +919,7 @@ const offeredTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...hun
   .map(task => ({ ...task, ...factRefreshBounds(task, sourceFactClocks) }));
 /** A slowed source not yet due is not read for, clocked or launched this pass; its work stays owed. Its child's launch records it. */
 const selectedTasks = offeredTasks.filter(task => {
-  if (admitJobLaunch(task.id, storedKeyEnvironment(), Date.now(), false)) return true;
+  if (admitJobLaunch(task.id, process.env, Date.now(), false)) return true;
   recordLaunchDecision(task, "DEFER", SLOWED_REASON, `JOB_TRANSFER_BREAKER: ${task.id} ${JOB_SLOWED_WORDS}`);
   return false;
 });

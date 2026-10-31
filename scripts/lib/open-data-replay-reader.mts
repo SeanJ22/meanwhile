@@ -1,4 +1,4 @@
-import { storedKeyEnvironment, storedKeyValue } from "../../lib/core/keys-values.ts";
+import { installSavedValues, storedKeyEnvironment, storedKeyValue } from "../../lib/core/keys-values.ts";
 /** Normal API/SQL/Netlify SDK readers over held local evidence, without external vault requests. */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -32,8 +32,9 @@ export async function installOpenDataReaderSql(query:ReadOnlyQuery) {
 }
 
 export function installOpenDataReplayVault(vault:EvidenceStore) {
-  const originalFetch=globalThis.fetch,names=["WTP_VAULT_PROVIDER","WTP_BLOBS_SITE_ID","WTP_BLOBS_TOKEN"],environment=new Map(names.map(name=>[name,storedKeyEnvironment()[name]]));
-  Object.assign(storedKeyEnvironment(),{WTP_VAULT_PROVIDER:"netlify",WTP_BLOBS_SITE_ID:"readonly-replay",WTP_BLOBS_TOKEN:"local-replay-token"});
+  const originalFetch=globalThis.fetch,names=["WTP_VAULT_PROVIDER","WTP_BLOBS_SITE_ID"],environment=new Map(names.map(name=>[name,storedKeyEnvironment()[name]]));
+  const saved=installSavedValues({values:new Map([...Object.entries(storedKeyEnvironment()).filter((entry):entry is [string,string]=>entry[1]!==undefined),["WTP_BLOBS_TOKEN","local-replay-token"]])});
+  Object.assign(storedKeyEnvironment(),{WTP_VAULT_PROVIDER:"netlify",WTP_BLOBS_SITE_ID:"readonly-replay"});
   const requested:string[]=[];
   globalThis.fetch=(async(input,init)=>{
     const url=new URL(input instanceof Request?input.url:String(input));
@@ -47,7 +48,7 @@ export function installOpenDataReplayVault(vault:EvidenceStore) {
     const object=await vault.get(key);if(!object)return new Response(null,{status:404});
     return new Response(object.bytes as BodyInit,{headers:{"netlify-blobs-metadata":`b64;${Buffer.from(JSON.stringify({meta:object.meta,bodySha256:object.meta.contentHash})).toString("base64")}`}});
   }) as typeof fetch;
-  return {requested,restore(){globalThis.fetch=originalFetch;for(const [name,value]of environment){if(value===undefined)delete storedKeyEnvironment()[name];else storedKeyEnvironment()[name]=value;}}};
+  return {requested,restore(){installSavedValues(saved);globalThis.fetch=originalFetch;for(const [name,value]of environment){if(value===undefined)delete storedKeyEnvironment()[name];else storedKeyEnvironment()[name]=value;}}};
 }
 
 export async function normalOpenDataPage(zip:string,expectedId:string,onPage?:(result:{offset:number;elapsedMs:number})=>void) {

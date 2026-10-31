@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  APRIL_2024_SENATE_NOTE,
   KEY_VOTES,
   KEY_VOTES_CRITERIA,
   KEY_VOTES_LAWS,
@@ -106,23 +105,6 @@ test("every explainer is level register, one sentence's worth, and never the tit
     }
   }
 });
-
-/** Passage or concurrence only — a cloture vote is a different question. */
-function assertPassageQuestion(id: string, chamber: string, question: string | null) {
-  assert.match(
-    question ?? "",
-    // `agreed?` and bare `concur` deliberately: the chambers write "Senate
-    // AGREED to the House amendment" and "Senate CONCURRED in", and a guard
-    // that only knew the infinitives would call a real concurrence vote a
-    // procedural one.
-    /passed|on passage|concur|agreed? to the|suspend the rules/i,
-    `${id} ${chamber}: not a passage-type question`,
-  );
-  assert.ok(
-    !/cloture|motion to proceed|motion to table|recommit/i.test(question ?? ""),
-    `${id} ${chamber}: a procedural vote is standing in for the law`,
-  );
-}
 
 /**
  * Votes on laws and votes on people both start collapsed, with their count in the header, and the sub-groups

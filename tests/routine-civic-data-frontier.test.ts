@@ -1,46 +1,16 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
-  ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_TASKS,
   routineFailureDomainFrontier,
-  routineFailureDomainRotationSeed,
   routinePassLaunchOrder,
   routineBaselineOwed,
-  routineCodeChangeRetryTaskIds,
-  routineTaskDeadlineMs,
   routineTaskDue,
   routineTaskNextDueMs,
-  routineAdmissionClock,
-  unchangedRoutineProtocolFailure,
-  routineUnreceiptedSupervisorAttemptHistory,
-  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
-  type RoutineSourceTask,
-  type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
-import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
-import { sittingWindowHotByConclusion } from "../lib/civic-data/sitting-window-admission.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
-import {
-  ROUTINE_SUPERVISOR_HISTORY_FIELDS,
-  ROUTINE_SUPERVISOR_HISTORY_WINDOW,
-} from "../lib/civic-data/supervisor-history.ts";
-import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import { ROUTINE_CHILD_CONCURRENCY } from "../lib/civic-data/bounded-child-pass.ts";
-
-function largestRealDomain(): readonly RoutineSourceTask[] {
-  const grouped = new Map<string, RoutineSourceTask[]>();
-  for (const task of ROUTINE_SOURCE_TASKS) {
-    const rows = grouped.get(task.acquisitionFailureDomain) ?? [];
-    rows.push(task);
-    grouped.set(task.acquisitionFailureDomain, rows);
-  }
-  return [...grouped.values()].sort((left, right) => right.length - left.length)[0] ?? [];
-}
 
 test("missing people and previous-parser government baselines admit every state and share the existing pool in source order", () => {
   const people = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("openstates-people-"));

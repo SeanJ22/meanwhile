@@ -1,12 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
-import { dispatchWorkerTask, enqueueWorkerTask } from "../lib/control-plane/workers/runtime.ts";
+import { runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { projectAutonomousActivity, readAutonomousActivity } from "../lib/control-plane/workers/activity.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
-import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
-import type { EvidenceWalkStep } from "../lib/control-plane/workers/research-types.ts";
 
 test("uncommitted or mismatched worker output never enters the proved event chain", async () => {
   const h=await autonomousHarness(); await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1});

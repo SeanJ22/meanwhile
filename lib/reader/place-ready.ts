@@ -38,7 +38,7 @@ export function packPlaceContext(context: Row): Row {
     const brief={...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
       meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
         payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};
-    const facts={...brief,registry:null,everyday_routing:null,governments:[],divisions:[],registration_held:false};
+    const facts={...brief,registry:null,governments:[],divisions:[],registration_held:false};
     packed[key]={full:pack(full),brief:pack(brief),facts:pack(facts)};
   }
   return packed;

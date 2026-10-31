@@ -9,6 +9,8 @@ import type { PlaceInput } from "./place-types.ts";
 import type { FactDb } from "../facts/publish.ts";
 import { preparedStatement, readPassCursor, readerFactDb, writePassCursor } from "../facts/db.ts";
 import { createHash, randomUUID } from "node:crypto";
+import { processNeonBytes as __pn } from "../db/transfer-by-caller.ts";
+const __bytes = () => __pn().reduce((n, p) => n + p.bytes.reader + p.bytes["control-plane"], 0);
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { packPlaceContext, unpackPlaceContextRow } from "./place-ready.ts";
@@ -479,11 +481,15 @@ export const PLACE_PACKAGE_SQL = preparedStatement(placePackageSql(false));
 const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
 
 /**
- * Change when the same read composes into a different page, so pages whose reads are unchanged compose again.
- * A change to the read's own SQL changes the build print by itself.
+ * Change when the same facts compose into a different page, so pages whose reads are unchanged compose again. The read's own
+ * packing is not part of it: a page stays valid across a change of the read while its group prints still match. A page saved
+ * before this tag existed carries a hash of its read instead, and is accepted as this composition.
  */
-const PLACE_PAGE_COMPOSITION = "place-page-composition:2";
-const PLACE_PAGE_BUILD = createHash("sha256").update(PLACE_PACKAGE_SQL).update(PLACE_PAGE_COMPOSITION).digest("hex").slice(0,32);
+const PLACE_PAGE_BUILD = "place-page-composition:1";
+const sameBuild = (build: string) => build === PLACE_PAGE_BUILD || /^[0-9a-f]{32}$/.test(build);
+/** Groups an earlier read printed that no read returns now; a page is rewritten only when a current group changes. */
+const RETIRED_GROUPS = ["everyday_routing"];
+const withoutRetired = (prints: ReadPrints): ReadPrints => Object.fromEntries(Object.entries(prints).filter(([group]) => !RETIRED_GROUPS.includes(group)));
 
 /** What a stored page was built from: the builder, its selection, and each read's group prints by context key. */
 export interface PlacePagePrints {
@@ -526,14 +532,14 @@ async function readPlaceRow(input: PlaceInput,query: Query,held?: HeldRead,keeps
   const printed = (prints ?? {}) as ReadPrints;
   const behind = [...kept].filter(group => PLACE_ROW_GROUPS[group] && group !== "body_aliases");
   // Against a page that keeps its rows, each changed long list came back with only the rows the page lacks.
-  const partial = keeps && held !== undefined, whole = async () => ({prints:printed,row:(await readPlaceRow(input,query)).row});
+  const partial = keeps && held !== undefined, whole = async () => { console.error('WHOLE', input.divisionIds[0]??input.bodyIds?.[0]); return ({prints:printed,row:(await readPlaceRow(input,query)).row}); };
   const stored = behind.length || partial ? await held?.stored?.() ?? null : undefined;
-  if (stored === null) return whole();
+  if (stored === null) { console.error('STORED NULL'); return whole(); }
   for (const group of behind) for (const column of PLACE_ROW_GROUPS[group]!) row[column] = stored![column];
   const full = kept.has("meetings") ? row : await expandPlaceBuildRow(row);
   if (partial) for (const column of ELEMENT_COLUMNS) if (!kept.has(groupOf(column))) {
     const was = (held.prints[`${column}[]`] ?? []) as readonly string[], rows = stored![column] as unknown[], sent = (full[column] as unknown[]).values();
-    if (rows?.length !== was.length) return whole(); // A stored page always keeps the rows its prints name.
+    if (rows?.length !== was.length) { console.error('MISMATCH', column, rows?.length, was.length, Object.keys(held.prints).join(',').slice(0,300)); return whole(); } // A stored page always keeps the rows its prints name.
     const byPrint = new Map(was.map((print,index) => [print,rows[index]]));
     full[column] = ((printed[`${column}[]`] ?? []) as readonly string[]).map(print => byPrint.has(print) ? byPrint.get(print) : sent.next().value);
   }
@@ -574,14 +580,15 @@ export async function rebuildPageBody(id:string,kind:string,state:string,query:Q
   held?:HeldPlacePage):Promise<StoredPlacePage|UnchangedPlacePage> {
   const input:PlaceInput={state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]};
   const stateRoot=kind==='place' && /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id);
-  const frame={build:PLACE_PAGE_BUILD,input:createHash("sha256").update(JSON.stringify({input})).digest("hex").slice(0,32)};
-  const same=held?.prints.build===frame.build && held.prints.input===frame.input ? held : undefined;
+  // The selection's print keeps the form pages were saved with, so every saved page stays valid.
+  const frame={build:PLACE_PAGE_BUILD,input:createHash("sha256").update(JSON.stringify({input,territory:null})).digest("hex").slice(0,32)};
+  const same=held && sameBuild(held.prints.build) && held.prints.input===frame.input ? held : undefined;
   const reads:[string,PlaceInput][]=[["history",{...input,includeHistory:true}],
     ...(stateRoot?[["emptyHistory",{...input,divisionIds:[],includeHistory:true}] as [string,PlaceInput]]:[])];
   const prints:Record<string,ReadPrints>={},rows=new Map<string,Record<string,unknown>|null>();
   for(const [key,read] of reads) {
     const prior=same?.prints.reads[key];
-    const out=await readPlaceRow(read,query,prior?{prints:prior,stored:()=>same!.row(key)}:undefined,true);
+    const out=await readPlaceRow(read,query,prior?{prints:withoutRetired(prior),stored:()=>same!.row(key)}:undefined,true);
     prints[key]=out.prints;
     rows.set(key,out.row);
   }
@@ -684,7 +691,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
           await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
           await query("SET LOCAL plan_cache_mode=force_custom_plan");
           const held=claim.has_page===true?await heldPlacePage(id,query):undefined;
-          return rebuildPageBody(id,String(claim.kind),state,query,held);
+          const __b0 = __bytes(); const __r = await rebuildPageBody(id,String(claim.kind),state,query,held); console.error('BYTES',id,__bytes()-__b0); return __r;
         });
         await db.transaction(async query=>{
           // A worker whose lease expired cannot replace a newer worker's page.

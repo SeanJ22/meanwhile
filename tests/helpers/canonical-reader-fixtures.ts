@@ -21,7 +21,7 @@ import { neonConfig } from "@neondatabase/serverless";
 import { isCensusPlaceholderDivision } from "../../lib/registry/census-placeholders.ts";
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
-import { PLACE_PAGES_SQL } from "../../lib/reader/place.ts";
+import { PLACE_PAGES_SQL, PLACE_PRINT_SQL } from "../../lib/reader/place.ts";
 import { placePagesAnswer } from "./place-pages-answer.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
@@ -261,6 +261,7 @@ export function activateCanonicalFixture(key: string): void {
     return saved.then(rows=>structuredClone(rows));
   };
   const readFacts: Query = async (sql,params=[]) => {
+    if(sql===PLACE_PRINT_SQL)return [];
     if(sql===PLACE_PAGES_SQL)return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
       namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true});
     if(sql.includes("AS registration_held") || sql.includes("WITH RECURSIVE ancestors AS"))return fixturePlaceRow(params);

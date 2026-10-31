@@ -4687,5 +4687,29 @@
     "gates": "pass (9 of 9, 9,934 tests)",
     "at": "2026-10-26T00:48:00Z",
     "live": "release 122 main 560cc2aa2 at 2026-10-26T01:47:12Z"
+  },
+  {
+    "lane": "spn-01-parserstop",
+    "steps": [
+      "SPN-01"
+    ],
+    "ready_sha": "090259d302260ee85f62eefcb3ab0cd703ff50f7",
+    "merge_sha": "9e852c5fa483eb376eb443d9a03224cfe4d246f5",
+    "river_sha": "c0e7b7a75fd5ec9c6c65348bca61dcf081e4a031",
+    "release": 168,
+    "ci": "pass",
+    "at": "2026-10-31T04:24:23Z"
+  },
+  {
+    "lane": "spn-01-tasksonce",
+    "steps": [
+      "SPN-01"
+    ],
+    "ready_sha": "0d312c8e79b1220ca45b6208da1596979337040d",
+    "merge_sha": "199048feb1428ad6baac1ad7e41c521b45931cf1",
+    "river_sha": "c0e7b7a75fd5ec9c6c65348bca61dcf081e4a031",
+    "release": 168,
+    "ci": "pass",
+    "at": "2026-10-31T04:24:23Z"
   }
 ]

@@ -419,3 +419,5 @@ One line per batch folded into river.
 - 2026-10-25T21:30:00Z · river-portraits · DB-03 portraits and member offices, never re-read (River session session_012UDbgz3sjA8QN2m7CY78QS) · ready 9bf9801a5 · river ea117a0bb · pnpm gates pass on ea117a0bb (9 of 9, 9,919 tests) · release 120 PR #832
 - 2026-10-25T23:34:00Z · db-02-recut · DB-02 · ready e0f14fe59 (River re-cut of 2769c614e on river ea117a0bb, without docs and proof scripts) · river a37ce95a7 · pnpm gates pass on a37ce95a7 (9 of 9, 9,922 tests) · release 121 PR #833
 - 2026-10-26T00:48:00Z · river-db03-reads · DB-03 reads · ready de764a119 (River finished stream/db-03-reads 8b69f0cbf: two tests rewritten) · river e58835856 · pnpm gates pass on e58835856 (9 of 9, 9,934 tests) · release 122 PR #834
+- 2026-10-31T04:24:23Z · spn-01-parserstop · SPN-01 · ready 090259d30226 · river c0e7b7a75fd5 · GitHub CI passed on release 168
+- 2026-10-31T04:24:23Z · spn-01-tasksonce · SPN-01 · ready 0d312c8e79b1 · river c0e7b7a75fd5 · GitHub CI passed on release 168

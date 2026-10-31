@@ -7,7 +7,7 @@ check: pnpm test (tests/bounded-beat.test.ts)
 ready: SPN-01 d6bcd167e5d4
 river: f1bb5dfad0b0555f1f851fbeaeb26046273a797b
 at: 2026-10-31T03:22:52Z
-state: returned
+state: cleared: integrated ready 090259d302260ee85f62eefcb3ab0cd703ff50f7 on river c0e7b7a75fd5ec9c6c65348bca61dcf081e4a031
 fix_subject: fix:d16d60dd
 fix: River · stream/spn-01-parserstop — pnpm test (tests/bounded-beat.test.ts) failed for spn-01-parserstop: ✖ failing tests:
 

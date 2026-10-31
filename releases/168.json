@@ -29,6 +29,7 @@
     "number": 888,
     "url": "https://github.com/SeanJ22/meanwhile/pull/888"
   },
-  "ci": "running",
-  "at": "2026-10-31T03:53:26Z"
+  "ci": "pass",
+  "at": "2026-10-31T03:53:26Z",
+  "settled_at": "2026-10-31T04:24:23Z"
 }

@@ -10,7 +10,7 @@ import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { ProbeFetch } from "../doors/probe.ts";
-import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
+import { ITEM_READ_MS, runClaimLoop } from "../ops/claim-loop.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import type { Lead, PlatformParser } from "./parser-hook.ts";
 import { platformOf } from "./platform-of.ts";
@@ -20,7 +20,6 @@ export const LEAD_ATTEMPTS = 5;
 /** The most new links one page can add; a page with more is a listing, and its parser picks the pages worth reading. */
 const MAX_LINKS = 500;
 export const LEAD_LEASE_MS = 300_000;
-const RENEW_MS = 60_000;
 /** A page that linked here is evidence of that link however old its copy is. */
 const LINKING_PAGE_WINDOW_HOURS = 30 * 24;
 
@@ -112,50 +111,22 @@ export const parserStats = () => ({ claimed: 0, read: 0, published: 0, links: 0,
 
 /** Claims links newest first within each tier, whichever of the installed kinds of website holds the first, and reads each with its parser. */
 export async function runParserWorkers(input: { readonly deps: LeadDeps; readonly concurrency: number; readonly maxClaims?: number;
-  /** At the turn's end, a link still being read is cut off and goes back to waiting; it is not a failure. */
   readonly turnEnd?: AbortSignal; readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void;
-  /** Counts as they happen, for the turn's minute line. */ readonly stats?: ReturnType<typeof parserStats> }) {
-  const { deps } = input, platforms = [...deps.parsers.keys()];
-  const stats = input.stats ?? parserStats();
-  let reserved = 0;
-  const results = await runBoundedWorkPool(Array.from({ length: input.concurrency }, (_, index) => index), input.concurrency, async () => {
-    while (!input.stopRequested() && reserved < (input.maxClaims ?? Infinity)) {
-      reserved++;
-      const platform = await deps.list.firstPlatform(platforms);
-      const [claim] = platform === null ? [] : await deps.list.claim("lead", 1, { platform });
-      if (!claim) { reserved--; if (!input.sleep) break; await input.sleep(5_000); continue; }
-      stats.claimed++;
-      const controller = new AbortController(), signal = input.turnEnd ? AbortSignal.any([controller.signal, input.turnEnd]) : controller.signal;
-      let renewing = false;
-      const timer = setInterval(() => {
-        if (renewing) return;
-        renewing = true;
-        void deps.list.renew(claim).then(held => { if (!held) controller.abort(new Error("WORK_LEASE_LOST")); })
-          .catch(error => controller.abort(error)).finally(() => { renewing = false; });
-      }, RENEW_MS);
-      try {
-        // A page that is slow to answer cannot hold the turn open past its end.
-        const result = await Promise.race([readLead(deps, claim), new Promise<never>((_, reject) => {
-          if (signal.aborted) reject(signal.reason); else signal.addEventListener("abort", () => reject(signal.reason), { once: true });
-        })]);
-        controller.signal.throwIfAborted();
-        const unlock = (kind: Unlock["kind"], text: string): Unlock => ({ kind, platform: platform ?? undefined, text });
-        if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; }
-        else if ("again" in result && claim.attempts >= LEAD_ATTEMPTS) { await deps.list.refuse(claim, result.again, unlock("method", result.again)); stats.refused++; }
-        else if ("again" in result) { await deps.list.later(claim, result.again); stats.again++; }
-        else {
-          if (!await deps.list.finish(claim)) throw new Error("WORK_LEASE_LOST");
-          stats.read++; stats.published += result.published; stats.links += result.links;
-        }
-      } catch (error) {
-        if (input.turnEnd?.aborted) { stats.released++; await deps.list.release(claim).catch(inner => input.log?.(sanitizedErrorDiagnostic(inner))); continue; }
-        stats.failed++;
-        const detail = sanitizedErrorDiagnostic(error);
-        await deps.list.later(claim, detail);
-        input.log?.(detail);
-      } finally { clearInterval(timer); }
-    }
-  });
-  for (const result of results) if (!result.ok) throw new Error(result.error);
+  readonly stats?: ReturnType<typeof parserStats>; readonly readMs?: number }) {
+  const { deps } = input, platforms = [...deps.parsers.keys()], stats = input.stats ?? parserStats(), readMs = input.readMs ?? ITEM_READ_MS;
+  await runClaimLoop<LeadResult>({ ...input, stats, list: deps.list, readMs, slow: { again: `READ_TIMED_OUT: the page gave no answer in ${readMs / 1000} s` },
+    claim: async () => { const platform = await deps.list.firstPlatform(platforms); return platform === null ? undefined : (await deps.list.claim("lead", 1, { platform }))[0]; },
+    work: claim => readLead(deps, claim),
+    settle: async (claim, result) => {
+      const platform = String((claim.value as { platform?: unknown } | null)?.platform ?? "");
+      const unlock = (kind: Unlock["kind"], text: string): Unlock => ({ kind, platform, text });
+      if ("broke" in result) { await deps.list.refuse(claim, result.broke, unlock("parser", result.broke)); stats.refused++; }
+      else if ("again" in result && claim.attempts >= LEAD_ATTEMPTS) { await deps.list.refuse(claim, result.again, unlock("method", result.again)); stats.refused++; }
+      else if ("again" in result) { await deps.list.later(claim, result.again); stats.again++; }
+      else {
+        if (!await deps.list.finish(claim)) throw new Error("WORK_LEASE_LOST");
+        stats.read++; stats.published += result.published; stats.links += result.links;
+      }
+    } });
   return stats;
 }

@@ -11,7 +11,7 @@
  * Nothing here reads a clock.
  */
 
-import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
+import type { AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
 import type { WorkCostKind } from "../core/work-kinds.ts";
 import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
@@ -19,11 +19,6 @@ import { CACHE_RATE_MULTIPLIERS, DEAREST_ACTIVE_RATES, rateFor, ratesForPrompt }
 import { addExact, exactSum, exactValue, mergeExact, subtractExact, type ExactSum } from "./exact-sum.ts";
 /* Re-exported so a cost reader keys on the one constant. */
 export { DISCOVERY_SEARCH_ROLE } from "./attempt.ts";
-
-/** The invariant, as a string a report can print verbatim. */
-export const COST_SCHEDULING_INVARIANT =
-  "Cost informs SCHEDULING (what runs next, how much runs at once, when a run stops). " +
-  "Cost never informs TRUTH: what a fact cost has no bearing on whether it is right.";
 
 /*
  * Discovery search charges carry DISCOVERY_SEARCH_ROLE: one row per request,
@@ -347,31 +342,6 @@ export function isProofProject(project: string | null | undefined): boolean {
   return /^conformance(-|$)/.test(p) || p === "control-plane-proof" || p === AUTONOMOUS_FLEET_PROOF_PROJECT;
 }
 
-/** Lift an Attempt into a ledger entry. `cost` is copied unchanged, nulls included. */
-export function costEntryFromAttempt(
-  attempt: Attempt,
-  context: {
-    routeId?: string | null;
-    source?: string | null;
-    jurisdiction?: string | null;
-    project: string;
-    recordedAt: string;
-  },
-): CostEntry {
-  return {
-    attemptId: attempt.id,
-    workItemId: attempt.workItemId,
-    routeTaskId: attempt.routeTaskId,
-    routeId: context.routeId ?? null,
-    source: context.source ?? null,
-    jurisdiction: context.jurisdiction ?? null,
-    project: context.project,
-    role: attempt.worker.role,
-    cost: attempt.cost,
-    recordedAt: context.recordedAt,
-  };
-}
-
 /** ------------------------------------------------------------------ rollup */
 
 export const ROLLUP_DIMENSIONS = [
@@ -401,23 +371,6 @@ export interface RollupBucket {
   readonly key: string;
   readonly entryCount: number;
   readonly totals: Readonly<Record<CostMetric, MeasuredTotal>>;
-}
-
-function keyOf(entry: CostEntry, dimension: RollupDimension): string {
-  switch (dimension) {
-    case "workItem":
-      return entry.workItemId;
-    case "route":
-      return entry.routeId ?? UNATTRIBUTED;
-    case "source":
-      return entry.source ?? UNATTRIBUTED;
-    case "jurisdiction":
-      return entry.jurisdiction ?? UNATTRIBUTED;
-    case "project":
-      return entry.project;
-    case "role":
-      return entry.role;
-  }
 }
 
 /** A `MeasuredTotal` kept as it is folded, so totals can be carried between reads and merged. */
@@ -468,28 +421,6 @@ export function sumMetric(
   const total = measuredSum();
   for (const entry of entries) addMeasured(total, entry.cost[metric]);
   return measuredTotal(total);
-}
-
-/** Roll entries up along one dimension. Buckets are sorted by key so reports are stable. */
-export function rollup(
-  entries: readonly CostEntry[],
-  dimension: RollupDimension,
-): RollupBucket[] {
-  const grouped = new Map<string, CostEntry[]>();
-  for (const entry of entries) {
-    const key = keyOf(entry, dimension);
-    const bucket = grouped.get(key);
-    if (bucket) bucket.push(entry);
-    else grouped.set(key, [entry]);
-  }
-
-  return [...grouped.entries()]
-    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
-    .map(([key, bucketEntries]) => {
-      const totals = {} as Record<CostMetric, MeasuredTotal>;
-      for (const metric of COST_METRICS) totals[metric] = sumMetric(bucketEntries, metric);
-      return { dimension, key, entryCount: bucketEntries.length, totals };
-    });
 }
 
 /** ------------------------------------------------------------------- caps */
@@ -564,16 +495,6 @@ export class CostCapExceeded extends Error {
   }
 }
 
-/** Throw at a hard cap. An unenforceable check never throws — it cannot. */
-export function assertWithinHardCap(
-  spent: number | null,
-  cap: number | null,
-  label = "spend",
-): void {
-  const check = withinBudget(spent, cap, label);
-  if (!check.within && check.enforceable) throw new CostCapExceeded(check, label);
-}
-
 /** ------------------------------------------------------------- scheduling */
 
 export interface ScheduleDecision {
@@ -584,42 +505,6 @@ export interface ScheduleDecision {
   readonly refusedBy: readonly string[];
   /** Every cap that could not be enforced, named. Surfaced, never hidden. */
   readonly unenforceable: readonly string[];
-}
-
-/** The only question this module answers about work: should more of it start now? */
-export function shouldScheduleMoreWork(input: {
-  spent: Partial<Record<CostMetric, number | null>>;
-  caps: Partial<Record<CostMetric, number | null>>;
-}): ScheduleDecision {
-  const refusedBy: string[] = [];
-  const unenforceable: string[] = [];
-
-  for (const metric of COST_METRICS) {
-    const cap = input.caps[metric] ?? null;
-    if (cap === null) continue;
-    const spent = input.spent[metric] ?? null;
-    const check = withinBudget(spent, cap, metric);
-    if (!check.enforceable) unenforceable.push(metric);
-    else if (!check.within) refusedBy.push(`${metric} (${check.spent} of ${check.cap})`);
-  }
-
-  if (refusedBy.length > 0) {
-    return {
-      schedule: false,
-      reason: `Scheduling paused at: ${refusedBy.join("; ")}.`,
-      refusedBy,
-      unenforceable,
-    };
-  }
-  return {
-    schedule: true,
-    reason:
-      unenforceable.length > 0
-        ? `Scheduling permitted; ${unenforceable.join(", ")} could not be enforced (unmeasured).`
-        : "Scheduling permitted; every set cap is under its limit.",
-    refusedBy,
-    unenforceable,
-  };
 }
 
 /** ------------------------------------------------------- calendar windows */
@@ -668,17 +553,3 @@ export function utcMonthWindow(nowIso: string, monthsBack = 0): LedgerWindow {
 
 /** ----------------------------------------------------------------- report */
 
-export function describeRollup(buckets: readonly RollupBucket[]): string {
-  if (buckets.length === 0) return "COST ROLLUP — no entries.";
-  const lines = buckets.map((bucket) => {
-    const metrics = COST_METRICS.map((metric) => {
-      const t = bucket.totals[metric];
-      const value = t.total === null ? "unmeasured" : String(t.total);
-      return `${metric}=${value} (measured ${t.measured}, unmeasured ${t.unmeasured})`;
-    });
-    return `  ${bucket.key} [${bucket.entryCount} entr${bucket.entryCount === 1 ? "y" : "ies"}]\n      ${metrics.join("\n      ")}`;
-  });
-  return [`COST ROLLUP by ${buckets[0].dimension} — ${buckets.length} bucket(s)`, ...lines].join(
-    "\n",
-  );
-}

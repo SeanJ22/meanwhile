@@ -108,12 +108,15 @@ export async function readLead(deps: LeadDeps, claim: WorkRow): Promise<LeadResu
   return parsed.facts.length > 0 && unmatched.count === parsed.facts.length ? { again: "SUBJECT_NOT_FOUND" } : { read: true, ...tally, links };
 }
 
+export const parserStats = () => ({ claimed: 0, read: 0, published: 0, links: 0, again: 0, refused: 0, failed: 0, released: 0 });
+
 /** Claims links newest first within each tier, whichever of the installed kinds of website holds the first, and reads each with its parser. */
 export async function runParserWorkers(input: { readonly deps: LeadDeps; readonly concurrency: number; readonly maxClaims?: number;
   /** At the turn's end, a link still being read is cut off and goes back to waiting; it is not a failure. */
-  readonly turnEnd?: AbortSignal; readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void }) {
+  readonly turnEnd?: AbortSignal; readonly stopRequested: () => boolean; readonly sleep?: (ms: number) => Promise<void>; readonly log?: (line: string) => void;
+  /** Counts as they happen, for the turn's minute line. */ readonly stats?: ReturnType<typeof parserStats> }) {
   const { deps } = input, platforms = [...deps.parsers.keys()];
-  const stats = { claimed: 0, read: 0, published: 0, links: 0, again: 0, refused: 0, failed: 0, released: 0 };
+  const stats = input.stats ?? parserStats();
   let reserved = 0;
   const results = await runBoundedWorkPool(Array.from({ length: input.concurrency }, (_, index) => index), input.concurrency, async () => {
     while (!input.stopRequested() && reserved < (input.maxClaims ?? Infinity)) {

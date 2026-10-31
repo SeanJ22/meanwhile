@@ -11,15 +11,7 @@
 
 export const STALL_SNAPSHOT_CAPACITY_BYTES = 32 * 1024;
 const HEADER_INTS = 4;
-const PING_OFFSET = 16;
 const BODY_OFFSET = 32;
-
-export const RECORD_CLAIM = {
-  ARMED: 0,
-  FINALIZED: 1,
-  STALL_WRITING: 2,
-  STALL_WRITTEN: 3,
-} as const;
 
 export interface PendingStep {
   readonly label: string;
@@ -107,34 +99,6 @@ export function readPendingSnapshot(sab: SharedArrayBuffer): PendingSnapshot | n
   return null;
 }
 
-export function pingMainThread(sab: SharedArrayBuffer, nowMs: number): void {
-  try {
-    Atomics.store(new BigInt64Array(sab, PING_OFFSET, 1), 0, BigInt(Math.trunc(nowMs)));
-  } catch {
-    /* a missed ping only makes the main thread look blocked */
-  }
-}
-
-export function lastMainThreadPing(sab: SharedArrayBuffer): number | null {
-  const value = Number(Atomics.load(new BigInt64Array(sab, PING_OFFSET, 1), 0));
-  return Number.isFinite(value) && value > 0 ? value : null;
-}
-
-/** Compare-and-set the record claim; returns the claim that was there. */
-export function claimRecord(sab: SharedArrayBuffer, from: number, to: number): number {
-  return Atomics.compareExchange(header(sab), 2, from, to);
-}
-
-export function recordClaim(sab: SharedArrayBuffer): number {
-  return Atomics.load(header(sab), 2);
-}
-
-export function settleRecordClaim(sab: SharedArrayBuffer, to: number): void {
-  const h = header(sab);
-  Atomics.store(h, 2, to);
-  Atomics.notify(h, 2);
-}
-
 function waitOn(view: Int32Array, index: number, value: number, timeoutMs: number): void {
   try {
     Atomics.wait(view, index, value, Math.max(0, timeoutMs));
@@ -142,12 +106,6 @@ function waitOn(view: Int32Array, index: number, value: number, timeoutMs: numbe
     /* a runtime that forbids waiting here reads the value as it stands */
   }
 }
-
-/** Block up to `timeoutMs` while the claim still reads `value`. Node allows this on the main thread. */
-export function waitWhileClaim(sab: SharedArrayBuffer, value: number, timeoutMs: number): void {
-  waitOn(header(sab), 2, value, timeoutMs);
-}
-
 
 const seconds = (ms: number): string => {
   const s = Math.max(0, Math.round(ms / 1000));
@@ -232,43 +190,3 @@ export interface StallDiagnosticBlock {
   readonly lines: readonly string[];
 }
 
-export function stallDiagnosticBlock(reading: StallReading): StallDiagnosticBlock {
-  return {
-    at: new Date(reading.nowMs).toISOString(),
-    secondsBeforeWall: Math.round((reading.wallAtMs - reading.nowMs) / 1000),
-    lastPhase: reading.snapshot?.lastPhase ?? null,
-    pending: reading.snapshot?.steps ?? [],
-    storeInFlight: reading.snapshot?.store ?? [],
-    storeInFlightCount: reading.snapshot?.storeInFlight ?? 0,
-    mainThreadBlocked: mainThreadBlocked(reading),
-    lines: stallDiagnosticLines(reading),
-  };
-}
-
-export function stallRunRecord(input: {
-  readonly startedAt: string;
-  readonly testedSha: string | null;
-  readonly cycleId: string;
-  readonly block: StallDiagnosticBlock;
-}): Record<string, unknown> {
-  const step = input.block.pending.at(-1)?.label ?? null;
-  const store = input.block.storeInFlight[0]?.call ?? null;
-  return {
-    startedAt: input.startedAt,
-    finishedAt: null,
-    cycleId: input.cycleId,
-    testedSha: input.testedSha,
-    stalled: true,
-    error:
-      `CYCLE_STALLED: ${input.block.secondsBeforeWall} s before the wall the cycle was waiting on ` +
-      `${step ?? "no labelled await"}${store ? ` (store call ${store})` : ""}` +
-      (input.block.mainThreadBlocked ? "; its event loop was blocked" : ""),
-    stallDiagnostic: input.block,
-    digest: [
-      "PILOT HEALTH",
-      `  the cycle had not finished ${input.block.secondsBeforeWall} s before the supervisor's wall — a stalled cycle, never an idle one`,
-      ...input.block.lines.slice(1).map((line) => `    ${line.trim()}`),
-      "  ROLLUP    NOT GREEN — the cycle did not finish",
-    ],
-  };
-}

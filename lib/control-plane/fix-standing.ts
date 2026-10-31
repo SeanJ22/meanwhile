@@ -3,7 +3,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig, isAdminConfig, type AdminConfig } 
 import type { ControlPlaneRepositories } from "./repository/types.ts";
 import { withUpdateAdded } from "./updates.ts";
 import type { FixMapRepository } from "../method/fix-map.ts";
-import { proofFromStatistics, nextStanding, readFixProofBar, readFixProofRecentDays, type MethodStanding, type StandingEvent, type StandingUpdate } from "../method/fix-status.ts";
+import { proofFromStatistics, nextStanding, readFixProofBar, readFixProofRecentDays, type MethodStanding, type StandingUpdate } from "../method/fix-status.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig">;
 
@@ -47,7 +47,6 @@ export interface MethodTouch {
   readonly brokeIn?: number;
 }
 
-
 export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "statistics">, repos: Repos, touched: readonly MethodTouch[], at: string,
   titleOf: (methodId: string) => string | null = () => null): Promise<readonly StandingUpdate[]> {
   if (touched.length === 0) return [];
@@ -73,25 +72,6 @@ export async function noteMethodStandings(fixMap: Pick<FixMapRepository, "statis
   }
   return written;
 }
-
-/** A loss study changed a method: it goes back into Testing and says so once. */
-export async function noteMethodLesson(fixMap: Pick<FixMapRepository, "statistics">, repos: Repos, methodId: string, lesson: string, at: string,
-  title: string | null = null): Promise<StandingUpdate | null> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  const config = held && isAdminConfig(held.value) ? held.value : null;
-  const stats = await fixMap.statistics(methodId, new Date(Date.parse(at) - readFixProofRecentDays(config) * 86_400_000).toISOString());
-  const proof = proofFromStatistics(stats, readFixProofBar(config));
-  let told: StandingUpdate | null = null;
-  const event: StandingEvent = { lesson };
-  await mutate(repos, methodId, at, (c) => {
-    const prior = methodStandings(c).find((s) => s.methodId === methodId) ?? null;
-    const { standing, update } = nextStanding(methodId, prior, proof, title ?? "", at, event);
-    told = update;
-    return withStanding(c, standing, update);
-  });
-  return told;
-}
-
 
 export async function recheckProvenFixes(fixMap: Pick<FixMapRepository, "statistics">, repos: Repos, now: string): Promise<readonly StandingUpdate[]> {
   const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true });

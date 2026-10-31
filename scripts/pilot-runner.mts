@@ -1095,9 +1095,7 @@ function holdForRestart(targetSha: string): void {
   console.log(`  release ${targetSha.slice(0, 8)} loads by restart: no new standing run starts; ` +
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
-  drainMemberLane();
-  drainSliceLane();
-  drainParserLane();
+  drainLaneChildren();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
@@ -1289,53 +1287,32 @@ function drainHunterLane(): void {
   });
 }
 
-let memberLaneChild: ChildProcess | null = null;
-async function runMemberLane(deadlineMs: number): Promise<void> {
-  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed("legistar-members")) return;
-  const [run] = await runRuntimeChildren([{id:"legistar-members",databaseBytesPerRun:LEGISTAR_MEMBER_DATABASE_BYTES,
-    executable:process.execPath,args:[...TS_CHILD,"scripts/legistar-members-worker.mts"],
-    env:withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"),deadlineMs)}],{
-    cwd:CODE_ROOT,env:process.env,deadlineMs,maxBufferBytes:16*1024*1024,noProgressMs:RUNTIME_NO_PROGRESS_MS,
-    onStdout:(_id,output)=>process.stdout.write(output),onStderr:(_id,output)=>process.stderr.write(output),
-    onStarted:(_id,child)=>{memberLaneChild=child;}});
-  memberLaneChild=null;
-  if(!run || run.status!==0) throw Error("Legistar members stopped; queued records remain due");
-}
-function drainMemberLane():void {
-  if(memberLaneChild?.connected)memberLaneChild.send({kind:"RUNTIME_RELEASE_DRAIN"},error=>{if(error)console.error("Legistar member drain failed",error);});
-}
-
-let sliceLaneChild: ChildProcess | null = null;
-async function runSliceLane(deadlineMs: number): Promise<void> {
-  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(SLICE_JOB.id)) return;
-  const [run] = await runRuntimeChildren([{ id: SLICE_JOB.id, databaseBytesPerRun: SLICE_JOB.databaseBytesPerRun, executable: process.execPath,
-    args: [...TS_CHILD, "scripts/slice-lane.mts"], env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
-    cwd: CODE_ROOT, env: process.env, deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
-    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
-    onStarted: (_id, child) => { sliceLaneChild = child; } });
-  sliceLaneChild = null;
-  if (!run || run.status !== 0) throw Error("Slices stopped; marked slices stay waiting");
-}
-function drainSliceLane(): void {
-  if (sliceLaneChild?.connected) sliceLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error("Slice lane drain failed", error); });
-}
-// Expected SQL request and response bytes for one 55-minute turn: claims, page copies, fact checks and new links.
+const laneChildren = new Map<string, ChildProcess>();
+// Expected SQL request and response bytes for one 55-minute turn of the page readers: claims, page copies, fact checks and new links.
 const PARSER_LANE_DATABASE_BYTES = 150_000_000;
-let parserLaneChild: ChildProcess | null = null;
-/** Reads the links on the work list with the reader of each kind of website; the lane ends at its life and starts again. */
-async function runParserLane(deadlineMs: number): Promise<void> {
-  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed("parser-lane")) return;
-  const [run] = await runRuntimeChildren([{ id: "parser-lane", databaseBytesPerRun: PARSER_LANE_DATABASE_BYTES,
-    executable: process.execPath, args: [...TS_CHILD, "scripts/parser-worker.mts"],
+/** One turn of a standing lane's child. The child ends itself by exit 0 when idle or drained, and that is a finish; a kill or any other exit is a stop. */
+async function runLaneChild(id: string, databaseBytesPerRun: number, script: string, deadlineMs: number, stopped: string): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(id)) return;
+  const [run] = await runRuntimeChildren([{ id, databaseBytesPerRun, executable: process.execPath, args: [...TS_CHILD, script],
     env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
     cwd: CODE_ROOT, env: process.env, deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
     onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
-    onStarted: (_id, child) => { parserLaneChild = child; } });
-  parserLaneChild = null;
-  if (!run || run.status !== 0) throw new Error("The page readers stopped; the links they had remain on the work list");
+    onStarted: (_id, child) => { laneChildren.set(id, child); } });
+  laneChildren.delete(id);
+  if (!run || run.status !== 0) throw new Error(stopped);
 }
-function drainParserLane(): void {
-  if (parserLaneChild?.connected) parserLaneChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error("Page reader drain failed", error); });
+function drainLaneChildren(): void {
+  for (const [id, child] of laneChildren) if (child.connected) child.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error(`${id} drain failed`, error); });
+}
+async function runMemberLane(deadlineMs: number): Promise<void> {
+  await runLaneChild("legistar-members", LEGISTAR_MEMBER_DATABASE_BYTES, "scripts/legistar-members-worker.mts", deadlineMs, "Legistar members stopped; queued records remain due");
+}
+async function runSliceLane(deadlineMs: number): Promise<void> {
+  await runLaneChild(SLICE_JOB.id, SLICE_JOB.databaseBytesPerRun, "scripts/slice-lane.mts", deadlineMs, "Slices stopped; marked slices stay waiting");
+}
+/** Reads the links on the work list with the reader of each kind of website. */
+async function runParserLane(deadlineMs: number): Promise<void> {
+  await runLaneChild("parser-lane", PARSER_LANE_DATABASE_BYTES, "scripts/parser-worker.mts", deadlineMs, "The page readers stopped; the links they had remain on the work list");
 }
 
 const auditPasses = auditPassClock({

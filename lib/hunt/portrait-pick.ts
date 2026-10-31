@@ -6,7 +6,6 @@
  * a share card, not a portrait.
  */
 
-
 /** One image on a page, resolved against the page's own URL. */
 export interface PageImage {
   src: string;
@@ -142,32 +141,3 @@ export function pickPortraits(name: string, all: readonly PageImage[]): PickedPo
   return out;
 }
 
-/**
- * Return an image explicitly labelled with the complete source name. This is
- * extraction only; the publisher binds the saved profile to a stable person.
- */
-export function pickPortrait(name: string, all: readonly PageImage[]): PickedPortrait | null {
-  return pickPortraits(name, all)[0] ?? null;
-}
-
-/**
- * A US phone number on the page, in the shape these sites write. Narrow: a
- * loose digit run matches addresses, zip+4s, fees and meeting times.
- */
-export function phoneIn(text: string): string | null {
-  const m =
-    /\(?\b(\d{3})\)?[\s.-]{1,2}(\d{3})[\s.-](\d{4})\b(\s*(?:x|ext\.?|extension)\s*\d{1,5})?/i.exec(text);
-  if (!m) return null;
-  const area = m[1];
-  // 000 and 555 are not dialable area codes; a match on either is a template.
-  if (area === "000" || area === "555") return null;
-  return `${area}-${m[2]}-${m[3]}${m[4] ? ` ${m[4].trim()}` : ""}`;
-}
-
-/** `&#038;` and friends, which a page's own markup puts inside a src. */
-export function decodeEntities(url: string): string {
-  return url
-    .replace(/&#0?38;|&amp;/g, "&")
-    .replace(/&#0?39;/g, "'")
-    .replace(/&quot;/g, '"');
-}

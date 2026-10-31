@@ -1,7 +1,7 @@
 import { readSetting, registerSetting } from "../control-plane/settings.ts";
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { FIELD_KINDS, type FieldKind } from "./check.ts";
-import type { Clocks } from "./publish.ts";
+import type { Clocks, Query } from "./publish.ts";
 
 type Hours = Readonly<Record<FieldKind, number>>;
 
@@ -28,4 +28,16 @@ export function factClocks(config: AdminConfig | null): Clocks {
   const hours = readSetting<Hours>(config, FRESHNESS_HOURS_SETTING, FRESHNESS_HOURS_DEFAULT);
   const retry = readSetting<Hours>(config, RETRY_MINUTES_SETTING, RETRY_MINUTES_DEFAULT);
   return { windowHours: kind => hours[kind], retryMinutes: kind => retry[kind] };
+}
+
+/** The two fact clocks Sean sets, kept current: `refresh` reads them (one row) and says whether his settings changed since the last look. */
+export function adminClocks(query: Query) {
+  let version: string | undefined, clocks = factClocks(null);
+  return { clocks: () => clocks, refresh: async () => {
+    const [row] = await query(`SELECT md5((value->'settings')::text) AS version, jsonb_build_object('settings',jsonb_build_object('facts.freshnessHours',value#>'{settings,facts.freshnessHours}',
+      'facts.retryMinutes',value#>'{settings,facts.retryMinutes}')) AS value FROM cp_admin_config WHERE id='current'`);
+    if (row?.version === version) return false;
+    clocks = factClocks((row?.value ?? null) as Parameters<typeof factClocks>[0]); version = String(row?.version);
+    return true;
+  } };
 }

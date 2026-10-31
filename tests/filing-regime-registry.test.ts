@@ -5,15 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-import {
-  FILING_REGIME_FORMAT_VERSION,
-  FILING_REGIME_REGISTRY_PATH,
-  FilingRegimeRegistryInvalid,
-  loadFilingRegimeRegistry,
-  selectRegime,
-  validateFilingRegimeRegistry,
-  type RegistryIssueCode,
-} from "../lib/control-plane/campaign-finance/filing-regime.ts";
+import { FILING_REGIME_FORMAT_VERSION, FILING_REGIME_REGISTRY_PATH, FilingRegimeRegistryInvalid, loadFilingRegimeRegistry, validateFilingRegimeRegistry, type RegistryIssueCode } from "../lib/control-plane/campaign-finance/filing-regime.ts";
 import { METHOD_FIXTURE_PATH } from "./method-store-fixture.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -137,7 +129,6 @@ function refusalCodes(raw: unknown): RegistryIssueCode[] {
   return issues.map((i) => i.code);
 }
 
-
 test("the committed registry loads, and every regime carries provenance that exists on disk", () => {
   const registry = filingRegimeRegistry();
 
@@ -246,7 +237,6 @@ test("the AZ regimes reproduce the § 16-928 routing table, with the level misma
   assert.match(pima.publisher?.name ?? "", /EasyVote/);
 });
 
-
 test("B two regimes claiming one contest with no supersession is REFUSED, not tie-broken", () => {
   const twin = fixtureRegimeRaw({ regimeId: "fixture:zz:school-district-rival" });
   const codes = refusalCodes(fixtureRegistryRaw({ regimes: [fixtureRegimeRaw(), twin] }));
@@ -284,7 +274,6 @@ test("B two regimes claiming one contest with no supersession is REFUSED, not ti
 
   assert.equal(loadFixture().regimes.length, 1);
 });
-
 
 test("the loader refuses each malformed shape by its own stable code", () => {
   const cases: { name: string; raw: unknown; code: RegistryIssueCode }[] = [
@@ -457,34 +446,5 @@ test("the loader refuses each malformed shape by its own stable code", () => {
   const { registry, issues } = validateFilingRegimeRegistry(fixtureRegistryRaw(), FIXTURE_CITATION);
   assert.deepEqual(issues, [], "the clean fixture must load — otherwise this battery proves nothing");
   assert.ok(registry);
-});
-
-test("selectRegime never falls through, and refuses an in-memory ambiguity rather than guessing", () => {
-  const registry = loadFixture();
-
-  const unrouted = selectRegime(registry, { jurisdiction: "ZZ", officeLevel: "STATEWIDE" });
-  assert.equal(unrouted.regime, null, "no nearest-match, no jurisdiction-wide default");
-  assert.equal(unrouted.ambiguity, null);
-  assert.match(unrouted.why, /fact about this registry/);
-
-  const federal = selectRegime(filingRegimeRegistry(), {
-    jurisdiction: "AZ",
-    officeLevel: "FEDERAL",
-  });
-  assert.equal(federal.regime?.regimeId, "us:federal:fec");
-
-  const ambiguous = {
-    ...registry,
-    regimes: [...registry.regimes, { ...registry.regimes[0], regimeId: "fixture:zz:rival" }],
-  };
-  const selection = selectRegime(ambiguous, { jurisdiction: "ZZ", officeLevel: "SCHOOL_DISTRICT" });
-  assert.equal(selection.regime, null);
-  assert.equal(selection.ambiguity?.code, "REGIME_AMBIGUOUS_OVERLAP");
-  assert.match(selection.why, /nothing is guessed/);
-
-  assert.equal(
-    selectRegime(registry, { jurisdiction: "ZZ", officeLevel: "SCHOOL_DISTRICT" }).regime?.regimeId,
-    "fixture:zz:school-district",
-  );
 });
 

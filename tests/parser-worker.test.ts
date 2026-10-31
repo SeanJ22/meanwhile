@@ -10,8 +10,10 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
+import { progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
+import { laneTurn } from "../lib/ops/lane-turn.ts";
 import { loadParsers, type PlatformParser } from "../lib/sources/parser-hook.ts";
-import { LEAD_ATTEMPTS, runParserWorkers, type LeadDeps } from "../lib/sources/parser-worker.ts";
+import { LEAD_ATTEMPTS, parserStats, runParserWorkers, type LeadDeps } from "../lib/sources/parser-worker.ts";
 import { PLATFORM_PATTERNS, platformOf } from "../lib/sources/platform-of.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -154,4 +156,17 @@ test("a turn whose end arrives mid-batch ends cleanly: the links still being rea
   assert.equal(requests.length, 0);
   assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead' AND status = 'waiting' AND lease_owner IS NULL`))[0]!.n), 3);
   assert.equal((await runParserWorkers({ deps, concurrency: 3, stopRequested: () => false })).claimed, 3, "the next turn claims them again");
+});
+
+test("a release drain lets the link being read finish, claims no other, and the minute line has moved on", async t => {
+  const { facts, list, deps } = await setup(PAGES, undefined, "<html><body>A sitting</body></html>");
+  t.after(() => facts.pg.close());
+  await list.ensure([productionLead()]);
+  const stats = parserStats(), turn = laneTurn(() => `Page readers: ${stats.claimed} claimed, ${stats.read} read`), lines: string[] = [];
+  turn.beat(line => lines.push(line));
+  await runParserWorkers({ deps: { ...deps, fetch: (url, init) => { turn.ask(); return deps.fetch(url, init); } }, concurrency: 1, stats, stopRequested: turn.asked });
+  turn.beat(line => lines.push(line));
+  assert.deepEqual([stats.claimed, stats.read, stats.failed, stats.released], [1, 1, 0, 0]);
+  assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead' AND status = 'waiting'`))[0]!.n), 8, "its new links wait for the restarted lane");
+  assert.ok(lines[0] !== lines[1] && progressLines()(`${lines[1]}\n`) === 1);
 });

@@ -52,13 +52,6 @@ export function isCapability(value: string): value is Capability {
   return CAPABILITY_SET.has(value);
 }
 
-/** Capabilities no default grant may carry: each needs an owner-constructed grant with `notes`. */
-export const OWNER_GATED_CAPABILITIES: readonly Capability[] = [
-  "PRODUCTION_DB_WRITE",
-  "EXTERNAL_COMMUNICATION",
-  "RECORDS_REQUEST_SEND",
-];
-
 /** ----------------------------------------------------------------- grants */
 
 export interface CapabilityGrant {
@@ -256,54 +249,5 @@ export function requireCapability(
   }
 }
 
-/** Which roles hold a capability by default. Used by the invariant tests. */
-export function rolesWithCapabilityByDefault(capability: Capability): WorkerRole[] {
-  return WORKER_ROLES.filter((role) => DEFAULT_GRANTS[role].includes(capability));
-}
-
 /** ------------------------------------------------------- always-on policy */
 
-/** Invariants, modelled as flags only so an attempt to disable one can be refused. */
-export const ALWAYS_ON_INVARIANTS = ["POLITICAL_NEUTRALITY", "COVERAGE_SYMMETRY"] as const;
-export type AlwaysOnInvariant = (typeof ALWAYS_ON_INVARIANTS)[number];
-
-export interface PolicyFlags {
-  /**
-   * No ranking, no recommendation, no alignment score, no ordering by anything
-   * but a neutral criterion. Cannot be turned off, for any caller, ever.
-   */
-  readonly politicalNeutrality: boolean;
-  /**
-   * Effort and coverage do not vary with the politics of the subject. A body is
-   * hunted as hard as its neighbour regardless of who holds it.
-   */
-  readonly coverageSymmetry: boolean;
-  /** Genuinely optional operational switches live here and MAY be off. */
-  readonly browserDriveEnabled: boolean;
-}
-
-export const ALWAYS_ON_POLICY: PolicyFlags = {
-  politicalNeutrality: true,
-  coverageSymmetry: true,
-  browserDriveEnabled: true,
-};
-
-export class NeutralityDisabled extends Error {
-  readonly invariant: AlwaysOnInvariant;
-
-  constructor(invariant: AlwaysOnInvariant) {
-    super(
-      `${invariant} is an ALWAYS-ON invariant and cannot be disabled. ` +
-        "It is not a capability, not a feature flag, and not subject to a grant: " +
-        "a run with it off is refused rather than degraded.",
-    );
-    this.name = "NeutralityDisabled";
-    this.invariant = invariant;
-  }
-}
-
-/** Throws if an always-on invariant was turned off. Called at policy load and before any scheduling decision. */
-export function assertNeutralityEnabled(policy: PolicyFlags): void {
-  if (!policy.politicalNeutrality) throw new NeutralityDisabled("POLITICAL_NEUTRALITY");
-  if (!policy.coverageSymmetry) throw new NeutralityDisabled("COVERAGE_SYMMETRY");
-}

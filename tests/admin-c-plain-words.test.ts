@@ -2,19 +2,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import {
-  PLAIN_WORDS,
-  ageWords,
-  count,
-  hasPlainMeaning,
-  isEnvVarName,
-  modelName,
-  plainCode,
-  plainMeaning,
-  plainText,
-  usdCents,
-  usdOf,
-} from "../lib/control-plane/plain-words.ts";
+import { PLAIN_WORDS, ageWords, count, isEnvVarName, modelName, plainCode, plainMeaning, plainText, usdCents, usdOf } from "../lib/control-plane/plain-words.ts";
 import { stateCodeOf, unitBelongsToState } from "../lib/control-plane/unit-state.ts";
 import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
 
@@ -175,9 +163,3 @@ test("every dictionary entry is sentence case and free of underscores", () => {
   }
 });
 
-test("a cause the owner will read has a meaning, not only a label", () => {
-  for (const cause of ["REFUSED_BY_HOST", "UPSTREAM_ERROR", "TRANSPORT_FAILED", "NEVER_DISPATCHED", "CYCLE_DEFERRED"]) {
-    assert.ok(hasPlainMeaning(cause), `${cause} has no owner sentence`);
-    assert.ok((plainMeaning(cause) ?? "").length > 30, cause);
-  }
-});

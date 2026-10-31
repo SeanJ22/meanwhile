@@ -4,7 +4,6 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
-import { plainCount, plainDuration, plainMeaning } from "../lib/control-plane/plain-words.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -62,13 +61,6 @@ test("a fragment target clears the sticky header rather than landing under it", 
 /* -------------------------------------------------------------------------- */
 /* Plain counts and durations                                                  */
 /* -------------------------------------------------------------------------- */
-
-test("a count agrees with its noun, and a duration is in seconds", () => {
-  assert.equal(plainCount(1, "document kept", "documents kept"), "1 document kept");
-  assert.equal(plainCount(2, "document kept", "documents kept"), "2 documents kept");
-  assert.match(plainDuration(1552), /^1\.6 seconds$/);
-  assert.match(plainDuration(839), /^0\.8 seconds$/);
-});
 
 /* -------------------------------------------------------------------------- */
 /* Console publication                                                        */

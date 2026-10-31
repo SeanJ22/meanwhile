@@ -53,7 +53,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
     provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, JOB_SLOWED_WORDS,
     admitJobLaunch: (job: string) => admitJobLaunch(job, process.env, clock.now), jobRuns: new JobRunBook(), BREAKER_SLOWED: "slowed",
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
-    drainHunterLane: () => {}, drainMemberLane: () => {}, drainSliceLane: () => {}, drainParserLane: () => {},
+    drainHunterLane: () => {}, drainLaneChildren: () => {},
     TS_CHILD: ["--experimental-strip-types"], CODE_ROOT: process.cwd(), process,
     ownerRepositories: async () => ({}),
     readRunnerPauseIntents: async () => { if (pause instanceof Error) throw pause; return pause; },
@@ -207,4 +207,26 @@ test("a place-page turn reserves its measured peak on the shared host memory", a
   const release = await reserve(WORKER_MEMORY_HEADROOM_MIB + 837);
   release();
   await assert.rejects(reserve(WORKER_MEMORY_HEADROOM_MIB + 836), /WORKER_MEMORY_DEADLINE/, "a turn waits rather than starving other workers");
+});
+
+test("a pending restart drains the members, slice and page-reader children, and a drained exit 0 is a finish, not a stop", async () => {
+  for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["slices", "runSliceLane", /Slices stopped/], ["parser-lane", "runParserLane", /page readers stopped/]] as const) {
+    for (const status of [0, null]) {
+      const sent: unknown[] = [];
+      const context = createContext({ provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
+        standingRuntimeScheduler: { inFlightIds: () => [lane] }, researchCycleActive: false, drainHunterLane: () => {}, console: { log: () => {}, error: () => {} }, process,
+        SLICE_JOB: { id: "slices", databaseBytesPerRun: 1 }, LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
+        RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true,
+        runRuntimeChildren: async (_commands: unknown, options: { onStarted(id: string, child: unknown): void }) => {
+          options.onStarted(lane, { connected: true, send: (message: unknown) => { sent.push(message); } });
+          runInContext(`holdForRestart("${"c".repeat(40)}")`, context);
+          return [{ id: lane, status }];
+        } });
+      runInContext(stripTypeScriptTypes(["holdForRestart", "drainLaneChildren", "runLaneChild", run].map(runnerFunction).join("\n")
+        + "\nconst laneChildren = new Map();"), context);
+      const turn = runInContext(`${run}(Date.now() + 60000)`, context) as Promise<void>;
+      if (status === 0) await turn; else await assert.rejects(turn, stopped);
+      assert.equal(JSON.stringify(sent), `[{"kind":"RUNTIME_RELEASE_DRAIN"}]`, `${lane} was told to drain`);
+    }
+  }
 });

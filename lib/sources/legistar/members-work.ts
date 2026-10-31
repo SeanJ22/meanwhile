@@ -6,12 +6,14 @@ import { LEGISTAR_MEMBER_CADENCE_MS,LEGISTAR_MEMBER_SUBJECT } from "./members-qu
 /** This many database failures in a row end the turn; the runner starts it again. */
 export const HICCUPS_BEFORE_STOPPING = 5;
 
+export const newMemberStats=()=>({claimed:0,done:0,refused:0,failed:0,released:0});
+
 /** Slots are claimed directly on the shared list, independently of the routine source scheduler. */
 export async function runLegistarMemberWorkers(input:{list:ReturnType<typeof workList>;kind:"load"|"check";concurrency:number;
   maxClaims?:number;turnEnd?:AbortSignal; // at the turn's end, running work is cut off and its row goes back to waiting
   stopRequested:()=>boolean;run:(claim:WorkRow,signal:AbortSignal)=>Promise<void|{refused?:string}>;
-  sleep?:(ms:number)=>Promise<void>;log?:(message:string)=>void}) {
-  const stats={claimed:0,done:0,refused:0,failed:0,released:0};
+  sleep?:(ms:number)=>Promise<void>;log?:(message:string)=>void;stats?:ReturnType<typeof newMemberStats>}) { // counts as they happen, for the turn's minute line
+  const stats=input.stats??newMemberStats();
   const maximum=input.maxClaims??Infinity,sleep=input.sleep??(ms=>new Promise<void>(done=>setTimeout(done,ms)));
   if(input.maxClaims!==undefined&&(!Number.isSafeInteger(maximum)||maximum<1))throw Error("WORK_INVALID_BATCH");
   let reserved=0,hiccups=0;

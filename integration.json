@@ -4735,5 +4735,29 @@
     "release": 170,
     "ci": "pass",
     "at": "2026-10-31T16:00:21Z"
+  },
+  {
+    "lane": "river-cardreads-171",
+    "steps": [
+      "RIVER-CARDREADS"
+    ],
+    "ready_sha": "aa82683f20068b74a79d5f49413188b91688aa48",
+    "merge_sha": "848577a28b102f14c885412ff2d742a4d642a948",
+    "river_sha": "222f18b409e13ba59baf0b34590a2cbd8682d6f4",
+    "release": 172,
+    "ci": "pass",
+    "at": "2026-10-31T21:39:09Z"
+  },
+  {
+    "lane": "spn-01-b5a",
+    "steps": [
+      "SPN-01"
+    ],
+    "ready_sha": "7bca6edf33382396f1d8313a15b9233dafdec8ef",
+    "merge_sha": "bd389aeccd37e4217d8ff23c6d0db694535cb1a4",
+    "river_sha": "222f18b409e13ba59baf0b34590a2cbd8682d6f4",
+    "release": 172,
+    "ci": "pass",
+    "at": "2026-10-31T21:39:09Z"
   }
 ]

@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
+import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 import test, { type TestContext } from "node:test";
 import { readFileSync } from "node:fs";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
-import { PLACE_PAGES_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
+import { PLACE_PAGES_SQL, PLACE_PRINT_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
 import { buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import type { Query } from "../lib/facts/publish.ts";
@@ -700,12 +701,13 @@ test("the map and ballot reuse one place read for their request, and a later req
   let reads = 0, release: (() => void) | undefined;
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1, "the default place transport sends one statement through the shared socket");
+    if (statements[0].text === PLACE_PRINT_SQL) return [[{ print: "moved" }]];
     assert.equal(statements[0].text, PLACE_PAGES_SQL);
     assert.equal(statements[0].params[0], "AZ");
     reads++;
     if (reads === 1) await new Promise<void>(resolve => { release = resolve; });
-    return [[{page_id:CITY,page_kind:"place",built_at:AT,body_ids:[BODY],row:{ division_ids:[CITY,COUNTY],registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
-      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }}]];
+    return [placePagesAnswer([{page_id:CITY,page_kind:"place",built_at:AT,body_ids:[BODY],row:{ division_ids:[CITY,COUNTY],registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
+      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }}])];
   });
   try {
     let first: Awaited<ReturnType<typeof readPlacePackage>> | undefined;

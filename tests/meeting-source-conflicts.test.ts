@@ -5,6 +5,7 @@ import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { PIMA } from "./helpers/meeting-body-fixtures.ts";
+import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
 import { withSittingFacts } from "../lib/facts/meeting-read.ts";
 const at = "2026-10-05T12:00:00Z";
@@ -34,10 +35,10 @@ test("CP-18: a body's composition retains both source ids and an agenda belongin
   const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: at, sources: [report("calendar"), report("portal")], counts: snapshotCounts([old, fresh], 0), meetings: [old, fresh], agendaDocuments: [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]] };
   const held = await readPlacePackage({state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true},async sql=>{
     assert.equal(sql,PLACE_PAGES_SQL);
-    return [{page_id:PIMA.bodyId,page_kind:"body",built_at:at,body_ids:[PIMA.bodyId],row:{
+    return placePagesAnswer([{page_id:PIMA.bodyId,page_kind:"body",built_at:at,body_ids:[PIMA.bodyId],row:{
       division_ids:[PIMA.ocdId],entities:[{id:PIMA.bodyId,division:PIMA.ocdId}],fields:[],rosters:[],comments:[],sittings:[],
       meeting_rows:[{scope:PIMA.scope,payload:snapshot,current_version_id:"v-1",confirmation:null}],parts:{},governments:[],divisions:[],registration_held:false,
-    }}];
+    }}]);
   });
   const result = held.snapshot;
   assert.equal(result.meetings.length, 1);

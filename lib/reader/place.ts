@@ -62,25 +62,28 @@ const PAGES_PRINT = `printed AS (
 export const PLACE_PRINT_SQL = `${PLACE_SELECTION}, ${PAGES_PRINT} SELECT print FROM printed`;
 
 /**
- * The saved pages of a selection, leaving out the rows of those a server already holds ($10, as id:version:kind). The requested boards
- * and the print of the whole selection come once, on its first row.
+ * The saved pages of a selection as one row, so a read pays the connection's per-row cost once: the print of the whole selection,
+ * the requested boards, the identity headers of every page once, and each page as [id, kind, built (epoch seconds), version, row]. The rows of pages a server
+ * already holds ($10, as id:version:kind) are left out and listed under `held`.
  */
 export const PLACE_PAGES_SQL = `${PLACE_SELECTION}, ${PAGES_PRINT}, pages AS (
 SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,p.version,
   coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) AS row,
-  ${identityHeaders('s.id')} AS body_headers,
-  ARRAY(SELECT id FROM requested_bodies) AS body_ids
+  ${identityHeaders('s.id')} AS body_headers
   FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id
   LEFT JOIN LATERAL (SELECT p.context->CASE WHEN NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
     OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies)
     THEN CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
     ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS value) saved ON true
-  WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id
+  WHERE e.state=$1::char(2) OR e.state IS NULL
+), listed AS (
+SELECT pages.*,pages.row IS NOT NULL AND pages.page_id||':'||pages.version||':'||pages.page_kind=ANY($10::text[]) AS saved FROM pages
 )
-SELECT pages.page_id,pages.page_kind,pages.built_at,pages.version,CASE WHEN held.saved THEN NULL ELSE pages.row END AS row,held.saved AS held,
-  pages.body_headers,CASE WHEN first.lead THEN pages.body_ids END AS body_ids,CASE WHEN first.lead THEN (SELECT print FROM printed) END AS print
-  FROM pages CROSS JOIN LATERAL (SELECT pages.row IS NOT NULL AND pages.page_id||':'||pages.version||':'||pages.page_kind=ANY($10::text[]) AS saved) held
-  CROSS JOIN LATERAL (SELECT pages.page_id=(SELECT min(page_id) FROM pages) AS lead) first`;
+SELECT jsonb_build_object('print',(SELECT print FROM printed),'bodies',ARRAY(SELECT id FROM requested_bodies),
+  'held',coalesce(jsonb_agg(page_id||':'||version||':'||page_kind ORDER BY page_id) FILTER (WHERE saved),'[]'),
+  'headers',coalesce((SELECT jsonb_object_agg(h.key,h.value) FROM pages p CROSS JOIN LATERAL jsonb_each(p.body_headers) h),'{}'),
+  'pages',coalesce(jsonb_agg(jsonb_build_array(page_id,page_kind,extract(epoch FROM built_at)::text,version,CASE WHEN saved THEN NULL ELSE row END) ORDER BY page_id),'[]')) AS read
+  FROM listed`;
 
 /** A combined answer is kept in this server's memory while the print of its pages is unchanged, and never for long, since sittings are read against the clock. */
 const COMBINED_KEPT = 24, COMBINED_MS = 60_000;
@@ -157,11 +160,17 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
   const key=JSON.stringify([params,input.placeId??null]),kept=remember?combined.get(key):undefined;
   const shape=JSON.stringify(params.slice(6)),prefix=`${shape}|`;
   if(kept && Date.now()-kept.at<COMBINED_MS && (await query(PLACE_PRINT_SQL,params.slice(0,7)))[0]?.print===kept.print)return kept.place;
-  const read=async(have:readonly string[])=>query(PLACE_PAGES_SQL,[...params,have]);
-  let rows=await read(remember?[...heldRows.keys()].filter(held=>held.startsWith(prefix)).map(held=>held.slice(prefix.length)):[]);
-  const rowKey=(row:Record<string,unknown>)=>`${prefix}${row.page_id}:${row.version}:${row.page_kind}`;
-  if(rows.some(row=>row.held===true && !heldRows.has(rowKey(row))))rows=await read([]);
-  const withRows=rows.map(row=>row.held===true?{...row,row:heldRows.get(rowKey(row))}:row);
+  const read=async(have:readonly string[])=>{
+    const [{read:out}={}]=await query(PLACE_PAGES_SQL,[...params,have]);
+    const {print,bodies,headers,held,pages}=out as {print:string;bodies:string[];headers:BodyHeaders;held:string[];pages:[string,string,string,number|null,unknown][]};
+    const kept=new Set(held);
+    return {print,bodies,headers,rows:pages.map(([page_id,page_kind,built,version,row])=>
+      ({page_id,page_kind,version,row,built_at:Number(built)*1000,held:kept.has(`${page_id}:${version}:${page_kind}`)}))};
+  };
+  const rowKey=(row:{page_id:string;version:number|null;page_kind:string})=>`${prefix}${row.page_id}:${row.version}:${row.page_kind}`;
+  let {rows,print,bodies,headers}=await read(remember?[...heldRows.keys()].filter(held=>held.startsWith(prefix)).map(held=>held.slice(prefix.length)):[]);
+  if(rows.some(row=>row.held && !heldRows.has(rowKey(row))))({rows,print,bodies,headers}=await read([]));
+  const withRows=rows.map(row=>row.held?{...row,row:heldRows.get(rowKey(row))}:row);
   // A place whose page is not built yet adds nothing until it is; the places that are built still answer.
   const built=withRows.filter(row=>row.row);
   if(!built.length)throw new Error("PLACE_PAGE_NOT_BUILT");
@@ -171,15 +180,12 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
   }
   for(const oldest of heldRows.keys()){ if(heldRows.size<=HELD_ROWS)break; heldRows.delete(oldest); }
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
-  // The requested boards and the print of the whole selection come once, on its first row.
-  const lead=rows.find(row=>row.print!=null);
-  const canonical={...input,bodyIds:lead?.body_ids as string[]??input.bodyIds};
-  const merged=mergePlaceRows(canonical,built.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),row.body_headers as BodyHeaders ?? {},input.placeId!==undefined),page_id:row.page_id,
+  const canonical={...input,bodyIds:bodies};
+  const merged=mergePlaceRows(canonical,built.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),headers,input.placeId!==undefined),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
   // The national routing record is held once in this server's memory, not in each saved page.
-  const place={...await composePlaceRow(canonical,merged),everydayRouting:input.bodyFactsOnly||input.meetingIds!==undefined?null:await nationalEverydayRouting().catch(()=>null)};
-  pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
-  const print=lead?.print;
+  const place={...await composePlaceRow(canonical,merged),everydayRouting:input.bodyFactsOnly||input.meetingIds!==undefined?null:await nationalEverydayRouting().catch(error=>{console.error("READER_ROUTING_UNAVAILABLE",error);return null;})};
+  pageIds.set(place,rows.map(row=>row.page_id));
   if(remember && typeof print==="string") {
     combined.delete(key);
     combined.set(key,{print,at:Date.now(),place});

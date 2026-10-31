@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 import test from "node:test";
 import { readMeetingBodies, readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
@@ -45,8 +46,8 @@ test("state jobs list IDs once per state and defer each bounded page read until 
     assert.equal(params[5], false, "a worker never opens a complete state aggregate");
     const bodies = params[2] as string[];
     assert.equal(bodies.length, 1, "one body calendar crosses the connection");
-    return [bodyRow(bodies[0]!, bodies[0] === FIRST ? [meeting(FIRST, "old", "2020-01-01T12:00:00Z"), soon,
-      meeting(FIRST, "future", "2028-01-01T12:00:00Z")] : [])];
+    return placePagesAnswer([bodyRow(bodies[0]!, bodies[0] === FIRST ? [meeting(FIRST, "old", "2020-01-01T12:00:00Z"), soon,
+      meeting(FIRST, "future", "2028-01-01T12:00:00Z")] : [])]);
   };
   const iterator = readMeetingBodies({ states: ["az", "CA"], now: AT, settings: meetingSettingsFromValues(), query });
   const first = await iterator.next();
@@ -191,7 +192,7 @@ test("saved division contexts read current alias pointers without storing a seco
       const place=await readPlacePackage({state:'AZ',divisionIds:[division],includeHistory},async(text,params)=>{
         reads++;assert.equal(text,PLACE_PAGES_SQL);
         const rows=await query(text,params);
-        assert.deepEqual(rows[0]?.body_headers,{[alias]:{id:body,name:'City Council'},[body]:{id:body,name:'City Council'}},'one indexed query supplies only this saved page\'s identity headers');
+        assert.deepEqual((rows[0] as {read:{headers:unknown}}).read.headers,{[alias]:{id:body,name:'City Council'},[body]:{id:body,name:'City Council'}},'one indexed query supplies only this saved page\'s identity headers');
         return rows;
       });
       assert.equal(reads,1);

@@ -25,7 +25,7 @@ function restoreAgendaText(value: unknown, texts: readonly string[]): unknown {
 }
 
 function pageTime(row: Row): number {
-  const parsed = Date.parse(String(row.built_at ?? ""));
+  const parsed = typeof row.built_at === "number" ? row.built_at : Date.parse(String(row.built_at ?? ""));
   return Number.isFinite(parsed) ? parsed : 0;
 }
 

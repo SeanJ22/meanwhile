@@ -22,6 +22,7 @@ import { isCensusPlaceholderDivision } from "../../lib/registry/census-placehold
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { PLACE_PAGES_SQL } from "../../lib/reader/place.ts";
+import { placePagesAnswer } from "./place-pages-answer.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
@@ -252,8 +253,8 @@ export function activateCanonicalFixture(key: string): void {
       saved=(async()=>{
         const [row]=await fixturePlaceRow([input.state,input.divisionIds,input.bodyIds??[],`ocd-division/country:us/state:${input.state.toLowerCase()}`,
           input.allBodies??false,input.includeHistory??false,true,null,input.neighbors??false,input.namedDivisionIds??[]]);
-        return [{page_id:input.divisionIds[0]??input.bodyIds?.[0]??`ocd-division/country:us/state:${input.state.toLowerCase()}`,
-          page_kind:input.bodyIds?.length?"body":input.divisionIds.length?"place":"empty",built_at:new Date().toISOString(),body_ids:input.bodyIds??[],row}];
+        return placePagesAnswer([{page_id:input.divisionIds[0]??input.bodyIds?.[0]??`ocd-division/country:us/state:${input.state.toLowerCase()}`,
+          page_kind:input.bodyIds?.length?"body":input.divisionIds.length?"place":"empty",built_at:new Date().toISOString(),body_ids:input.bodyIds??[],row}]);
       })();
       pages.set(key,saved);
     }

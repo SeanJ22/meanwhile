@@ -65,8 +65,8 @@ test("the real worker transfers only the requested compressed context and keeps 
         reads++;assert.equal(text,PLACE_PAGES_SQL,"every selection reads only saved context in one query");
         const rows=await query(text,params);
         bytes.set(label,Buffer.byteLength(JSON.stringify(rows)));
-        for(const {row} of rows) {
-          assert.match((row as {encoding:string}).encoding,/^(br-json-v1|dfl-dict-v1)$/);
+        for(const [,,,,row] of (rows[0] as {read:{pages:[string,string,string,number,{encoding:string}][]}}).read.pages) {
+          assert.match(row.encoding,/^(br-json-v1|dfl-dict-v1)$/);
           const decoded=unpackPlaceContextRow(row);
           if(!input.includeAgenda) {
             assert.deepEqual(decoded.archived_documents,[]);

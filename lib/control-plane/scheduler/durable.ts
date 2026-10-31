@@ -527,17 +527,6 @@ export type ResumedOccurrence =
 
   | { readonly kind: "SETTLED"; readonly settled: SettledOccurrence };
 
-export async function findSettledOccurrences(
-  repos: ControlPlaneRepositories,
-  input: {
-    readonly obligations: readonly StandingObligation[];
-    readonly settledRouteTaskIds: ReadonlySet<string>;
-  },
-): Promise<readonly SettledOccurrence[]> {
-  if (!input.obligations.some((o) => o.openOccurrenceId !== null) || input.settledRouteTaskIds.size === 0) return [];
-  return (await scanOccurrences(repos, { ...input, neverClaimedRouteTaskIds: new Set() })).settled;
-}
-
 export interface AbandonedOccurrence {
   readonly occurrenceId: string;
   readonly obligationId: string;
@@ -669,6 +658,7 @@ export async function openOccurrence(
     readonly obligation: StandingObligation;
     readonly dueAt: string;
     readonly now: string;
+    /** Occurrences the caller already knows are open, so the obligation's own is not read again to find out. */ readonly knownOpen?: ReadonlySet<string>;
   },
 ): Promise<{
   readonly occurrence: FreshnessOccurrence;
@@ -677,6 +667,7 @@ export async function openOccurrence(
 } | null> {
   const o = input.obligation;
   if (o.routeId === null) return null;
+  if (o.openOccurrenceId !== null && input.knownOpen?.has(o.openOccurrenceId)) throw new OccurrenceStillOpen(o.id, o.openOccurrenceId);
 
   const current = await repos.obligations.mustRead(o.id);
   if (current.value.openOccurrenceId !== null) {

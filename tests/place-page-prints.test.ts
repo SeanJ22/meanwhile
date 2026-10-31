@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
-import { buildPageBody, PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { packPlaceContext, packReadyPlace, unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
+import { PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
+import { packPlaceContext, unpackPlaceContextRow } from "../lib/reader/place-ready.ts";
+import { composePlaceRow } from "../lib/reader/place-decode.ts";
 import { meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
-import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, PLACES = 8, OTHER_BODIES = 600;
@@ -12,11 +12,6 @@ const AT = new Date(Date.now() - 86_400_000).toISOString(), DAY = 86_400_000;
 const place = (n: number) => `${COUNTY}/place:town_${String(n).padStart(2, "0")}`;
 const council = (n: number) => `${place(n)}#council`, schools = (n: number) => `${place(n)}#schools`;
 const iso = (offsetDays: number) => new Date(Date.now() + offsetDays * DAY).toISOString().replace(/\.\d{3}Z$/, "Z");
-
-/** A national record every page carries, at about its production size (~25 KB). */
-const routing = (label: string) => ({ kind: "everyday-routing", formatVersion: 1, denominator: { zips: ["85701"] },
-  records: Array.from({ length: 120 }, (_, n) => ({ id: `${label}-route-${n}`, topicId: `topic-${n % 12}`, zip: "85701",
-    contact: { name: `Office ${n}`, phone: "520-555-0100", url: `https://example.gov/${label}/${n}` }, sourceUrl: "https://example.gov/source" })) });
 
 const holder = (body: string, n: number) => ({ id: `${body}:member-${n}`, name: `Member ${n} of ${body.split("/").at(-1)}`,
   officeTitle: n === 0 ? "Mayor" : "Council Member", divisions: [body.split("#")[0]!], authority: "REGISTRY_BODY_ROSTER", sourceUrl: `https://example.gov/${n}` });
@@ -71,8 +66,6 @@ async function fixture() {
     return query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
     VALUES($1,$2,$3,'saved quote','live','OFFICIAL',1,'saved quote',$4,'fixture')`, [id, field, JSON.stringify(value), AT]);
   };
-  await publish({ id: "routing-1", value: routing("first"), at: AT, recordClass: EVERYDAY_ROUTING_POINTER.recordClass as "CURATED_READER_RECORD",
-    scope: EVERYDAY_ROUTING_POINTER.scope, sourceId: "everyday-routing" });
   await publish({ id: "registration-az", value: registration(), at: AT, recordClass: "REGISTRATION", scope: "US-AZ:registration:v1", sourceId: "registration" });
   await publish({ id: "runtime-1", value: runtime("first"), at: AT, recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US-AZ:reader-registry-runtime", sourceId: "registry-runtime" });
   await query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov/roster','https://example.gov/roster',$1,$2,'roster')", [AT, "a".repeat(64)]);
@@ -97,7 +90,7 @@ async function fixture() {
       await publish({ id: `${body}:v2`, value: calendar(body, "current", -100, 30), at: AT, recordClass: "MEETING", scope, sourceId: "ical" });
     }
   }
-  await query("DELETE FROM rebuild_queue");
+  await query("UPDATE place_page SET stale_at=NULL");
   return { pg, query, publish, fact };
 }
 
@@ -121,17 +114,18 @@ const factDb = (pg: Awaited<ReturnType<typeof fixture>>["pg"], into: Meter): Fac
 };
 
 async function stored(query: Query) {
-  const rows = await query("SELECT place_id,body,history_body,context FROM place_page ORDER BY place_id");
-  return new Map(rows.map(row => {
-    const { prints, ...context } = row.context as Record<string, unknown>;
-    return [String(row.place_id), { body: unpackReadyPlace(row.body), history: unpackReadyPlace(row.history_body), prints,
-      context: Object.fromEntries(Object.entries(context).map(([key, value]) => [key, key === "formatVersion" ? value
-        : Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([shape, packed]) => [shape, unpackPlaceContextRow(packed)]))])) }];
-  }));
+  const rows = await query("SELECT place_id,context FROM place_page ORDER BY place_id");
+  return new Map(await Promise.all(rows.map(async row => {
+    const { prints, ...context } = row.context as Record<string, unknown>, id = String(row.place_id);
+    const unpacked = Object.fromEntries(Object.entries(context).map(([key, value]) => [key, key === "formatVersion" ? value
+      : Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([shape, packed]) => [shape, unpackPlaceContextRow(packed)]))])) as Record<string, Record<string, Record<string, unknown>>>;
+    return [id, { body: await composePlaceRow({ state: "AZ", divisionIds: [id] }, structuredClone(unpacked.current!.full!)),
+      history: await composePlaceRow({ state: "AZ", divisionIds: [id], includeHistory: true }, structuredClone(unpacked.history!.full!)), prints, context: unpacked }] as const;
+  })));
 }
 
 async function queueAll(query: Query) {
-  for (let n = 0; n < PLACES; n++) await query("INSERT INTO rebuild_queue(place_id) VALUES($1) ON CONFLICT DO NOTHING", [place(n)]);
+  for (let n = 0; n < PLACES; n++) await query("INSERT INTO place_page(place_id,stale_at) VALUES($1,clock_timestamp()) ON CONFLICT(place_id) DO UPDATE SET stale_at=clock_timestamp()", [place(n)]);
 }
 
 const turn = (pg: Awaited<ReturnType<typeof fixture>>["pg"], into: Meter) =>
@@ -168,16 +162,14 @@ test("a rebuild reads only what changed for its place and stores the same pages 
     assert.deepEqual(await turn(pg, stateWide), { rebuilt: PLACES, failed: 0, remaining: 0, unchanged: PLACES });
     assert.deepEqual(await stored(query), built);
 
-    // The national routing record changes, and one town's own officials and calendar change.
-    await publish({ id: "routing-2", value: routing("second"), at: AT, recordClass: EVERYDAY_ROUTING_POINTER.recordClass as "CURATED_READER_RECORD",
-      scope: EVERYDAY_ROUTING_POINTER.scope, sourceId: "everyday-routing" });
+    // One town's own officials and calendar change.
     await fact(`person:${council(3)}:1`, "phone", "520-555-0199");
     await publish({ id: `${council(3)}:v3`, value: calendar(council(3), "moved", -95, 30), at: AT, recordClass: "MEETING",
       scope: meetingPartitionScope("ical", council(3)), sourceId: "ical" });
     await queueAll(query);
     const changed = meter();
-    assert.deepEqual(await turn(pg, changed), { rebuilt: PLACES, failed: 0, remaining: 0 });
-    assert.equal(changed.contextReads, PLACES, "a changed page reads its own saved rows once, for the groups that did not change");
+    assert.deepEqual(await turn(pg, changed), { rebuilt: PLACES, failed: 0, remaining: 0, unchanged: PLACES - 1 });
+    assert.equal(changed.contextReads, 1, "a changed page reads its own saved rows once, for the groups that did not change");
     const partial = await stored(query);
 
     // The same snapshot read whole, with no prints held, builds identical pages.
@@ -193,7 +185,6 @@ test("a rebuild reads only what changed for its place and stores the same pages 
       assert.deepEqual(kept.context, page.context, `${id}: the saved rows match a full read`);
       assert.deepEqual(kept.prints, page.prints, `${id}: the prints match a full read`);
     }
-    assert.deepEqual(full.get(place(3))!.body.everydayRouting, routing("second"));
     assert.ok(full.get(place(3))!.body.meetings.some(meeting => meeting.title.startsWith("moved")));
     assert.equal(full.get(place(3))!.body.bodies.find(body => body.id === council(3))!.roster!.members
       .find(member => member.personId === `person:${council(3)}:1`)?.phone, "520-555-0199");
@@ -201,7 +192,7 @@ test("a rebuild reads only what changed for its place and stores the same pages 
 
     console.log(`place-package bytes per page (${PLACES} towns, rows received): full read ${perPage(first.pageBytes)} B; `
       + `unchanged ${perPage(unchanged.pageBytes)} B; state-wide edition ${perPage(stateWide.pageBytes)} B; `
-      + `routing + one town changed ${perPage(changed.pageBytes)} B (+ ${perPage(changed.received - changed.pageBytes)} B other rows incl. saved rows)`);
+      + `one town changed ${perPage(changed.pageBytes)} B (+ ${perPage(changed.received - changed.pageBytes)} B other rows incl. saved rows)`);
     console.log(`whole turn per page, received + sent: first ${perPage(first.received + first.sent)} B, unchanged ${perPage(unchanged.received + unchanged.sent)} B, `
       + `changed ${perPage(changed.received + changed.sent)} B; place-package statement text ${Buffer.byteLength(PLACE_PACKAGE_SQL)} B once per connection`);
     assert.ok(unchanged.pageBytes * 40 < first.pageBytes, `an unchanged page reads under 1/40 of a full read (${unchanged.pageBytes} of ${first.pageBytes})`);
@@ -210,42 +201,57 @@ test("a rebuild reads only what changed for its place and stores the same pages 
   } finally { await pg.close(); }
 });
 
-test("a different builder or selection reads the page whole; without saved rows, a change reads it whole", async () => {
-  const { pg, query, fact } = await fixture();
+test("a page saved by the earlier read stays valid: its read hash and retired routing print do not rebuild it", async () => {
+  const { pg, query } = await fixture();
   try {
     await queueAll(query);
-    await turn(pg, meter());
+    assert.deepEqual(await turn(pg, meter()), { rebuilt: PLACES, failed: 0, remaining: 0 });
     const built = await stored(query);
-    // Prints from another builder version never stand in.
-    await query(`UPDATE place_page SET context=jsonb_set(context,'{prints,build}','"another-builder"')`);
+    await query(`UPDATE place_page SET context=jsonb_set(jsonb_set(context,'{prints,build}','"0123456789abcdef0123456789abcdef"'),'{prints,reads,history,everyday_routing}','"retired"')`);
     await queueAll(query);
-    const rebuilt = meter();
-    assert.deepEqual(await turn(pg, rebuilt), { rebuilt: PLACES, failed: 0, remaining: 0 });
-    assert.equal(rebuilt.contextReads, 0);
-    assert.deepEqual(await stored(query), built);
+    const again = meter();
+    assert.deepEqual(await turn(pg, again), { rebuilt: PLACES, failed: 0, remaining: 0, unchanged: PLACES });
+    assert.equal(again.contextReads, 0, "a valid old page never reads its saved rows");
+    for (const [id, page] of await stored(query)) assert.deepEqual(page.body, built.get(id)!.body, `${id}: the page is kept as it was`);
+    // A page printed before long lists had row prints is read whole and saved again with them.
+    await query(`UPDATE place_page SET context=jsonb_set(context,'{prints,reads,history}',(context#>'{prints,reads,history}') - ARRAY(SELECT k FROM jsonb_object_keys(context#>'{prints,reads,history}') k WHERE k LIKE '%[]'))`);
+    await queueAll(query);
+    const whole = meter();
+    assert.deepEqual(await turn(pg, whole), { rebuilt: PLACES, failed: 0, remaining: 0 });
+    assert.equal(whole.contextReads, 0, "a page without row prints is read whole, not from its saved rows");
+  } finally { await pg.close(); }
+});
 
-    // Saved rows gone (an older page shape): the changed group's page is read again whole and stays exact.
-    await fact(`${council(1)}`, "office_phone", "520-555-0222");
-    await query("UPDATE place_page SET context=jsonb_build_object('formatVersion',1,'prints',context->'prints') WHERE place_id=$1", [place(1)]);
-    await query("INSERT INTO rebuild_queue(place_id) VALUES($1) ON CONFLICT DO NOTHING", [place(1)]);
-    const reread = meter();
-    assert.deepEqual(await turn(pg, reread), { rebuilt: 1, failed: 0, remaining: 0 });
-    assert.equal(reread.pageReads, 2, "the changed read is repeated whole when no saved rows are kept");
-    const page = (await stored(query)).get(place(1))!;
-    assert.equal(page.body.bodies.find(body => body.id === council(1))!.fields.officePhone, "520-555-0222");
-    const fresh = await buildPageBody(place(1), "place", "AZ", query);
-    assert.deepEqual(page.body, JSON.parse(JSON.stringify(fresh.readyCurrent)));
-    assert.deepEqual(page.context, Object.fromEntries(Object.entries(packPlaceContext({ ...fresh })).map(([key, value]) => [key, key === "formatVersion" ? value
-      : Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([shape, packed]) => [shape, unpackPlaceContextRow(packed)]))])));
-    assert.ok(packReadyPlace(fresh.readyCurrent));
+test("a page saved with the routing record is saved again without it, from its own rows, behind the marked pages", async () => {
+  const { pg, query } = await fixture();
+  try {
+    await queueAll(query);
+    assert.deepEqual(await turn(pg, meter()), { rebuilt: PLACES, failed: 0, remaining: 0 });
+    const built = await stored(query);
+    // As saved before this release: the record in every shape of every page, and a hash of the read for a build.
+    for (const row of await query("SELECT place_id,context FROM place_page")) {
+      const context = row.context as Record<string, Record<string, unknown>>, raw: Record<string, unknown> = { formatVersion: 1 };
+      for (const key of ["current", "history", "emptyCurrent", "emptyHistory"]) if (context[key]) raw[key] = { ...unpackPlaceContextRow(context[key].full), everyday_routing: { routes: ["held"] } };
+      const prints = { ...(context.prints as object), build: "0123456789abcdef0123456789abcdef" };
+      await query("UPDATE place_page SET context=$2::jsonb WHERE place_id=$1", [row.place_id, JSON.stringify({ ...packPlaceContext(raw), prints })]);
+    }
+    await query("DELETE FROM pass_cursor WHERE name='place-pages:strip'");
+    const versions = async () => new Map((await query("SELECT place_id,version FROM place_page")).map(row => [String(row.place_id), String(row.version)]));
+    const old = await versions();
+    assert.deepEqual(await turn(pg, meter()), { rebuilt: 0, failed: 0, remaining: 0 }, "nothing is marked, and nothing is rebuilt");
+    for (const [id, version] of await versions()) assert.equal(version, old.get(id), `${id}: no version moves`);
+    for (const row of await query("SELECT context FROM place_page")) for (const shape of ["full", "brief"])
+      assert.equal(Object.hasOwn(unpackPlaceContextRow((row.context as Record<string, Record<string, unknown>>).current![shape]), "everyday_routing"), false, `the ${shape} rows carry no routing record`);
+    for (const [id, page] of await stored(query)) assert.deepEqual(page.body, built.get(id)!.body, `${id}: the page reads as it did`);
+    assert.deepEqual(await query("SELECT position FROM pass_cursor WHERE name='place-pages:strip'"), [{ position: '{"done":true}' }]);
   } finally { await pg.close(); }
 });
 
 test("the place read returns every group, only changed groups, or nothing, by the prints it is given", async () => {
   const { pg, query } = await fixture();
   try {
-    const params = (held: unknown, partial: boolean) => ["AZ", [place(4)], [], STATE, false, true, true, null, false, [], null, held === null ? null : JSON.stringify(held), partial];
-    const groups = ["registration_held", "division_ids", "agenda_texts", "everyday_routing", "publication_attempts", "registry", "governments", "divisions",
+    const params = (held: unknown, partial: boolean) => ["AZ", [place(4)], [], STATE, false, true, true, null, false, [], held === null ? null : JSON.stringify(held), partial];
+    const groups = ["registration_held", "division_ids", "agenda_texts", "publication_attempts", "registry", "governments", "divisions",
       "entities", "fields", "rosters", "comments", "sittings", "meeting_rows", "archived_meetings", "archived_documents", "archived_document_links", "parts"];
     const [whole] = await query(PLACE_PACKAGE_SQL, params(null, true));
     assert.equal(whole!.unchanged, false);
@@ -262,7 +268,7 @@ test("the place read returns every group, only changed groups, or nothing, by th
     const [partial] = await query(PLACE_PACKAGE_SQL, params(moved, true));
     assert.equal(partial!.unchanged, false);
     assert.deepEqual(partial!.omitted, Object.keys(prints).filter(group => group !== "rosters").sort());
-    for (const column of groups) assert.equal(partial![column] === null, column !== "rosters" && column !== "everyday_routing", column);
+    for (const column of groups) assert.equal(partial![column] === null, column !== "rosters", column);
     assert.deepEqual(partial!.rosters, [], "rows the stored page holds stay behind");
     assert.deepEqual((await query(PLACE_PACKAGE_SQL, params({ ...moved, "rosters[]": (prints["rosters[]"] as unknown as string[]).slice(1) }, true)))[0]!.rosters, (whole!.rosters as unknown[]).slice(0, 1), "only the missing row is sent");
 

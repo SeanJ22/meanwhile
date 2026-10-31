@@ -34,7 +34,7 @@ function recordingDb() {
       const tx = ++next;
       const query: Query = async (text, params = []) => {
         events.push({ tx, text, params });
-        if (/INSERT INTO rebuild_queue/.test(text)) {
+        if (/INSERT INTO place_page/.test(text)) {
           const ids = (params[1] as string[]).length + (params[2] as string[]).length;
           if (ids > 1000) throw new Error("Query read timeout");
         }
@@ -52,7 +52,7 @@ test("a South Dakota-scale map queues its pages after the map commits, in statem
   const { db, events, commits } = recordingDb();
   await loadStatePlaceMap(db, southDakotaScale());
   const mapTx = events.find(event => /INSERT INTO place_boundary/.test(event.text))!.tx;
-  const queued = events.filter(event => /INSERT INTO rebuild_queue/.test(event.text));
+  const queued = events.filter(event => /INSERT INTO place_page/.test(event.text));
   assert.ok(queued.length >= 2);
   for (const event of queued) {
     assert.notEqual(event.tx, mapTx, "page queueing never waits inside the map's own transaction");

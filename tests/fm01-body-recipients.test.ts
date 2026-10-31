@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readPlacePackage } from "../lib/reader/place.ts";
 import { buildPlacePackage } from "../lib/reader/place-builder.ts";
-import { packReadyPlace } from "../lib/reader/place-ready.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
@@ -65,13 +63,6 @@ test("a place's existing parent and native ids carry recipient aliases to its bo
   assert.equal(coverage.bodies.find(body => body.bodyId === BOARD)?.recipientState, "WI");
   assert.equal(coverage.bodies.find(body => body.bodyId === similarBoard)?.recipientIds, undefined);
   assert.equal(reads, 1);
-  let pageReads = 0;
-  const saved = await readPlacePackage({ state: "WI", placeId: "zip:53202", divisionIds: [COUNTY] }, async () => {
-    pageReads++;
-    return [{ page: packReadyPlace(place) }];
-  });
-  assert.equal(pageReads, 1);
-  assert.deepEqual(saved.bodies, place.bodies, "the saved ZIP page retains recipient identities and source service areas");
   const ambiguous = await buildPlacePackage({ state: "WI", divisionIds: [COUNTY] }, async () => [{ ...row,
     governments: [government, { ...government, id: "different-government", nativeIds: {}, bodyIds: [] }] }]);
   assert.equal(ambiguous.bodies.find(body => body.id === BOARD)?.recipientNames, undefined,

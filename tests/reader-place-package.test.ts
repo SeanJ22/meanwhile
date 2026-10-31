@@ -1,16 +1,15 @@
 import assert from "node:assert/strict";
+import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 import test, { type TestContext } from "node:test";
 import { readFileSync } from "node:fs";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
-import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
-import { buildPageBody, buildPlacePackage } from "../lib/reader/place-builder.ts";
-import { packReadyPlace } from "../lib/reader/place-ready.ts";
+import { PLACE_PAGES_SQL, PLACE_PRINT_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
+import { buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
-import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { ReaderStatePackage } from "../lib/reader/state.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -19,7 +18,6 @@ import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { classifyAgendaPublication, readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
@@ -27,7 +25,6 @@ import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meeti
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { activeWiring, installMeetingDoors } from "../lib/registry/source-wiring.ts";
 import { readerCacheTags } from "../lib/reader/cache.ts";
-import { readerLocation, readerTerritory, territoryBodies } from "../lib/reader/location.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -53,7 +50,7 @@ async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
 async function readReadyPackage(db: Awaited<ReturnType<typeof factDb>>,input: PlaceInput,query: Query = db.query) {
   await seedPlacePages(db.query,input);
   return readPlacePackage(input,async(text,params)=>{
-    assert.ok(text===PLACE_PAGES_SQL || text===READY_PLACE_SQL,"the reader only queries saved pages");
+    assert.ok(text===PLACE_PAGES_SQL,"the reader only queries saved pages");
     return query(text,params);
   });
 }
@@ -147,47 +144,6 @@ test("an agenda opened through a former body ID keeps its documents and the cano
     assert.notEqual(canonicalTag,aliasTag,"the former body URL has a different cache tag");
     assert.ok(tags.has(aliasTag!),"the existing request tag is retained");
     assert.ok(tags.has(canonicalTag!),"purging the rebuilt canonical body also clears the former body's cached agenda");
-  } finally {installReaderDatabaseQuery(undefined);await db.pg.close();}
-});
-
-test("a map's cache follows its canonical territory and fringe pages while an ordinary ZIP keeps only its ZIP tag", async t => {
-  const {db} = await agendaFixture(t);
-  const zip = "85641", lat = 32.10986530852745, lng = -110.71768784670735;
-  const alias = "curated:az/pima-rocking-k-south-cfd#governing", canonical = "government:US-AZ:cog:fixture-rocking-k#governing";
-  try {
-    const location = await readerLocation(lat,lng,zip);
-    assert.ok(location.fringe.length,"this ZIP also reads names from fringe divisions");
-    assert.deepEqual(territoryBodies(lat,lng,await readerTerritory("AZ")),[alias],"the map point lies inside the held district boundary");
-    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'body','District Board','AZ',$1)",[STATE,canonical]);
-    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)",[canonical,alias]);
-    await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{registry,bodies}',
-      (payload#>'{registry,bodies}') || $1::jsonb) WHERE record_class='REGISTRY_RUNTIME_BINDING'`,
-    [JSON.stringify([{id:alias,ocdId:STATE,name:"District Board"}])]);
-    const input = {state:"AZ",divisionIds:location.divisionIds,namedDivisionIds:location.fringe,bodyIds:[alias]};
-    await seedPlacePages(db.query,input);
-    const zipId = `zip:${zip}`, page = await buildPageBody(zipId,"place","AZ",db.query);
-    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ')",[zipId]);
-    await db.query("INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,'{}','{}')",
-      [zipId,JSON.stringify(packReadyPlace(page.readyCurrent))]);
-    const reads:string[] = [];
-    installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
-      assert.ok(statement.text===PLACE_PAGES_SQL || statement.text===READY_PLACE_SQL,"cache identities require no additional query");
-      reads.push(statement.text);
-      return db.query(statement.text,statement.params);
-    })));
-    const response = await meetingsGET(new Request(`https://wtp.test/api/meetings?zip=${zip}&lat=${lat}&lng=${lng}`));
-    assert.equal(response.status,200,JSON.stringify(await response.clone().json()));
-    assert.deepEqual(reads,[PLACE_PAGES_SQL]);
-    const tags = new Set(response.headers.get("Netlify-Cache-Tag")?.split(",")??[]);
-    const expected = readerCacheTags({places:[...location.divisionIds,...location.fringe,canonical]});
-    assert.deepEqual([...tags].sort(),[...expected,"reader-settings"].sort(),"every selected ready page shares the response's cache scope");
-    const [bodyPurgeTag] = readerCacheTags({places:[canonical]});
-    assert.ok(tags.has(bodyPurgeTag!),"rebuilding the canonical body clears the map requested through its former territory ID");
-    const zipResponse = await meetingsGET(new Request(`https://wtp.test/api/meetings?zip=${zip}`));
-    assert.equal(zipResponse.status,200,JSON.stringify(await zipResponse.clone().json()));
-    assert.deepEqual(reads,[PLACE_PAGES_SQL,READY_PLACE_SQL]);
-    assert.deepEqual(zipResponse.headers.get("Netlify-Cache-Tag")?.split(",").sort(),
-      [...readerCacheTags({places:[zipId]}),"reader-settings"].sort(),"the compiled ZIP is cleared only when its replacement is ready");
   } finally {installReaderDatabaseQuery(undefined);await db.pg.close();}
 });
 
@@ -670,56 +626,6 @@ test("ready agendas restore every document, alias and extraction variant from in
   } finally { await db.pg.close(); }
 });
 
-test("a cold visit reads a compact ready page and opens its exact encoded agenda on request", async () => {
-  const db = await factDb();
-  try {
-    await canonicalTables(db);
-    const siblingBody = `${CITY}#elsewhere`;
-    const held: Meeting = {id:"ical:own",bodyId:BODY,ocdId:CITY,bodyName:"Mayor and Council",title:"Public hearing",
-      startsAt:"2026-10-21T18:00:00-07:00",timeZone:"America/Phoenix",location:null,agendaUrl:"https://tucsonaz.gov/agenda",
-      jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT},
-      carried:{source:"ical",lastFreshAt:AT}};
-    const unowned = {...held,id:"ical:elsewhere",bodyId:siblingBody,title:"ELSEWHERE ".repeat(6000)};
-    const document = {id:"own-agenda",meetingId:held.id,text:"OWN AGENDA ".repeat(6000)};
-    const sources = [{source:"ical",ok:false,error:"Calendar unavailable",failure:"WALL",fetched:0,normalized:0,
-      drops:{placeless:0,unknownVenue:0,unplaceableInTime:0,notConfigured:0},carriedForward:2}];
-    const member = {id:`ical:${BODY}`,source:"ical",bodyId:BODY,status:"ACTIVE",outcome:"HELD",detail:"Calendar unavailable"};
-    const family = {formatVersion:1,generatedAt:AT,meetings:[held,unowned],agendaDocuments:[document,
-      {id:"elsewhere-agenda",meetingId:unowned.id,text:"ELSEWHERE AGENDA ".repeat(6000)}],sources,
-      counts:{fresh:0,carried:2,total:2,duplicatesCollapsed:0},carriedSummary:{count:2,lastFreshAt:AT},
-      derivedMembers:[member,{...member,id:`ical:${siblingBody}`,bodyId:siblingBody,detail:"ELSEWHERE MEMBER ".repeat(6000)}]};
-    const scope = derivedMeetingFamilyScope("US-AZ");
-    const encoded = partitionCivicPayload(family);
-    assert.ok(encoded.parts.length > 10,"fixture uses encoded root, collection and text parts");
-    for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'family-version')",
-      [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT]);
-    let wire = "", calls = 0;
-    const cold = await readReadyPackage(db,{state:"AZ",placeId:BODY,divisionIds:[],bodyIds:[BODY]},async(sql,params) => {
-      assert.equal(sql,READY_PLACE_SQL);
-      calls++;
-      const rows=await db.query(sql,params);wire=JSON.stringify(rows);
-      return rows;
-    });
-    assert.equal(calls,1);
-    assert.ok(Buffer.byteLength(wire)<12_000,`cold place transfer was ${Buffer.byteLength(wire)} bytes`);
-    assert.equal(wire.includes("ELSEWHERE"),false,"unrelated meeting, agenda and source-member parts stay at the database");
-    assert.equal(wire.includes("OWN AGENDA"),false,"even an encoded root does not transfer agenda text before it is opened");
-    assert.deepEqual(cold.meetings.map(meeting => meeting.id),[held.id]);
-    assert.deepEqual(cold.meetings[0].carried,held.carried);
-    assert.deepEqual(cold.snapshot.agendaDocuments,[]);
-    assert.equal(cold.snapshot.sources[0].error,member.detail);
-    assert.equal(cold.snapshot.sources[0].carriedForward,1);
-    const opened = await readReadyPackage(db,{state:"AZ",divisionIds:[],bodyIds:[BODY],includeAgenda:true},async(sql,params) => {
-      const rows = await db.query(sql,params);
-      assert.equal(JSON.stringify(rows).includes("ELSEWHERE"),false,"opening an agenda still reads only this body");
-      return rows;
-    });
-    assert.deepEqual(opened.snapshot.agendaDocuments,[document]);
-    assert.equal(opened.meetings[0].agendaUrl,held.agendaUrl);
-  } finally { await db.pg.close(); }
-});
-
 test("one place query preserves source-only bodies, local runtime records and their calendars without a state read", async () => {
   const db = await factDb();
   try {
@@ -752,9 +658,6 @@ test("one place query preserves source-only bodies, local runtime records and th
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'REGISTRY_RUNTIME_BINDING',$2,$3,$4,'runtime-version')",
       ["REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime","US-AZ:reader-registry-runtime",JSON.stringify(encoded.value),AT]);
-    const routing = {kind:"everyday-routing",formatVersion:1,denominator:{zips:["85701"]},records:[{id:"local-route",sourceUrl:SOURCE}]};
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'CURATED_READER_RECORD',$2,$3,$4,'routing-version')",
-      [`${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`,EVERYDAY_ROUTING_POINTER.scope,JSON.stringify(routing),AT]);
     const meeting = {id:"ical:source-only",bodyId:BODY,ocdId:CITY,bodyName:body.name,title:"Public hearing",startsAt:"2026-10-21T18:00:00-07:00",
       timeZone:"America/Phoenix",location:null,agendaUrl:SOURCE,jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:body.provenance};
     const family = {formatVersion:1,generatedAt:AT,meetings:[meeting,{...meeting,id:"ical:special",bodyId:SPECIAL,bodyName:special.name},
@@ -777,12 +680,10 @@ test("one place query preserves source-only bodies, local runtime records and th
     assert.deepEqual(result.registry?.officialCandidacies,{...runtime.officialCandidacies,rows:[candidacy]});
     assert.deepEqual(result.registry?.officialPhotos,{photos:[photo]});
     assert.deepEqual(result.registry?.rosterPhotos,{[member.id]:photo.url});
-    assert.deepEqual(result.everydayRouting,routing,"global routing accompanies the local answer without a state read");
     assert.deepEqual(result.publicationAttempts,[],"reader pages never consult control-plane work rows");
     const compact = await readReadyPackage(db,{state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL],meetingIds:[meeting.id],includeAgenda:true},async(sql,params) => {
       return db.query(sql,params);
     });
-    assert.equal(compact.everydayRouting,null,"an agenda does not load the global routing projection held by the full place read");
     assert.deepEqual(compact.publicationAttempts,[],"body acquisition attempts are outside the agenda answer");
     const orderedRegistry = (registry: RegistryRuntimeReadModel["registry"]) => ({...registry,
       bodies:[...registry.bodies].sort((a,b)=>a.id.localeCompare(b.id)),divisions:[...registry.divisions].sort((a,b)=>a.ocdId.localeCompare(b.ocdId))});
@@ -800,12 +701,13 @@ test("the map and ballot reuse one place read for their request, and a later req
   let reads = 0, release: (() => void) | undefined;
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1, "the default place transport sends one statement through the shared socket");
+    if (statements[0].text === PLACE_PRINT_SQL) return [[{ print: "moved" }]];
     assert.equal(statements[0].text, PLACE_PAGES_SQL);
     assert.equal(statements[0].params[0], "AZ");
     reads++;
     if (reads === 1) await new Promise<void>(resolve => { release = resolve; });
-    return [[{page_id:CITY,page_kind:"place",built_at:AT,body_ids:[BODY],row:{ division_ids:[CITY,COUNTY],registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
-      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }}]];
+    return [placePagesAnswer([{page_id:CITY,page_kind:"place",built_at:AT,body_ids:[BODY],row:{ division_ids:[CITY,COUNTY],registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
+      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }}])];
   });
   try {
     let first: Awaited<ReturnType<typeof readPlacePackage>> | undefined;

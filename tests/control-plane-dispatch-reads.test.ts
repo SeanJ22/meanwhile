@@ -395,3 +395,20 @@ test("lineage summaries invalidate on writes and retain invalidation that races 
   await f.repos.dispatchState.prepareLineages([id]);await f.repos.dispatchState.lineages(id,load,"same");assert.equal(loads,3);
   assert.ok(!f.statements.some(text=>text.includes("sum(revision)")));
 });
+
+test("a planner learns which occurrences are open from what changed since it last asked, and does not read them again to refuse a second open", async () => {
+  const f = await fixture();
+  const opened = await openOccurrence(f.repos, { obligation: f.obligation, dueAt: NOW, now: NOW });
+  assert.ok(opened);
+  const id = opened.occurrence.id, ask = () => f.repos.dispatchState.openAmong!([id, "never-opened"]);
+  await ask();
+  f.statements.length = 0;
+  const known = await ask();
+  assert.deepEqual([...known], [id]);
+  assert.ok(f.statements.every(text => !/FROM cp_occurrences WHERE id = ANY|SELECT id,revision/.test(text)), "the next answer reads only occurrences changed since");
+  const reads: string[] = [], mustRead = async (readId: string) => { reads.push(readId); return f.repos.obligations.mustRead(readId); };
+  await assert.rejects(openOccurrence({ ...f.repos, obligations: { ...f.repos.obligations, mustRead } }, { obligation: (await mustRead(f.obligation.id)).value, dueAt: NOW, now: NOW, knownOpen: known }), /still holds open occurrence/);
+  assert.deepEqual(reads, [f.obligation.id], "a known open occurrence is refused without reading the obligation or the occurrence again");
+  await closeOccurrence(f.repos, { occurrenceId: id, disposition: null, unresolvedReason: "test", now: NOW });
+  assert.deepEqual([...await ask()], [], "a closed occurrence leaves the answer by its change");
+});

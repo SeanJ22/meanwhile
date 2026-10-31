@@ -111,6 +111,7 @@ test("published local territory and merged board aliases survive registration re
     await db.query("INSERT INTO entity_external_id VALUES ($1,'body-alias',$2)", [canonical,former]);
     await db.query("DELETE FROM entity_host WHERE entity_id=$1", [former]);
     await db.query("DELETE FROM entity_place WHERE entity_id=$1", [former]);
+    await db.query("DELETE FROM place_page WHERE place_id=$1", [former]);
     await db.query("DELETE FROM entity WHERE id=$1", [former]);
     await db.pg.exec("CREATE TABLE civic_data_promotions(key text PRIMARY KEY,payload jsonb)");
     await db.query("INSERT INTO civic_data_promotions VALUES ('REGISTRATION:US-AZ:registration:v1',$1::jsonb)", [JSON.stringify({governments:[

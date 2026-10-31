@@ -20,12 +20,12 @@ test("new person aliases and place links rebuild their served page; resolving ag
   try {
     const person = { name: "Ada Sample", state: "AZ", placeId: local, externalIds: [["sample-person", "ada"]] as const };
     const id = await resolvePerson(db, person);
-    assert.ok((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=$1", [local])).length);
-    await db.query("DELETE FROM rebuild_queue");
+    assert.ok((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1", [local])).length);
+    await db.query("UPDATE place_page SET stale_at=NULL");
     assert.equal(await resolvePerson(db, person), id);
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
     assert.equal(await resolvePerson(db, { ...person, externalIds: [...person.externalIds, ["another-source", "same-ada"]] }), id);
-    assert.ok((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=$1", [local])).length);
+    assert.ok((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1", [local])).length);
   } finally { await db.pg.close(); }
 });
 
@@ -34,13 +34,13 @@ test("moving a body from its bare state association queues the old and new place
   try {
     await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)", [body, state]);
     await placeBody(db.query, body, local);
-    const queued = new Set((await db.query("SELECT place_id FROM rebuild_queue")).map(row => row.place_id));
+    const queued = new Set((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL")).map(row => row.place_id));
     assert.ok(queued.has(state));
     assert.ok(queued.has(local));
     assert.deepEqual(await db.query("SELECT place_id FROM entity_place WHERE entity_id=$1", [body]), [{ place_id: local }]);
-    await db.query("DELETE FROM rebuild_queue");
+    await db.query("UPDATE place_page SET stale_at=NULL");
     await placeBody(db.query, body, local);
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
   } finally { await db.pg.close(); }
 });
 
@@ -50,10 +50,10 @@ test("entity publication and its queued page roll back together", async () => {
   try {
     await assert.rejects(db.transaction(async query => {
       await ensureEntity(query, { id, kind: "body", name: "Parks Commission", state: "AZ", parentId: "az:city:example" });
-      assert.ok((await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1", [local])).length);
+      assert.ok((await query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1", [local])).length);
       throw new Error("publication failed");
     }), /publication failed/);
     assert.deepEqual(await db.query("SELECT id FROM entity WHERE id=$1", [id]), []);
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"), []);
   } finally { await db.pg.close(); }
 });

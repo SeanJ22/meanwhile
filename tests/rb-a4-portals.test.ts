@@ -67,13 +67,13 @@ test('an unconfirmed portal keeps every verified fact, host, calendar and agenda
       copies:await query('SELECT * FROM source_copy ORDER BY id'),
     });
     const savedRows=await readerRows();
-    await query('DELETE FROM rebuild_queue');
+    await query('UPDATE place_page SET stale_at=NULL');
     let purges=0;
     const purge=async()=>{purges++;return {purged:true};};
     for(let run=0;run<2;run++) {
       await withdrawPlatformPublication(db,door,portal,purge);
       assert.equal(purges,0,'a CHECK-only retry never purges the unchanged page');
-      assert.deepEqual(await query('SELECT place_id FROM rebuild_queue'),[],'a CHECK-only retry never queues an unchanged page');
+      assert.deepEqual(await query('SELECT place_id FROM place_page WHERE stale_at IS NOT NULL'),[],'a CHECK-only retry never queues an unchanged page');
       const blanks=await query("SELECT field,stage,reason,detail,attempts,next_try_at FROM blank WHERE entity_id=$1 ORDER BY field",[body]);
       assert.deepEqual(blanks.map(({field,stage,reason,detail,attempts})=>({field,stage,reason,detail,attempts})),
         [partition.scope,`${partition.scope}:history`].map(scope=>({field:`calendar:${scope}`,stage:'CHECK',reason:'PORTAL_AUTHORITY_UNCONFIRMED',detail:portal,attempts:run+1})));
@@ -95,7 +95,7 @@ test('an unconfirmed portal keeps every verified fact, host, calendar and agenda
     await confirmPlatformPublication(db,door,purge);
     assert.deepEqual(await query('SELECT * FROM blank WHERE entity_id=$1',[body]),[],'the observed government link closes the standing check');
     assert.equal(purges,0);
-    assert.deepEqual(await query('SELECT place_id FROM rebuild_queue'),[]);
+    assert.deepEqual(await query('SELECT place_id FROM place_page WHERE stale_at IS NOT NULL'),[]);
     assert.deepEqual(await readerRows(),savedRows);
     const restored=await page();
     assert.deepEqual(restored,before,'closing the check leaves every held source and agenda unchanged');

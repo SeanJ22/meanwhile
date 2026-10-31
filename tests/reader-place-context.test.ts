@@ -73,7 +73,7 @@ test("the real worker transfers only the requested compressed context and keeps 
             assert.deepEqual(decoded.agenda_texts,[]);
             for(const partition of decoded.meeting_rows as {payload:{agendaDocuments:unknown[]}}[])assert.deepEqual(partition.payload.agendaDocuments,[]);
             if(input.bodyFactsOnly) {
-              assert.equal(decoded.registry,null);assert.equal(decoded.everyday_routing,null);
+              assert.equal(decoded.registry,null);
               assert.equal(decoded.registration_held,false);assert.deepEqual(decoded.governments,[]);assert.deepEqual(decoded.divisions,[]);
             }
           }

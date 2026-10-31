@@ -12,6 +12,7 @@ import { composePlaceRow } from "./place-decode.ts";
 import { mergePlaceRows } from "./place-compose.ts";
 import { currentPlaceRow,type BodyHeaders } from "./place-identity.ts";
 import { unpackPlaceContextRow } from "./place-ready.ts";
+import { nationalEverydayRouting } from "./national.ts";
 import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
@@ -72,8 +73,9 @@ SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state
   WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id
 )
 SELECT pages.page_id,pages.page_kind,pages.built_at,pages.version,CASE WHEN held.saved THEN NULL ELSE pages.row END AS row,held.saved AS held,
-  pages.body_headers,pages.body_ids,(SELECT print FROM printed) AS print
+  pages.body_headers,CASE WHEN first.lead THEN pages.body_ids END AS body_ids,CASE WHEN first.lead THEN (SELECT print FROM printed) END AS print
   FROM pages CROSS JOIN LATERAL (SELECT pages.row IS NOT NULL AND pages.page_id||':'||pages.version||':'||pages.page_kind=ANY($11::text[]) AS saved) held
+  CROSS JOIN LATERAL (SELECT pages.page_id=(SELECT min(page_id) FROM pages) AS lead) first
   WHERE (SELECT print FROM printed) IS DISTINCT FROM $10::text
 UNION ALL SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,(SELECT print FROM printed) WHERE (SELECT print FROM printed)=$10::text`;
 
@@ -166,12 +168,15 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,remember=false
   }
   for(const oldest of heldRows.keys()){ if(heldRows.size<=HELD_ROWS)break; heldRows.delete(oldest); }
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
-  const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
+  // The requested boards and the print of the whole selection come once, on its first row.
+  const lead=rows.find(row=>row.print!=null);
+  const canonical={...input,bodyIds:lead?.body_ids as string[]??input.bodyIds};
   const merged=mergePlaceRows(canonical,built.map(row=>({...currentPlaceRow(unpackPlaceContextRow(row.row),row.body_headers as BodyHeaders ?? {},input.placeId!==undefined),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
-  const place=await composePlaceRow(canonical,merged);
+  // The national routing record is held once in this server's memory, not in each saved page.
+  const place={...await composePlaceRow(canonical,merged),everydayRouting:input.bodyFactsOnly||input.meetingIds!==undefined?null:await nationalEverydayRouting().catch(()=>null)};
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
-  const print=rows[0]?.print;
+  const print=lead?.print;
   if(remember && typeof print==="string") {
     combined.delete(key);
     combined.set(key,{print,at:Date.now(),place});

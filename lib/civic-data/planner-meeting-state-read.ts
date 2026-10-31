@@ -86,7 +86,7 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
         delete document.$plannerAgendaText;
       }));
       return rows.map(row => ({ registration_held: false, division_ids: [], fields: [], rosters: [], comments: [],
-        governments: [], divisions: [], publication_attempts: [], agenda_texts: [], registry: null, everyday_routing: null, ...row }));
+        governments: [], divisions: [], publication_attempts: [], agenda_texts: [], registry: null, ...row }));
     });
   const upper = Date.parse(now) + settings.shownAheadDays * 86_400_000;
   for (const body of held.bodies) yield { state, bodyId: body.id, load: async () => {

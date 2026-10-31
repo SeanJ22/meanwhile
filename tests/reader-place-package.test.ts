@@ -17,7 +17,6 @@ import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { classifyAgendaPublication, readerAgendaDocuments } from "../lib/ask/agenda-publication.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
@@ -658,9 +657,6 @@ test("one place query preserves source-only bodies, local runtime records and th
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'REGISTRY_RUNTIME_BINDING',$2,$3,$4,'runtime-version')",
       ["REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime","US-AZ:reader-registry-runtime",JSON.stringify(encoded.value),AT]);
-    const routing = {kind:"everyday-routing",formatVersion:1,denominator:{zips:["85701"]},records:[{id:"local-route",sourceUrl:SOURCE}]};
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'CURATED_READER_RECORD',$2,$3,$4,'routing-version')",
-      [`${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`,EVERYDAY_ROUTING_POINTER.scope,JSON.stringify(routing),AT]);
     const meeting = {id:"ical:source-only",bodyId:BODY,ocdId:CITY,bodyName:body.name,title:"Public hearing",startsAt:"2026-10-21T18:00:00-07:00",
       timeZone:"America/Phoenix",location:null,agendaUrl:SOURCE,jurisdiction:"Tucson, AZ",status:"SCHEDULED",provenance:body.provenance};
     const family = {formatVersion:1,generatedAt:AT,meetings:[meeting,{...meeting,id:"ical:special",bodyId:SPECIAL,bodyName:special.name},
@@ -683,12 +679,10 @@ test("one place query preserves source-only bodies, local runtime records and th
     assert.deepEqual(result.registry?.officialCandidacies,{...runtime.officialCandidacies,rows:[candidacy]});
     assert.deepEqual(result.registry?.officialPhotos,{photos:[photo]});
     assert.deepEqual(result.registry?.rosterPhotos,{[member.id]:photo.url});
-    assert.deepEqual(result.everydayRouting,routing,"global routing accompanies the local answer without a state read");
     assert.deepEqual(result.publicationAttempts,[],"reader pages never consult control-plane work rows");
     const compact = await readReadyPackage(db,{state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL],meetingIds:[meeting.id],includeAgenda:true},async(sql,params) => {
       return db.query(sql,params);
     });
-    assert.equal(compact.everydayRouting,null,"an agenda does not load the global routing projection held by the full place read");
     assert.deepEqual(compact.publicationAttempts,[],"body acquisition attempts are outside the agenda answer");
     const orderedRegistry = (registry: RegistryRuntimeReadModel["registry"]) => ({...registry,
       bodies:[...registry.bodies].sort((a,b)=>a.id.localeCompare(b.id)),divisions:[...registry.divisions].sort((a,b)=>a.ocdId.localeCompare(b.ocdId))});

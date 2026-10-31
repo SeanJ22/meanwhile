@@ -40,7 +40,8 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   const selected = new Set(input.divisionIds), named = new Set(input.namedDivisionIds ?? []);
   const pages = rows.map((row, order): Page => ({ row, order, at: pageTime(row) }));
   const aliases = Object.assign({},...pages.sort((a,b)=>a.at-b.at).map(page=>record(page.row.body_aliases))) as Record<string,string>;
-  const canonical = (id: unknown): string => aliases[String(id)] ?? String(id);
+  // A body folded into a body that was itself folded resolves to the last of the chain.
+  const canonical = (id: unknown): string => { let at = String(id); for (const seen = new Set<string>(); aliases[at] && !seen.has(at); at = aliases[at]!) seen.add(at); return at; };
   const canonicalRow = (row: Row,key="bodyId"): Row => row[key] && canonical(row[key])!==row[key] ? {...row,[key]:canonical(row[key])} : row;
   const explicitBodies = new Set((input.bodyIds ?? []).map(canonical));
   const active = pages.filter(({ row }) => input.allBodies || row.page_kind === "body"
@@ -67,8 +68,14 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     entities.set(id, { ...body,id, divisions, ...(linked ? { linked: true } : {}), ...(placed ? { placed: true } : {}) });
   }
   const owns = (page: Page, id: unknown) => (originalOwner.get(String(id)) ?? bodyOwner.get(canonical(id))) === page;
-  const ownRows = (key: string, bodyKey: string) => ordered.flatMap(page => records(page.row[key]).filter(row => owns(page, row[bodyKey]))
-    .map(row=>({...row,[bodyKey]:canonical(row[bodyKey])})));
+  // A folded body's rows come before the body it was folded into, so the surviving body's own rows win a shared field.
+  const ownRows = (key: string, bodyKey: string, fold?: (row: Row, from: string, into: string) => Row) =>
+    ordered.flatMap(page => records(page.row[key]).filter(row => owns(page, row[bodyKey])))
+      .sort((a, b) => Number(canonical(a[bodyKey]) === a[bodyKey]) - Number(canonical(b[bodyKey]) === b[bodyKey]))
+      .map(row => { const into = canonical(row[bodyKey]); return { ...(into !== row[bodyKey] && fold ? fold(row, String(row[bodyKey]), into) : row), [bodyKey]: into }; });
+  // A member seated under a folded board is named and dated as the surviving board's own.
+  const foldMember = (row: Row, from: string, into: string): Row => ({ ...row, body_name: entities.get(into)?.name ?? row.body_name,
+    person: Object.fromEntries(Object.entries(record(row.person)).map(([field, value]) => [field.endsWith(`:${from}`) ? `${field.slice(0, -from.length)}${into}` : field, value])) });
 
   const registries = ordered.flatMap(page => page.row.registry ? [{ page, value: record(page.row.registry) }] : []);
   const lastRegistry = registries.at(-1)?.value;
@@ -143,13 +150,13 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     body_aliases: aliases,
     division_ids: [...new Set([...input.divisionIds, ...(input.neighbors ? active.flatMap(page => strings(page.row.division_ids)) : [])])],
     registry,
-    everyday_routing: input.bodyFactsOnly || agendaOnly ? null : last.row.everyday_routing ?? null,
     registration_held: !input.bodyFactsOnly && !agendaOnly && active.some(page => page.row.registration_held === true),
     governments: input.bodyFactsOnly || agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)),
     divisions: input.bodyFactsOnly || agendaOnly ? [] : allDivisions.filter(division => selected.has(String(division.ocdId)) || named.has(String(division.ocdId))),
     entities: [...entities.values()].sort(byText("id")),
     fields: ownRows("fields", "entity_id").sort(byText("entity_id")),
-    rosters: agendaOnly ? [] : ownRows("rosters", "body_id"),
+    // A person seated under a folded board and under the board it was folded into is one member.
+    rosters: agendaOnly ? [] : unique(ownRows("rosters", "body_id", foldMember), row => `${row.body_id}|${row.shown_id || row.person_id}`),
     comments: ownRows("comments", "entity_id").sort(byText("entity_id", "field")),
     sittings: ownRows("sittings", "body_id"),
     meeting_rows: [...meetingRows.values()].map(({ header, payload, meetings, documents, members, links }) => ({

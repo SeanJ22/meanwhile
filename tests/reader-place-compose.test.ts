@@ -18,7 +18,7 @@ const family = (meetings: Row[], bodies: string[]) => ({ scope: "source:derived:
 function page(id: string, bodies: Row[], extra: Row = {}): Row {
   return { page_id: id, page_kind: "place", built_at: AT, division_ids: [id], entities: bodies,
     fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [], archived_meetings: [], archived_documents: [], archived_document_links: [],
-    agenda_texts: [], parts: {}, everyday_routing: { routes: ["held"] }, registration_held: true,
+    agenda_texts: [], parts: {}, registration_held: true,
     governments: [], divisions: [{ ocdId: id, label: id }],
     registry: { formatVersion: 1, registry: { generatedAt: AT, bodies: bodies.map(body => ({ id: body.id, ocdId: body.division })),
       divisions: [{ ocdId: CITY, parentOcdId: COUNTY }, { ocdId: COUNTY, parentOcdId: STATE }, { ocdId: STATE, parentOcdId: null }] },
@@ -176,7 +176,6 @@ test("an agenda lookup retains identity context and omits unrelated member and d
   assert.deepEqual(entries(model(result.registry).bodyRosters)[0]!.members, []);
   assert.deepEqual(model(model(result.registry).officialCandidacies).rows, []);
   assert.equal(result.registration_held, false);
-  assert.equal(result.everyday_routing, null);
 });
 
 test("body-facts-only reads retain local facts without claiming that their independent state directory was loaded", () => {
@@ -184,7 +183,6 @@ test("body-facts-only reads retain local facts without claiming that their indep
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY], bodyFactsOnly: true }, [city]);
   assert.equal(entries(result.fields)[0]!.value, "Council");
   assert.equal(result.registry, null);
-  assert.equal(result.everyday_routing, null);
   assert.equal(result.registration_held, false);
   assert.deepEqual(result.divisions, []);
   assert.deepEqual(result.governments, []);

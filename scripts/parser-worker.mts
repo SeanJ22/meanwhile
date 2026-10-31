@@ -10,19 +10,20 @@ import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
+import { askOnRelease, laneTurn, slotOrLeave } from "../lib/ops/lane-turn.ts";
 import { loadParsers } from "../lib/sources/parser-hook.ts";
-import { LEAD_LEASE_MS, runParserWorkers } from "../lib/sources/parser-worker.ts";
+import { LEAD_LEASE_MS, parserStats, runParserWorkers } from "../lib/sources/parser-worker.ts";
 
 prepareProductionCivicDataWrite();
-let drain = false;
-process.on("SIGTERM", () => { drain = true; });
-process.on("message", message => { if (message && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") drain = true; });
+const stats = parserStats();
+const turn = laneTurn(() => `Page readers: ${stats.claimed} claimed, ${stats.read} read, ${stats.released} released, ${stats.failed} failed`);
+askOnRelease(turn.ask);
 // A database request settles within STANDING_NEON_REQUEST_DEADLINE_MS: claiming stops two before the pass deadline, work still running one before.
 const turnEndAt = passDeadlineFromEnv() - STANDING_NEON_REQUEST_DEADLINE_MS;
-const stopRequested = () => drain || Date.now() >= turnEndAt - STANDING_NEON_REQUEST_DEADLINE_MS;
+const stopRequested = () => turn.stop() || Date.now() >= turnEndAt - STANDING_NEON_REQUEST_DEADLINE_MS;
 const turnEnd = Number.isFinite(turnEndAt) ? AbortSignal.timeout(Math.max(1, turnEndAt - Date.now())) : undefined;
 const slots = routineProcessSlots({ admissionsOpen: () => !stopRequested() });
-const release = await slots.acquire("parser-worker.mts", Date.now() + 60_000);
+const release = await slotOrLeave(slots.acquire("parser-worker.mts", Date.now() + 60_000));
 try {
   const url = controlPlaneUrlFromEnv();
   if (url === null) throw new Error("parser lane: the control-plane URL is not set");
@@ -32,7 +33,7 @@ try {
     connection.transaction(query => work((text, params) => query(preparedStatement(text), params))) };
   const parsers = await loadParsers();
   const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), fetch = pacedProbeFetch({ pacing: repos.websitePacing });
-  const heartbeat = setInterval(() => { console.log(`Page readers: working; readers installed for ${[...parsers.keys()].join(", ")}`); }, 60_000);
+  const heartbeat = setInterval(() => turn.beat(), 60_000);
   try {
     // A setting Sean changes holds within the minute; only the two clocks are read, and only when the settings changed.
     let clocks = factClocks(null), clocksAt = 0, adminVersion: string | undefined;
@@ -46,10 +47,10 @@ try {
     };
     while (!stopRequested()) {
       if (Date.now() - clocksAt >= 60_000) { await settings(); clocksAt = Date.now(); }
-      const stats = await runParserWorkers({ concurrency: 4, maxClaims: 100, stopRequested, turnEnd, log: console.error, deps: {
+      const before = stats.claimed;
+      await runParserWorkers({ concurrency: 4, maxClaims: 100, stats, stopRequested, turnEnd, log: console.error, deps: {
         list: workList(query, { owner: `parser:${process.pid}`, leaseMs: LEAD_LEASE_MS }), facts, repos, parsers, clocks, vault, fetch, now: () => new Date() } });
-      if (stats.claimed) console.log(`Page readers: ${JSON.stringify(stats)}`);
-      else await new Promise(done => setTimeout(done, 5_000));
+      if (stats.claimed === before) await new Promise(done => setTimeout(done, 5_000));
     }
   } finally { clearInterval(heartbeat); }
 } finally { release(); }

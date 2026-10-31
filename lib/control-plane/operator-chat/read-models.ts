@@ -2,7 +2,6 @@ import { formatEastern } from "../eastern-time.ts";
 import { ageWords, count, plainCode, plainText, usdCents } from "../plain-words.ts";
 import { codeIdentityLine } from "../code-identity.ts";
 import { collapseDecisionLog } from "../decision-log.ts";
-import { isFeedbackTriageIntent } from "../feedback-inbox.ts";
 import { fixQueueView, isRowDecision } from "../fix-queue.ts";
 import { buildFleetView, whereOf } from "../fleet-view.ts";
 import { decisionCardKind, measured, type Gap, type Held } from "../owner-surface.ts";
@@ -416,7 +415,7 @@ export function waitingOnYou(ctx: OperatorContext): ChatAnswer {
 
   if (snapshot.held) {
     const cards = snapshot.value.decisionCards;
-    const decidedRows = new Set(collapsed.filter((d) => isRowDecision(d) && !isFeedbackTriageIntent(d)).map((d) => d.subjectId));
+    const decidedRows = new Set(collapsed.filter((d) => isRowDecision(d) && !d.subjectId.startsWith("feedback:")).map((d) => d.subjectId));
     const waiting = cards.filter((c) => !decidedRows.has(c.rowId));
     const forks = waiting.filter((c) => decisionCardKind(c) === "DECISION");
     const acknowledge = waiting.filter((c) => decisionCardKind(c) === "ACKNOWLEDGE");

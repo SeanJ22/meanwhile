@@ -122,30 +122,6 @@ export async function readDigests(
   }
 }
 
-export async function readLatestIntakeRuntimeDigest(
-  repos: ControlPlaneRepositories,
-): Promise<ReadOutcome<OwnerDigestRecord>> {
-  try {
-    const observations = await repos.ownerDigests.readWhere(
-      DIGEST_LOG_KEY,
-      ["runtimeOutcome", "kind"],
-      "INTAKE_RUNTIME_OBSERVATION",
-    );
-    const latest = observations.at(-1);
-    return latest
-      ? { kind: "HELD", value: latest }
-      : {
-          kind: "NOT_RECORDED",
-          detail: "The control plane is reachable and holds no append-only intake-runtime observation yet.",
-        };
-  } catch (error) {
-    return {
-      kind: "STORE_UNREACHABLE",
-      detail: `Reading the intake-runtime outcome history failed (${(error as Error)?.name ?? "error"}). We could not ask.`,
-    };
-  }
-}
-
 export async function readFleetInputs(repos: ControlPlaneRepositories): Promise<
   ReadOutcome<{
     readonly attempts: readonly Attempt[];

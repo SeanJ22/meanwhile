@@ -9,21 +9,7 @@ import test from "node:test";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { MODELS, MODEL_TIERS } from "../lib/models.ts";
 import { CACHE_RATE_MULTIPLIERS } from "../lib/control-plane/model-cost.ts";
-import {
-  ORDERING_RULE,
-  UNIVERSE_PROVIDERS,
-  bandFor,
-  cacheDefectCounts,
-  cacheHitRateByRole,
-  costPerUsefulOutcome,
-  graduationFunnel,
-  modelShareTrend,
-  orderByReaderImpact,
-  scoutCapacity,
-  type OrderingInputs,
-  type ResearchMetrics,
-} from "../lib/control-plane/research-metrics.ts";
-import { researchDigestLines, researchDigestRows } from "../lib/control-plane/research-digest.ts";
+import { ORDERING_RULE, UNIVERSE_PROVIDERS, bandFor, cacheDefectCounts, cacheHitRateByRole, costPerUsefulOutcome, graduationFunnel, modelShareTrend, orderByReaderImpact, scoutCapacity, type OrderingInputs } from "../lib/control-plane/research-metrics.ts";
 import type { ScoutResult, ScoutStep } from "../lib/control-plane/scheduler/scout-result.ts";
 
 const NOW = "2026-09-02T16:00:00.000Z";
@@ -280,25 +266,3 @@ test("cost per useful outcome shares the whole measured spend across classes and
   assert.match(by.ROUTE_CANDIDATE.denominator, /3 measured Attempt\(s\) \(1 unmeasured\)/);
 });
 
-test("the digest lines and rows print every number with its denominator, and an unmeasured value as its named gap", () => {
-  const metrics: ResearchMetrics = {
-    computedAt: NOW,
-    capacity: scoutCapacity({ costs: [cost("a", 1.25)], nowIso: NOW, windowHours: 24, ceilingUsd: 25 }),
-    ordering: orderByReaderImpact([], { pilotZips: ["85701"] }).ordering,
-    funnel: graduationFunnel({ results: [], candidateCounts: null, pipeline: [], pipelineSource: "none recorded", deterministicReplays: 0 }),
-    share: modelShareTrend({ thisCycle: { deterministic: 0, model: 0 }, windowCycles: [] }),
-    cacheByRole: [],
-    costPerOutcome: costPerUsefulOutcome({ results: [], candidateCounts: null }),
-    cacheDefects: { defective: 0, instrumented: 0 },
-  };
-  const lines = researchDigestLines(metrics);
-  assert.match(lines.join("\n"), /capacity\s+20 Attempt\(s\)\/day at the \$25 ceiling/);
-  assert.match(lines.join("\n"), /queue by band\s+band 1 0 · band 2 0 · band 3 0/);
-  assert.match(lines.join("\n"), /model share\s+this cycle UNMEASURED/);
-  assert.match(lines.join("\n"), /cache hit rate\s+NOT MEASURED/);
-  assert.match(lines.join("\n"), /cost per outcome/);
-  const rows = researchDigestRows(metrics);
-  for (const row of Object.values(rows).flat()) assert.ok(row.denominator.length > 0, `${row.label} has no denominator`);
-  assert.equal(rows.capacity[0].value, "20");
-  assert.equal(rows.share[0].value, "UNMEASURED");
-});

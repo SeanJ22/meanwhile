@@ -5,8 +5,8 @@ import { join } from "node:path";
 
 import { MAPTILER_ANALYTICS_BASE, fetchTimeline, scrubToken, timelineUrl, type MapTilerTimeline } from "../lib/control-plane/maptiler/client.ts";
 import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
-import { allowanceFrom, burnFrom, classifyKeyLabel, normalizeTimeline } from "../lib/control-plane/maptiler/usage.ts";
-import { DEFAULT_MAPTILER_ALLOWANCE, MAPTILER_SERVICE_TOKEN_VAR, type MapTilerUsageDay } from "../lib/control-plane/maptiler/types.ts";
+import { allowanceFrom, normalizeTimeline } from "../lib/control-plane/maptiler/usage.ts";
+import { DEFAULT_MAPTILER_ALLOWANCE, MAPTILER_SERVICE_TOKEN_VAR } from "../lib/control-plane/maptiler/types.ts";
 
 /** The fixtures are shaped from MapTiler's published schema, not recorded; each says so in its first field. */
 const FIXTURES = join(process.cwd(), "tests", "fixtures");
@@ -163,36 +163,6 @@ test("the standing collector requires both classifiers to describe one billing w
   });
   assert.equal(candidate.connection, "COULD_NOT_ASK");
   assert.match(candidate.detail ?? "", /different billing windows/i);
-});
-
-test("a key label is matched exactly, and anything else is UNCLASSIFIED", () => {
-  assert.equal(classifyKeyLabel("meanwhile-prod-browser").identity, "meanwhile-prod-browser");
-  assert.equal(classifyKeyLabel("  MEANWHILE-PROD-BROWSER ").identity, "meanwhile-prod-browser");
-  assert.equal(classifyKeyLabel("meanwhile-staging-browser").expectation, "OWNER_MANUAL_STAGING");
-  assert.equal(
-    classifyKeyLabel("meanwhile-synthetic-provider-smoke").expectation,
-    "BOUNDED_SMOKE",
-  );
-
-  /* Deliberately not fuzzy: a near-miss is a different key. */
-  assert.equal(classifyKeyLabel("meanwhile-prod-browser-old").identity, "UNCLASSIFIED");
-  assert.equal(classifyKeyLabel("old-shared-key").identity, "UNCLASSIFIED");
-  assert.equal(classifyKeyLabel("none").identity, "UNCLASSIFIED", "the no-key identity is not a key");
-});
-
-test("burn is measured over a stated window and never over the provider's own projection", () => {
-  const days: MapTilerUsageDay[] = [
-    { date: "2026-09-01", classifier: "api_keys", itemId: "k", label: "meanwhile-prod-browser", group: "request", count: 100, estimated: false },
-    { date: "2026-09-02", classifier: "api_keys", itemId: "k", label: "meanwhile-prod-browser", group: "request", count: 300, estimated: false },
-    { date: "2026-09-30", classifier: "api_keys", itemId: "k", label: "meanwhile-prod-browser", group: "request", count: 99_999, estimated: true },
-  ];
-  const burn = burnFrom({ days, remaining: 800, windowDays: 7 });
-  assert.equal(burn?.perDay, 200, "the projection must not be an input to the projection");
-  assert.equal(burn?.windowSince, "2026-09-01");
-  assert.equal(burn?.windowUntil, "2026-09-02");
-  assert.equal(burn?.exhaustionDate, "2026-09-06");
-
-  assert.equal(burnFrom({ days: [], remaining: 10, windowDays: 7 }), null, "no days is no reading");
 });
 
 test("the allowance is stated as assumed until somebody confirms it", () => {

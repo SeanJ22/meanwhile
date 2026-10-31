@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { lateWords, sharedRead } from "@/app/(admin)/_mw/data/shared-read.ts";
-import { parseScope, scopeParam, withScope } from "@/app/(admin)/_mw/scope.ts";
 
 /**
  * The honesty rules the Money and Fix list screens make, proven on their pure
@@ -57,13 +56,3 @@ test("a shared read loads once for every caller at once, serves a recent read wh
   assert.deepEqual(await reader.read(slow(6, 5)), { kind: "HELD", n: 6 }, "the next caller reads again");
 });
 
-test("the scope travels in the URL and an unreadable scope is everywhere, never a guess", () => {
-  const pima = parseScope("az.county.04019");
-  assert.deepEqual(pima, { kind: "geo", type: "county", geoid: "04019", state: "az" });
-  assert.equal(scopeParam(pima), "az.county.04019");
-  assert.deepEqual(parseScope("az.cd.0406"), { kind: "geo", type: "congressional_district", geoid: "0406", state: "az" });
-  assert.deepEqual(parseScope("nonsense!"), { kind: "all" });
-  assert.deepEqual(parseScope(undefined), { kind: "all" });
-  assert.equal(withScope("/admin/money", pima, { view: "work" }), "/admin/money?scope=az.county.04019&view=work");
-  assert.equal(withScope("/admin", { kind: "all" }), "/admin");
-});

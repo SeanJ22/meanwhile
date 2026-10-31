@@ -2,19 +2,22 @@ import { readPassCursor, writePassCursor } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import type { WorkList } from "../core/work.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
-import { buildSlices, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
+import { boardsToBuild, buildSlices, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
 
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
 export const SLICE_JOB = { id: "slices", databaseBytesPerRun: 32_000_000 } as const;
 /** Slice rows taken in one go. A place's marked cards are built together, from one read of that place. */
 const CLAIM_LIMIT = 100;
-/** Places given their first slices in one go, and the least it rests after one. */
+/** Places given their first slices in one go, taken from the most populated ZIPs down, and the least it rests after one. */
 const BACKFILL_PLACES = 100;
-const BACKFILL_PAUSE_MS = 20_000;
-/** What the lane may read an hour, marked rebuilds included. Each look puts the time its bytes take on a tab (the wire carries a fifth more than the rows' JSON); places nobody asked for are built only while the tab is clear, so marked slices never wait. */
+const BACKFILL_ZIPS = 25;
+/** ZIP groups looked through in one go when their places already have slices. */
+const ZIP_LOOKS = 40;
+const BACKFILL_PAUSE_MS = 3_000;
+/** What the lane may read an hour. Each go puts the time its bytes take to come due on a tab; places nobody has asked for are built only while the tab is clear, and marked slices never wait. */
 export const SLICE_BYTES_PER_HOUR = 27_000_000;
-export const owedMs = (bytes: number): number => Math.ceil(bytes * 1.2 / SLICE_BYTES_PER_HOUR * 3_600_000);
-const tab = { owed: 0, at: 0 };
+/** The wire carries about a fifth more than the rows' JSON the lane counts. */
+const WIRE_FACTOR = 1.2;
 /** With nothing marked the lane looks again this soon. */
 const IDLE_MS = 10_000;
 /** Once every place has slices, new places are looked for this often. */
@@ -27,6 +30,16 @@ export function slicesLane(run: (deadlineMs: number) => Promise<void>): Independ
 
 export interface SliceTurn { readonly claimed: number; readonly built: number; readonly written: number; readonly backfilled: number; readonly read?: number }
 const NOTHING: SliceTurn = { claimed: 0, built: 0, written: 0, backfilled: 0 };
+
+/** A query that adds up what it returned, so the lane knows what a go read. */
+function counted(query: Query): { readonly query: Query; readonly bytes: () => number } {
+  let bytes = 0;
+  return { query: async (text, params) => { const rows = await query(text, params); bytes += JSON.stringify(rows).length; return rows; }, bytes: () => bytes };
+}
+/** The time reading this many bytes takes up of the hour's allowance. */
+export const owedMs = (bytes: number): number => Math.ceil(bytes * WIRE_FACTOR / SLICE_BYTES_PER_HOUR * 3_600_000);
+/** What the lane still owes, kept across its turns so each new turn does not begin with a clear tab. */
+const tab = { owed: 0, at: 0 };
 
 /** Work that ignores the turn's end cannot hold the turn open past it. */
 const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
@@ -48,25 +61,53 @@ async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal): P
   }
 }
 
-/** Gives every place that has no slices its first, a hundred at a time, in place order. When all have them, new places are looked for once a day. */
+/** Where the backfill is: the ZIP it has reached (most residents first), then, once every ZIP's places have slices, the rest of the places in id order. */
+interface BackfillCursor { zip?: readonly [number, string]; zipsDone?: true; after?: string; doneAt?: string }
+
+/** The next places without all their slices: those a published ZIP lays over, from the most populated ZIP down, then every other place. */
+async function nextPlaces(facts: Query, held: BackfillCursor): Promise<{ readonly places: string[]; readonly cursor: BackfillCursor; readonly finished: boolean }> {
+  let cursor = held;
+  for (let looks = 0; !cursor.zipsDone && looks < ZIP_LOOKS; looks++) {
+    const zips = await facts(`SELECT id,page_priority FROM entity WHERE page_priority>0 AND (page_priority,id)<($1::int,$2::text) ORDER BY page_priority DESC,id DESC LIMIT $3`,
+      [cursor.zip?.[0] ?? 2_147_483_647, cursor.zip?.[1] ?? "", BACKFILL_ZIPS]);
+    if (!zips.length) { cursor = { ...cursor, zipsDone: true }; break; }
+    const places = await facts(`SELECT m.place_id FROM zip_place m JOIN entity z ON z.id='zip:'||m.zip JOIN entity e ON e.id=m.place_id AND e.kind='place'
+      WHERE z.id=ANY($1::text[]) AND NOT EXISTS(SELECT 1 FROM place_slice s WHERE s.place_id=m.place_id AND s.card=$2)
+      GROUP BY m.place_id ORDER BY max(z.page_priority) DESC,m.place_id LIMIT $3`, [zips.map(row => String(row.id)), LAST_CARD, BACKFILL_PLACES]);
+    // A group stays the cursor until every place it lays over has its slices; the ones built drop out of the next look.
+    if (places.length) return { places: places.map(row => String(row.place_id)), cursor, finished: false };
+    cursor = { ...cursor, zip: [Number(zips.at(-1)!.page_priority), String(zips.at(-1)!.id)] };
+  }
+  if (!cursor.zipsDone) return { places: [], cursor, finished: false };
+  const rest = (await facts(`SELECT e.id FROM entity e WHERE e.kind='place' AND e.id>$1 AND NOT EXISTS(SELECT 1 FROM place_slice s WHERE s.place_id=e.id AND s.card=$3) ORDER BY e.id LIMIT $2`,
+    [cursor.after ?? "", BACKFILL_PLACES, LAST_CARD])).map(row => String(row.id));
+  return { places: rest, cursor: rest.length ? { ...cursor, after: rest.at(-1) } : cursor, finished: !rest.length };
+}
+
+/** Gives every place that lacks any of its slices its first, from the places most readers see to the rest. When all have them, new places are looked for once a day. */
 async function backfill(facts: Query, now: Date): Promise<SliceTurn & { readonly done: boolean }> {
-  const held = JSON.parse(await readPassCursor(facts, BACKFILL_CURSOR) ?? "{}") as { after?: string; doneAt?: string };
+  const held = JSON.parse(await readPassCursor(facts, BACKFILL_CURSOR) ?? "{}") as BackfillCursor;
   if (held.doneAt && now.getTime() - Date.parse(held.doneAt) < SWEEP_EVERY_MS) return { ...NOTHING, done: true };
-  const places = (await facts(`SELECT e.id FROM entity e WHERE e.kind='place' AND e.id>$1 AND NOT EXISTS(SELECT 1 FROM place_slice s WHERE s.place_id=e.id AND s.card='governs') ORDER BY e.id LIMIT $2`, [held.after ?? "", BACKFILL_PLACES])).map(row => String(row.id));
-  if (!places.length) { await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify({ doneAt: now.toISOString() })); return { ...NOTHING, done: true }; }
-  const written = await writeSlices(facts, await buildSlices(facts, new Map(places.map(place => [place, new Set(SLICE_CARDS)]))));
-  await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify({ after: places.at(-1) }));
-  return { claimed: 0, built: places.length, written, backfilled: places.length, done: false };
+  const { places, cursor, finished } = await nextPlaces(facts, held.doneAt ? { zipsDone: true } : held);
+  if (!places.length) {
+    await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify(finished ? { doneAt: now.toISOString() } : cursor));
+    return { ...NOTHING, done: finished };
+  }
+  const wanted = new Map<string, Set<SliceCard>>(places.map(place => [place, new Set<SliceCard>(SLICE_CARDS)]));
+  for (const board of await boardsToBuild(facts, places)) wanted.set(board, new Set<SliceCard>(MEETING_CARDS));
+  const written = await writeSlices(facts, await buildSlices(facts, wanted));
+  await writePassCursor(facts, BACKFILL_CURSOR, JSON.stringify(cursor));
+  return { claimed: 0, built: wanted.size, written, backfilled: places.length, done: false };
 }
 
 /** One look: marked slices first, then, when none are marked and `backfill` is not held back, the next places without slices. `read` is what it took from the database. */
 export async function sliceTurn(input: { readonly list: WorkList; readonly facts: Query; readonly now?: Date; readonly turnEnd?: AbortSignal; readonly backfill?: boolean }): Promise<SliceTurn & { readonly idle: boolean }> {
-  let read = 0;
-  const facts: Query = async (text, params) => { const rows = await input.facts(text, params); read += JSON.stringify(rows).length; return rows; };
-  const marked = await rebuildMarked(input.list, facts, input.turnEnd);
-  if (marked.claimed || input.backfill === false) return { ...marked, read, idle: false };
-  const first = await untilEnd(input.turnEnd, backfill(facts, input.now ?? new Date()));
-  return { claimed: 0, built: first.built, written: first.written, backfilled: first.backfilled, read, idle: first.done };
+  const reads = counted(input.facts);
+  const marked = await rebuildMarked(input.list, reads.query, input.turnEnd);
+  if (marked.claimed) return { ...marked, read: reads.bytes(), idle: false };
+  if (input.backfill === false) return { ...NOTHING, read: reads.bytes(), idle: false };
+  const first = await untilEnd(input.turnEnd, backfill(reads.query, input.now ?? new Date()));
+  return { claimed: 0, built: first.built, written: first.written, backfilled: first.backfilled, read: reads.bytes(), idle: first.done };
 }
 
 /** The lane's turn: keeps looking until it is asked to stop, resting between looks so building every place stays within its pace. */

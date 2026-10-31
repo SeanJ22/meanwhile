@@ -1,0 +1,34 @@
+{
+  "n": 168,
+  "branch": "release/168",
+  "head_sha": "c0e7b7a75fd5ec9c6c65348bca61dcf081e4a031",
+  "base_river_sha": "f1bb5dfad0b0555f1f851fbeaeb26046273a797b",
+  "main_sha": "79e3cf3a508d70590d15ff24c5e0ddc0f470bcf7",
+  "lanes": [
+    {
+      "lane": "spn-01-parserstop",
+      "steps": [
+        "SPN-01"
+      ],
+      "ready_sha": "090259d302260ee85f62eefcb3ab0cd703ff50f7",
+      "result_sha": "9e852c5fa483eb376eb443d9a03224cfe4d246f5"
+    },
+    {
+      "lane": "spn-01-tasksonce",
+      "steps": [
+        "SPN-01"
+      ],
+      "ready_sha": "0d312c8e79b1220ca45b6208da1596979337040d",
+      "result_sha": "199048feb1428ad6baac1ad7e41c521b45931cf1"
+    }
+  ],
+  "steps": [
+    "SPN-01"
+  ],
+  "pr": {
+    "number": 888,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/888"
+  },
+  "ci": "running",
+  "at": "2026-10-31T03:53:26Z"
+}

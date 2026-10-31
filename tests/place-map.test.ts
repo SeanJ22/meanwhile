@@ -60,7 +60,7 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     await db.exec(placeBoundaryMigration());
     await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(readFileSync("lib/db/migrations/ZP-01_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
-    await db.exec(readFileSync("lib/db/migrations/SPN-01E_page_marks.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
+    await db.exec(readFileSync("lib/db/migrations/0081_spn01e_page_marks.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(zipLocationMigration());
     let calls = 0;
     const query: Query = async (sql, params = []) => { calls++; return (await db.query(sql, [...params])).rows as Record<string, unknown>[]; };

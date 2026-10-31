@@ -220,13 +220,30 @@ test("a pending restart drains the members, slice and page-reader children, and 
         runRuntimeChildren: async (_commands: unknown, options: { onStarted(id: string, child: unknown): void }) => {
           options.onStarted(lane, { connected: true, send: (message: unknown) => { sent.push(message); } });
           runInContext(`holdForRestart("${"c".repeat(40)}")`, context);
-          return [{ id: lane, status }];
+          return [{ id: lane, status, signal: null, stderr: "", errorMessage: null }];
         } });
-      runInContext(stripTypeScriptTypes(["holdForRestart", "drainLaneChildren", "runLaneChild", run].map(runnerFunction).join("\n")
+      runInContext(stripTypeScriptTypes(["holdForRestart", "drainLaneChildren", "runLaneChild", "privateText", run].map(runnerFunction).join("\n")
         + "\nconst laneChildren = new Map();"), context);
       const turn = runInContext(`${run}(Date.now() + 60000)`, context) as Promise<void>;
       if (status === 0) await turn; else await assert.rejects(turn, stopped);
       assert.equal(JSON.stringify(sent), `[{"kind":"RUNTIME_RELEASE_DRAIN"}]`, `${lane} was told to drain`);
     }
   }
+});
+
+test("a lane child that stops tells the heartbeat why: the runner's kill reason, or its exit and last error lines, with secrets taken out", async () => {
+  const stopped = (result: object) => {
+    const context = createContext({ provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
+      RUNTIME_NO_PROGRESS_MS: 1, PARSER_LANE_DATABASE_BYTES: 1, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ id: "parser-lane", status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
+    runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", "runParserLane"].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
+    return (runInContext(`runParserLane(Date.now() + 60000)`, context) as Promise<void>).then(() => "", (error: Error) => error.message);
+  };
+  const lead = "The page readers stopped; the links they had remain on the work list: ";
+  assert.equal(await stopped({ status: null, errorMessage: "RESEARCH_CHILD_NO_PROGRESS: no changed output for 600000ms" }), `${lead}RESEARCH_CHILD_NO_PROGRESS: no changed output for 600000ms`);
+  process.env.SPN01_TEST_TOKEN = "s3cr3t-token";
+  try {
+    const memory = "x.mts:26\n\nError: WORKER_MEMORY_DEADLINE: memory wait deferred s3cr3t-token postgres://user:pw@db/app\n    at acquire (x.ts:1:1)\n\nNode.js v24.1.0\n";
+    assert.equal(await stopped({ stderr: memory }), `${lead}exit 1; Error: WORKER_MEMORY_DEADLINE: memory wait deferred [private] [private connection]`);
+    assert.ok((await stopped({ stderr: "Error: x".repeat(200).replaceAll("Error", "\nError") })).length <= 400, "it fits the 400 characters the heartbeat keeps");
+  } finally { delete process.env.SPN01_TEST_TOKEN; }
 });

@@ -59,14 +59,14 @@ test("a task passes only when every tap landed, every part was shown and the tap
   assert.match(over.says, /took 4 taps, over the 3-tap budget/);
 });
 
-test("a newly published place is queued for its first run and is never dropped from the sample", () => {
+test("a newly published place is queued for its first run, at most ZIP_COUNT a pass, oldest first", () => {
   const published = ["00001", "00002", "00003", "00004", "00005"];
   const first = chooseTaskZips(published, new Set(["00001", "00002", "00003"]), 3, NOW);
   assert.deepEqual(first.queued, ["00004", "00005"]);
   assert.deepEqual(first.zips.slice(0, 2), ["00004", "00005"]);
   assert.equal(first.zips.length, 3);
-  const many = chooseTaskZips(published, new Set(), 2, NOW);
-  assert.deepEqual(many.zips, published, "every never-run ZIP runs even past the sample size");
+  const huge = chooseTaskZips(Array.from({ length: 500 }, (_, i) => String(i + 1).padStart(5, "0")), new Set(), 2, NOW);
+  assert.deepEqual(huge.zips, ["00001", "00002"], "500 queued ZIPs give a pass of two");
   const none = chooseTaskZips(published, new Set(published), 2, NOW);
   assert.deepEqual(none.queued, []);
   assert.equal(none.zips.length, 2);

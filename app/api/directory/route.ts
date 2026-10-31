@@ -1,7 +1,8 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
-import { readCardMemberOffices, readCardFederalDirectory } from "@/lib/officials/card-authorities-read";
+import { readCardFederalDirectory } from "@/lib/officials/card-authorities-read";
+import { readMemberOffices } from "@/lib/officials/member-offices-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 
@@ -33,7 +34,7 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
   if (!FEDERAL_ID.test(member)) {
     let offices;
     try {
-      offices = await readCardMemberOffices(member,params.get("state") ?? undefined);
+      offices = await readMemberOffices(member,params.get("state") ?? undefined);
     } catch {
       return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the office records just now." },
         { status: 503, headers: { "Cache-Control": "private, no-store" } });

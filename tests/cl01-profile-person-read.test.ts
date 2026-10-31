@@ -109,6 +109,6 @@ test("the profile's default server read batches only people authorities and shar
       assert.deepEqual(alias, primary);
       assert.deepEqual(await readPrlForSubject(person.id), {statements: [], summaries: [], gaps: []});
     });
-    assert.equal(selected.length, 1, "source aliases and the profile share one state-person read, without registry or national packages");
+    assert.equal(selected.length, 2, "each alias reads only its own person's records, without registry or national packages, and the profile shares them");
   } finally { installReaderDatabaseQuery(undefined); }
 });

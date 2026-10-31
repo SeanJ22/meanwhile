@@ -7,7 +7,8 @@ import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { forgetNationalShelf } from "../lib/reader/shelf.ts";
-import { readCardMemberOffices, readOfficialActionIdentityAuthorities } from "../lib/officials/card-authorities-read.ts";
+import { readOfficialActionIdentityAuthorities } from "../lib/officials/card-authorities-read.ts";
+import { readMemberOffices } from "../lib/officials/member-offices-read.ts";
 import { statePeopleSourcePointers } from "../lib/officials/people-identity.ts";
 import { currentOfficialIdentity } from "../lib/funding/campaign-money.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
@@ -68,7 +69,7 @@ function peopleEntry(holder: Officeholder) {
 
 test("native directory offices preserve every office and source without state services or curated fallback", async () => {
   await withCanonical([peopleEntry(person)], async reads => {
-    const offices = await readCardMemberOffices(person.personId!, "TX");
+    const offices = await readMemberOffices(person.personId!, "TX");
     assert.equal(offices.length, 2);
     assert.equal(offices[0].office.email, "capitol@example.gov");
     assert.equal(offices[1].office.phone, "713-555-0100");
@@ -84,7 +85,7 @@ test("a person without native offices still receives the existing curated office
     sourceUrl: "https://www.ltgov.texas.gov/district/", sourceOrg: "Held Legislature", official: true, collectedAt: at};
   const fallback = provenEdgeEntry({recordClass: curated.recordClass, scope: curated.scope, sourceId: curated.sourceId!, versionId: "test:card-curated", value: {kind: "member-offices", records: [record]}});
   await withCanonical([peopleEntry({...person, offices: []}), fallback], async reads => {
-    assert.deepEqual(await readCardMemberOffices(person.id, "TX"), [record]);
+    assert.deepEqual(await readMemberOffices(person.id, "TX"), [record]);
     assert.equal(reads.length, 2);
     assert.deepEqual(reads[1], ["US-TX:state-legislator-member-offices", curated.scope]);
   });

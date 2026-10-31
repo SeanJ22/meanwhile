@@ -35,3 +35,11 @@ export async function migratedReaderDb() {
   };
   return {pg,publish};
 }
+
+/** The same database as a fact store, so the Slide's queries and transactions run on every production table. */
+export async function migratedFactDb() {
+  const { pg, publish } = await migratedReaderDb();
+  type Query = (text: string, params?: readonly unknown[]) => Promise<Record<string, unknown>[]>;
+  const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
+  return { pg, publish, query, transaction: <T,>(work: (query: Query) => Promise<T>) => pg.transaction(tx => work(async (text, params = []) => (await tx.query<Record<string, unknown>>(text, [...params])).rows)) };
+}

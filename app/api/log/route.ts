@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { markerFromRequestWithBody } from "@/lib/db/run-marker";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
@@ -142,5 +143,6 @@ async function postWithSettings(request: Request) {
 }
 
 export async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   return withReaderFeatures(() => postWithSettings(request));
 }

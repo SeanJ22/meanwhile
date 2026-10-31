@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { execFile } from "node:child_process";
 import { admitJobLaunch, JOB_SLOWED_WORDS } from "../control-plane/job-breaker-local.ts";
 
@@ -101,7 +102,7 @@ function runOneBoundedChild(
       [...command.args],
       {
         cwd: options.cwd,
-        env: { ...(command.env ?? options.env), WTP_DATABASE_JOB: command.id },
+        env: { ...storedKeyEnvironment((command.env ?? options.env)), WTP_DATABASE_JOB: command.id },
         encoding: "utf8",
         maxBuffer,
         windowsHide: true,

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /** @freshness-reads-here — the held capture keeps the date the source bytes were read. */
 import { parse } from "yaml";
 import { pathToFileURL } from "node:url";
@@ -64,7 +65,7 @@ export async function refreshCongressDirectory(input: {
     changed.add(state);return true;
   };
   const failures: unknown[] = [];
-  const deadline = passDeadlineFromEnv(process.env) ?? Infinity;
+  const deadline = passDeadlineFromEnv(storedKeyEnvironment()) ?? Infinity;
   const publish = async (state: string, acquisitions: readonly FederalDirectoryCapture[], projection: FederalDirectoryReadModel, retrievedAt: string) => {
     if (Date.now() >= deadline) return;
     try {

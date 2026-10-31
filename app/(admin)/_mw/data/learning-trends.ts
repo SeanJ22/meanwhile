@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../../../lib/core/keys-values.ts";
 import "server-only";
 
 /** Aggregates over the Scout result log, never the log itself: database transfer is billed. A failure is returned as unread, never as an empty week. */
@@ -95,7 +96,7 @@ const trendsShared = sharedRead<LearningTrendRead>({
 
 export async function loadLearningTrends(nowIso: string): Promise<LearningTrendRead> {
   return trendsShared.read(async () => {
-    const connection = process.env[CONTROL_PLANE_URL_VAR]?.trim() ?? "";
+    const connection = storedKeyEnvironment()[CONTROL_PLANE_URL_VAR]?.trim() ?? "";
     if (connection === "") return { kind: "UNREAD", detail: "This Admin runtime has no connection to the control plane, so the weekly series were not read." };
     try {
       return { kind: "HELD", facts: await readLearningTrends(connection, nowIso) };

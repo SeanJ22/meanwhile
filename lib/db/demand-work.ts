@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { controlPlaneQuery, workList, type WorkList } from "../core/work.ts";
 import { neon } from "./client.ts";
 import type { Query } from "../facts/publish.ts";
@@ -23,7 +24,7 @@ const production: DemandWorkStores = {
   work: () => workList(controlPlaneQuery(), { owner: "reader-demand" }),
   blanks: () => {
     assertWriteAllowed("a demand request");
-    const url = process.env.DATABASE_URL;
+    const url = storedKeyValue("DATABASE_URL");
     if (!url) throw new Error("DATABASE_URL is not set.");
     const sql = neon(url);
     return async (text, params = []) => await sql.query(text, [...params]) as Record<string, unknown>[];

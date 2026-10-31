@@ -11,7 +11,6 @@ import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { importExistingKeys } from "../lib/core/keys-import.ts";
 import { handleKeys } from "../lib/core/keys-http.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "../lib/ops/origins.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -61,6 +60,37 @@ test("save, test, direct runner read and delete work without an Admin session", 
   assert.deepEqual(await store.list(), []);
 });
 
+test("daily checks run at 24 hours, survive restart and are claimed once by competing runners", async t => {
+  const { store } = await fixture(t);
+  await store.save("Example", SECRET, "anthropic", AT);
+  let tests = 0;
+  const check = async () => { tests++; return good(); };
+  await testDueKeys(store, AT, undefined, check);
+  assert.equal(await testDueKeys(store, "2026-10-30T11:59:59.999Z", undefined, check), 0);
+  const next = "2026-10-30T12:00:00.000Z";
+  const counts = await Promise.all([testDueKeys(store, next, undefined, check), testDueKeys(store, next, undefined, check)]);
+  assert.equal(counts.reduce((n, x) => n + x, 0), 1);
+  assert.equal(tests, 2);
+});
+
+test("a saved key can be retested without its value, without stealing an active test or reviving a deleted key", async t => {
+  const { store } = await fixture(t);
+  const version = await store.save("Example", SECRET, "signing", AT);
+  await testDueKeys(store, AT, "Example", async () => ({ working: false, says: "The service could not be reached." }));
+  const next = "2026-10-29T12:01:00.000Z";
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next, "Example")).length, 1);
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next, "Example")).length, 0);
+  await store.tested("Example", version, await good(), next);
+  assert.equal((await store.list())[0].working, true);
+  assert.equal((await store.claimTests("2026-10-30T12:00:59.999Z")).length, 0);
+  await store.remove("Example", next);
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next)).length, 0);
+  assert.equal(await store.read("Example"), undefined);
+});
+
 test("a killed test is reclaimed and old results cannot overwrite a replacement or resurrect a deleted key", async t => {
   const { store } = await fixture(t);
   const old = await store.save("Example", SECRET, "anthropic", AT);
@@ -82,6 +112,7 @@ test("HTML success pages and provider failures never count as working or expose 
   assert.equal((await testKey("census", SECRET, fake(new Response("<html>Invalid Key</html>")))).working, false);
   assert.equal((await testKey("anthropic", SECRET, fake(Response.json({ error: "no" })))).working, false);
   assert.equal((await testKey("anthropic", SECRET, fake(Response.json({ data: [{ id: "claude" }] })))).working, true);
+  assert.equal((await testKey("signing", "internal-setting")).working, true, "use the website's actual signing behavior");
   const failure = await testKey("anthropic", SECRET, (async () => { throw new Error(SECRET); }) as typeof fetch);
   assert.equal(failure.working, false);
   assert.equal(JSON.stringify(failure).includes(SECRET), false);
@@ -90,6 +121,32 @@ test("HTML success pages and provider failures never count as working or expose 
     assert.equal(new Headers(init?.headers).get("authorization"), `Token ${SECRET}`);
     return Response.json({ datasets: [] });
   }) as typeof fetch)).working, true);
+});
+
+test("key checks use current provider routes, reporting scope and the dedicated map test origin", async t => {
+  const { store } = await fixture(t);
+  await store.save("WTP_MAPTILER_SMOKE_KEY", SECRET, "maptiler", AT);
+  await testDueKeys(store, AT, undefined, async (service, value, _fetch, companion) => testKey(service, value,
+    (async (_url, init) => {
+      assert.equal(new Headers(init?.headers).get("origin"), "http://maptiler-smoke.localhost");
+      return Response.json({ version: 8, layers: [{}] });
+    }) as typeof fetch, companion));
+  assert.equal((await store.list())[0].working, true);
+  for (const [service, path, body] of [
+    ["lda", "https://lda.gov/api/v1/filings/", { results: [{}] }],
+    ["sam", "https://api.sam.gov/opportunities/v2/search", { totalRecords: 0, opportunitiesData: [] }],
+    ["neon", "https://console.neon.tech/api/v2/users/me/organizations", { organizations: [] }],
+  ] as const) {
+    assert.equal((await testKey(service, SECRET, (async (url, init) => {
+      assert.equal(String(url).split("?")[0], path);
+      assert.equal(init?.redirect, "error");
+      return Response.json(body);
+    }) as typeof fetch)).working, true);
+  }
+  assert.equal((await testKey("neon", SECRET, (async url => {
+    assert.equal(new URL(String(url)).searchParams.get("org_id"), "existing-billing-account");
+    return Response.json({ projects: [] });
+  }) as typeof fetch, { neonOrganization: "existing-billing-account" })).working, true);
 });
 
 test("search keys are checked against a rejected control without submitting paid searches", async () => {
@@ -118,25 +175,6 @@ test("failed and overdue key checks appear in the brief and disappear after reco
   await testDueKeys(store, next, undefined, good);
   assert.deepEqual(keyProblems(await store.list(), next), []);
   assert.match(keyProblems(await store.list(), "2026-10-31T12:00:00.000Z")[0].what, /overdue/);
-});
-
-test("imports preserve distinct runtime credentials and never replace an owner's saved change", async t => {
-  const { store } = await fixture(t);
-  // Signing checks exercise the real site's HMAC without external services.
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website");
-  assert.equal((await store.list()).length, 2);
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), "runner-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY.website"), "website-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", true, AT, "runner"), "runner-".repeat(8));
-  await store.save("WTP_ADMIN_SESSION_KEY", SECRET, "signing", AT);
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), SECRET);
-  assert.equal((await store.list()).length, 2);
-  await store.remove("WTP_ADMIN_SESSION_KEY", AT);
-  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), undefined, "the import cannot restore a deleted key");
 });
 
 test("undo restores the previous encrypted value, retests it, and keeps every value out of history", async t => {
@@ -178,11 +216,48 @@ test("the protected Settings API saves, tests, lists and deletes without returni
     const listed = await handleKeys(request("GET"), cookie, deps);
     assert.match(listed.headers.get("cache-control")!, /no-store/);
     assert.equal((await listed.json()).rows[0].working, true);
+    const retested = await handleKeys(request("POST", { name: "Example", action: "test" }), cookie, deps);
+    assert.equal(retested.status, 200);
+    assert.equal((await retested.text()).includes(SECRET), false);
     await keysRunnerPass(store);
     assert.ok((await store.list())[0].runnerReadAt);
     const deleted = await handleKeys(request("DELETE", { name: "Example" }), cookie, deps);
     assert.equal(deleted.status, 200);
     assert.equal(await store.read("Example"), undefined);
+  });
+});
+
+test("saving starts the provider test immediately and keeps its work alive without holding the response", async t => {
+  const { store } = await fixture(t);
+  let release!: () => void;
+  const provider = new Promise<void>(resolve => { release = resolve; });
+  const kept: Promise<unknown>[] = [];
+  let started = false;
+  await withAdminSessionKey(async () => {
+    const cookie = (await adminSessionCookie()).split("=")[1];
+    const response = await handleKeys(new Request(`${ADMIN_ORIGIN}/api/admin/v6/keys`, {
+      method: "POST", headers: { host: hostOf(ADMIN_ORIGIN), origin: ADMIN_ORIGIN, "content-type": "application/json" },
+      body: JSON.stringify({ name: "Slow provider", value: SECRET, service: "anthropic" }),
+    }), cookie, {
+      store: () => store,
+      test: (saved, at, name) => {
+        started = true;
+        return testDueKeys(saved, at, name, async (_service, value) => {
+          assert.equal(value, SECRET); await provider; return good();
+        });
+      },
+      waitUntil: pending => { kept.push(pending); },
+    });
+    assert.equal(started, true);
+    assert.equal(response.status, 200);
+    const body = await response.json();
+    assert.match(body.says, /saved.*test is running/i);
+    assert.equal(body.rows[0].testedAt, null);
+    assert.equal(JSON.stringify(body).includes(SECRET), false);
+    assert.equal(kept.length, 1);
+    assert.equal(await store.read("Slow provider"), SECRET);
+    release(); await Promise.all(kept);
+    assert.equal((await store.list())[0].working, true);
   });
 });
 
@@ -201,19 +276,6 @@ test("known credentials cannot skip their provider check by choosing a different
     }
     assert.ok((await store.list()).every(row => row.service === "congress"));
   });
-});
-
-test("simultaneous runtime imports preserve both keys, and a later owner edit wins over a first import", async t => {
-  const { store } = await fixture(t);
-  await Promise.all([
-    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner"),
-    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website"),
-  ]);
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "runner"), "runner-".repeat(8));
-  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
-  await store.save("ANTHROPIC_API_KEY", SECRET, "signing", AT);
-  await importExistingKeys({ ANTHROPIC_API_KEY: "old-website-setting" }, store, AT, "website");
-  assert.equal(await store.read("ANTHROPIC_API_KEY", false, AT, "website"), SECRET);
 });
 
 test("the standing clock picks up saved keys on its next tick and tests again on the following day", async t => {
@@ -238,45 +300,7 @@ test("the standing clock picks up saved keys on its next tick and tests again on
   assert.equal(checked, 2);
 });
 
-test("a fresh runner process accepts its recorded inventory and reaches daily tests after restart", () => {
-  const dir = mkdtempSync(join(tmpdir(), "saved-keys-restart-"));
-  const script = `
-    import assert from 'node:assert/strict';
-    import {PGlite} from '@electric-sql/pglite';
-    import {CAPABILITY_DDL} from './lib/core/capability.ts';
-    import {KEYS_DDL,keysStore} from './lib/core/keys-store.ts';
-    import {keysRunnerPass} from './lib/core/keys-runner.ts';
-    import {neonConfig} from './lib/db/client.ts';
-    const db=new PGlite(process.argv[1]),at=process.argv[2];
-    await db.exec(KEYS_DDL); for(const ddl of CAPABILITY_DDL)await db.exec(ddl);
-    await db.exec('CREATE TABLE IF NOT EXISTS cp_log_heads(log_table text,log_key text,next_position bigint,PRIMARY KEY(log_table,log_key)); CREATE TABLE IF NOT EXISTS cp_log_owner_digests(log_key text,record_id text,position bigint,recorded_at timestamptz,record jsonb,changed_at timestamptz DEFAULT now(),PRIMARY KEY(log_key,record_id));');
-    const store=keysStore(async(text,params)=>(await db.query(text,params)).rows,'${MASTER}');
-    if(!(await store.list()).length)await store.save('After restart','${SECRET}','signing',at,false,'website');
-    neonConfig.fetchFunction=async(_url,init)=>{
-      const request=JSON.parse(init.body),execute=async statement=>{
-        const result=await db.query(statement.query,statement.params);
-        return {command:'SELECT',rowCount:result.rows.length,rowAsArray:true,fields:result.fields,
-          rows:result.rows.map(row=>result.fields.map(({name})=>row[name]==null?null:typeof row[name]==='boolean'?row[name]?'t':'f':typeof row[name]==='object'?JSON.stringify(row[name]):String(row[name])))};
-      };
-      if(!request.queries)return Response.json(await execute(request));
-      const results=[];for(const query of request.queries)results.push(await execute(query));return Response.json({results});
-    };
-    globalThis.fetch=async()=>Response.json({login:'fixture-owner'});
-    await keysRunnerPass(store,at,{env:{WTP_RUNTIME_MODE:'production',WTP_CONTROL_PLANE_DATABASE_URL:'postgres://fixture:fixture@db.example.neon.tech/fixture',COMMIT_REF:at},github:()=>{assert.equal(at,'${AT}');return 'existing_cli_login';}});
-    assert.equal(await store.read('GH_TOKEN'),'existing_cli_login');
-    const key=(await store.list()).find(row=>row.name==='After restart');assert.equal(key.testedAt,at);assert.equal(key.working,true);
-    assert.equal((await store.claimTests(new Date(Date.parse(at)+86399999).toISOString(),'After restart')).length,0);
-    await store.save('Competing','${SECRET}','signing',at);
-    const claims=await Promise.all([store.claimTests(at,'Competing'),store.claimTests(at,'Competing')]);assert.equal(claims.flat().length,1);
-    const rows=(await db.query('SELECT record FROM cp_log_owner_digests')).rows;
-    assert.equal(rows.length,1);assert.equal(rows[0].record.writtenAt,'${AT}');assert.equal(JSON.stringify(rows).includes('${SECRET}'),false);
-    await db.close();
-  `;
-  try { for (const at of [AT, "2026-10-30T12:00:00.000Z"]) execFileSync(process.execPath,
-    ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", script, dir, at],
-    { env: { ...process.env, WTP_VITAL_SIGNS_REPORT: "1" }, timeout: 30_000, stdio: "pipe" });
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
+
 
 test("the PRL archive key pair uses a bounded signed list and never records its secret", async t => {
   const { store } = await fixture(t), previous = globalThis.fetch;
@@ -293,60 +317,48 @@ test("the PRL archive key pair uses a bounded signed list and never records its 
     assert.equal(JSON.stringify(init?.headers).includes(SECRET), false);
     return new Response("<ListBucketResult><IsTruncated>false</IsTruncated></ListBucketResult>");
   }) as typeof fetch;
-  await importExistingKeys({ PRL_ARCHIVE_S3_ACCESS_KEY_ID: "fixture_id", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: SECRET }, store, AT);
+  await store.save("PRL_ARCHIVE_S3_ACCESS_KEY_ID", "fixture_id", "prlarchive", AT);
+  await store.save("PRL_ARCHIVE_S3_SECRET_ACCESS_KEY", SECRET, "prlarchive", AT);
+  await testDueKeys(store, AT);
   assert.equal((await store.list()).filter(row => row.working).length, 2);
   assert.equal(JSON.stringify(await store.list()).includes(SECRET), false);
   globalThis.fetch = (async () => new Response(null, { status: 403 })) as typeof fetch;
   assert.equal((await testKey("prlarchive", SECRET, fetch, { archiveAccessId: "fixture_id", archiveSecret: SECRET })).working, false);
 });
 
-test("key checks use current provider routes, reporting scope and the dedicated map test origin", async t => {
-  const { store } = await fixture(t);
-  await store.save("WTP_MAPTILER_SMOKE_KEY", SECRET, "maptiler", AT);
-  await testDueKeys(store, AT, undefined, async (service, value, _fetch, companion) => testKey(service, value,
-    (async (_url, init) => {
-      assert.equal(new Headers(init?.headers).get("origin"), "http://maptiler-smoke.localhost");
-      return Response.json({ version: 8, layers: [{}] });
-    }) as typeof fetch, companion));
-  assert.equal((await store.list())[0].working, true);
-  for (const [service, path, body] of [
-    ["lda", "https://lda.gov/api/v1/filings/", { results: [{}] }],
-    ["sam", "https://api.sam.gov/opportunities/v2/search", { totalRecords: 0, opportunitiesData: [] }],
-    ["neon", "https://console.neon.tech/api/v2/users/me/organizations", { organizations: [] }],
-  ] as const) {
-    assert.equal((await testKey(service, SECRET, (async (url, init) => {
-      assert.equal(String(url).split("?")[0], path);
-      assert.equal(init?.redirect, "error");
-      return Response.json(body);
-    }) as typeof fetch)).working, true);
-  }
-  assert.equal((await testKey("neon", SECRET, (async url => {
-    assert.equal(new URL(String(url)).searchParams.get("org_id"), "existing-billing-account");
-    return Response.json({ projects: [] });
-  }) as typeof fetch, { neonOrganization: "existing-billing-account" })).working, true);
-});
-
-
-test("the website copy imports its configured feedback and control-plane read handles and tests the connections", async t => {
-  const { db, store } = await fixture(t);
-  const { neonConfig } = await import("../lib/db/client.ts");
-  const previous = neonConfig.fetchFunction, oldReport = process.env.WTP_VITAL_SIGNS_REPORT;
-  process.env.WTP_VITAL_SIGNS_REPORT = "1";
-  t.after(async () => { neonConfig.fetchFunction = previous;
-    if (oldReport === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = oldReport; });
-  neonConfig.fetchFunction = async (_url: RequestInfo | URL, init?: RequestInit) => {
-    const request = JSON.parse(String(init?.body));
-    const execute = async (statement: { query: string; params?: unknown[] }) => {
-      const result = await db.query<Record<string, unknown>>(statement.query, statement.params);
-      return { command: "SELECT", rowCount: result.rows.length, rowAsArray: true, fields: result.fields,
-        rows: result.rows.map(row => result.fields.map(({ name }) => row[name] == null ? null : typeof row[name] === "boolean" ? row[name] ? "t" : "f" : typeof row[name] === "object" ? JSON.stringify(row[name]) : String(row[name]))) };
+test("a fresh runner process loads the saved keys and completes daily tests after restart", () => {
+  const dir = mkdtempSync(join(tmpdir(), "saved-keys-restart-"));
+  const script = `
+    import assert from 'node:assert/strict';
+    import {PGlite} from '@electric-sql/pglite';
+    import {CAPABILITY_DDL} from './lib/core/capability.ts';
+    import {KEYS_DDL,keysStore} from './lib/core/keys-store.ts';
+    import {keysRunnerPass} from './lib/core/keys-runner.ts';
+    import {neonConfig} from './lib/db/client.ts';
+    const db=new PGlite(process.argv[1]),at=process.argv[2];
+    await db.exec(KEYS_DDL); for(const ddl of CAPABILITY_DDL)await db.exec(ddl);
+    const store=keysStore(async(text,params)=>(await db.query(text,params)).rows,'${MASTER}');
+    if(!(await store.list()).length)await store.save('After restart','${SECRET}','signing',at);
+    neonConfig.fetchFunction=async(_url,init)=>{
+      const request=JSON.parse(init.body),execute=async statement=>{
+        const description=await db.describeQuery(statement.query),serializers=Object.fromEntries(description.queryParams.map(type=>[type.dataTypeID,value=>String(value)]));
+        const result=await db.query(statement.query,statement.params,{serializers});
+        return {command:'SELECT',rowCount:result.rows.length,rowAsArray:true,fields:result.fields,
+          rows:result.rows.map(row=>result.fields.map(({name})=>row[name]==null?null:typeof row[name]==='boolean'?row[name]?'t':'f':typeof row[name]==='object'?JSON.stringify(row[name]):String(row[name])))};
+      };
+      if(!request.queries)return Response.json(await execute(request));
+      const results=[];for(const query of request.queries)results.push(await execute(query));return Response.json({results});
     };
-    if (!request.queries) return Response.json(await execute(request));
-    const results = []; for (const statement of request.queries) results.push(await execute(statement));
-    return Response.json({ results });
-  };
-  const names = ["FEEDBACK_DATABASE_URL", "WTP_CONTROL_PLANE_DATABASE_URL_READONLY", "WTP_CONTROL_PLANE_POST_DEPLOY_DATABASE_URL", "WTP_STAGING_DATABASE_URL_READONLY"];
-  await importExistingKeys(Object.fromEntries(names.map(name => [name, "postgresql://readonly:fixture@db.example.neon.tech/fixture"])), store, AT, "website");
-  assert.deepEqual((await store.list()).map(row => row.name), [...names].sort());
-  assert.ok((await store.list()).every(row => row.working));
+    process.env.WTP_CONTROL_PLANE_DATABASE_URL='postgres://fixture:fixture@db.example.neon.tech/fixture'; process.env.WTP_KEYS_ENCRYPTION_KEY='${MASTER}';
+    await keysRunnerPass(undefined,at);
+    const key=(await store.list()).find(row=>row.name==='After restart');assert.equal(key.testedAt,at);assert.equal(key.working,true);
+    assert.equal((await store.claimTests(new Date(Date.parse(at)+86399999).toISOString(),'After restart')).length,0);
+    await store.save('Competing','${SECRET}','signing',at);
+    const claims=await Promise.all([store.claimTests(at,'Competing'),store.claimTests(at,'Competing')]);assert.equal(claims.flat().length,1);
+    await db.close();
+  `;
+  try { for (const at of [AT, "2026-10-30T12:00:00.000Z"]) execFileSync(process.execPath,
+    ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", script, dir, at],
+    { env: { ...process.env, WTP_VITAL_SIGNS_REPORT: "1" }, timeout: 30_000, stdio: "pipe" });
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

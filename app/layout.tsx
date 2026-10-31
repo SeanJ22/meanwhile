@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../lib/core/keys-entry.ts";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { DM_Sans, EB_Garamond, JetBrains_Mono } from "next/font/google";
@@ -65,7 +66,7 @@ export const viewport: Viewport = {
 const THEME_SCRIPT = `try{if(localStorage.getItem("wtp.theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}`;
 
 /* Written out rather than `LayoutProps<"/">`, which exists only after a build, so `tsc --noEmit` runs on a fresh clone. */
-export default function RootLayout({
+export default async function RootLayout({
   children,
   modal,
 }: {
@@ -78,6 +79,7 @@ export default function RootLayout({
    */
   modal: ReactNode;
 }) {
+  await loadWebsiteSavedKeys();
   return (
     <html
       lang="en"

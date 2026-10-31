@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
@@ -10,6 +11,7 @@ const NO_STORE = {
 } as const;
 
 export const POST = readerRoute("/api/ballot/scope", async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   let lat: number;
   let lng: number;
   let place: { zip?: unknown; divisions?: readonly string[] } = {};

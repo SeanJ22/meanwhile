@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
@@ -152,5 +153,6 @@ async function postWithSettings(request: Request) {
 }
 
 export const POST = readerRoute("/api/demand-signal", async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   return withReaderFeatures(() => postWithSettings(request));
 });

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * The failure-path step of a workflow job: reads the job's own log and names
  * what killed it, using the class list in `lib/ops/failure-classes.ts`.
@@ -47,7 +48,7 @@ function asLogText(bytes: Buffer): string | null {
   return text.includes("\u0000") ? null : text;
 }
 
-const GH_ENV = { ...process.env, GH_PROMPT: "disabled", GIT_TERMINAL_PROMPT: "0" };
+const GH_ENV = { ...storedKeyEnvironment(), GH_PROMPT: "disabled", GIT_TERMINAL_PROMPT: "0" };
 
 let logText: string | null = null;
 

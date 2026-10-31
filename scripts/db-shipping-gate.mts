@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * The schema shipping gate, asked before the merge: `build-check.yml`'s gates
  * job and `pnpm gates` run it. It uses the same comparator and reader as
@@ -45,7 +46,6 @@ import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { config as loadEnv } from "dotenv";
 
 import { describeConnection, readAppliedMigrationWhen } from "../lib/db/applied-migrations.ts";
 import { readJournal, type JournalEntry } from "../lib/db/schema-state.ts";
@@ -68,7 +68,6 @@ import {
   type ShipMoment,
 } from "../lib/db/shipping-invariant.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const argv = process.argv.slice(2);
 const arg = (name: string): string | null => {
@@ -106,7 +105,7 @@ function complain(line: string): void {
 function git(args: string[]): { ok: boolean; out: string } {
   const r = spawnSync("git", args, {
     encoding: "utf8",
-    env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+    env: { ...storedKeyEnvironment(), GIT_TERMINAL_PROMPT: "0" },
   });
   return { ok: r.status === 0, out: (r.stdout ?? "").trim() };
 }
@@ -220,7 +219,7 @@ function ensureCommit(sha: string): boolean {
   for (const depth of [100, 1000]) {
     spawnSync("git", ["fetch", `--depth=${depth}`, "origin", sha], {
       stdio: "ignore",
-      env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+      env: { ...storedKeyEnvironment(), GIT_TERMINAL_PROMPT: "0" },
     });
     if (git(["cat-file", "-e", `${sha}^{commit}`]).ok) return true;
   }
@@ -467,14 +466,14 @@ if (introduced.length > 0) {
   say("  this change introduces no migration file of its own");
 }
 
-const connection = process.env[VARIABLE];
+const connection = storedKeyEnvironment()[VARIABLE];
 if (!connection) {
   complain(`\ndb:gate: COULD NOT TELL — ${VARIABLE} is not set in this environment.`);
   complain("  An unset credential is not a passing schema check.");
   complain(
     "  In CI this is a repository secret. Add WTP_PRODUCTION_DATABASE_URL_READONLY under " +
       "Settings > Secrets and variables > Actions; the value is the read-only production string " +
-      "already recorded in docs/credential-ledger.md. The READONLY role is deliberate: this gate " +
+      "saved in the Keys box in Admin Settings. The READONLY role is deliberate: this gate " +
       "must not be able to apply what it finds.",
   );
   process.exit(2);

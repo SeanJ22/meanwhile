@@ -1,3 +1,4 @@
+import { loadNativeSavedKeys, type KeyFunctionContext } from "../../lib/core/keys-native.ts";
 /**
  * Warms a production deploy the moment it succeeds. Netlify invokes a function
  * named `deploy-succeeded` for every deploy context with `{ payload: <the
@@ -29,7 +30,8 @@ export async function handleDeploySucceeded(
   return { acted: true, result: await warm(deploy) };
 }
 
-export default async function deploySucceeded(request: Request): Promise<Response> {
+export default async function deploySucceeded(request: Request, context?: KeyFunctionContext): Promise<Response> {
+  await loadNativeSavedKeys(context);
   const handled = await handleDeploySucceeded(request);
   const result = handled.result;
   // One line, not one entry per county: how many places were asked for, filled and read back from the CDN.

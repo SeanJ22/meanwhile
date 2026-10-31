@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** One permanent source-state reader; publication and portrait work have independent standing clocks. */
 import { pathToFileURL } from "node:url";
 import { parsePeopleSourceArguments, runPeopleSourceRefresh } from "../lib/civic-data/people-source-runtime.ts";
@@ -11,7 +12,7 @@ async function main(): Promise<void> {
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
   const result = await runPeopleSourceRefresh({ ...args, store: new PostgresRoutineDataStore(), vault: rawCaptureVault() }, {
-    executiveCredentials: { fec: process.env.FEC_API_KEY, congress: process.env.CONGRESS_API_KEY },
+    executiveCredentials: { fec: storedKeyValue("FEC_API_KEY"), congress: storedKeyValue("CONGRESS_API_KEY") },
   });
   if (!result.succeeded) process.exitCode = 2;
 }

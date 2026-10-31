@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 import { createHash } from "node:crypto";
 
 import {
@@ -51,11 +52,11 @@ export function timelineUrl(input: {
 
 /** Null is legitimate and renders as NOT CONNECTED. Messages name the variable, never the value. */
 export function serviceTokenFromEnv(
-  env: { readonly [MAPTILER_SERVICE_TOKEN_VAR]?: string | undefined } = process.env as {
+  env: { readonly [MAPTILER_SERVICE_TOKEN_VAR]?: string | undefined } = storedKeyEnvironment() as {
     [MAPTILER_SERVICE_TOKEN_VAR]?: string;
   },
 ): string | null {
-  const token = env[MAPTILER_SERVICE_TOKEN_VAR]?.trim();
+  const token = storedKeyValue(MAPTILER_SERVICE_TOKEN_VAR, env)?.trim();
   return token ? token : null;
 }
 

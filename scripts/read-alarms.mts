@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * `pnpm alarms` — has a write to a sold store failed?
  *
@@ -11,16 +12,13 @@
  *   1  ALARMS PRESENT, printed with the database's own words
  *   2  COULD NOT READ — no credential, or the table could not be queried
  */
-import { join } from "node:path";
 
-import { config as loadEnv } from "dotenv";
 import { neon } from "../lib/db/client.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const PRODUCTION = process.argv.includes("--target=production");
 const VARIABLE = PRODUCTION ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
-const connection = process.env[VARIABLE];
+const connection = storedKeyEnvironment()[VARIABLE];
 
 const hoursArg = process.argv.find((a) => a.startsWith("--hours="));
 const HOURS = hoursArg ? Number(hoursArg.slice("--hours=".length)) : 24;

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 /**
  * The live sources: the event store (`lib/db/reader-events.ts`) behind `Sources`.
  *
@@ -22,8 +23,8 @@ const NOT_INSTALLED = "Reader events need migration 0034, so there are no counts
 const NO_DATABASE = "No reader database is configured here, so the counts are unknown, not zero.";
 
 /** The default query: the reader database over HTTP, or null when none is configured. */
-export function readerQuery(env: NodeJS.ProcessEnv = process.env): Query | null {
-  const url = env.DATABASE_URL?.trim();
+export function readerQuery(env: NodeJS.ProcessEnv = storedKeyEnvironment()): Query | null {
+  const url = storedKeyValue("DATABASE_URL", env)?.trim();
   if (url === undefined || url === "") return null;
   const sql = neon(url);
   return (text, params) => sql.query(text, [...params]);

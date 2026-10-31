@@ -1,3 +1,5 @@
+import { productionKeysStore } from "../lib/core/keys-store.ts";
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * `pnpm run doctor` — can this machine do the work? Every capability this
  * repository depends on, each with a state and a remediation. It is an
@@ -11,13 +13,12 @@
  * pnpm run doctor --json doctor.json
  * ```
  *
- * It never calls a credentialed endpoint: credentials are reported PRESENT or
- * MISSING by name only (`pnpm credentials` proves them by calling). Everything
+ * It reports saved credential test results from the control plane. Everything
  * printed or written goes through `redact`.
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
@@ -35,25 +36,7 @@ interface CheckResult {
   remediation: string | null;
 }
 
-const SECRET_NAME_SHAPES: readonly RegExp[] = [
-  /KEY$/i,
-  /_KEY_/i,
-  /TOKEN/i,
-  /SECRET/i,
-  /PASSWORD/i,
-  /PASSWD/i,
-  /CREDENTIAL/i,
-  /DATABASE_URL/i,
-  /_URL$/i,
-  /_DSN$/i,
-  /AUTH/i,
-  /SIGNING/i,
-  /PRIVATE/i,
-];
-
-function nameLooksSecret(name: string): boolean {
-  return SECRET_NAME_SHAPES.some((shape) => shape.test(name));
-}
+const nameLooksSecret = (name: string) => /KEY$|_KEY_|TOKEN|SECRET|PASSW(?:OR)?D|CREDENTIAL|DATABASE_URL|_URL$|_DSN$|AUTH|SIGNING|PRIVATE/i.test(name);
 
 const SECRET_VALUE_SHAPES: readonly { re: RegExp; as: string }[] = [
   { re: /\b([a-z][a-z0-9+.-]*):\/\/[^\s/@]+:[^\s/@]+@/gi, as: "$1://<credentials-removed>@" },
@@ -64,26 +47,15 @@ const SECRET_VALUE_SHAPES: readonly { re: RegExp; as: string }[] = [
   { re: /\b(?:sk|pk|ghp|gho|ghs|glpat|xox[baprs])[_-][A-Za-z0-9_-]{8,}\b/gi, as: "<token-removed>" },
 ];
 
-/** The only way text leaves this script: known secret values first, then secret-shaped text. */
+/** Redact saved values and common credential forms before reporting diagnostics. */
 function redact(text: unknown, env: Record<string, string | undefined>): string {
-  let s: string;
-  if (text instanceof Error) s = `${text.name}: ${text.message}`;
-  else if (typeof text === "string") s = text;
-  else {
-    try {
-      s = JSON.stringify(text);
-    } catch {
-      s = "<unserializable>";
-    }
-  }
-  if (s === "") return s;
-  const values = Object.entries(env)
-    .filter(([name, value]) => typeof value === "string" && value.length >= 8 && nameLooksSecret(name))
-    .map(([, value]) => value as string)
-    .sort((a, b) => b.length - a.length);
-  for (const v of values) s = s.split(v).join("<redacted>");
-  for (const { re, as } of SECRET_VALUE_SHAPES) s = s.replace(re, as);
-  return s;
+  let output: string;
+  try { output = text instanceof Error ? `${text.name}: ${text.message}` : typeof text === "string" ? text : JSON.stringify(text); }
+  catch { output = "<unserializable>"; }
+  const values = Object.entries(env).filter(([name, value]) => value && value.length >= 8 && nameLooksSecret(name)).map(([, value]) => value!).sort((a,b) => b.length-a.length);
+  for (const value of values) output = output.split(value).join("<redacted>");
+  for (const { re, as } of SECRET_VALUE_SHAPES) output = output.replace(re, as);
+  return output;
 }
 
 function check(
@@ -121,21 +93,8 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-/** `.env.local` is gitignored, so it is read directly. NAMES only ever leave. */
-function envLocal(): Record<string, string> {
-  const p = join(ROOT, ".env.local");
-  if (!existsSync(p)) return {};
-  const out: Record<string, string> = {};
-  for (const line of readFileSync(p, "utf8").split(/\r?\n/)) {
-    const m = /^([A-Z_0-9]+)\s*=\s*(.*)$/.exec(line.trim());
-    if (m) out[m[1]] = m[2].replace(/^["']|["']$/g, "");
-  }
-  return out;
-}
-
-const FILE_ENV = envLocal();
 /** The full environment, for REDACTION. Never for printing. */
-const ENV: Record<string, string | undefined> = { ...FILE_ENV, ...process.env };
+const ENV: Record<string, string | undefined> = { ...storedKeyEnvironment() };
 
 const results: CheckResult[] = [];
 const c = (
@@ -245,55 +204,14 @@ for (const a of REQUIRED_ARTIFACTS) {
 
 /* ------------------------------------------------------------ credentials */
 
-/* Names and presence only: never a value, a prefix or a length. */
-const secretNames = Object.keys(FILE_ENV).filter(nameLooksSecret).sort();
-const emptyNames = secretNames.filter((n) => (FILE_ENV[n] ?? "").trim() === "");
-c(
-  "credentials",
-  "credentials present in .env.local, by name",
-  existsSync(join(ROOT, ".env.local")) ? (emptyNames.length === 0 ? "PASS" : "COULD_NOT_VERIFY") : "MISSING",
-  existsSync(join(ROOT, ".env.local"))
-    ? `${secretNames.length} credential name(s) set${emptyNames.length > 0 ? `; ${emptyNames.length} present but EMPTY: ${emptyNames.join(", ")}` : ""}`
-    : ".env.local is absent",
-  existsSync(join(ROOT, ".env.local"))
-    ? emptyNames.length > 0
-      ? "a variable that exists and is empty reads as configured and behaves as missing. Fill it or remove the line."
-      : null
-    : "create .env.local. `pnpm credentials` says which keys this repository uses and proves each by calling it — this check never calls anything.",
-);
-c(
-  "credentials-validity",
-  "whether those credentials actually work",
-  "OPTIONAL",
-  "not checked here, by design",
-  "run `pnpm credentials`, which proves each key by calling its endpoint and prints the result. A readiness check that authenticates can be rate-limited and can leak a token into an error.",
-);
-
-/*
- * Presence, shape and host only, without connecting. The local branch is known
- * not to authenticate, so an unconnected check is COULD_NOT_VERIFY, never FAIL.
- * A malformed value has no host to show, so the value itself goes through `redact`.
- */
-for (const key of ["DATABASE_URL", "WTP_PRODUCTION_DATABASE_URL_READONLY"]) {
-  const raw = (ENV[key] ?? "").trim();
-  if (raw === "") {
-    c(`db:${key}`, `${key} is set`, "MISSING", `${key} is not set`, `set ${key} in .env.local.`);
-    continue;
-  }
-
-  let shape: string;
-  let state: "COULD_NOT_VERIFY" | "FAIL" = "COULD_NOT_VERIFY";
-  let fix =
-    "presence, shape and host only — this check does not connect. Run `pnpm verify:readonly` to prove the read-only handle, and note that the local branch is known not to authenticate today.";
-  try {
-    const u = new URL(raw);
-    shape = `set, parses as ${u.protocol.replace(":", "")}, host ${u.hostname}`;
-  } catch {
-    state = "FAIL";
-    shape = `does not parse as a URL: ${redact(raw, ENV)}`;
-    fix = `${key} does not parse. Check for a missing scheme, an unescaped @ in the password, or a stray quote.`;
-  }
-  c(`db:${key}`, `${key} is set, well-formed, and points where you expect`, state, shape, fix);
+try {
+  const keys = await productionKeysStore().list();
+  const working = keys.filter(key => key.working).length;
+  c("credentials", "saved keys", keys.length && working === keys.length ? "PASS" : "COULD_NOT_VERIFY",
+    keys.length ? `${keys.length} saved keys; ${working} Working; ${keys.length - working} Not working` : "The Keys box has no saved keys.",
+    keys.length && working === keys.length ? null : "Check the Keys box in Admin Settings. The runner tests saved keys daily.");
+} catch {
+  c("credentials", "saved keys", "COULD_NOT_VERIFY", "This session could not reach the saved keys.", "Use a runner session with access to the Keys box; saved values do not need to be pasted again.");
 }
 
 /* ------------------------------------------------------------------- git */

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { matching, rejectUnknown } from "@/lib/api/params";
@@ -12,6 +13,7 @@ export const runtime = "nodejs";
 const privateHeaders = { "cache-control": "no-store, no-cache, must-revalidate" };
 
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
     nowSeconds: Math.floor(Date.now() / 1000) });

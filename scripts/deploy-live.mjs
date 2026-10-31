@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * Which SHA is live, answered from Netlify's deploy record with zero requests
  * to the site (a request to the site writes a search-log row).
@@ -9,9 +10,7 @@
  * Verdicts: current, behind, ahead, cannot-tell. No Netlify credential is
  * cannot-tell and exits 3, never 0.
  *
- * Reads `NETLIFY_AUTH_TOKEN` (or `NETLIFY_TOKEN`) and `NETLIFY_SITE_ID`
- * (default: the site domain below). A token is a Personal Access Token from
- * Netlify → User settings → Applications.
+ * Reads the saved publishing token; NETLIFY_SITE_ID selects the site.
  */
 
 import { DEPLOY_EXIT, verdictForDeploys } from "../lib/ops/deploy-verdict.ts";
@@ -19,13 +18,12 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { gitFor } from "./git-lite.mjs";
-import { loadEnvLocal } from "./load-env-local.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 /** The deploys API answers 404 for the bare site name; the domain or site id works. */
 const SITE = process.env.NETLIFY_SITE_ID || "sparkwtp.netlify.app";
 
-loadEnvLocal();
+await import("./keys-preload.mjs");
 
 const git = gitFor(ROOT);
 
@@ -86,7 +84,7 @@ async function deployForSha(token, sha) {
 
 const SHA_ARG = process.argv.find((a) => a.startsWith("--sha="))?.slice("--sha=".length);
 if (SHA_ARG) {
-  const token = process.env.NETLIFY_AUTH_TOKEN || process.env.NETLIFY_TOKEN || "";
+  const token = storedKeyValue("NETLIFY_AUTH_TOKEN") || storedKeyValue("NETLIFY_TOKEN") || "";
   say("·", "site", SITE);
   say("·", "asking about", SHA_ARG.slice(0, 7));
   if (!token) {
@@ -116,7 +114,7 @@ if (SHA_ARG) {
 }
 
 async function main() {
-  const token = process.env.NETLIFY_AUTH_TOKEN || process.env.NETLIFY_TOKEN || "";
+  const token = storedKeyValue("NETLIFY_AUTH_TOKEN") || storedKeyValue("NETLIFY_TOKEN") || "";
   const eligible = await lastDeployEligible();
 
   say("·", "site", SITE);
@@ -135,11 +133,7 @@ async function main() {
   if (!token) {
     say("?", "netlify", "NO CREDENTIAL — cannot reach the deploy record");
     console.log("");
-    console.log("  This is CANNOT-TELL, not a pass. Set NETLIFY_AUTH_TOKEN in .env.local");
-    console.log("  (Netlify → User settings → Applications → Personal access tokens).");
-    console.log("");
-    console.log("  Do NOT substitute a request to the site: /api/build answers the same");
-    console.log("  question and writes reader-indistinguishable traffic to a sold store.");
+    console.log("Check saved website publishing keys in Admin Settings; use a runner session to read them.");
     process.exit(3);
   }
 

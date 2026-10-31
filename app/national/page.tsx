@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../lib/core/keys-entry.ts";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { NationalSection } from "@/components/national/national-section";
@@ -8,6 +9,7 @@ export const metadata = { title: titleFor("National government") };
 export const dynamic = "force-dynamic";
 
 export default async function NationalPage() {
+  await loadWebsiteSavedKeys();
   const cards = await readNationalCards();
   return (
     <main className="mw-page mx-auto max-w-2xl px-4 py-8 text-paper">

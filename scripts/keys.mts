@@ -1,29 +1,19 @@
-/** Lists metadata or imports existing runtime credentials; never prints a key value and never prompts for one. */
-import { productionKeysStore, readSavedKey } from "../lib/core/keys-store.ts";
-import { importExistingKeys } from "../lib/core/keys-import.ts";
+/** Lists and tests saved keys; never prints a key value and never prompts for one. */
+import { productionKeysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys } from "../lib/core/keys-test.ts";
-
-const productionBuild = process.argv.includes("--production-build");
-if (productionBuild && !(process.env.NETLIFY === "true" && process.env.CONTEXT === "production" && process.env.BRANCH === "main")) {
-  console.log("Saved keys are unchanged outside a production build.");
-  process.exit(0);
-}
 
 try {
   const store = productionKeysStore();
   const command = process.argv[2] ?? "list";
-  if (command === "import") await importExistingKeys(process.env, store, new Date().toISOString(), productionBuild ? "website" : "runner");
-  else if (command === "test") await testDueKeys(store, new Date().toISOString());
-  else if (command === "verify") {
-    const name = process.argv[3];
-    if (!name || !await readSavedKey(name)) throw new Error("Saved key unavailable");
-    console.log(`${name}: the saved key is available to this session.`);
+  if (command === "test") {
+    const name = process.argv[3], at = new Date().toISOString();
+    if (name) await store.retest(name, at);
+    await testDueKeys(store, at, name);
   }
   else if (command !== "list") throw new Error("Unknown keys command");
   const rows = await store.list();
   for (const row of rows) console.log(`${row.name}: ${row.working ? "Working" : "Not working"}; ${row.purpose}; last tested ${row.testedAt ?? "—"}`);
-  // This rollout keeps existing readers while health failures become visible in Settings and the brief.
-  if (!productionBuild && rows.some(row => !row.working)) process.exitCode = 1;
+  if (rows.some(row => !row.working)) process.exitCode = 1;
 } catch {
   console.error("The saved keys could not be reached. Check the Keys box in Admin Settings. No key value was printed.");
   process.exitCode = 1;

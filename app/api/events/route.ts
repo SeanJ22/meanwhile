@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readLocationOrigin, stampResidency, type ResidencyRelation } from "@/lib/ask/residency";
 import { appendReaderEvents } from "@/lib/db/reader-events";
 import { markerFromRequestWithBody } from "@/lib/db/run-marker";
@@ -29,6 +30,7 @@ function limiter() {
 }
 
 export async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   const raw = await request.text();
   if (raw.length > MAX_BATCH_BYTES) {
     return Response.json({ error: "payload too large" }, { status: 413 });

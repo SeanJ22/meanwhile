@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, writeFile, symlink, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -23,7 +24,7 @@ export async function checkAdapterRepair(files: readonly AdapterFile[], scope: R
     }
     const env: NodeJS.ProcessEnv = { CI_TEST_FILES: scope.testFiles.join("\n"), NODE_ENV: "test", NEXT_TELEMETRY_DISABLED: "1" };
     for (const key of ["PATH", "TMPDIR", "TEMP", "TMP", "SYSTEMROOT", "COMSPEC", "PATHEXT", "NODE_OPTIONS"]) {
-      if (process.env[key] !== undefined) env[key] = process.env[key];
+      if (storedKeyEnvironment()[key] !== undefined) storedKeyEnvironment(env)[key] = storedKeyEnvironment()[key];
     }
     await exec(process.execPath, ["scripts/ci-tests.mjs"], { cwd: checkout, env, timeout: 120_000, maxBuffer: 4 * 1024 * 1024 });
     return { ok: true, summary: `${scope.kind}: ${scope.testFiles.length} fixture and composite test files passed` };

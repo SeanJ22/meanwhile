@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /** Partition the canonical test command, never its assertions or dependencies. */
 import { createHash } from "node:crypto";
 import { spawn, spawnSync } from "node:child_process";
@@ -282,7 +283,7 @@ export async function runTests(root = process.cwd(), shardValue = process.env.CI
   writeFileSync(timingPath, "");
   process.stdout.write(header);
   persist();
-  const child = spawn(process.execPath, invocationArgs, { cwd: root, env: process.env, stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
+  const child = spawn(process.execPath, invocationArgs, { cwd: root, env: storedKeyEnvironment(), stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
   // Preserve raw spec diagnostics and stderr alongside the structured reporter.
   child.stdout.on("data", (chunk) => { appendFileSync(`${stem}.log`, chunk); process.stdout.write(chunk); });
   child.stderr.on("data", (chunk) => { appendFileSync(`${stem}.log`, chunk); process.stderr.write(chunk); });

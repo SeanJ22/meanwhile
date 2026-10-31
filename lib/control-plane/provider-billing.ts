@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /** Cached reporting facts. These never authorize work or change a spending cap. */
 export const REPORTING_PROVIDERS = ["anthropic-api", "neon", "exa", "github", "brave", "netlify"] as const;
 export type ReportingProvider = typeof REPORTING_PROVIDERS[number];
@@ -62,8 +63,7 @@ export function billingTotal(readings: readonly ProviderReading[], since: string
 }
 /** Billing credentials go only to the server-side owner-snapshot collector. */
 export function withoutBillingSecrets<T extends Record<string, string | undefined>>(env: T): T {
-  const clean = { ...env };
+  const clean = { ...storedKeyEnvironment(env) };
   for (const name of BILLING_SECRET_NAMES) delete clean[name];
-  delete clean.WTP_BILLING_ENV_FILE;
   return clean;
 }

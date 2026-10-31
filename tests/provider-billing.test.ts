@@ -2,9 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { collectProviderBilling, searchLedgersOf } from "../lib/control-plane/provider-billing-collector.ts";
 import { BILLING_SECRET_NAMES, billingTotal, withoutBillingSecrets } from "../lib/control-plane/provider-billing.ts";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
 import { billingCollectorEnvironment } from "../lib/control-plane/provider-billing-environment.ts";
 import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
 import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
@@ -107,23 +104,18 @@ test("an incomplete report cannot silently replace a previously complete provide
   assert.equal(a.reportedUsd, previous.readings[0].reportedUsd);
 });
 
-test("collector reloads the exact absolute file after rotation; siblings receive neither reporting keys nor its path", () => {
-  const dir = mkdtempSync(join(tmpdir(), "billing-env-")), file = join(dir,".env.local");
-  try {
-    writeFileSync(file, "ANTHROPIC_ADMIN_API_KEY=first\nEXA_API_KEY=must-not-reload\n");
-    const parent = { ...process.env, WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40), WTP_BILLING_ENV_FILE: file, ANTHROPIC_ADMIN_API_KEY: "stale", EXA_API_KEY: "existing-search-key" };
-    const worker = admittedRuntimeChildEnvironment({ parentEnv: parent, capability: "RESEARCH_CYCLE" });
-    assert.equal(worker.ANTHROPIC_ADMIN_API_KEY, undefined);
-    assert.equal(worker.WTP_BILLING_ENV_FILE, undefined);
-    const collector = admittedRuntimeChildEnvironment({ parentEnv: parent, capability: "CONSOLE_PUBLISHER", billingCollector: true });
-    assert.equal(billingCollectorEnvironment(collector).ANTHROPIC_ADMIN_API_KEY,"first");
-    writeFileSync(file, "ANTHROPIC_ADMIN_API_KEY=rotated\n");
-    const loaded = billingCollectorEnvironment(collector);
-    assert.equal(loaded.ANTHROPIC_ADMIN_API_KEY,"rotated");
-    assert.equal(loaded.EXA_API_KEY,"existing-search-key");
-    assert.equal(loaded.EXA_SERVICE_API_KEY,undefined);
-    assert.throws(() => billingCollectorEnvironment({ ...parent, WTP_BILLING_ENV_FILE: "relative.env" }), /NOT_ABSOLUTE/);
-  } finally { rmSync(dir,{ recursive:true,force:true }); }
+test("the collector opens saved reporting keys after rotation while siblings inherit none", async () => {
+  const parent = { ...process.env, WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40), ANTHROPIC_ADMIN_API_KEY: "stale", EXA_API_KEY: "existing-search-key" };
+  const worker = admittedRuntimeChildEnvironment({ parentEnv: parent, capability: "RESEARCH_CYCLE" });
+  assert.equal(worker.ANTHROPIC_ADMIN_API_KEY, undefined);
+  let value = "first";
+  const store = { read: async (name: string) => name === "ANTHROPIC_ADMIN_API_KEY" ? value : undefined };
+  assert.equal((await billingCollectorEnvironment(parent, store)).ANTHROPIC_ADMIN_API_KEY, "first");
+  value = "rotated";
+  const loaded = await billingCollectorEnvironment(parent, store);
+  assert.equal(loaded.ANTHROPIC_ADMIN_API_KEY, "rotated");
+  assert.equal(loaded.EXA_API_KEY, "existing-search-key");
+  assert.equal(loaded.EXA_SERVICE_API_KEY, undefined);
 });
 
 test("hunt attribution does not add account reports or count shared reservation keys twice", async () => {

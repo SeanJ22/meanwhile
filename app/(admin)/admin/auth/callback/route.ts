@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../../../lib/core/keys-values.ts";
 /**
  * The registered redirect URI: `ADMIN_ORIGIN` + `OAUTH_CALLBACK_PATH`, never the request's own host.
  * Every decision is `completeGoogleCallback` in `lib/control-plane/admin-google.ts`.
@@ -36,18 +38,19 @@ export const runtime = "nodejs";
 const resolveKey = createJwksResolver({ fetchImpl: (...args) => fetch(...args) });
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
 
   const nowSeconds = Math.floor(Date.now() / 1000);
-  const sessionKey = process.env[ADMIN_SESSION_KEY_VAR];
+  const sessionKey = storedKeyValue(ADMIN_SESSION_KEY_VAR);
   const verdict = await completeGoogleCallback({
     query: request.nextUrl.searchParams,
     stateCookie: request.cookies.get(OAUTH_STATE_COOKIE)?.value,
     sessionKey,
-    clientId: process.env[GOOGLE_CLIENT_ID_VAR],
-    clientSecret: process.env[GOOGLE_CLIENT_SECRET_VAR],
+    clientId: storedKeyValue(GOOGLE_CLIENT_ID_VAR),
+    clientSecret: storedKeyValue(GOOGLE_CLIENT_SECRET_VAR),
     redirectUri: `${ADMIN_ORIGIN}${OAUTH_CALLBACK_PATH}`,
     nowSeconds,
     fetchImpl: (...args) => fetch(...args),

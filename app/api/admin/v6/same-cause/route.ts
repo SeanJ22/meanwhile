@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest, NextResponse } from "next/server";
 import { v6StuckGet } from "@/lib/control-plane/admin-view/v6-stuck-route.ts";
@@ -8,6 +9,7 @@ export const runtime = "nodejs";
 
 /** `admin-v6/sameCause@1`: every stuck row counted by cause, with one "send agents" for the whole group. Read-only. */
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   return v6StuckGet(request, "sameCause");
 }
 

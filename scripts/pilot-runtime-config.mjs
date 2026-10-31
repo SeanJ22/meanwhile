@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * Validate the standing runner's immutable launch boundary. It reads no
  * environment-file bytes; the only environment fact it returns is the resolved
@@ -17,7 +18,7 @@ const FULL_SHA = /^[0-9a-f]{40}$/i;
  * Check the runner's startup reads against its explicitly configured production destination.
  * @param {Record<string, string | undefined>} env
  */
-export function assertProductionDatabaseTarget(env = process.env) {
+export function assertProductionDatabaseTarget(env = storedKeyEnvironment()) {
   if (env.WTP_RUNTIME_MODE !== "production") return;
   const refuse = () => { throw new Error("PRODUCTION_DATABASE_TARGET_REFUSED: DATABASE_URL must match the approved production reader and writer endpoint and database"); };
   const target = (connection) => {
@@ -29,8 +30,8 @@ export function assertProductionDatabaseTarget(env = process.env) {
       return `${host}${url.pathname}`;
     } catch { return refuse(); }
   };
-  const reader = target(env.WTP_PRODUCTION_DATABASE_URL_READONLY);
-  if (target(env.DATABASE_URL) !== reader || target(env.WTP_PRODUCTION_DATABASE_URL_WRITE) !== reader) refuse();
+  const reader = target(storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY", env));
+  if (target(storedKeyValue("DATABASE_URL", env)) !== reader || target(storedKeyValue("WTP_PRODUCTION_DATABASE_URL_WRITE", env)) !== reader) refuse();
 }
 
 /** Staging digests stay in their worktree; the shared production mirror is never a fallback. */

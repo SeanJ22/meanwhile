@@ -7,7 +7,8 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import { checkReaderTraces, missingReaderTraceFiles, readerTraceRequirements } from "../lib/holdings/reader-trace.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import nextConfig from "../next.config.ts";
+import configuration from "../next.config.ts";
+const nextConfig = await configuration("phase-test");
 
 test("every dynamic reader contract fails if one holding is removed from deployment tracing", () => {
   const contracts = readerTraceRequirements(process.cwd());

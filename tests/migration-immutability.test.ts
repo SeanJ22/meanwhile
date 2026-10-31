@@ -314,7 +314,7 @@ test("an unreachable merge base is COULD NOT TELL, never a pass", () => {
 test("the gate exits 2 on COULD NOT TELL and 1 on a violation — they are different answers", () => {
   const source = readFileSync(GATE, "utf8");
   const guardAt = source.indexOf("evaluateMigrationImmutability({");
-  const credentialAt = source.indexOf("const connection = process.env[VARIABLE]");
+  const credentialAt = source.indexOf("const connection = storedKeyEnvironment()[VARIABLE]");
   assert.ok(guardAt > 0, "the gate no longer runs the immutability guard at all");
   assert.ok(
     guardAt < credentialAt,

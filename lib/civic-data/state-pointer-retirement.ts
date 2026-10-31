@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { readRetirementProgress, retirementTargets } from "./state-retirement-progress.ts";
 import { withPassDeadline } from "../ops/independent-runtime-pass.ts";
 import { randomBytes } from "node:crypto";
@@ -60,8 +61,8 @@ export async function reconcileNationalStatePointers(input: {
   if (Date.now() >= deadlineMs) return [];
   const states = targets.filter(target => target.origin_version === unfinished.versionId && !progress.get(unfinished.versionId)?.has(target.state)).map(target => target.state);
   // Exactly one origin; successful state units are already their own durable resume cursor.
-  const childEnv = { ...(Number.isFinite(deadlineMs) ? withPassDeadline(input.env, deadlineMs) : input.env), [STATE_RETIREMENT_KEY_ENV]: randomBytes(32).toString("hex") };
-  const connection = input.env.DATABASE_URL;
+  const childEnv = { ...storedKeyEnvironment((Number.isFinite(deadlineMs) ? withPassDeadline(input.env, deadlineMs) : input.env)), [STATE_RETIREMENT_KEY_ENV]: randomBytes(32).toString("hex") };
+  const connection = storedKeyValue("DATABASE_URL", input.env);
   if (!connection) throw new Error("STATE_RETIREMENT_DATABASE_UNAVAILABLE");
   const directory = join(tmpdir(), "meanwhile-held", databaseIdentity(connection), "state-retirement", `${process.pid}-${Date.now()}`);
   await mkdir(temporaryPath(directory), { recursive: true, mode: 0o700 });

@@ -77,4 +77,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default async function configuration(phase: string): Promise<NextConfig> {
+  if (phase === "phase-production-build" && process.env.NETLIFY === "true" && process.env.CONTEXT === "production" && process.env.BRANCH === "main") {
+    const { refreshSavedKeys } = await import("./lib/core/keys-runtime.ts");
+    await refreshSavedKeys("build");
+  }
+  return nextConfig;
+}

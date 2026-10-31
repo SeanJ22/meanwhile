@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { CP01_COUNTS_DECLARATIONS, controlCountsMigrationDefinition, expandControlCounts, contractControlCounts, contractControlCountsMigrationDefinition } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
 import { LEGISTAR_WORK_MIGRATION_SOURCE,legistarWorkMigrationDefinition,expandLegistarWork } from "../lib/control-plane/repository/migrations/RB-A9.ts";
 import { createHash } from "node:crypto";
@@ -127,7 +128,7 @@ async function withDatabase<T>(connection: string, operation: (sql: Sql) => Prom
 }
 
 export async function applyControlPlaneMigrations(args: string[], deps: Dependencies = {}): Promise<void> {
-  const env = deps.env ?? process.env, root = deps.root ?? process.cwd();
+  const env = deps.env ?? storedKeyEnvironment(), root = deps.root ?? process.cwd();
   const connection = productionControlPlaneTarget(args, env);
   const phase = args.find(arg => arg.startsWith("--phase="))!.slice(8) as Entry["phase"];
   const dry = args.includes("--dry");

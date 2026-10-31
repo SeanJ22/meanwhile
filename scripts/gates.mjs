@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * The local gate set: the commands CI requires (`.github/workflows/build-check.yml`).
  *
@@ -61,7 +62,7 @@ const GATES = [
      */
     id: "db:gate",
     ciJob: "gates (test · lint · tsc)",
-    command: "pnpm exec tsx scripts/db-shipping-gate.mts",
+    command: "pnpm exec tsx --import ./scripts/register-test-loader.mjs scripts/db-shipping-gate.mts",
     why: "a deploy may not cross its own migrations — 0021 and 0022 shipped ahead of the schema",
   },
   {
@@ -161,7 +162,7 @@ for (const gate of GATES) {
     /* The suite summary is read on the success path too. */
     const out = execSync(gate.command, {
       stdio: ["ignore", "pipe", "pipe"],
-      env: { ...process.env, ...(gate.env ?? {}) },
+      env: { ...storedKeyEnvironment(), ...storedKeyEnvironment((gate.env ?? {})) },
       encoding: "utf8",
       maxBuffer: 256 * 1024 * 1024,
     });

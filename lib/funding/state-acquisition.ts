@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { createReadStream } from "node:fs";
@@ -255,7 +256,8 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
   const headers = new Headers({ accept: "application/json, text/csv, application/zip, */*" });
   for (const [name, value] of Object.entries(resource.headers ?? {})) headers.set(name, value);
   if (resource.method && body && !headers.has("content-type")) headers.set("content-type", resource.requestEncoding === "FORM" ? "application/x-www-form-urlencoded; charset=UTF-8" : "application/json");
-  if (resource.kind === "SOCRATA" && process.env.SOCRATA_APP_TOKEN) headers.set("x-app-token", process.env.SOCRATA_APP_TOKEN);
+  const socrataToken = storedKeyValue("SOCRATA_APP_TOKEN");
+  if (resource.kind === "SOCRATA" && socrataToken) headers.set("x-app-token", socrataToken);
   if (prior?.etag) headers.set("if-none-match", prior.etag);
   else if (prior?.modified) headers.set("if-modified-since", prior.modified);
   const acquired = await campaignSourceResponse(url, { headers, ...(resource.method ? { method: resource.method, body: resource.requestEncoding === "FORM" ? new URLSearchParams(Object.entries(body ?? {}).map(([name, value]) => [name, value === null || value === undefined ? "" : String(value)])).toString() : JSON.stringify(body) } : {}) }, options);

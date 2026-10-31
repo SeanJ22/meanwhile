@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
  */
@@ -312,7 +313,7 @@ sourceContext=canonicalCivicDataHash([sourceContext,lastSourceRawHash]);
 }
 
 // ---- Official bill titles from Congress.gov ------------------------------
-const apiKey = process.env.CONGRESS_API_KEY;
+const apiKey = storedKeyValue("CONGRESS_API_KEY");
 let titled = 0;
 if (apiKey) {
   const billType = (legis: string): { type: string; num: string } | null => {

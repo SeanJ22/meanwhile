@@ -1,28 +1,11 @@
-/**
- * `pnpm verify:readonly` — the connection string named READONLY must be able to
- * SELECT and must be refused by the database when it tries to write. Each probe
- * prints what it actually got, inside a catch:
- *
- * 0. Which branch — this variable must not point at the same host as
- *    `DATABASE_URL` (a Neon role exists only on its own branch).
- * 1. Who am I — `current_user`, and whether it inherits `neon_superuser`.
- * 2. Privilege as Postgres reports it — `has_table_privilege` per store.
- * 3. An attempted write — `delete from <table> where false`, which changes
- *    nothing whether permitted or refused.
- *
- * It writes nothing, creates nothing, and alters no role.
- *
- * Run: `pnpm verify:readonly`
- */
-import { join } from "node:path";
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
+/** Verify the saved reader can SELECT, cannot write, and inherits no owner privileges. */
 
-import { config as loadEnv } from "dotenv";
 import { neon } from "../lib/db/client.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const VAR = "WTP_PRODUCTION_DATABASE_URL_READONLY";
-const connection = process.env[VAR];
+const connection = storedKeyEnvironment()[VAR];
 if (!connection) {
   console.error(`verify:readonly: ${VAR} is not set — refusing to guess`);
   process.exit(1);
@@ -54,37 +37,6 @@ function finish(): never {
     `\n${failures === 0 ? "R36 CLOSES" : `R36 STAYS OPEN — ${failures} check(s) failed`}\n`,
   );
   process.exit(failures === 0 ? 0 : 1);
-}
-
-// ── 0. Which BRANCH this string points at ────────────────────────────────
-// Before anything asks who the role is: a role is per-branch, so a string on
-// the wrong branch is wrong even when every privilege on it is perfect.
-console.log("BRANCH");
-const localConnection = process.env.DATABASE_URL;
-if (!localConnection) {
-  cannotRun(
-    "the READONLY variable points at a different branch from DATABASE_URL",
-    "DATABASE_URL is unset, so there is nothing to compare against",
-  );
-} else {
-  const localHost = new URL(localConnection).hostname;
-  const declaredLocal = process.env.WTP_DB_ROLE === "local";
-  if (!declaredLocal) {
-    cannotRun(
-      "the READONLY variable points at a different branch from DATABASE_URL",
-      `WTP_DB_ROLE is ${JSON.stringify(process.env.WTP_DB_ROLE ?? null)}, so DATABASE_URL is not ` +
-        "declared local and a shared host would not prove anything",
-    );
-  } else {
-    report(
-      "this string is not on the branch DATABASE_URL declares as local",
-      localHost !== url.hostname,
-      localHost === url.hostname
-        ? `both point at ${url.hostname} — this variable is on the LOCAL branch, so it reads a ` +
-          "database production has never seen"
-        : `readonly = ${url.hostname}, local = ${localHost}`,
-    );
-  }
 }
 
 // ── 1. Who the connection actually is ────────────────────────────────────

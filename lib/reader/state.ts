@@ -330,8 +330,8 @@ export async function readStatePersonStore(jurisdiction: string, id: string): Pr
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const cte = (statement: { text: string; params: readonly unknown[] }) => { const offset = params.length; params.push(...statement.params); return statement.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + offset}`); };
   const official = cte(zipOfficialStatement(jurisdiction.slice(3), [])), sources = cte({ ...zipSourcesStatement(jurisdiction.slice(3), []), params: [keys.slice(1), []] });
-  const [rows] = await query([{ params, text: `WITH state_geography AS (SELECT ARRAY(SELECT 'CURATED_READER_RECORD:US:plain-english-translations:'||(reader_payload_node(d.item)->>'ocdId') FROM civic_data_promotions p,
-      LATERAL reader_payload_members(reader_payload_node(reader_payload_node(p.payload)->'roster')->'divisions') d WHERE p.key=($1::text[])[2] AND reader_payload_node(d.item)->>'officeholderId'=$2::text) AS canonical_keys),
+  const [rows] = await query([{ params, text: `WITH person_roster AS MATERIALIZED (${selectedPointerSql.replace("p.key=$1", "p.key=($1::text[])[2]")}), state_geography AS (SELECT ARRAY(SELECT 'CURATED_READER_RECORD:US:plain-english-translations:'||(reader_payload_node(d.item)->>'ocdId')
+      FROM person_roster,LATERAL reader_payload_members(reader_payload_node(reader_payload_node(person_roster.payload)->'roster')->'divisions') d WHERE person_roster.published AND reader_payload_node(d.item)->>'officeholderId'=$2::text) AS canonical_keys),
     zip_official AS (${official}), zip_people AS (SELECT jsonb_build_object('roster',jsonb_build_object('officeholders',jsonb_build_array(jsonb_build_object('id',$2::text,'personId',$2::text)))) AS payload), person AS (${sources}) SELECT * FROM person UNION ALL SELECT * FROM zip_official` }]);
   return { readPromotion: refuse, readCandidate: refuse, readPromotedEntry: async (recordClass, scope) => selectedStateEntry(recordClass, scope, rows.find(row => row.key === `${recordClass}:${scope}`)) };
 }

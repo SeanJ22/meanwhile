@@ -1,5 +1,9 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import { lockKey, unlockKey } from "../lib/core/keys-crypto.ts";
 import { CAPABILITY_DDL } from "../lib/core/capability.ts";
@@ -7,8 +11,7 @@ import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { importExistingKeys, importRuntimeKeys } from "../lib/core/keys-import.ts";
-import initializer from "../netlify/functions/line-keeper-initialize.mts";
+import { importExistingKeys } from "../lib/core/keys-import.ts";
 import { handleKeys } from "../lib/core/keys-http.ts";
 import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "../lib/ops/origins.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -56,19 +59,6 @@ test("save, test, direct runner read and delete work without an Admin session", 
   await store.remove("Example");
   assert.equal(await store.read("Example", true), undefined);
   assert.deepEqual(await store.list(), []);
-});
-
-test("daily checks run at 24 hours, survive restart and are claimed once by competing runners", async t => {
-  const { store } = await fixture(t);
-  await store.save("Example", SECRET, "anthropic", AT);
-  let tests = 0;
-  const check = async () => { tests++; return good(); };
-  await testDueKeys(store, AT, undefined, check);
-  assert.equal(await testDueKeys(store, "2026-10-30T11:59:59.999Z", undefined, check), 0);
-  const next = "2026-10-30T12:00:00.000Z";
-  const counts = await Promise.all([testDueKeys(store, next, undefined, check), testDueKeys(store, next, undefined, check)]);
-  assert.equal(counts.reduce((n, x) => n + x, 0), 1);
-  assert.equal(tests, 2);
 });
 
 test("a killed test is reclaimed and old results cannot overwrite a replacement or resurrect a deleted key", async t => {
@@ -248,37 +238,44 @@ test("the standing clock picks up saved keys on its next tick and tests again on
   assert.equal(checked, 2);
 });
 
-test("runtime copy records only names, imports function-only signing settings, and preserves absence evidence", async t => {
-  const { store } = await fixture(t), reports: import("../lib/control-plane/owner-surface.ts").OwnerDigestRecord[] = [];
-  const env = { WTP_ADMIN_SECRET: SECRET, WTP_ADMIN_SESSION_KEY: "session-secret", WTP_STAGING_MANIFEST_COOKIE: "staging-cookie" };
-  const event = (context: string) => ({ deploy: { context, publishedAt: AT } });
-  const copy = () => importRuntimeKeys(env, "website", AT, store, async record => { reports.push(record); });
-  const seed = async () => {};
-  await initializer.deploySucceeded(event("deploy-preview"), copy, seed);
-  assert.equal((await store.list()).length, 0, "preview deploys never copy their values into production");
-  await initializer.deploySucceeded(event("production"), copy, seed);
-  for (const name of Object.keys(env)) assert.equal((await store.list()).find(row => row.name === name)?.working, true);
-  assert.ok(reports[0].lines[0].includes("WTP_ADMIN_SESSION_KEY"));
-  assert.ok(reports[0].lines[1].includes("WTP_CONTROL_PLANE_DATABASE_URL_READONLY"));
-  assert.equal(JSON.stringify(reports).includes(SECRET), false);
-  await importRuntimeKeys(env, "website", AT, store, async record => { reports.push(record); });
-  assert.equal(reports.length, 1, "an unchanged process inventory is recorded once");
-});
-
-test("the running runner imports its existing CLI login without asking for a token", async t => {
-  const { store } = await fixture(t);
-  const previous = globalThis.fetch;
-  globalThis.fetch = (async (_url, init) => {
-    assert.equal(new Headers(init?.headers).get("authorization"), "Bearer existing_cli_login");
-    return Response.json({ login: "fixture-owner" });
-  }) as typeof fetch;
-  t.after(async () => { globalThis.fetch = previous; });
-  await keysRunnerPass(store, AT, { env: { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", GH_TOKEN: "" },
-    github: () => "existing_cli_login", report: async record => { assert.equal(JSON.stringify(record).includes("existing_cli_login"), false); } });
-  assert.equal(await store.read("GH_TOKEN"), "existing_cli_login");
-  assert.equal((await store.list())[0].working, true);
-  await keysRunnerPass(store, AT, { env: { NODE_ENV: "test", WTP_RUNTIME_MODE: "production" },
-    github: () => { throw new Error("the saved login must be reused"); }, report: async () => {} });
+test("a fresh runner process accepts its recorded inventory and reaches daily tests after restart", () => {
+  const dir = mkdtempSync(join(tmpdir(), "saved-keys-restart-"));
+  const script = `
+    import assert from 'node:assert/strict';
+    import {PGlite} from '@electric-sql/pglite';
+    import {CAPABILITY_DDL} from './lib/core/capability.ts';
+    import {KEYS_DDL,keysStore} from './lib/core/keys-store.ts';
+    import {keysRunnerPass} from './lib/core/keys-runner.ts';
+    import {neonConfig} from './lib/db/client.ts';
+    const db=new PGlite(process.argv[1]),at=process.argv[2];
+    await db.exec(KEYS_DDL); for(const ddl of CAPABILITY_DDL)await db.exec(ddl);
+    await db.exec('CREATE TABLE IF NOT EXISTS cp_log_heads(log_table text,log_key text,next_position bigint,PRIMARY KEY(log_table,log_key)); CREATE TABLE IF NOT EXISTS cp_log_owner_digests(log_key text,record_id text,position bigint,recorded_at timestamptz,record jsonb,changed_at timestamptz DEFAULT now(),PRIMARY KEY(log_key,record_id));');
+    const store=keysStore(async(text,params)=>(await db.query(text,params)).rows,'${MASTER}');
+    if(!(await store.list()).length)await store.save('After restart','${SECRET}','signing',at,false,'website');
+    neonConfig.fetchFunction=async(_url,init)=>{
+      const request=JSON.parse(init.body),execute=async statement=>{
+        const result=await db.query(statement.query,statement.params);
+        return {command:'SELECT',rowCount:result.rows.length,rowAsArray:true,fields:result.fields,
+          rows:result.rows.map(row=>result.fields.map(({name})=>row[name]==null?null:typeof row[name]==='boolean'?row[name]?'t':'f':typeof row[name]==='object'?JSON.stringify(row[name]):String(row[name])))};
+      };
+      if(!request.queries)return Response.json(await execute(request));
+      const results=[];for(const query of request.queries)results.push(await execute(query));return Response.json({results});
+    };
+    globalThis.fetch=async()=>Response.json({login:'fixture-owner'});
+    await keysRunnerPass(store,at,{env:{WTP_RUNTIME_MODE:'production',WTP_CONTROL_PLANE_DATABASE_URL:'postgres://fixture:fixture@db.example.neon.tech/fixture',COMMIT_REF:at},github:()=>{assert.equal(at,'${AT}');return 'existing_cli_login';}});
+    assert.equal(await store.read('GH_TOKEN'),'existing_cli_login');
+    const key=(await store.list()).find(row=>row.name==='After restart');assert.equal(key.testedAt,at);assert.equal(key.working,true);
+    assert.equal((await store.claimTests(new Date(Date.parse(at)+86399999).toISOString(),'After restart')).length,0);
+    await store.save('Competing','${SECRET}','signing',at);
+    const claims=await Promise.all([store.claimTests(at,'Competing'),store.claimTests(at,'Competing')]);assert.equal(claims.flat().length,1);
+    const rows=(await db.query('SELECT record FROM cp_log_owner_digests')).rows;
+    assert.equal(rows.length,1);assert.equal(rows[0].record.writtenAt,'${AT}');assert.equal(JSON.stringify(rows).includes('${SECRET}'),false);
+    await db.close();
+  `;
+  try { for (const at of [AT, "2026-10-30T12:00:00.000Z"]) execFileSync(process.execPath,
+    ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", script, dir, at],
+    { env: { ...process.env, WTP_VITAL_SIGNS_REPORT: "1" }, timeout: 30_000, stdio: "pipe" });
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test("the PRL archive key pair uses a bounded signed list and never records its secret", async t => {

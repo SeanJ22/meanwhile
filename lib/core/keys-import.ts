@@ -39,7 +39,7 @@ export async function importRuntimeKeys(env: Readonly<Record<string, string | un
   else {
     const { createPgRepositories } = await import("../control-plane/repository/pg-store.ts");
     const repos = await createPgRepositories(env.WTP_CONTROL_PLANE_DATABASE_URL!, at, { skipBootstrap: true });
-    await repos.ownerDigests.append(`keys-copy:${source}`, id, record, at);
+    await repos.ownerDigests.append(`keys-copy:${source}`, id, (await repos.ownerDigests.readEntry!(`keys-copy:${source}`, id))?.record ?? record, at);
   }
   recorded.add(id);
 }

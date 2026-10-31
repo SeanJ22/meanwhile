@@ -1151,19 +1151,19 @@ const vitalSignsTimer = setInterval(() => {
 }, 60_000);
 vitalSignsTimer.unref();
 
+/** Text safe to store: secrets from the environment and connection strings are taken out. */
+function privateText(text: string): string {
+  for (const [name, value] of Object.entries(process.env)) if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) text = text.split(value).join("[private]");
+  return text.replace(/postgres(?:ql)?:\/\/[^\s"'<>]+/gi, "[private connection]");
+}
+
 async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: number | null; signal: string | null }): Promise<void> {
   if (provider !== "postgres") return;
 
   const abort = nativeAbortLine(currentCycleErrors);
   const failedRead = neonReadFailureLine(currentCycleErrors);
   const tail = currentCycleErrors.split("\n").filter(line => line && line.trim() !== abort).slice(-8).join("\n");
-  let lastError = [abort?.slice(0, 400), failedRead, tail.slice(-1600)].filter(Boolean).join("\n").slice(0, 2000) || null;
-  if (lastError) {
-    for (const [name, value] of Object.entries(process.env)) {
-      if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) lastError = lastError.split(value).join("[private]");
-    }
-    lastError = lastError.replace(/postgres(?:ql)?:\/\/[^\s"'<>]+/gi, "[private connection]");
-  }
+  const lastError = privateText([abort?.slice(0, 400), failedRead, tail.slice(-1600)].filter(Boolean).join("\n").slice(0, 2000)) || null;
   try {
     const repos = await ownerRepositories();
     if (!repos) return;
@@ -1299,7 +1299,10 @@ async function runLaneChild(id: string, databaseBytesPerRun: number, script: str
     onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
     onStarted: (_id, child) => { laneChildren.set(id, child); } });
   laneChildren.delete(id);
-  if (!run || run.status !== 0) throw new Error(stopped);
+  if (run?.status === 0) return;
+  // The reason: the runner's own kill reason, else the exit or signal and last error lines, fitted to the 400 characters the heartbeat keeps.
+  const lines = run?.stderr.split("\n").filter(Boolean) ?? [], errors = lines.filter(line => /^(?:\w*Error\b|[A-Z][A-Z_]{4,}:)/.test(line));
+  throw new Error(`${stopped}: ${privateText(run?.errorMessage ?? [`exit ${run?.status ?? `signal ${run?.signal}`}`, ...(errors.length ? errors : lines.slice(-1)).slice(-2)].join("; ")).slice(0, 380 - stopped.length)}`);
 }
 function drainLaneChildren(): void {
   for (const [id, child] of laneChildren) if (child.connected) child.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error(`${id} drain failed`, error); });

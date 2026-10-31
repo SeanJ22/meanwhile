@@ -44,7 +44,7 @@ test("the runner beats every minute through bounded beats, and a routine pass be
 test("startup and the standing clock write the running code, at most once a minute, without starting research or touching cycle fields", async () => {
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
   const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & { stripTypeScriptTypes(source: string): string };
-  const write = runner.match(/\nasync function writeLiveCycleBeat\([\s\S]*?\n\}/)?.[0];
+  const write = runner.match(/\n(?:async )?function (?:privateText|writeLiveCycleBeat)\([\s\S]*?\n\}/g)?.join("");
   const clock = runner.match(/\nconst STANDING_BEAT_MS[\s\S]*?BEAT_BOUND_MS, lateBeat\);/)?.[0];
   assert.ok(write && clock);
   const tick = runner.match(/function runStandingRuntimeTick\([\s\S]*?\n\}/)?.[0] ?? "";

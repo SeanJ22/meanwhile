@@ -380,7 +380,6 @@ function checkCycleHonorsDispatch(src: string): void {
   assert.ok(sort < bands, "the reader-impact bands come before the deterministic order");
 
   assert.match(src, /pendingResearchLaneAcknowledgment\(/, "lane PAUSE and RESUME acknowledgments use the shared owner-intent boundary");
-  assert.match(src, /pause: null,/, "the working heartbeat does not say it is not paused");
 }
 
 test("freshness-shadow.mts honors DISPATCH before ordering both lanes and acknowledges the lane PAUSE / RESUME", () => {

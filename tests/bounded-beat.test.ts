@@ -5,7 +5,7 @@ import * as nodeModule from "node:module";
 import { createContext, runInContext } from "node:vm";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { liveCycleHeartbeat, standingHeartbeat, type CycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { JobRunBook } from "../lib/control-plane/job-runs.ts";
 
 test("a hung beat is left behind after its bound and the next beat writes", async () => {
@@ -81,4 +81,15 @@ test("startup and the standing clock write the running code, at most once a minu
   context.RUNNING_CODE_SHA = "b".repeat(40);
   await runInContext("standingBeat()", context);
   assert.equal((await repos.runnerHeartbeat.read("pilot-runner"))!.value.testedSha, "b".repeat(40), "the next minute writes again");
+  context.INTERVAL_MIN = 60;
+  context.jobRuns.register("platform-census", 600_000);
+  context.jobRuns.failed("platform-census", "Platform census stopped: exit 1; Error: source unavailable");
+  await context.writeLiveCycleBeat("2026-10-27T00:00:00Z");
+  const active = (await repos.runnerHeartbeat.read("pilot-runner"))!.value as CycleHeartbeat;
+  assert.equal(active.cycle?.finishedAt, null);
+  assert.equal(active.jobs?.["platform-census"]?.lastError, "Platform census stopped: exit 1; Error: source unavailable");
+  await context.writeLiveCycleBeat("2026-10-27T00:00:00Z", { code: 1, signal: null });
+  const finished = (await repos.runnerHeartbeat.read("pilot-runner"))!.value;
+  assert.equal(finished.lastCycleOk, false);
+  assert.deepEqual(finished.jobs, active.jobs, "finishing research keeps the standing jobs and their real errors");
 });

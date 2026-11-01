@@ -211,8 +211,6 @@ import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
 import { readSpendWindow, EMPTY_SPEND } from "../lib/control-plane/spend-window.ts";
 import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
-import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
 import type { FreshnessCycleOutcome } from "../lib/control-plane/owner-surface.ts";
 import {
   appendFreshnessCycleDigest,
@@ -234,7 +232,7 @@ import {
   type AdminConfig,
   type AdminConfigRead,
 } from "../lib/control-plane/gateway/admin-config.ts";
-import { readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
+import { readSetting } from "../lib/control-plane/settings.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -394,8 +392,6 @@ const MAX_DISPATCHES = canary
   ? 1
   : boundedNumber(ceilingArg?.slice("--max=".length), Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
 const SCOUT_JOB_WORST_CASE_USD = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch);
-const intervalArg = argv.find((a) => a.startsWith("--interval="));
-const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
 const onlyArg = argv.find((a) => a.startsWith("--only="));
 const ONLY = onlyArg ? onlyArg.slice("--only=".length) : null;
 
@@ -1241,7 +1237,6 @@ const credentialConfigured = workerKey.length > 0;
 
 let discoverySearchOn = false;
 
-let discoverySearchReceiptId: string | null = null;
 let discoverySearchDecision: string = "OFF: the owner has not allowed paid discovery search in Admin";
 let configRead: AdminConfigRead;
 let configRevision = 0;
@@ -1264,7 +1259,6 @@ if (!dry && ONLY === null && IDS === null) try {
 let ceilingOverrideUsd = fleetSpendCeilingOverrideUsd(config);
 discoverySearchOn = discoverySearchEnabled(config);
 if (config?.discoverySearch !== undefined && config.discoverySearch !== null) {
-  discoverySearchReceiptId = config.discoverySearch.receiptId;
   discoverySearchDecision =
     `${discoverySearchOn ? "ON" : "OFF"}: decided in Admin at ${config.discoverySearch.decidedAt} (receipt ${config.discoverySearch.receiptId})`;
 }
@@ -2682,48 +2676,6 @@ const codeIdentity = pending.sync("code-identity", () => {
     return null;
   }
 });
-
-const heartbeat: RunnerHeartbeat = {
-  formatVersion: OWNER_SURFACE_FORMAT_VERSION,
-  beatAt: finishedAt,
-  lastCycleStartedAt: NOW,
-  lastCycleFinishedAt: finishedAt,
-  nextCycleDueAt: INTERVAL_MIN === null ? null : new Date(Date.now() + INTERVAL_MIN * 60_000).toISOString(),
-  lastCycleOk: true,
-  testedSha: RUNNING_CODE_SHA,
-  host: HOST,
-
-  pause: null,
-  codeIdentity,
-
-  discoverySearch: {
-    receiptId: discoverySearchReceiptId,
-    enabled: discoverySearchOn,
-    perCycle: SEARCH_PER_CYCLE,
-    perDay: SEARCH_PER_DAY,
-    appliedAt: NOW,
-    detail: discoverySearchDecision,
-  },
-
-  settings: runnerSettingsEcho(settingsConfig, NOW),
-};
-try {
-  await finalStep("heartbeat", async () => {
-    const beat = await pending.step("heartbeat:read", () => repos.runnerHeartbeat.read(RUNNER_ID));
-    const nextHeartbeat: RunnerHeartbeat = {
-      ...heartbeat,
-
-      intakeRuntime: beat?.value.intakeRuntime ?? null,
-
-    };
-    await pending.step("heartbeat:write", async () => {
-      if (beat === null) await repos.runnerHeartbeat.put(RUNNER_ID, nextHeartbeat, finishedAt);
-      else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, beat.revision, nextHeartbeat, finishedAt);
-    });
-  });
-} catch (error) {
-  runtimeConditions.push(`the runner heartbeat could not be written: ${failedStep("heartbeat", error)}`);
-}
 
 const deferredByLine = Object.entries(laneCounts.deferredBy)
   .map(([k, v]) => `${k} ${v}`)

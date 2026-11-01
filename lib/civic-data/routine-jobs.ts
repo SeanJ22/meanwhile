@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { admitJobLaunch } from "../control-plane/job-breaker-local.ts";
 import { withDatabaseJob } from "../db/transfer-by-caller.ts";
 
@@ -35,7 +36,7 @@ export const ROUTINE_JOBS = {
 
 /** In-process work runs under its own meter. A job slowed for reading far more than its normal skips a turn now and then; its fallback stands and its work stays owed. */
 export async function runRoutineJob<T>(job: Pick<RoutineJob, "id">, run: () => Promise<T>, slowed: (id: string) => T,
-  env: NodeJS.ProcessEnv = process.env): Promise<T> {
+  env: NodeJS.ProcessEnv = storedKeyEnvironment()): Promise<T> {
   if (!admitJobLaunch(job.id, env)) return slowed(job.id);
   return withDatabaseJob(job.id, run);
 }

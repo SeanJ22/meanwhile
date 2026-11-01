@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 
@@ -17,6 +18,7 @@ export const runtime = "nodejs";
  * and the fix completions still show.
  */
 async function get(request: NextRequest) {
+  await loadWebsiteSavedKeys();
   return adminGet(request, async (observedAt) => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error(opened.detail);

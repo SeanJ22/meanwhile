@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { pluralVoteJurisdiction, pluralVoteState, PLURAL_VOTES_PARSER, PLURAL_VOTES_SOURCE, parsePluralBill, type PluralBillEvidence } from "./votes.ts";
 import { parsePluralBulkSessionFile } from "./vote-bulk.ts";
@@ -64,7 +65,7 @@ export async function acquireStateVotes(input: SharedOptions & {
   resume?: PluralVoteProgress;
   onCheckpoint?: (progress: PluralVoteProgress) => Promise<void>;
 }) {
-  const state = pluralVoteState(input.state), apiKey = input.apiKey ?? process.env.PLURAL_API_KEY;
+  const state = pluralVoteState(input.state), apiKey = input.apiKey ?? storedKeyValue("PLURAL_API_KEY");
   const now = input.now?.() ?? new Date().toISOString();
   const shared = { store: input.store, locks: input.locks, fetchImpl: input.fetchImpl, now: input.now,
     sourceId: PLURAL_VOTES_SOURCE, parserVersion: PLURAL_VOTES_PARSER, checkAfterMs: DAY, signal: input.signal };

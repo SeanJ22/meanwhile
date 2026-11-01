@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -49,7 +50,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   // Launch spacing reads this clock, so a test can step past a slowed job's wait without sleeping.
   const clock = { now: Date.now() };
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
-  const context = createContext({
+  const context = createContext({ storedKeyEnvironment,
     provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, JOB_SLOWED_WORDS,
     admitJobLaunch: (job: string) => admitJobLaunch(job, process.env, clock.now), jobRuns: new JobRunBook(), BREAKER_SLOWED: "slowed",
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
@@ -213,7 +214,7 @@ test("a pending restart drains the members, slice and page-reader children, and 
   for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["slices", "runSliceLane", /Slices stopped/], ["parser-lane", "runParserLane", /page readers stopped/]] as const) {
     for (const status of [0, null]) {
       const sent: unknown[] = [];
-      const context = createContext({ provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
+      const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
         standingRuntimeScheduler: { inFlightIds: () => [lane] }, researchCycleActive: false, drainHunterLane: () => {}, console: { log: () => {}, error: () => {} }, process,
         SLICE_JOB: { id: "slices", databaseBytesPerRun: 1 }, LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
         RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true,
@@ -233,7 +234,7 @@ test("a pending restart drains the members, slice and page-reader children, and 
 
 test("a lane child that stops tells the heartbeat why: the runner's kill reason, or its exit and last error lines, with secrets taken out", async () => {
   const stopped = (result: object) => {
-    const context = createContext({ provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
+    const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
       RUNTIME_NO_PROGRESS_MS: 1, PARSER_LANE_DATABASE_BYTES: 1, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ id: "parser-lane", status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
     runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", "runParserLane"].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
     return (runInContext(`runParserLane(Date.now() + 60000)`, context) as Promise<void>).then(() => "", (error: Error) => error.message);

@@ -410,7 +410,7 @@ test("THE PLANT: each narrowing shape is caught, and an additive one is not", ()
   }
 });
 
-const GATE_COMMAND = "pnpm exec tsx scripts/db-shipping-gate.mts";
+const GATE_COMMAND = "pnpm exec tsx --import ./scripts/register-test-loader.mjs scripts/db-shipping-gate.mts";
 
 test("the shipping gate runs in the PR gate job on every pull request and every push to main", () => {
   const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
@@ -512,7 +512,7 @@ test("the production migration applier commits each migration and its journal ro
 
 test("production expand applies in the deploy; pull-request checks do not apply migrations", () => {
   const deploy = readFileSync(join(ROOT, "netlify.toml"), "utf8");
-  assert.match(deploy, /pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm keys import --production-build && corepack pnpm run build && node --experimental-strip-types scripts\/prepare-place-pages\.mts/);
+  assert.match(deploy, /pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build && node --experimental-strip-types --import \.\/scripts\/register-test-loader\.mjs scripts\/prepare-place-pages\.mts/);
   const offenders: string[] = [];
   const files = readdirSync(WORKFLOWS).filter((f) => f.endsWith(".yml"));
   assert.equal(files.length, 2, `expected the CI and release observer workflows, found ${files.length}`);

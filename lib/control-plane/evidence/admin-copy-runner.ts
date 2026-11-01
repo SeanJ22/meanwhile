@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { NetlifyAdminEvidenceRemote } from "./admin-bridge-netlify.ts";
 import type { AdminEvidenceRemote } from "./admin-bridge.ts";
@@ -37,9 +38,9 @@ export async function runAuthorizedAdminCopyTick(input: {
   const empty = (state: "DISABLED" | "NOT_CONFIGURED") => ({ state, examined: 0, copied: 0, pending: 0, refused: 0 } as const);
   if (input.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1")
     return empty("DISABLED");
-  if (!input.remote && (!input.env.NETLIFY_SITE_ID || !input.env.NETLIFY_BLOBS_TOKEN)) return empty("NOT_CONFIGURED");
+  if (!input.remote && (!input.env.NETLIFY_SITE_ID || !storedKeyValue("NETLIFY_BLOBS_TOKEN", input.env))) return empty("NOT_CONFIGURED");
   const remote = input.remote ?? new NetlifyAdminEvidenceRemote({
-    siteID: input.env.NETLIFY_SITE_ID, token: input.env.NETLIFY_BLOBS_TOKEN });
+    siteID: input.env.NETLIFY_SITE_ID, token: storedKeyValue("NETLIFY_BLOBS_TOKEN", input.env) });
   const now = input.now ?? Date.now;
   const result = await pollAdminEvidenceCopyRequests({ repos: input.repos, vaultRoot: input.vaultRoot,
     remote: boundedRemote(remote, ADMIN_COPY_OPERATION_TIMEOUT_MS), now,

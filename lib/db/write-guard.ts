@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { assertSanctionedRuntimeAuthority } from "../civic-data/runtime-authority.ts";
 
 /**
@@ -71,7 +72,7 @@ type Env = Record<string, string | undefined>;
 
 /** Read the signals and decide. Pure; the environment is a parameter. */
 export function describeWriteContext(
-  env: Env = process.env as Env,
+  env: Env = storedKeyEnvironment() as Env,
   operation?: string,
 ): WriteContext {
   // Anything that is not an exact "local" is treated as production.
@@ -98,10 +99,10 @@ export function describeWriteContext(
 
   // A named sanction needs all three conditions; a partial match names what is missing.
   let refusalDetail: WriteContext | null = null;
-  const declared = env[SANCTION_VARIABLE];
+  const declared = storedKeyEnvironment(env)[SANCTION_VARIABLE];
   if (declared) {
     const permits = SANCTIONED_WRITES[declared];
-    const handle = env[SANCTIONED_WRITE_VARIABLE];
+    const handle = storedKeyEnvironment(env)[SANCTIONED_WRITE_VARIABLE];
     const refuse = (why: string): WriteContext => ({
       dbRole,
       isProductionRuntime,
@@ -124,7 +125,7 @@ export function describeWriteContext(
         `${SANCTIONED_WRITE_VARIABLE} is not set. A sanctioned writer connects through the one ` +
           `sanctioned write path, asked for by its own name.`,
       );
-    } else if (handle !== env.DATABASE_URL) {
+    } else if (handle !== storedKeyValue("DATABASE_URL", env)) {
       refusalDetail = refuse(
         `DATABASE_URL is not ${SANCTIONED_WRITE_VARIABLE}. The sanction names a purpose; it does ` +
           `not name a destination, so the connection this process will actually use has to BE ` +
@@ -160,10 +161,10 @@ export function describeWriteContext(
  * The call every write path makes first. Throws rather than returning false,
  * so a refusal never reads like "there was no database".
  */
-export function assertWriteAllowed(operation: string, env: Env = process.env as Env): void {
+export function assertWriteAllowed(operation: string, env: Env = storedKeyEnvironment() as Env): void {
   // A sanction opens exactly one operation, so the decision needs the operation.
   const context = describeWriteContext(env, operation);
   if (!context.allowed) throw new ProductionWriteRefused(operation, context);
   // A sanction must also hold runtime authority; checked whatever NODE_ENV says.
-  if (env[SANCTION_VARIABLE]) assertSanctionedRuntimeAuthority(operation, env);
+  if (storedKeyEnvironment(env)[SANCTION_VARIABLE]) assertSanctionedRuntimeAuthority(operation, env);
 }

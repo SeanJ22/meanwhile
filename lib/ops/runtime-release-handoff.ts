@@ -1,3 +1,4 @@
+import { SAVED_DATABASE_SOURCE, storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 /**
  * Exact, fail-closed software handoff for the standing runtime: the target is the newest published production deploy
  * with the required CI checks green, at or before the SHA `/api/build` reports. No commit, push, merge, deploy or
@@ -277,7 +278,7 @@ function defaultRunCommand(
 ): CommandResult {
   const result = spawnSync(executable, [...args], {
     cwd: options.cwd,
-    env: options.env,
+    env: storedKeyEnvironment(options.env),
     encoding: "utf8",
     maxBuffer: 16 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
@@ -313,8 +314,8 @@ export function runtimeGithubRepository(root: string, run: RunCommand = defaultR
 
 /** Operational civic readers must not inherit a developer checkout's database. */
 export function runtimeProductionReadEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
-  if (env.WTP_RUNTIME_MODE === "staging") return { ...env };
-  const connection = env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+  if (env.WTP_RUNTIME_MODE === "staging") return { ...storedKeyEnvironment(env) };
+  const connection = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY", env);
   if (!connection?.trim()) throw new Error("RUNTIME_CIVIC_READ_TARGET_UNAVAILABLE");
   let protocol: string;
   try { protocol = new URL(connection).protocol; }
@@ -322,28 +323,12 @@ export function runtimeProductionReadEnvironment(env: NodeJS.ProcessEnv): NodeJS
   if (protocol !== "postgres:" && protocol !== "postgresql:") {
     throw new Error("RUNTIME_CIVIC_READ_TARGET_INVALID");
   }
-  return { ...env, DATABASE_URL: connection };
+  return { ...storedKeyEnvironment(env), DATABASE_URL: connection, [SAVED_DATABASE_SOURCE]: "WTP_PRODUCTION_DATABASE_URL_READONLY" };
 }
 
-/** Reuse the host's authenticated CLI without copying its credential to disk. */
-export function runtimeGithubCredential(input: {
-  readonly root: string;
-  readonly env: Readonly<Record<string, string | undefined>>;
-  readonly runCommand?: RunCommand;
-}): string | null {
-  const configured = input.env.GH_TOKEN ?? input.env.GITHUB_TOKEN;
-  if (configured !== undefined) return configured;
-  try {
-    const result = (input.runCommand ?? defaultRunCommand)(
-      "gh", ["auth", "token", "--hostname", "github.com"],
-      { cwd: input.root, timeoutMs: 15_000 },
-    );
-    // Never include stdout/stderr in a diagnostic: either may contain secrets.
-    const token = result.stdout.trim();
-    return result.status === 0 && /^[A-Za-z0-9_]+$/.test(token) ? token : null;
-  } catch {
-    return null;
-  }
+/** Resolve the saved GitHub credential; there is no CLI credential fallback. */
+export function runtimeGithubCredential(env: Readonly<Record<string, string | undefined>>): string | null {
+  return storedKeyValue("GH_TOKEN", env) ?? storedKeyValue("GITHUB_TOKEN", env) ?? null;
 }
 
 function conciseFailure(result: CommandResult): string {
@@ -401,7 +386,7 @@ function finishRuntimeReleaseInstall(input: {
     if (command === null) return refuse("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry; no shell fallback was attempted");
     const installed = run(command.executable, command.args, {
       cwd: input.root, timeoutMs: INSTALL_TIMEOUT_MS,
-      env: { ...process.env, CI: "true" },
+      env: { ...storedKeyEnvironment(), CI: "true" },
     });
     if (installed.status !== 0) return refuse("FROZEN_INSTALL_FAILED", conciseFailure(installed));
   }

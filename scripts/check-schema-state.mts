@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * `pnpm db:check` — does a database have the migrations this checkout commits?
  * Runs from CI and the scheduled jobs, so a migration committed and not applied
@@ -15,9 +16,7 @@
  * not read the migrations table exits 2 (COULD NOT READ), distinct from exit
  * 1 (OUT OF SYNC).
  */
-import { join } from "node:path";
 
-import { config as loadEnv } from "dotenv";
 
 import { readAppliedMigrationWhen } from "../lib/db/applied-migrations.ts";
 import {
@@ -26,11 +25,10 @@ import {
   readJournal,
 } from "../lib/db/schema-state.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
 
 const PRODUCTION = process.argv.includes("--target=production");
 const VARIABLE = PRODUCTION ? "WTP_PRODUCTION_DATABASE_URL_READONLY" : "DATABASE_URL";
-const connection = process.env[VARIABLE];
+const connection = storedKeyEnvironment()[VARIABLE];
 
 if (!connection) {
   console.error(`db:check: COULD NOT READ — ${VARIABLE} is not set.`);

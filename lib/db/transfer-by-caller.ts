@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import type { DatabaseTransfer } from "./transfer.ts";
 import { currentReaderRoute, transferRead } from "./reader-route.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -272,7 +273,7 @@ function processLabel(): string {
 }
 
 function snapshot(hour: string, bucket: Bucket): NeonBytesHour {
-  return { hour, client: runnerClient() || process.env[VITAL_SIGNS_REPORT_ENV] === "1" ? "runner" : "reader", requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
+  return { hour, client: runnerClient() || storedKeyEnvironment()[VITAL_SIGNS_REPORT_ENV] === "1" ? "runner" : "reader", requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
     reads: Object.fromEntries(bucket.reads),
     byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()],
     ...(bucket.counters.size > 0 ? { counters: Object.fromEntries(bucket.counters) } : {}) };
@@ -335,7 +336,7 @@ export function parseVitalSignsReport(line: string): NeonBytesHour | null {
 }
 
 export function reportNeonBytes(nowMs: number = Date.now(), write: (text: string) => void = text => { process.stdout.write(text); }): boolean {
-  if (callerState.keptInProcess || process.env[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
+  if (callerState.keptInProcess || storedKeyEnvironment()[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
   try {
     for (const part of takeNeonBytesHours(nowMs)) for (const line of formatVitalSignsReport(part).split("\n")) write(`${line}\n`);
     return true;
@@ -432,8 +433,8 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
     const connection = headers.get("neon-connection-string");
     if (connection !== null) assertDatabaseReadTarget(connection);
     if (connection === null || internal()) return underlying(input, init);
-    const address = databaseAddress(connection), readerAddress = databaseAddress(process.env.DATABASE_URL);
-    if (address !== null && address === databaseAddress(process.env.FEEDBACK_DATABASE_URL) && address !== readerAddress &&
+    const address = databaseAddress(connection), readerAddress = databaseAddress(storedKeyValue("DATABASE_URL"));
+    if (address !== null && address === databaseAddress(storedKeyValue("FEEDBACK_DATABASE_URL")) && address !== readerAddress &&
         address !== databaseAddress(process.env.WTP_CONTROL_PLANE_DATABASE_URL)) return underlying(input, init);
     const database = address !== null && address === readerAddress ? "reader" : "control-plane";
     const client = runnerClient() ? "runner" : "reader";

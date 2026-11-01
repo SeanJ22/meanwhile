@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import { isPlaceMapTask } from "../lib/civic-data/place-map-lane.ts";
 import { spawnSync } from "node:child_process";
@@ -220,8 +221,8 @@ test("the runner's ballot child publishes only its state under exact authority a
     const parentEnv = { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
       DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
     const passEnds = Date.parse(now) + 20 * 60_000;
-    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", "process",
-      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, withPassDeadline, passEnds, isPlaceMapTask, { ...process, env: parentEnv });
+    const commandFor = new Function("storedKeyEnvironment", "admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", "process",
+      `${snippet} return sourceChildCommand;`)((env = parentEnv) => storedKeyEnvironment(env), admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, withPassDeadline, passEnds, isPlaceMapTask, { ...process, env: parentEnv });
     assert.deepEqual(ballotTask.command, ["scripts/assemble-ballot-package.mts", "--state=TX"]);
     const command = commandFor({ id: ballotTask.id, kind: "SOURCE", task: ballotTask, command: ballotTask.command });
     assert.equal(passDeadlineFromEnv(command.env), passEnds, "the child is told when the pass ends");

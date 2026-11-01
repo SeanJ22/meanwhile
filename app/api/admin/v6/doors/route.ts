@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -15,6 +16,7 @@ const UNREAD = "The doors could not be read just now, so they are unknown, not s
 
 /** The Door Registry for Admin: counts, the shut doors and the newest door changes. Read-only. */
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { databaseReadOnlySql } from "@/lib/reader/database.ts";
 import type { NextRequest } from "next/server";
@@ -51,6 +52,7 @@ async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
 
 /** `admin-v6/scoreboard@1`: the Scoreboard's rows with the counts behind each, the launch-gate health group, readiness counts and the weekly learning series. Read only; the same for every place. */
 async function get(request: NextRequest) {
+  await loadWebsiteSavedKeys();
   return adminGet(request, async (observedAt) => {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){

@@ -116,8 +116,8 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
 }
 
 export async function testDueKeys(store: KeysStore, at: string, name?: string,
-  check: typeof testKey = testKey, source?: "runner" | "website"): Promise<number> {
-  const due = await store.claimTests(at, name, source);
+  check: typeof testKey = testKey): Promise<number> {
+  const due = await store.claimTests(at, name);
   await Promise.all(due.map(async row => {
     let result: KeyTestResult;
     try {

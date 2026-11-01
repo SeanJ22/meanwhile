@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * @freshness-reads-here — `observedAt` is stamped at the moment production is
  * actually read, in the same run that reads it.
@@ -132,7 +133,7 @@ async function main(): Promise<void> {
 
   if (write) {
     try {
-      const connection = process.env[CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR]?.trim() ?? "";
+      const connection = storedKeyValue(CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR)?.trim() ?? "";
       if (connection === "") {
         throw new Error(`${CONTROL_PLANE_INTEGRITY_WRITE_URL_VAR} is not set`);
       }

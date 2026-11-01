@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** The shared read-only adapter for the canonical post-deploy outcome log. */
 import { NEVER_CHECKED } from "../lib/ops/production-integrity.ts";
 import {
@@ -10,7 +11,7 @@ import { assertDurableRepositories } from "../lib/control-plane/repository/types
 
 
 export async function readIntegrityAuthority(): Promise<ProductionIntegrityRead> {
-  const connection = process.env[CONTROL_PLANE_INTEGRITY_READ_URL_VAR]?.trim() ?? "";
+  const connection = storedKeyValue(CONTROL_PLANE_INTEGRITY_READ_URL_VAR)?.trim() ?? "";
   if (connection === "") {
     const detail = `${CONTROL_PLANE_INTEGRITY_READ_URL_VAR} is not set, so the canonical post-deploy outcome log was not read.`;
     return { kind: "STORE_UNREACHABLE", record: { ...NEVER_CHECKED, detail }, detail };

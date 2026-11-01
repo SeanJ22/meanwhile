@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
 import { RESEARCH_STALL_PROBE, progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
@@ -105,7 +106,7 @@ export async function runRuntimeChildren(
     const reports = { stdout: vitalSignsLineFilter(report), stderr: vitalSignsLineFilter(report) };
     const child = spawn(command.executable, [...command.args], {
       cwd: options.cwd,
-      env: { ...(command.env ?? options.env), WTP_DATABASE_JOB: command.id },
+      env: { ...storedKeyEnvironment((command.env ?? options.env)), WTP_DATABASE_JOB: command.id },
       windowsHide: true,
       detached: process.platform !== "win32",
       stdio: command.executable === process.execPath ? ["ignore", "pipe", "pipe", "ipc"] : ["ignore", "pipe", "pipe"],

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { execFile, spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -83,7 +84,7 @@ export async function runOcr(
       // Each source already has its own worker. Tesseract's OpenMP threads
       // contend across those workers and can turn a small scan into a timeout.
       await executeFile(command, [...args], { encoding: "utf8", timeout: remaining, windowsHide: true,
-        env: { ...process.env, OMP_THREAD_LIMIT: process.env.OMP_THREAD_LIMIT ?? "1" } });
+        env: { ...storedKeyEnvironment(), OMP_THREAD_LIMIT: process.env.OMP_THREAD_LIMIT ?? "1" } });
     });
     const dir = mkdtempSync(join(tmpdir(), "wtp-ocr-"));
     let step = "PDF rasterisation";

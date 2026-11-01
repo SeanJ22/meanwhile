@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { neon } from "../lib/db/client.ts";
 import { getStore } from "@netlify/blobs";
 import type { AppendOutcome, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -9,10 +10,10 @@ type Query = (text: string, params: unknown[]) => Promise<Record<string, unknown
 
 export const CONTROL_WAKE_POLL_MS = 1_000;
 
-export function runnerWakeReaderFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): (() => Promise<string | null>) | null {
-  if (env.WTP_VAULT_PROVIDER !== "netlify" || !env.WTP_BLOBS_SITE_ID || !env.WTP_BLOBS_TOKEN) return null;
+export function runnerWakeReaderFromEnv(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): (() => Promise<string | null>) | null {
+  if (env.WTP_VAULT_PROVIDER !== "netlify" || !env.WTP_BLOBS_SITE_ID || !storedKeyValue("WTP_BLOBS_TOKEN", env)) return null;
   const store = getStore({ name: env.WTP_VAULT_STORE ?? "meanwhile-evidence",
-    siteID: env.WTP_BLOBS_SITE_ID, token: env.WTP_BLOBS_TOKEN, consistency: "strong",
+    siteID: env.WTP_BLOBS_SITE_ID, token: storedKeyValue("WTP_BLOBS_TOKEN", env), consistency: "strong",
     fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(1_500) }),
   });
 

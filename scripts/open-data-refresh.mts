@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /** SRC-SO: one national source routine, independently clocked, with bounded reader partitions. */
 import { pathToFileURL } from "node:url";
 import { join } from "node:path";
@@ -215,7 +216,7 @@ async function main() {
         }
       };
       const config=(await repos.adminConfig.readNarrowed("current",{settings:["facts.freshnessHours"]}))?.value as AdminConfig|null??null;
-      ({publication,confirmation,reports}=await refreshSocrataNational({store,vault,now,signal,states:states(),token:process.env.SOCRATA_APP_TOKEN,
+      ({publication,confirmation,reports}=await refreshSocrataNational({store,vault,now,signal,states:states(),token:storedKeyValue("SOCRATA_APP_TOKEN"),
         maxSourceAgeMs:factClocks(config).windowHours("officeholder")*3_600_000,
         saveLeads:rows=>saveSocrataLeads(repos,rows,now()).then(()=>{}),gap:detail=>console.log(`SRC_SO_PORTAL_GAPS=${JSON.stringify(detail)}`)}));
     } else ({publication,confirmation,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{

@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 
 import { sql } from "drizzle-orm";
@@ -77,7 +78,7 @@ export async function writeReaction(row: StorableReaction): Promise<boolean> {
     );
   }
 
-  if (!process.env.DATABASE_URL) return false;
+  if (!storedKeyValue("DATABASE_URL")) return false;
 
   assertWriteAllowed("a reaction");
 

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { settingsEdgeStore } from "@/lib/civic-data/reader-settings-publication.ts";
 import { WORKER_SAFETY_FRAME } from "@/lib/control-plane/playbooks.ts";
@@ -12,6 +13,7 @@ export const revalidate = 0;
 export const runtime = "nodejs";
 
 async function get(request: NextRequest) {
+  await loadWebsiteSavedKeys();
   return adminGet(request, async observedAt => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error("Worker instructions are unavailable");

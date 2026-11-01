@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { readRegistryPlanningRows, type RegistryPlanningView } from "./keyed-registry-planning.ts";
@@ -464,7 +465,7 @@ export function routineDataStoreCandidateAuthorityIssue(
 }
 
 export function assertRoutineDataStoreMutationAuthority(
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment(),
 ): RuntimeAuthorityEnvelope {
   assertWriteAllowed(CIVIC_DATA_PROMOTION_OPERATION, env);
   const admitted = assertSanctionedRuntimeAuthority(CIVIC_DATA_PROMOTION_OPERATION, env);

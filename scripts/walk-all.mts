@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * `pnpm walk:all` — the regression net.
  *
@@ -14,7 +15,6 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { neon } from "../lib/db/client.ts";
-import { config as loadEnv } from "dotenv";
 import { type Page } from "playwright";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
@@ -295,7 +295,7 @@ async function appSettled(page: Page, ms = 20_000): Promise<boolean> {
 const RUN_ID =
   process.env.WTP_RUN_ID?.trim() ||
   makeRunId(process.env.CI ? "walk-all-ci" : "walk-all-local", new Date().toISOString());
-const RUN_HEADERS = syntheticRunHeaders({ ...process.env, WTP_RUN_ID: RUN_ID });
+const RUN_HEADERS = syntheticRunHeaders({ ...storedKeyEnvironment(), WTP_RUN_ID: RUN_ID });
 
 let searchLogRows = 0;
 let askRows = 0;
@@ -5543,8 +5543,8 @@ console.log(
 );
 
 /** The line above counts requests issued; this reads the rows that actually landed, by run id. */
-loadEnv({ path: join(process.cwd(), ".env.local") });
-const PRODUCTION_DB = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+
+const PRODUCTION_DB = storedKeyValue("WTP_PRODUCTION_DATABASE_URL_READONLY");
 
 /* The sold store accepting this run's rows at all is checked, not assumed. */
 const LANDED_CHECK = "the sold store accepted this run's rows at all";

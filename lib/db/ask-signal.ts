@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { getDb } from "./index.ts";
 import { askInteractions } from "./schema.ts";
@@ -112,7 +113,7 @@ export const ASK_ANSWER_MAX_CHARS = 4000;
 
 /** Persist the already-scrubbed Ask contract through the existing reader store. */
 export async function writeAskInteraction(row: AskInteractionRow): Promise<void> {
-  if (!process.env.DATABASE_URL) throw new Error("Ask question store is unavailable");
+  if (!storedKeyValue("DATABASE_URL")) throw new Error("Ask question store is unavailable");
   if (row.answerMode === "OFF" || row.answerMode === "TRANSPORT_FAILED") return;
   assertWriteAllowed("an Ask question");
   await getDb().insert(askInteractions).values({ ...row, answerMode: row.answerMode });

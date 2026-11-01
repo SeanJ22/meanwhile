@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { performance } from "node:perf_hooks";
 import { readerFactDb } from "../../facts/db.ts";
 import { resolveProductionWriteHandle } from "../../db/write-handle.ts";
@@ -26,7 +27,7 @@ export function productionHeldSubjectDetailsExecutor(input: {
   readonly sleep?: HeldSubjectWorkerRuntime["sleep"];
 }, task: RouteTask, holder: string): DeclaredExecutor {
   let db = input.db, clocks: Clocks | undefined;
-  const facts = () => db ??= (input.dbFactory ?? readerFactDb)(resolveProductionWriteHandle(input.environment ?? process.env).connection);
+  const facts = () => db ??= (input.dbFactory ?? readerFactDb)(resolveProductionWriteHandle(input.environment ?? storedKeyEnvironment()).connection);
   const usage = { requestCount: 0, bytesFetched: 0 };
   const fetchImpl: typeof fetch = async (resource, init) => {
     usage.requestCount++;

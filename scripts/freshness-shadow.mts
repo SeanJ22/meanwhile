@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../lib/core/keys-values.ts";
 import { refreshOfficialsLeads, officialsLeadProvider } from "../lib/control-plane/officials-leads.ts";
 import { plannerStateReads } from "../lib/civic-data/planner-state-read.ts";
 import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-state-read.ts";
@@ -1233,7 +1234,7 @@ const openOccurrenceInStep = async (
 };
 finishPhase("open-occurrences");
 
-const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
+const workerKey = (storedKeyValue(WORKER_CREDENTIAL_VAR) ?? "").trim();
 const workerMessages = anthropicTransport(workerKey, fetch, undefined, {
   onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } });
 const workerBatch = backgroundBatchTransport({ apiKey: workerKey });
@@ -1440,19 +1441,19 @@ const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
 });
 
 const scoutSearch = searchBudget === null ? null : makeHuntSearch({
-  braveKey: process.env.BRAVE_SEARCH_API_KEY,
-  exaKey: process.env.EXA_API_KEY,
+  braveKey: storedKeyValue("BRAVE_SEARCH_API_KEY"),
+  exaKey: storedKeyValue("EXA_API_KEY"),
   budget: searchBudget,
 });
 const scoutSearchLifetime = searchBudget === null || !hasLifetimeHunt ? null : makeHuntSearch({
-  braveKey: process.env.BRAVE_SEARCH_API_KEY,
-  exaKey: process.env.EXA_API_KEY,
+  braveKey: storedKeyValue("BRAVE_SEARCH_API_KEY"),
+  exaKey: storedKeyValue("EXA_API_KEY"),
   budget: searchBudget.lifetimeHunt,
 });
 console.log(
   scoutSearch === null
     ? `  scout search: OFF (${discoverySearchOn ? "no Brave or Exa key in this process" : configHold !== null ? "held: the owner's config row could not be trusted" : "the owner's paid-search switch is off"})`
-    : `  scout search: ON under the owner's switch (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}; ` +
+    : `  scout search: ON under the owner's switch (${[storedKeyValue("BRAVE_SEARCH_API_KEY") ? "brave" : null, storedKeyValue("EXA_API_KEY") ? "exa" : null].filter(Boolean).join("+")}; ` +
         `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery); Brave first, Exa only when Brave misses`,
 );
 
@@ -2153,7 +2154,7 @@ console.log(
 
 async function makeAutonomousFleet() {
   const fleetTransport = modelLaneEnabled ? workerMessages : null;
-  const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
+  const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: storedKeyEnvironment(),
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
     ...(searchBudget ? { searchBudget } : {}),

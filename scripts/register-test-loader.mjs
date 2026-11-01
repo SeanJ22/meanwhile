@@ -2,3 +2,5 @@
 import { register } from "node:module";
 
 register("./test-alias-loader.mjs", import.meta.url);
+
+await import("./keys-preload.mjs");

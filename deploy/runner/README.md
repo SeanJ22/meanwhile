@@ -6,51 +6,22 @@ Use this when all sessions are finished and you choose to resume. The server
 is **146.190.74.145**, $48/month. The PC-off staging check waits for you to say
 you are ready; the 24-hour observation follows the production start below.
 
-### 1. Change the server's settings privately
+### 1. Use the saved production settings
 
-In Windows PowerShell, paste:
+Service credentials, including database connections, Netlify access and GitHub
+sign-in, live in **Admin → Settings → Keys**. The runner reads them directly
+from the control-plane database. The private `/etc/meanwhile/runner.env` keeps
+the existing `WTP_CONTROL_PLANE_DATABASE_URL` and `WTP_KEYS_ENCRYPTION_KEY`
+bootstrap settings, plus host paths, runtime mode and project IDs. Manage saved
+credentials in the Keys box.
+
+Keep production mode, the live project's ID and the evidence store name matched
+between the runner and website. Open the existing Linux connection from Windows
+PowerShell to inspect the service:
 
 ```powershell
 ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145
 ```
-
-In that Linux terminal, paste `nano /etc/meanwhile/runner.env`. Edit or add the
-following lines, keeping only one of each name. Copy secret values directly
-into nano; never paste them into chat, GitHub, screenshots or a shell command.
-
-| Line | Production value and where to get it |
-| --- | --- |
-| `WTP_RUNTIME_MODE` | `production` |
-| `WTP_DB_ROLE` | `production` |
-| `NODE_ENV` | `production` |
-| `DATABASE_URL` | Live site's `DATABASE_URL`: Netlify → the live Meanwhile project → Project configuration → Environment variables → production value. |
-| `WTP_CONTROL_PLANE_DATABASE_URL` | Same screen, production value of this exact name. This must match the live Admin database. |
-| `WTP_PRODUCTION_DATABASE_URL_WRITE` | Existing approved production writer credential, under this exact name in the live settings or Sean's saved credentials. If absent, S0 must supply its private location; do not reuse a read-only URL. |
-| `WTP_PRODUCTION_DATABASE_URL_READONLY` | Existing production read-only credential of this name, from the live settings or Sean's saved credentials. |
- `WTP_VAULT_PROVIDER` | Keep `netlify`. |
-| `WTP_BLOBS_SITE_ID` and `NETLIFY_SITE_ID` | Live project → Project configuration → General → Project details → Project ID. Replace the staging ID `acafb24c-9803-4d0d-8f6c-8b9d21d96169` in both lines. |
-| `WTP_BLOBS_TOKEN` and `NETLIFY_BLOBS_TOKEN` | A Netlify personal access token authorized for the live project: User settings → Applications → Personal access tokens. Paste the same authorized token into both lines. |
-
-Keep the Linux paths, provider API keys and service user's GitHub sign-in.
-Keep `WTP_VAULT_STORE` identical on the live Admin host and Linux (default:
-`meanwhile-evidence`). In Netlify → the live project → **Site configuration →
-Environment variables**, add or edit these values with **Functions** scope and
-the **Production** deploy context:
-
-| Admin host setting | Value and private source |
-| --- | --- |
-| `WTP_VAULT_PROVIDER` | `netlify`, matching `/etc/meanwhile/runner.env`. |
-| `WTP_BLOBS_SITE_ID` | The live project's Project ID from General → Project details; use the same ID as the Linux runner. |
-| `WTP_BLOBS_TOKEN` | The authorized personal access token from User settings → Applications → Personal access tokens; use the same token as the Linux runner. |
-| `WTP_VAULT_STORE` | The runner's configured store name, or `meanwhile-evidence` when it is unset. |
-
-Enter the token privately in Netlify; never include its value in a report.
-Redeploy the live site after saving. Admin and the Linux runner must point to
-the same production project and evidence store so an Admin send can wake the
-runner. After starting the service in step 2, send an instruction in step 3
-and confirm its receipt appears on the runner's next control-plane poll and
-in Admin's instruction history. Give S0 a missing receipt or refusal.
-Save nano with **Ctrl+O**, **Enter**, then **Ctrl+X**.
 
 ### 2. Start continuous work and confirm it is running
 
@@ -101,45 +72,15 @@ Preview of the live site is insufficient: `getStore` stores are shared across
 all deploys of a project. The live project's `reader-artifacts` serves readers.
 See [Netlify's store scope documentation](https://docs.netlify.com/build/data-and-storage/netlify-blobs/).
 
-To recreate a staging storage destination without importing live settings:
-
-1. In the Netlify team, choose **Add new project → Deploy manually**. Drop a
-   folder containing a plain `index.html` identifying it as staging storage.
-2. In Project configuration → General → Project details, set the project name
-   to `meanwhile-runner-staging` and copy its **Project ID**. Record its name
-   and ID in the S13 PR. Keep the live site's domain and
-   settings on the live project.
-3. From User settings → Applications → Personal access tokens, choose **New
-   access token**, name it **Meanwhile runner staging**, choose its expiration,
-   then **Generate token** and copy the value. Enter it privately on Linux using
-   `ssh.exe -t -i "$env:USERPROFILE\.ssh\wtp-deploy" root@146.190.74.145 "nano /etc/meanwhile/runner.env"`.
-4. Add `WTP_VAULT_PROVIDER=netlify`, `WTP_BLOBS_SITE_ID=<staging Project ID>`,
-   and `WTP_BLOBS_TOKEN=<token>`. For staging reader-artifact publication and
-   Admin evidence copies, also set `NETLIFY_SITE_ID` to that same staging ID
-   and `NETLIFY_BLOBS_TOKEN` to that same token. Keep
-   `WTP_RUNTIME_MODE=staging` and `WTP_DB_ROLE=local`.
-
-Save the single `nano` edit with **Ctrl+O**, **Enter**, then **Ctrl+X**. Keep the
-token out of GitHub and chat; post only the staging project's name and ID.
-
-When an app deploy on the separate staging project is ready, set
-`WTP_VAULT_PROVIDER=netlify` in that project's build settings and redeploy.
-Existing `/officials/*` and `/candidates/*` URLs then use `/api/portraits/*` and
-that project's `meanwhile-portraits` store. Hosted portrait reads use Netlify's
-supplied credentials. The live project keeps
-its current provider until its own production migration is authorized.
-
 ## Installed host
 
 The approved host is `146.190.74.145`: Ubuntu 24.04, 4 vCPU, 8 GiB, $48/month.
 `setup.ps1` installs current main with Node 24, pnpm, Chromium, OCR, and the
 systemd unit. It leaves `meanwhile-runner.service` disabled and stopped.
 
-From PowerShell, run `./deploy/runner/setup.ps1`. It copies only the shared
-staging settings, converts Windows paths, and signs the service user into
-GitHub. The host keeps secrets in `/etc/meanwhile/runner.env`; `.env.local` in
-`/opt/meanwhile` is a link to that file. Keep the GitHub credential available to
-the `meanwhile` user for Engineer PRs.
+`setup.ps1` provisions an isolated staging install. Production service
+credentials are managed in the Keys box. The host's private configuration lives
+in `/etc/meanwhile/runner.env`; `.env.local` in `/opt/meanwhile` links to it.
 
 ## PC-off staging run
 

@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../../../../../lib/core/keys-values.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { getStore } from "@netlify/blobs";
 import type { NextRequest } from "next/server";
@@ -12,6 +14,7 @@ const NO_STORE = { "cache-control": "private, no-store" };
 
 /** One resident-task screenshot from the portrait blob store, signed-in Admin only. The public portrait route never serves this prefix. */
 async function get(request: NextRequest, context: { params: Promise<{ path: string[] }> }): Promise<Response> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({
     headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
@@ -23,7 +26,7 @@ async function get(request: NextRequest, context: { params: Promise<{ path: stri
   if (!path || path.length < 2 || path.some((part) => !/^[a-zA-Z0-9._-]+$/.test(part) || part === "." || part === "..") || !path.at(-1)!.endsWith(".png")) {
     return new Response(null, { status: 404, headers: NO_STORE });
   }
-  const siteID = process.env.WTP_BLOBS_SITE_ID, token = process.env.WTP_BLOBS_TOKEN;
+  const siteID = process.env.WTP_BLOBS_SITE_ID, token = storedKeyValue("WTP_BLOBS_TOKEN");
   let store;
   try { store = getStore({ name: "meanwhile-portraits", ...(siteID && token ? { siteID, token } : {}) }); }
   catch { return new Response(null, { status: 503, headers: NO_STORE }); }

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /** Message Batches for independent unattended work. Reader responses and dependent tool turns use Messages. */
 import { createHash, randomUUID } from "node:crypto";
 import type { AttemptProviderBatch } from "./attempt.ts";
@@ -37,10 +38,10 @@ export type BatchLane = keyof typeof BATCH_LANES;
 const ON = new Set(["1", "true", "on"]);
 
 /** Whether a registered lane's batch routing is switched on. OFF unless the flag says otherwise. */
-export function batchEnabledFor(lane: BatchLane, env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+export function batchEnabledFor(lane: BatchLane, env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): boolean {
   const entry = BATCH_LANES[lane];
   if (!entry || entry.readerFacing) return false;
-  const value = env[entry.flag];
+  const value = storedKeyEnvironment(env)[entry.flag];
   return value === undefined ? entry.defaultEnabled : ON.has(value.trim().toLowerCase());
 }
 
@@ -70,7 +71,7 @@ export function batchEligibleForJob(job: BatchJob | undefined, priority?: BatchP
     && !(priority.readerImpactAt && near(priority.readerImpactAt, 7, 7));
 }
 export function batchEnabledForJob(lane: BatchLane, job: BatchJob | undefined,
-  env: Readonly<Record<string, string | undefined>> = process.env, priority?: BatchPriority): boolean {
+  env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment(), priority?: BatchPriority): boolean {
   return batchEligibleForJob(job, priority) && batchEnabledFor(lane, env);
 }
 

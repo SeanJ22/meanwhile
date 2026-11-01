@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../../../../../lib/core/keys-values.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -18,6 +20,7 @@ const safeId = (id: string): boolean => /^[a-z][a-z0-9-]{1,120}$/.test(id);
 async function get(request: NextRequest, context: { params: Promise<{
   workItemId: string; attemptId: string; artifactId: string;
 }> }): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
     nowSeconds: Math.floor(Date.now() / 1000) });
@@ -62,6 +65,7 @@ async function get(request: NextRequest, context: { params: Promise<{
 async function post(request: NextRequest, context: { params: Promise<{
   workItemId: string; attemptId: string; artifactId: string;
 }> }): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: true,
     nowSeconds: Math.floor(Date.now() / 1000) });
@@ -72,7 +76,7 @@ async function post(request: NextRequest, context: { params: Promise<{
   if (![workItemId, attemptId, artifactId].every(safeId))
     return NextResponse.json({ error: "Invalid evidence identity." }, { status: 400, headers: adminEvidencePrivateHeaders });
   if (process.env.WTP_ADMIN_EVIDENCE_REQUESTS_ENABLED !== "1" ||
-      !process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN)
+      !process.env.NETLIFY_SITE_ID || !storedKeyValue("NETLIFY_BLOBS_TOKEN"))
     return NextResponse.json({ state: "REFUSED", code: "PRIVATE_COPY_NOT_ACTIVE",
       detail: "Private evidence requests are not active.", updatedAt: null },
       { status: 409, headers: adminEvidencePrivateHeaders });

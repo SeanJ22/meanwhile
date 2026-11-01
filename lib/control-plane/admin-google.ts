@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /**
  * Verifies server-side that the identity Google asserts is exactly the enrolled address. Pure of Next and the network:
  * routes hand in a clock, a fetch and a key resolver. `hd` is never sufficient for authorization.
@@ -70,7 +71,7 @@ export interface GoogleSignInReadiness {
 export function googleSignInReadiness(env: {
   readonly [name: string]: string | undefined;
 }): GoogleSignInReadiness {
-  const missing = GOOGLE_SIGN_IN_VARS.filter((name) => !env[name] || env[name]?.trim() === "");
+  const missing = GOOGLE_SIGN_IN_VARS.filter((name) => !storedKeyEnvironment(env)[name] || storedKeyEnvironment(env)[name]?.trim() === "");
   return { ready: missing.length === 0, missing };
 }
 

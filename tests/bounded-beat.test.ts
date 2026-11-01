@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -61,7 +62,7 @@ test("startup and the standing clock write the running code, at most once a minu
   const running = "9352c8e143db00d1623735f02e8c419d1c697278";
   let identityReads = 0;
   const staging = { targetSha: "a".repeat(40), state: "FAILED", code: "STAGING_TIMED_OUT", detail: "stuck", startedAt: "x", at: "y" };
-  const context = createContext({ provider: "postgres", currentCycleErrors: "", process, RUNNER_ID: "pilot-runner", CODE_ROOT: ".",
+  const context = createContext({ storedKeyEnvironment, provider: "postgres", currentCycleErrors: "", process, RUNNER_ID: "pilot-runner", CODE_ROOT: ".",
     RUNNING_CODE_SHA: running, nativeAbortLine: () => null, neonReadFailureLine: () => null, ownerRepositories: async () => repos,
     hostMemoryReading: async () => null, neonBytesReading: () => null, hostname: () => "meanwhile-runner",
     readCodeIdentity: (input: { runnerTestedSha: string }) => { identityReads += 1; return { verdict: "CONSISTENT", runnerTestedSha: input.runnerTestedSha }; },

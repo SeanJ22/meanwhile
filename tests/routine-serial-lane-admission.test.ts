@@ -142,7 +142,7 @@ test("voting sites and the overdue backlog take turns for memory, so neither hol
   assert.ok(crowdedStarted.filter(id => id.startsWith("voting-sites:")).length >= 8, `voting sites keep half the memory: ${crowdedStarted.join(" ")}`);
 
   // A voting child told when the pass ends stops reading with time to publish; untold, it reads into the pass's wall.
-  assert.match(runner, /function sourceChildCommand[\s\S]*?env: withPassDeadline\(\{[\s\S]*?\.\.\.pending\.env,\s*\}, SOURCE_CHILD_DEADLINE_MS\),/);
+  assert.match(runner, /function sourceChildCommand[\s\S]*?env: withPassDeadline\(\{[\s\S]*?\.\.\.storedKeyEnvironment\(pending\.env\),\s*\}, SOURCE_CHILD_DEADLINE_MS\),/);
   assert.match(runner, /const SOURCE_CHILD_DEADLINE_MS = PLACE_MAPS \? [^;]+ : PASS_LAUNCH_DEADLINE_MS;/, "outside the place-map lane a child is told the launch deadline");
   const wall = now + 20 * 60_000;
   assert.equal(votingAcquisitionDeadline(now, passDeadlineFromEnv({})), wall);

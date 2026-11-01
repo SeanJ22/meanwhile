@@ -2,7 +2,7 @@ import type { StyleSpecification } from "maplibre-gl";
 
 /**
  * Which basemap the map draws: MapTiler vector tiles, or nothing. There is no
- * substitute provider; with no key configured the caller renders "Basemap
+ * substitute provider; when the map server is unavailable the caller renders "Basemap
  * unavailable" over the fallback ground colour, so the failure is legible.
  */
 
@@ -15,12 +15,11 @@ export interface BasemapChoice {
 }
 
 /**
- * Null when no key is configured. The basemap follows the UI theme, so light
+ * Unavailable outside the production map server. The basemap follows the UI theme, so light
  * panels never sit over a dark map.
  */
 export function resolveBasemap(theme: "dark" | "light" = "dark"): BasemapChoice | null {
-  const key = process.env.NEXT_PUBLIC_MAPTILER_KEY;
-  if (!key) return null;
+  if (process.env.WTP_BUILD_CONTEXT !== "production") return null;
 
   const style =
     theme === "light"
@@ -29,12 +28,12 @@ export function resolveBasemap(theme: "dark" | "light" = "dark"): BasemapChoice 
 
   return {
     provider: "maptiler",
-    styleUrl: `https://api.maptiler.com/maps/${style}/style.json?key=${key}`,
+    styleUrl: `/api/maptiler/maps/${style}/style.json`,
   };
 }
 
-export function mapGlyphs(styleUrl: string): string {
-  return `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf${new URL(styleUrl).search}`;
+export function mapGlyphs(_styleUrl: string): string {
+  return "/api/maptiler/fonts/{fontstack}/{range}.pbf";
 }
 
 /** The same MapTiler style, painted by the provider when this browser uses CPU graphics. */
@@ -47,7 +46,7 @@ export function basemapStyle(choice: BasemapChoice, software: boolean): StyleSpe
     sources: {
       basemap: {
         type: "raster",
-        url: choice.styleUrl.replace("/style.json?", "/tiles.json?"),
+        url: choice.styleUrl.replace("/style.json", "/tiles.json"),
         tileSize: 512,
       },
     },

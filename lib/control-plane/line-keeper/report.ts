@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { neon } from "../../db/client.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { readCounts, query, countTimestamp } from "./read.ts";
@@ -6,7 +7,8 @@ import { type LineState } from "./model.ts";
 export async function readLineReport(control:Sql, reader?:Sql, options:{readonly includeCounts?:boolean}={}):Promise<LineState|null> {
   const rows=await query(control,"admin-runs",`SELECT hour,checked_at,problems,bytes_read,oldest FROM line_keeper_run ORDER BY hour DESC LIMIT 2`);
   if(!rows.length)return null;
-  const readerSql=options.includeCounts===false?null:reader??(process.env.DATABASE_URL?neon(process.env.DATABASE_URL,{readOnly:true}):null);
+  const connection = storedKeyValue("DATABASE_URL");
+  const readerSql=options.includeCounts===false?null:reader??(connection?neon(connection,{readOnly:true}):null);
   const hours=await Promise.all(rows.map(async row=>{
     const from=countTimestamp(row.hour),through=new Date(Date.parse(from)+3_600_000).toISOString();
     const counts=readerSql?await Promise.all([readCounts(control,from,through),readCounts(readerSql,from,through)]).then(r=>r.flat()).catch(()=>null):null;

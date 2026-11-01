@@ -1,32 +1,9 @@
-/** No tool prints a credential value: secrets from the env file are redacted from any text before it is shown. */
-
-import { existsSync, readFileSync } from "node:fs";
-
-/** Below this length a value is configuration rather than a secret. */
-export const MIN_SECRET_LENGTH = 12;
-
-export interface SecretValue {
-  name: string;
-  value: string;
-}
-
-/** Parse a dotenv file into (name, value) pairs long enough to be secrets. */
-export function parseSecrets(text: string): SecretValue[] {
-  const out: SecretValue[] = [];
-  for (const line of text.split(/\r?\n/)) {
-    if (/^\s*#/.test(line)) continue;
-    const m = /^\s*(?:export\s+)?([A-Za-z0-9_]+)\s*=\s*(.*)$/.exec(line);
-    if (!m) continue;
-    const value = m[2].trim().replace(/^["']|["']$/g, "");
-    if (value.length < MIN_SECRET_LENGTH) continue;
-    out.push({ name: m[1], value });
-  }
-  return out;
-}
-
-export function loadSecrets(envPath: string): SecretValue[] {
-  if (!existsSync(envPath)) return [];
-  return parseSecrets(readFileSync(envPath, "utf8"));
+/** Saved key values are matched directly, including their URL-encoded forms. */
+import { productionKeysStore } from "../core/keys-store.ts";
+export interface SecretValue { name: string; value: string }
+export async function loadSecrets(store: { list(): Promise<readonly { name: string }[]>; read(name: string): Promise<string | undefined> } = productionKeysStore()): Promise<SecretValue[]> {
+  const values = await Promise.all((await store.list()).map(async ({ name }) => ({ name, value: await store.read(name) })));
+  return values.filter((row): row is SecretValue => Boolean(row.value));
 }
 
 /** Replace every secret value with a placeholder naming its variable, longest first, since a connection string contains a password. */
@@ -75,9 +52,4 @@ export function findSecrets(
     if (count > 0) hits.push({ file, secretName: name, occurrences: count, lines: at });
   }
   return hits;
-}
-
-/** Whether this variable is published to every reader by design: a rule about the `NEXT_PUBLIC_` prefix, not a hand-list. */
-export function isPublishedByDesign(name: string): boolean {
-  return name.startsWith("NEXT_PUBLIC_");
 }

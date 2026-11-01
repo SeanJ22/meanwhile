@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readNationalExecutiveActions } from "@/lib/officials/national-executive-records";
 import { directOfficialActionTargetPlan, settleOfficialActionHoldingAnswer, type OfficialActionHoldingReaders, type OfficialActionTargetPlan } from "@/lib/officials/action-holding";
 import { readerRoute } from "@/lib/api/reader-route";
@@ -32,6 +33,7 @@ function defaultReadersFor(divisions: readonly string[]): OfficialActionHoldingR
 }; }
 
 export const GET = readerRoute("/api/official-actions/[subject]", async function GET(request: Request, context: { params: Promise<{ subject: string }> }) {
+  await loadWebsiteSavedKeys();
   const { subject } = await context.params;
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
   if (subject.startsWith("white-house:")) return readNationalExecutiveActions(subject);

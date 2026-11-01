@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../lib/core/keys-values.ts";
 import { readNationalExecutiveVotes } from "@/lib/officials/national-executive-records";
 import { readerRoute } from "@/lib/api/reader-route";
 import { getVotesSnapshot, readFederalMemberVotes, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
@@ -69,7 +71,7 @@ export type StateVoteMemberHolding =
 async function readCanonicalStateVoteScope(scope: OfficialStateVoteScope): Promise<HeldStateVoteScope> {
   // The retained LegiScan bytes are a deterministic node:test fixture only.
   // Production always opens the exact canonical pointer below.
-  if (mayUseTestFixture() && !process.env.DATABASE_URL) {
+  if (mayUseTestFixture() && !storedKeyValue("DATABASE_URL")) {
     return {
       scope,
       snapshot: getStateVotesSnapshot(scope),
@@ -193,6 +195,7 @@ function stateVotes(member: string, holding: HeldStateVoteScope, unavailableScop
 }
 
 export const GET = readerRoute("/api/votes", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";

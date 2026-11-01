@@ -147,7 +147,7 @@ test("runtime writers and Admin no longer use tracked operational run paths", ()
 
 test("production children are hidden behind the installed runtime and local proofs stay ignored", () => {
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
-  assert.match(runner, /standingChildEnvironment\("CONSOLE_PUBLISHER", process\.env, publisher\.name === "owner snapshot"\)/);
+  assert.match(runner, /standingChildEnvironment\("CONSOLE_PUBLISHER", storedKeyEnvironment\(\), publisher\.name === "owner snapshot"\)/);
   assert.match(runner, /standingChildEnvironment\("INTAKE_RUNTIME"\)/);
   assert.match(runner, /"ROUTINE_SUPERVISOR"/);
 });

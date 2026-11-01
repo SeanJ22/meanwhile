@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
@@ -183,7 +184,7 @@ export function resolveReaderArtifactWriteStore(): ReaderArtifactStore | null {
   const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
   if (localDir) return new LocalFileArtifactStore(localDir);
   const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
-  const token = process.env.NETLIFY_BLOBS_TOKEN?.trim() || process.env.NETLIFY_API_TOKEN?.trim();
+  const token = storedKeyValue("NETLIFY_BLOBS_TOKEN")?.trim() || storedKeyValue("NETLIFY_API_TOKEN")?.trim();
   if (siteID && token) return new NetlifyBlobsArtifactStore({ siteID, token });
   return null;
 }

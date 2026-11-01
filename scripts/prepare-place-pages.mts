@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { pathToFileURL } from "node:url";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -96,7 +97,7 @@ export async function queueUnbuiltPlacePages(query: Query): Promise<number> {
   return Number(queued?.n ?? 0);
 }
 
-export async function prepareProductionPlacePages(env: Record<string,string|undefined> = process.env): Promise<void> {
+export async function prepareProductionPlacePages(env: Record<string,string|undefined> = storedKeyEnvironment()): Promise<void> {
   if (!productionBuildCanApply(env)) {
     console.log("place pages: identities and queue skipped outside the Netlify production main build; writes=0");
     return;

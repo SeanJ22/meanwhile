@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { admittedRuntimeChildEnvironment, assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
@@ -51,7 +52,7 @@ if (!process.argv.includes("--manual-child")) {
     const subjects = ballots.flatMap(ballot => ballot.contests.filter(row => row.type === "MEASURE")
       .map(contest => ({ subjectId: contest.id, ocdId: contest.ocdId })));
     const queue = new ModelProviderQueue();
-    const key = process.env[WORKER_CREDENTIAL_VAR]?.trim() ?? "";
+    const key = storedKeyValue(WORKER_CREDENTIAL_VAR)?.trim() ?? "";
     const messages = anthropicTransport(key, fetch, undefined, { onRateLimits: (limits, request) => queue.observe(request.model, limits) });
     const armed = await armRoutineTranslationPaidWork({ repos, state, subjects, root: process.cwd(), now,
       messages, batch: backgroundBatchTransport({ apiKey: key }), credentialConfigured: Boolean(key),
@@ -64,7 +65,7 @@ if (!process.argv.includes("--manual-child")) {
     // the same Admin-allowed search when the held page did not answer the measure.
     const sources = await loadRoutineMeasureSources({ repos, root: process.cwd(), state, ballots, priorAttempts, now,
       open: routineMeasureSourceOpener({ repos, state, root: process.cwd(), now }), finds: routineMeasureFinds(repos, state),
-      search: armed.measurePageSearch({ braveKey: process.env.BRAVE_SEARCH_API_KEY, exaKey: process.env.EXA_API_KEY }) });
+      search: armed.measurePageSearch({ braveKey: storedKeyValue("BRAVE_SEARCH_API_KEY"), exaKey: storedKeyValue("EXA_API_KEY") }) });
     const result = await runMeasureTranslationPass({ states: [state], repos, store, now: now(),
       modelLaneEnabled: armed.closed === null, modelLaneReason: armed.closed?.reason,
       paidWorkerCapacity: () => armed.paidWorkerCapacity(), guardedTransportFor: armed.guardedTransportFor,

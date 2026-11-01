@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { Suspense } from "react";
 import { cookies, headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
@@ -18,6 +19,7 @@ export const runtime = "nodejs";
 type SearchParams = Record<string, string | string[] | undefined>;
 
 export default async function AdminHome({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  await loadWebsiteSavedKeys();
   const [requestHeaders, jar, params] = await Promise.all([headers(), cookies(), searchParams]);
   const observedAt = new Date().toISOString();
   const guard = await guardAdminRequest({ headers: requestHeaders,

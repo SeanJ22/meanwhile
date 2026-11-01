@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 
 import { getDb } from "./index.ts";
@@ -122,7 +123,7 @@ export async function logSearchEvent(event: SearchLogEvent): Promise<boolean> {
 
   const marker = event.marker ?? ORGANIC;
 
-  if (!process.env.DATABASE_URL) return false;
+  if (!storedKeyValue("DATABASE_URL")) return false;
 
   // After the DATABASE_URL check: no database returns false, the wrong database throws.
   assertWriteAllowed("a search log event");

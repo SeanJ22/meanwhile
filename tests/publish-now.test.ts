@@ -167,7 +167,7 @@ test("the standing runner starts publish-now each minute on its own lane, beside
   const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function runRoutineLane("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
-  assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
+  assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.storedKeyEnvironment\(\), \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
   assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(hostname\(\), startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
   const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(routine, /const LANE = PUBLISH_NOW \? "publish-now" : PLACE_MAPS \? "place-maps" : VOTING_SITES \? "voting-sites" : "routine-civic-data";/);

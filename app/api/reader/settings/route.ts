@@ -1,7 +1,9 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { settingsEdgeStore, READER_SETTINGS_TAG } from "@/lib/civic-data/reader-settings-publication.ts";
 
 export const runtime = "nodejs";
 export async function GET() {
+  await loadWebsiteSavedKeys();
   try {
     const held = await settingsEdgeStore().read();
     return Response.json({ available: held !== null, ...(held?.snapshot ?? { values: {} }) }, { headers: {

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 173, main a8ffb2dca, PR #892. Site and runner on the new build; Saved key checks completed three consecutive minute ticks; ten-state ballot/voting output byte-identical. Contract 0082 rolled back on a one-second statement timeout; automatic retry due about 06:32Z. Integrity receipt remains open. No release 174 work authorized in this session.
+build_state: LIVE: release 173 main a8ffb2dca, PR #892; site/runner, three minute key-check finishes and ten-state byte parity verified. Completion HELD: contract 0082 failed both automatic attempts (06:17:06Z and 06:32:15Z) on its one-second statement limit; integrity DEGRADED, 82/83 applied. A one-field 0082-only 10-second candidate passed 61 focused tests, lint and types locally; NOT SHIPPED pending Sean scope approval under the no-extra-code instruction.
 worker: RIVER-CX
 provider: Codex
 run_id: river-cx-173
 lock: river-cx-173
-heartbeat: 2026-11-01T06:22:16.182Z
+heartbeat: 2026-11-01T06:39:59.075Z
 
 <!-- river-cx-173 -->
 ## Release 173 — RIVER-CX
@@ -15,7 +15,8 @@ heartbeat: 2026-11-01T06:22:16.182Z
 - All nine local gate commands passed across the full run and focused environment-recovery reruns. Final CI 10,478 passed, five skipped, zero failed; unchanged Admin polling fixture race and its targeted retry remain documented in the PR.
 - River 50-ZIP usable under three seconds: phone 26→45, tablet 25→47, desktop 17→46. Code 671,601→670,840 lines (−761). Ten-state ballot payloads and full voting-site responses match exact saved hashes; all HTTP 200, no page errors.
 - Pre-deploy facts/read cutoffs aligned to actual publish: 15,560 facts in preceding 24h, 1.94 GB/h over preceding six full hours. Earlier baseline 15,691/1.92 retained in PR. Post-deploy 24h/six-full-hour windows are incomplete and are not claimed passed.
-- Expand 0081 applied in the build. First automatic contract 0082 failed at 06:17:06Z on the one-second statement timeout; no invalid card rows, serial diagnostic scan 141 ms after cold read. Existing retry due about 06:32Z. No manual DDL or extra source changes. The early observer REFUSED pending 0082; recheck only after schema advances. RIVER-CX retains the release until integrity clears.
+- Expand 0081 applied in the build. Automatic contract 0082 failed at 06:17:06Z and 06:32:15Z on the one-second statement timeout; 82/83 applied. No invalid card rows; a warm serial read was 141 ms, which does not establish the timeout cause. Both failure receipts and the early REFUSED observer are preserved. No manual DDL.
+- Additional local candidate on river-cx173-contract, work/release173/contract-fix: only 0082 gains contractStatementTimeoutMs:10_000 through the existing declaration; lock_timeout stays 250 ms, other budgets and SQL/journal untouched. 61 focused migration tests, lint and full type checking passed. Candidate remains uncommitted and unshipped. Exact proposal is in #892; Sean has been asked for scope approval because he said no code beyond the original fix. RIVER-CX will finish automatic migration and integrity verification if approved; do not report release completion until then.
 <!-- /river-cx-173 -->
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)

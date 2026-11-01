@@ -1,11 +1,11 @@
 # River status
 
 build_state: LIVE: release 155 (main 8a17174), CP-01 live-hour verification pending. 153 = SPN-01 only (wt-fold153 0fcdce106, −7,941 lines), pnpm gates in tests; ships before Nov 1 ET. KB-01 held: Keys box lacks WTP_ADMIN_SESSION_KEY/WTP_ADMIN_SECRET (+ GitHub, Netlify, PRL S3, staging, feedback keys) — Sean must save them. VIP live-fallback hotfix on stream/river-vip-154.
-worker: River
+worker: RIVER-CX
 provider: Claude
-run_id: session_01FMJNDzbbgHyJGc6Y8Se7oM
-lock: session_01FMJNDzbbgHyJGc6Y8Se7oM
-heartbeat: 2026-10-31T02:13:04Z
+run_id: river-cx-173
+lock: river-cx-173
+heartbeat: 2026-11-01T04:47:40Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 

@@ -15,7 +15,7 @@ import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
   rebuildPlacePageTurn } from "../lib/reader/place-page-worker.ts";
-import { queueUnbuiltPlacePages } from "../scripts/prepare-place-pages.mts";
+import { queueUnbuiltPlacePages } from "../lib/reader/cache.ts";
 import type { FactDb } from "../lib/facts/publish.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -36,6 +36,7 @@ const rawPage = (id: string) => ({ division_ids: [id], entities: [], fields: [],
 /** The runner's own place-page functions over a fixture database; only the turn process is run in this process. */
 async function placePageRunner(options: { readonly turnMs: number }) {
   const db = await factDb({ withHourlyCounts: true });
+  await db.query("INSERT INTO pass_cursor(name,position) VALUES('place-pages:adopt','done')");
   const wrapped: FactDb = { transaction: run => db.transaction(query => run(async (text, params) => {
     if (text !== PLACE_PACKAGE_SQL) return query(text, params);
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -104,8 +105,8 @@ test("the runner's place-page lane drains queued pages in turns, then waits for 
     assert.deepEqual(runInContext(`runStandingRuntimeTick("test", true)`, runner.context), undefined);
     assert.deepEqual(runner.context.standingRuntimeScheduler.inFlightIds(), ["place-pages"]);
     await runner.context.standingRuntimeScheduler.waitForIdle();
-    assert.equal(await runner.count("place_page"), 16, "every queued place now has a built page");
-    assert.equal(await runner.count("rebuild_queue"), 0);
+    assert.equal(await runner.count("place_page WHERE context ? 'formatVersion'"), 16, "every queued place now has a built page");
+    assert.equal(await runner.count("place_page WHERE stale_at IS NOT NULL"), 0);
     assert.ok(runner.turns.length > 1, `the lane kept taking turns while pages were owed (${runner.turns.length})`);
     assert.ok(runner.reservations.length === runner.turns.length && runner.reservations.every(entry => entry === "rebuild-place-pages.mts"));
     assert.ok(runner.log.some(line => /place pages: \d+ rebuilt, 0 failed and still queued, 0 waiting/.test(line)), runner.log.join("\n"));
@@ -135,9 +136,9 @@ test("a pending restart stops new place-page turns and waits for no more than th
     assert.ok(runner.turns[1]!.at < heldAt && runner.turns[1]!.ended! >= heldAt, "the hold came during the second turn");
     assert.ok(idleAfter <= 150 + 250, `the lane went idle ${idleAfter}ms after the hold, beyond one turn`);
     assert.ok(runner.log.some(line => /loads by restart: no new standing run starts; place-pages end by their deadlines/.test(line)), runner.log.join("\n"));
-    const waiting = await runner.count("rebuild_queue");
-    assert.ok(waiting > 0 && await runner.count("place_page") === 400 - waiting, "unbuilt pages stay queued for the restarted runner");
-    assert.equal(await runner.count("rebuild_queue WHERE lease_token IS NOT NULL"), 0, "every claimed page finished inside its turn");
+    const waiting = await runner.count("place_page WHERE stale_at IS NOT NULL");
+    assert.ok(waiting > 0 && await runner.count("place_page WHERE context ? 'formatVersion'") === 400 - waiting, "unbuilt pages stay queued for the restarted runner");
+    assert.equal(await runner.count("place_page WHERE lease_token IS NOT NULL"), 0, "every claimed page finished inside its turn");
     runInContext(`runStandingRuntimeTick("test", true)`, runner.context);
     assert.deepEqual(runner.context.standingRuntimeScheduler.inFlightIds(), [], "the standing clock launches nothing while held");
     await runner.context.runPlacePages(Date.now() + 60_000);
@@ -194,10 +195,10 @@ test("the owner's pause, an unreadable pause and a failed turn leave pages queue
     assert.equal(runner.turns.length, 1);
     assert.ok(runner.log.some(line => /place pages: turn ended without a result \(.*PLACE_PAGE_TURN_FAILED: 1\); its pages stay queued/.test(line)), runner.log.join("\n"));
     assert.ok(!runner.log.some(line => line.startsWith("FAILED")));
-    assert.equal(await runner.count("rebuild_queue"), 3);
+    assert.equal(await runner.count("place_page WHERE stale_at IS NOT NULL"), 3);
     runner.setChildStatus(0);
     await runner.context.runPlacePages(Date.now() + 60_000);
-    assert.equal(await runner.count("place_page"), 3, "the next turn builds what the failed turn left");
+    assert.equal(await runner.count("place_page WHERE context ? 'formatVersion'"), 3, "the next turn builds what the failed turn left");
   } finally { await runner.db.pg.close(); }
 });
 

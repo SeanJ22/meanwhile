@@ -143,6 +143,8 @@ export interface SittingKeyFields {
   timeZone: string;
 }
 
+const formatters = new Map<string, Intl.DateTimeFormat>();
+
 /** The separator, chosen because it cannot occur in an id, a date or a clock. */
 const UNIT_SEPARATOR = "";
 
@@ -160,7 +162,9 @@ export function localWallClock(
 ): { date: string; time: string } | null {
   const at = Date.parse(startsAt);
   if (!Number.isFinite(at)) return null;
-  const parts = new Intl.DateTimeFormat("en-CA", {
+  // A formatter costs far more to build than to use, and a page names a handful of zones for thousands of sittings.
+  let format = formatters.get(timeZone);
+  if (!format) formatters.set(timeZone, format = new Intl.DateTimeFormat("en-CA", {
     timeZone,
     year: "numeric",
     month: "2-digit",
@@ -168,7 +172,8 @@ export function localWallClock(
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-  }).formatToParts(new Date(at));
+  }));
+  const parts = format.formatToParts(new Date(at));
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
   const date = `${get("year")}-${get("month")}-${get("day")}`;
   // Some ICU builds render midnight as "24"; normalize so two spellings of one

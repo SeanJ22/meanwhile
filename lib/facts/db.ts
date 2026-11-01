@@ -6,6 +6,7 @@ import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
+import { serverReaderValue } from "../reader/memory.ts";
 
 const pools = new Map<string, Pool>();
 const prepared = new Map<string, string>();
@@ -96,6 +97,8 @@ export function factReader(): Query | null {
 /** A process that already holds a fact connection (a test's database, a script's pool) reads through it. */
 export function installFactReader(query: Query | null | undefined): void {
   installed = query;
+  serverReaderValue("place-combined", () => new Map()).clear();
+  serverReaderValue("place-rows", () => new Map()).clear();
 }
 
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>

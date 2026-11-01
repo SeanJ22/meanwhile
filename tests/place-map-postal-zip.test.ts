@@ -33,6 +33,7 @@ test("a mail-only ZIP keeps its linked ZCTA's school districts as ones that coul
     await db.exec(placeBoundaryMigration());
     await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(readFileSync("lib/db/migrations/ZP-01_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
+    await db.exec(readFileSync("lib/db/migrations/0081_spn01e_page_marks.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(zipLocationMigration());
     const query: Query = async (sql, params = []) => (await db.query(sql, [...params])).rows as Record<string, unknown>[];
     const transaction = <T,>(read: (query: Query) => Promise<T>) => db.transaction(tx => read(async (sql, params = []) => (await tx.query(sql, [...params])).rows as Record<string, unknown>[]));

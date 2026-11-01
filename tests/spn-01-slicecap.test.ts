@@ -1,17 +1,14 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { owedMs, runSliceLane, SLICE_BYTES_PER_HOUR } from "../lib/reader/slice-lane.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
-const MIGRATION = readFileSync(new URL("../lib/db/migrations/SPN-01D_place_slice.sql", import.meta.url), "utf8").replaceAll("--> statement-breakpoint", "");
 const ONE = "ocd-division/country:us/state:az/place:p001";
 
 test("the lane builds places nobody asked for only while it owes no time, and marked slices never wait", async () => {
-  const db = await factDb();
+  const db = await migratedFactDb();
   try {
-    await db.pg.exec(MIGRATION);
     for (const ddl of WORK_DDL) await db.pg.exec(ddl);
     await db.query("INSERT INTO entity(id,kind,name,state) SELECT 'ocd-division/country:us/state:az/place:p'||lpad(n::text,3,'0'),'place','P','AZ' FROM generate_series(1,150) n");
     const list = workList(db.query, { owner: "cap-test" });

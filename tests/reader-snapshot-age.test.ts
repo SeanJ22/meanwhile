@@ -3,13 +3,14 @@ import test from "node:test";
 import { heldSnapshot, snapshotInView, wireSnapshot } from "../lib/meetings/freshness.ts";
 import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 
 const EPOCH = "1970-01-01T00:00:00.000Z", AT = "2026-10-21T12:00:00.000Z";
 
-const placeRow = (state: string, meetingRows: unknown[]) => [{
+const placeRow = (state: string, meetingRows: unknown[]) => placePagesAnswer([{
   page_id: `ocd-division/country:us/state:${state.toLowerCase()}`, page_kind: "place", built_at: AT, body_ids: [],
   row: { division_ids: [], entities: [], fields: [], rosters: [], comments: [], sittings: [], meeting_rows: meetingRows, parts: {}, governments: [], divisions: [], registration_held: false },
-}];
+}]);
 
 test("a place with no held calendar has no snapshot date, and the wire says so instead of 1970", async () => {
   const none = await readPlacePackage({ state: "MI", divisionIds: [] }, async sql => {

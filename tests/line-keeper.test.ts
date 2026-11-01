@@ -31,7 +31,7 @@ const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])
 async function readerDatabase() {
   const db=new PGlite();
   await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,state text);
-    CREATE TABLE rebuild_queue(place_id text PRIMARY KEY,queued_at timestamptz NOT NULL);
+    CREATE TABLE place_page(place_id text PRIMARY KEY,stale_at timestamptz);
     CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb);
     CREATE TABLE fact(id serial PRIMARY KEY,entity_id text REFERENCES entity(id),field text,status text,value jsonb);
     CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text);
@@ -195,7 +195,7 @@ test('page rebuild waiting ages are grouped by state and enter the existing repa
   const db=await readerDatabase();
   try {
     await db.exec(`INSERT INTO entity VALUES('az:place','place','AZ'),('ny:place','place','NY');
-      INSERT INTO rebuild_queue VALUES('az:place','2026-10-25T01:00:00Z'),('ny:place','2026-10-25T01:04:00Z');`);
+      INSERT INTO place_page VALUES('az:place','2026-10-25T01:00:00Z'),('ny:place','2026-10-25T01:04:00Z');`);
     const waiting=await readRebuildWaiting(query(db));
     assert.deepEqual(waiting.map(r=>[r.state,r.count,r.oldestAt]),[
       ['AZ',1,'2026-10-25T01:00:00.000Z'],['NY',1,'2026-10-25T01:04:00.000Z'],

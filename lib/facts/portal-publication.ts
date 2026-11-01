@@ -143,8 +143,7 @@ export async function foldPortalBodyLabels(db: FactDb & { readonly query: Query 
       WHERE kind='meeting' AND parent_id=p.source AND p.source<>p.target RETURNING id`,[sources,targets]);
     report.meetings=meetings.length;
     const entities=[...new Set([...sources,...targets])];
-    const pages=await query(`SELECT page_id AS id FROM place_page_dependency WHERE entity_id=ANY($1::text[])
-      UNION SELECT place_id AS id FROM place_page WHERE place_id=ANY($1::text[])`,[entities]);
+    const pages=await query("SELECT place_id AS id FROM place_page WHERE depends && $1::text[] OR place_id=ANY($1::text[])",[entities]);
     const scope={states:[state],entities,places:pages.map(row=>String(row.id))};
     await enqueueReaderPlaces({entities:scope.entities},query);
     return {report,scope};

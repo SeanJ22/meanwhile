@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { markSlicesOn } from "../lib/core/slice-marks.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
@@ -10,16 +9,14 @@ import { progressLines } from "../lib/control-plane/scheduler/round-progress.ts"
 import { laneTurn } from "../lib/ops/lane-turn.ts";
 import { runSliceLane, sliceTurn } from "../lib/reader/slice-lane.ts";
 import { sliceProgress } from "../lib/reader/slice-progress.ts";
-import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, type SliceCard } from "../lib/reader/slices.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, unpackSlice, type SliceBody, type SliceCard } from "../lib/reader/slices.ts";
+import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:example", BODY = "az:city:example#governing", PERSON = "az:person:example:mayor";
 const now = new Date("2026-10-24T08:00:00Z"), clocks = factClocks(null), purge = async () => ({ purged: true });
-const MIGRATION = readFileSync(new URL("../lib/db/migrations/SPN-01D_place_slice.sql", import.meta.url), "utf8").replaceAll("--> statement-breakpoint", "");
 
 async function open() {
-  const db = await factDb();
-  await db.pg.exec(MIGRATION);
+  const db = await migratedFactDb();
   for (const ddl of WORK_DDL) await db.pg.exec(ddl);
   const list = workList(db.query, { owner: "slice-test", leaseMs: 60_000 });
   markSlicesOn(() => workList(db.query, { owner: "slide" }));
@@ -34,7 +31,7 @@ const text = '{\n  "Name": "Example City Council",\n  "Phone": "520-555-0100",\n
 const copy: SavedCopy = { id: 1, finalUrl: "https://example.gov/api", text, fetchedAt: now, isArchive: false };
 const claim = (field: string, value: string) => ({ subjectId: BODY, field, fieldKind: "contact" as const, value, valueText: value, quote: value, provenance: "OFFICIAL" as const,
   producedBy: "loader-d1", costUsd: 0, copy });
-const publish = (db: Awaited<ReturnType<typeof factDb>>, field: string, value: string, label: string) =>
+const publish = (db: Awaited<ReturnType<typeof migratedFactDb>>, field: string, value: string, label: string) =>
   publishLoaded(db, claim(field, value), () => ({ quote: exactLine(text, label, value)!, valueText: value }), clocks, now, { purge });
 
 test("a fact the Slide files marks its slice, the lane rebuilds it, the slice holds the fact, and the next look rebuilds nothing", async () => {
@@ -46,10 +43,10 @@ test("a fact the Slide files marks its slice, the lane rebuilds it, the slice ho
 
     // Every place is given its slices, five cards each, before any fact is marked.
     assert.deepEqual(await sliceProgress(db.query), { built: 0, places: 1 }); const first = await turn();
-    assert.deepEqual([first.backfilled, first.written], [1, 5]); assert.deepEqual(await sliceProgress(db.query), { built: 1, places: 1 });
-    const held = async (card: string) => (await db.query("SELECT body FROM place_slice WHERE place_id=$1 AND card=$2", [PLACE, card]))[0]!.body as { entities: { id: string; f: Record<string, unknown[]> }[]; sources: string[] } | null;
+    assert.deepEqual([first.backfilled, first.written], [1, 11]); assert.deepEqual(await sliceProgress(db.query), { built: 1, places: 1 });
+    const held = async (card: string) => unpackSlice((await db.query("SELECT body FROM place_slice WHERE place_id=$1 AND card=$2", [PLACE, card]))[0]!.body) as { entities: { id: string; f: Record<string, unknown[]> }[]; sources: string[]; stamps: [number | null, string, string][] } | null;
     assert.deepEqual((await held("bodies"))!.entities.map(entity => entity.id), [BODY], "the body is on the place's bodies card before it has a fact");
-    assert.deepEqual((await held("governs"))!.entities.map(entity => entity.id), [PERSON]); assert.equal(await held("ballot"), null);
+    assert.equal(await held("governs"), null, "a person with no fact checked against a page is not listed as governing"); assert.equal(await held("ballot"), null);
     assert.equal((await db.query("SELECT 1 FROM place_slice WHERE place_id='az:meeting:one'")).length, 0, "meetings are not on any card yet");
     const idle = await turn();
     assert.deepEqual([idle.claimed, idle.backfilled, idle.written, idle.idle], [0, 0, 0, true], "once every place has slices, a look with nothing marked builds nothing");
@@ -60,10 +57,11 @@ test("a fact the Slide files marks its slice, the lane rebuilds it, the slice ho
     reads.length = 0;
     const rebuilt = await turn();
     assert.deepEqual([rebuilt.claimed, rebuilt.built, rebuilt.written], [2, 1, 1], "two slices marked, one place read, only the one that changed written");
-    assert.equal(reads.filter(sql => sql.includes("entity_place")).length, 1, "one read of the place's entities for the whole look");
+    assert.equal(reads.filter(sql => sql.includes("SELECT DISTINCT ep.place_id,e.id")).length, 1, "one read of the place's entities for the whole look");
     const bodies = (await held("bodies"))!;
-    const phone = bodies.entities[0]!.f.office_phone!;
-    assert.deepEqual([phone[0], bodies.sources[phone[1] as number], phone[2], phone[3]], ["520-555-0100", "https://example.gov/api", "2026-10-24", "OFFICIAL"], "the slice holds the fact, its page, the day it was checked and its kind");
+    const phone = bodies.entities[0]!.f.office_phone!, stamp = bodies.stamps[phone[1] as number]!;
+    assert.deepEqual([phone[0], bodies.sources[stamp[0]!], stamp[1], stamp[2], phone.length], ["520-555-0100", "https://example.gov/api", now.toISOString().replace("08:00:00.000Z", "08:00:00.000Z"), "OFFICIAL", 3],
+      "the slice holds the fact, its page, the exact time it was checked, its kind and its quote (the line, not the value)");
     assert.deepEqual(await db.query("SELECT status FROM work ORDER BY field"), [{ status: "done" }, { status: "done" }]);
     // The next look, with nothing new filed, rebuilds nothing and reads nothing about the place.
     reads.length = 0;
@@ -89,14 +87,14 @@ test("a slice holds only what its card shows: no donor or money lines, only a pe
     await fact(PERSON, "name", "Pat Mayor"); await fact(PERSON, `office:${BODY}`, "Mayor"); await fact(PERSON, "office:az:body:elsewhere", "Member");
     await fact(PERSON, "campaign-donor:abc", "A donor"); await fact(PERSON, "campaign-money:x", "A line"); await fact(PERSON, "campaign-cycle:one", "Totals"); await fact(PERSON, "pronouns", "they");
     await fact("az:committee:one", "campaign-money:y", "A line"); await fact("az:vote:one", "result", "passed");
-    const built = (await buildSlices(db.query, new Map([[PLACE, new Set<SliceCard>(SLICE_CARDS)]]))).get(PLACE)!;
+    const built = (await buildSlices(db.query, new Map([[PLACE, new Set<SliceCard>(SLICE_CARDS)]]))).get(PLACE)! as Map<SliceCard, SliceBody>;
     const fields = (card: SliceCard) => built.get(card)!.entities.map(entity => [entity.id, Object.keys(entity.f).sort()]);
     assert.deepEqual(fields("governs"), [[PERSON, ["name", "office@0"]]], "the seat on the board filed here shows; the seat on a board filed elsewhere waits for that board's place");
     assert.deepEqual(built.get("governs")!.boards, [BODY]); assert.deepEqual(fields("money"), [[PERSON, ["campaign-cycle:one"]]], "a summary shows; the lines never do");
     assert.deepEqual(fields("more"), [[PERSON, ["pronouns"]], ["az:vote:one", ["result"]]], "a fact no card claims lands in More about this");
     assert.equal(built.get("ballot"), null);
     assert.ok(![...built.values()].some(slice => JSON.stringify(slice).includes("donor") || JSON.stringify(slice).includes("A line")));
-    assert.deepEqual([cardsOfKind("meeting"), cardsOfKind("committee"), cardsOfKind("person")], [[], [], ["governs", "money", "more"]]);
+    assert.deepEqual([cardsOfKind("meeting"), cardsOfKind("committee"), cardsOfKind("person")], [["meetings"], [], ["governs", "money", "more"]]);
     assert.equal(cardOfFact("person", "campaign-donor:abc"), null);
   } finally { await db.pg.close(); }
 });

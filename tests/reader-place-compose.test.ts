@@ -18,7 +18,7 @@ const family = (meetings: Row[], bodies: string[]) => ({ scope: "source:derived:
 function page(id: string, bodies: Row[], extra: Row = {}): Row {
   return { page_id: id, page_kind: "place", built_at: AT, division_ids: [id], entities: bodies,
     fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [], archived_meetings: [], archived_documents: [], archived_document_links: [],
-    agenda_texts: [], parts: {}, everyday_routing: { routes: ["held"] }, registration_held: true,
+    agenda_texts: [], parts: {}, registration_held: true,
     governments: [], divisions: [{ ocdId: id, label: id }],
     registry: { formatVersion: 1, registry: { generatedAt: AT, bodies: bodies.map(body => ({ id: body.id, ocdId: body.division })),
       divisions: [{ ocdId: CITY, parentOcdId: COUNTY }, { ocdId: COUNTY, parentOcdId: STATE }, { ocdId: STATE, parentOcdId: null }] },
@@ -40,7 +40,7 @@ test("a split ZIP unions overlapping ready rows once and retains every body's fi
   });
   const before = structuredClone([city, county]);
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY, COUNTY] }, [city, county]);
-  assert.deepEqual(entries(result.entities).map(body => body.id), [BOARD, COUNTY_BOARD]);
+  assert.deepEqual(entries(result.entities).map(body => body.id), [COUNTY_BOARD, BOARD]);
   assert.deepEqual(entries(result.rosters).map(row => row.person_id), ["city-member", "county-member"]);
   assert.equal(entries(result.fields).length, 2);
   assert.equal(entries(result.comments)[0]!.value, "Three minutes");
@@ -96,7 +96,7 @@ test("an explicit body page adds only that body's ready facts to the requested p
   const city = page(CITY, [entity(BOARD)]);
   const explicit = page(COUNTY_BOARD, [entity(COUNTY_BOARD, COUNTY)], { page_kind: "body", division_ids: [], fields: [{ entity_id: COUNTY_BOARD, field: "name", value: "Supervisors" }] });
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY], bodyIds: ["legacy-supervisors-alias"] }, [city, explicit]);
-  assert.deepEqual(entries(result.entities).map(body => body.id), [BOARD, COUNTY_BOARD]);
+  assert.deepEqual(entries(result.entities).map(body => body.id), [COUNTY_BOARD, BOARD]);
   assert.equal(entries(result.fields)[0]!.value, "Supervisors");
   assert.deepEqual(result.division_ids, [CITY]);
 });
@@ -176,7 +176,6 @@ test("an agenda lookup retains identity context and omits unrelated member and d
   assert.deepEqual(entries(model(result.registry).bodyRosters)[0]!.members, []);
   assert.deepEqual(model(model(result.registry).officialCandidacies).rows, []);
   assert.equal(result.registration_held, false);
-  assert.equal(result.everyday_routing, null);
 });
 
 test("body-facts-only reads retain local facts without claiming that their independent state directory was loaded", () => {
@@ -184,10 +183,23 @@ test("body-facts-only reads retain local facts without claiming that their indep
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY], bodyFactsOnly: true }, [city]);
   assert.equal(entries(result.fields)[0]!.value, "Council");
   assert.equal(result.registry, null);
-  assert.equal(result.everyday_routing, null);
   assert.equal(result.registration_held, false);
   assert.deepEqual(result.divisions, []);
   assert.deepEqual(result.governments, []);
+});
+
+test("a board folded into a board that was itself folded resolves to the last, keeping its sittings and seating each member once", () => {
+  const WORKSHOP = `${CITY}#body:workshop`, MIDDLE = `${CITY}#governing`, LAST = `${CITY}#body:council`;
+  const partition = (body: string, meetings: Row[]) => ({ scope: `source:legistar:body:${encodeURIComponent(body)}`, current_version_id: body, confirmation: null,
+    payload: { formatVersion: 1, generatedAt: AT, meetings, agendaDocuments: [], sources: [] } });
+  const city = page(CITY, [entity(MIDDLE), entity(LAST)], { body_aliases: { [WORKSHOP]: MIDDLE, [MIDDLE]: LAST },
+    rosters: [{ body_id: MIDDLE, person_id: "ana", shown_id: "legistar:ana", body_name: "Council", person: { "term_start:old": 1 } },
+      { body_id: LAST, person_id: "ana", shown_id: "legistar:ana", body_name: "Council" }],
+    meeting_rows: [partition(WORKSHOP, [sitting("legistar:one", WORKSHOP)]), partition(MIDDLE, [sitting("legistar:one", MIDDLE)])] });
+  const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY] }, [city]);
+  assert.deepEqual(entries(result.entities).map(body => body.id), [LAST]);
+  assert.deepEqual(entries(result.rosters).map(row => [row.body_id, row.person_id]), [[LAST, "ana"]]);
+  assert.deepEqual(entries(result.meeting_rows).map(row => entries(model(row.payload).meetings).map(meeting => meeting.bodyId)), [[LAST], [LAST]]);
 });
 
 test("saved current and history contexts keep meetings, agendas and members from folded calendar labels",async()=>{

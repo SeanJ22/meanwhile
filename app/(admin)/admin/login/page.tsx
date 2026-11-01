@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
+import { storedKeyEnvironment } from "../../../../lib/core/keys-values.ts";
 /**
  * This screen never displays which account is enrolled. The break-glass section renders only when
  * `WTP_ADMIN_BREAK_GLASS=enabled`, the same flag that makes its route exist. `why` is a rejection class,
@@ -137,13 +139,14 @@ function stateFor(why: string | undefined): SignInState | null {
 export const dynamic = "force-dynamic";
 
 export default async function AdminLoginPage({ searchParams }: { searchParams: Promise<{ why?: string }> }) {
+  await loadWebsiteSavedKeys();
   const { why } = await searchParams;
   const state = stateFor(why);
 
   // Runtime reads, by name. Names reach the page; values never do.
-  const google = googleSignInReadiness(process.env);
-  const breakGlass = isBreakGlassEnabled(process.env);
-  const breakGlassMissing = [ADMIN_SECRET_VAR, ADMIN_SESSION_KEY_VAR].filter((name) => !process.env[name]);
+  const google = googleSignInReadiness(storedKeyEnvironment());
+  const breakGlass = isBreakGlassEnabled(storedKeyEnvironment());
+  const breakGlassMissing = [ADMIN_SECRET_VAR, ADMIN_SESSION_KEY_VAR].filter((name) => !storedKeyEnvironment()[name]);
 
   return (
     <main data-admin-signin>
@@ -175,9 +178,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
                 </a>
               ) : (
                 <p className="signin-note">
-                  Continue with Google is not configured on this deploy. Not set:{" "}
-                  <code>{google.missing.join(", ")}</code>. Until every one is set in the deploy&rsquo;s environment,
-                  no one can sign in this way &mdash; including the owner.
+                  Google sign-in could not load its saved settings. The team needs to check the Keys box.
                 </p>
               )}
             </div>

@@ -1,3 +1,5 @@
+import { installSavedValues } from "../../lib/core/keys-values.ts";
+import { storedKeyValue } from "../../lib/core/keys-values.ts";
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { once } from "node:events";
 import { channel } from "node:diagnostics_channel";
@@ -36,7 +38,8 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
   }
 
   static async open(directory: string, source: SourceAuthorityId, contract: string = source, options:{nativeConnectionFile?:string}={}): Promise<FederalMoneyBenchmarkStore> {
-    const original = { fetch: neonConfig.fetchFunction, url: process.env.DATABASE_URL, reporting: process.env.WTP_VITAL_SIGNS_REPORT, mode: process.env.WTP_RUNTIME_MODE, role: process.env.WTP_DB_ROLE, control: process.env.WTP_CONTROL_PLANE_DATABASE_URL };
+    const original = { fetch: neonConfig.fetchFunction, url: storedKeyValue("DATABASE_URL"), snapshot: installSavedValues(undefined), reporting: process.env.WTP_VITAL_SIGNS_REPORT, mode: process.env.WTP_RUNTIME_MODE, role: process.env.WTP_DB_ROLE, control: process.env.WTP_CONTROL_PLANE_DATABASE_URL };
+    installSavedValues(original.snapshot);
     const bytes: BenchmarkStorageBytes = { read: 0, written: 0, requests: 0, statements: 0, largestRead: 0, largestWrite: 0, databasePeakRssBytes: 0, databaseElapsedMs: 0, largestLatencyMs: 0, databaseProxyPeakRssBytes:0 };
     const child: ChildProcessWithoutNullStreams = spawn(process.execPath, ["--experimental-strip-types", resolve("scripts/lib/federal-money-postgres-server.mts"), resolve(directory), String(Date.now()),
       ...(options.nativeConnectionFile?["--native-connection-file",resolve(options.nativeConnectionFile)]:[])], { stdio: ["pipe", "pipe", "pipe"] });
@@ -86,12 +89,13 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
     };
     // This transport talks to the local emulator and already measures its simulated bytes.
     Object.defineProperty(neonConfig.fetchFunction, Symbol.for("meanwhile.database.transfer.fetch"), { value: true });
-    process.env.DATABASE_URL = "postgresql://benchmark:benchmark@ep-federal-benchmark.us-east-2.aws.neon.tech/benchmark";
+    const fixtureConnection = "postgresql://benchmark:benchmark@ep-federal-benchmark.us-east-2.aws.neon.tech/benchmark";
+    installSavedValues({ values: new Map([...original.snapshot?.values ?? [], ["DATABASE_URL", fixtureConnection]]) });
     process.env.WTP_VITAL_SIGNS_REPORT = "1";
     process.env.WTP_RUNTIME_MODE = "staging";
     process.env.WTP_DB_ROLE = "local";
-    process.env.WTP_CONTROL_PLANE_DATABASE_URL = process.env.DATABASE_URL;
-    const client = neon(process.env.DATABASE_URL);
+    process.env.WTP_CONTROL_PLANE_DATABASE_URL = storedKeyValue("DATABASE_URL");
+    const client = neon(fixtureConnection);
     const query: ReadOnlyQuery = statements => client.transaction(statements.map(statement => client.query(statement.text, [...statement.params])));
     return new FederalMoneyBenchmarkStore(bytes, query, async dropNativeDatabase => {
       const exited = once(child, "exit");
@@ -100,7 +104,7 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
       bytes.databaseProxyPeakRssBytes=answer.databaseProxyPeakRssBytes??0;
       child.stdin.end(); await exited;
       neonConfig.fetchFunction = original.fetch;
-      if (original.url === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = original.url;
+      installSavedValues(original.snapshot);
       if (original.role === undefined) delete process.env.WTP_DB_ROLE; else process.env.WTP_DB_ROLE = original.role;
       if (original.control === undefined) delete process.env.WTP_CONTROL_PLANE_DATABASE_URL; else process.env.WTP_CONTROL_PLANE_DATABASE_URL = original.control;
       if (original.mode === undefined) delete process.env.WTP_RUNTIME_MODE; else process.env.WTP_RUNTIME_MODE = original.mode;

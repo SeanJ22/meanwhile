@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /** Direct Census ACS retrieval/validation/promotion; writes no repository file. */
 import { KEY_VAR } from "../lib/sources/census-acs-population/index.ts";
 import { refreshNationalAcs } from "../lib/sources/census-acs-population/refresh.ts";
@@ -20,7 +21,7 @@ prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 
 async function main(): Promise<void> {
-  const key = process.env[KEY_VAR];
+  const key = storedKeyEnvironment()[KEY_VAR];
   let refreshed:Awaited<ReturnType<typeof refreshNationalAcs>>;
   try {
     refreshed = await withPublisherAcquisitionDeadline("Census ACS", ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,

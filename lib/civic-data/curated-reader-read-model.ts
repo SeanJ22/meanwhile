@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { memberOfficeStateScope, readMemberOfficeRows, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
 import {
@@ -212,7 +213,7 @@ export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<Cura
 };
 /** The national navigation record, read only for states whose own record is not yet published. */
 export const settleBallotNavigationRead = async (): Promise<string> => {
-  if (currentReaderSelection() && !currentReaderAuthorityEdge() && process.env.DATABASE_URL &&
+  if (currentReaderSelection() && !currentReaderAuthorityEdge() && storedKeyValue("DATABASE_URL") &&
       !readerCanonicalEntry(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope)) {
     const pointers = [{ recordClass: BALLOT_NAVIGATION.recordClass, scope: BALLOT_NAVIGATION.scope }];
     await primeReaderCanonicalStore(pointers, readCanonicalShelf(pointers));

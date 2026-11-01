@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { writeFeedback } from "@/lib/db/feedback";
 import {
   FEEDBACK_MAX_CHARS,
@@ -32,6 +33,7 @@ export const runtime = "nodejs";
 const MAX_BODY_BYTES = 8192;
 
 export async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return Response.json(

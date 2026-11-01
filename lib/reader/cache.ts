@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { countReaderInvalidation } from "../counts/cache.ts";
 import { createHash } from "node:crypto";
 import { REGISTRY_STATES, registryJurisdictions } from "../civic-data/state-scopes.ts";
@@ -17,8 +18,8 @@ export type ReaderCachePurger = (tags: readonly string[]) => Promise<ReaderCache
 /** The same tag purge is used by publication jobs and deployed reader functions. */
 export async function purgeReaderCacheTags(tags: readonly string[]): Promise<ReaderCachePurgeResult> {
   const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim() || process.env.WTP_BLOBS_SITE_ID?.trim();
-  const token = process.env.NETLIFY_API_TOKEN?.trim() || process.env.NETLIFY_AUTH_TOKEN?.trim() || process.env.NETLIFY_TOKEN?.trim()
-    || process.env.WTP_BLOBS_TOKEN?.trim() || process.env.NETLIFY_BLOBS_TOKEN?.trim();
+  const token = storedKeyValue("NETLIFY_API_TOKEN")?.trim() || storedKeyValue("NETLIFY_AUTH_TOKEN")?.trim() || storedKeyValue("NETLIFY_TOKEN")?.trim()
+    || storedKeyValue("WTP_BLOBS_TOKEN")?.trim() || storedKeyValue("NETLIFY_BLOBS_TOKEN")?.trim();
   if (!siteID || !token || tags.length === 0) return { purged: false, detail: "no purge credentials or tags" };
   try {
     const response = await fetch("https://api.netlify.com/api/v1/purge", {
@@ -46,8 +47,6 @@ export interface ReaderCacheScope {
 export const READER_NATIONAL_CACHE_TAG = "reader-national";
 export const READER_NATIONAL_PEOPLE_CACHE_TAG = "reader-national-people";
 export const READER_CACHE_SECONDS = 15 * 60;
-/** First ZIP builds must keep advancing even when already-built large ZIPs change every turn. */
-export const UNBUILT_ZIP_PRIORITY = 1_000_000_000;
 
 /** Publication data read by the place builder; other families refresh their own endpoints. */
 export function placePageConsumesPublication(scope: string, recordClass?: string): boolean {
@@ -160,9 +159,18 @@ export function readerCacheScopeForPublication(scope: string, context: {
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
 export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags,
   query?: Query | null): Promise<ReaderCachePurgeResult> {
-  if (query !== null && (query || process.env.DATABASE_URL)) await enqueueReaderPlaces(scope, query ?? readerFactDb().query);
+  if (query !== null && (query || storedKeyValue("DATABASE_URL"))) await enqueueReaderPlaces(scope, query ?? readerFactDb().query);
   // Explicit global owner actions and outcomes without a known place still clear place answers.
   return invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
+}
+
+/** Every place and body without a saved page is marked for the place-page lane to build. */
+export async function queueUnbuiltPlacePages(query: Query): Promise<number> {
+  const [queued] = await query(`WITH queued AS (INSERT INTO place_page(place_id,stale_at,priority)
+    SELECT e.id,statement_timestamp(),e.page_priority FROM entity e LEFT JOIN place_page p ON p.place_id=e.id
+    WHERE e.kind IN ('place','body') AND e.id NOT LIKE 'zip:%' AND p.place_id IS NULL
+    ON CONFLICT(place_id) DO NOTHING RETURNING 1) SELECT count(*)::int AS n FROM queued`);
+  return Number(queued?.n ?? 0);
 }
 
 /** Queue inside a writer's transaction; a newer arrival survives an in-flight rebuild. */
@@ -189,23 +197,17 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
     SELECT id FROM entity WHERE kind IN ('place','body') AND ($4::boolean OR state=ANY($1::text[]) OR id=ANY($2::text[]))
     UNION SELECT id FROM subjects WHERE kind IN ('place','body')
     UNION SELECT ep.place_id FROM entity_place ep JOIN subjects s ON s.id=ep.entity_id
-    UNION SELECT d.page_id FROM place_page_dependency d WHERE d.entity_id=ANY($3::text[]) OR d.entity_id=ANY($2::text[])
-      OR d.entity_id IN (SELECT id FROM service_places)
-      OR d.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
+    UNION SELECT p.place_id FROM place_page p WHERE p.place_id NOT LIKE 'zip:%' AND p.depends && (
+      $3::text[] || $2::text[] || ARRAY(SELECT id FROM service_places) || ARRAY(SELECT id FROM subjects WHERE kind<>'place'))
+    UNION SELECT o.page_id FROM place_page_dependency o JOIN place_page p ON p.place_id=o.page_id AND p.depends IS NULL
+      WHERE o.entity_id=ANY($3::text[]) OR o.entity_id=ANY($2::text[]) OR o.entity_id IN (SELECT id FROM service_places)
+        OR o.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
     UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
-  ) INSERT INTO rebuild_queue(place_id,queued_at,priority,next_queued_at)
-    SELECT a.id,clock_timestamp(),e.page_priority+CASE WHEN e.page_priority>0
-      AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=e.id) THEN ${UNBUILT_ZIP_PRIORITY} ELSE 0 END,
-      CASE WHEN $5::boolean THEN clock_timestamp() END
-    FROM affected a JOIN entity e ON e.id=a.id ORDER BY a.id
-    ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+CASE
-      WHEN rebuild_queue.lease_token IS NOT NULL OR rebuild_queue.built_generation=rebuild_queue.generation THEN 1 ELSE 0 END,
-      next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
-        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp())
-        WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END
-    WHERE (rebuild_queue.next_queued_at IS NULL AND (rebuild_queue.lease_token IS NOT NULL OR $5::boolean))
-      OR rebuild_queue.built_generation=rebuild_queue.generation`,
-  [broad ? states : [],places,entities,broad && scope.national === true,!broad]);
+  ) INSERT INTO place_page(place_id,stale_at,priority)
+    SELECT a.id,clock_timestamp(),e.page_priority FROM affected a JOIN entity e ON e.id=a.id AND a.id NOT LIKE 'zip:%' ORDER BY a.id
+    ON CONFLICT(place_id) DO UPDATE SET stale_at=CASE WHEN place_page.lease_until>clock_timestamp() THEN clock_timestamp()
+      ELSE coalesce(place_page.stale_at,clock_timestamp()) END`,
+  [broad ? states : [],places,entities,broad && scope.national === true]);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {

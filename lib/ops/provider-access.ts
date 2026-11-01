@@ -1,3 +1,4 @@
+import { PUBLIC_SITE_ORIGIN, STAGING_RENDER_ORIGIN, ADMIN_ORIGIN } from "./origins.ts";
 /** Our robots do not spend a third party's quota: provider hosts are blocked by default for synthetic runs. */
 
 /** The providers this module knows how to bound. One, for now, and named. */
@@ -95,12 +96,20 @@ export function resolveProviderPolicy(input: {
   };
 }
 
+const relayHosts = new Set([PUBLIC_SITE_ORIGIN, STAGING_RENDER_ORIGIN, ADMIN_ORIGIN].map(origin => new URL(origin).hostname));
+function isMapRelay(url: URL): boolean {
+  const host = url.hostname.toLowerCase().replace(/\.$/, "");
+  return (url.pathname === "/api/maptiler" || url.pathname.startsWith("/api/maptiler/")) &&
+    (relayHosts.has(host) || host === "localhost" || host.endsWith(".localhost") || host === "127.0.0.1" || host === "[::1]");
+}
+
 /** Which provider a URL belongs to, or null; only http and https can carry a request to a provider. */
 export function providerOf(requestUrl: string): ExternalProvider | null {
   let host: string;
   try {
     const parsed = new URL(requestUrl);
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+    if (isMapRelay(parsed)) return MAPTILER;
     host = parsed.hostname.toLowerCase().replace(/\.$/, "");
   } catch {
     return null;
@@ -184,7 +193,8 @@ export function newProviderLedger(policy: ProviderPolicy): ProviderLedger {
 /** The host of a provider URL, for the ledger. Never the query string — that carries the key. */
 export function providerHostOf(requestUrl: string): string {
   try {
-    return new URL(requestUrl).hostname.toLowerCase();
+    const url = new URL(requestUrl);
+    return isMapRelay(url) ? "api.maptiler.com" : url.hostname.toLowerCase();
   } catch {
     return "unparseable";
   }

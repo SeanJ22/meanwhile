@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { zipCountsByState } from "../bulk-hunts/zip-state.ts";
@@ -25,7 +26,7 @@ const SCORE_BUDGET_MS = 2_500;
 export const defaultNationalDeps: NationalDeps = {
   now: () => new Date().toISOString(),
   districts: (state) => readStateDistricts(state),
-  zipCounts: () => zipCountsByState(process.env.DATABASE_URL ? databaseHttpReadOnlySql(process.env.DATABASE_URL).query : undefined),
+  zipCounts: () => { const connection = storedKeyValue("DATABASE_URL"); return zipCountsByState(connection ? databaseHttpReadOnlySql(connection).query : undefined); },
   zipDivisions: (zips) => zipDivisionIds(zips),
   readHeld: (ids, now) => readHeldPlaceCapture(ids, { now }),
   scoreBudgetMs: SCORE_BUDGET_MS,
@@ -41,7 +42,8 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
   const deps = options.deps ?? defaultNationalDeps;
   const opened = await openControlPlane();
   if (!opened.ok) return NextResponse.json({ state: "UNREAD", code: "CONTROL_PLANE_UNREAD", says: opened.detail }, { status: 503, headers: NO_STORE });
-  const populationQuery = process.env.DATABASE_URL ? databaseHttpReadOnlyQuery(process.env.DATABASE_URL, 2_000) : undefined;
+  const readerConnection = storedKeyValue("DATABASE_URL");
+  const populationQuery = readerConnection ? databaseHttpReadOnlyQuery(readerConnection, 2_000) : undefined;
   const earlyPopulation = query.scope.kind === "country"
     ? readPopulationFacts(US_STATES.map(state => statePopulationId(state.code)).filter((key): key is string => key !== null), populationQuery) : null;
   const earlyZips = query.scope.kind === "country" ? deps.zipCounts().catch(() => null) : null;

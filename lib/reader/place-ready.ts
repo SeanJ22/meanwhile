@@ -1,38 +1,24 @@
 import { Buffer } from "node:buffer";
-import { brotliCompressSync, brotliDecompressSync, constants, gunzipSync } from "node:zlib";
-import type { PlacePackage } from "./place-types.ts";
-import type { BodyTerritorySelection } from "../registry/body-territory.ts";
+import { brotliCompressSync, brotliDecompressSync, constants, gunzipSync, inflateRawSync } from "node:zlib";
+import { PAGE_DICTIONARY } from "./page-dictionary.ts";
 
 interface PackedReadyPlace {
-  readonly encoding: "br-json-v1" | "gzip-json-v1";
+  readonly encoding: "br-json-v1" | "gzip-json-v1" | "dfl-dict-v1";
   readonly data: string;
-  readonly territory?: PackedReadyPlace;
 }
 
+/** Brotli, which the release before this one reads. Pages against the shared dictionary ("dfl-dict-v1") are read here but not yet written, so a rollback never meets a page it cannot decode. */
 function pack(page: unknown): PackedReadyPlace {
   return { encoding: "br-json-v1", data: brotliCompressSync(JSON.stringify(page), {params:{[constants.BROTLI_PARAM_QUALITY]:5}}).toString("base64") };
 }
 
 function unpack<T>(page: unknown): T {
   if (!page || typeof page !== "object" || !("encoding" in page)) return page as T;
-  if (!["br-json-v1","gzip-json-v1"].includes(String(page.encoding)) || !("data" in page) || typeof page.data !== "string")
+  if (!["br-json-v1","gzip-json-v1","dfl-dict-v1"].includes(String(page.encoding)) || !("data" in page) || typeof page.data !== "string")
     throw new Error("PLACE_PAGE_ENCODING_INVALID");
   const bytes=Buffer.from(page.data,"base64");
-  return JSON.parse((page.encoding==="br-json-v1"?brotliDecompressSync(bytes):gunzipSync(bytes)).toString("utf8")) as T;
-}
-
-/** Compress the complete JSON response before it crosses the database connection. */
-export function packReadyPlace(page: PlacePackage,territory?:BodyTerritorySelection|null): PackedReadyPlace {
-  return {...pack(page),...(territory===undefined?{}:{territory:pack(territory)})};
-}
-
-/** Previously built uncompressed pages remain readable until their next rebuild. */
-export function unpackReadyPlace(page: unknown): PlacePackage { return unpack(page); }
-
-/** Undefined is a legacy page; null is a saved selection with no territory geometry. */
-export function unpackReadyTerritory(page:unknown):BodyTerritorySelection|null|undefined {
-  return page && typeof page==='object' && 'encoding' in page && 'territory' in page
-    ? unpack<BodyTerritorySelection|null>(page.territory) : undefined;
+  const text=page.encoding==="br-json-v1"?brotliDecompressSync(bytes):page.encoding==="dfl-dict-v1"?inflateRawSync(bytes,{dictionary:PAGE_DICTIONARY}):gunzipSync(bytes);
+  return JSON.parse(text.toString("utf8")) as T;
 }
 
 type Row = Record<string,unknown>;
@@ -48,7 +34,7 @@ export function packPlaceContext(context: Row): Row {
     const brief={...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
       meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
         payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};
-    const facts={...brief,registry:null,everyday_routing:null,governments:[],divisions:[],registration_held:false};
+    const facts={...brief,registry:null,governments:[],divisions:[],registration_held:false};
     packed[key]={full:pack(full),brief:pack(brief),facts:pack(facts)};
   }
   return packed;

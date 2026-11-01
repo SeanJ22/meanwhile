@@ -1,9 +1,11 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { NextResponse } from "next/server";
 import { readerOpenData,OpenDataCursorError } from "@/lib/sources/open-data/reader";
 import { jurisdictionFromOcdId } from "@/lib/coverage/states";
 import { openDataReaderRecord } from "@/lib/sources/open-data/model";
 export const GET = readerRoute("/api/open-data", async function GET(request:Request) {
+  await loadWebsiteSavedKeys();
   const params=new URL(request.url).searchParams, division=params.get("division"),zip=params.get("zip"),bodyId=params.get("body");
   const cursor=params.get("cursor");
   if(!division && !zip || division && !jurisdictionFromOcdId(division) || zip && !/^\d{5}$/.test(zip))return NextResponse.json({error:"A US division or ZIP is required."},{status:400});

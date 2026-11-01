@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 import { getStore, type Store } from "@netlify/blobs";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { contentHash } from "../ids.ts";
@@ -166,9 +167,9 @@ export class NetlifyEvidenceStore implements EvidenceStore {
   }
 }
 
-export function netlifyEvidenceStoreFromEnv(env: NodeJS.ProcessEnv = process.env): NetlifyEvidenceStore | null {
+export function netlifyEvidenceStoreFromEnv(env: NodeJS.ProcessEnv = storedKeyEnvironment()): NetlifyEvidenceStore | null {
   if (env.WTP_VAULT_PROVIDER !== "netlify") return null;
-  const siteID = env.WTP_BLOBS_SITE_ID?.trim(), token = env.WTP_BLOBS_TOKEN?.trim();
+  const siteID = env.WTP_BLOBS_SITE_ID?.trim(), token = storedKeyValue("WTP_BLOBS_TOKEN", env)?.trim();
   if (!siteID || !token) throw new EvidenceStoreRefusal("Netlify vault requires WTP_BLOBS_SITE_ID and WTP_BLOBS_TOKEN from the host");
   const signals = new AsyncLocalStorage<AbortSignal>();
   const boundedFetch: typeof fetch = async (input, init) => {

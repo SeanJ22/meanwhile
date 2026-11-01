@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { sourceFetch, sourceFetchPrivate, SourceReadDeferred } from "../http.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import { civicElectionRows, civicLookupFromRaw, unavailableCivicLookup, type CivicLookup } from "./model.ts";
@@ -27,7 +28,7 @@ export interface CivicReadOptions {
 function logCivicCallFailure(route: "elections" | "voterinfo", status: number | null, body: string, params: Record<string, string>, options: CivicReadOptions, stage: "transport" | "body" | "http" | "parse"): void {
   if (typeof window !== "undefined") return;
   let preview = route === "voterinfo" ? "" : body;
-  for (const secret of [options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY, params.address].filter((value): value is string => !!value)) {
+  for (const secret of [options.apiKey ?? storedKeyValue("GOOGLE_CIVIC_API_KEY"), params.address].filter((value): value is string => !!value)) {
     preview = preview.split(secret).join("[redacted]").split(encodeURIComponent(secret)).join("[redacted]");
   }
   console.error(JSON.stringify({ event: "google_civic_call_failed", route, stage, httpStatus: status, body: preview.slice(0, 300) }));
@@ -53,7 +54,7 @@ async function civicResponseBody(response: Response, route: "elections" | "voter
 }
 
 async function readCivicApiCall(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions, transport: typeof sourceFetch): Promise<{ raw: string; checkedAt: string; status: number }> {
-  const key = options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY;
+  const key = options.apiKey ?? storedKeyValue("GOOGLE_CIVIC_API_KEY");
   if (!key) throw new CivicSourceError(null, "Google Civic API key is not configured.", "KEY_MISSING");
   const url = new URL(`${GOOGLE_CIVIC_API}${route}`);
   url.search = new URLSearchParams({ ...params, key }).toString();

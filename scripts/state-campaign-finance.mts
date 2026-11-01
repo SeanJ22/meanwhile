@@ -31,7 +31,7 @@ await runCampaignMoneyStates(async state=>{
     if(held?.providerHashBasis==="SOURCE_CONTENT_V1"&&held.providerRawHash)providers.set(state,held.providerRawHash);
     published+=held?.publishedPeople??0;found+=held?.peopleWithMoney??0;return;
   }
-  const child=spawn(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types",fileURLToPath(new URL("../lib/funding/state-publication.ts",import.meta.url)),`--state=${state}`,...(providerDue?[]:["--held"])],{stdio:["ignore","pipe","inherit"],env:admittedRuntimeChildEnvironment({capability:"ROUTINE_CONTRACT",contract:"campaign-money"})});
+  const child=spawn(process.execPath,["--max-old-space-size=112","--max-semi-space-size=4","--experimental-strip-types","--import","./scripts/register-test-loader.mjs",fileURLToPath(new URL("../lib/funding/state-publication.ts",import.meta.url)),`--state=${state}`,...(providerDue?[]:["--held"])],{stdio:["ignore","pipe","inherit"],env:admittedRuntimeChildEnvironment({capability:"ROUTINE_CONTRACT",contract:"campaign-money"})});
   const exited=new Promise<number|null>((resolve,reject)=>{child.once("error",reject);child.once("exit",resolve);});
   let reported=false;
   for await(const line of createInterface({input:child.stdout,crlfDelay:Infinity})){

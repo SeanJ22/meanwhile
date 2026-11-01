@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -14,7 +15,7 @@ import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
   rebuildPlacePageTurn } from "../lib/reader/place-page-worker.ts";
-import { queueUnbuiltPlacePages } from "../scripts/prepare-place-pages.mts";
+import { queueUnbuiltPlacePages } from "../lib/reader/cache.ts";
 import type { FactDb } from "../lib/facts/publish.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -35,6 +36,7 @@ const rawPage = (id: string) => ({ division_ids: [id], entities: [], fields: [],
 /** The runner's own place-page functions over a fixture database; only the turn process is run in this process. */
 async function placePageRunner(options: { readonly turnMs: number }) {
   const db = await factDb({ withHourlyCounts: true });
+  await db.query("INSERT INTO pass_cursor(name,position) VALUES('place-pages:adopt','done')");
   const wrapped: FactDb = { transaction: run => db.transaction(query => run(async (text, params) => {
     if (text !== PLACE_PACKAGE_SQL) return query(text, params);
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -49,7 +51,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   // Launch spacing reads this clock, so a test can step past a slowed job's wait without sleeping.
   const clock = { now: Date.now() };
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
-  const context = createContext({
+  const context = createContext({ storedKeyEnvironment,
     provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, JOB_SLOWED_WORDS,
     admitJobLaunch: (job: string) => admitJobLaunch(job, process.env, clock.now), jobRuns: new JobRunBook(), BREAKER_SLOWED: "slowed",
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
@@ -103,8 +105,8 @@ test("the runner's place-page lane drains queued pages in turns, then waits for 
     assert.deepEqual(runInContext(`runStandingRuntimeTick("test", true)`, runner.context), undefined);
     assert.deepEqual(runner.context.standingRuntimeScheduler.inFlightIds(), ["place-pages"]);
     await runner.context.standingRuntimeScheduler.waitForIdle();
-    assert.equal(await runner.count("place_page"), 16, "every queued place now has a built page");
-    assert.equal(await runner.count("rebuild_queue"), 0);
+    assert.equal(await runner.count("place_page WHERE context ? 'formatVersion'"), 16, "every queued place now has a built page");
+    assert.equal(await runner.count("place_page WHERE stale_at IS NOT NULL"), 0);
     assert.ok(runner.turns.length > 1, `the lane kept taking turns while pages were owed (${runner.turns.length})`);
     assert.ok(runner.reservations.length === runner.turns.length && runner.reservations.every(entry => entry === "rebuild-place-pages.mts"));
     assert.ok(runner.log.some(line => /place pages: \d+ rebuilt, 0 failed and still queued, 0 waiting/.test(line)), runner.log.join("\n"));
@@ -134,9 +136,9 @@ test("a pending restart stops new place-page turns and waits for no more than th
     assert.ok(runner.turns[1]!.at < heldAt && runner.turns[1]!.ended! >= heldAt, "the hold came during the second turn");
     assert.ok(idleAfter <= 150 + 250, `the lane went idle ${idleAfter}ms after the hold, beyond one turn`);
     assert.ok(runner.log.some(line => /loads by restart: no new standing run starts; place-pages end by their deadlines/.test(line)), runner.log.join("\n"));
-    const waiting = await runner.count("rebuild_queue");
-    assert.ok(waiting > 0 && await runner.count("place_page") === 400 - waiting, "unbuilt pages stay queued for the restarted runner");
-    assert.equal(await runner.count("rebuild_queue WHERE lease_token IS NOT NULL"), 0, "every claimed page finished inside its turn");
+    const waiting = await runner.count("place_page WHERE stale_at IS NOT NULL");
+    assert.ok(waiting > 0 && await runner.count("place_page WHERE context ? 'formatVersion'") === 400 - waiting, "unbuilt pages stay queued for the restarted runner");
+    assert.equal(await runner.count("place_page WHERE lease_token IS NOT NULL"), 0, "every claimed page finished inside its turn");
     runInContext(`runStandingRuntimeTick("test", true)`, runner.context);
     assert.deepEqual(runner.context.standingRuntimeScheduler.inFlightIds(), [], "the standing clock launches nothing while held");
     await runner.context.runPlacePages(Date.now() + 60_000);
@@ -193,10 +195,10 @@ test("the owner's pause, an unreadable pause and a failed turn leave pages queue
     assert.equal(runner.turns.length, 1);
     assert.ok(runner.log.some(line => /place pages: turn ended without a result \(.*PLACE_PAGE_TURN_FAILED: 1\); its pages stay queued/.test(line)), runner.log.join("\n"));
     assert.ok(!runner.log.some(line => line.startsWith("FAILED")));
-    assert.equal(await runner.count("rebuild_queue"), 3);
+    assert.equal(await runner.count("place_page WHERE stale_at IS NOT NULL"), 3);
     runner.setChildStatus(0);
     await runner.context.runPlacePages(Date.now() + 60_000);
-    assert.equal(await runner.count("place_page"), 3, "the next turn builds what the failed turn left");
+    assert.equal(await runner.count("place_page WHERE context ? 'formatVersion'"), 3, "the next turn builds what the failed turn left");
   } finally { await runner.db.pg.close(); }
 });
 
@@ -213,7 +215,7 @@ test("a pending restart drains the members, slice and page-reader children, and 
   for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["slices", "runSliceLane", /Slices stopped/], ["parser-lane", "runParserLane", /page readers stopped/]] as const) {
     for (const status of [0, null]) {
       const sent: unknown[] = [];
-      const context = createContext({ provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
+      const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
         standingRuntimeScheduler: { inFlightIds: () => [lane] }, researchCycleActive: false, drainHunterLane: () => {}, console: { log: () => {}, error: () => {} }, process,
         SLICE_JOB: { id: "slices", databaseBytesPerRun: 1 }, LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
         RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true,
@@ -233,7 +235,7 @@ test("a pending restart drains the members, slice and page-reader children, and 
 
 test("a lane child that stops tells the heartbeat why: the runner's kill reason, or its exit and last error lines, with secrets taken out", async () => {
   const stopped = (result: object) => {
-    const context = createContext({ provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
+    const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
       RUNTIME_NO_PROGRESS_MS: 1, PARSER_LANE_DATABASE_BYTES: 1, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ id: "parser-lane", status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
     runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", "runParserLane"].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
     return (runInContext(`runParserLane(Date.now() + 60000)`, context) as Promise<void>).then(() => "", (error: Error) => error.message);

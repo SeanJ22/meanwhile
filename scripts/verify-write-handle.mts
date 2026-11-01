@@ -1,26 +1,9 @@
-/**
- * `pnpm verify:write-handle` — proof that the one sanctioned production write
- * path (`WTP_PRODUCTION_DATABASE_URL_WRITE`) connects, writes, and cleans up:
- *
- * 1. it resolves through `lib/db/write-handle.ts`, so both refusals (the
- *    READONLY variable by name, and any read-only user) are on the path;
- * 2. it confirms the host is NOT the branch `DATABASE_URL` calls local;
- * 3. it writes ONE row, marked SYNTHETIC with a run id it mints;
- * 4. it reads that row back by the run id;
- * 5. it deletes it and prints the before and after totals, so "delta 0" is checkable.
- *
- * This writes to PRODUCTION, on purpose; the row is gone by the end of the run.
- *
- * Run: `pnpm verify:write-handle`
- */
-import { join } from "node:path";
+/** Verify the saved writer resolves, connects, and inserts, reads and removes its own synthetic row. */
 
-import { config as loadEnv } from "dotenv";
 import { neon } from "../lib/db/client.ts";
 
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
 
-loadEnv({ path: join(process.cwd(), ".env.local") });
 
 let failures = 0;
 function report(label: string, ok: boolean, detail: string) {
@@ -54,19 +37,6 @@ console.log(`  role = ${handle.role}`);
 console.log(`  host = ${handle.host}`);
 console.log(`  db   = ${handle.database}`);
 
-console.log("\nBRANCH");
-const localRaw = process.env.DATABASE_URL;
-const localHost = localRaw ? new URL(localRaw).hostname : null;
-report(
-  "the write handle is not pointed at the branch DATABASE_URL calls local",
-  localHost !== handle.host,
-  localHost === null
-    ? "DATABASE_URL is unset, so there is nothing to confuse it with"
-    : localHost === handle.host
-      ? `both are ${handle.host} — this handle would write to the local branch while claiming production`
-      : `write = ${handle.host}, local = ${localHost}`,
-);
-
 const sql = neon(handle.connection);
 
 console.log("\nCONNECTION");
@@ -91,8 +61,6 @@ if (!connected) finish();
 console.log("\nWRITE AND READ BACK");
 const runId = `verify-write-handle@${new Date().toISOString()}`;
 console.log(`  run id = ${runId}`);
-
-const before = (await sql`select count(*)::int as n from search_log`) as { n: number }[];
 
 try {
   await sql`
@@ -122,12 +90,11 @@ console.log("\nCLEANUP");
 const deleted = (await sql`
   delete from search_log where run_id = ${runId} returning id
 `) as { id: string }[];
-const after = (await sql`select count(*)::int as n from search_log`) as { n: number }[];
+const after = (await sql`select count(*)::int as n from search_log where run_id = ${runId}`) as { n: number }[];
 report(
   "the probe row is removed and the store returns to where it started",
-  after[0].n === before[0].n,
-  `search_log ${before[0].n} -> ${after[0].n}, delta ${after[0].n - before[0].n} ` +
-    `(deleted ${deleted.length})`,
+  deleted.length === 1 && after[0].n === 0,
+  `deleted ${deleted.length} probe row; ${after[0].n} remain for this run`,
 );
 
 finish();

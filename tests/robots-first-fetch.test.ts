@@ -187,5 +187,5 @@ test("THE COMMAND LINE HAS NO WAY AROUND IT: it fetches only through researchFet
   assert.equal((second.match(/\bfetch\(/g) ?? []).length, 0, "the curl rung wraps the Node transport and has no fetch of its own");
   assert.match(second, /options\.first \?\? nodeResearchGet/, "the Node transport is asked first");
   assert.doesNotMatch(second, /"-L"|--location/, "curl never follows a redirect either");
-  assert.match(readFileSync("package.json", "utf8"), /"research:fetch": "tsx scripts\/research-fetch\.mts"/);
+  assert.match(readFileSync("package.json", "utf8"), /"research:fetch": "tsx --import \.\/scripts\/register-test-loader\.mjs scripts\/research-fetch\.mts"/);
 });

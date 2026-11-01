@@ -212,7 +212,7 @@ function checkRunnerPublishesConsole(src: string): void {
   assert.match(body, /await runRuntimeChildren\(/, "each publisher is an asynchronous child process");
   assert.match(body, /args: \[\.\.\.TS_CHILD, \.\.\.publisher\.args\]/, "a publisher does not start the way every runner child starts");
   assert.doesNotMatch(src, /--env-file=\.env\.local/, "a standing child reopens cwd-relative environment state instead of inheriting the validated parent environment");
-  assert.match(body, /env: process\.env/, "the child does not inherit the validated parent environment");
+  assert.match(body, /env: storedKeyEnvironment\(\)/, "the child does not inherit the saved-key parent environment");
   assert.match(body, /console publish: \$\{publisher\.name\} OK/, "no OK line");
   assert.match(body, /console publish: \$\{publisher\.name\} FAILED exit/, "no FAILED line");
   assert.doesNotMatch(body, /\bthrow\b/, "a publish failure is printed, never thrown");

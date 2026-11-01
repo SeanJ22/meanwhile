@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import {join} from 'node:path';
 import {describeWriteContext,assertWriteAllowed} from '../db/write-guard.ts';
 import {readerFactDb} from '../facts/db.ts';
@@ -19,8 +20,9 @@ export type PrepareHuntBody=(finding:SiteFinding,origin:{workItemId:string;attem
 /** Bind sourced body identities only in the live writer runtime. Source-only
  * and production read-only checks retain the finding in the Box without writes. */
 export function liveBodyIdentityWritesAllowed():boolean{
- if(process.env.WTP_RUNTIME_MODE!=='production' || !describeWriteContext().allowed || !process.env.DATABASE_URL)return false;
- try{return decodeURIComponent(new URL(process.env.DATABASE_URL).username)!=='readonly';}catch{return false;}
+ const connection = storedKeyValue("DATABASE_URL");
+ if(process.env.WTP_RUNTIME_MODE!=='production' || !describeWriteContext().allowed || !connection)return false;
+ try{return decodeURIComponent(new URL(connection).username)!=='readonly';}catch{return false;}
 }
 export function liveHuntBodyPreparer(input:{repos:ControlPlaneRepositories;root:string;now:()=>string}):PrepareHuntBody|undefined{
  if(!liveBodyIdentityWritesAllowed())return undefined;

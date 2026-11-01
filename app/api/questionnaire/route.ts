@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { digestToken, verifyToken, tokenRefusalLine } from "@/lib/questionnaire/auth";
 import {
   INSTRUMENT_VERSION,
@@ -43,6 +44,7 @@ function isAnswerArray(v: unknown): v is { questionId: string; text: string }[] 
 }
 
 export async function POST(request: Request): Promise<Response> {
+  await loadWebsiteSavedKeys();
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return Response.json(

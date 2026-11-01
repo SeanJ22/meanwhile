@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { neon } from "../db/client.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 
@@ -5,9 +6,10 @@ export interface VotingLookupCount { day: string; zip: string; districts: string
 
 /** Accept only coarse geography; this function cannot receive a street or a Google answer. */
 export async function recordVotingLookupCount(count: VotingLookupCount, query = async (text: string, params: string[]) => {
-  if (!process.env.DATABASE_URL) return;
+  const connection = storedKeyValue("DATABASE_URL");
+  if (!connection) return;
   assertWriteAllowed("anonymous voting lookup counts");
-  await neon(process.env.DATABASE_URL).query(text, params, { fetchOptions: { signal: AbortSignal.timeout(500) } });
+  await neon(connection).query(text, params, { fetchOptions: { signal: AbortSignal.timeout(500) } });
 }): Promise<void> {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(count.day) || count.zip && !/^\d{5}$/.test(count.zip) ||
     count.districts.some(id => !/^ocd-division\/country:us(?:\/[a-z_]+:[a-z0-9_.~-]+)*$/.test(id))) throw new Error("Invalid voting count geography");

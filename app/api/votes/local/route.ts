@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { settleOutcomeRead, sittingsForBody } from "@/lib/outcomes/store";
 import { linkLocalVotes, localVotesForMember, type LocalVoteRosterFor } from "@/lib/outcomes/local-votes";
@@ -11,6 +12,7 @@ const ROSTER_ID = /^roster:(.+)#\d+$/;
 const rosterMembers: LocalVoteRosterFor = (bodyId) => rosterForBody(bodyId)?.members ?? [];
 
 export const GET = readerRoute("/api/votes/local", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const personId = new URL(request.url).searchParams.get("personId") ?? "";
   const bodyId = ROSTER_ID.exec(personId)?.[1];
   if (!bodyId || personId.length > 300) return Response.json({ error: "personId required" }, { status: 400 });

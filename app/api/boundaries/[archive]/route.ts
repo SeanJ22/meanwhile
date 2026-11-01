@@ -1,8 +1,10 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { getStore } from "@netlify/blobs";
 import { open } from "node:fs/promises";
 import { BOUNDARY_CACHE_HEADERS, boundaryRange } from "@/lib/map/boundary-archive";
 
 export async function GET(request: Request, context: { params: Promise<{ archive: string }> }): Promise<Response> {
+  await loadWebsiteSavedKeys();
   const { archive } = await context.params;
   if (!/^census-\d{4}-[a-z0-9-]+\.pmtiles$/.test(archive)) return new Response(null, { status: 404 });
   const range = boundaryRange(request.headers.get("range"));

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { sourceFetch } from "../http.ts";
 import { createHash } from "node:crypto";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
@@ -99,7 +100,7 @@ export async function savedRead(options: PeopleAcquisitionOptions, url: string, 
 export function json(release: KnownRelease): Record<string, unknown> { return record(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(release.bytes))); }
 export function gap(gaps: { sourceUrl: string; detail: string }[], options: PeopleAcquisitionOptions, sourceUrl: string, error: unknown): void {
   options.signal.throwIfAborted();
-  const secrets = Object.entries(options.env ?? process.env).filter(([key, value]) => /(?:API_KEY|TOKEN)$/.test(key) && value).map(([, value]) => value!);
+  const secrets = Object.entries(storedKeyEnvironment(options.env ?? process.env)).filter(([key, value]) => /(?:API_KEY|TOKEN)$/.test(key) && value).map(([, value]) => value!);
   const detail = secrets.reduce((text, secret) => text.split(secret).join("[REDACTED]").split(encodeURIComponent(secret)).join("[REDACTED]"), error instanceof Error ? error.message : String(error));
   gaps.push({ sourceUrl, detail: `${options.sourceId.toUpperCase().replace(/-/g, "_")}_SOURCE_GAP:${detail}` });
 }

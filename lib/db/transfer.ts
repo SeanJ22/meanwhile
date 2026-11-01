@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { collectProcessTransfers } from "./transfer-journal.ts";
 import { mergeProcessTransfer, processTransferKey, processTransferStatements } from "./process-transfer.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -98,7 +99,7 @@ export async function flushDatabaseTransfer(): Promise<boolean> {
     return saved && (pendingParts.size || pendingDailyParts.size) ? flushDatabaseTransfer() : saved;
   }
   if (!pendingParts.size && !pendingDailyParts.size) return true;
-  const url = process.env.DATABASE_URL;
+  const url = storedKeyValue("DATABASE_URL");
   if (!url) return false;
   transferState.lastFlush = Date.now();
   const batch = [...pending.values()], hours = [...pendingHours.values()];
@@ -157,7 +158,7 @@ function accumulate(row: DatabaseTransfer): void {
 
 
 function reportsToRunner(): boolean {
-  return process.env[VITAL_SIGNS_REPORT_ENV] === "1";
+  return storedKeyEnvironment()[VITAL_SIGNS_REPORT_ENV] === "1";
 }
 
 function counted(row: DatabaseTransfer, caller?: string): void {
@@ -177,7 +178,7 @@ function socketDatabase(url: string | URL): DatabaseTransfer["database"] | null 
   };
   let target: string;
   try { target = new URL(String(url)).hostname.toLowerCase().replace("-pooler.", "."); } catch { return null; }
-  if (target === host(process.env.DATABASE_URL)) return "reader";
+  if (target === host(storedKeyValue("DATABASE_URL"))) return "reader";
   if (target === host(process.env.WTP_CONTROL_PLANE_DATABASE_URL)) return "control-plane";
   return null;
 }
@@ -313,7 +314,7 @@ function withRunnerDays(saved: readonly DatabaseTransfer[], hours: readonly Data
 
 /** Admin's small daily read. Days are Eastern, matching Admin's calendar. */
 export async function readDailyDatabaseTransfer(days = 7): Promise<DailyDatabaseTransferRead> {
-  const url = process.env.DATABASE_URL;
+  const url = storedKeyValue("DATABASE_URL");
   if (!url) throw new Error("DATABASE_URL is not configured");
   assertDatabaseReadTarget(url);
   const window = Number.isFinite(days) ? Math.max(1, Math.min(90, Math.trunc(days))) - 1 : 6;
@@ -369,7 +370,7 @@ const readHourTotals = async (url: string, where: string, args: readonly unknown
 
 /** Admin's daily reading line: every hour since yesterday began in Eastern time, read by key as small totals. */
 export async function readRecentHourTotals(): Promise<HourlyDatabaseTransfer[]> {
-  const url = process.env.DATABASE_URL;
+  const url = storedKeyValue("DATABASE_URL");
   if (!url) throw new Error("DATABASE_URL is not configured");
   assertDatabaseReadTarget(url);
   return readHourTotals(url, "hour >= (((now() AT TIME ZONE 'America/New_York')::date - 1)::timestamp AT TIME ZONE 'America/New_York')", []);
@@ -377,7 +378,7 @@ export async function readRecentHourTotals(): Promise<HourlyDatabaseTransfer[]> 
 
 /** Read small hour totals, then only the selected hour's job/table details. */
 export async function readRunnerDatabaseTransfer(selectedHour?: string, held?: readonly HourlyDatabaseTransfer[]): Promise<RunnerDatabaseTransfer> {
-  const url = process.env.DATABASE_URL;
+  const url = storedKeyValue("DATABASE_URL");
   if (!url) throw new Error("DATABASE_URL is not configured");
   assertDatabaseReadTarget(url);
   const totals = [...held ?? await readHourTotals(url, "hour >= now()-interval '31 days'", [])];

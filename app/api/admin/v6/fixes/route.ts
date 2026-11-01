@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 
@@ -23,6 +24,7 @@ export const runtime = "nodejs";
 
 /** `admin-v6/fixes@1`: what is on the fix queue and how far each item has got. Read only; the same for every place. */
 async function get(request: NextRequest) {
+  await loadWebsiteSavedKeys();
   return adminGet(request, async (observedAt) => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error(opened.detail);

@@ -17,7 +17,6 @@ import type { RegistrationGovernmentListing } from "../registration/listings.ts"
 import type { Division } from "../registry/types.ts";
 import { carriedFromAnswer } from "../meetings/carry-forward.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import type { PublicBodyAttempt } from "../registry/body-attempt-read.ts";
 import { attemptFamilyOf } from "../registry/attempt-families.ts";
 import { publishedBodyLabel } from "../civic-data/published-body-name.ts";
@@ -207,7 +206,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     return [body.id,{...snapshot,generatedAt:sources.map(s => s.generatedAt).sort().at(-1) ?? snapshot.generatedAt,meetings,
       counts:snapshotCounts(meetings,accounting.freshCollapsed),sources:[...accounting.sources],agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
-  return { registry,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
+  return { registry,everydayRouting:null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
     bodies,meetings: overlaid,snapshot,snapshotHeldAt,bodySnapshots,

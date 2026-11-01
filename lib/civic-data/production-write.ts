@@ -1,3 +1,4 @@
+import { selectSavedDatabase, storedKeyEnvironment } from "../core/keys-values.ts";
 import {
   resolveProductionWriteHandle,
   type WriteHandle,
@@ -11,10 +12,11 @@ export const CIVIC_DATA_PROMOTION_OPERATION =
 type WritableEnvironment = Record<string, string | undefined>;
 
 export function prepareProductionCivicDataWrite(
-  env: WritableEnvironment = process.env,
+  env: WritableEnvironment = storedKeyEnvironment(),
 ): WriteHandle {
   const handle = resolveProductionWriteHandle(env);
-  env.DATABASE_URL = handle.connection;
+  if (storedKeyEnvironment(env) === storedKeyEnvironment()) selectSavedDatabase(env.WTP_RUNTIME_MODE === "staging" ? undefined : "WTP_PRODUCTION_DATABASE_URL_WRITE");
+  else env.DATABASE_URL = handle.connection;
   if (env.WTP_RUNTIME_MODE === "staging") env.WTP_DB_ROLE = "local";
   else env.WTP_DB_ROLE = "production";
   env.WTP_SANCTIONED_WRITE = CIVIC_DATA_PROMOTION_SANCTION;

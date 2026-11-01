@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { isVersionedSelectStatement } from "../db/versioned-query.ts";
 import { neonConfig, Pool } from "../db/client.ts";
@@ -5,6 +6,7 @@ import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
+import { serverReaderValue } from "../reader/memory.ts";
 
 const pools = new Map<string, Pool>();
 const prepared = new Map<string, string>();
@@ -39,7 +41,7 @@ function isQueryReadTimeout(error: unknown): boolean {
 }
 
 /** The reader database over the pooled WebSocket client, so each publish is one real transaction. */
-export function readerFactDb(url: string | undefined = process.env.DATABASE_URL): FactDb & { readonly query: Query } {
+export function readerFactDb(url: string | undefined = storedKeyValue("DATABASE_URL")): FactDb & { readonly query: Query } {
   if (!url) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
@@ -85,7 +87,7 @@ let installed: Query | null | undefined;
 /** Fact reads share the reader's version-checked, read-only connection. */
 export function factReader(): Query | null {
   if (installed !== undefined) return installed;
-  const url = process.env.DATABASE_URL?.trim();
+  const url = storedKeyValue("DATABASE_URL")?.trim();
   if (!url) return null;
   const selected = readerDatabaseQuery();
   if (!selected) return null;
@@ -95,6 +97,8 @@ export function factReader(): Query | null {
 /** A process that already holds a fact connection (a test's database, a script's pool) reads through it. */
 export function installFactReader(query: Query | null | undefined): void {
   installed = query;
+  serverReaderValue("place-combined", () => new Map()).clear();
+  serverReaderValue("place-rows", () => new Map()).clear();
 }
 
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>

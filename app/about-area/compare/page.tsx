@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import Link from "next/link";
 
 import {
@@ -119,6 +120,7 @@ export default async function CompareStatesPage({
 }: {
   searchParams: Promise<{ a?: string; b?: string; zip?: string }>;
 }) {
+  await loadWebsiteSavedKeys();
   const { a, b, zip } = await searchParams;
   const comparison = a && b ? compareStates(a, b) : null;
 

@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 import { PLANNING_STATES } from "../lib/control-plane/scheduler/state-planning.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -53,7 +54,7 @@ const keeper = setInterval(() => { void claims.keep().catch(error => say(`hunter
 keeper.unref();
 const providerQueue = new ModelProviderQueue({
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
-const workerKey = (process.env[WORKER_CREDENTIAL_VAR] ?? "").trim();
+const workerKey = (storedKeyValue(WORKER_CREDENTIAL_VAR) ?? "").trim();
 const messages = anthropicTransport(workerKey, fetch, undefined, { onRateLimits: (limits, request) => { providerQueue.observe(request.model, limits); } });
 const batch = backgroundBatchTransport({ apiKey: workerKey });
 const ownSpend = new LaneOwnSpend();
@@ -96,7 +97,7 @@ const lane = hunterLane({
         catch (error) { return error instanceof Error ? error.message : String(error); }
       };
       const budget = durableSearchBudget({ repos, perCycle: Number.MAX_SAFE_INTEGER, perDay: Number.MAX_SAFE_INTEGER, admit: admitted, admitLifetimeHunt: admitted, now: nowIso });
-      const keys = { braveKey: process.env.BRAVE_SEARCH_API_KEY, exaKey: process.env.EXA_API_KEY };
+      const keys = { braveKey: storedKeyValue("BRAVE_SEARCH_API_KEY"), exaKey: storedKeyValue("EXA_API_KEY") };
       const normal = makeHuntSearch({ ...keys, budget });
       return normal === null ? null : { budget, normal, lifetime: makeHuntSearch({ ...keys, budget: budget.lifetimeHunt }) ?? normal };
     })();

@@ -1,7 +1,7 @@
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStatePackage, readStateAuthorities, primeStateDistrictPointers, primeStateReaderPointers } from "../reader/state.ts";
-import { readPlacePackage } from "../reader/place.ts";
+import { readBallotPlacePackage } from "./place-package-until-nov-4.ts";
 import { readZipPlace } from "../place-map/reader.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
@@ -44,7 +44,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const places = packages.map(async ({ state, read }, index) => {
     const territory = territories[index];
     if (territory.status === "rejected") throw territory.reason;
-    const local = readPlacePackage({ state, divisionIds: rawEntry ? [...rawEntry.ids, ...rawEntry.fringe ?? []] : selection.divisions ?? [], bodyFactsOnly: true,
+    const local = readBallotPlacePackage({ state, divisionIds: rawEntry ? [...rawEntry.ids, ...rawEntry.fringe ?? []] : selection.divisions ?? [], bodyFactsOnly: true,
       bodyIds: territoryBodies(point.lat, point.lng, territory.value) });
     const [held, facts] = await Promise.all([readStateAuthorities(read), local]);
     if (held.registryRead.kind !== "PROMOTED" && held.registryRead.kind !== "BOOTSTRAP") throw new Error(`STATE_PACKAGE_NOT_RECORDED:${state}`);

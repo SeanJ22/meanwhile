@@ -90,7 +90,7 @@ test("the smoke key is restricted to the smoke's own origin and ships nowhere el
   assert.equal(smoke.name, "meanwhile-synthetic-provider-smoke");
   assert.deepEqual(smoke.allowedOrigins, [SMOKE_ORIGIN]);
   assert.equal(
-    smoke.envVar,
+    smoke.keyName,
     "WTP_MAPTILER_SMOKE_KEY",
     "the smoke key must live in its own variable — sharing NEXT_PUBLIC_MAPTILER_KEY would ship " +
       "it to the browser as the production or staging key",
@@ -110,7 +110,7 @@ test("local, CI and preview deploys carry no browser key at all", () => {
   for (const context of ["local", "ci", "deploy-preview", "branch-deploy:other"] as DeployContext[]) {
     const identity = keyIdentityFor(context);
     assert.equal(identity.name, "none", `${context} must carry no browser key`);
-    assert.equal(identity.envVar, null);
+    assert.equal(identity.keyName, null);
     assert.deepEqual(identity.allowedOrigins, []);
   }
 });
@@ -142,23 +142,22 @@ test("the smoke refuses to spend the production key", () => {
 
   const missing = refuseSharedKey({ smokeKey: undefined, productionKey: "P" });
   assert.equal(missing.ok, false);
-  assert.match(missing.ok === false ? missing.says : "", /NEEDS OWNER/);
+  assert.match(missing.ok === false ? missing.says : "", /Keys box/);
 
   assert.deepEqual(refuseSharedKey({ smokeKey: "SMOKE", productionKey: "PROD" }), { ok: true });
   assert.deepEqual(refuseSharedKey({ smokeKey: "SMOKE", productionKey: undefined }), { ok: true });
 });
 
-test("the smoke asks the real provider, on the URL shape the app builds", () => {
+test("the bounded smoke asks its provider while the Reader keeps the key on the server", () => {
   const url = smokeStyleUrl("basic-v2-dark", "SMOKEKEY");
-  assert.equal(providerOf(url), MAPTILER, "the smoke must exercise the real provider host");
-
-  /* The two constructors agree on everything except the key's variable, so the smoke tests the Reader's URL shape. */
-  const previous = process.env.NEXT_PUBLIC_MAPTILER_KEY;
-  process.env.NEXT_PUBLIC_MAPTILER_KEY = "SMOKEKEY";
+  assert.equal(providerOf(url), MAPTILER);
+  const previous = process.env.WTP_BUILD_CONTEXT;
+  process.env.WTP_BUILD_CONTEXT = "production";
   try {
-    assert.equal(resolveBasemap("dark")?.styleUrl, url);
+    assert.equal(resolveBasemap("dark")?.styleUrl, "/api/maptiler/maps/basic-v2-dark/style.json");
+    assert.equal(resolveBasemap("dark")?.styleUrl.includes("SMOKEKEY"), false);
   } finally {
-    if (previous === undefined) delete process.env.NEXT_PUBLIC_MAPTILER_KEY;
-    else process.env.NEXT_PUBLIC_MAPTILER_KEY = previous;
+    if (previous === undefined) delete process.env.WTP_BUILD_CONTEXT;
+    else process.env.WTP_BUILD_CONTEXT = previous;
   }
 });

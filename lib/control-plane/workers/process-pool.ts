@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { requireRegistryState } from "../../civic-data/state-scopes.ts";
 import type { NationalPlaceTask } from "../../hunt/place-source-task.ts";
 import { fork } from "node:child_process";
@@ -216,7 +217,7 @@ export async function runLeaseWorkerProcesses(input: {
       : [...pending];
     for (const id of ids) assigned.add(id);
     const child = fork(join(input.config.root, input.entry), [], {
-      cwd: input.config.root, env: { ...process.env },
+      cwd: input.config.root, env: { ...storedKeyEnvironment() },
       execArgv: ["--experimental-strip-types", "--import", pathToFileURL(join(input.config.root, "scripts/register-test-loader.mjs")).href],
       stdio: ["ignore", "inherit", "inherit", "ipc"], serialization: "advanced",
       detached: process.platform !== "win32",

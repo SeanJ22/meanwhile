@@ -52,7 +52,7 @@ test('a native Census host correction queues both former and corrected states fo
     for(const [zip,state,parent] of [['85001','AZ',az],['90001','CA',ca],['89101','NV',nv],['84001','UT',ut]])
       await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place',$1,$2,$3)",[`zip:${zip}`,state,parent]);
     let queueWrites=0;
-    const observe=(query:Query):Query=>async(text,args)=>{if(text.includes('INSERT INTO rebuild_queue'))queueWrites++;return query(text,args);};
+    const observe=(query:Query):Query=>async(text,args)=>{if(text.includes('INSERT INTO place_page'))queueWrites++;return query(text,args);};
     const connected={...db,query:observe(db.query),transaction:<T>(run:(query:Query)=>Promise<T>)=>db.transaction(query=>run(observe(query)))};
     assert.deepEqual(await ensureFactEntities(connected,root,['az']),['az']);
     for(const [index,state] of ['CA','NV'].entries()) {
@@ -63,28 +63,27 @@ test('a native Census host correction queues both former and corrected states fo
         [{place_id:counties[index],placement_basis:'HOST_COUNTY'}]);
     }
     assert.equal(queueWrites,1,'one registration transaction queues the full old and new footprint');
-    const queued=(await db.query('SELECT place_id FROM rebuild_queue')).map(row=>row.place_id);
-    for(const id of ['zip:85001','zip:90001','zip:89101'])assert.ok(queued.includes(id),id);
+    const queued=(await db.query('SELECT place_id FROM place_page WHERE stale_at IS NOT NULL')).map(row=>row.place_id);
+    for(const id of counties)assert.ok(queued.includes(id),id);
     assert.ok(!queued.includes('zip:84001'));
-    await db.query('DELETE FROM rebuild_queue');
+    await db.query('UPDATE place_page SET stale_at=NULL');
     assert.deepEqual(await ensureFactEntities(connected,root,['az']),[]);
-    assert.equal((await db.query('SELECT count(*)::int AS n FROM rebuild_queue'))[0]!.n,0);
+    assert.equal((await db.query('SELECT count(*)::int AS n FROM place_page WHERE stale_at IS NOT NULL'))[0]!.n,0);
   }finally{await db.pg.close();rmSync(root,{recursive:true,force:true});}
 });
 
 test('an explicit service area replaces an inherited host-county marker and refreshes the place once',async()=>{
   const db=await factDb(),city='ocd-division/country:us/state:az/county:pima',body='az:special:board',government='az:special:government';
   try {
-    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Pima','AZ',NULL),($2,'government','District','AZ',$1),($3,'body','Board','AZ',$2),('zip:85701','place','ZIP 85701','AZ',$1)",[city,government,body]);
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Pima','AZ',NULL),($2,'government','District','AZ',$1),($3,'body','Board','AZ',$2)",[city,government,body]);
     await db.query("INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis) VALUES($1,$3,2025,'HOST_COUNTY'),($2,$3,2025,'HOST_COUNTY')",[government,body,city]);
-    await db.query("INSERT INTO place_page_dependency VALUES('zip:85701',$1)",[city]);
     const places=[{placeId:city,boundaryYear:2025,basis:'SERVICE_AREA' as const}];
     assert.equal(await fileEntityPlaces(db.query,body,places,government).then(filed=>filed.moved),true);
     assert.deepEqual(await db.query('SELECT placement_basis FROM entity_place WHERE entity_id=$1',[body]),[{placement_basis:'SERVICE_AREA'}]);
-    assert.ok((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id='zip:85701'")).length);
-    await db.query('DELETE FROM rebuild_queue');
+    assert.ok((await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1",[city])).length);
+    await db.query('UPDATE place_page SET stale_at=NULL');
     assert.equal(await fileEntityPlaces(db.query,body,places,government).then(filed=>filed.moved),false);
-    assert.deepEqual(await db.query('SELECT * FROM rebuild_queue'),[]);
+    assert.deepEqual(await db.query('SELECT * FROM place_page WHERE stale_at IS NOT NULL'),[]);
     assert.equal(await fileEntityPlaces(db.query,body,[],government).then(filed=>filed.moved),false,'a later inherited host filing cannot erase the source-established service area');
     assert.deepEqual(await db.query('SELECT placement_basis FROM entity_place WHERE entity_id=$1',[body]),[{placement_basis:'SERVICE_AREA'}]);
   }finally{await db.pg.close();}

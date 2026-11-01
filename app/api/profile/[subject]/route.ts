@@ -1,9 +1,11 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readPrlProfileForSubject } from "@/lib/sources/prl/snapshot";
 import { readPrlForSubject } from "@/lib/sources/prl/person";
 
 export const runtime = "nodejs";
 export const GET = readerRoute("/api/profile/[subject]", async function GET(_request: Request, { params }: { params: Promise<{ subject: string }> }) {
+  await loadWebsiteSavedKeys();
   const subject = decodeURIComponent((await params).subject);
   if (!subject || subject.length > 128) return Response.json({ error: "subject required" }, { status: 400 });
   try {

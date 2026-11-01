@@ -52,7 +52,7 @@ export async function factDb(options: { readonly withResolver?: boolean; readonl
   if (options.withPlacePages !== false) {
     for (const sql of readerIdentityMigration().split("--> statement-breakpoint").filter(sql => /^\s*ALTER TABLE entity_place/.test(sql))) await pg.exec(sql);
     await pg.exec(readFileSync(join(import.meta.dirname,"../../lib/db/migrations/ZP-01_expand.sql"),"utf8").replaceAll("--> statement-breakpoint",""));
-    await pg.exec(readFileSync(join(import.meta.dirname,"../../lib/db/migrations/ZP-01_build_fingerprint.sql"),"utf8").replaceAll("--> statement-breakpoint",""));
+    await pg.exec(readFileSync(join(import.meta.dirname,"../../lib/db/migrations/0081_spn01e_page_marks.sql"),"utf8").replaceAll("--> statement-breakpoint",""));
   }
   await pg.exec(migration("_entity_places.sql"));
   if (options.withHourlyCounts) {

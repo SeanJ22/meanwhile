@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -185,7 +186,7 @@ export async function runHeldMeetingNative(runtime: HeldMeetingWorkerRuntime, in
   if (input.door.doorId !== input.partition.id || input.door.bodyIds.length !== 1 || input.door.bodyIds[0] !== input.partition.bodyId ||
     nativePartition(input.partition, input.contract).id !== input.partition.id ||
     (args.includes("--door") && args[args.indexOf("--door") + 1] !== input.partition.id)) throw new Error("HELD_MEETING_NATIVE_DOOR_BINDING_REFUSED");
-  const env = admittedRuntimeChildEnvironment({ parentEnv: runtime.environment ?? process.env, capability: "ROUTINE_CONTRACT", contract: input.contract.id, parentPid: process.pid });
+  const env = admittedRuntimeChildEnvironment({ parentEnv: runtime.environment ?? storedKeyEnvironment(), capability: "ROUTINE_CONTRACT", contract: input.contract.id, parentPid: process.pid });
   const slots = runtime.slots ?? routineProcessSlots({ parentPeakBytes: process.resourceUsage().maxRSS * 1024 });
   const release = await slots.acquire(`${input.contract.id}/${args[0]}`, input.deadlineMs);
   let directory: string | undefined;

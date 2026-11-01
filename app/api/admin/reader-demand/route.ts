@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 
@@ -10,6 +11,7 @@ export const runtime = "nodejs";
 
 /** What readers looked up and asked for, organic traffic, aggregate only. Read only. */
 async function get(request: NextRequest) {
+  await loadWebsiteSavedKeys();
   return adminGet(request, (observedAt) => readReaderDemand(observedAt));
 }
 

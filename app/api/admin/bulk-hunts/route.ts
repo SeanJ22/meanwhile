@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * ```
@@ -60,6 +61,7 @@ async function guard(request: NextRequest, write: boolean) {
 }
 
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const verdict = await guard(request, false);
   if (!verdict.ok) {
     return verdict.status === 404 ? new NextResponse(null, { status: 404, headers }) : NextResponse.json({ says: verdict.says }, { status: verdict.status, headers });
@@ -74,6 +76,7 @@ async function get(request: NextRequest): Promise<NextResponse> {
 }
 
 async function post(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const verdict = await guard(request, true);
   if (!verdict.ok) {
     return verdict.status === 404 ? new NextResponse(null, { status: 404, headers }) : NextResponse.json({ says: verdict.says }, { status: verdict.status, headers });

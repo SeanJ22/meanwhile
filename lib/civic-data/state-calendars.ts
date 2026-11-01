@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /**
  * One calendar program per state: the runner groups each state's due board reads into one child, which loads the
  * state's data and door list once and reads each board in turn. Each board still gets its own receipt, clock and LKG.
@@ -15,7 +16,7 @@ export const stateCalendarsId = (state: string): string => `${STATE_CALENDARS_PR
 export function stateCalendarEnvironment(members: readonly { readonly env?: Readonly<Record<string, string>> }[]): Readonly<Record<string, string>> {
   let latest: { at: number; value: string } | null = null;
   for (const member of members) {
-    const value = member.env?.[SOURCE_CHECK_AFTER_ENV];
+    const value = storedKeyEnvironment(member.env)[SOURCE_CHECK_AFTER_ENV];
     if (value === undefined) continue;
     const at = Date.parse(value);
     if (!Number.isFinite(at)) throw new Error("STATE_CALENDAR_SOURCE_CHECK_INVALID");
@@ -37,7 +38,7 @@ export function stateCalendarsCovers(authorityContract: string | null, partition
   return state !== null && authorityContract === stateCalendarsId(state);
 }
 
-export function assertMeetingPartitionAuthority(partitionId: string, env: Readonly<Record<string, string | undefined>> = process.env): void {
+export function assertMeetingPartitionAuthority(partitionId: string, env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): void {
   const envelope = runtimeAuthorityEnvelope(env);
   if (envelope?.capability !== "STATE_CALENDARS") {
     const child=meetingPartitionContract(partitionId);

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
 import { readerCacheHeaders, readerCacheScopeForPublication } from "@/lib/reader/cache";
@@ -18,6 +19,7 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   _request: Request,
   context: { params: Promise<{ division: string[] }> },
 ) {
+  await loadWebsiteSavedKeys();
   const { division } = await context.params;
   const ocdId = division.map((segment) => decodeURIComponent(segment)).join("/");
 

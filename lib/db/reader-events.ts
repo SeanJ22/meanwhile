@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 /** @freshness-reads-here Aggregate observedAt is stamped after the database read. */
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
@@ -142,7 +143,7 @@ export async function appendReaderEvents(input: ReaderEventBatchInput, options: 
   }));
   const aggregates = prepareReaderEventBatch({ ...input,
     events: input.events.map((event, index) => ({ ...event, topic: classified[index]! })) }).aggregates;
-  const database = options.query ?? ((statement:string, params:readonly unknown[]) => neon(process.env.DATABASE_URL!).query(statement, [...params]));
+  const database = options.query ?? ((statement:string, params:readonly unknown[]) => neon(storedKeyValue("DATABASE_URL")!).query(statement, [...params]));
   // The batch claim and totals commit together. Retrying this same statement after a lost
   // response is safe: the claim prevents counting it twice, even if the first commit succeeded.
   const query=async(statement:string,params:readonly unknown[])=>{

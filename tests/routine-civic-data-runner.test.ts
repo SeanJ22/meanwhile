@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { REGISTRY_STATES, parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/state-sources.ts";
@@ -294,7 +295,7 @@ test("the server catch-up child, inherited acquisition and memory lease share th
   }).outputText + "\nrunHotRead", {
     MEETING_PARTITION_TASK_IDS: new Set([task.id]), launchedTaskIds: new Set(), attempted: 0,
     console: { log: () => {} }, HOT_READ_CATCH_UP_CONCURRENCY: 2, HOT_READ_CATCH_UP_READ_BUDGET_MS,
-    hotReadLimitMs: repairDeadlineMs, ROOT: process.cwd(), process,
+    hotReadLimitMs: repairDeadlineMs, ROOT: process.cwd(), process, storedKeyEnvironment,
     ROUTINE_CHILD_TIMEOUT_MS: 30 * 60_000, ROUTINE_CHILD_MAX_BUFFER_BYTES: 1_024,
     withPassDeadline, sourceUnitCommand: () => ({ id: task.id, args: [], executable: process.execPath, env: { SOURCE: "fixture" } }),
     recordSourceSettlementFailures: () => {}, settlePendingRun: () => {},
@@ -1234,8 +1235,8 @@ test("national and publication source commands retain the progress-renewed timeo
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
+  const commandFor = new Function("storedKeyEnvironment", "admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", `
+    ${snippet} return sourceChildCommand;`)(storedKeyEnvironment, () => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
     withPassDeadline, Date.now() + 20 * 60_000, isPlaceMapTask);
   const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("people-portraits-"))!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
@@ -2114,8 +2115,8 @@ test("every routine task's real child command runs a scripts/ script right after
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
+  const commandFor = new Function("storedKeyEnvironment", "admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", `
+    ${snippet} return sourceChildCommand;`)(storedKeyEnvironment, () => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
     withPassDeadline, Date.now() + 20 * 60_000, isPlaceMapTask);
   const tasks = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract), ...AUTOMATIC_REFRESH_TASKS, ...STATE_BINDING_REFRESH_TASKS];
   assert.ok(tasks.length > 100);

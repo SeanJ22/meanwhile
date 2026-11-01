@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 import { createHash, createHmac } from "node:crypto";
 import { posix } from "node:path";
 import { readCompleteResponse } from "../source-bytes.ts";
@@ -245,11 +246,11 @@ export class PrlArchiveNotConfiguredError extends Error {
  * writer is on its import path. A non-routine caller that wants an on-disk
  * fallback uses `resolvePrlArchiveStore` in `archive-store-local.ts` instead.
  */
-export function resolveS3ArchiveStore(env: NodeJS.ProcessEnv = process.env): S3ArchiveStore {
+export function resolveS3ArchiveStore(env: NodeJS.ProcessEnv = storedKeyEnvironment()): S3ArchiveStore {
   const endpoint = env.PRL_ARCHIVE_S3_ENDPOINT;
   const bucket = env.PRL_ARCHIVE_S3_BUCKET;
-  const accessKeyId = env.PRL_ARCHIVE_S3_ACCESS_KEY_ID;
-  const secretAccessKey = env.PRL_ARCHIVE_S3_SECRET_ACCESS_KEY;
+  const accessKeyId = storedKeyValue("PRL_ARCHIVE_S3_ACCESS_KEY_ID", env);
+  const secretAccessKey = storedKeyValue("PRL_ARCHIVE_S3_SECRET_ACCESS_KEY", env);
   if (!endpoint || !bucket || !accessKeyId || !secretAccessKey) throw new PrlArchiveNotConfiguredError();
   return new S3ArchiveStore({
     endpoint, bucket, accessKeyId, secretAccessKey,

@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
+import { storedKeyValue } from "../../../lib/core/keys-values.ts";
 import { neon } from "../../../lib/db/client.ts";
 
 import {
@@ -18,7 +20,8 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const url = process.env.DATABASE_URL;
+  await loadWebsiteSavedKeys();
+  const url = storedKeyValue("DATABASE_URL");
   if (!url) {
     /*
      * No database configured is an ordinary state for a local build, and it is

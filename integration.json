@@ -4759,5 +4759,41 @@
     "release": 172,
     "ci": "pass",
     "at": "2026-10-31T21:39:09Z"
+  },
+  {
+    "lane": "spn-01-e3",
+    "steps": [
+      "SPN-01"
+    ],
+    "ready_sha": "793b9c66967ea94749d847c09dfddf13a755efc7",
+    "merge_sha": "e0a9c873af718c12829cb8fa0232eb34fc1594f5",
+    "river_sha": "936ab7a6d7a7e55c618b443c00af9ba0533cfedd",
+    "release": 173,
+    "ci": "pass",
+    "at": "2026-11-01T05:56:16Z"
+  },
+  {
+    "lane": "spn-01-e4",
+    "steps": [
+      "SPN-01"
+    ],
+    "ready_sha": "218fa0e744a071a07cb89d1d4ac07c6a4ee17375",
+    "merge_sha": "dd955ff70c069faa8095b6d9654b4eda809e25f5",
+    "river_sha": "936ab7a6d7a7e55c618b443c00af9ba0533cfedd",
+    "release": 173,
+    "ci": "pass",
+    "at": "2026-11-01T05:56:16Z"
+  },
+  {
+    "lane": "kb-01",
+    "steps": [
+      "KB-01"
+    ],
+    "ready_sha": "ac6f606020174f0fce8c9e5a5262138c205ff194",
+    "merge_sha": "2ae494a7e3fd09e96348d6c6966711abca552ef0",
+    "river_sha": "936ab7a6d7a7e55c618b443c00af9ba0533cfedd",
+    "release": 173,
+    "ci": "pass",
+    "at": "2026-11-01T05:56:16Z"
   }
 ]

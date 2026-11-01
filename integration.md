@@ -425,3 +425,6 @@ One line per batch folded into river.
 - 2026-10-31T16:00:21Z · river-askreads-170 · RIVER-ASKREADS · ready db687a29c18f · river e49528175fb9 · GitHub CI passed on release 170
 - 2026-10-31T21:39:09Z · river-cardreads-171 · RIVER-CARDREADS · ready aa82683f2006 · river 222f18b409e1 · GitHub CI passed on release 172
 - 2026-10-31T21:39:09Z · spn-01-b5a · SPN-01 · ready 7bca6edf3338 · river 222f18b409e1 · GitHub CI passed on release 172
+- 2026-11-01T05:56:16Z · spn-01-e3 · SPN-01 · ready 793b9c66967e · river 936ab7a6d7a7 · GitHub CI passed on release 173
+- 2026-11-01T05:56:16Z · spn-01-e4 · SPN-01 · ready 218fa0e744a0 · river 936ab7a6d7a7 · GitHub CI passed on release 173
+- 2026-11-01T05:56:16Z · kb-01 · KB-01 · ready ac6f60602017 · river 936ab7a6d7a7 · GitHub CI passed on release 173

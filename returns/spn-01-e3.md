@@ -7,7 +7,7 @@ check: readers keep what they have (unbuilt places, ballot freeze)
 ready: SPN-01 d105512d75e8
 river: c0e7b7a75fd5ec9c6c65348bca61dcf081e4a031
 at: 2026-10-31T07:50:47Z
-state: returned
+state: cleared: integrated ready 793b9c66967ea94749d847c09dfddf13a755efc7 on river 936ab7a6d7a7e55c618b443c00af9ba0533cfedd
 fix_subject: fix:f6e00434
 fix: River · stream/spn-01-e3 — readers keep what they have (unbuilt places, ballot freeze) failed for spn-01-e3: Held by River and withdrawn by SPN-01 (4:45 AM ET Oct 31). Readers would lose information they have: loadPlacePackage no longer falls back to readUnbuiltPlace, so places with no saved page drop out. On SPN-01's copy about 23% of place pages
 

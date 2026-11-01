@@ -1,11 +1,22 @@
 # River status
 
-build_state: LIVE: release 155 (main 8a17174), CP-01 live-hour verification pending. 153 = SPN-01 only (wt-fold153 0fcdce106, −7,941 lines), pnpm gates in tests; ships before Nov 1 ET. KB-01 held: Keys box lacks WTP_ADMIN_SESSION_KEY/WTP_ADMIN_SECRET (+ GitHub, Netlify, PRL S3, staging, feedback keys) — Sean must save them. VIP live-fallback hotfix on stream/river-vip-154.
+build_state: LIVE: release 173, main a8ffb2dca, PR #892. Site and runner on the new build; Saved key checks completed three consecutive minute ticks; ten-state ballot/voting output byte-identical. Contract 0082 rolled back on a one-second statement timeout; automatic retry due about 06:32Z. Integrity receipt remains open. No release 174 work authorized in this session.
 worker: RIVER-CX
-provider: Claude
+provider: Codex
 run_id: river-cx-173
 lock: river-cx-173
-heartbeat: 2026-11-01T06:06:08Z
+heartbeat: 2026-11-01T06:22:16.182Z
+
+<!-- river-cx-173 -->
+## Release 173 — RIVER-CX
+
+- PR https://github.com/SeanJ22/meanwhile/pull/892 merged to main a8ffb2dca4ea62f9d577c4a68acc42019d3e1853; site published 06:02:04Z Nov 1. Runner reports that SHA and CONSISTENT from 06:17:00Z. Saved key checks finished at 06:16:59.100Z, 06:17:58.287Z and 06:18:58.358Z on their existing minute schedule.
+- Folded exact SPN-01 e3/e4 READYs and KB-01 ac6f60602; only added source change is the canonical-context test ordering fix debdb588fe. The test falsely ordered independent ZIP-map and territory completions; controlled completion order fails both old branches and passes the repair. Under four busy CPU loops, original 30/30 on each branch and repaired 30/30 on each branch passed.
+- All nine local gate commands passed across the full run and focused environment-recovery reruns. Final CI 10,478 passed, five skipped, zero failed; unchanged Admin polling fixture race and its targeted retry remain documented in the PR.
+- River 50-ZIP usable under three seconds: phone 26→45, tablet 25→47, desktop 17→46. Code 671,601→670,840 lines (−761). Ten-state ballot payloads and full voting-site responses match exact saved hashes; all HTTP 200, no page errors.
+- Pre-deploy facts/read cutoffs aligned to actual publish: 15,560 facts in preceding 24h, 1.94 GB/h over preceding six full hours. Earlier baseline 15,691/1.92 retained in PR. Post-deploy 24h/six-full-hour windows are incomplete and are not claimed passed.
+- Expand 0081 applied in the build. First automatic contract 0082 failed at 06:17:06Z on the one-second statement timeout; no invalid card rows, serial diagnostic scan 141 ms after cold read. Existing retry due about 06:32Z. No manual DDL or extra source changes. The early observer REFUSED pending 0082; recheck only after schema advances. RIVER-CX retains the release until integrity clears.
+<!-- /river-cx-173 -->
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 

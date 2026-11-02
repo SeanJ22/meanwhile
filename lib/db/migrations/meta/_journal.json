@@ -579,8 +579,15 @@
     {
       "idx": 82,
       "version": "7",
-      "when": 1792834202302,
-      "tag": "0082_spn01e4_slice_cards",
+      "when": 1792834202303,
+      "tag": "RIVER-174_slice_cards",
+      "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "7",
+      "when": 1792834202304,
+      "tag": "RIVER-174_slice_cards_validate",
       "breakpoints": true
     }
   ]

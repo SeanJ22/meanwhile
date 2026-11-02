@@ -560,7 +560,7 @@ test("the two retracted PB-01 migrations, SPN-01A and 0082 are on the list with 
     assert.match(row.why, /cp_field_manual_entries/);
   }
   assert.match(RETRACTED_MIGRATIONS[2].why, /RIVER-MERGEFIX-159_merge_people/);
-  assert.match(RETRACTED_MIGRATIONS[3].why, /RIVER-174_slice_cards_validate/);
+  assert.match(RETRACTED_MIGRATIONS[3].why, /0083_river_174_slice_cards_validate/);
 });
 
 test("deleting exactly the two retracted files and dropping exactly their journal entries passes", () => {

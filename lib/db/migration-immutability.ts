@@ -137,7 +137,7 @@ export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
     sha256: "c24e494132e25506387599f6dc9e390afa34c2d83b22bdfbce1b4e5355ee37ab", retractedOn: "2026-11-02",
     why: "Never applied (production reader journal ends at 0081_spn01e_page_marks as of 2026-11-02; the old card check is still in place). Its " +
       "ADD CONSTRAINT scanned all 885,000 slices under the table lock and hit the one-second contract budget on every runner attempt. " +
-      "RIVER-174_slice_cards adds the same check NOT VALID and RIVER-174_slice_cards_validate validates it without blocking readers.",
+      "0082_river_174_slice_cards adds the same check NOT VALID and 0083_river_174_slice_cards_validate validates it without blocking readers.",
   },
 ];
 const retractedTag = (tag: string | null): RetractedMigration | undefined => RETRACTED_MIGRATIONS.find((r) => r.tag === tag);

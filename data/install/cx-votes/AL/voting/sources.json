@@ -1,0 +1,21 @@
+[
+  {
+    "url": "https://myinfo.alabamavotes.gov/",
+    "finalUrl": "https://myinfo.alabamavotes.gov/VoterView",
+    "file": "sources/d98744d6bd7652845ee1d69ae122ce3b072cc02cbd0fd9c3a3bd82e7619e249b.html",
+    "sha256": "d98744d6bd7652845ee1d69ae122ce3b072cc02cbd0fd9c3a3bd82e7619e249b",
+    "byteLength": 177170,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:40:14.965604+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "1e647a57a399584153c7b341aaa85437a0bf35bfabeeed58879613613420103a",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://myinfo.alabamavotes.gov/",
+      "recordedAt": "2026-11-02T21:40:14.965604+00:00"
+    }
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "AL",
+  "coverage": {
+    "preparedSites": 0,
+    "preparedBoundaries": 0,
+    "scope": "Read-only check in Montgomery; official source discovery only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/d98744d6bd7652845ee1d69ae122ce3b072cc02cbd0fd9c3a3bd82e7619e249b.html",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 0,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 0,
+  "registryPageRows": 0,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "NOT_APPLICABLE_DISCOVERY_ONLY",
+  "checks": [],
+  "siteKinds": {
+    "electionDay": 0,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:AL"
+}

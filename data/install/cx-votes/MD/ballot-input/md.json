@@ -1,0 +1,435 @@
+{
+  "ballots": {
+    "MD:md-2026-11-03": {
+      "election": {
+        "id": "md-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Maryland Gubernatorial General Election",
+        "state": "MD"
+      },
+      "contests": [
+        {
+          "id": "md-county-questions-2026-baltimorecounty-a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "title": "Baltimore County — Question A — Baltimore County Farmland Preservation Act (URDL)",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question A | Baltimore County Farmland Preservation Act (URDL) | Identical wording appears on all 258 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-c",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "title": "Baltimore County — Question C — Inspector General Appointment Board",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question C | Inspector General Appointment Board | Identical wording appears on all 258 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "title": "Baltimore County — Question D — Charter Review Commission – Membership",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question D | Charter Review Commission – Membership | Identical wording appears on all 258 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-i",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "title": "Baltimore County — Question I — Parks, Preservation and Greenways Borrowing",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question I | Parks, Preservation and Greenways Borrowing | Identical wording appears on all 258 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-l",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "title": "Baltimore County — Question L — Community Improvement Project Borrowing",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question L | Community Improvement Project Borrowing | Identical wording appears on all 258 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecity-i",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24510",
+          "title": "Baltimore City — Question I — Baltimore Baby Fund",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question I | Baltimore Baby Fund | Identical wording appears on all 295 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+            "verifiedAt": "2026-10-20T23:55:49.365375+00:00",
+            "collectedAt": "2026-10-20T23:55:49.365375+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        }
+      ],
+      "measures": [
+        {
+          "id": "md-county-questions-2026-baltimorecounty-a:question",
+          "contestId": "md-county-questions-2026-baltimorecounty-a",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "questionText": "Currently, the Planning Board changes the Urban-Rural Demarcation Line (URDL), which separates urban areas from rural areas in Baltimore County, largely in response to zoning changes or water/sewer designation changes enacted by the County Council. The Baltimore County Charter requires a simple majority of the County Council to approve changes by the Planning Board to the Urban-Rural Demarcation Line (URDL). This amendment to the Baltimore County Charter would require a vote of six (6) of the nine (9) members of the County Council rather than a simple majority of five (5) votes to approve changes to the Urban-Rural Demarcation Line (URDL) recommended by the Planning Board. All other planning and zoning matters would continue to be approved by a simple majority vote of the County Council. This would amend Section 522.1 of the Baltimore County Charter and add Section 1015 to the Baltimore County Charter. A vote FOR the amendment requires six (6) of the nine (9) members of the County Council to approve changes to the Urban-Rural Demarcation Line (URDL). A vote AGAINST the amendment keeps the current simple majority vote of five (5) members of the County Council on changes to the Urban-Rural Demarcation Line (URDL).",
+          "officialStatement": null
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-c:question",
+          "contestId": "md-county-questions-2026-baltimorecounty-c",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "questionText": "The Inspector General provides oversight of County government by investigating fraud, waste, and abuse. This Charter Amendment establishes an Inspector General Appointment Board; provides for the appointment of members to the Appointment Board; provides authority for the Inspector General Appointment Board to appoint or reappoint the Inspector General and, if necessary, remove the Inspector General for cause. It replaces the current process under which the County Executive appoints or reappoints the Inspector General, and the County Council confirms the appointment. It provides for a residency requirement for the Inspector General. The Inspector General Appointment Board will consist of seven (7) members, with the County Council and County Executive each selecting one member, and the Chair of the Ethics Commission electing the other five (5) members, each of whom must be from specific judicial, accounting, fraud examination or academic professions. There are also several requirements for members relating to potential ethical conflicts between their service on the Inspector General Appointment Board and their employment or business involvement with the County; candidacy for elected office or involvement in campaign finances; registration as a lobbyist; or criminal convictions. This would amend Section 1014 of the Baltimore County Charter and add Section 1014.1 to the Baltimore County Charter. A vote FOR the amendment transfers the authority to appoint or reappoint and remove the Inspector General from the County Executive to an Inspector General Appointment Board to be established. A vote AGAINST the amendment keeps the current process, in which the County Executive appoints or reappoints, the Inspector General and the County Council confirms the appointment.",
+          "officialStatement": null
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-d:question",
+          "contestId": "md-county-questions-2026-baltimorecounty-d",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "questionText": "This Charter Amendment increases the number of Charter Review Commission members appointed by the County Council from seven to nine for purposes of matching the expansion of the County Council. This would amend Section 1203(a) of the Baltimore County Charter. A vote FOR the amendment increases the number of Charter Review Commission appointments made by County Council members from seven (7) to nine (9). A vote AGAINST the amendment keeps the current Charter provisions, under which County Council members make seven (7) appointments to the Charter Review Commission.",
+          "officialStatement": null
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-i:question",
+          "contestId": "md-county-questions-2026-baltimorecounty-i",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "questionText": "AN ORDINANCE to authorize and empower Baltimore County, Maryland to borrow $2,000,000 for the purpose of parks, preservation and greenways projects, including but not limited to: acquisition, construction, maintenance, and equipping of playgrounds, parks, community centers, and recreational facilities; related engineering, architectural, and other services; and the acquisition and maintenance of equipment, to be undertaken pursuant to Sections 705(a) and 718 of the Baltimore County Charter. A vote FOR the bond issue authorizes Baltimore County to borrow $2,000,000 for parks, preservation and greenways projects. A vote AGAINST the bond issue precludes Baltimore County from borrowing $2,000,000 for parks, preservation and greenways projects.",
+          "officialStatement": null
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecounty-l:question",
+          "contestId": "md-county-questions-2026-baltimorecounty-l",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "verifiedAt": "2026-10-20T23:55:41.859109+00:00",
+            "collectedAt": "2026-10-20T23:55:41.859109+00:00"
+          },
+          "questionText": "AN ORDINANCE to authorize and empower Baltimore County, Maryland to borrow $4,000,000 for community improvement projects, including but not limited to construction, renovation, extension, alteration, repair or modernization of: street curbs; gutters; water; sewer and other utilities; sidewalk improvements; interior and rear access improvements; landscaping and lighting improvements; building and other structural improvements; and sidewalk and pedestrian system improvements, to be undertaken pursuant to Sections 705(a) and 718 of the Baltimore County Charter. A vote FOR the bond issue authorizes Baltimore County to borrow $4,000,000 for community improvement projects. A vote AGAINST the bond issue precludes Baltimore County from borrowing $4,000,000 for community improvement projects.",
+          "officialStatement": null
+        },
+        {
+          "id": "md-county-questions-2026-baltimorecity-i:question",
+          "contestId": "md-county-questions-2026-baltimorecity-i",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+            "verifiedAt": "2026-10-20T23:55:49.365375+00:00",
+            "collectedAt": "2026-10-20T23:55:49.365375+00:00"
+          },
+          "questionText": "Question I is a charter amendment to create the “Baltimore Baby Fund” as a new, separate fund in City government. The City could use money in the Baby Fund only to enhance the economic stability of families with newborns in Baltimore City. The City could not use money from the Baby Fund to replace funding for newborn children that already exists in this year’s City budget. The amendment would require each year’s City budget to include a contribution to the Baby Fund. The City’s required annual contribution to the Baby Fund will be $0.03 for every $100 in taxable property value in the City. The Baby Fund will also be able to accept grants and donations. Money in the Baby Fund will stay in the Baby Fund until the City spends it for the benefit of families with newborns. The City could not transfer money in the Baby Fund to any other purpose. Voting for this amendment would create the Baltimore Baby Fund and require the City to fund it as described above. Voting against this amendment would mean that the Baltimore Baby Fund would not be created.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "md-county-questions-2026-baltimorecounty-a",
+          "whatItDoes": "Requires six of Baltimore County Council’s nine members to approve Planning Board recommendations to change the line separating urban and rural areas. Other planning and zoning decisions would still need only a simple majority.",
+          "yesMeans": "Require six council votes to approve changes to the urban–rural boundary.",
+          "noMeans": "Keep the current five-vote majority requirement for changing that boundary.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "sourceHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-county-questions-2026-baltimorecounty-c",
+          "whatItDoes": "Creates a seven-member board to appoint, reappoint and, for cause, remove Baltimore County’s Inspector General, replacing the current system of appointment by the County Executive and confirmation by the County Council. The council and executive each select one board member, and the Ethics Commission chair selects five from specified professions. Board members must meet ethics restrictions, and the Inspector General must meet a residency requirement.",
+          "yesMeans": "Transfer Inspector General appointment and removal authority to the new board and adopt the related requirements.",
+          "noMeans": "Keep appointment or reappointment by the County Executive with confirmation by the County Council.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "sourceHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-county-questions-2026-baltimorecounty-d",
+          "whatItDoes": "Increases the number of Charter Review Commission members appointed by Baltimore County Council from seven to nine to match the council’s expansion.",
+          "yesMeans": "Allow council members to make nine appointments to the Charter Review Commission.",
+          "noMeans": "Keep the current seven council appointments to that commission.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "sourceHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-county-questions-2026-baltimorecounty-i",
+          "whatItDoes": "Allows Baltimore County to borrow $2 million for parks, preservation and greenways projects, including facilities, equipment and related work.",
+          "yesMeans": "Authorize the proposed $2 million in borrowing for these projects.",
+          "noMeans": "Reject this $2 million borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "sourceHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-county-questions-2026-baltimorecounty-l",
+          "whatItDoes": "Allows Baltimore County to borrow $4 million for community improvements such as streets, sidewalks, utilities, lighting, landscaping and buildings.",
+          "yesMeans": "Authorize the proposed $4 million in borrowing for community improvements.",
+          "noMeans": "Reject this $4 million borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+          "sourceHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "md-county-questions-2026-baltimorecity-i",
+          "whatItDoes": "Creates a separate Baltimore Baby Fund for the economic stability of city families with newborns. Each year the city budget must contribute an amount equal to 3 cents for every $100 of taxable property value, and the fund can also accept grants and donations. Its money cannot replace newborn funding already included in the current city budget, must stay in the fund until spent for its purpose, and cannot be transferred to other uses.",
+          "yesMeans": "Create the fund and require the annual city-budget contribution.",
+          "noMeans": "Do not create the proposed Baltimore Baby Fund.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+          "sourceHash": "92a39e26b808bdfb8b36e12f19d79ab52bdd5b3d6c70e0c392d1c7f3a24956b6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:43:11.551Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "8b0b6f5f33ed81b0d4f66046d287968573d50a8d83fdfc512561aa1bbd695caf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:10.584Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "reviewedEvidence": "Official general-election publication converted from the captured response bytes."
+      },
+      {
+        "rawHash": "42440748262311cb48c8ff83fb4c3a49c29d145006c3fa2468c97b2ccdc32fb6",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Allegany.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:19.452Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Allegany.pdf",
+        "reviewedEvidence": "Official general-election publication converted from the captured response bytes."
+      },
+      {
+        "rawHash": "0d41e82aa67feb15fc4cadf41a4f553d1c4fa427d4ab1d69d958fe3457c5842a",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:02:49.718731+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "reviewedEvidence": "Exact current general-election candidate row or rows, parties, websites when provided, and seat counts, scoped only to the specific council district."
+      },
+      {
+        "rawHash": "8b0b6f5f33ed81b0d4f66046d287968573d50a8d83fdfc512561aa1bbd695caf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:52:22.309611+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "reviewedEvidence": "All nine active Circuit 7 candidate rows replayed with equal fields and exact stated party/category and website values."
+      },
+      {
+        "rawHash": "f859210bbf56a29fd42a025ab5e62bb151dce3cbe5f651cfa3580eea99ba1220",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/ballot_questions.html",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:42:01.769586+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/ballot_questions.html",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "406431e3a734794542db0b111902e5512b0f981310d96c69fb70a7ce34e1c15f",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Cecil.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:55:36.287394+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Cecil.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:55:41.859109+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "1af1138e76d169998a9906ed1654aa329c5ed9f11f3175e80599b562c2a80f60",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/AnneArundel.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:55:38.648386+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/AnneArundel.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "ff59a3d2f2da9f257c646c5bbde83d73a60e5d33fd93904429b971d8b127e0af",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Howard.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:55:38.011191+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Howard.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "170d5b3d51c358452b3709568ffcfd2d83da19b63ca349d48c167daef336e3a0",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Frederick.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:55:39.775239+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Frederick.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "92a39e26b808bdfb8b36e12f19d79ab52bdd5b3d6c70e0c392d1c7f3a24956b6",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:55:49.365375+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "d1addca6da49f5c2382c1c44dba0945ec506d97b61906567d20dbfced479565a",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Wicomico.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:16:24.016357+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Wicomico.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "rawHash": "08c8ba0d734680489bf406c6dd1dae387f207e868db7f746c2985c75ddf6b1a5",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+        "publisher": "Maryland State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:16:23.284841+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+        "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+        "publisher": "www.elections.maryland.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.955674+00:00",
+        "httpStatus": 200,
+        "rawHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+        "publisher": "www.elections.maryland.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.509408+00:00",
+        "httpStatus": 200,
+        "rawHash": "92a39e26b808bdfb8b36e12f19d79ab52bdd5b3d6c70e0c392d1c7f3a24956b6",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

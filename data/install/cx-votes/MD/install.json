@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "MD",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MD",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "md-county-questions-2026-baltimorecounty-a",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf"
+    },
+    {
+      "id": "md-county-questions-2026-baltimorecounty-c",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf"
+    },
+    {
+      "id": "md-county-questions-2026-baltimorecounty-d",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf"
+    },
+    {
+      "id": "md-county-questions-2026-baltimorecounty-i",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf"
+    },
+    {
+      "id": "md-county-questions-2026-baltimorecounty-l",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf"
+    },
+    {
+      "id": "md-county-questions-2026-baltimorecity-i",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 0
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

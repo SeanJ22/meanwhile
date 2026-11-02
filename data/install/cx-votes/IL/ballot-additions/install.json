@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "IL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "il-sbe-2026-state-senate-36",
+      "title": "FOR STATE SENATOR THIRTY-SIXTH LEGISLATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldu:36",
+      "candidates": 2,
+      "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId="
+    },
+    {
+      "id": "il-sbe-2026-state-house-71",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY SEVENTY-FIRST REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:71",
+      "candidates": 2,
+      "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId="
+    },
+    {
+      "id": "il-sbe-2026-state-house-79",
+      "title": "REPRESENTATIVE DISTRICT SEVENTY-NINTH THE GENERAL ASSEMBLY FOR REPRESENTATIVE IN",
+      "ocdId": "ocd-division/country:us/state:il/sldl:79",
+      "candidates": 1,
+      "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",
+  "resolvedHeldContests": [
+    "il-sbe-2026-state-senate-36",
+    "il-sbe-2026-state-house-71",
+    "il-sbe-2026-state-house-79"
+  ],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
+    "candidateAliasesEnriched": 3
+  },
+  "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
+  "nextOwner": "River: install as data and verify these districts and candidates live."
+}

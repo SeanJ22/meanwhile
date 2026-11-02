@@ -1,0 +1,555 @@
+{
+  "ballots": {
+    "IL:il-2026-11-03": {
+      "election": {
+        "id": "il-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IL"
+      },
+      "contests": [
+        {
+          "id": "il-sbe-2026-state-senate-36",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldu:36",
+          "divisionVintage": "2022",
+          "title": "FOR STATE SENATOR THIRTY-SIXTH LEGISLATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+            "sourceOrg": "Rock Island County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.397381+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.397381+00:00",
+            "quote": "FOR STATE SENATOR\nTHIRTY-SIXTH LEGISLATIVE DISTRICT\n(Vote for ONE)\nMichael W. Halpin\nDEMOCRATIC\nBrad Beekman\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-71",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:71",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY SEVENTY-FIRST REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+            "sourceOrg": "Rock Island County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.397381+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.397381+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nSEVENTY-FIRST REPRESENTATIVE DISTRICT\n(Vote for ONE)\nKermit Thomas\nDEMOCRATIC\nDan Swanson\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-79",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:79",
+          "divisionVintage": "2022",
+          "title": "REPRESENTATIVE DISTRICT SEVENTY-NINTH THE GENERAL ASSEMBLY FOR REPRESENTATIVE IN",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+            "sourceOrg": "Kankakee County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.405883+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.405883+00:00",
+            "quote": "REPRESENTATIVE DISTRICT\nSEVENTY-NINTH\nTHE GENERAL ASSEMBLY\nFOR REPRESENTATIVE IN\n(Vote for one)\nREPUBLICAN\nJackie Haas\nDEMOCRATIC\nNo Candidate"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "il-sbe-2026-state-senate-36-0e935c2ff53c67e9",
+          "contestId": "il-sbe-2026-state-senate-36",
+          "givenName": "Michael W.",
+          "familyName": "Halpin",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+            "sourceOrg": "Rock Island County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.397381+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.397381+00:00",
+            "quote": "FOR STATE SENATOR\nTHIRTY-SIXTH LEGISLATIVE DISTRICT\n(Vote for ONE)\nMichael W. Halpin\nDEMOCRATIC\nBrad Beekman\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-senate-36-113a822b38c67787",
+          "contestId": "il-sbe-2026-state-senate-36",
+          "givenName": "Brad",
+          "familyName": "Beekman",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+            "sourceOrg": "Rock Island County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.397381+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.397381+00:00",
+            "quote": "FOR STATE SENATOR\nTHIRTY-SIXTH LEGISLATIVE DISTRICT\n(Vote for ONE)\nMichael W. Halpin\nDEMOCRATIC\nBrad Beekman\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-71-3ed3a58deb18679f",
+          "contestId": "il-sbe-2026-state-house-71",
+          "givenName": "Kermit",
+          "familyName": "Thomas",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+            "sourceOrg": "Rock Island County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.397381+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.397381+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nSEVENTY-FIRST REPRESENTATIVE DISTRICT\n(Vote for ONE)\nKermit Thomas\nDEMOCRATIC\nDan Swanson\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-71-3b4ce599a29f766d",
+          "contestId": "il-sbe-2026-state-house-71",
+          "givenName": "Dan",
+          "familyName": "Swanson",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+            "sourceOrg": "Rock Island County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.397381+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.397381+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nSEVENTY-FIRST REPRESENTATIVE DISTRICT\n(Vote for ONE)\nKermit Thomas\nDEMOCRATIC\nDan Swanson\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-79-d58743606f756c44",
+          "contestId": "il-sbe-2026-state-house-79",
+          "givenName": "Jackie",
+          "familyName": "Haas",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+            "sourceOrg": "Kankakee County Clerk",
+            "collectedAt": "2026-11-02T21:37:41.405883+00:00",
+            "verifiedAt": "2026-11-02T21:37:41.405883+00:00",
+            "quote": "REPRESENTATIVE DISTRICT\nSEVENTY-NINTH\nTHE GENERAL ASSEMBLY\nFOR REPRESENTATIVE IN\n(Vote for one)\nREPUBLICAN\nJackie Haas\nDEMOCRATIC\nNo Candidate"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:58:44.812Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "b7788f7de06ebda208a88670fa5d50d36d1371d96a30b4b28ef81d64ad456d47",
+        "finalUrl": "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
+        "publisher": "City of Rockford Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:15Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.voterockfordil.gov/images/pdf/PUBLICATION-Complete-specimen-ballot-general-2026.pdf",
+        "reviewedEvidence": "Converted 15 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "bdc325ec2b488160287a92568be5ddfa5b1686334735398978203bfde061e64e",
+        "finalUrl": "https://shelbycounty-il.gov/documents/CountyClerk/Election%20information/2026%20General%20Election%2011.3.2026/2026%20Nov%203%20countywide%20sample%20ballot.pdf",
+        "publisher": "Shelby County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:20Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://shelbycounty-il.gov/documents/CountyClerk/Election%20information/2026%20General%20Election%2011.3.2026/2026%20Nov%203%20countywide%20sample%20ballot.pdf",
+        "reviewedEvidence": "Converted 3 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "d390b1ca9ed5185525ac177591aecb21a78d20bd3d6e5e3e7e12d1cc1e87cba8",
+        "finalUrl": "https://www.co.st-clair.il.us/webdocuments/departments/countyclerk/elections/2026%20General%20Election%20Voters%20Guide.pdf",
+        "publisher": "St. Clair County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:13:57Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.co.st-clair.il.us/webdocuments/departments/countyclerk/elections/2026%20General%20Election%20Voters%20Guide.pdf",
+        "reviewedEvidence": "Converted 9 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3",
+        "finalUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+        "publisher": "Kankakee County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:14:45Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+        "reviewedEvidence": "Converted 7 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "eedf81c32e24f0f5ecdb9d2bb10dbb9597e688dcccf98b1ebfbfeac96610d3c5",
+        "finalUrl": "https://mcleancountyil.gov/DocumentCenter/View/32912/2026-General-McLean-County-Specimen-Ballot",
+        "publisher": "McLean County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:15:33Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://mcleancountyil.gov/DocumentCenter/View/32912/2026-General-McLean-County-Specimen-Ballot",
+        "reviewedEvidence": "Converted 4 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "44017f7891b2554689a678dce1cd984f4468c3ce75bb24e8d0db269735a47ff3",
+        "finalUrl": "https://cms3.revize.com/revize/grundycounty/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+        "publisher": "Grundy County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:32:40Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.grundycountyil.gov/County%20Clerk/Elections/2026%20General/ALLCONTESTBALLOT_Style1_English_8.5x14_Paper.pdf?t=202609141300590",
+        "reviewedEvidence": "Converted 2 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "8803507cd3214e1be8c544a46a5f12c269ff5572e53066bcf1be72ea0c582c8d",
+        "finalUrl": "https://effinghamcountyil.gov/wp-content/uploads/2026/09/FULL-SPECIMEN-General-Election-November-3-2026.pdf",
+        "publisher": "Effingham County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:36:56Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://effinghamcountyil.gov/wp-content/uploads/2026/09/FULL-SPECIMEN-General-Election-November-3-2026.pdf",
+        "reviewedEvidence": "Converted 3 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "56dd9d920f3272898427e43bec9c086572e65ec1286194e4d6fa8d29dea0fe8b",
+        "finalUrl": "https://www.pikecountyil.org/wp-content/uploads/2026/09/2026-General-Election-Publication-Ballot-1.pdf",
+        "publisher": "Pike County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:39:59Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.pikecountyil.org/wp-content/uploads/2026/09/2026-General-Election-Publication-Ballot-1.pdf",
+        "reviewedEvidence": "Converted 2 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "64ed773a8775fe1afdebc402d72e825b508dc4a71483d250fcf689cccbe0a777",
+        "finalUrl": "https://www.williamsoncountyil.gov/wp-content/uploads/2026/09/sample-ballot-001.pdf",
+        "publisher": "Williamson County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:40:46Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.williamsoncountyil.gov/wp-content/uploads/2026/09/sample-ballot-001.pdf",
+        "reviewedEvidence": "Converted 3 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "b353cd25e06618514fb24b2f75584eee4a786b31ace87718f696087567030e15",
+        "finalUrl": "https://maconcounty.illinois.gov/download/specimen-ballot/?wpdmdl=14661&ind=1789592172553&refresh=19e0973f&filename=2026-General-Specimen-Ballot.pdf",
+        "publisher": "Macon County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:55:37Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://maconcounty.illinois.gov/download/specimen-ballot/?wpdmdl=14661&ind=1789592172553&refresh=19e0973f&filename=2026-General-Specimen-Ballot.pdf",
+        "reviewedEvidence": "Converted 3 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "1477f47e07e7e2678e91a418b1d486a2f05bc6d4188f1e46b74121aace4d0720",
+        "finalUrl": "https://www.lasallecountyil.gov/DocumentCenter/View/4565/Specimen-Ballot-PDF",
+        "publisher": "La Salle County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:59:43Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.lasallecountyil.gov/DocumentCenter/View/4565/Specimen-Ballot-PDF",
+        "reviewedEvidence": "Converted 2 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "fe7b8ea0c8a0c7dd3c1148095e00e5c96337d5c3ac1041187ea28eaec8b3029b",
+        "finalUrl": "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
+        "publisher": "Douglas County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T06:39:16Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://douglas.wp.webfoot.io/wp-content/uploads/2026/09/Publication.pdf",
+        "reviewedEvidence": "Converted 1 retained federal, statewide or state legislative contests from the official November 3, 2026 source; all printed candidates for those contests retained."
+      },
+      {
+        "rawHash": "0ab2aff2cfd0cabefaf271818c01385eab8008dc39abda0c99289d5a3a085f81",
+        "finalUrl": "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.dupagecounty.gov/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+        "reviewedEvidence": "Official whole-district candidate inventory: 29 congressional and legislative contests parsed by each full district heading, retaining every named printed candidate and its party. Geographic scope selects which district offices are listed; no precinct, voter, or town filter was applied. County-qualified write-ins are excluded from whole-territory completeness."
+      },
+      {
+        "rawHash": "6cece5f964815aeae2f1a80120a73f2174a53d2ef2f828b9ba5f1a173ff97dc4",
+        "finalUrl": "https://applications.kanecountyil.gov/ElectionWebsite/en-US/Candidates/List/31/NP",
+        "publisher": "Kane County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://applications.kanecountyil.gov/ElectionWebsite/en-US/Candidates/List/31/NP",
+        "reviewedEvidence": "Official whole-district candidate inventory: 17 congressional and legislative contests parsed by each full district heading, retaining every named printed candidate and its party. Geographic scope selects which district offices are listed; no precinct, voter, or town filter was applied. County-qualified write-ins are excluded from whole-territory completeness."
+      },
+      {
+        "rawHash": "03ebff7dc73981fe0ab20684712bc273d887db6522159f3c21d0164c51bbf420",
+        "finalUrl": "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List?bidId=",
+        "publisher": "Lake County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lakecountyil.gov/DocumentCenter/View/13059",
+        "reviewedEvidence": "Official whole-district candidate inventory: 18 congressional and legislative contests parsed by each full district heading, retaining every named printed candidate and its party. Geographic scope selects which district offices are listed; no precinct, voter, or town filter was applied. County-qualified write-ins are excluded from whole-territory completeness."
+      },
+      {
+        "rawHash": "d5ae868f62591659dd672622694f2895cd6fd4bd78c15a914a06ac4e6c22ec05",
+        "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
+        "publisher": "Chicago Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-08/Candidate%20List_20260819-1_0.pdf",
+        "reviewedEvidence": "Official whole-district candidate inventory: 60 congressional and legislative contests parsed by each full district heading, retaining every named printed candidate and its party. Geographic scope selects which district offices are listed; no precinct, voter, or town filter was applied. County-qualified write-ins are excluded from whole-territory completeness."
+      },
+      {
+        "rawHash": "57e3d33a00a66308874df50ad43c4a66e8041b52bb870fcec413dcefcf80db3e",
+        "finalUrl": "https://vr.platinumvrms.com/county/rslrequest/6?t=2",
+        "publisher": "St. Clair County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:17:49Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/rslrequest/6?t=2",
+        "reviewedEvidence": "Official public Candidate Filings table for the November 3, 2026 election lists scheduled offices by full congressional/legislative district and current Active candidate status. Ordinary district nominees are retained; separately proved county-qualified write-ins remain a coverage gap. No voter or precinct parameter or identity lookup is used. The county election office endorses the public Platinum portal."
+      },
+      {
+        "rawHash": "e833b9c30bfe261c6ecc998e684791f60795db193d3dd89266811d894fb8dcad",
+        "finalUrl": "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+        "publisher": "Madison County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:20:39.070458Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://cms4files.revize.com/madisoncountyilus/document_center/CountyClerk/2026%20Election/Candidate%20list.pdf?t=20260930111710911",
+        "reviewedEvidence": "Official November 3, 2026 General Election candidate inventory, linked by the county .gov Who's Running page. Converted all congressional and state legislative rows on page 1 under ContestName / DistrictName / NameOnBallot / PartyAbbr. DistrictName supplies exact contest territory. The source includes all active nominees listed for each office, including independent and third-party statewide lines; it is not a geographically filtered specimen ballot."
+      },
+      {
+        "rawHash": "82d9da3ecacb4cddaef928667661cb5ecbe40a5709add906ac814454d3e730da",
+        "finalUrl": "https://www.macoupinvotes.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=23&lang=en&callback=soeSampleBallotObj.processSampleBallot",
+        "publisher": "Macoupin County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:24:04.866633+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.macoupinvotes.gov/ce/mobile/seam/resource/rest/sampleballot/getBallot?eid=23&lang=en&callback=soeSampleBallotObj.processSampleBallot",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official Candidate List page links this 2026 General Election inventory. Its public all-contest API is requested with electionId 23, no precinct or voter parameters. Complete candidate arrays are listed under each numbered Senate and House district; party labels are not supplied. Public page and source JavaScript establish API authority and election association."
+      },
+      {
+        "rawHash": "3d6502d630bef24a3776bfbc987f6c4f89a0d340d212da5fd6f2572891da761a",
+        "finalUrl": "https://vr.platinumvrms.com/county/rslrequest/13?t=2",
+        "publisher": "Randolph County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:24:06.743411Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/rslrequest/13?t=2",
+        "reviewedEvidence": "Public November 3, 2026 General Election candidate filings page: Access official candidate filings and petition documents for all scheduled contests. All district rows for the selected office are retained. Each retained candidate has status Active; no voter or address lookup was submitted. The county's own party labels and printed name order are retained."
+      },
+      {
+        "rawHash": "55e377f5a67509f9baf8ea14dba213f525d1ef0412c0e2ba071ac481a17473ca",
+        "finalUrl": "https://vr.platinumvrms.com/county/rslrequest/103?t=2",
+        "publisher": "Pike County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:24:07.175833Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/rslrequest/103?t=2",
+        "reviewedEvidence": "Public November 3, 2026 General Election candidate filings page: Access official candidate filings and petition documents for all scheduled contests. All district rows for the selected office are retained. Each retained candidate has status Active; no voter or address lookup was submitted. The county's own party labels and printed name order are retained."
+      },
+      {
+        "rawHash": "256b73ef177734d6a9cb9fc8ac7a6ebced8de1596c54a523f2325116fd88244d",
+        "finalUrl": "https://vr.platinumvrms.com/county/rslrequest/10?t=2",
+        "publisher": "Clinton County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:25:32.915112Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/rslrequest/10?t=2",
+        "reviewedEvidence": "Public November 3, 2026 General Election candidate filings page: Access official candidate filings and petition documents for all scheduled contests. All district rows for the selected office are retained. Each retained candidate has status Active; no voter or address lookup was submitted. The county's own party labels and printed name order are retained."
+      },
+      {
+        "rawHash": "c22ae53a7aa95c1df92ae3295b5d7c99045ff40d67d2d6457819495b20ad6c5e",
+        "finalUrl": "https://vr.platinumvrms.com/county/rslrequest/21?t=2",
+        "publisher": "Franklin County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:25:33.342315Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/rslrequest/21?t=2",
+        "reviewedEvidence": "Public November 3, 2026 General Election candidate filings page: Access official candidate filings and petition documents for all scheduled contests. All district rows for the selected office are retained. Each retained candidate has status Active; no voter or address lookup was submitted. The county's own party labels and printed name order are retained."
+      },
+      {
+        "rawHash": "41e8b37aafcde0f4245d681786495e4233b48d1719fb212b8e540c240e4718ec",
+        "finalUrl": "https://il-coles.pollresults.net/",
+        "publisher": "Coles County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:26:44.368735Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://il-coles.pollresults.net/",
+        "reviewedEvidence": "The official Coles .gov elections page directly links this county service. November 3, 2026 GENERAL ELECTION embeds each whole office/district Races[].Candidates[] inventory without a voter, address or precinct filter. Each candidate record has only CandidateName, PercentVotesForCandidate, SortCandidate, TotalVotesForCandidate and Winner; no draft, synthetic or candidate-qualification flag appears. Election.Message TESTING is rendered separately under the results status UI; it describes vote reporting, and no results totals or finality are used. All four retained names and their printed party abbreviations independently match the previously held official county ballot publications for Senate 51 and House 101/102. No Candidate entries are placeholders and are excluded."
+      },
+      {
+        "rawHash": "847e5d09e5a314e446a47cfd9d9a89c70ee8538a6c457caeeca1c8c2025cb33f",
+        "finalUrl": "https://vr.platinumvrms.com/county/RSLRequest/119?t=2",
+        "publisher": "Winnebago County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:27:10Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/RSLRequest/119?t=2",
+        "reviewedEvidence": "Official public Candidate Filings table for the November 3, 2026 election lists scheduled offices by full congressional/legislative district and current Active candidate status. Ordinary district nominees are retained; separately proved county-qualified write-ins remain a coverage gap. No voter or precinct parameter or identity lookup is used. The county election office endorses the public Platinum portal."
+      },
+      {
+        "file": "montgomery-specimen.pdf",
+        "rawHash": "65f3fbadd242aca3ce696031f42b8d0fb18ca3d3d4e9f64621755f790fcd0a3f",
+        "finalUrl": "https://montgomerycountyil.gov/wp-content/uploads/MontgomeryCountyILGeneralElectionSpecimenBallot11032026-.pdf",
+        "publisher": "Montgomery County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:27:24.028946Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://montgomerycountyil.gov/wp-content/uploads/MontgomeryCountyILGeneralElectionSpecimenBallot11032026-.pdf",
+        "reviewedEvidence": "Official November 3, 2026 countywide specimen supplies the printed House108 candidate name and party. It supports those candidate fields only; the separate Macoupin whole-district candidate inventory establishes completeness."
+      },
+      {
+        "rawHash": "5d8712d60bfbda45b25344b91384d237d3ef5e2bf190f3d19b96a7cae1ec1f7d",
+        "finalUrl": "https://il-macon.pollresults.net/",
+        "publisher": "Josh Tanner, County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:30:17.265888+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://il-macon.pollresults.net/",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Public complete race.Candidates arrays for GENERAL ELECTION, November 3, 2026, under each numbered district; no precinct or voter selection requested. Every held name/party matches the separately sourced official specimen. TESTING is displayed under result totals and Final Results status; candidate fields contain no draft or synthetic flags. No vote totals or final election outcomes are asserted. Verified official government/clerk page publishes a provider link."
+      },
+      {
+        "rawHash": "73b9ef29e8f6ced82ec42b1117e99a0e578c9c1c9db9f8c0641198dd45842681",
+        "finalUrl": "https://il-tazewell.pollresults.net/",
+        "publisher": "John C. Ackerman, County Clerk & Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:32:07.535603+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://il-tazewell.pollresults.net/",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Public complete race.Candidates arrays for GENERAL ELECTION, November 3, 2026, under each numbered district; no precinct or voter selection requested. Every held name/party matches the separately sourced official specimen. TESTING is displayed under result totals and Final Results status; candidate fields contain no draft or synthetic flags. No vote totals or final election outcomes are asserted. Verified official government/clerk page publishes a provider link."
+      },
+      {
+        "rawHash": "c09228f1d202713586ffe013da8fbd50b7c885d5a4f42f71a1262cecf5b27f43",
+        "finalUrl": "https://il-bureau.pollresults.net/",
+        "publisher": "Matt Eggers, County Clerk & Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:43:33.547486+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://il-bureau.pollresults.net/",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Public complete race.Candidates arrays for GENERAL ELECTION, November 3, 2026, under each numbered district; no precinct or voter selection requested. Every held name/party matches the separately sourced official specimen. TESTING is displayed under result totals and Final Results status; candidate fields contain no draft or synthetic flags. No vote totals or final election outcomes are asserted. Verified official government/clerk page publishes a provider link."
+      },
+      {
+        "rawHash": "0260b721d45850b917df444a6066f2dbe5186989a9fdc80b4fc12d7daf624978",
+        "finalUrl": "https://il-livingston.pollresults.net/",
+        "publisher": "Kristy Masching, County Clerk & Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:43:34.116036+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://il-livingston.pollresults.net/",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Public complete race.Candidates arrays for GENERAL ELECTION, November 3, 2026, under each numbered district; no precinct or voter selection requested. Every held name/party matches the separately sourced official specimen. TESTING is displayed under result totals and Final Results status; candidate fields contain no draft or synthetic flags. No vote totals or final election outcomes are asserted. Verified official government/clerk page publishes a provider link."
+      },
+      {
+        "rawHash": "ffc5b022b726edce4c24bba746ba339de4d47bd798213b7f1b2666885c518e70",
+        "finalUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+        "publisher": "Peoria County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:55:31.306654+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.peoriaelections.gov/DocumentCenter/View/1454/2026-General-Election---Sample-Ballot",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "November 3, 2026 certified countywide master specimen publishes all Peoria County district contests, including both congressional districts and six numbered House districts, with Precinct SPECIMEN BALLOT rather than a voter precinct. Census official full district/county relationship table establishes all House District 92 land and water lie in Peoria County, so this countywide publication covers the entire contest territory. Printed House92 candidate and party exactly match the held candidate."
+      },
+      {
+        "rawHash": "cbc56858b83d6cbe2ee4fe37e1436de51e5dfb602074942ffae2b548519a9d90",
+        "finalUrl": "https://il-whiteside.pollresults.net/",
+        "publisher": "Karen Stralow, County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T17:26:41Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://il-whiteside.pollresults.net/",
+        "reviewedEvidence": "Official county website links this hosted election service. Its November 3, 2026 general-election race.Candidates arrays publish every candidate under each whole district heading without precinct or voter selection. Printed party codes are retained and No Candidate placeholders excluded. Election.Message TESTING accompanies vote totals and result finality; no vote totals or election outcomes are asserted."
+      },
+      {
+        "rawHash": "90ee9591a8757da9ebd657e4fa3e6b49dc00b9518a85cf846f55a9439a4ef6aa",
+        "finalUrl": "https://vr.platinumvrms.com/county/RSLRequest/66?t=2",
+        "publisher": "DeKalb County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T17:28:26Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/RSLRequest/66?t=2",
+        "reviewedEvidence": "Official public Candidate Filings table for the November 3, 2026 election lists scheduled offices by full congressional/legislative district and current Active candidate status. Ordinary district nominees are retained; separately proved county-qualified write-ins remain a coverage gap. No voter or precinct parameter or identity lookup is used. The county election office endorses the public Platinum portal."
+      },
+      {
+        "rawHash": "d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6",
+        "finalUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+        "publisher": "Rock Island County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T17:35:33.045938Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 countywide master sample ballot identifies Karen Kinney, County Clerk, and publishes four numbered House districts and nine County Board districts in one document, rather than a voter-precinct ballot. The full Census relationship table establishes every House District72 land and water area lies in Rock Island County. Thus this countywide publication covers the entire contest territory; every printed House72 candidate and party is retained."
+      },
+      {
+        "rawHash": "04056f445aed43a400e25ec9b1cfa38d68032e981d0f45cacfaf7e6c6e597f5a",
+        "finalUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+        "publisher": "Brown County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:08:12.638933+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-brown-sample.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
+      },
+      {
+        "rawHash": "bf22b031f08eeeab06a7e52a82f903797aef8ff414768cae825fe0afc67258b2",
+        "finalUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+        "publisher": "Sangamon County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:10:34.573767+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-sangamon-sample.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
+      },
+      {
+        "requestedUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+        "finalUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+        "httpStatus": 200,
+        "rawHash": "d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6",
+        "retrievedAt": "2026-11-02T21:37:41.397381+00:00",
+        "publisher": "Rock Island County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The official November 3, 2026 sample ballot was read in full for each listed office block; all printed named candidates and party labels match these additions. Blank write-in lines and no-candidate placeholders are not named candidates."
+      },
+      {
+        "requestedUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+        "finalUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3",
+        "retrievedAt": "2026-11-02T21:37:41.405883+00:00",
+        "publisher": "Kankakee County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The official November 3, 2026 sample ballot was read in full for each listed office block; all printed named candidates and party labels match these additions. Blank write-in lines and no-candidate placeholders are not named candidates."
+      }
+    ]
+  }
+}

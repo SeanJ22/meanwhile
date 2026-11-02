@@ -1,0 +1,26 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "DC",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:DC",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "dc-2026-general-initiative-86",
+      "sourceUrl": "https://www.dcboe.org/getContentAsset/5a9ceeda-114c-4171-810d-1317c9e06b0e/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/_-DCBOE-Voter-Guide-Web-Smaller-File.pdf?language=en"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 0
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

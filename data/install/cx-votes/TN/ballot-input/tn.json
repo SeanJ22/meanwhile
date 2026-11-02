@@ -1,0 +1,143 @@
+{
+  "ballots": {
+    "TN:tn-2026-general": {
+      "election": {
+        "id": "tn-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "TN"
+      },
+      "contests": [
+        {
+          "id": "tn-sos-2026-general-constitutional-amendment-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:tn",
+          "title": "Constitutional Amendment #3",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "tn-2026-general",
+          "provenance": {
+            "quote": "Constitutional Amendment #3",
+            "doorId": "fec-tn-chief",
+            "sourceOrg": "Tennessee Secretary of State, Division of Elections",
+            "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+            "verifiedAt": "2026-10-14T16:12:55.005303Z",
+            "collectedAt": "2026-10-14T16:12:55.005303Z"
+          },
+          "measureTextUrl": "https://publications.tnsosfiles.com/acts/114/resolutions/sjr0009.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "tn-sos-2026-general-constitutional-amendment-3-question",
+          "contestId": "tn-sos-2026-general-constitutional-amendment-3",
+          "provenance": {
+            "quote": "Shall Article I, Section 35 of the Constitution of Tennessee be amended by deleting the section in its entirety and substituting the following:\n\nSection 35. That to preserve and protect the rights of victims of crime to justice and due process throughout the criminal and juvenile justice systems, a victim, as defined by law and which may be expanded by the General Assembly, shall have the following rights, which shall be protected:\n\n(1) The right to be treated with fairness for the victim's safety and dignity;\n\n(2) The right, upon request, to reasonable notice of all public criminal proceedings and all public juvenile delinquency proceedings involving the accused;\n\n(3) The right to be present at all public criminal proceedings and all public juvenile delinquency proceedings involving the accused;\n\n(4) The right upon request to be heard in any proceeding involving release, plea, sentencing, disposition, and parole, as well as any public proceeding when relevant during which a right of the victim is implicated;\n\n(5) The right to be heard and informed of all parole procedures, to participate in the parole process, to provide information to the parole authority to be considered before the parole of the offender, and to be notified, upon request, of the parole or other release of the offender;\n\n(6) The right to be free from harassment, intimidation, and abuse throughout the criminal justice system, including reasonable protection, as defined by the General Assembly, from the accused or any person acting on behalf of the accused;\n\n(7) The right, upon request, to reasonable notice of any release, transfer, or escape of the accused or convicted person;\n\n(8) The right to full and timely restitution from the offender;\n\n(9) The right to a speedy trial or disposition and a prompt and final conclusion of the case after the conviction or sentence;\n\n(10) The right to be informed of the minimum sentence the offender will serve in custody and the scheduled release date;\n\n(11) The right to have the safety of the victim, the victim's family, and the general public considered before any parole or other post-judgment release decision is made;\n\n(12) The right, upon request, to confer with the prosecution; and\n\n(13) The right to be fully informed of all rights afforded to crime victims.\n\nA victim may assert the rights enumerated in this section, not as a party, but in the manner further provided by the General Assembly protecting the victim's right to standing. The General Assembly has the authority to enact substantive and procedural laws to further define, implement, preserve, and protect the rights guaranteed to victims by this section. This section must be interpreted to preserve and protect the rights of all persons to due process. This section, or any law enacted under this section, does not create a basis for vacating a conviction. This section does not restrict the powers of the District Attorney General or the inherent authority of the court.\n\nOther than as provided in the preceding paragraph, this section does not create a cause of action or claim for damages against the state or a political subdivision of the state; an officer, employee, or agent of the state or of any of its political subdivisions; or an officer or employee of the court.",
+            "doorId": "fec-tn-chief",
+            "sourceOrg": "Tennessee Secretary of State, Division of Elections",
+            "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+            "verifiedAt": "2026-10-14T16:12:55.005303Z",
+            "collectedAt": "2026-10-14T16:12:55.005303Z"
+          },
+          "questionText": "Shall Article I, Section 35 of the Constitution of Tennessee be amended by deleting the section in its entirety and substituting the following:\n\nSection 35. That to preserve and protect the rights of victims of crime to justice and due process throughout the criminal and juvenile justice systems, a victim, as defined by law and which may be expanded by the General Assembly, shall have the following rights, which shall be protected:\n\n(1) The right to be treated with fairness for the victim's safety and dignity;\n\n(2) The right, upon request, to reasonable notice of all public criminal proceedings and all public juvenile delinquency proceedings involving the accused;\n\n(3) The right to be present at all public criminal proceedings and all public juvenile delinquency proceedings involving the accused;\n\n(4) The right upon request to be heard in any proceeding involving release, plea, sentencing, disposition, and parole, as well as any public proceeding when relevant during which a right of the victim is implicated;\n\n(5) The right to be heard and informed of all parole procedures, to participate in the parole process, to provide information to the parole authority to be considered before the parole of the offender, and to be notified, upon request, of the parole or other release of the offender;\n\n(6) The right to be free from harassment, intimidation, and abuse throughout the criminal justice system, including reasonable protection, as defined by the General Assembly, from the accused or any person acting on behalf of the accused;\n\n(7) The right, upon request, to reasonable notice of any release, transfer, or escape of the accused or convicted person;\n\n(8) The right to full and timely restitution from the offender;\n\n(9) The right to a speedy trial or disposition and a prompt and final conclusion of the case after the conviction or sentence;\n\n(10) The right to be informed of the minimum sentence the offender will serve in custody and the scheduled release date;\n\n(11) The right to have the safety of the victim, the victim's family, and the general public considered before any parole or other post-judgment release decision is made;\n\n(12) The right, upon request, to confer with the prosecution; and\n\n(13) The right to be fully informed of all rights afforded to crime victims.\n\nA victim may assert the rights enumerated in this section, not as a party, but in the manner further provided by the General Assembly protecting the victim's right to standing. The General Assembly has the authority to enact substantive and procedural laws to further define, implement, preserve, and protect the rights guaranteed to victims by this section. This section must be interpreted to preserve and protect the rights of all persons to due process. This section, or any law enacted under this section, does not create a basis for vacating a conviction. This section does not restrict the powers of the District Attorney General or the inherent authority of the court.\n\nOther than as provided in the preceding paragraph, this section does not create a cause of action or claim for damages against the state or a political subdivision of the state; an officer, employee, or agent of the state or of any of its political subdivisions; or an officer or employee of the court.",
+          "officialNumber": "Constitutional Amendment #3",
+          "officialStatement": "This amendment changes Article I, section 35 of the Tennessee Constitution by clarifying existing rights for crime victims and adding new rights.  The amendment gives victims new rights: to fair treatment; to be informed about and participate in the parole process; to be protected from harassment, intimidation, and abuse; to be informed of the minimum sentence the convicted criminal will serve, as well as their scheduled release date; and to have their safety, their family’s safety, and the public’s safety taken into account before any decision is made to release the convicted criminal.  The amendment also maintains or clarifies victims’ existing rights: to be informed about legal proceedings involving the accused or convicted criminal; to be present at public criminal proceedings; to be informed of any release, transfer, or escape of the accused or convicted criminal; to talk to prosecutors; to make statements about conviction, sentencing, or release of the accused person; to a speedy resolution of the case; to restitution from the convicted criminal; and to be informed of their rights.  The amendment does not restrict the powers of prosecutors or courts and does not create a cause of action or claim for damages against the State of Tennessee."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "tn-sos-2026-general-constitutional-amendment-3",
+          "whatItDoes": "Revises crime victims’ rights in criminal and juvenile cases, including fair treatment; attendance at public proceedings; parole participation; protection from harassment; full and timely restitution; a speedy case outcome; and information about minimum sentences, scheduled release dates and victims’ rights. Victim, family and public safety must be considered before parole or other post-judgment release. On request, victims have rights to notice of proceedings, release, transfer or escape; to be heard in specified proceedings; and to consult prosecutors. Victims may assert their rights through procedures set by the legislature, without becoming parties to the case. Due-process rights and prosecutors’ and courts’ powers are preserved. These rights do not permit overturning a conviction or create a damages claim against the state, local governments, their personnel or court personnel.",
+          "yesMeans": "Replace the current constitutional crime-victim rights section with the revised provisions.",
+          "noMeans": "Keep the current constitutional crime-victim rights section.",
+          "parts": [],
+          "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+          "sourceHash": "d36b1228d24a29200b3d5b7c7c53ad11aa448aefbca959968401234a89816138",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:44:24.225Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "4b9ff575335a226ef4d234cbbaec04dae6bea6acc6e2bc1d9d0d23c2b44100b0",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54.877017Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 1 contests and 15 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "849089bf66711a94daaf072146f8411effd60febf74af6ad387c236702c1755b",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54.904862Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 1 contests and 10 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "c05034ad26087289ddb90a5cad9ecab2bb4efc63606154e3dcb033b1389df1d1",
+        "finalUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.005303Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
+      },
+      {
+        "rawHash": "0e1210e8afc2c5b1c6cac93b0f4ce1a6267bb334dd83e594bbdde8ba0d3affb8",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.113148Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 9 contests and 46 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.294266Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 17 contests and 25 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.492158Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 98 contests and 170 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "requestedUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "finalUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "publisher": "sos.tn.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:11.373005+00:00",
+        "httpStatus": 200,
+        "rawHash": "d36b1228d24a29200b3d5b7c7c53ad11aa448aefbca959968401234a89816138",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

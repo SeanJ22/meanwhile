@@ -1,0 +1,26 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "TN",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TN",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tn-sos-2026-general-constitutional-amendment-3",
+      "sourceUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 0
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

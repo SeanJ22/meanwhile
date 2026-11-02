@@ -1,0 +1,385 @@
+{
+  "ballots": {
+    "NY:ny-2026-11-03": {
+      "election": {
+        "id": "ny-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NY"
+      },
+      "contests": [
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-1",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "title": "New York City Proposal 1: Speed Up Process for Granting a Revocable Consent to Use Public Spaces",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ny-2026-11-03",
+          "provenance": {
+            "quote": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. “Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-2",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "title": "New York City Proposal 2: Reduce City Contractor Paperwork: Require Regular Meetings of Procurement Policy Board",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ny-2026-11-03",
+          "provenance": {
+            "quote": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. “Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "title": "New York City Proposal 3: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ny-2026-11-03",
+          "provenance": {
+            "quote": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. \"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-4",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "title": "New York City Proposal 4: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ny-2026-11-03",
+          "provenance": {
+            "quote": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. “Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-5",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ny/place:new_york",
+          "title": "New York City Proposal 5: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ny-2026-11-03",
+          "provenance": {
+            "quote": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. “Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "measureTextUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-1#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "provenance": {
+            "quote": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. “Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "questionText": "Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input.",
+          "officialNumber": "1",
+          "officialStatement": "“Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes."
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-2#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "provenance": {
+            "quote": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. “Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "questionText": "Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report.",
+          "officialNumber": "2",
+          "officialStatement": "“Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire."
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-3#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "provenance": {
+            "quote": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. \"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "questionText": "Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce.",
+          "officialNumber": "3",
+          "officialStatement": "\"Yes\" simplifies street project approval, City property disposition and office leasing. \"No\" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases."
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-4#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "provenance": {
+            "quote": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. “Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "questionText": "Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials.",
+          "officialNumber": "4",
+          "officialStatement": "“Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged."
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-5#question",
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "provenance": {
+            "quote": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. “Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target.",
+            "sourceOrg": "New York City Board of Elections",
+            "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+            "verifiedAt": "2026-10-21T00:56:16.692164+00:00",
+            "collectedAt": "2026-10-21T00:24:02.517Z"
+          },
+          "questionText": "Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions.",
+          "officialNumber": "5",
+          "officialStatement": "“Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-1",
+          "whatItDoes": "Changes New York City’s approval process for using public streets and sidewalks for structures such as ramps, planters and outdoor cafes. It makes hearings optional, removes newspaper-ad requirements and the City Council’s power to reject sidewalk-cafe permits, while keeping notices in the City Record and notice and comments from local officials and community boards. The changes start March 1, 2027, and do not apply to applications already submitted.",
+          "yesMeans": "Adopt the revised public-space permit process, including optional hearings and the removal of the council’s sidewalk-cafe veto.",
+          "noMeans": "Keep the current process with mandatory public hearings and council review of sidewalk-cafe permits.",
+          "parts": [],
+          "sourceUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+          "sourceHash": "40c0ecc1b77e5779b7a7fc89530d86c74edde780a95a0a3a2357f2dfea45c214",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-2",
+          "whatItDoes": "Lets city contracting boards simplify contractor questionnaires and requires the Procurement Policy Board to meet at least quarterly starting January 1, 2027. It lets the mayor delegate certain approvals for contracts over $5 million with the agency commissioner’s approval, removes a required hearing on annual client-service contract plans while retaining a published plan, and makes written public comments an alternative to certain contract hearings. Starting October 1, 2030, the board can set the contract-value threshold for required public comments; the other changes take effect when voter approval is certified.",
+          "yesMeans": "Adopt these contracting-process changes and the quarterly meeting requirement.",
+          "noMeans": "Keep current contracting law, including the existing contractor questionnaire and approval requirements.",
+          "parts": [],
+          "sourceUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+          "sourceHash": "10d25e2228ae91fe38b883fd6ed0f2326df3e88f7bbf86f3922a2d6d63bc67e0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-3",
+          "whatItDoes": "Changes three city approval processes. For urgent street-safety work, it allows work before local notification when supported by safety data and prevents technical errors or missed consultations from stopping a project. Certain smaller property transactions and landmark development rights can use shorter review with a final City Planning Commission decision if no environmental impact statement is required; undevelopable lots can be sold to neighbors without auction. It also removes a repeat hearing when more than two years pass after council approval of a property sale or acquisition. City office-space acquisitions move to commissioner certification and notices instead of council and planning-commission approvals. Most changes start when approval is certified; permanent authority for the undevelopable-lot sales starts December 31, 2030.",
+          "yesMeans": "Adopt the proposed changes to street-project review, city property transactions and office-space acquisitions.",
+          "noMeans": "Keep current review procedures, including the council’s role in property transactions and office leases.",
+          "parts": [],
+          "sourceUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+          "sourceHash": "700b1ccb0f8a2acc44dee5ac4d9db912513b5420a3dd18980e45612beb3b79b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-4",
+          "whatItDoes": "Lets the Department of Buildings authorize more officials to approve construction documents and requires one construction-permit application system for all city agencies by 2030. Waterfront construction permitting moves from Small Business Services to Buildings on December 31, 2030, or when a new waterfront code takes effect; existing permits remain valid. Other changes begin when voter approval is certified.",
+          "yesMeans": "Approve the centralized permit system, expanded approval authority and transfer of waterfront permitting.",
+          "noMeans": "Keep the current permitting law.",
+          "parts": [],
+          "sourceUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+          "sourceHash": "99c4e55505556d495b659cbc81c68e82311d2e5625f1339fa22390bb4233959b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ny-2026-new-york-city-charter-proposal-5",
+          "whatItDoes": "Sets a target for city reserves, including the Rainy Day Fund, of at least 12% of the previous year’s tax revenue. By May 2027, the budget office must publish a deposit plan in consultation with the Comptroller, update it by May 2030 and every four years afterward, and keep deposits subject to the annual budget process with hardship exceptions. It also makes permanent a rule limiting withdrawals to 50% of the fund unless the mayor certifies a compelling fiscal reason. The changes take effect when voter approval is certified.",
+          "yesMeans": "Adopt the reserve target, deposit-planning requirement and withdrawal rule.",
+          "noMeans": "Keep current law without this reserve-balance target.",
+          "parts": [],
+          "sourceUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+          "sourceHash": "fbdd7d8a8882c5b92dadbf65735d68d3313e1cd48c53091835e0fc229b3769b8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:43:14.148Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+        "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "publisher": "New York State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:06.312586Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.ny.gov/certification-november-3-2026-general-election",
+        "reviewedEvidence": "Amended certification dated October 7, 2026, extracted by pdftotext bounding boxes. All 26 congressional, 63 state Senate, 150 Assembly and statewide executive office tables and their printed candidate party lines are accounted for; duplicate fusion lines are consolidated per identical source-listed name. Judicial district tables are outside this statewide/congressional/legislative scope."
+      },
+      {
+        "rawHash": "7677aaf908ed1e281771fec201511e2d8b5638e7be9ce84c858228e4bd3250fe",
+        "finalUrl": "https://elections.ny.gov/system/files/documents/2026/07/2026-amended-certification-of-offices-to-counties-7.31.26.pdf",
+        "publisher": "New York State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:06.781860Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.ny.gov/certification-offices-be-filled-november-3-2026-general-election",
+        "reviewedEvidence": "July 31, 2026 amended certification of offices: Governor and Lieutenant Governor, Comptroller, Attorney General, every congressional/state Senate/Assembly district and district-based Supreme Court justices. No U.S. Senate or statewide judicial election appears."
+      },
+      {
+        "rawHash": "10d95f5d2d6b282f98f13e9e771c78e3fb48bfdba4ac38d0c477d383a7712f8e",
+        "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "publisher": "New York State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:18:38.478633+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+        "reviewedEvidence": "All11 certified Supreme Court district contests and60 distinct candidates/95 printed party lines replayed across all continuation pages. Identical printed names within each contest retain all fusion party lines. Official Counties cells provide only whole-county memberships."
+      },
+      {
+        "rawHash": "c703f3fa20cb0acbfb4fe52c328060908284ae9f88abbdaa24a0c7fcd47d386b",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:24:02.517Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+        "reviewedEvidence": "Normal public official pollsite UI retrieved16 contests for315 West29St,10001:11 candidate contests with32 distinct candidacies,5 charter questions. All printed candidate names and party lines compared race by race; blank write-in slots do not invent candidates. Full linked sample PDF retained. Only four missing local races/seven candidates are added; earlier verified state/court IDs are preserved. This official current ballot confirms five questions, resolving the unsupported NYC311 count of six for this ballot."
+      },
+      {
+        "rawHash": "11124af05064c00b6ea73d6eda5f0b86ca953defdace157d5aea0e282af53289",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:40:00.977Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 209 Joralemon Street, 11201. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "rawHash": "f991083f49f009dcd56b44415a263b231a4c705cdd78dd309be10e2c3f150f51",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:40:04.573Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 90-27 Sutphin Boulevard, 11435. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "rawHash": "ad52ba38d5d41d5f92bc814637124429bef758bbd233add0b98fd71db2dd97ee",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:40:07.327Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1932 Arthur Avenue, 10457. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "rawHash": "b33dd18a208d34c8dddb8a4017c42456226ebd1c34c40c9ab159ad76661edd18",
+        "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+        "publisher": "New York City Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:40:11.688Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+        "reviewedEvidence": "Actual normal public pollsite UI response for 1 Edgewater Street, 10305. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-1/",
+        "publisher": "www.nycvotes.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.637118+00:00",
+        "httpStatus": 200,
+        "rawHash": "40c0ecc1b77e5779b7a7fc89530d86c74edde780a95a0a3a2357f2dfea45c214",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-2/",
+        "publisher": "www.nycvotes.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.752847+00:00",
+        "httpStatus": 200,
+        "rawHash": "10d25e2228ae91fe38b883fd6ed0f2326df3e88f7bbf86f3922a2d6d63bc67e0",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-3/",
+        "publisher": "www.nycvotes.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.914283+00:00",
+        "httpStatus": 200,
+        "rawHash": "700b1ccb0f8a2acc44dee5ac4d9db912513b5420a3dd18980e45612beb3b79b8",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-4/",
+        "publisher": "www.nycvotes.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.868140+00:00",
+        "httpStatus": 200,
+        "rawHash": "99c4e55505556d495b659cbc81c68e82311d2e5625f1339fa22390bb4233959b",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+        "finalUrl": "https://www.nycvotes.org/whats-on-the-ballot/2026-general-election-voter-guide/ballot-proposals-2026/ballot-proposal-5/",
+        "publisher": "www.nycvotes.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.984039+00:00",
+        "httpStatus": 200,
+        "rawHash": "fbdd7d8a8882c5b92dadbf65735d68d3313e1cd48c53091835e0fc229b3769b8",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

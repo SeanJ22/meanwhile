@@ -1,0 +1,119 @@
+{
+  "preparedOnly": true,
+  "productionWrites": false,
+  "appCodeChanged": false,
+  "records": [
+    {
+      "state": "CO",
+      "contestId": "co-el_paso-general-2026-county-surveyor",
+      "title": "County Surveyor",
+      "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+      "status": "SOURCE_CONFIRMS_NO_NAMED_CANDIDATES",
+      "action": "Preserve held office and its no-candidates explanation; never invent a named candidacy. Current application/schema change is outside task scope.",
+      "freshSource": true,
+      "quote": "County Surveyor\n(Vote for One)\nThere are no candidates for this office.",
+      "source": {
+        "requestedUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "finalUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-02T21:37:41.057694+00:00",
+        "rawFormat": "PDF",
+        "nativePdf": {
+          "file": "sources/co-elpaso-official-sample.pdf",
+          "sha256": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+          "bytes": 230233
+        },
+        "text": {
+          "file": "sources/co-elpaso-official-sample.txt",
+          "sha256": "bf0b2268ff1bda4607d25defff5acf8cf587dde86805307a45aabd1832f8c5d5",
+          "bytes": 30125
+        },
+        "publisher": "El Paso County Clerk and Recorder",
+        "textExtraction": "Reviewed decoded text from the unchanged source PDF. Legacy embedded font encodes ASCII as codepoint minus29. Existing ba01-west-elpaso extraction documentation and native raw text are retained for replay; this review makes no new ballot or absence record.",
+        "originalRawText": {
+          "file": "sources/co-elpaso-native-raw.txt",
+          "sha256": "848c85cdd9a9566282cd07c178548f5793e2039961aabc8fe3cde0cd491e1c24",
+          "bytes": 31268
+        },
+        "priorExtractionDocumentation": "pdftotext -raw; custom embedded font maps ASCII to codepoint minus29. Recovered text replayed by ba01-west-elpaso.py. Candidate and retention names and county1A text visually checked against rendered official PDF."
+      },
+      "officialLinkChain": [
+        {
+          "requestedUrl": "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-20T23:46:26.072048+00:00",
+          "archivedFile": "sources/co-official-counties.html",
+          "archivedSha256": "44c8de1393e2e6105a0596366e074d1c79111c712fefa97f18fb3aa2a7ee65de",
+          "originalSourceSha256": "44c8de1393e2e6105a0596366e074d1c79111c712fefa97f18fb3aa2a7ee65de",
+          "representation": "ORIGINAL_PUBLIC_LINKING_PAGE"
+        },
+        {
+          "requestedUrl": "https://clerkandrecorder.elpasoco.com/elections/election-information/",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-20T23:34:29.019373+00:00",
+          "archivedFile": "sources/co-elpaso-official-page.html",
+          "archivedSha256": "3f0757e98ff6f2878889f395bf2fc24af0eb6be957527ee208542b59164b4f67",
+          "originalSourceSha256": "3f0757e98ff6f2878889f395bf2fc24af0eb6be957527ee208542b59164b4f67",
+          "representation": "ORIGINAL_PUBLIC_LINKING_PAGE"
+        }
+      ],
+      "scopeLimit": "Only this saved November3,2026 sample field explicitly states no candidates. Do not convert it into a statewide absence, remove the held office or create any candidate."
+    },
+    {
+      "state": "WI",
+      "contestId": "ba01-pacific-wi-richland-county-coroner",
+      "title": "Richland County Coroner",
+      "ocdId": "ocd-division/country:us/state:wi/county:richland",
+      "status": "SOURCE_CONFIRMS_WRITE_IN_ONLY",
+      "action": "Preserve held office and write-in-only explanation; never invent a named candidacy. Current application/schema change is outside task scope.",
+      "freshSource": true,
+      "quote": "Coroner \nWrite-in",
+      "source": {
+        "requestedUrl": "https://richlandcounty2024.govoffice.com/uploads/dm/83004/Type_B_Notice_Fall_2026",
+        "finalUrl": "https://richlandcounty2024.govoffice.com/uploads/dm/83004/Type_B_Notice_Fall_2026",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-02T21:44:12.053821+00:00",
+        "rawFormat": "PDF",
+        "nativePdf": {
+          "file": "sources/wi-richland-typeb.pdf",
+          "sha256": "147e2a5f98c6556c38eb890510d99b94a112ce025502d134334cf434896c9d60",
+          "bytes": 258091
+        },
+        "text": {
+          "file": "sources/wi-richland-typeb.txt",
+          "sha256": "3c0fd647d7ef900e5f3cbe7397024b250e6c699581f2e531d69613103fccf68a",
+          "bytes": 9689
+        },
+        "publisher": "Richland County Clerk"
+      },
+      "corroboratingSample": {
+        "requestedUrl": "https://richlandcounty2024.govoffice.com/uploads/dm/83076/2026NovSampleBallots.pdf",
+        "finalUrl": "https://richlandcounty2024.govoffice.com/uploads/dm/83076/2026NovSampleBallots.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-02T21:44:12.049711+00:00",
+        "rawFormat": "PDF",
+        "nativePdf": {
+          "file": "sources/wi-richland-samples.pdf",
+          "sha256": "f5a5df4a7d15ac3efb4ba1e50835caafaeb647d40a2574c9a05286fe9f525752",
+          "bytes": 796458
+        },
+        "text": {
+          "file": "sources/wi-richland-samples.txt",
+          "sha256": "d30586b7c9ce52eb0eabc80ff4de107dc2c3c51315bd18928d11a89ed28d0ce0",
+          "bytes": 129697
+        }
+      },
+      "officialLinkingPage": {
+        "requestedUrl": "https://richlandcountywi.gov/index.asp?SEC=7747B0EC-1F40-480C-9579-7B15ACDD8920",
+        "finalUrl": "https://richlandcountywi.gov/index.asp?SEC=7747B0EC-1F40-480C-9579-7B15ACDD8920",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-02T21:43:25.451755+00:00",
+        "archivedFile": "sources/wi-richland-official-elections.html",
+        "archivedSha256": "075f2efe35432b6e2d0447c470bc09c1cd22d239feba2f85d39c8ffcfd0d6998",
+        "originalSourceSha256": "075f2efe35432b6e2d0447c470bc09c1cd22d239feba2f85d39c8ffcfd0d6998",
+        "representation": "ORIGINAL_PUBLIC_LINKING_PAGE"
+      },
+      "scopeLimit": "The printed Coroner field contains a generic write-in line and no named candidate. This does not prove that no person registered as a write-in; do not infer candidate names, statewide absence or remove the held office."
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "status": "OFFICIAL_SOURCE_FACTS_READY_READER_WRITE_IN_REPRESENTATION_UNRESOLVED",
+  "preparedOnly": true,
+  "productionWrites": false,
+  "election": {
+    "state": "WI",
+    "name": "General Election",
+    "date": "2026-11-03"
+  },
+  "source": {
+    "requestedUrl": "https://dunncountywi.govoffice2.com/vertical/Sites/%7B97C2FC1A-69D7-4F5C-BA23-79B5C833BED5%7D/uploads/Registered_Write_In_Candidates_by_Office_-_Nov_3_2026.pdf",
+    "finalUrl": "https://dunncountywi.govoffice2.com/vertical/Sites/%7B97C2FC1A-69D7-4F5C-BA23-79B5C833BED5%7D/uploads/Registered_Write_In_Candidates_by_Office_-_Nov_3_2026.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:39:16.537711+00:00",
+    "rawFormat": "PDF",
+    "nativePdf": {
+      "file": "sources/dunn-registered-writeins.pdf",
+      "sha256": "423e7c1ef4310dc933bf7f9a34b6af1bec4e4226ef92e0e071310cefdfdd578b",
+      "bytes": 66891
+    },
+    "text": {
+      "file": "sources/dunn-registered-writeins.txt",
+      "sha256": "397c18aa380b22735274d0b272dfbc9079bcbb210d9250c8a67a1482f8c91482",
+      "bytes": 747
+    },
+    "publisher": "Dunn County Clerk",
+    "documentTitle": "Dunn County Registered Write-In Candidates by Office",
+    "sourceClass": "ELECTION_AUTHORITY",
+    "pdfPages": 1,
+    "documentPublicationOrUpdateDate": null
+  },
+  "officialLinkingPage": {
+    "requestedUrl": "https://dunncountywi.gov/elections",
+    "finalUrl": "https://dunncountywi.gov/elections",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:39:05.642804+00:00",
+    "archivedFile": "sources/dunn-official-elections.html",
+    "archivedSha256": "16f27a634fe9cfc4e1986b01665a53e15ae72d4bc53702eef75d6666f4bcf165",
+    "originalSourceSha256": "16f27a634fe9cfc4e1986b01665a53e15ae72d4bc53702eef75d6666f4bcf165",
+    "representation": "ORIGINAL_PUBLIC_LINKING_PAGE",
+    "exactLinkLabel": "Registered Write-In Candidates - Nov. 3, 2026",
+    "exactHref": "https://dunncountywi.govoffice2.com/vertical/Sites/%7B97C2FC1A-69D7-4F5C-BA23-79B5C833BED5%7D/uploads/Registered_Write_In_Candidates_by_Office_-_Nov_3_2026.pdf"
+  },
+  "registeredWriteInCandidates": [
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Ieshuh Griffin",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    },
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Jamie Jo Carothers",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    },
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "David D. King",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    },
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Chad Muellenberg",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    },
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Mary Morgan",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    },
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Mark Grimek",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    },
+    {
+      "office": "Governor of the State of Wisconsin",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "name": "Brayden Donnelly",
+      "sourceStatus": "REGISTERED_WRITE_IN",
+      "partyLabel": null,
+      "runningMate": null,
+      "page": 1
+    }
+  ],
+  "otherPrintedOfficeOutsideCurrentStatewideComparison": {
+    "office": "Dunn County Sheriff",
+    "name": "Chad Weinberger",
+    "sourceStatus": "REGISTERED_WRITE_IN",
+    "partyLabel": null
+  },
+  "sourceQuote": "      Dunn County Registered Write-In Candidates by Office\n\n                       General Election - November 3, 2026\n\n              Office                                         Name\n                                                        Ieshuh Griffin\n                                                     Jamie Jo Carothers\n                                                        David D. King\nGovernor of the State of Wisconsin                   Chad Muellenberg\n                                                        Mary Morgan\n                                                        Mark Grimek\n                                                      Brayden Donnelly\n       Dunn County Sheriff                            Chad Weinberger\n\f",
+  "limits": [
+    "Official county-published November3 list proves these seven names are listed as registered gubernatorial write-ins. It does not provide parties, running mates, individual registration dates or a dated final statewide write-in certification.",
+    "This is separate from the 128 regular race fields and 260 printed tickets in the WEC August25 general-election roster. That printed-nominee comparison is complete independently of this supplement.",
+    "The source contains only Governor and Dunn County Sheriff. It does not establish absence of registered write-ins for other offices or counties."
+  ],
+  "existingReaderContractBlocker": {
+    "type": "Candidacy",
+    "facts": "Candidacy has name, partyLabel, slogan, optional ticket/runningMate and provenance; no registered-write-in or printed-ballot status field. No existing per-candidate display label verified for this distinction.",
+    "nextStep": "River should retain these official source facts as standing data work and choose an existing truthful disclosure path or add explicit write-in status/display support after the user freeze permits app-code changes. Do not install these as ordinary printed nominees, invent running mates or use Write-in as a party.",
+    "repositoryFile": "lib/ballot/types.ts",
+    "relativeSchemaPath": "../../../../../lib/ballot/types.ts"
+  },
+  "appCodeChanged": false
+}

@@ -1,0 +1,4450 @@
+{
+  "generatedAt": "2026-11-02T23:05:14.989662+00:00",
+  "preparedOnly": true,
+  "productionWrites": false,
+  "sourceTextSHA256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+  "sourcePrintedAt": "August 25, 2026 4:39:33 PM",
+  "sourceFields": 128,
+  "sourceCandidateTickets": 260,
+  "allSourceOfficePrintedTotalsReconciled": true,
+  "baselineSHA256": "407cfd1efda2e8fc62b3b008dc123fe89b9539d4909ed9003fc492ceb3981790",
+  "additions": [],
+  "scope": "128 regular statewide, congressional and legislative race fields; governor and lieutenant governor normalized as one joint ticket. Full named nominees in August25 WEC general roster only; later certified write-ins, local races/measures, voter attachment and live installation are not established. Additional current candidates are retained and identified for source follow-up, not removed.",
+  "fieldsWithoutContest": [],
+  "missingSourceCandidates": [],
+  "partyDifferences": [
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 6",
+      "sourceName": "Matthew Arndt",
+      "sourcePartyLabel": "Wisconsin Green",
+      "candidateId": "ba01-pacific-wi-representative-in-congress-district-6:7d72610de1e9f395",
+      "currentPartyLabel": "Wisconsin Green Party",
+      "interpretation": "Published Wisconsin Green Party is a textual alias of the source Wisconsin Green label; no missing name or substantive party conflict established."
+    }
+  ],
+  "extraCurrentCandidates": [],
+  "fields": [
+    {
+      "office": "GOVERNOR",
+      "division": "ocd-division/country:us/state:wi",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-green-county-2026-general-governor"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tom Tiffany / David Varnam",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-governor-candidate-tom-tiffany"
+          ],
+          "matchedNames": [
+            "Tom Tiffany"
+          ]
+        },
+        {
+          "sourceName": "David Crowley / Sarah Godlewski",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-governor-candidate-david-crowley"
+          ],
+          "matchedNames": [
+            "David Crowley"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "ATTORNEY GENERAL",
+      "division": "ocd-division/country:us/state:wi",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-green-county-2026-general-attorney-general"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Eric Toney",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-attorney-general-candidate-eric-toney"
+          ],
+          "matchedNames": [
+            "Eric Toney"
+          ]
+        },
+        {
+          "sourceName": "Josh Kaul",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-attorney-general-candidate-josh-kaul"
+          ],
+          "matchedNames": [
+            "Josh Kaul"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "SECRETARY OF STATE",
+      "division": "ocd-division/country:us/state:wi",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "wi-green-county-2026-general-secretary-of-state"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jay Schroeder",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-secretary-of-state-candidate-jay-schroeder"
+          ],
+          "matchedNames": [
+            "Jay Schroeder"
+          ]
+        },
+        {
+          "sourceName": "JoCasta Zamarripa",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-secretary-of-state-candidate-jocasta-zamarripa"
+          ],
+          "matchedNames": [
+            "JoCasta Zamarripa"
+          ]
+        },
+        {
+          "sourceName": "Pete Karas",
+          "sourcePartyLabel": "Wisconsin Green",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-secretary-of-state-candidate-pete-karas"
+          ],
+          "matchedNames": [
+            "Pete Karas"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE TREASURER",
+      "division": "ocd-division/country:us/state:wi",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-green-county-2026-general-state-treasurer"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "John S. Leiber",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-state-treasurer-candidate-john-s-leiber"
+          ],
+          "matchedNames": [
+            "John S. Leiber"
+          ]
+        },
+        {
+          "sourceName": "Yee Leng Xiong",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-state-treasurer-candidate-yee-leng-xiong"
+          ],
+          "matchedNames": [
+            "Yee Leng Xiong"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 1",
+      "division": "ocd-division/country:us/state:wi/cd:1",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-1"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bryan Steil",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-1:fe698f3890754a9a"
+          ],
+          "matchedNames": [
+            " Bryan Steil"
+          ]
+        },
+        {
+          "sourceName": "Mitchell Berman",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-1:d640546e28ee134e"
+          ],
+          "matchedNames": [
+            " Mitchell Berman"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 2",
+      "division": "ocd-division/country:us/state:wi/cd:2",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "wi-green-county-2026-general-representative-in-congress-district-2"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mark Pocan",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-representative-in-congress-district-2-candidate-mark-pocan"
+          ],
+          "matchedNames": [
+            "Mark Pocan"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 3",
+      "division": "ocd-division/country:us/state:wi/cd:3",
+      "sourceCandidateCount": 4,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-3"
+      ],
+      "matchedSourceCandidates": 4,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Alexander Valiensi Kent",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-3:44f7aab60ab4db3c"
+          ],
+          "matchedNames": [
+            " Alexander Valiensi Kent"
+          ]
+        },
+        {
+          "sourceName": "Rustin Provance",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-3:004199ee54291282"
+          ],
+          "matchedNames": [
+            " Rustin Provance"
+          ]
+        },
+        {
+          "sourceName": "Derrick Van Orden",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-3:a3d2a7544f0a1eb9"
+          ],
+          "matchedNames": [
+            " Derrick Van Orden"
+          ]
+        },
+        {
+          "sourceName": "Rebecca Cooke",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-3:9b64082b5bd7d546"
+          ],
+          "matchedNames": [
+            " Rebecca Cooke"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 4",
+      "division": "ocd-division/country:us/state:wi/cd:4",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-4"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Arthur Burks",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-4:d4180a395caa4058"
+          ],
+          "matchedNames": [
+            " Arthur Burks"
+          ]
+        },
+        {
+          "sourceName": "Tim Rogers",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-4:19457984e5d51718"
+          ],
+          "matchedNames": [
+            " Tim Rogers"
+          ]
+        },
+        {
+          "sourceName": "Gwen Moore",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-4:1d3bd4d8347626c1"
+          ],
+          "matchedNames": [
+            " Gwen Moore"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 5",
+      "division": "ocd-division/country:us/state:wi/cd:5",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-5"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Scott Fitzgerald",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-5:82e8acb5f6330b51"
+          ],
+          "matchedNames": [
+            " Scott Fitzgerald"
+          ]
+        },
+        {
+          "sourceName": "Andrew Beck",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-5:97e3c4fd4ed88d66"
+          ],
+          "matchedNames": [
+            " Andrew Beck"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 6",
+      "division": "ocd-division/country:us/state:wi/cd:6",
+      "sourceCandidateCount": 5,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-6"
+      ],
+      "matchedSourceCandidates": 5,
+      "missingSourceCandidates": [],
+      "partyDifferences": [
+        {
+          "sourceName": "Matthew Arndt",
+          "sourcePartyLabel": "Wisconsin Green",
+          "candidateId": "ba01-pacific-wi-representative-in-congress-district-6:7d72610de1e9f395",
+          "currentPartyLabel": "Wisconsin Green Party"
+        }
+      ],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Elizabeth Anne Fitzgibbon",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-6:186ec894985e830d"
+          ],
+          "matchedNames": [
+            " Elizabeth Anne Fitzgibbon"
+          ]
+        },
+        {
+          "sourceName": "Mike Thurow",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-6:72c271780bd4c66a"
+          ],
+          "matchedNames": [
+            " Mike Thurow"
+          ]
+        },
+        {
+          "sourceName": "Glenn Grothman",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-6:7704f9ba9475adac"
+          ],
+          "matchedNames": [
+            " Glenn Grothman"
+          ]
+        },
+        {
+          "sourceName": "Brad Smith",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-6:a4f98e0965988eab"
+          ],
+          "matchedNames": [
+            " Brad Smith"
+          ]
+        },
+        {
+          "sourceName": "Matthew Arndt",
+          "sourcePartyLabel": "Wisconsin Green",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-6:7d72610de1e9f395"
+          ],
+          "matchedNames": [
+            " Matthew Arndt"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 7",
+      "division": "ocd-division/country:us/state:wi/cd:7",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-7"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Michael Alfonso",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-7:98a34a28ba107ecd"
+          ],
+          "matchedNames": [
+            " Michael Alfonso"
+          ]
+        },
+        {
+          "sourceName": "Fred Clark",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-7:0a9f7963bd1d8ffa"
+          ],
+          "matchedNames": [
+            " Fred Clark"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE IN CONGRESS DISTRICT 8",
+      "division": "ocd-division/country:us/state:wi/cd:8",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-in-congress-district-8"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tony Wied",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-8:d538574f010f9db2"
+          ],
+          "matchedNames": [
+            " Tony Wied"
+          ]
+        },
+        {
+          "sourceName": "Rick Crosson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-in-congress-district-8:be62d9b94a1be7a7"
+          ],
+          "matchedNames": [
+            " Rick Crosson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 1",
+      "division": "ocd-division/country:us/state:wi/sldu:1",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-1"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mark Becker",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-1:5f7c0ba96a4d959a"
+          ],
+          "matchedNames": [
+            " Mark Becker"
+          ]
+        },
+        {
+          "sourceName": "Nic Cravillion",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-1:d295fc2dd635849d"
+          ],
+          "matchedNames": [
+            " Nic Cravillion"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 3",
+      "division": "ocd-division/country:us/state:wi/sldu:3",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-3"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tim Carpenter",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-3:b42b11f006c90015"
+          ],
+          "matchedNames": [
+            " Tim Carpenter"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 5",
+      "division": "ocd-division/country:us/state:wi/sldu:5",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-5"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mike Roberts",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-5:2709bf04ccc3625a"
+          ],
+          "matchedNames": [
+            " Mike Roberts"
+          ]
+        },
+        {
+          "sourceName": "Robyn Vining",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-5:45e6dbd30590c0c3"
+          ],
+          "matchedNames": [
+            " Robyn Vining"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 7",
+      "division": "ocd-division/country:us/state:wi/sldu:7",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-7"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mike Moeller",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-7:43fb4b85c6b0c5bf"
+          ],
+          "matchedNames": [
+            " Mike Moeller"
+          ]
+        },
+        {
+          "sourceName": "Chris J. Larson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-7:e59ed14677bcaef0"
+          ],
+          "matchedNames": [
+            " Chris J. Larson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 9",
+      "division": "ocd-division/country:us/state:wi/sldu:9",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-9"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Christian Ellis",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-9:9a825c1065bb0678"
+          ],
+          "matchedNames": [
+            " Christian Ellis"
+          ]
+        },
+        {
+          "sourceName": "Amy Binsfeld",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-9:30fd68ff197f5627"
+          ],
+          "matchedNames": [
+            " Amy Binsfeld"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 11",
+      "division": "ocd-division/country:us/state:wi/sldu:11",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-11"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Ellen Schutt",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-11:63ce0a76badf66d5"
+          ],
+          "matchedNames": [
+            " Ellen Schutt"
+          ]
+        },
+        {
+          "sourceName": "Adam Duda",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-11:6a6d0ed788a1c243"
+          ],
+          "matchedNames": [
+            " Adam Duda"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 13",
+      "division": "ocd-division/country:us/state:wi/sldu:13",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-13"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "John Jagler",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-13:a6b501b0d152916d"
+          ],
+          "matchedNames": [
+            " John Jagler"
+          ]
+        },
+        {
+          "sourceName": "Sasha Ripley",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-13:21b045b69d25c87b"
+          ],
+          "matchedNames": [
+            " Sasha Ripley"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 15",
+      "division": "ocd-division/country:us/state:wi/sldu:15",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "wi-ba01-state-senator-district-15-sldu-15"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Christopher Dean",
+          "sourcePartyLabel": "Serving People Not Parties",
+          "matchedCandidateIds": [
+            "wi-ba01-state-senator-district-15-sldu-15-candidate-christopher-dean"
+          ],
+          "matchedNames": [
+            " Christopher Dean"
+          ]
+        },
+        {
+          "sourceName": "Scott Fleming",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-state-senator-district-15-sldu-15-candidate-scott-fleming"
+          ],
+          "matchedNames": [
+            " Scott Fleming"
+          ]
+        },
+        {
+          "sourceName": "Mark Spreitzer",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-state-senator-district-15-sldu-15-candidate-mark-spreitzer"
+          ],
+          "matchedNames": [
+            " Mark Spreitzer"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 17",
+      "division": "ocd-division/country:us/state:wi/sldu:17",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-green-county-2026-general-state-senator-district-17"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Howard Marklein",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-state-senator-district-17-candidate-howard-marklein"
+          ],
+          "matchedNames": [
+            "Howard Marklein"
+          ]
+        },
+        {
+          "sourceName": "Jenna Jacobson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-state-senator-district-17-candidate-jenna-jacobson"
+          ],
+          "matchedNames": [
+            "Jenna Jacobson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 19",
+      "division": "ocd-division/country:us/state:wi/sldu:19",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-19"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Rachael Ann Cabral-Guevara",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-19:a7b495bbaf31c540"
+          ],
+          "matchedNames": [
+            " Rachael Ann Cabral-Guevara"
+          ]
+        },
+        {
+          "sourceName": "Emily Daniels Tseffos",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-19:1c05e3108d56996a"
+          ],
+          "matchedNames": [
+            " Emily Daniels Tseffos"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 21",
+      "division": "ocd-division/country:us/state:wi/sldu:21",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-21"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jim Croft",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-21:28b646f08e1ce9bd"
+          ],
+          "matchedNames": [
+            " Jim Croft"
+          ]
+        },
+        {
+          "sourceName": "Trevor Jung",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-21:03011f1b285a5ab1"
+          ],
+          "matchedNames": [
+            " Trevor Jung"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 23",
+      "division": "ocd-division/country:us/state:wi/sldu:23",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-23"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Romaine Robert Quinn",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-23:c90e5ffc69bbecd8"
+          ],
+          "matchedNames": [
+            " Romaine Robert Quinn"
+          ]
+        },
+        {
+          "sourceName": "Jeff Foster",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-23:3ac2f6c88d893b29"
+          ],
+          "matchedNames": [
+            " Jeff Foster"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 25",
+      "division": "ocd-division/country:us/state:wi/sldu:25",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-25"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Erik Severson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-25:4456ee94a80abc6e"
+          ],
+          "matchedNames": [
+            " Erik Severson"
+          ]
+        },
+        {
+          "sourceName": "Charly Ray",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-25:5b94c4391086b657"
+          ],
+          "matchedNames": [
+            " Charly Ray"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 27",
+      "division": "ocd-division/country:us/state:wi/sldu:27",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "wi-ba01-state-senator-district-27-sldu-27"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Dianne Hesselbein",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-state-senator-district-27-sldu-27-candidate-dianne-hesselbein"
+          ],
+          "matchedNames": [
+            " Dianne Hesselbein"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 29",
+      "division": "ocd-division/country:us/state:wi/sldu:29",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-29"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Cory Tomczyk",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-29:f60951ffa0c3c5b9"
+          ],
+          "matchedNames": [
+            " Cory Tomczyk"
+          ]
+        },
+        {
+          "sourceName": "Gillian Battino",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-29:b412fe4aefbdbba2"
+          ],
+          "matchedNames": [
+            " Gillian Battino"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 31",
+      "division": "ocd-division/country:us/state:wi/sldu:31",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-31"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Michele Magadance Skinner",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-31:d251f46fb84b59be"
+          ],
+          "matchedNames": [
+            " Michele Magadance Skinner"
+          ]
+        },
+        {
+          "sourceName": "Jeff Smith",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-31:d7702d16c56977d0"
+          ],
+          "matchedNames": [
+            " Jeff Smith"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "STATE SENATOR DISTRICT 33",
+      "division": "ocd-division/country:us/state:wi/sldu:33",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-state-senator-district-33"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Chris Kapenga",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-33:f2020c4aa783a3cd"
+          ],
+          "matchedNames": [
+            " Chris Kapenga"
+          ]
+        },
+        {
+          "sourceName": "Mike Van Someren",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-state-senator-district-33:3d02c4f9cec5ab9f"
+          ],
+          "matchedNames": [
+            " Mike Van Someren"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 1",
+      "division": "ocd-division/country:us/state:wi/sldl:1",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-1"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Joel Kitchens",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-1:51eb53d41f267963"
+          ],
+          "matchedNames": [
+            " Joel Kitchens"
+          ]
+        },
+        {
+          "sourceName": "Renee A. Paplham",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-1:348b41ba350ef54b"
+          ],
+          "matchedNames": [
+            " Renee A. Paplham"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 2",
+      "division": "ocd-division/country:us/state:wi/sldl:2",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-2"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Shae Sortwell",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-2:324081738d5237bc"
+          ],
+          "matchedNames": [
+            " Shae Sortwell"
+          ]
+        },
+        {
+          "sourceName": "Alicia Saunders",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-2:1c8601412938d728"
+          ],
+          "matchedNames": [
+            " Alicia Saunders"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 3",
+      "division": "ocd-division/country:us/state:wi/sldl:3",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-3"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Ron Tusler",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-3:76e00dd95e1aeb19"
+          ],
+          "matchedNames": [
+            " Ron Tusler"
+          ]
+        },
+        {
+          "sourceName": "Michael J. Goodwin",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-3:149281a8b3cde31e"
+          ],
+          "matchedNames": [
+            " Michael J. Goodwin"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 4",
+      "division": "ocd-division/country:us/state:wi/sldl:4",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-4"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "David Steffen",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-4:9b00da8769bc0950"
+          ],
+          "matchedNames": [
+            " David Steffen"
+          ]
+        },
+        {
+          "sourceName": "Alexia Unertl",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-4:c18e9e7f4244bb36"
+          ],
+          "matchedNames": [
+            " Alexia Unertl"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 5",
+      "division": "ocd-division/country:us/state:wi/sldl:5",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-5"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Joy Goeben",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-5:81ff811f753d4581"
+          ],
+          "matchedNames": [
+            " Joy Goeben"
+          ]
+        },
+        {
+          "sourceName": "Justin Schumacher",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-5:0ec8fcb159b196dd"
+          ],
+          "matchedNames": [
+            " Justin Schumacher"
+          ]
+        },
+        {
+          "sourceName": "David Schupbach",
+          "sourcePartyLabel": "Wisconsin Green",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-5:6a5994373bb0248d"
+          ],
+          "matchedNames": [
+            " David Schupbach"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 6",
+      "division": "ocd-division/country:us/state:wi/sldl:6",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-6"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Elijah Behnke",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-6:4f22b90aaa54a9e5"
+          ],
+          "matchedNames": [
+            " Elijah Behnke"
+          ]
+        },
+        {
+          "sourceName": "Shirley Hinze",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-6:5a69edb4eeeffe48"
+          ],
+          "matchedNames": [
+            " Shirley Hinze"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 7",
+      "division": "ocd-division/country:us/state:wi/sldl:7",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-7"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Lee Whiting",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-7:2ee62f4e5937aafd"
+          ],
+          "matchedNames": [
+            " Lee Whiting"
+          ]
+        },
+        {
+          "sourceName": "Karen Kirsch",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-7:ff92f17f26e3c51d"
+          ],
+          "matchedNames": [
+            " Karen Kirsch"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 8",
+      "division": "ocd-division/country:us/state:wi/sldl:8",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-8"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Angel Sanchez",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-8:7cf4af7ae5e22c69"
+          ],
+          "matchedNames": [
+            " Angel Sanchez"
+          ]
+        },
+        {
+          "sourceName": "Ismael Luna",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-8:928e074f3fdaeba8"
+          ],
+          "matchedNames": [
+            " Ismael Luna"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 9",
+      "division": "ocd-division/country:us/state:wi/sldl:9",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-9"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Sam Guerrero",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-9:61fd13ff17170cc1"
+          ],
+          "matchedNames": [
+            " Sam Guerrero"
+          ]
+        },
+        {
+          "sourceName": "Priscilla A. Prado",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-9:7b1cbd199357bda8"
+          ],
+          "matchedNames": [
+            " Priscilla A. Prado"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 10",
+      "division": "ocd-division/country:us/state:wi/sldl:10",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-10"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Darrin Madison",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-10:7e39ba52079f0080"
+          ],
+          "matchedNames": [
+            " Darrin Madison"
+          ]
+        },
+        {
+          "sourceName": "Robert Longwell-Grice",
+          "sourcePartyLabel": "Wisconsin Green",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-10:cb43de36f241b61d"
+          ],
+          "matchedNames": [
+            " Robert Longwell-Grice"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 11",
+      "division": "ocd-division/country:us/state:wi/sldl:11",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-11"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Shandowlyon Reaves",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-11:80c9b4d117859285"
+          ],
+          "matchedNames": [
+            " Shandowlyon Reaves"
+          ]
+        },
+        {
+          "sourceName": "Sequanna Taylor",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-11:8482fcff6aa68878"
+          ],
+          "matchedNames": [
+            " Sequanna Taylor"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 12",
+      "division": "ocd-division/country:us/state:wi/sldl:12",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-12"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Russell Antonio Goodwin, Sr.",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-12:a0e0b3df77af0811"
+          ],
+          "matchedNames": [
+            " Russell Antonio Goodwin, Sr."
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 13",
+      "division": "ocd-division/country:us/state:wi/sldl:13",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-13"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mike Morgan",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-13:mike-morgan"
+          ],
+          "matchedNames": [
+            "Mike Morgan"
+          ]
+        },
+        {
+          "sourceName": "Amy Zimmerman",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-13:amy-zimmerman"
+          ],
+          "matchedNames": [
+            "Amy Zimmerman"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 14",
+      "division": "ocd-division/country:us/state:wi/sldl:14",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-14"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "AmyRose Murphy",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-14:229d1f7d0549a76c"
+          ],
+          "matchedNames": [
+            " AmyRose Murphy"
+          ]
+        },
+        {
+          "sourceName": "Angelito Tenorio",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-14:396491d5a5964282"
+          ],
+          "matchedNames": [
+            " Angelito Tenorio"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 15",
+      "division": "ocd-division/country:us/state:wi/sldl:15",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-15"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Adam Neylon",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-15:12a48a5249f109ca"
+          ],
+          "matchedNames": [
+            " Adam Neylon"
+          ]
+        },
+        {
+          "sourceName": "Stephen Tryon",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-15:01a7de570d6d67eb"
+          ],
+          "matchedNames": [
+            " Stephen Tryon"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 16",
+      "division": "ocd-division/country:us/state:wi/sldl:16",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-16"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Alciro Deacon",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-16:0cb77ac288d06566"
+          ],
+          "matchedNames": [
+            " Alciro Deacon"
+          ]
+        },
+        {
+          "sourceName": "Kalan Haywood",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-16:9ae0466ea2a006a8"
+          ],
+          "matchedNames": [
+            " Kalan Haywood"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 17",
+      "division": "ocd-division/country:us/state:wi/sldl:17",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-17"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Charlene Abughrin",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-17:e9931c05ca99efcc"
+          ],
+          "matchedNames": [
+            " Charlene Abughrin"
+          ]
+        },
+        {
+          "sourceName": "Supreme Moore Omokunde",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-17:0da727549d29cddb"
+          ],
+          "matchedNames": [
+            " Supreme Moore Omokunde"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 18",
+      "division": "ocd-division/country:us/state:wi/sldl:18",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-18"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Joel Richmond",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-18:5e94ad4d7eb5711b"
+          ],
+          "matchedNames": [
+            " Joel Richmond"
+          ]
+        },
+        {
+          "sourceName": "Margaret Arney",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-18:5b667fe2b88dc513"
+          ],
+          "matchedNames": [
+            " Margaret Arney"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 19",
+      "division": "ocd-division/country:us/state:wi/sldl:19",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-19"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Yasmine B. Outlaw",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-19:6dddab5357152676"
+          ],
+          "matchedNames": [
+            " Yasmine B. Outlaw"
+          ]
+        },
+        {
+          "sourceName": "Ryan Clancy",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-19:346067b5037256a0"
+          ],
+          "matchedNames": [
+            " Ryan Clancy"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 20",
+      "division": "ocd-division/country:us/state:wi/sldl:20",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-20"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Kyle Cleary",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-20:187233a6a0a049a3"
+          ],
+          "matchedNames": [
+            " Kyle Cleary"
+          ]
+        },
+        {
+          "sourceName": "Christine M. Sinicki",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-20:44f901c76c138e89"
+          ],
+          "matchedNames": [
+            " Christine M. Sinicki"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 21",
+      "division": "ocd-division/country:us/state:wi/sldl:21",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-21"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Dylan Pfaffenbach",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-21:cd182460b673bdd0"
+          ],
+          "matchedNames": [
+            " Dylan Pfaffenbach"
+          ]
+        },
+        {
+          "sourceName": "Daniel J. Bukiewicz",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-21:9a3320c7adf03455"
+          ],
+          "matchedNames": [
+            " Daniel J. Bukiewicz"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 22",
+      "division": "ocd-division/country:us/state:wi/sldl:22",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-22"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Paul Melotik",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-22:paul-melotik"
+          ],
+          "matchedNames": [
+            "Paul Melotik"
+          ]
+        },
+        {
+          "sourceName": "Dana Glasstein",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-22:dana-glasstein"
+          ],
+          "matchedNames": [
+            "Dana Glasstein"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 23",
+      "division": "ocd-division/country:us/state:wi/sldl:23",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-23"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Aleaner Pabonnie",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-23:4db2a5497ee7e916"
+          ],
+          "matchedNames": [
+            " Aleaner Pabonnie"
+          ]
+        },
+        {
+          "sourceName": "Deb Andraca",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-23:ff532c281fe808a0"
+          ],
+          "matchedNames": [
+            " Deb Andraca"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 24",
+      "division": "ocd-division/country:us/state:wi/sldl:24",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-24"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Dan Knodl",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-24:dan-knodl"
+          ],
+          "matchedNames": [
+            "Dan Knodl"
+          ]
+        },
+        {
+          "sourceName": "Matt Brown",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-24:matt-brown"
+          ],
+          "matchedNames": [
+            "Matt Brown"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 25",
+      "division": "ocd-division/country:us/state:wi/sldl:25",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-25"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Paul Tittl",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-25:2a35d1eb68c170fc"
+          ],
+          "matchedNames": [
+            " Paul Tittl"
+          ]
+        },
+        {
+          "sourceName": "Christopher Able",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-25:0666df4afd301560"
+          ],
+          "matchedNames": [
+            " Christopher Able"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 26",
+      "division": "ocd-division/country:us/state:wi/sldl:26",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-26"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "John Belanger",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-26:john-belanger"
+          ],
+          "matchedNames": [
+            "John Belanger"
+          ]
+        },
+        {
+          "sourceName": "Joe Sheehan",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-26:joe-sheehan"
+          ],
+          "matchedNames": [
+            "Joe Sheehan"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 27",
+      "division": "ocd-division/country:us/state:wi/sldl:27",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-27"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Lindee Brill",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-27:8de46da61e8fb7e5"
+          ],
+          "matchedNames": [
+            " Lindee Brill"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 28",
+      "division": "ocd-division/country:us/state:wi/sldl:28",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-28"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Rob Kreibich",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-28:d2df88a810000499"
+          ],
+          "matchedNames": [
+            " Rob Kreibich"
+          ]
+        },
+        {
+          "sourceName": "Robin Lillesve",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-28:8e90b844d6d741ee"
+          ],
+          "matchedNames": [
+            " Robin Lillesve"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 29",
+      "division": "ocd-division/country:us/state:wi/sldl:29",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-29"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Treig Pronschinske",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-29:d38d332ebc823476"
+          ],
+          "matchedNames": [
+            " Treig Pronschinske"
+          ]
+        },
+        {
+          "sourceName": "Chris Danou",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-29:bcd985fd780f257c"
+          ],
+          "matchedNames": [
+            " Chris Danou"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 30",
+      "division": "ocd-division/country:us/state:wi/sldl:30",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-30"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Shannon Zimmerman",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-30:shannon-zimmerman"
+          ],
+          "matchedNames": [
+            "Shannon Zimmerman"
+          ]
+        },
+        {
+          "sourceName": "Kevin Knoke",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-30:kevin-knoke"
+          ],
+          "matchedNames": [
+            "Kevin Knoke"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 31",
+      "division": "ocd-division/country:us/state:wi/sldl:31",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-31"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tyler August",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-31:adafc5b697ac53e5"
+          ],
+          "matchedNames": [
+            " Tyler August"
+          ]
+        },
+        {
+          "sourceName": "John Perryman",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-31:292b2ea599b6c90c"
+          ],
+          "matchedNames": [
+            " John Perryman"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 32",
+      "division": "ocd-division/country:us/state:wi/sldl:32",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-32"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Amanda Nedweski",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-32:4e03d8dfca4cc6ec"
+          ],
+          "matchedNames": [
+            " Amanda Nedweski"
+          ]
+        },
+        {
+          "sourceName": "Greg Miller",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-32:e7e37e92f1abc756"
+          ],
+          "matchedNames": [
+            " Greg Miller"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 33",
+      "division": "ocd-division/country:us/state:wi/sldl:33",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-33"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Steve Wicklund",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-33:85f54a3adff15101"
+          ],
+          "matchedNames": [
+            " Steve Wicklund"
+          ]
+        },
+        {
+          "sourceName": "Maria Elena Bisabarros",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-33:6c9ec7ab9dbafc53"
+          ],
+          "matchedNames": [
+            " Maria Elena Bisabarros"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 34",
+      "division": "ocd-division/country:us/state:wi/sldl:34",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-34"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Rob Swearingen",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-34:fad02d55b80d90c5"
+          ],
+          "matchedNames": [
+            " Rob Swearingen"
+          ]
+        },
+        {
+          "sourceName": "Merlin Van Buren",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-34:364713996f3adb09"
+          ],
+          "matchedNames": [
+            " Merlin Van Buren"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 35",
+      "division": "ocd-division/country:us/state:wi/sldl:35",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-35"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Calvin Callahan",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-35:a851a3c0e587d7a7"
+          ],
+          "matchedNames": [
+            " Calvin Callahan"
+          ]
+        },
+        {
+          "sourceName": "Elizabeth McCrank",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-35:b9493397750d29c0"
+          ],
+          "matchedNames": [
+            " Elizabeth McCrank"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 36",
+      "division": "ocd-division/country:us/state:wi/sldl:36",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-36"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Shena Chapman",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-36:ce5155d6fb950d5b"
+          ],
+          "matchedNames": [
+            " Shena Chapman"
+          ]
+        },
+        {
+          "sourceName": "Jeffrey L. Mursau",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-36:0caabde4e58a1156"
+          ],
+          "matchedNames": [
+            " Jeffrey L. Mursau"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 37",
+      "division": "ocd-division/country:us/state:wi/sldl:37",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-37"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mark Born",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-37:5dfc9589cc4f762c"
+          ],
+          "matchedNames": [
+            " Mark Born"
+          ]
+        },
+        {
+          "sourceName": "LaToya Bates",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-37:735698eeed66ca8a"
+          ],
+          "matchedNames": [
+            " LaToya Bates"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 38",
+      "division": "ocd-division/country:us/state:wi/sldl:38",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-38"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "William Penterman",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-38:08decac2ebf9ae8f"
+          ],
+          "matchedNames": [
+            " William Penterman"
+          ]
+        },
+        {
+          "sourceName": "Terri Wenkman",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-38:c544e572b31aed64"
+          ],
+          "matchedNames": [
+            " Terri Wenkman"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 39",
+      "division": "ocd-division/country:us/state:wi/sldl:39",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-39"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Alex Dallman",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-39:3352c562a62c9c94"
+          ],
+          "matchedNames": [
+            " Alex Dallman"
+          ]
+        },
+        {
+          "sourceName": "Michael Skivington",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-39:5cc4ce340704047b"
+          ],
+          "matchedNames": [
+            " Michael Skivington"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 40",
+      "division": "ocd-division/country:us/state:wi/sldl:40",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-40"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Julie Helmer",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-40:47f07cfb2a5e6d3e"
+          ],
+          "matchedNames": [
+            " Julie Helmer"
+          ]
+        },
+        {
+          "sourceName": "Karen DeSanto",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-40:8e0a96dfd00b1ca9"
+          ],
+          "matchedNames": [
+            " Karen DeSanto"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 41",
+      "division": "ocd-division/country:us/state:wi/sldl:41",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-41"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tony Kurtz",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-41:98102c371a10377f"
+          ],
+          "matchedNames": [
+            " Tony Kurtz"
+          ]
+        },
+        {
+          "sourceName": "Zach Commons",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-41:d97f6edae63ba878"
+          ],
+          "matchedNames": [
+            " Zach Commons"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 42",
+      "division": "ocd-division/country:us/state:wi/sldl:42",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-42-sldl-42"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Keith F. Miller",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-42-sldl-42-candidate-keith-f-miller"
+          ],
+          "matchedNames": [
+            " Keith F. Miller"
+          ]
+        },
+        {
+          "sourceName": "Maureen McCarville",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-42-sldl-42-candidate-maureen-mccarville"
+          ],
+          "matchedNames": [
+            " Maureen McCarville"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 43",
+      "division": "ocd-division/country:us/state:wi/sldl:43",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-43-sldl-43"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Paul McGraw",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-43-sldl-43-candidate-paul-mcgraw"
+          ],
+          "matchedNames": [
+            " Paul McGraw"
+          ]
+        },
+        {
+          "sourceName": "Brienne Brown",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-43-sldl-43-candidate-brienne-brown"
+          ],
+          "matchedNames": [
+            " Brienne Brown"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 44",
+      "division": "ocd-division/country:us/state:wi/sldl:44",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-44"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Ron Woodman",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-44:ron-woodman"
+          ],
+          "matchedNames": [
+            "Ron Woodman"
+          ]
+        },
+        {
+          "sourceName": "Ann Roe",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-44:ann-roe"
+          ],
+          "matchedNames": [
+            "Ann Roe"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 45",
+      "division": "ocd-division/country:us/state:wi/sldl:45",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-45"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jocelyn Jordan",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-45:32778fae645a625d"
+          ],
+          "matchedNames": [
+            " Jocelyn Jordan"
+          ]
+        },
+        {
+          "sourceName": "Clinton Anderson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-45:84022ff9a44f854b"
+          ],
+          "matchedNames": [
+            " Clinton Anderson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 46",
+      "division": "ocd-division/country:us/state:wi/sldl:46",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-46-sldl-46"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "John Donohue",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-46-sldl-46-candidate-john-donohue"
+          ],
+          "matchedNames": [
+            " John Donohue"
+          ]
+        },
+        {
+          "sourceName": "Joan Fitzgerald",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-46-sldl-46-candidate-joan-fitzgerald"
+          ],
+          "matchedNames": [
+            " Joan Fitzgerald"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 47",
+      "division": "ocd-division/country:us/state:wi/sldl:47",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-47-sldl-47"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Sandy Bakk",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-47-sldl-47-candidate-sandy-bakk"
+          ],
+          "matchedNames": [
+            " Sandy Bakk"
+          ]
+        },
+        {
+          "sourceName": "Randy Udell",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-47-sldl-47-candidate-randy-udell"
+          ],
+          "matchedNames": [
+            " Randy Udell"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 48",
+      "division": "ocd-division/country:us/state:wi/sldl:48",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-48-sldl-48"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mark Kjorlie",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-48-sldl-48-candidate-mark-kjorlie"
+          ],
+          "matchedNames": [
+            " Mark Kjorlie"
+          ]
+        },
+        {
+          "sourceName": "Andrew Hysell",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-48-sldl-48-candidate-andrew-hysell"
+          ],
+          "matchedNames": [
+            " Andrew Hysell"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 49",
+      "division": "ocd-division/country:us/state:wi/sldl:49",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-49"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Travis Tranel",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-49:00abd7eb0b0b5e57"
+          ],
+          "matchedNames": [
+            " Travis Tranel"
+          ]
+        },
+        {
+          "sourceName": "John Rindy",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-49:92f3e4ec52e9f03c"
+          ],
+          "matchedNames": [
+            " John Rindy"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 50",
+      "division": "ocd-division/country:us/state:wi/sldl:50",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-green-county-2026-general-representative-to-the-assembly-district-50"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jon Aleckson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-representative-to-the-assembly-district-50-candidate-jon-aleckson"
+          ],
+          "matchedNames": [
+            "Jon Aleckson"
+          ]
+        },
+        {
+          "sourceName": "Bill Oemichen",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-green-county-2026-general-representative-to-the-assembly-district-50-candidate-bill-oemichen"
+          ],
+          "matchedNames": [
+            "Bill Oemichen"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 51",
+      "division": "ocd-division/country:us/state:wi/sldl:51",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-51-sldl-51"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Nathan Tataje",
+          "sourcePartyLabel": "American Solidarity Party",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-51-sldl-51-candidate-nathan-tataje"
+          ],
+          "matchedNames": [
+            " Nathan Tataje"
+          ]
+        },
+        {
+          "sourceName": "Todd Novak",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-51-sldl-51-candidate-todd-novak"
+          ],
+          "matchedNames": [
+            " Todd Novak"
+          ]
+        },
+        {
+          "sourceName": "Ben Gruber",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-51-sldl-51-candidate-ben-gruber"
+          ],
+          "matchedNames": [
+            " Ben Gruber"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 52",
+      "division": "ocd-division/country:us/state:wi/sldl:52",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-52"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Reive Pullen",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-52:e8bc919ded944f40"
+          ],
+          "matchedNames": [
+            " Reive Pullen"
+          ]
+        },
+        {
+          "sourceName": "Lee Snodgrass",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-52:364ee9f9040763db"
+          ],
+          "matchedNames": [
+            " Lee Snodgrass"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 53",
+      "division": "ocd-division/country:us/state:wi/sldl:53",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-53"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Rachael Dowling",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-53:3a1e85c26d66f421"
+          ],
+          "matchedNames": [
+            " Rachael Dowling"
+          ]
+        },
+        {
+          "sourceName": "David Daniels",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-53:82ea9608d7710023"
+          ],
+          "matchedNames": [
+            " David Daniels"
+          ]
+        },
+        {
+          "sourceName": "Becky Nichols",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-53:5fa2c37e0adc7fc6"
+          ],
+          "matchedNames": [
+            " Becky Nichols"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 54",
+      "division": "ocd-division/country:us/state:wi/sldl:54",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-54"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tim Paterson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-54:d95506c95657bad3"
+          ],
+          "matchedNames": [
+            " Tim Paterson"
+          ]
+        },
+        {
+          "sourceName": "Lori Palmeri",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-54:ba942000900fa0ae"
+          ],
+          "matchedNames": [
+            " Lori Palmeri"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 55",
+      "division": "ocd-division/country:us/state:wi/sldl:55",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-55"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Nate Gustafson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-55:2a4e94656decbf0c"
+          ],
+          "matchedNames": [
+            " Nate Gustafson"
+          ]
+        },
+        {
+          "sourceName": "Alex Corrigan",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-55:30fbddb5dee4842b"
+          ],
+          "matchedNames": [
+            " Alex Corrigan"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 56",
+      "division": "ocd-division/country:us/state:wi/sldl:56",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-56"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Anthony W. Phillips",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-56:44995cfdd1ef7376"
+          ],
+          "matchedNames": [
+            " Anthony W. Phillips"
+          ]
+        },
+        {
+          "sourceName": "Grace Abitz",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-56:706ce1d8c3d7dc8f"
+          ],
+          "matchedNames": [
+            " Grace Abitz"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 57",
+      "division": "ocd-division/country:us/state:wi/sldl:57",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-57"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Kevin Krentz",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-57:ee34baa25b4ea500"
+          ],
+          "matchedNames": [
+            " Kevin Krentz"
+          ]
+        },
+        {
+          "sourceName": "Joey Marschall",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-57:6fb665afa35f2af4"
+          ],
+          "matchedNames": [
+            " Joey Marschall"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 58",
+      "division": "ocd-division/country:us/state:wi/sldl:58",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-58"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bernie Newman",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-58:212f5ea986fffbb5"
+          ],
+          "matchedNames": [
+            " Bernie Newman"
+          ]
+        },
+        {
+          "sourceName": "Dennis D. Degenhardt",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-58:c3c7c4ccdd454b1e"
+          ],
+          "matchedNames": [
+            " Dennis D. Degenhardt"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 59",
+      "division": "ocd-division/country:us/state:wi/sldl:59",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-59"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bradley Petersen",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-59:c7b59c8cd6af9eb8"
+          ],
+          "matchedNames": [
+            " Bradley Petersen"
+          ]
+        },
+        {
+          "sourceName": "Jack Holzman",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-59:3a1fdeb479e54405"
+          ],
+          "matchedNames": [
+            " Jack Holzman"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 60",
+      "division": "ocd-division/country:us/state:wi/sldl:60",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-60"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Tiffany Brault",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-60:tiffany-brault"
+          ],
+          "matchedNames": [
+            "Tiffany Brault"
+          ]
+        },
+        {
+          "sourceName": "Marty Ryan",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-60:marty-ryan"
+          ],
+          "matchedNames": [
+            "Marty Ryan"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 61",
+      "division": "ocd-division/country:us/state:wi/sldl:61",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-61"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bob Donovan",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-61:8126b96469fab993"
+          ],
+          "matchedNames": [
+            " Bob Donovan"
+          ]
+        },
+        {
+          "sourceName": "Ben Brist",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-61:f0c128bdd0fa97c7"
+          ],
+          "matchedNames": [
+            " Ben Brist"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 62",
+      "division": "ocd-division/country:us/state:wi/sldl:62",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-62"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mike Bellagio",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-62:3136ce6585dc8f87"
+          ],
+          "matchedNames": [
+            " Mike Bellagio"
+          ]
+        },
+        {
+          "sourceName": "Angelina M. Cruz",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-62:cb764329a49f294d"
+          ],
+          "matchedNames": [
+            " Angelina M. Cruz"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 63",
+      "division": "ocd-division/country:us/state:wi/sldl:63",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-63"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Robert Wittke",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-63:84c456c8adfc6446"
+          ],
+          "matchedNames": [
+            " Robert Wittke"
+          ]
+        },
+        {
+          "sourceName": "Eddie Phanichkul",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-63:1da50ef7ee5ca6ea"
+          ],
+          "matchedNames": [
+            " Eddie Phanichkul"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 64",
+      "division": "ocd-division/country:us/state:wi/sldl:64",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-64"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Ed Hibsch",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-64:5fbe7f07f00d5e65"
+          ],
+          "matchedNames": [
+            " Ed Hibsch"
+          ]
+        },
+        {
+          "sourceName": "Tip McGuire",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-64:1bcf5121eba3dc15"
+          ],
+          "matchedNames": [
+            " Tip McGuire"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 65",
+      "division": "ocd-division/country:us/state:wi/sldl:65",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-65"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Valerie Kretchmer",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-65:0721565a0c5cdeeb"
+          ],
+          "matchedNames": [
+            " Valerie Kretchmer"
+          ]
+        },
+        {
+          "sourceName": "Ben DeSmidt",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-65:b6cf91be6d99f615"
+          ],
+          "matchedNames": [
+            " Ben DeSmidt"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 66",
+      "division": "ocd-division/country:us/state:wi/sldl:66",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-66"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Gina Cefalu Paulick",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-66:gina-cefalu-paulick"
+          ],
+          "matchedNames": [
+            "Gina Cefalu Paulick"
+          ]
+        },
+        {
+          "sourceName": "Greta Neubauer",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-66:greta-neubauer"
+          ],
+          "matchedNames": [
+            "Greta Neubauer"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 67",
+      "division": "ocd-division/country:us/state:wi/sldl:67",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-67"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "David Armstrong",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-67:038ef70ebc96378e"
+          ],
+          "matchedNames": [
+            " David Armstrong"
+          ]
+        },
+        {
+          "sourceName": "Indiana Thompson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-67:06d18f26e79857e3"
+          ],
+          "matchedNames": [
+            " Indiana Thompson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 68",
+      "division": "ocd-division/country:us/state:wi/sldl:68",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-68"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Rob Summerfield",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-68:rob-summerfield"
+          ],
+          "matchedNames": [
+            "Rob Summerfield"
+          ]
+        },
+        {
+          "sourceName": "Elisha King",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-68:elisha-king"
+          ],
+          "matchedNames": [
+            "Elisha King"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 69",
+      "division": "ocd-division/country:us/state:wi/sldl:69",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-69"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Josh Kelley",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-69:79a0da7a843d2623"
+          ],
+          "matchedNames": [
+            " Josh Kelley"
+          ]
+        },
+        {
+          "sourceName": "Karen Hurd",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-69:3c5f366bb7375183"
+          ],
+          "matchedNames": [
+            " Karen Hurd"
+          ]
+        },
+        {
+          "sourceName": "Roger Halls",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-69:76dafcb855aeaf70"
+          ],
+          "matchedNames": [
+            " Roger Halls"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 70",
+      "division": "ocd-division/country:us/state:wi/sldl:70",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-70"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Nancy VanderMeer",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-70:a65ab6341e03bb93"
+          ],
+          "matchedNames": [
+            " Nancy VanderMeer"
+          ]
+        },
+        {
+          "sourceName": "Stephanie Stuve Bodeen",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-70:f718cdd8d37589d1"
+          ],
+          "matchedNames": [
+            " Stephanie Stuve Bodeen"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 71",
+      "division": "ocd-division/country:us/state:wi/sldl:71",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-71"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jeff Disher",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-71:2f0ebcbe4275ad01"
+          ],
+          "matchedNames": [
+            " Jeff Disher"
+          ]
+        },
+        {
+          "sourceName": "Vinnie Miresse",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-71:8d72ff47dce6556d"
+          ],
+          "matchedNames": [
+            " Vinnie Miresse"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 72",
+      "division": "ocd-division/country:us/state:wi/sldl:72",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-72"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Scott Krug",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-72:f4373f7d569059b3"
+          ],
+          "matchedNames": [
+            " Scott Krug"
+          ]
+        },
+        {
+          "sourceName": "Christine Maltese",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-72:10c3aba3a116cbb7"
+          ],
+          "matchedNames": [
+            " Christine Maltese"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 73",
+      "division": "ocd-division/country:us/state:wi/sldl:73",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-73"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Frank Kostka",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-73:4375ce824c70effd"
+          ],
+          "matchedNames": [
+            " Frank Kostka"
+          ]
+        },
+        {
+          "sourceName": "Angela Stroud",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-73:5dd178ecacba3c9b"
+          ],
+          "matchedNames": [
+            " Angela Stroud"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 74",
+      "division": "ocd-division/country:us/state:wi/sldl:74",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-74"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Chanz Green",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-74:540ae6a012bde418"
+          ],
+          "matchedNames": [
+            " Chanz Green"
+          ]
+        },
+        {
+          "sourceName": "Paul Johnson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-74:72e8a2c517fd764a"
+          ],
+          "matchedNames": [
+            " Paul Johnson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 75",
+      "division": "ocd-division/country:us/state:wi/sldl:75",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-75"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Duke Tucker",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-75:77c24ba9b5322d51"
+          ],
+          "matchedNames": [
+            " Duke Tucker"
+          ]
+        },
+        {
+          "sourceName": "Keith Mogel",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-75:ade88a9e48965afa"
+          ],
+          "matchedNames": [
+            " Keith Mogel"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 76",
+      "division": "ocd-division/country:us/state:wi/sldl:76",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-76-sldl-76"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Nina Chat",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-76-sldl-76-candidate-nina-chat"
+          ],
+          "matchedNames": [
+            " Nina Chat"
+          ]
+        },
+        {
+          "sourceName": "Dina Nina Martinez-Rutherford",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-76-sldl-76-candidate-dina-nina-martinez-rutherford"
+          ],
+          "matchedNames": [
+            " Dina Nina Martinez-Rutherford"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 77",
+      "division": "ocd-division/country:us/state:wi/sldl:77",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-77-sldl-77"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jane McCormick",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-jane-mccormick"
+          ],
+          "matchedNames": [
+            " Jane McCormick"
+          ]
+        },
+        {
+          "sourceName": "Renuka Mayadev",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-renuka-mayadev"
+          ],
+          "matchedNames": [
+            " Renuka Mayadev"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 78",
+      "division": "ocd-division/country:us/state:wi/sldl:78",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-78-sldl-78"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Henry Johnson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-78-sldl-78-candidate-henry-johnson"
+          ],
+          "matchedNames": [
+            " Henry Johnson"
+          ]
+        },
+        {
+          "sourceName": "Shelia Stubbs",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-78-sldl-78-candidate-shelia-stubbs"
+          ],
+          "matchedNames": [
+            " Shelia Stubbs"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 79",
+      "division": "ocd-division/country:us/state:wi/sldl:79",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-79-sldl-79"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "John Fons",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-79-sldl-79-candidate-john-fons"
+          ],
+          "matchedNames": [
+            " John Fons"
+          ]
+        },
+        {
+          "sourceName": "Lisa Subeck",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-79-sldl-79-candidate-lisa-subeck"
+          ],
+          "matchedNames": [
+            " Lisa Subeck"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 80",
+      "division": "ocd-division/country:us/state:wi/sldl:80",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-80-sldl-80"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Simran Arora",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-80-sldl-80-candidate-simran-arora"
+          ],
+          "matchedNames": [
+            " Simran Arora"
+          ]
+        },
+        {
+          "sourceName": "Mike Bare",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-80-sldl-80-candidate-mike-bare"
+          ],
+          "matchedNames": [
+            " Mike Bare"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 81",
+      "division": "ocd-division/country:us/state:wi/sldl:81",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-ba01-representative-to-the-assembly-district-81-sldl-81"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Mark S. Maier",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-81-sldl-81-candidate-mark-s-maier"
+          ],
+          "matchedNames": [
+            " Mark S. Maier"
+          ]
+        },
+        {
+          "sourceName": "Alex Joers",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-ba01-representative-to-the-assembly-district-81-sldl-81-candidate-alex-joers"
+          ],
+          "matchedNames": [
+            " Alex Joers"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 82",
+      "division": "ocd-division/country:us/state:wi/sldl:82",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-82"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bryson Reyes",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-82:bryson-reyes"
+          ],
+          "matchedNames": [
+            "Bryson Reyes"
+          ]
+        },
+        {
+          "sourceName": "Rico Camacho",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-82:rico-camacho"
+          ],
+          "matchedNames": [
+            "Rico Camacho"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 83",
+      "division": "ocd-division/country:us/state:wi/sldl:83",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-83"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Dave Maxey",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-83:7e8b29145531aec9"
+          ],
+          "matchedNames": [
+            " Dave Maxey"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 84",
+      "division": "ocd-division/country:us/state:wi/sldl:84",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-84"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Chuck Wichgers",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-84:0dfcf5c6c0c11779"
+          ],
+          "matchedNames": [
+            " Chuck Wichgers"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 85",
+      "division": "ocd-division/country:us/state:wi/sldl:85",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-85"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Patrick Snyder",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-85:patrick-snyder"
+          ],
+          "matchedNames": [
+            "Patrick Snyder"
+          ]
+        },
+        {
+          "sourceName": "John Kroll",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-85:john-kroll"
+          ],
+          "matchedNames": [
+            "John Kroll"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 86",
+      "division": "ocd-division/country:us/state:wi/sldl:86",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-86"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "John Spiros",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-86:09a9821ee8e43d64"
+          ],
+          "matchedNames": [
+            " John Spiros"
+          ]
+        },
+        {
+          "sourceName": "Andy Wuethrich",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-86:58d7b47a7039808d"
+          ],
+          "matchedNames": [
+            " Andy Wuethrich"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 87",
+      "division": "ocd-division/country:us/state:wi/sldl:87",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-87"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Brent Jacobson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-87:400af2915812cb0a"
+          ],
+          "matchedNames": [
+            " Brent Jacobson"
+          ]
+        },
+        {
+          "sourceName": "Bob Look",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-87:b3d3531703b62b3f"
+          ],
+          "matchedNames": [
+            " Bob Look"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 88",
+      "division": "ocd-division/country:us/state:wi/sldl:88",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-88"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Ben Franklin",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-88:597caf92e08328f8"
+          ],
+          "matchedNames": [
+            " Ben Franklin"
+          ]
+        },
+        {
+          "sourceName": "Brandy Tollefson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-88:a446e6e928a6429d"
+          ],
+          "matchedNames": [
+            " Brandy Tollefson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 89",
+      "division": "ocd-division/country:us/state:wi/sldl:89",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-89"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bobby R. Lindsey",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-89:8a563d9256f02650"
+          ],
+          "matchedNames": [
+            " Bobby R. Lindsey"
+          ]
+        },
+        {
+          "sourceName": "Ryan Spaude",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-89:cdb7913d197576bd"
+          ],
+          "matchedNames": [
+            " Ryan Spaude"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 90",
+      "division": "ocd-division/country:us/state:wi/sldl:90",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-90"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jessica Henderson",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-90:485bdb83e5ad3800"
+          ],
+          "matchedNames": [
+            " Jessica Henderson"
+          ]
+        },
+        {
+          "sourceName": "Amaad Rivera-Wagner",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-90:73fe2278fb08d979"
+          ],
+          "matchedNames": [
+            " Amaad Rivera-Wagner"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 91",
+      "division": "ocd-division/country:us/state:wi/sldl:91",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-91"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Bruce Stabenow",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-91:bruce-stabenow"
+          ],
+          "matchedNames": [
+            "Bruce Stabenow"
+          ]
+        },
+        {
+          "sourceName": "Jodi Emerson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-91:jodi-emerson"
+          ],
+          "matchedNames": [
+            "Jodi Emerson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 92",
+      "division": "ocd-division/country:us/state:wi/sldl:92",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-92"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Clint Moses",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-92:a1434a3f29169522"
+          ],
+          "matchedNames": [
+            " Clint Moses"
+          ]
+        },
+        {
+          "sourceName": "Jeremiah Fredrickson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-92:88f392c6ed2741ec"
+          ],
+          "matchedNames": [
+            " Jeremiah Fredrickson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 93",
+      "division": "ocd-division/country:us/state:wi/sldl:93",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-93"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Michael Ayala",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-93:michael-ayala"
+          ],
+          "matchedNames": [
+            "Michael Ayala"
+          ]
+        },
+        {
+          "sourceName": "Christian Phelps",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-93:christian-phelps"
+          ],
+          "matchedNames": [
+            "Christian Phelps"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 94",
+      "division": "ocd-division/country:us/state:wi/sldl:94",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-94"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Keith Purnell",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-94:87c875c057927bf3"
+          ],
+          "matchedNames": [
+            " Keith Purnell"
+          ]
+        },
+        {
+          "sourceName": "Steve Doyle",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-94:dabb5a536207ff96"
+          ],
+          "matchedNames": [
+            " Steve Doyle"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 95",
+      "division": "ocd-division/country:us/state:wi/sldl:95",
+      "sourceCandidateCount": 3,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-95"
+      ],
+      "matchedSourceCandidates": 3,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Paul Michael Weber",
+          "sourcePartyLabel": "Independent",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-95:c43a1d8152053f14"
+          ],
+          "matchedNames": [
+            " Paul Michael Weber"
+          ]
+        },
+        {
+          "sourceName": "Cedric Schnitzler",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-95:31cd1f5aa9b3780b"
+          ],
+          "matchedNames": [
+            " Cedric Schnitzler"
+          ]
+        },
+        {
+          "sourceName": "Jill Billings",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-95:5c050ccb5c906f12"
+          ],
+          "matchedNames": [
+            " Jill Billings"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 96",
+      "division": "ocd-division/country:us/state:wi/sldl:96",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-96"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jim Green",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-96:01eda5fe9fbe5dd0"
+          ],
+          "matchedNames": [
+            " Jim Green"
+          ]
+        },
+        {
+          "sourceName": "Tara Johnson",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-96:9b7c174e2ed60d1d"
+          ],
+          "matchedNames": [
+            " Tara Johnson"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 97",
+      "division": "ocd-division/country:us/state:wi/sldl:97",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-97"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Cindi Duchow",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-97:352f66415e577d99"
+          ],
+          "matchedNames": [
+            " Cindi Duchow"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 98",
+      "division": "ocd-division/country:us/state:wi/sldl:98",
+      "sourceCandidateCount": 2,
+      "currentContestIds": [
+        "wi-cx-2026-general-assembly-98"
+      ],
+      "matchedSourceCandidates": 2,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Jim Piwowarczyk",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-98:jim-piwowarczyk"
+          ],
+          "matchedNames": [
+            "Jim Piwowarczyk"
+          ]
+        },
+        {
+          "sourceName": "Matt Philibert",
+          "sourcePartyLabel": "Democratic",
+          "matchedCandidateIds": [
+            "wi-cx-2026-general-assembly-98:matt-philibert"
+          ],
+          "matchedNames": [
+            "Matt Philibert"
+          ]
+        }
+      ]
+    },
+    {
+      "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 99",
+      "division": "ocd-division/country:us/state:wi/sldl:99",
+      "sourceCandidateCount": 1,
+      "currentContestIds": [
+        "ba01-pacific-wi-representative-to-the-assembly-district-99"
+      ],
+      "matchedSourceCandidates": 1,
+      "missingSourceCandidates": [],
+      "partyDifferences": [],
+      "extraCurrentCandidates": [],
+      "sourceCandidateMatches": [
+        {
+          "sourceName": "Barbara Dittrich",
+          "sourcePartyLabel": "Republican",
+          "matchedCandidateIds": [
+            "ba01-pacific-wi-representative-to-the-assembly-district-99:e8726f3656f417d4"
+          ],
+          "matchedNames": [
+            " Barbara Dittrich"
+          ]
+        }
+      ]
+    }
+  ],
+  "sourceFile": "sources/wec-general-roster.source.txt",
+  "parsedSourceFieldsFile": "wec-parsed-office-fields.json",
+  "reviewedMergedPayloadSha256": "407cfd1efda2e8fc62b3b008dc123fe89b9539d4909ed9003fc492ceb3981790",
+  "reviewedMergedPayloadFile": null,
+  "payloadArchiveNote": "The merged payload is not copied into this review directory; it was a read-only local replay of the named prior version and the fingerprinted sibling install input. This directory contains no ballot installation rows.",
+  "reviewedInstallInput": {
+    "file": "../ballot-additions/ballot-input/wi.json",
+    "sha256": "c4c1a17473849f551e30e88bc34d04e9f4d796429bd9347e38fe5348a00d69e9",
+    "raceAdditions": 14,
+    "candidateAdditions": 28
+  },
+  "priorPublishedVersion": {
+    "contractId": "ballot-contests:WI",
+    "versionId": "official-ballot-authorities:c49c81a3f73870d0e5f4cceb24d13622",
+    "reviewedExportSha256": "cb1d96619acaec282f4621287022f1b5b330cf6205801d532c7f2182379a5bbe"
+  },
+  "mergeValidation": {
+    "retrievalSucceeded": true,
+    "missingRequiredFields": [],
+    "violations": [],
+    "BallotContestMergeCheckAuthority": true,
+    "performedAt": "2026-11-02T23:04:31.940Z"
+  }
+}

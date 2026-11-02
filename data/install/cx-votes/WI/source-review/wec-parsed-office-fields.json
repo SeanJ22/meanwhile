@@ -1,0 +1,2454 @@
+[
+  {
+    "office": "GOVERNOR",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Tom Tiffany / David Varnam",
+        "partyLabel": "Republican",
+        "quote": "1 0104212 Tom Tiffany / David Varnam Republican"
+      },
+      {
+        "name": "David Crowley / Sarah Godlewski",
+        "partyLabel": "Democratic",
+        "quote": "2 0105751 David Crowley / Sarah Godlewski Democratic"
+      }
+    ],
+    "quote": "Office : GOVERNOR Incumbent: Tony Evers (Filed Notification of Noncandidacy) \n\n1 0104212 Tom Tiffany / David Varnam Republican 2 0105751 David Crowley / Sarah Godlewski Democratic \n\nTotal Number of GOVERNOR Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104212 Tom Tiffany / David Varnam Republican 2 0105751 David Crowley / Sarah Godlewski Democratic"
+  },
+  {
+    "office": "ATTORNEY GENERAL",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Eric Toney",
+        "partyLabel": "Republican",
+        "quote": "1 0106408 Eric Toney Republican"
+      },
+      {
+        "name": "Josh Kaul",
+        "partyLabel": "Democratic",
+        "quote": "2 0105879 Josh Kaul Democratic"
+      }
+    ],
+    "quote": "Office : ATTORNEY GENERAL Incumbent: Josh Kaul \n\n1 0106408 Eric Toney Republican 2 0105879 Josh Kaul Democratic \n\nTotal Number of ATTORNEY GENERAL Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106408 Eric Toney Republican 2 0105879 Josh Kaul Democratic"
+  },
+  {
+    "office": "SECRETARY OF STATE",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Jay Schroeder",
+        "partyLabel": "Republican",
+        "quote": "1 0106320 Jay Schroeder Republican"
+      },
+      {
+        "name": "JoCasta Zamarripa",
+        "partyLabel": "Democratic",
+        "quote": "2 0104989 JoCasta Zamarripa Democratic"
+      },
+      {
+        "name": "Pete Karas",
+        "partyLabel": "Wisconsin Green",
+        "quote": "3 0105008 Pete Karas Wisconsin Green"
+      }
+    ],
+    "quote": "Office : SECRETARY OF STATE Incumbent: Sarah Godlewski (Filed Notification of Noncandidacy) \n\n1 0106320 Jay Schroeder Republican 2 0104989 JoCasta Zamarripa Democratic 3 0105008 Pete Karas Wisconsin Green \n\nTotal Number of SECRETARY OF STATE Candidates :3",
+    "parseComplete": true,
+    "candidateText": "1 0106320 Jay Schroeder Republican 2 0104989 JoCasta Zamarripa Democratic 3 0105008 Pete Karas Wisconsin Green"
+  },
+  {
+    "office": "STATE TREASURER",
+    "count": 2,
+    "rows": [
+      {
+        "name": "John S. Leiber",
+        "partyLabel": "Republican",
+        "quote": "1 0106014 John S. Leiber Republican"
+      },
+      {
+        "name": "Yee Leng Xiong",
+        "partyLabel": "Democratic",
+        "quote": "2 0106771 Yee Leng Xiong Democratic"
+      }
+    ],
+    "quote": "Office : STATE TREASURER Incumbent: John S. Leiber \n\n1 0106014 John S. Leiber Republican 2 0106771 Yee Leng Xiong Democratic \n\nTotal Number of STATE TREASURER Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106014 John S. Leiber Republican 2 0106771 Yee Leng Xiong Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 1",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bryan Steil",
+        "partyLabel": "Republican",
+        "quote": "1 Bryan Steil Republican"
+      },
+      {
+        "name": "Mitchell Berman",
+        "partyLabel": "Democratic",
+        "quote": "2 Mitchell Berman Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 1 Incumbent: Bryan Steil \n\n1 Bryan Steil Republican 2 Mitchell Berman Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 1 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Bryan Steil Republican 2 Mitchell Berman Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 2",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Mark Pocan",
+        "partyLabel": "Democratic",
+        "quote": "1 Mark Pocan Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 2 Incumbent: Mark Pocan \n\n1 Mark Pocan Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 2 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 Mark Pocan Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 3",
+    "count": 4,
+    "rows": [
+      {
+        "name": "Alexander Valiensi Kent",
+        "partyLabel": "Independent",
+        "quote": "3 Alexander Valiensi Kent Independent"
+      },
+      {
+        "name": "Rustin Provance",
+        "partyLabel": "Independent",
+        "quote": "4 0200878 Rustin Provance Independent"
+      },
+      {
+        "name": "Derrick Van Orden",
+        "partyLabel": "Republican",
+        "quote": "1 Derrick Van Orden Republican"
+      },
+      {
+        "name": "Rebecca Cooke",
+        "partyLabel": "Democratic",
+        "quote": "2 Rebecca Cooke Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 3 Incumbent: Derrick Van Orden \n\n3 Alexander Valiensi Kent Independent 4 0200878 Rustin Provance Independent 1 Derrick Van Orden Republican 2 Rebecca Cooke Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 3 Candidates :4",
+    "parseComplete": true,
+    "candidateText": "3 Alexander Valiensi Kent Independent 4 0200878 Rustin Provance Independent 1 Derrick Van Orden Republican 2 Rebecca Cooke Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 4",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Arthur Burks",
+        "partyLabel": "Independent",
+        "quote": "3 Arthur Burks Independent"
+      },
+      {
+        "name": "Tim Rogers",
+        "partyLabel": "Republican",
+        "quote": "1 Tim Rogers Republican"
+      },
+      {
+        "name": "Gwen Moore",
+        "partyLabel": "Democratic",
+        "quote": "2 Gwen Moore Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 4 Incumbent: Gwen S. Moore \n\n3 Arthur Burks Independent 1 Tim Rogers Republican 2 Gwen Moore Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 4 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "3 Arthur Burks Independent 1 Tim Rogers Republican 2 Gwen Moore Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 5",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Scott Fitzgerald",
+        "partyLabel": "Republican",
+        "quote": "1 Scott Fitzgerald Republican"
+      },
+      {
+        "name": "Andrew Beck",
+        "partyLabel": "Democratic",
+        "quote": "2 Andrew Beck Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 5 Incumbent: Scott Fitzgerald \n\n1 Scott Fitzgerald Republican 2 Andrew Beck Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 5 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Scott Fitzgerald Republican 2 Andrew Beck Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 6",
+    "count": 5,
+    "rows": [
+      {
+        "name": "Elizabeth Anne Fitzgibbon",
+        "partyLabel": "Independent",
+        "quote": "4 Elizabeth Anne Fitzgibbon Independent"
+      },
+      {
+        "name": "Mike Thurow",
+        "partyLabel": "Independent",
+        "quote": "5 Mike Thurow Independent"
+      },
+      {
+        "name": "Glenn Grothman",
+        "partyLabel": "Republican",
+        "quote": "1 Glenn Grothman Republican"
+      },
+      {
+        "name": "Brad Smith",
+        "partyLabel": "Democratic",
+        "quote": "2 Brad Smith Democratic"
+      },
+      {
+        "name": "Matthew Arndt",
+        "partyLabel": "Wisconsin Green",
+        "quote": "3 Matthew Arndt Wisconsin Green"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 6 Incumbent: Glenn Grothman \n\n4 Elizabeth Anne Fitzgibbon Independent 5 Mike Thurow Independent 1 Glenn Grothman Republican 2 Brad Smith Democratic 3 Matthew Arndt Wisconsin Green \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 6 Candidates :5",
+    "parseComplete": true,
+    "candidateText": "4 Elizabeth Anne Fitzgibbon Independent 5 Mike Thurow Independent 1 Glenn Grothman Republican 2 Brad Smith Democratic 3 Matthew Arndt Wisconsin Green"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 7",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Michael Alfonso",
+        "partyLabel": "Republican",
+        "quote": "1 Michael Alfonso Republican"
+      },
+      {
+        "name": "Fred Clark",
+        "partyLabel": "Democratic",
+        "quote": "2 Fred Clark Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 7 Incumbent: Tom Tiffany \n\n1 Michael Alfonso Republican 2 Fred Clark Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 7 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Michael Alfonso Republican 2 Fred Clark Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE IN CONGRESS DISTRICT 8",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Tony Wied",
+        "partyLabel": "Republican",
+        "quote": "1 Tony Wied Republican"
+      },
+      {
+        "name": "Rick Crosson",
+        "partyLabel": "Democratic",
+        "quote": "2 Rick Crosson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE IN CONGRESS DISTRICT 8 Incumbent: Tony Wied \n\n1 Tony Wied Republican 2 Rick Crosson Democratic \n\nTotal Number of REPRESENTATIVE IN CONGRESS DISTRICT 8 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Tony Wied Republican 2 Rick Crosson Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 1",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mark Becker",
+        "partyLabel": "Independent",
+        "quote": "2 01072841 Mark Becker Independent"
+      },
+      {
+        "name": "Nic Cravillion",
+        "partyLabel": "Republican",
+        "quote": "1 01072872 Nic Cravillion Republican"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 1 Incumbent: André Jacque (Filed Notification of Noncandidacy) \n\n2 01072841 Mark Becker Independent 1 01072872 Nic Cravillion Republican \n\nTotal Number of STATE SENATOR DISTRICT 1 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "2 01072841 Mark Becker Independent 1 01072872 Nic Cravillion Republican"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 3",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Tim Carpenter",
+        "partyLabel": "Democratic",
+        "quote": "1 0100881 Tim Carpenter Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 3 Incumbent: Tim Carpenter \n\n1 0100881 Tim Carpenter Democratic \n\nTotal Number of STATE SENATOR DISTRICT 3 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0100881 Tim Carpenter Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 5",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mike Roberts",
+        "partyLabel": "Republican",
+        "quote": "1 01072671 Mike Roberts Republican"
+      },
+      {
+        "name": "Robyn Vining",
+        "partyLabel": "Democratic",
+        "quote": "2 0106017 Robyn Vining Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 5 Incumbent: Rob Hutton (Filed Notification of Noncandidacy) \n\n1 01072671 Mike Roberts Republican 2 0106017 Robyn Vining Democratic \n\nTotal Number of STATE SENATOR DISTRICT 5 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072671 Mike Roberts Republican 2 0106017 Robyn Vining Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 7",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mike Moeller",
+        "partyLabel": "Republican",
+        "quote": "1 0106839 Mike Moeller Republican"
+      },
+      {
+        "name": "Chris J. Larson",
+        "partyLabel": "Democratic",
+        "quote": "2 0104991 Chris J. Larson Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 7 Incumbent: Chris J. Larson \n\n1 0106839 Mike Moeller Republican 2 0104991 Chris J. Larson Democratic \n\nTotal Number of STATE SENATOR DISTRICT 7 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106839 Mike Moeller Republican 2 0104991 Chris J. Larson Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 9",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Christian Ellis",
+        "partyLabel": "Independent",
+        "quote": "2 01072852 Christian Ellis Independent"
+      },
+      {
+        "name": "Amy Binsfeld",
+        "partyLabel": "Republican",
+        "quote": "1 0106528 Amy Binsfeld Republican"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 9 Incumbent: Devin LeMahieu (Filed Notification of Noncandidacy) \n\n2 01072852 Christian Ellis Independent 1 0106528 Amy Binsfeld Republican \n\nTotal Number of STATE SENATOR DISTRICT 9 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "2 01072852 Christian Ellis Independent 1 0106528 Amy Binsfeld Republican"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 11",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Ellen Schutt",
+        "partyLabel": "Republican",
+        "quote": "1 0106464 Ellen Schutt Republican"
+      },
+      {
+        "name": "Adam Duda",
+        "partyLabel": "Democratic",
+        "quote": "2 01072898 Adam Duda Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 11 Incumbent: Steve Nass (Filed Notification of Noncandidacy) \n\n1 0106464 Ellen Schutt Republican 2 01072898 Adam Duda Democratic \n\nTotal Number of STATE SENATOR DISTRICT 11 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106464 Ellen Schutt Republican 2 01072898 Adam Duda Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 13",
+    "count": 2,
+    "rows": [
+      {
+        "name": "John Jagler",
+        "partyLabel": "Republican",
+        "quote": "1 0105237 John Jagler Republican"
+      },
+      {
+        "name": "Sasha Ripley",
+        "partyLabel": "Democratic",
+        "quote": "2 01072497 Sasha Ripley Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 13 Incumbent: John Jagler \n\n1 0105237 John Jagler Republican 2 01072497 Sasha Ripley Democratic \n\nTotal Number of STATE SENATOR DISTRICT 13 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105237 John Jagler Republican 2 01072497 Sasha Ripley Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 15",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Christopher Dean",
+        "partyLabel": "Serving People Not Parties",
+        "quote": "3 01072760 Christopher Dean Serving People Not Parties"
+      },
+      {
+        "name": "Scott Fleming",
+        "partyLabel": "Republican",
+        "quote": "1 01072850 Scott Fleming Republican"
+      },
+      {
+        "name": "Mark Spreitzer",
+        "partyLabel": "Democratic",
+        "quote": "2 0105472 Mark Spreitzer Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 15 Incumbent: Mark Spreitzer \n\n3 01072760 Christopher Dean Serving People Not Parties 1 01072850 Scott Fleming Republican 2 0105472 Mark Spreitzer Democratic \n\nTotal Number of STATE SENATOR DISTRICT 15 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "3 01072760 Christopher Dean Serving People Not Parties 1 01072850 Scott Fleming Republican 2 0105472 Mark Spreitzer Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 17",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Howard Marklein",
+        "partyLabel": "Republican",
+        "quote": "1 0104815 Howard Marklein Republican"
+      },
+      {
+        "name": "Jenna Jacobson",
+        "partyLabel": "Democratic",
+        "quote": "2 0106541 Jenna Jacobson Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 17 Incumbent: Howard Marklein \n\n1 0104815 Howard Marklein Republican 2 0106541 Jenna Jacobson Democratic \n\nTotal Number of STATE SENATOR DISTRICT 17 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104815 Howard Marklein Republican 2 0106541 Jenna Jacobson Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 19",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Rachael Ann Cabral-Guevara",
+        "partyLabel": "Republican",
+        "quote": "1 0106157 Rachael Ann Cabral-Guevara Republican"
+      },
+      {
+        "name": "Emily Daniels Tseffos",
+        "partyLabel": "Democratic",
+        "quote": "2 0106699 Emily Daniels Tseffos Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 19 Incumbent: Rachael Cabral-Guevara \n\n1 0106157 Rachael Ann Cabral-Guevara Republican 2 0106699 Emily Daniels Tseffos Democratic \n\nTotal Number of STATE SENATOR DISTRICT 19 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106157 Rachael Ann Cabral-Guevara Republican 2 0106699 Emily Daniels Tseffos Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 21",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jim Croft",
+        "partyLabel": "Republican",
+        "quote": "1 01072846 Jim Croft Republican"
+      },
+      {
+        "name": "Trevor Jung",
+        "partyLabel": "Democratic",
+        "quote": "2 01072516 Trevor Jung Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 21 Incumbent: Van H. Wanggaard (Filed Notification of Noncandidacy) \n\n1 01072846 Jim Croft Republican 2 01072516 Trevor Jung Democratic \n\nTotal Number of STATE SENATOR DISTRICT 21 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072846 Jim Croft Republican 2 01072516 Trevor Jung Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 23",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Romaine Robert Quinn",
+        "partyLabel": "Republican",
+        "quote": "1 0105505 Romaine Robert Quinn Republican"
+      },
+      {
+        "name": "Jeff Foster",
+        "partyLabel": "Democratic",
+        "quote": "2 0106870 Jeff Foster Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 23 Incumbent: Jesse James (Filed Notification of Noncandidacy) \n\n1 0105505 Romaine Robert Quinn Republican 2 0106870 Jeff Foster Democratic \n\nTotal Number of STATE SENATOR DISTRICT 23 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105505 Romaine Robert Quinn Republican 2 0106870 Jeff Foster Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 25",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Erik Severson",
+        "partyLabel": "Republican",
+        "quote": "1 0104915 Erik Severson Republican"
+      },
+      {
+        "name": "Charly Ray",
+        "partyLabel": "Democratic",
+        "quote": "2 01072579 Charly Ray Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 25 Incumbent: Romaine Robert Quinn (Filed Notification of Noncandidacy) \n\n1 0104915 Erik Severson Republican 2 01072579 Charly Ray Democratic \n\nTotal Number of STATE SENATOR DISTRICT 25 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104915 Erik Severson Republican 2 01072579 Charly Ray Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 27",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Dianne Hesselbein",
+        "partyLabel": "Democratic",
+        "quote": "1 0104973 Dianne Hesselbein Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 27 Incumbent: Dianne H. Hesselbein \n\n1 0104973 Dianne Hesselbein Democratic \n\nTotal Number of STATE SENATOR DISTRICT 27 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0104973 Dianne Hesselbein Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 29",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Cory Tomczyk",
+        "partyLabel": "Republican",
+        "quote": "1 0106552 Cory Tomczyk Republican"
+      },
+      {
+        "name": "Gillian Battino",
+        "partyLabel": "Democratic",
+        "quote": "2 0106491 Gillian Battino Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 29 Incumbent: Cory Tomczyk \n\n1 0106552 Cory Tomczyk Republican 2 0106491 Gillian Battino Democratic \n\nTotal Number of STATE SENATOR DISTRICT 29 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106552 Cory Tomczyk Republican 2 0106491 Gillian Battino Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 31",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Michele Magadance Skinner",
+        "partyLabel": "Republican",
+        "quote": "1 0106818 Michele Magadance Skinner Republican"
+      },
+      {
+        "name": "Jeff Smith",
+        "partyLabel": "Democratic",
+        "quote": "2 0104251 Jeff Smith Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 31 Incumbent: Jeff Smith \n\n1 0106818 Michele Magadance Skinner Republican 2 0104251 Jeff Smith Democratic \n\nTotal Number of STATE SENATOR DISTRICT 31 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106818 Michele Magadance Skinner Republican 2 0104251 Jeff Smith Democratic"
+  },
+  {
+    "office": "STATE SENATOR DISTRICT 33",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Chris Kapenga",
+        "partyLabel": "Republican",
+        "quote": "1 0104883 Chris Kapenga Republican"
+      },
+      {
+        "name": "Mike Van Someren",
+        "partyLabel": "Democratic",
+        "quote": "2 0106920 Mike Van Someren Democratic"
+      }
+    ],
+    "quote": "Office : STATE SENATOR DISTRICT 33 Incumbent: Chris Kapenga \n\n1 0104883 Chris Kapenga Republican 2 0106920 Mike Van Someren Democratic \n\nTotal Number of STATE SENATOR DISTRICT 33 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104883 Chris Kapenga Republican 2 0106920 Mike Van Someren Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 1",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Joel Kitchens",
+        "partyLabel": "Republican",
+        "quote": "1 0105512 Joel Kitchens Republican"
+      },
+      {
+        "name": "Renee A. Paplham",
+        "partyLabel": "Democratic",
+        "quote": "2 0106756 Renee A. Paplham Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 1 Incumbent: Joel Kitchens \n\n1 0105512 Joel Kitchens Republican 2 0106756 Renee A. Paplham Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 1 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105512 Joel Kitchens Republican 2 0106756 Renee A. Paplham Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 2",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Shae Sortwell",
+        "partyLabel": "Republican",
+        "quote": "1 0105544 Shae Sortwell Republican"
+      },
+      {
+        "name": "Alicia Saunders",
+        "partyLabel": "Democratic",
+        "quote": "2 0106767 Alicia Saunders Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 2 Incumbent: Shae Sortwell \n\n1 0105544 Shae Sortwell Republican 2 0106767 Alicia Saunders Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 2 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105544 Shae Sortwell Republican 2 0106767 Alicia Saunders Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 3",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Ron Tusler",
+        "partyLabel": "Republican",
+        "quote": "1 0105788 Ron Tusler Republican"
+      },
+      {
+        "name": "Michael J. Goodwin",
+        "partyLabel": "Democratic",
+        "quote": "2 01072995 Michael J. Goodwin Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 3 Incumbent: Ron Tusler \n\n1 0105788 Ron Tusler Republican 2 01072995 Michael J. Goodwin Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 3 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105788 Ron Tusler Republican 2 01072995 Michael J. Goodwin Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 4",
+    "count": 2,
+    "rows": [
+      {
+        "name": "David Steffen",
+        "partyLabel": "Republican",
+        "quote": "1 0105539 David Steffen Republican"
+      },
+      {
+        "name": "Alexia Unertl",
+        "partyLabel": "Democratic",
+        "quote": "2 0106864 Alexia Unertl Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 4 Incumbent: David Steffen \n\n1 0105539 David Steffen Republican 2 0106864 Alexia Unertl Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 4 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105539 David Steffen Republican 2 0106864 Alexia Unertl Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 5",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Joy Goeben",
+        "partyLabel": "Republican",
+        "quote": "1 0106489 Joy Goeben Republican"
+      },
+      {
+        "name": "Justin Schumacher",
+        "partyLabel": "Democratic",
+        "quote": "2 01072912 Justin Schumacher Democratic"
+      },
+      {
+        "name": "David Schupbach",
+        "partyLabel": "Wisconsin Green",
+        "quote": "3 01072605 David Schupbach Wisconsin Green"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 5 Incumbent: Joy Goeben \n\n1 0106489 Joy Goeben Republican 2 01072912 Justin Schumacher Democratic 3 01072605 David Schupbach Wisconsin Green \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 5 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "1 0106489 Joy Goeben Republican 2 01072912 Justin Schumacher Democratic 3 01072605 David Schupbach Wisconsin Green"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 6",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Elijah Behnke",
+        "partyLabel": "Republican",
+        "quote": "1 0106393 Elijah Behnke Republican"
+      },
+      {
+        "name": "Shirley Hinze",
+        "partyLabel": "Democratic",
+        "quote": "2 0106847 Shirley Hinze Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 6 Incumbent: Elijah Behnke \n\n1 0106393 Elijah Behnke Republican 2 0106847 Shirley Hinze Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 6 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106393 Elijah Behnke Republican 2 0106847 Shirley Hinze Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 7",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Lee Whiting",
+        "partyLabel": "Republican",
+        "quote": "1 0106778 Lee Whiting Republican"
+      },
+      {
+        "name": "Karen Kirsch",
+        "partyLabel": "Democratic",
+        "quote": "2 0106810 Karen Kirsch Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 7 Incumbent: Karen Kirsch \n\n1 0106778 Lee Whiting Republican 2 0106810 Karen Kirsch Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 7 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106778 Lee Whiting Republican 2 0106810 Karen Kirsch Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 8",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Angel Sanchez",
+        "partyLabel": "Republican",
+        "quote": "1 0105023 Angel Sanchez Republican"
+      },
+      {
+        "name": "Ismael Luna",
+        "partyLabel": "Democratic",
+        "quote": "2 01072750 Ismael Luna Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 8 Incumbent: Sylvia Ortiz-Velez \n\n1 0105023 Angel Sanchez Republican 2 01072750 Ismael Luna Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 8 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105023 Angel Sanchez Republican 2 01072750 Ismael Luna Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 9",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Sam Guerrero",
+        "partyLabel": "Republican",
+        "quote": "1 Sam Guerrero Republican"
+      },
+      {
+        "name": "Priscilla A. Prado",
+        "partyLabel": "Democratic",
+        "quote": "2 0106782 Priscilla A. Prado Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 9 Incumbent: PRISCILLA A. PRADO \n\n1 Sam Guerrero Republican 2 0106782 Priscilla A. Prado Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 9 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Sam Guerrero Republican 2 0106782 Priscilla A. Prado Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 10",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Darrin Madison",
+        "partyLabel": "Democratic",
+        "quote": "1 0106582 Darrin Madison Democratic"
+      },
+      {
+        "name": "Robert Longwell-Grice",
+        "partyLabel": "Wisconsin Green",
+        "quote": "2 01072561 Robert Longwell-Grice Wisconsin Green"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 10 Incumbent: Darrin Madison \n\n1 0106582 Darrin Madison Democratic 2 01072561 Robert Longwell-Grice Wisconsin Green \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 10 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106582 Darrin Madison Democratic 2 01072561 Robert Longwell-Grice Wisconsin Green"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 11",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Shandowlyon Reaves",
+        "partyLabel": "Republican",
+        "quote": "1 01072864 Shandowlyon Reaves Republican"
+      },
+      {
+        "name": "Sequanna Taylor",
+        "partyLabel": "Democratic",
+        "quote": "2 0106787 Sequanna Taylor Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 11 Incumbent: Sequanna Taylor \n\n1 01072864 Shandowlyon Reaves Republican 2 0106787 Sequanna Taylor Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 11 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072864 Shandowlyon Reaves Republican 2 0106787 Sequanna Taylor Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 12",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Russell Antonio Goodwin, Sr.",
+        "partyLabel": "Democratic",
+        "quote": "1 0106827 Russell Antonio Goodwin, Sr. Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 12 Incumbent: Russell Antonio Goodwin, Sr. \n\n1 0106827 Russell Antonio Goodwin, Sr. Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 12 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0106827 Russell Antonio Goodwin, Sr. Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 13",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mike Morgan",
+        "partyLabel": "Republican",
+        "quote": "1 01072891 Mike Morgan Republican"
+      },
+      {
+        "name": "Amy Zimmerman",
+        "partyLabel": "Democratic",
+        "quote": "2 0106928 Amy Zimmerman Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 13 Incumbent: Robyn Vining (Filed Notification of Noncandidacy) \n\n1 01072891 Mike Morgan Republican 2 0106928 Amy Zimmerman Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 13 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072891 Mike Morgan Republican 2 0106928 Amy Zimmerman Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 14",
+    "count": 2,
+    "rows": [
+      {
+        "name": "AmyRose Murphy",
+        "partyLabel": "Republican",
+        "quote": "1 01072935 AmyRose Murphy Republican"
+      },
+      {
+        "name": "Angelito Tenorio",
+        "partyLabel": "Democratic",
+        "quote": "2 0106424 Angelito Tenorio Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 14 Incumbent: Angelito Tenorio \n\n1 01072935 AmyRose Murphy Republican 2 0106424 Angelito Tenorio Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 14 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072935 AmyRose Murphy Republican 2 0106424 Angelito Tenorio Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 15",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Adam Neylon",
+        "partyLabel": "Republican",
+        "quote": "1 0105423 Adam Neylon Republican"
+      },
+      {
+        "name": "Stephen Tryon",
+        "partyLabel": "Democratic",
+        "quote": "2 01072608 Stephen Tryon Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 15 Incumbent: Adam Neylon \n\n1 0105423 Adam Neylon Republican 2 01072608 Stephen Tryon Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 15 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105423 Adam Neylon Republican 2 01072608 Stephen Tryon Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 16",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Alciro Deacon",
+        "partyLabel": "Republican",
+        "quote": "1 0106331 Alciro Deacon Republican"
+      },
+      {
+        "name": "Kalan Haywood",
+        "partyLabel": "Democratic",
+        "quote": "2 0106079 Kalan Haywood Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 16 Incumbent: Kalan Haywood \n\n1 0106331 Alciro Deacon Republican 2 0106079 Kalan Haywood Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 16 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106331 Alciro Deacon Republican 2 0106079 Kalan Haywood Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 17",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Charlene Abughrin",
+        "partyLabel": "Republican",
+        "quote": "1 Charlene Abughrin Republican"
+      },
+      {
+        "name": "Supreme Moore Omokunde",
+        "partyLabel": "Democratic",
+        "quote": "2 0106075 Supreme Moore Omokunde Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 17 Incumbent: Supreme Moore Omokunde \n\n1 Charlene Abughrin Republican 2 0106075 Supreme Moore Omokunde Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 17 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Charlene Abughrin Republican 2 0106075 Supreme Moore Omokunde Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 18",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Joel Richmond",
+        "partyLabel": "Republican",
+        "quote": "1 01072944 Joel Richmond Republican"
+      },
+      {
+        "name": "Margaret Arney",
+        "partyLabel": "Democratic",
+        "quote": "2 0106685 Margaret Arney Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 18 Incumbent: Margaret Arney \n\n1 01072944 Joel Richmond Republican 2 0106685 Margaret Arney Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 18 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072944 Joel Richmond Republican 2 0106685 Margaret Arney Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 19",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Yasmine B. Outlaw",
+        "partyLabel": "Republican",
+        "quote": "1 01072836 Yasmine B. Outlaw Republican"
+      },
+      {
+        "name": "Ryan Clancy",
+        "partyLabel": "Democratic",
+        "quote": "2 0106550 Ryan Clancy Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 19 Incumbent: Ryan Clancy \n\n1 01072836 Yasmine B. Outlaw Republican 2 0106550 Ryan Clancy Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 19 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072836 Yasmine B. Outlaw Republican 2 0106550 Ryan Clancy Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 20",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Kyle Cleary",
+        "partyLabel": "Republican",
+        "quote": "1 01072938 Kyle Cleary Republican"
+      },
+      {
+        "name": "Christine M. Sinicki",
+        "partyLabel": "Democratic",
+        "quote": "2 0103687 Christine M. Sinicki Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 20 Incumbent: Christine M. Sinicki \n\n1 01072938 Kyle Cleary Republican 2 0103687 Christine M. Sinicki Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 20 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072938 Kyle Cleary Republican 2 0103687 Christine M. Sinicki Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 21",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Dylan Pfaffenbach",
+        "partyLabel": "Republican",
+        "quote": "1 01072877 Dylan Pfaffenbach Republican"
+      },
+      {
+        "name": "Daniel J. Bukiewicz",
+        "partyLabel": "Democratic",
+        "quote": "2 01072686 Daniel J. Bukiewicz Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 21 Incumbent: Jessie Rodriguez (Filed Notification of Noncandidacy) \n\n1 01072877 Dylan Pfaffenbach Republican 2 01072686 Daniel J. Bukiewicz Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 21 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072877 Dylan Pfaffenbach Republican 2 01072686 Daniel J. Bukiewicz Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 22",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Paul Melotik",
+        "partyLabel": "Republican",
+        "quote": "1 0104003 Paul Melotik Republican"
+      },
+      {
+        "name": "Dana Glasstein",
+        "partyLabel": "Democratic",
+        "quote": "2 0106795 Dana Glasstein Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 22 Incumbent: Paul Melotik \n\n1 0104003 Paul Melotik Republican 2 0106795 Dana Glasstein Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 22 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104003 Paul Melotik Republican 2 0106795 Dana Glasstein Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 23",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Aleaner Pabonnie",
+        "partyLabel": "Republican",
+        "quote": "1 01072837 Aleaner Pabonnie Republican"
+      },
+      {
+        "name": "Deb Andraca",
+        "partyLabel": "Democratic",
+        "quote": "2 0106162 Deb Andraca Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 23 Incumbent: Deb Andraca \n\n1 01072837 Aleaner Pabonnie Republican 2 0106162 Deb Andraca Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 23 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072837 Aleaner Pabonnie Republican 2 0106162 Deb Andraca Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 24",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Dan Knodl",
+        "partyLabel": "Republican",
+        "quote": "1 0106817 Dan Knodl Republican"
+      },
+      {
+        "name": "Matt Brown",
+        "partyLabel": "Democratic",
+        "quote": "2 0106621 Matt Brown Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 24 Incumbent: Dan Knodl \n\n1 0106817 Dan Knodl Republican 2 0106621 Matt Brown Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 24 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106817 Dan Knodl Republican 2 0106621 Matt Brown Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 25",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Paul Tittl",
+        "partyLabel": "Republican",
+        "quote": "1 0104514 Paul Tittl Republican"
+      },
+      {
+        "name": "Christopher Able",
+        "partyLabel": "Democratic",
+        "quote": "2 01072821 Christopher Able Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 25 Incumbent: Paul Tittl \n\n1 0104514 Paul Tittl Republican 2 01072821 Christopher Able Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 25 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104514 Paul Tittl Republican 2 01072821 Christopher Able Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 26",
+    "count": 2,
+    "rows": [
+      {
+        "name": "John Belanger",
+        "partyLabel": "Republican",
+        "quote": "1 01072934 John Belanger Republican"
+      },
+      {
+        "name": "Joe Sheehan",
+        "partyLabel": "Democratic",
+        "quote": "2 0106796 Joe Sheehan Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 26 Incumbent: Joe Sheehan \n\n1 01072934 John Belanger Republican 2 0106796 Joe Sheehan Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 26 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072934 John Belanger Republican 2 0106796 Joe Sheehan Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 27",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Lindee Brill",
+        "partyLabel": "Republican",
+        "quote": "1 0106798 Lindee Brill Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 27 Incumbent: Lindee Rae Brill \n\n1 0106798 Lindee Brill Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 27 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0106798 Lindee Brill Republican"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 28",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Rob Kreibich",
+        "partyLabel": "Republican",
+        "quote": "1 0102969 Rob Kreibich Republican"
+      },
+      {
+        "name": "Robin Lillesve",
+        "partyLabel": "Democratic",
+        "quote": "2 01072940 Robin Lillesve Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 28 Incumbent: Rob Kreibich \n\n1 0102969 Rob Kreibich Republican 2 01072940 Robin Lillesve Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 28 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0102969 Rob Kreibich Republican 2 01072940 Robin Lillesve Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 29",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Treig Pronschinske",
+        "partyLabel": "Republican",
+        "quote": "1 0105806 Treig Pronschinske Republican"
+      },
+      {
+        "name": "Chris Danou",
+        "partyLabel": "Democratic",
+        "quote": "2 0104405 Chris Danou Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 29 Incumbent: Treig E. Pronschinske \n\n1 0105806 Treig Pronschinske Republican 2 0104405 Chris Danou Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 29 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105806 Treig Pronschinske Republican 2 0104405 Chris Danou Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 30",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Shannon Zimmerman",
+        "partyLabel": "Republican",
+        "quote": "1 0105714 Shannon Zimmerman Republican"
+      },
+      {
+        "name": "Kevin Knoke",
+        "partyLabel": "Democratic",
+        "quote": "2 01072709 Kevin Knoke Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 30 Incumbent: Shannon Zimmerman \n\n1 0105714 Shannon Zimmerman Republican 2 01072709 Kevin Knoke Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 30 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105714 Shannon Zimmerman Republican 2 01072709 Kevin Knoke Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 31",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Tyler August",
+        "partyLabel": "Republican",
+        "quote": "1 0104912 Tyler August Republican"
+      },
+      {
+        "name": "John Perryman",
+        "partyLabel": "Democratic",
+        "quote": "2 01072554 John Perryman Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 31 Incumbent: Tyler August \n\n1 0104912 Tyler August Republican 2 01072554 John Perryman Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 31 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104912 Tyler August Republican 2 01072554 John Perryman Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 32",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Amanda Nedweski",
+        "partyLabel": "Republican",
+        "quote": "1 0106600 Amanda Nedweski Republican"
+      },
+      {
+        "name": "Greg Miller",
+        "partyLabel": "Democratic",
+        "quote": "2 01072900 Greg Miller Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 32 Incumbent: Amanda Nedweski \n\n1 0106600 Amanda Nedweski Republican 2 01072900 Greg Miller Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 32 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106600 Amanda Nedweski Republican 2 01072900 Greg Miller Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 33",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Steve Wicklund",
+        "partyLabel": "Republican",
+        "quote": "1 01072765 Steve Wicklund Republican"
+      },
+      {
+        "name": "Maria Elena Bisabarros",
+        "partyLabel": "Democratic",
+        "quote": "2 01072897 Maria Elena Bisabarros Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 33 Incumbent: Robin J. Vos (Filed Notification of Noncandidacy) \n\n1 01072765 Steve Wicklund Republican 2 01072897 Maria Elena Bisabarros Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 33 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072765 Steve Wicklund Republican 2 01072897 Maria Elena Bisabarros Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 34",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Rob Swearingen",
+        "partyLabel": "Republican",
+        "quote": "1 0105273 Rob Swearingen Republican"
+      },
+      {
+        "name": "Merlin Van Buren",
+        "partyLabel": "Democratic",
+        "quote": "2 01072857 Merlin Van Buren Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 34 Incumbent: Rob Swearingen \n\n1 0105273 Rob Swearingen Republican 2 01072857 Merlin Van Buren Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 34 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105273 Rob Swearingen Republican 2 01072857 Merlin Van Buren Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 35",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Calvin Callahan",
+        "partyLabel": "Republican",
+        "quote": "1 0106155 Calvin Callahan Republican"
+      },
+      {
+        "name": "Elizabeth McCrank",
+        "partyLabel": "Democratic",
+        "quote": "2 0106815 Elizabeth McCrank Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 35 Incumbent: Calvin Callahan \n\n1 0106155 Calvin Callahan Republican 2 0106815 Elizabeth McCrank Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 35 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106155 Calvin Callahan Republican 2 0106815 Elizabeth McCrank Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 36",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Shena Chapman",
+        "partyLabel": "Independent",
+        "quote": "2 01072871 Shena Chapman Independent"
+      },
+      {
+        "name": "Jeffrey L. Mursau",
+        "partyLabel": "Republican",
+        "quote": "1 0104355 Jeffrey L. Mursau Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 36 Incumbent: Jeffrey L. Mursau \n\n2 01072871 Shena Chapman Independent 1 0104355 Jeffrey L. Mursau Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 36 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "2 01072871 Shena Chapman Independent 1 0104355 Jeffrey L. Mursau Republican"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 37",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mark Born",
+        "partyLabel": "Republican",
+        "quote": "1 0105189 Mark Born Republican"
+      },
+      {
+        "name": "LaToya Bates",
+        "partyLabel": "Democratic",
+        "quote": "2 0106865 LaToya Bates Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 37 Incumbent: Mark L. Born \n\n1 0105189 Mark Born Republican 2 0106865 LaToya Bates Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 37 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105189 Mark Born Republican 2 0106865 LaToya Bates Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 38",
+    "count": 2,
+    "rows": [
+      {
+        "name": "William Penterman",
+        "partyLabel": "Republican",
+        "quote": "1 0106412 William Penterman Republican"
+      },
+      {
+        "name": "Terri Wenkman",
+        "partyLabel": "Democratic",
+        "quote": "2 01072713 Terri Wenkman Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 38 Incumbent: William Penterman \n\n1 0106412 William Penterman Republican 2 01072713 Terri Wenkman Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 38 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106412 William Penterman Republican 2 01072713 Terri Wenkman Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 39",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Alex Dallman",
+        "partyLabel": "Republican",
+        "quote": "1 0106199 Alex Dallman Republican"
+      },
+      {
+        "name": "Michael Skivington",
+        "partyLabel": "Democratic",
+        "quote": "2 01072929 Michael Skivington Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 39 Incumbent: Alex Dallman \n\n1 0106199 Alex Dallman Republican 2 01072929 Michael Skivington Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 39 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106199 Alex Dallman Republican 2 01072929 Michael Skivington Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 40",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Julie Helmer",
+        "partyLabel": "Republican",
+        "quote": "1 0106924 Julie Helmer Republican"
+      },
+      {
+        "name": "Karen DeSanto",
+        "partyLabel": "Democratic",
+        "quote": "2 0106822 Karen DeSanto Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 40 Incumbent: Karen DeSanto \n\n1 0106924 Julie Helmer Republican 2 0106822 Karen DeSanto Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 40 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106924 Julie Helmer Republican 2 0106822 Karen DeSanto Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 41",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Tony Kurtz",
+        "partyLabel": "Republican",
+        "quote": "1 0106073 Tony Kurtz Republican"
+      },
+      {
+        "name": "Zach Commons",
+        "partyLabel": "Democratic",
+        "quote": "2 01072882 Zach Commons Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 41 Incumbent: Tony Kurtz \n\n1 0106073 Tony Kurtz Republican 2 01072882 Zach Commons Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 41 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106073 Tony Kurtz Republican 2 01072882 Zach Commons Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 42",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Keith F. Miller",
+        "partyLabel": "Republican",
+        "quote": "1 01072916 Keith F. Miller Republican"
+      },
+      {
+        "name": "Maureen McCarville",
+        "partyLabel": "Democratic",
+        "quote": "2 0106564 Maureen McCarville Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 42 Incumbent: Maureen McCarville \n\n1 01072916 Keith F. Miller Republican 2 0106564 Maureen McCarville Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 42 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072916 Keith F. Miller Republican 2 0106564 Maureen McCarville Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 43",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Paul McGraw",
+        "partyLabel": "Republican",
+        "quote": "1 01072488 Paul McGraw Republican"
+      },
+      {
+        "name": "Brienne Brown",
+        "partyLabel": "Democratic",
+        "quote": "2 0106583 Brienne Brown Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 43 Incumbent: Brienne Brown \n\n1 01072488 Paul McGraw Republican 2 0106583 Brienne Brown Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 43 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072488 Paul McGraw Republican 2 0106583 Brienne Brown Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 44",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Ron Woodman",
+        "partyLabel": "Republican",
+        "quote": "1 01072861 Ron Woodman Republican"
+      },
+      {
+        "name": "Ann Roe",
+        "partyLabel": "Democratic",
+        "quote": "2 0106737 Ann Roe Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 44 Incumbent: Ann Roe \n\n1 01072861 Ron Woodman Republican 2 0106737 Ann Roe Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 44 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072861 Ron Woodman Republican 2 0106737 Ann Roe Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 45",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jocelyn Jordan",
+        "partyLabel": "Republican",
+        "quote": "1 01072932 Jocelyn Jordan Republican"
+      },
+      {
+        "name": "Clinton Anderson",
+        "partyLabel": "Democratic",
+        "quote": "2 0105792 Clinton Anderson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 45 Incumbent: Clinton Anderson \n\n1 01072932 Jocelyn Jordan Republican 2 0105792 Clinton Anderson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 45 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072932 Jocelyn Jordan Republican 2 0105792 Clinton Anderson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 46",
+    "count": 2,
+    "rows": [
+      {
+        "name": "John Donohue",
+        "partyLabel": "Republican",
+        "quote": "1 01072928 John Donohue Republican"
+      },
+      {
+        "name": "Joan Fitzgerald",
+        "partyLabel": "Democratic",
+        "quote": "2 0106718 Joan Fitzgerald Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 46 Incumbent: Joan Fitzgerald \n\n1 01072928 John Donohue Republican 2 0106718 Joan Fitzgerald Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 46 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072928 John Donohue Republican 2 0106718 Joan Fitzgerald Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 47",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Sandy Bakk",
+        "partyLabel": "Republican",
+        "quote": "1 0105385 Sandy Bakk Republican"
+      },
+      {
+        "name": "Randy Udell",
+        "partyLabel": "Democratic",
+        "quote": "2 0106742 Randy Udell Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 47 Incumbent: Randy Udell \n\n1 0105385 Sandy Bakk Republican 2 0106742 Randy Udell Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 47 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105385 Sandy Bakk Republican 2 0106742 Randy Udell Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 48",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mark Kjorlie",
+        "partyLabel": "Republican",
+        "quote": "1 01072920 Mark Kjorlie Republican"
+      },
+      {
+        "name": "Andrew Hysell",
+        "partyLabel": "Democratic",
+        "quote": "2 0106563 Andrew Hysell Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 48 Incumbent: Andrew Hysell \n\n1 01072920 Mark Kjorlie Republican 2 0106563 Andrew Hysell Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 48 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072920 Mark Kjorlie Republican 2 0106563 Andrew Hysell Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 49",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Travis Tranel",
+        "partyLabel": "Republican",
+        "quote": "1 0104591 Travis Tranel Republican"
+      },
+      {
+        "name": "John Rindy",
+        "partyLabel": "Democratic",
+        "quote": "2 01072735 John Rindy Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 49 Incumbent: Travis Tranel \n\n1 0104591 Travis Tranel Republican 2 01072735 John Rindy Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 49 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104591 Travis Tranel Republican 2 01072735 John Rindy Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 50",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jon Aleckson",
+        "partyLabel": "Republican",
+        "quote": "1 01072678 Jon Aleckson Republican"
+      },
+      {
+        "name": "Bill Oemichen",
+        "partyLabel": "Democratic",
+        "quote": "2 01072810 Bill Oemichen Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 50 Incumbent: Jenna Jacobson \n\n1 01072678 Jon Aleckson Republican 2 01072810 Bill Oemichen Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 50 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072678 Jon Aleckson Republican 2 01072810 Bill Oemichen Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 51",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Nathan Tataje",
+        "partyLabel": "American Solidarity Party",
+        "quote": "3 01072874 Nathan Tataje American Solidarity Party"
+      },
+      {
+        "name": "Todd Novak",
+        "partyLabel": "Republican",
+        "quote": "1 0105503 Todd Novak Republican"
+      },
+      {
+        "name": "Ben Gruber",
+        "partyLabel": "Democratic",
+        "quote": "2 01072662 Ben Gruber Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 51 Incumbent: Todd Novak \n\n3 01072874 Nathan Tataje American Solidarity Party 1 0105503 Todd Novak Republican 2 01072662 Ben Gruber Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 51 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "3 01072874 Nathan Tataje American Solidarity Party 1 0105503 Todd Novak Republican 2 01072662 Ben Gruber Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 52",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Reive Pullen",
+        "partyLabel": "Republican",
+        "quote": "1 0106930 Reive Pullen Republican"
+      },
+      {
+        "name": "Lee Snodgrass",
+        "partyLabel": "Democratic",
+        "quote": "2 0106018 Lee Snodgrass Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 52 Incumbent: Lee Snodgrass \n\n1 0106930 Reive Pullen Republican 2 0106018 Lee Snodgrass Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 52 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106930 Reive Pullen Republican 2 0106018 Lee Snodgrass Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 53",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Rachael Dowling",
+        "partyLabel": "Independent",
+        "quote": "3 01072910 Rachael Dowling Independent"
+      },
+      {
+        "name": "David Daniels",
+        "partyLabel": "Republican",
+        "quote": "1 01072880 David Daniels Republican"
+      },
+      {
+        "name": "Becky Nichols",
+        "partyLabel": "Democratic",
+        "quote": "2 0106522 Becky Nichols Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 53 Incumbent: Dean R. Kaufert (Filed Notification of Noncandidacy) \n\n3 01072910 Rachael Dowling Independent 1 01072880 David Daniels Republican 2 0106522 Becky Nichols Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 53 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "3 01072910 Rachael Dowling Independent 1 01072880 David Daniels Republican 2 0106522 Becky Nichols Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 54",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Tim Paterson",
+        "partyLabel": "Republican",
+        "quote": "1 0106840 Tim Paterson Republican"
+      },
+      {
+        "name": "Lori Palmeri",
+        "partyLabel": "Democratic",
+        "quote": "2 0106496 Lori Palmeri Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 54 Incumbent: Lori Palmeri \n\n1 0106840 Tim Paterson Republican 2 0106496 Lori Palmeri Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 54 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106840 Tim Paterson Republican 2 0106496 Lori Palmeri Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 55",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Nate Gustafson",
+        "partyLabel": "Republican",
+        "quote": "1 0106494 Nate Gustafson Republican"
+      },
+      {
+        "name": "Alex Corrigan",
+        "partyLabel": "Democratic",
+        "quote": "2 01072884 Alex Corrigan Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 55 Incumbent: Nate Gustafson \n\n1 0106494 Nate Gustafson Republican 2 01072884 Alex Corrigan Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 55 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106494 Nate Gustafson Republican 2 01072884 Alex Corrigan Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 56",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Anthony W. Phillips",
+        "partyLabel": "Republican",
+        "quote": "1 0106770 Anthony W. Phillips Republican"
+      },
+      {
+        "name": "Grace Abitz",
+        "partyLabel": "Democratic",
+        "quote": "2 01072867 Grace Abitz Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 56 Incumbent: Dave Murphy \n\n1 0106770 Anthony W. Phillips Republican 2 01072867 Grace Abitz Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 56 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106770 Anthony W. Phillips Republican 2 01072867 Grace Abitz Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 57",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Kevin Krentz",
+        "partyLabel": "Republican",
+        "quote": "1 01072794 Kevin Krentz Republican"
+      },
+      {
+        "name": "Joey Marschall",
+        "partyLabel": "Democratic",
+        "quote": "2 01072741 Joey Marschall Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 57 Incumbent: Kevin Petersen (Filed Notification of Noncandidacy) \n\n1 01072794 Kevin Krentz Republican 2 01072741 Joey Marschall Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 57 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072794 Kevin Krentz Republican 2 01072741 Joey Marschall Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 58",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bernie Newman",
+        "partyLabel": "Republican",
+        "quote": "1 01072849 Bernie Newman Republican"
+      },
+      {
+        "name": "Dennis D. Degenhardt",
+        "partyLabel": "Democratic",
+        "quote": "2 0105915 Dennis D. Degenhardt Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 58 Incumbent: Rick Gundrum (Filed Notification of Noncandidacy) \n\n1 01072849 Bernie Newman Republican 2 0105915 Dennis D. Degenhardt Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 58 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072849 Bernie Newman Republican 2 0105915 Dennis D. Degenhardt Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 59",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bradley Petersen",
+        "partyLabel": "Republican",
+        "quote": "1 01072827 Bradley Petersen Republican"
+      },
+      {
+        "name": "Jack Holzman",
+        "partyLabel": "Democratic",
+        "quote": "2 0106838 Jack Holzman Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 59 Incumbent: Robert Brooks (Filed Notification of Noncandidacy) \n\n1 01072827 Bradley Petersen Republican 2 0106838 Jack Holzman Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 59 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072827 Bradley Petersen Republican 2 0106838 Jack Holzman Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 60",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Tiffany Brault",
+        "partyLabel": "Independent",
+        "quote": "2 01072851 Tiffany Brault Independent"
+      },
+      {
+        "name": "Marty Ryan",
+        "partyLabel": "Republican",
+        "quote": "1 01072853 Marty Ryan Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 60 Incumbent: Jerry O'Connor (Filed Notification of Noncandidacy) \n\n2 01072851 Tiffany Brault Independent 1 01072853 Marty Ryan Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 60 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "2 01072851 Tiffany Brault Independent 1 01072853 Marty Ryan Republican"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 61",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bob Donovan",
+        "partyLabel": "Republican",
+        "quote": "1 0101520 Bob Donovan Republican"
+      },
+      {
+        "name": "Ben Brist",
+        "partyLabel": "Democratic",
+        "quote": "2 01072723 Ben Brist Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 61 Incumbent: Bob Donovan \n\n1 0101520 Bob Donovan Republican 2 01072723 Ben Brist Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 61 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0101520 Bob Donovan Republican 2 01072723 Ben Brist Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 62",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mike Bellagio",
+        "partyLabel": "Republican",
+        "quote": "1 01072922 Mike Bellagio Republican"
+      },
+      {
+        "name": "Angelina M. Cruz",
+        "partyLabel": "Democratic",
+        "quote": "2 0106794 Angelina M. Cruz Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 62 Incumbent: Angelina M. Cruz \n\n1 01072922 Mike Bellagio Republican 2 0106794 Angelina M. Cruz Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 62 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072922 Mike Bellagio Republican 2 0106794 Angelina M. Cruz Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 63",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Robert Wittke",
+        "partyLabel": "Republican",
+        "quote": "1 0106066 Robert Wittke Republican"
+      },
+      {
+        "name": "Eddie Phanichkul",
+        "partyLabel": "Democratic",
+        "quote": "2 01072904 Eddie Phanichkul Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 63 Incumbent: Robert Wittke \n\n1 0106066 Robert Wittke Republican 2 01072904 Eddie Phanichkul Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 63 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106066 Robert Wittke Republican 2 01072904 Eddie Phanichkul Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 64",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Ed Hibsch",
+        "partyLabel": "Republican",
+        "quote": "1 0106236 Ed Hibsch Republican"
+      },
+      {
+        "name": "Tip McGuire",
+        "partyLabel": "Democratic",
+        "quote": "2 0106119 Tip McGuire Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 64 Incumbent: Tip McGuire \n\n1 0106236 Ed Hibsch Republican 2 0106119 Tip McGuire Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 64 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106236 Ed Hibsch Republican 2 0106119 Tip McGuire Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 65",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Valerie Kretchmer",
+        "partyLabel": "Republican",
+        "quote": "1 01072822 Valerie Kretchmer Republican"
+      },
+      {
+        "name": "Ben DeSmidt",
+        "partyLabel": "Democratic",
+        "quote": "2 0106740 Ben DeSmidt Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 65 Incumbent: Ben DeSmidt \n\n1 01072822 Valerie Kretchmer Republican 2 0106740 Ben DeSmidt Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 65 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072822 Valerie Kretchmer Republican 2 0106740 Ben DeSmidt Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 66",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Gina Cefalu Paulick",
+        "partyLabel": "Republican",
+        "quote": "1 Gina Cefalu Paulick Republican"
+      },
+      {
+        "name": "Greta Neubauer",
+        "partyLabel": "Democratic",
+        "quote": "2 0105919 Greta Neubauer Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 66 Incumbent: Greta Neubauer \n\n1 Gina Cefalu Paulick Republican 2 0105919 Greta Neubauer Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 66 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Gina Cefalu Paulick Republican 2 0105919 Greta Neubauer Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 67",
+    "count": 2,
+    "rows": [
+      {
+        "name": "David Armstrong",
+        "partyLabel": "Republican",
+        "quote": "1 0106213 David Armstrong Republican"
+      },
+      {
+        "name": "Indiana Thompson",
+        "partyLabel": "Democratic",
+        "quote": "2 01072666 Indiana Thompson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 67 Incumbent: David Armstrong \n\n1 0106213 David Armstrong Republican 2 01072666 Indiana Thompson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 67 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106213 David Armstrong Republican 2 01072666 Indiana Thompson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 68",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Rob Summerfield",
+        "partyLabel": "Republican",
+        "quote": "1 Rob Summerfield Republican"
+      },
+      {
+        "name": "Elisha King",
+        "partyLabel": "Democratic",
+        "quote": "2 01072547 Elisha King Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 68 Incumbent: Rob Summerfield \n\n1 Rob Summerfield Republican 2 01072547 Elisha King Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 68 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Rob Summerfield Republican 2 01072547 Elisha King Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 69",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Josh Kelley",
+        "partyLabel": "Independent",
+        "quote": "3 Josh Kelley Independent"
+      },
+      {
+        "name": "Karen Hurd",
+        "partyLabel": "Republican",
+        "quote": "1 0106479 Karen Hurd Republican"
+      },
+      {
+        "name": "Roger Halls",
+        "partyLabel": "Democratic",
+        "quote": "2 0106845 Roger Halls Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 69 Incumbent: Karen Hurd \n\n3 Josh Kelley Independent 1 0106479 Karen Hurd Republican 2 0106845 Roger Halls Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 69 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "3 Josh Kelley Independent 1 0106479 Karen Hurd Republican 2 0106845 Roger Halls Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 70",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Nancy VanderMeer",
+        "partyLabel": "Republican",
+        "quote": "1 0105275 Nancy VanderMeer Republican"
+      },
+      {
+        "name": "Stephanie Stuve Bodeen",
+        "partyLabel": "Democratic",
+        "quote": "2 01072844 Stephanie Stuve Bodeen Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 70 Incumbent: Nancy Lynn VanderMeer \n\n1 0105275 Nancy VanderMeer Republican 2 01072844 Stephanie Stuve Bodeen Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 70 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105275 Nancy VanderMeer Republican 2 01072844 Stephanie Stuve Bodeen Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 71",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jeff Disher",
+        "partyLabel": "Republican",
+        "quote": "1 01072906 Jeff Disher Republican"
+      },
+      {
+        "name": "Vinnie Miresse",
+        "partyLabel": "Democratic",
+        "quote": "2 0106731 Vinnie Miresse Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 71 Incumbent: Vinnie Miresse \n\n1 01072906 Jeff Disher Republican 2 0106731 Vinnie Miresse Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 71 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072906 Jeff Disher Republican 2 0106731 Vinnie Miresse Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 72",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Scott Krug",
+        "partyLabel": "Republican",
+        "quote": "1 0104141 Scott Krug Republican"
+      },
+      {
+        "name": "Christine Maltese",
+        "partyLabel": "Democratic",
+        "quote": "2 01072902 Christine Maltese Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 72 Incumbent: Scott Krug \n\n1 0104141 Scott Krug Republican 2 01072902 Christine Maltese Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 72 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104141 Scott Krug Republican 2 01072902 Christine Maltese Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 73",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Frank Kostka",
+        "partyLabel": "Republican",
+        "quote": "1 0106859 Frank Kostka Republican"
+      },
+      {
+        "name": "Angela Stroud",
+        "partyLabel": "Democratic",
+        "quote": "2 0106809 Angela Stroud Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 73 Incumbent: Angela Stroud \n\n1 0106859 Frank Kostka Republican 2 0106809 Angela Stroud Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 73 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106859 Frank Kostka Republican 2 0106809 Angela Stroud Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 74",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Chanz Green",
+        "partyLabel": "Republican",
+        "quote": "1 0106516 Chanz Green Republican"
+      },
+      {
+        "name": "Paul Johnson",
+        "partyLabel": "Democratic",
+        "quote": "2 01072848 Paul Johnson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 74 Incumbent: Chanz J Green \n\n1 0106516 Chanz Green Republican 2 01072848 Paul Johnson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 74 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106516 Chanz Green Republican 2 01072848 Paul Johnson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 75",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Duke Tucker",
+        "partyLabel": "Republican",
+        "quote": "1 0106758 Duke Tucker Republican"
+      },
+      {
+        "name": "Keith Mogel",
+        "partyLabel": "Democratic",
+        "quote": "2 01072917 Keith Mogel Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 75 Incumbent: Duke Tucker \n\n1 0106758 Duke Tucker Republican 2 01072917 Keith Mogel Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 75 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106758 Duke Tucker Republican 2 01072917 Keith Mogel Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 76",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Nina Chat",
+        "partyLabel": "Republican",
+        "quote": "1 01072943 Nina Chat Republican"
+      },
+      {
+        "name": "Dina Nina Martinez-Rutherford",
+        "partyLabel": "Democratic",
+        "quote": "2 01072528 Dina Nina Martinez-Rutherford Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 76 Incumbent: Francesca Hong (Filed Notification of Noncandidacy) \n\n1 01072943 Nina Chat Republican 2 01072528 Dina Nina Martinez-Rutherford Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 76 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072943 Nina Chat Republican 2 01072528 Dina Nina Martinez-Rutherford Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 77",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jane McCormick",
+        "partyLabel": "Republican",
+        "quote": "1 01072933 Jane McCormick Republican"
+      },
+      {
+        "name": "Renuka Mayadev",
+        "partyLabel": "Democratic",
+        "quote": "2 0106754 Renuka Mayadev Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 77 Incumbent: Renuka Mayadev \n\n1 01072933 Jane McCormick Republican 2 0106754 Renuka Mayadev Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 77 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072933 Jane McCormick Republican 2 0106754 Renuka Mayadev Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 78",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Henry Johnson",
+        "partyLabel": "Republican",
+        "quote": "1 01072931 Henry Johnson Republican"
+      },
+      {
+        "name": "Shelia Stubbs",
+        "partyLabel": "Democratic",
+        "quote": "2 0105959 Shelia Stubbs Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 78 Incumbent: Shelia Stubbs \n\n1 01072931 Henry Johnson Republican 2 0105959 Shelia Stubbs Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 78 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072931 Henry Johnson Republican 2 0105959 Shelia Stubbs Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 79",
+    "count": 2,
+    "rows": [
+      {
+        "name": "John Fons",
+        "partyLabel": "Republican",
+        "quote": "1 01072873 John Fons Republican"
+      },
+      {
+        "name": "Lisa Subeck",
+        "partyLabel": "Democratic",
+        "quote": "2 0105466 Lisa Subeck Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 79 Incumbent: Lisa Subeck \n\n1 01072873 John Fons Republican 2 0105466 Lisa Subeck Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 79 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072873 John Fons Republican 2 0105466 Lisa Subeck Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 80",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Simran Arora",
+        "partyLabel": "Republican",
+        "quote": "1 01072834 Simran Arora Republican"
+      },
+      {
+        "name": "Mike Bare",
+        "partyLabel": "Democratic",
+        "quote": "2 0106532 Mike Bare Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 80 Incumbent: Mike Bare \n\n1 01072834 Simran Arora Republican 2 0106532 Mike Bare Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 80 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072834 Simran Arora Republican 2 0106532 Mike Bare Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 81",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Mark S. Maier",
+        "partyLabel": "Republican",
+        "quote": "1 01072913 Mark S. Maier Republican"
+      },
+      {
+        "name": "Alex Joers",
+        "partyLabel": "Democratic",
+        "quote": "2 0106542 Alex Joers Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 81 Incumbent: Alex Joers \n\n1 01072913 Mark S. Maier Republican 2 0106542 Alex Joers Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 81 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072913 Mark S. Maier Republican 2 0106542 Alex Joers Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 82",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bryson Reyes",
+        "partyLabel": "Republican",
+        "quote": "1 01072832 Bryson Reyes Republican"
+      },
+      {
+        "name": "Rico Camacho",
+        "partyLabel": "Democratic",
+        "quote": "2 01072594 Rico Camacho Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 82 Incumbent: Scott Allen (Filed Notification of Noncandidacy) \n\n1 01072832 Bryson Reyes Republican 2 01072594 Rico Camacho Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 82 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072832 Bryson Reyes Republican 2 01072594 Rico Camacho Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 83",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Dave Maxey",
+        "partyLabel": "Republican",
+        "quote": "1 0106525 Dave Maxey Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 83 Incumbent: Dave Maxey \n\n1 0106525 Dave Maxey Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 83 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0106525 Dave Maxey Republican"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 84",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Chuck Wichgers",
+        "partyLabel": "Republican",
+        "quote": "1 0105770 Chuck Wichgers Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 84 Incumbent: Chuck Wichgers \n\n1 0105770 Chuck Wichgers Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 84 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0105770 Chuck Wichgers Republican"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 85",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Patrick Snyder",
+        "partyLabel": "Republican",
+        "quote": "1 0105215 Patrick Snyder Republican"
+      },
+      {
+        "name": "John Kroll",
+        "partyLabel": "Democratic",
+        "quote": "2 01072673 John Kroll Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 85 Incumbent: Patrick Snyder \n\n1 0105215 Patrick Snyder Republican 2 01072673 John Kroll Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 85 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105215 Patrick Snyder Republican 2 01072673 John Kroll Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 86",
+    "count": 2,
+    "rows": [
+      {
+        "name": "John Spiros",
+        "partyLabel": "Republican",
+        "quote": "1 0104954 John Spiros Republican"
+      },
+      {
+        "name": "Andy Wuethrich",
+        "partyLabel": "Democratic",
+        "quote": "2 01072930 Andy Wuethrich Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 86 Incumbent: John Spiros \n\n1 0104954 John Spiros Republican 2 01072930 Andy Wuethrich Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 86 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0104954 John Spiros Republican 2 01072930 Andy Wuethrich Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 87",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Brent Jacobson",
+        "partyLabel": "Republican",
+        "quote": "1 0105951 Brent Jacobson Republican"
+      },
+      {
+        "name": "Bob Look",
+        "partyLabel": "Democratic",
+        "quote": "2 0106631 Bob Look Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 87 Incumbent: Brent Jacobson \n\n1 0105951 Brent Jacobson Republican 2 0106631 Bob Look Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 87 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0105951 Brent Jacobson Republican 2 0106631 Bob Look Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 88",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Ben Franklin",
+        "partyLabel": "Republican",
+        "quote": "1 0106768 Ben Franklin Republican"
+      },
+      {
+        "name": "Brandy Tollefson",
+        "partyLabel": "Democratic",
+        "quote": "2 01072610 Brandy Tollefson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 88 Incumbent: Benjamin Franklin \n\n1 0106768 Ben Franklin Republican 2 01072610 Brandy Tollefson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 88 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106768 Ben Franklin Republican 2 01072610 Brandy Tollefson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 89",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bobby R. Lindsey",
+        "partyLabel": "Republican",
+        "quote": "1 01072854 Bobby R. Lindsey Republican"
+      },
+      {
+        "name": "Ryan Spaude",
+        "partyLabel": "Democratic",
+        "quote": "2 0106727 Ryan Spaude Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 89 Incumbent: Ryan Spaude \n\n1 01072854 Bobby R. Lindsey Republican 2 0106727 Ryan Spaude Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 89 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072854 Bobby R. Lindsey Republican 2 0106727 Ryan Spaude Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 90",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jessica Henderson",
+        "partyLabel": "Republican",
+        "quote": "1 0106875 Jessica Henderson Republican"
+      },
+      {
+        "name": "Amaad Rivera-Wagner",
+        "partyLabel": "Democratic",
+        "quote": "2 0106786 Amaad Rivera-Wagner Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 90 Incumbent: Amaad Rivera Wagner \n\n1 0106875 Jessica Henderson Republican 2 0106786 Amaad Rivera-Wagner Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 90 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106875 Jessica Henderson Republican 2 0106786 Amaad Rivera-Wagner Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 91",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Bruce Stabenow",
+        "partyLabel": "Republican",
+        "quote": "1 Bruce Stabenow Republican"
+      },
+      {
+        "name": "Jodi Emerson",
+        "partyLabel": "Democratic",
+        "quote": "2 0105971 Jodi Emerson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 91 Incumbent: Jodi Emerson \n\n1 Bruce Stabenow Republican 2 0105971 Jodi Emerson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 91 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Bruce Stabenow Republican 2 0105971 Jodi Emerson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 92",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Clint Moses",
+        "partyLabel": "Republican",
+        "quote": "1 Clint Moses Republican"
+      },
+      {
+        "name": "Jeremiah Fredrickson",
+        "partyLabel": "Democratic",
+        "quote": "2 01072728 Jeremiah Fredrickson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 92 Incumbent: Clint Moses \n\n1 Clint Moses Republican 2 01072728 Jeremiah Fredrickson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 92 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 Clint Moses Republican 2 01072728 Jeremiah Fredrickson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 93",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Michael Ayala",
+        "partyLabel": "Republican",
+        "quote": "1 01072939 Michael Ayala Republican"
+      },
+      {
+        "name": "Christian Phelps",
+        "partyLabel": "Democratic",
+        "quote": "2 0106775 Christian Phelps Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 93 Incumbent: Christian Phelps \n\n1 01072939 Michael Ayala Republican 2 0106775 Christian Phelps Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 93 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072939 Michael Ayala Republican 2 0106775 Christian Phelps Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 94",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Keith Purnell",
+        "partyLabel": "Republican",
+        "quote": "1 01072869 Keith Purnell Republican"
+      },
+      {
+        "name": "Steve Doyle",
+        "partyLabel": "Democratic",
+        "quote": "2 0101856 Steve Doyle Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 94 Incumbent: Steve Doyle \n\n1 01072869 Keith Purnell Republican 2 0101856 Steve Doyle Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 94 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072869 Keith Purnell Republican 2 0101856 Steve Doyle Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 95",
+    "count": 3,
+    "rows": [
+      {
+        "name": "Paul Michael Weber",
+        "partyLabel": "Independent",
+        "quote": "3 0106265 Paul Michael Weber Independent"
+      },
+      {
+        "name": "Cedric Schnitzler",
+        "partyLabel": "Republican",
+        "quote": "1 0106790 Cedric Schnitzler Republican"
+      },
+      {
+        "name": "Jill Billings",
+        "partyLabel": "Democratic",
+        "quote": "2 0105123 Jill Billings Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 95 Incumbent: Jill Billings \n\n3 0106265 Paul Michael Weber Independent 1 0106790 Cedric Schnitzler Republican 2 0105123 Jill Billings Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 95 Candidates :3",
+    "parseComplete": true,
+    "candidateText": "3 0106265 Paul Michael Weber Independent 1 0106790 Cedric Schnitzler Republican 2 0105123 Jill Billings Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 96",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jim Green",
+        "partyLabel": "Republican",
+        "quote": "1 01072903 Jim Green Republican"
+      },
+      {
+        "name": "Tara Johnson",
+        "partyLabel": "Democratic",
+        "quote": "2 0104632 Tara Johnson Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 96 Incumbent: Tara Johnson \n\n1 01072903 Jim Green Republican 2 0104632 Tara Johnson Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 96 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 01072903 Jim Green Republican 2 0104632 Tara Johnson Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 97",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Cindi Duchow",
+        "partyLabel": "Republican",
+        "quote": "1 0105660 Cindi Duchow Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 97 Incumbent: Cindi Duchow \n\n1 0105660 Cindi Duchow Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 97 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0105660 Cindi Duchow Republican"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 98",
+    "count": 2,
+    "rows": [
+      {
+        "name": "Jim Piwowarczyk",
+        "partyLabel": "Republican",
+        "quote": "1 0106747 Jim Piwowarczyk Republican"
+      },
+      {
+        "name": "Matt Philibert",
+        "partyLabel": "Democratic",
+        "quote": "2 01072772 Matt Philibert Democratic"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 98 Incumbent: Jim Piwowarczyk \n\n1 0106747 Jim Piwowarczyk Republican 2 01072772 Matt Philibert Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 98 Candidates :2",
+    "parseComplete": true,
+    "candidateText": "1 0106747 Jim Piwowarczyk Republican 2 01072772 Matt Philibert Democratic"
+  },
+  {
+    "office": "REPRESENTATIVE TO THE ASSEMBLY DISTRICT 99",
+    "count": 1,
+    "rows": [
+      {
+        "name": "Barbara Dittrich",
+        "partyLabel": "Republican",
+        "quote": "1 0106042 Barbara Dittrich Republican"
+      }
+    ],
+    "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 99 Incumbent: Barbara Dittrich \n\n1 0106042 Barbara Dittrich Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 99 Candidates :1",
+    "parseComplete": true,
+    "candidateText": "1 0106042 Barbara Dittrich Republican"
+  }
+]

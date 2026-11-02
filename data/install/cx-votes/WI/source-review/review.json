@@ -1,0 +1,37 @@
+{
+  "kind": "CX_VOTES_SOURCE_REVIEW",
+  "status": "READY_FOR_RIVER_REVIEW_DATA_ONLY",
+  "generatedAt": "2026-11-02T23:05:15.206591+00:00",
+  "state": "WI",
+  "electionDate": "2026-11-03",
+  "productionWrites": false,
+  "appCodeChanged": false,
+  "containsBallotInstallRows": false,
+  "printedNomineeComparison": {
+    "file": "printed-nominee-comparison.json",
+    "sourceReceiptFile": "wec-roster-source.json",
+    "officeFields": 128,
+    "sourceCandidateTickets": 260,
+    "sourcePrintedAt": "2026-08-25 16:39:33 (timezone not stated)",
+    "allPrintedOfficeTotalsReconciled": true,
+    "missingOfficeFields": 0,
+    "missingPrintedNominees": 0,
+    "scope": "Four statewide joint-ticket-normalized offices, eight U.S. House districts, seventeen scheduled odd-numbered Senate districts and ninety-nine Assembly districts. Later write-ins, local races/measures and live installation are excluded."
+  },
+  "laterRegisteredWriteIns": {
+    "file": "registered-writein-review.json",
+    "verifiedGovernorNames": 7,
+    "partyLabels": "unknown",
+    "runningMates": "unknown",
+    "notOrdinaryPrintedNominees": true,
+    "readerStatus": "No verified per-candidate registered-write-in display distinction in the existing Candidacy contract; hand source facts to River without candidate installation rows."
+  },
+  "existingHeldOfficeFindings": {
+    "file": "held-office-source-review.json",
+    "count": 2,
+    "effect": "Source findings only; neither candidate nor absence data are created."
+  },
+  "nextOwner": "River: review source facts, install the separate printed-ballot repair using its existing manifest, verify live districts after installation, and retain write-in representation as standing work under the app-code freeze.",
+  "fileManifest": "file-manifest.json",
+  "pathConvention": "Artifact paths are relative to source-review unless explicitly labeled repository-relative."
+}

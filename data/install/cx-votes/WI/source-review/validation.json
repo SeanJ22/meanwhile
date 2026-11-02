@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-02T23:06:54.444Z",
+  "productionWrites": false,
+  "appCodeChanged": false,
+  "containsBallotInstallRows": false,
+  "checks": [
+    "128 office totals,260 source rows,260 candidate matches,actual sibling input hash",
+    "Dunn nativePDF and official.gov link,seven names/status,unknown parties/mates",
+    "Two exact held-office source findings with official linking chains; no inferred candidate or absence rows"
+  ],
+  "sourceHashAssertions": 14,
+  "quotedOfficeFieldsChecked": 130,
+  "credentialScanner": {
+    "version": "fx-cred-v1-2026-08-28",
+    "findings": 0
+  },
+  "limitations": [
+    "Comparison source is the August25 printed WEC general roster, not later registered-write-in eligibility.",
+    "No live installation or voter attachment verification was performed.",
+    "Review data contains source facts, not a ballot installation input."
+  ]
+}

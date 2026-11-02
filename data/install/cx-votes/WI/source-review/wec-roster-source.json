@@ -1,0 +1,26 @@
+{
+  "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+  "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+  "httpStatus": 200,
+  "rawHash": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+  "retrievedAt": "2026-11-02T22:34:38.186321+00:00",
+  "publisher": "Wisconsin Elections Commission",
+  "sourceClass": "ELECTION_AUTHORITY",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+  "file": "sources/wec-general-roster.source.txt",
+  "captureMetadata": {
+    "originHttpStatus": null,
+    "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+    "provider": "Jina Reader deterministic full-PDF extraction",
+    "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "readerHttpStatus": 200,
+    "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "reportedPdfPages": 21,
+    "nativeGovernmentHttpStatus": 403,
+    "sourceTextFile": "sources/wec-general-roster.source.txt"
+  },
+  "sourcePrintedAt": "2026-08-25 16:39:33 (timezone not stated in source)",
+  "sourceElectionDate": "2026-11-03",
+  "reportedPdfPages": 21
+}

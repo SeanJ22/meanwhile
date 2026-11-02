@@ -1,0 +1,117 @@
+{
+  "generatedAt": "2026-11-02T23:08:29.229480+00:00",
+  "hashAlgorithm": "SHA256",
+  "scope": "Every other archived file in this directory; manifest excludes itself. Native PDF bytes remain unchanged. Any sanitized linking-page archive would identify both archived and original-source hashes in its source metadata.",
+  "files": [
+    {
+      "file": "held-office-source-review.json",
+      "sha256": "dd7ed54008c7c51ab4c2fa5f0f262a633c98f94964cb9e233aee060929143512",
+      "bytes": 6445
+    },
+    {
+      "file": "install.json",
+      "sha256": "fa5b72113829e193509aaef8c72aa51506639d4400c208ae01272118d1aeb0c4",
+      "bytes": 4116
+    },
+    {
+      "file": "printed-nominee-comparison.json",
+      "sha256": "9c47b7b10c2819e26f7751fb04cd5fb586c4ff204ae27e5f9acb494b9cd2775f",
+      "bytes": 140526
+    },
+    {
+      "file": "registered-writein-review.json",
+      "sha256": "495ce95b7515d92285e1e7dc7476ae7c6ee319993a17d190c3659df3db194a51",
+      "bytes": 6325
+    },
+    {
+      "file": "review.json",
+      "sha256": "ed30da6aa87b725d1d8b998cafcd031063c96d86d25514827a1be5e686f30741",
+      "bytes": 1890
+    },
+    {
+      "file": "sources/co-elpaso-native-raw.txt",
+      "sha256": "848c85cdd9a9566282cd07c178548f5793e2039961aabc8fe3cde0cd491e1c24",
+      "bytes": 31268
+    },
+    {
+      "file": "sources/co-elpaso-official-page.html",
+      "sha256": "3f0757e98ff6f2878889f395bf2fc24af0eb6be957527ee208542b59164b4f67",
+      "bytes": 171817
+    },
+    {
+      "file": "sources/co-elpaso-official-sample.pdf",
+      "sha256": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+      "bytes": 230233
+    },
+    {
+      "file": "sources/co-elpaso-official-sample.txt",
+      "sha256": "bf0b2268ff1bda4607d25defff5acf8cf587dde86805307a45aabd1832f8c5d5",
+      "bytes": 30125
+    },
+    {
+      "file": "sources/co-official-counties.html",
+      "sha256": "44c8de1393e2e6105a0596366e074d1c79111c712fefa97f18fb3aa2a7ee65de",
+      "bytes": 46812
+    },
+    {
+      "file": "sources/dunn-official-elections.html",
+      "sha256": "16f27a634fe9cfc4e1986b01665a53e15ae72d4bc53702eef75d6666f4bcf165",
+      "bytes": 87562
+    },
+    {
+      "file": "sources/dunn-registered-writeins.pdf",
+      "sha256": "423e7c1ef4310dc933bf7f9a34b6af1bec4e4226ef92e0e071310cefdfdd578b",
+      "bytes": 66891
+    },
+    {
+      "file": "sources/dunn-registered-writeins.txt",
+      "sha256": "397c18aa380b22735274d0b272dfbc9079bcbb210d9250c8a67a1482f8c91482",
+      "bytes": 747
+    },
+    {
+      "file": "sources/wec-general-roster.source.txt",
+      "sha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+      "bytes": 33231
+    },
+    {
+      "file": "sources/wi-richland-official-elections.html",
+      "sha256": "075f2efe35432b6e2d0447c470bc09c1cd22d239feba2f85d39c8ffcfd0d6998",
+      "bytes": 37446
+    },
+    {
+      "file": "sources/wi-richland-samples.pdf",
+      "sha256": "f5a5df4a7d15ac3efb4ba1e50835caafaeb647d40a2574c9a05286fe9f525752",
+      "bytes": 796458
+    },
+    {
+      "file": "sources/wi-richland-samples.txt",
+      "sha256": "d30586b7c9ce52eb0eabc80ff4de107dc2c3c51315bd18928d11a89ed28d0ce0",
+      "bytes": 129697
+    },
+    {
+      "file": "sources/wi-richland-typeb.pdf",
+      "sha256": "147e2a5f98c6556c38eb890510d99b94a112ce025502d134334cf434896c9d60",
+      "bytes": 258091
+    },
+    {
+      "file": "sources/wi-richland-typeb.txt",
+      "sha256": "3c0fd647d7ef900e5f3cbe7397024b250e6c699581f2e531d69613103fccf68a",
+      "bytes": 9689
+    },
+    {
+      "file": "validation.json",
+      "sha256": "a36544681cf443cc35485c7691c2896c7cccf0fd67b7a04acc6638d00bfbcb23",
+      "bytes": 905
+    },
+    {
+      "file": "wec-parsed-office-fields.json",
+      "sha256": "95401070d80f5a806de6190f43dae36e07120f9e9a0c8c4df03cac7d24b1ba4b",
+      "bytes": 96687
+    },
+    {
+      "file": "wec-roster-source.json",
+      "sha256": "d7bbfc042dd0589817264daae74fa6c15402d79293ab68caa2d1b6f89a170832",
+      "bytes": 1615
+    }
+  ]
+}

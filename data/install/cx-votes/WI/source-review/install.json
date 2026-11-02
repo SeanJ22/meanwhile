@@ -1,0 +1,24 @@
+{
+  "kind": "CX_VOTES_SOURCE_REVIEW",
+  "step": "CX-VOTES",
+  "state": "WI",
+  "status": "SOURCE_REVIEW_NO_WRITE",
+  "printedBallotInstall": "../ballot-additions/install.json",
+  "sourceScope": {
+    "regularOfficeFields": 128,
+    "nomineesOnAugust25Roster": 260,
+    "laterGovernorWriteins": 7
+  },
+  "notes": [
+    "This directory contains source review data for River. It contains no ballot installation rows and does not change application code. Install the separate printed-ballot repair through [its manifest](../ballot-additions/install.json).",
+    "[The printed-nominee comparison](printed-nominee-comparison.json) accounts for all 128 regular Wisconsin office fields and all 260 candidate tickets in the WEC general-election roster printed August 25, 2026. Governor and Lieutenant Governor count as one joint-ticket office. Every office parse reconciles to its printed candidate total, and every listed ticket matches the independently replayed published baseline plus the sibling 14-race/28-candidate install input. The comparison fingerprints that exact input and prior version. The CD6 labels \u201cWisconsin Green\u201d and \u201cWisconsin Green Party\u201d differ only in wording.",
+    "[The WEC source receipt](wec-roster-source.json) hashes the complete captured 21-page extraction text. It explicitly does not claim a hash of original PDF bytes. Native government retrieval returned 403; the deterministic reader returned 200. The source text, full office extracts and candidate matches are retained.",
+    "[The registered-write-in review](registered-writein-review.json) is separate. A native PDF linked directly from Dunn County\u2019s official .gov election page lists seven registered Governor write-ins: Ieshuh Griffin, Jamie Jo Carothers, David D. King, Chad Muellenberg, Mary Morgan, Mark Grimek and Brayden Donnelly. Parties, running mates, registration dates and a dated final statewide certification are not provided. The review records those unknowns and does not turn these people into ordinary printed nominees. The same source separately names Dunn County Sheriff write-in Chad Weinberger; local-race completeness is not established.",
+    "The existing Candidacy contract has no verified per-candidate distinction between registered write-in and printed nominee. River owns a truthful disclosure path or later explicit status/display support when the application-code freeze permits it. \u201cWrite-in\u201d must not be used as a party label, and running mates must not be inferred.",
+    "[Two existing held-office findings](held-office-source-review.json) retain their saved evidence: El Paso County\u2019s November 3 sample explicitly says there are no County Surveyor candidates; Richland County\u2019s Coroner field contains only a generic write-in line. These facts neither create candidates nor establish a statewide absence. A generic write-in line does not establish that nobody registered as a write-in. Native PDFs, extracted text and saved official linking chains are included; no additional source hunt was performed for this packaging step.",
+    "All artifact paths are relative to this directory unless explicitly identified as repository-relative. Public linking pages were checked with the existing credential sanitizer; no credential findings remained. Acquisition metadata excludes request headers, cookies and credentials. [Validation](validation.json) checks source hashes, exact office text, official linking chains, candidate totals and the sibling install-input hash. The file manifest fingerprints every archived artifact. No production installation, live reader delivery or voter-attachment check is claimed. Later write-in eligibility, local races and local measures remain outside the 128-office printed-roster comparison."
+  ],
+  "operation": "No ballot rows are installed from this review. Use the separate printed-ballot install manifest; keep write-in eligibility findings distinct.",
+  "files": "file-manifest.json",
+  "nextOwner": "River: install the separate ballot packet and retain these source findings for the existing acquisition work."
+}

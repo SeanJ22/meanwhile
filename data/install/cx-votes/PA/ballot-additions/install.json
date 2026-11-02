@@ -1,0 +1,86 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "PA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:PA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "pa-dos:pa-2026-general:sldl-37",
+      "title": "Representative in the General Assembly – District 37",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:37",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-36",
+      "title": "Senator in the General Assembly – District 36",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:36",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-41",
+      "title": "Representative in the General Assembly – District 41",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:41",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-43",
+      "title": "Representative in the General Assembly – District 43",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:43",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-49",
+      "title": "Representative in the General Assembly – District 49",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:49",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-97",
+      "title": "Representative in the General Assembly – District 97",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:97",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-98",
+      "title": "Representative in the General Assembly – District 98",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:98",
+      "candidates": 3,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-100",
+      "title": "Representative in the General Assembly – District 100",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:100",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-123",
+      "title": "Representative in the General Assembly – District 123",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:123",
+      "candidates": 2,
+      "sourceUrl": "https://www.schuylkillcountypa.gov/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/013%20Butler%20Township%20Lavelle.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
+    "candidateAliasesEnriched": 1
+  },
+  "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
+  "nextOwner": "River: install as data and verify these districts and candidates live."
+}

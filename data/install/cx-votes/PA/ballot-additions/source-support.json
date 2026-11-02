@@ -1,0 +1,145 @@
+[
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:42:59.280801+00:00",
+    "sha256": "5ade528bafa5c009ce77d370695cfc2db49cc172e0464a6e6f091f0ff87faf97",
+    "sourceFile": "sources/5ade528bafa5c009ce77d370695cfc2db49cc172e0464a6e6f091f0ff87faf97.source",
+    "excerptFile": "sources/c6b91a93cdb9027c4ea3a3191467fa657fa606587a37aaef4419e7e95eab91ea.txt",
+    "excerptSha256": "c6b91a93cdb9027c4ea3a3191467fa657fa606587a37aaef4419e7e95eab91ea",
+    "publicSelection": {
+      "schoolDistrict": "Warwick School District",
+      "precinctId": "4600"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Warwick School District and precinct 4600, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:44:17.698733+00:00",
+    "sha256": "8d67640cde803b7870195a880ee76f39d634cc908b784f8aae6588442f8b1909",
+    "sourceFile": "sources/8d67640cde803b7870195a880ee76f39d634cc908b784f8aae6588442f8b1909.source",
+    "excerptFile": "sources/64556d22958f17454870ce407e724ddadc70602a778325145fefe11f0065b3c5.txt",
+    "excerptSha256": "64556d22958f17454870ce407e724ddadc70602a778325145fefe11f0065b3c5",
+    "publicSelection": {
+      "schoolDistrict": "Hempfield School District",
+      "precinctId": "4901"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Hempfield School District and precinct 4901, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:44:00.099886+00:00",
+    "sha256": "5a1402f296ad5634eb6c65bf657b06bdefd30e435356455a6de8902ddc768b7e",
+    "sourceFile": "sources/5a1402f296ad5634eb6c65bf657b06bdefd30e435356455a6de8902ddc768b7e.source",
+    "excerptFile": "sources/399beb381fee2b16fd307857b73f0b66f954db1127c73c770e653357207b2585.txt",
+    "excerptSha256": "399beb381fee2b16fd307857b73f0b66f954db1127c73c770e653357207b2585",
+    "publicSelection": {
+      "schoolDistrict": "Ephrata Area School District",
+      "precinctId": "1101"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Ephrata Area School District and precinct 1101, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:43:59.852927+00:00",
+    "sha256": "b45708fe412f0f9ddb050d1a90b0018801a14c719aaf2380daf0f35b759bb183",
+    "sourceFile": "sources/b45708fe412f0f9ddb050d1a90b0018801a14c719aaf2380daf0f35b759bb183.source",
+    "excerptFile": "sources/c412e44fa46d4f5735a8d12c69abadb905fdb6a7cb952df24055424294e88962.txt",
+    "excerptSha256": "c412e44fa46d4f5735a8d12c69abadb905fdb6a7cb952df24055424294e88962",
+    "publicSelection": {
+      "schoolDistrict": "Lancaster School District",
+      "precinctId": "0202"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Lancaster School District and precinct 0202, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:44:00.007180+00:00",
+    "sha256": "ae89e73360c5d16b03b8ef2bd751aab071fe4e483d866c7d2c858e1f1a20c5bc",
+    "sourceFile": "sources/ae89e73360c5d16b03b8ef2bd751aab071fe4e483d866c7d2c858e1f1a20c5bc.source",
+    "excerptFile": "sources/c0332efaeabb684c0fc6b1ec1d0e66306ba12f5101f70d57a543c7f1d8a50283.txt",
+    "excerptSha256": "c0332efaeabb684c0fc6b1ec1d0e66306ba12f5101f70d57a543c7f1d8a50283",
+    "publicSelection": {
+      "schoolDistrict": "Lampeter-Strasburg School District",
+      "precinctId": "5206"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Lampeter-Strasburg School District and precinct 5206, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:43:59.997257+00:00",
+    "sha256": "6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da",
+    "sourceFile": "sources/6e259cc79a7726bd98c73bd2eeb2e308ca1e84b524a909c224a7c7046752b7da.source",
+    "excerptFile": "sources/01710080697eddc1e0619ddb30eaa796ee4c669eacdce084b62ab723a6202af4.txt",
+    "excerptSha256": "01710080697eddc1e0619ddb30eaa796ee4c669eacdce084b62ab723a6202af4",
+    "publicSelection": {
+      "schoolDistrict": "Donegal School District",
+      "precinctId": "3801"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Donegal School District and precinct 3801, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:43:59.874367+00:00",
+    "sha256": "e852c6dc78455a3497d39d831873bc83d51dd5e6d1518383c5c69190b1302713",
+    "sourceFile": "sources/e852c6dc78455a3497d39d831873bc83d51dd5e6d1518383c5c69190b1302713.source",
+    "excerptFile": "sources/bf919557ba44696a4805a4d5f7ff13ca614c9d095aae39a06dbdfa29394d4e7a.txt",
+    "excerptSha256": "bf919557ba44696a4805a4d5f7ff13ca614c9d095aae39a06dbdfa29394d4e7a",
+    "publicSelection": {
+      "schoolDistrict": "Solanco School District",
+      "precinctId": "2900"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Solanco School District and precinct 2900, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://www.schuylkillcountypa.gov/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/013%20Butler%20Township%20Lavelle.pdf",
+    "finalUrl": "https://cms8.revize.com/revize/schuylkillcountypa/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/013%20Butler%20Township%20Lavelle.pdf",
+    "sourceCheckedAt": "2026-11-02T21:22:28.178516+00:00",
+    "sha256": "2499f71c709e081e5572f25e7a70d8412647780b65cd1850ed0b5ac0b39091f2",
+    "sourceFile": "sources/2499f71c709e081e5572f25e7a70d8412647780b65cd1850ed0b5ac0b39091f2.source",
+    "excerptFile": "sources/c84a124eac766734aa084a2e0d14ab21845ed034a602cef3183c038ef22caacc.txt",
+    "excerptSha256": "c84a124eac766734aa084a2e0d14ab21845ed034a602cef3183c038ef22caacc",
+    "evidence": "The official 013 Butler Township Lavelle November 3, 2026 general-election ballot names John Deatrich (Democratic) and Tim Twardzik (Republican) as the complete printed candidate list for Representative in the General Assembly, 123rd Legislative District, vote for one, two-year term. Code confirmed the heading and both exact name/party passages in the saved PDF extraction. The ballot prints no State Senate contest."
+  }
+]

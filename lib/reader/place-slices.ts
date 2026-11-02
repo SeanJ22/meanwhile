@@ -13,6 +13,8 @@ interface Person { readonly facts: Map<string, Held>; readonly shown: string }
 interface Cards { meetings?: MeetingsBody; history?: HistoryBody; agenda?: AgendaBody }
 
 const FAMILY = "source:derived:family:";
+/** A government not on the registration of the places a page holds is known by the kind its id names (`ak:city:...`). */
+const KIND_OF_ID: Readonly<Record<string, string>> = { special: "SPECIAL DISTRICT", city: "MUNICIPAL", school: "SCHOOL DISTRICT", depschool: "DEPENDENT SCHOOL SYSTEM", county: "COUNTY" };
 const BODY_FIELDS = new Set(["name", "homepage", "meeting_cadence", "agenda_url", "office_address", "office_phone", "office_email", "mailing_address"]);
 const PERSON_KEYS = new Set<string>(ROSTER_PERSON_FIELDS);
 /** Where a slice read numbers the places whose cards only lend the entities of boards that are filed nowhere the page names. */
@@ -172,7 +174,7 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
       peopleIds: rosters.flatMap(row => [String(row.person_id), String(row.shown_id)]) }) : null;
     for (const entity of entities) {
       entity.registered_name = (runtime?.registry.bodies.find(body => body.id === entity.id)?.name as string | undefined) ?? null;
-      entity.government_class = (entity.parent_id === null ? null : classes.get(entity.parent_id)) ?? null;
+      entity.government_class = (entity.parent_id === null ? null : classes.get(entity.parent_id) ?? KIND_OF_ID[entity.parent_id.split(":")[1] ?? ""]) ?? null;
     }
     if (kind === "place") takeCards(cards.get(pageId));
     // A state's family calendar is on every page of the state; its rows are those the slices hold for this page's boards and for the place itself.

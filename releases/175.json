@@ -21,6 +21,89 @@
     "number": 894,
     "url": "https://github.com/SeanJ22/meanwhile/pull/894"
   },
-  "ci": "running",
-  "at": "2026-11-02T22:05:39Z"
+  "ci": "fail",
+  "at": "2026-11-02T22:05:39Z",
+  "failed_jobs": [],
+  "failed_tests": [
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "a contract that declares a longer statement budget keeps the bounded lock wait"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "a migration that declares its trigger tables locks them together before its first statement"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "a serving mismatch cannot write pending contracts, but cannot hold a current contract journal"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "an already applied upper bound still includes older pending migrations"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "an applied journal hash mismatch refuses in both dry and write modes without DDL"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "concurrent migration reuse reports no statements applied and keeps the lock with the journal"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "db:apply --dry plans against an absent journal using SELECT only"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "db:apply --dry preserves applied/pending planning without issuing DDL"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "db:apply --phase=contract plans only that phase without writes"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "db:apply --phase=expand plans only that phase without writes"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "non-dry db:apply keeps setup and migration journalling fail-closed"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "production build without a writer passes only when committed expands are already applied"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "production build without a writer refuses pending expands or an absent journal without DDL"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "production contracts bound exclusive reader locks inside their journal transaction"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "production refuses uncommitted journal or SQL bytes before database access"
+    },
+    {
+      "file": "tests/apply-migrations-dry.test.ts",
+      "name": "writerless production inspection still refuses the wrong endpoint and applied hash drift"
+    },
+    {
+      "file": "tests/migration-shipping-invariant.test.ts",
+      "name": "every committed migration declares a phase"
+    },
+    {
+      "file": "tests/migration-shipping-invariant.test.ts",
+      "name": "every declaration agrees with the migration's own SQL"
+    },
+    {
+      "file": "tests/migration-shipping-invariant.test.ts",
+      "name": "the declaration states a reason, and names no migration that does not exist"
+    }
+  ],
+  "returned": [
+    "river-174"
+  ],
+  "settled_at": "2026-11-02T22:37:01Z"
 }

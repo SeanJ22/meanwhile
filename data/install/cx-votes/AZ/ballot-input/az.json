@@ -1,0 +1,635 @@
+{
+  "ballots": {
+    "AZ:az-2026-11-03": {
+      "election": {
+        "id": "az-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "AZ"
+      },
+      "contests": [
+        {
+          "id": "az-maricopa-2026-proposition-413",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+          "title": "Proposition 413 — Transaction Privilege Tax for Jail Facilities",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "az-2026-11-03",
+          "provenance": {
+            "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.\nA \"YES\" vote shall have the effect of approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.\nA \"NO\" vote shall have the effect of rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs.",
+            "sourceOrg": "Maricopa County Elections Department",
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+            "verifiedAt": "2026-10-20T22:54:15.702076+00:00",
+            "collectedAt": "2026-10-20T22:54:15.702076+00:00"
+          },
+          "measureTextUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "az-peoria-general-2026-proposition-417",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:az/place:peoria",
+          "title": "City of Peoria — Proposition 417",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "az-2026-11-03",
+          "provenance": {
+            "quote": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.\nA \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.\nA \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company.",
+            "sourceOrg": "City of Peoria City Clerk",
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00"
+          },
+          "measureTextUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "az-tempe-general-2026-proposition-424",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:az/place:tempe",
+          "title": "City of Tempe — Proposition 424",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "az-2026-11-03",
+          "provenance": {
+            "quote": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).\nA “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.\nA “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
+            "sourceOrg": "City of Tempe City Clerk",
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "verifiedAt": "2026-10-21T00:09:35.797512+00:00",
+            "collectedAt": "2026-10-21T00:09:35.797512+00:00"
+          },
+          "measureTextUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ballot-az-pima:prop-423",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+          "title": "Proposition 423: Vail Unified School District budget override continuation",
+          "voteFor": 1,
+          "scopeNote": "Voters of Vail Unified School District No. 20. The proposition number is the Pima County School Superintendent’s; the fiscal terms are the district’s own Notice of Election.",
+          "termYears": null,
+          "electionId": "az-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections (proposition number); Vail Unified School District No. 20 Notice of Election (question and fiscal terms)",
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "verifiedAt": "2026-08-27",
+            "collectedAt": "2026-08-27"
+          },
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "ballot-az-pima:prop-428",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+          "title": "Proposition 428: Sahuarita Unified School District budget override continuation",
+          "voteFor": 1,
+          "scopeNote": "Voters of Sahuarita Unified School District No. 30. The question as titled by the Pima County School Superintendent, who is the filing officer for school-district ballot measures in this county. The district’s own Notice of Election has not been read, so the fiscal terms are not stated here rather than estimated.",
+          "termYears": null,
+          "electionId": "az-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "verifiedAt": "2026-08-27",
+            "collectedAt": "2026-08-27"
+          },
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "ballot-az-pima:prop-429",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+          "title": "Proposition 429: Tanque Verde Unified School District budget override continuation",
+          "voteFor": 1,
+          "scopeNote": "Voters of Tanque Verde Unified School District No. 13. The question as titled by the Pima County School Superintendent, who is the filing officer for school-district ballot measures in this county. The district’s own Notice of Election has not been read, so the fiscal terms are not stated here rather than estimated.",
+          "termYears": null,
+          "electionId": "az-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "verifiedAt": "2026-08-27",
+            "collectedAt": "2026-08-27"
+          },
+          "divisionVintage": "TIGER_GENZ2025"
+        }
+      ],
+      "measures": [
+        {
+          "id": "az-maricopa-2026-proposition-413#question",
+          "contestId": "az-maricopa-2026-proposition-413",
+          "provenance": {
+            "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.\nA \"YES\" vote shall have the effect of approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.\nA \"NO\" vote shall have the effect of rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs.",
+            "sourceOrg": "Maricopa County Elections Department",
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+            "verifiedAt": "2026-10-20T22:54:15.702076+00:00",
+            "collectedAt": "2026-10-20T22:54:15.702076+00:00"
+          },
+          "questionText": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.",
+          "officialNumber": "413",
+          "officialStatement": "A \"YES\" vote shall have the effect of approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.\nA \"NO\" vote shall have the effect of rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs."
+        },
+        {
+          "id": "az-peoria-general-2026-proposition-417#question",
+          "contestId": "az-peoria-general-2026-proposition-417",
+          "provenance": {
+            "quote": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.\nA \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.\nA \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company.",
+            "sourceOrg": "City of Peoria City Clerk",
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "verifiedAt": "2026-10-21T00:09:35.705603+00:00",
+            "collectedAt": "2026-10-21T00:09:35.705603+00:00"
+          },
+          "questionText": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.",
+          "officialNumber": "417",
+          "officialStatement": "A \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.\nA \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company."
+        },
+        {
+          "id": "az-tempe-general-2026-proposition-424#question",
+          "contestId": "az-tempe-general-2026-proposition-424",
+          "provenance": {
+            "quote": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).\nA “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.\nA “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
+            "sourceOrg": "City of Tempe City Clerk",
+            "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+            "verifiedAt": "2026-10-21T00:09:35.797512+00:00",
+            "collectedAt": "2026-10-21T00:09:35.797512+00:00"
+          },
+          "questionText": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).",
+          "officialNumber": "424",
+          "officialStatement": "A “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.\nA “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027."
+        },
+        {
+          "id": "ballot-az-pima:prop-423:question",
+          "contestId": "ballot-az-pima:prop-423",
+          "provenance": {
+            "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections (proposition number); Vail Unified School District No. 20 Notice of Election (question and fiscal terms)",
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "verifiedAt": "2026-08-27",
+            "collectedAt": "2026-08-27"
+          },
+          "questionText": "BUDGET OVERRIDE CONTINUATION, YES / NO — whether Vail Unified School District No. 20 of Pima County, Arizona may continue to exceed the revenue control limit by not more than 12.5% per fiscal year, for fiscal years 2027/2028 and the next six fiscal years.",
+          "officialStatement": "From the district’s statutory Notice of Election: a special election consolidated with the General Election of November 3, 2026, under A.R.S. § 15-481(P). The budget effect is approximately $5,102,762 above the alternate budget for 2027/2028, at an estimated continuation of $1.61 per $100 of secondary assessed valuation. The governing board adopted the calling resolution on 2026-06-02. Arguments were due to the Pima County School Superintendent by 5:00 p.m. on 2026-08-07."
+        },
+        {
+          "id": "ballot-az-pima:prop-428:question",
+          "contestId": "ballot-az-pima:prop-428",
+          "provenance": {
+            "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "verifiedAt": "2026-08-27",
+            "collectedAt": "2026-08-27"
+          },
+          "questionText": "A 15% Maintenance and Operations Budget Override Continuation for Sahuarita Unified School District, to be considered by the voters of the district at the election of November 3, 2026.",
+          "officialStatement": null
+        },
+        {
+          "id": "ballot-az-pima:prop-429:question",
+          "contestId": "ballot-az-pima:prop-429",
+          "provenance": {
+            "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+            "sourceUrl": "https://www.schools.pima.gov/",
+            "verifiedAt": "2026-08-27",
+            "collectedAt": "2026-08-27"
+          },
+          "questionText": "A 15% Maintenance and Operations Budget Override Continuation for Tanque Verde Unified School District, to be considered by the voters of the district at the election of November 3, 2026.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "az-maricopa-2026-proposition-413",
+          "whatItDoes": "Replaces Maricopa County’s expiring jail tax with a sales tax at the same 0.2% rate, or 20 cents per $100 of taxable purchases, for up to 20 years. Collection starts the month after the existing tax expires in March 2027. Revenue is restricted to adult and juvenile jail buildings, operations and programs that reduce jail costs; the county may lower the rate during the term. County general-fund support for these facilities must also continue with annual inflation adjustments.",
+          "yesMeans": "Approve the replacement jail tax at the current rate for up to 20 years.",
+          "noMeans": "Reject this replacement jail tax; the current tax is scheduled to expire in March 2027.",
+          "parts": [],
+          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+          "sourceHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "az-peoria-general-2026-proposition-417",
+          "whatItDoes": "Gives Rose Valley Water Company a nonexclusive 25-year agreement to use Peoria’s public rights-of-way for water systems in its state-approved service area. The company must pay the city a franchise fee equal to 2% of its defined gross water-service receipts in Peoria and follow the agreement’s permitting, safety and other requirements. It takes effect on the first day of the month after voter approval. The company must provide the required service-area map and file written acceptance within 60 days after City Council approval.",
+          "yesMeans": "Allow Peoria to enter the proposed water-utility franchise agreement with Rose Valley Water Company.",
+          "noMeans": "Deny authority for Peoria to enter this proposed agreement.",
+          "parts": [],
+          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "sourceHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "az-tempe-general-2026-proposition-424",
+          "whatItDoes": "Raises Tempe’s city sales and use tax from 1.8% to 2.3% beginning January 1, 2027, while food bought for home use stays at the current 1.8% sales-tax rate. The additional 0.5 percentage point is divided into 0.3 for public safety, 0.1 for transit and walking or cycling projects, and 0.1 for early childhood care and preschool. Child-care access is prioritized for qualified Tempe residents, then Tempe school-district teachers, city employees, and workers at Tempe-based businesses.",
+          "yesMeans": "Approve the additional 0.5% tax and its specified public-safety, transportation and early-childhood uses.",
+          "noMeans": "Keep the city’s current 1.8% sales and use tax rate.",
+          "parts": [],
+          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+          "sourceHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ballot-az-pima:prop-423",
+          "whatItDoes": "Renews Vail Unified School District’s authority to spend up to 12.5% above its state-set operating-budget limit for seven years, starting in 2027–28. Local property taxes would fund the renewal in addition to other district taxes. The legally required first-year estimate is $1.61 per $100 of assessed value using current-year property values; the district estimates about $1.55 using expected next-year values, subject to final values.",
+          "yesMeans": "Renew the existing operating-budget override and the property taxes that fund it.",
+          "noMeans": "Do not renew the override; the existing authorization is scheduled to shrink by one-third in each of 2027–28 and 2028–29.",
+          "parts": [],
+          "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+          "sourceHash": "edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ballot-az-pima:prop-428",
+          "whatItDoes": "Renews and increases Sahuarita Unified School District’s operating-budget override from 14% to 15% above the state-set limit. It runs for seven years starting in 2027–28: 15% for five years, then 10% and 5% in the final two years. Local property taxes would fund it at an estimated first-year rate of $1.31 per $100 of assessed value, in addition to other district taxes.",
+          "yesMeans": "Authorize the seven-year renewal and increase, funded by district property taxes.",
+          "noMeans": "Do not renew or increase the override; the current 14% authorization is scheduled to phase down in 2028–29 and 2029–30 and end in 2030–31.",
+          "parts": [],
+          "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+          "sourceHash": "66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ballot-az-pima:prop-429",
+          "whatItDoes": "Renews Tanque Verde Unified School District’s authority to spend 15% above its state-set operating-budget limit for seven years, starting in 2027–28. The authority remains at 15% for five years, then drops to 10% and 5% in the last two years. Local property taxes would fund it at an estimated first-year rate of $0.88 per $100 of assessed value, in addition to other district taxes.",
+          "yesMeans": "Renew the existing operating-budget override and the property taxes that fund it.",
+          "noMeans": "Do not renew the override; the current authorization is scheduled to phase down in 2028–29 and 2029–30 and end in 2030–31.",
+          "parts": [],
+          "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+          "sourceHash": "0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:47:02.352Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "85fe65b18970c71466282cabe145dab03ad8ccacc703417203a7ea8a3946c743",
+        "finalUrl": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
+        "publisher": "apps.azsos.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:40.068Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 19111993 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "75a05fb9c1ef32e693c08981ef4baec4bf805ce2294a6d63472ee22d7e47feaa",
+        "finalUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "publisher": "apps.azsos.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:41.860Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 26553926 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "a13d2a82f83b52206d3697a840382403b1c3d5cb6c80481e383b42d360669016",
+        "finalUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "publisher": "azsos.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:44.129Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 183097 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "398d15f09b68fbbf85714af7a300407f9812b79f1f3d981223b3f5bea8cf537a",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf",
+        "publisher": "content.civicplus.com",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:44.437Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 90877 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "4c941b9ffb3385846b98ef17100c68deb86b55f2ecc7fe6a2210de6fafa09d52",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "publisher": "content.civicplus.com",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:44.638Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "reviewedEvidence": "Codex PDC cutover acquired 170226 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "db3194faa729d9d69e9aa6909d1d354358d5cb8907f156847af90d4ce4bdd675",
+        "finalUrl": "https://pima.legistar.com/LegislationDetail.aspx?ID=21690",
+        "publisher": "pima.legistar.com",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:44.873Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://pima.legistar.com/LegislationDetail.aspx?ID=21690",
+        "reviewedEvidence": "Codex PDC cutover acquired 19 exact bytes as text/html; charset=utf-8; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "95744f08583dd328b917de532d0f06fda1dda6d87fb0e0c7c94cd4c6c4083ece",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202001%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:45.580Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202001%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 18966 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "94f10a133b59944377eb9249279fce1f12cb1e9000b43147e76d918406a5eba0",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202044%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:45.817Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202044%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 30104 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "b3634d11e574f94f4b9e328256ae13b1dc16f380e61fbc3f68e6a2d4416f9a6b",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202055%20-%202025.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.008Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202055%20-%202025.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 15852 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "96ff70bd8149c70bd9f19a597a1228a6c2534a18017a39896325c1daf5d76f83",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2003%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.192Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2003%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 44587 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "85258ee837ec351219ae4d62aabc4db44340a494438d8152a8b1e0b752b859ba",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2021%20-%202025.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.304Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2021%20-%202025.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 16479 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "ecc9bcc2e8acd5694c99ed201c7944d87ede4fb384e254092c127a4abd9720bc",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2040%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.483Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2040%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 19018 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "cd7facb265792e5531933ae42a7a77a4b1e4540150131bc608f5fc70a0bd54cf",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2048%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.544Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2048%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 19285 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "864b04959043986d9f49195e546b4880aecf90c802d450479f0f52297b242349",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20I-09-2026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.730Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20I-09-2026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 29561 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "f524dcdd65afcca1e13ec07d1cb6c9fcac060b8e687da6081af828945bb67a33",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:46.955Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 18700 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "4dc68fefd81e1e185c5ffb93a819da239123b41bc4f7b790d88e8026d0673334",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202025.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:47.025Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202025.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 16530 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "050b8260fd8fb02644436e1c0f61e0f54af589497e4986a66ac321411274646c",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:47.092Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 16452 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "233a82fc9a2d233111511a80fb61edbd3b0da26bedb69c26693a63865260a77a",
+        "finalUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/ballot%20analysis%20SCR1004%20-%202026.pdf",
+        "publisher": "www.azleg.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:47.152Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/ballot%20analysis%20SCR1004%20-%202026.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 18424 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "bf023e97b783c59fe9820879d4a60b6c0c790ac27f217f20a8ce03adeb960b53",
+        "finalUrl": "https://www.schools.pima.gov/",
+        "publisher": "www.schools.pima.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:47.347Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.schools.pima.gov/",
+        "reviewedEvidence": "Codex PDC cutover acquired 21155 exact bytes as text/html; charset=UTF-8; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "85fe65b18970c71466282cabe145dab03ad8ccacc703417203a7ea8a3946c743",
+        "finalUrl": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf?download=1",
+        "publisher": "Arizona Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T04:04:22.911340+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf?download=1",
+        "reviewedEvidence": "Official statewide canvass of the July 21, 2026 primary, certified August 6, 2026, 13 pages. Read the full document by OCR and matched starred congressional and legislative nominees against the official November voter guide and September 24 captured official candidate listing. The canvass supplies all nine congressional primary nominee lists. Qualified November write-ins are separately sourced from the September 9 official list. The non-authoritative cross-check capture is https://politicalmediamonitor.com/api/politicians/p_gzvszbz11/files/17221?download=1 (41 pages, saved separately); no published fact relies on that capture alone."
+      },
+      {
+        "rawHash": "67bc4e66b68a5883f6f68a4fa165d807eb4bbf5a78a3640bd3eac9b08273b5fb",
+        "finalUrl": "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf",
+        "publisher": "Citizens Clean Elections Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T04:04:22.911340+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general-election Voter Education Guide, linked from https://azcleanelections.gov/voter-education-guide. Extracted all 60 legislative contest rosters and 158 named candidates, including candidates whose statements read None Provided; matched nominee names and party to the Secretary of State primary canvass. Nick Fierro is an independent general-election candidate listed in the guide and is not a primary nominee. Added the 54 legislative district contests absent from the saved ballot and verified missing nominees in existing contests; retained existing ballot entries and their original sources. Qualified write-ins come from the Secretary of State separate official list."
+      },
+      {
+        "rawHash": "e43c9543b49762c0c20e8dd8e87cbeb3218673a7393bbb0e284fd0281d63e7a5",
+        "finalUrl": "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "publisher": "Arizona Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T04:04:22.911340+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "reviewedEvidence": "November 3, 2026 General Election Write-In and Withdrawn Candidates, revised September 9, 2026, linked as https://azsos.gov/media/718 by the Secretary of State election page. Contains 15 qualified write-ins: seven U.S. House, four legislative, and four statewide candidates; states no withdrawn candidates. All write-ins in the newly added district races are included. Existing candidate rows and their original sources are retained; newly verified missing general candidates are added."
+      },
+      {
+        "rawHash": "d18da57058ca71adb107eca888827db04ac87eea884ae3743bc52a09b3743bc1",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "publisher": "Maricopa County Elections Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:53:06.539560+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved full source document in maricopa-candidates.txt; code extracted the exact published office, name, party or ballot text."
+      },
+      {
+        "rawHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+        "publisher": "Maricopa County Elections Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:15.702076+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved full source document in maricopa-proposition-413.txt; code extracted the exact published office, name, party or ballot text."
+      },
+      {
+        "rawHash": "ed48de5bbf563ce81b84701eeec100486f7efa1d7824e492f0f48332359fa397",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+        "publisher": "Pima County Elections Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:17:15.543620+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete September9 general candidate list: clerk and all3AppealsDivisionII/10PimaSuperiorCourt judicial choices; Pima electorate remains county-specific."
+      },
+      {
+        "rawHash": "68d6f83d3e8a8dd0f687db54766d8c1a297a0107dea7161231486418afd3255a",
+        "finalUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "publisher": "Maricopa County / City of Scottsdale",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:19:36.209484+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 general election sample and full qualified write-in list. Eight individual appeals retention decisions and both college at-large candidates are printed; no college, appeals or clerk write-in is certified on the complete list."
+      },
+      {
+        "rawHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "publisher": "City of Peoria City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:09:35.705603+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3 general publicity pamphlet/ballot text: both at-large mayor candidates and complete Proposition417 question/YES/NO meanings. District council candidates excluded."
+      },
+      {
+        "rawHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "publisher": "City of Tempe City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:09:35.797512+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3 special election publicity pamphlet FULLTEXT sample ballot page7: complete Proposition424 official/descriptive text and both vote meanings. Advocacy arguments excluded."
+      },
+      {
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+        "publisher": "elections.maricopa.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:08:59.577423+00:00",
+        "httpStatus": 200,
+        "rawHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "publisher": "elections.maricopa.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:08:59.994817+00:00",
+        "httpStatus": 200,
+        "rawHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+        "publisher": "elections.maricopa.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:08:59.738539+00:00",
+        "httpStatus": 200,
+        "rawHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/",
+        "publisher": "content.civicplus.com",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:12:03.512376+00:00",
+        "httpStatus": 200,
+        "rawHash": "edd388f137cd77fc85e86ecc06fe9edfbc015b62775fadf10b4c02a9141a5f9f",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/",
+        "publisher": "content.civicplus.com",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:12:03.548735+00:00",
+        "httpStatus": 200,
+        "rawHash": "66f40f500619353809d740a059fd67c479d56812b066e72755c0c88525d5848e",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+        "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/",
+        "publisher": "content.civicplus.com",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:12:03.537575+00:00",
+        "httpStatus": 200,
+        "rawHash": "0e8a2d050848cfe422121dc4947c7921c7d8e2042cf141f2135b8633890f1641",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

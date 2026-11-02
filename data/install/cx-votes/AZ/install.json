@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "AZ",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AZ",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "az-maricopa-2026-proposition-413",
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf"
+    },
+    {
+      "id": "az-peoria-general-2026-proposition-417",
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf"
+    },
+    {
+      "id": "az-tempe-general-2026-proposition-424",
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf"
+    },
+    {
+      "id": "ballot-az-pima:prop-423",
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/cbbafe09-1da2-4954-9efb-3c9c2bd20869/"
+    },
+    {
+      "id": "ballot-az-pima:prop-428",
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/db4053ed-07a4-4b32-aed7-2cffbafd3d2f/"
+    },
+    {
+      "id": "ballot-az-pima:prop-429",
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f0201522-2b65-4712-b5b7-d669ea6280cf/"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 2
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

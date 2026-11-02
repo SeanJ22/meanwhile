@@ -1,0 +1,57 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "VA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:VA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "va-sbe-2026-amendment-2",
+      "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf"
+    },
+    {
+      "id": "va-local-measure-2026-6a4ad9ded3ed32a9c5a4",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-f790d6c721bafe46b51a",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-90ed087d096f9014fe12",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-b54993cd694fd6adf315",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-71e59a947fa9ee553245",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-faf583c06fecee3d069d",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-90a0c1c30e64523a3a87",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    },
+    {
+      "id": "va-local-measure-2026-92bdc390f922f87ffeee",
+      "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 1
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

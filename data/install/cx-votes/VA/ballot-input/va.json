@@ -1,0 +1,480 @@
+{
+  "ballots": {
+    "VA:va-2026-11-03-general": {
+      "election": {
+        "id": "va-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VA"
+      },
+      "contests": [
+        {
+          "id": "va-sbe-2026-amendment-2",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va",
+          "title": "Proposed Constitutional Amendment Question 2",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "quote": "Proposed Constitutional Amendment Question 2 | Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
+            "doorId": "fec-va-chief",
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "va-local-measure-2026-6a4ad9ded3ed32a9c5a4",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:emporia",
+          "title": "Sales Tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-f790d6c721bafe46b51a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:isle_of_wight",
+          "title": "General Retail Sales Tax for School Capital Projects",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-90ed087d096f9014fe12",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:new_kent",
+          "title": "General Retail Sales Tax for School Capital Projects",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-b54993cd694fd6adf315",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:norfolk",
+          "title": "Additional Local Sales Tax ",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-71e59a947fa9ee553245",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:richmond_51760",
+          "title": "Local Sales Tax Option",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-faf583c06fecee3d069d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:spotsylvania",
+          "title": "PUBLIC SCHOOLS",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-90a0c1c30e64523a3a87",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:spotsylvania",
+          "title": "TRANSPORTATION",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "va-local-measure-2026-92bdc390f922f87ffeee",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:va/county:waynesboro",
+          "title": "Sales Tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "va-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "measureTextUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "divisionVintage": "TIGER_GENZ2025"
+        }
+      ],
+      "measures": [
+        {
+          "id": "va-sbe-2026-amendment-2:measure",
+          "contestId": "va-sbe-2026-amendment-2",
+          "provenance": {
+            "quote": "Proposed Constitutional Amendment Question 2 | Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
+            "doorId": "fec-va-chief",
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-14T05:06:24.951694+00:00",
+            "collectedAt": "2026-10-14T05:06:24.951694+00:00"
+          },
+          "questionText": "Question: Should the Constitution of Virginia be amended to (i) remove the ban on same-sex marriage; (ii) affirm that two adults may marry regardless of sex, gender, or race; and (iii) require all legally valid marriages to be treated equally under the law?",
+          "officialNumber": "Question 2",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-6a4ad9ded3ed32a9c5a4:question",
+          "contestId": "va-local-measure-2026-6a4ad9ded3ed32a9c5a4",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Should City of Emporia, Virginia, be authorized to levy an additional local general retail sales tax at a rate not to exceed one percent (1%), provided that the revenues from the additional sales tax shall be used solely for capital projects for the construction or renovation of schools in the City? If the capital projects for the construction or renovation of schools in the City are to be financed by bonds or loans, the additional sales tax shall expire on the date by which such bonds or loans shall be repaid if the capital projects for the construction or renovation of schools in the City are not to be financed by bonds or loans, the additional sales tax shall expire on June 30, 2046. ",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-f790d6c721bafe46b51a:question",
+          "contestId": "va-local-measure-2026-f790d6c721bafe46b51a",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Shall Isle of Wight County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent (1%), with the revenues to be used solely for capital projects for new construction or major renovation of schools serving Isle of Wight County, Virginia, including related bond and loan financing costs, and that the tax shall expire on June 30, 2046? ",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-90ed087d096f9014fe12:question",
+          "contestId": "va-local-measure-2026-90ed087d096f9014fe12",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Shall New Kent County, Virginia be authorized to levy a general retail sales tax at a rate not to exceed one percent, with the revenues to be used solely for capital projects for new construction or major renovation of schools serving New Kent County, Virginia, including related bond and loan financing costs, and with the tax expiring on June 30, 2046? ",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-b54993cd694fd6adf315:question",
+          "contestId": "va-local-measure-2026-b54993cd694fd6adf315",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Shall the City of Norfolk, Virginia, add an additional local general retail sales tax that does not exceed one percent (1%) and that expires on June 30, 2046, in order to provide revenue that is used solely for capital projects for the new construction or major renovation of schools serving the City of Norfolk? ",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-71e59a947fa9ee553245:question",
+          "contestId": "va-local-measure-2026-71e59a947fa9ee553245",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Shall the City of Richmond be authorized to levy a general retail sales tax at a rate not to exceed 1% to provide revenue solely for capital projects for the construction or major renovation of schools in the City? Should this referendum be approved authorizing the levy of such tax, the tax would expire no later than June 30, 2046. ",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-faf583c06fecee3d069d:question",
+          "contestId": "va-local-measure-2026-faf583c06fecee3d069d",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Question 1: Shall the County of Spotsylvania, Virginia (the \"County\") contract a debt and issue its General Obligation Public Improvement Bonds in the maximum amount of Two Hundred Thirty-Seven Million Two Hundred Seventy-Eight Thousand Six Hundred Five Dollars ($237,278,605) to provide funds, together with other available funds, to undertake a program of Capital Improvement Projects for the Spotsylvania County Public Schools, including without limitation (1) the acquisition of real property for future public school sites, construction and equipping of new public schools and additions and renovations to existing public schools; (2) public school capital maintenance purposes, including HVAC and roof replacements, asphalt/sidewalk construction and replacement, and other capital maintenance projects; (3) school transportation purposes including acquisition of new and replacement school buses; (4) school technology purposes including upgrades to and replacements of existing equipment; and (5) acquisition, construction and equipping or rehabilitation of such other capital school assets as may be required to address the actual educational needs of the residents of the County? ",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-90a0c1c30e64523a3a87:question",
+          "contestId": "va-local-measure-2026-90a0c1c30e64523a3a87",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "Question 2: Shall the County of Spotsylvania, Virginia (the \"County\") contract a debt and issue its General Obligation Public Improvement Bonds in the maximum amount of Sixty-Seven Million Six Hundred Twenty-Seven Thousand Dollars ($67,627,000) to provide funds, together with other available funds, to undertake a program of Capital Improvement Projects for transportation purposes, including without limitation (except as specifically provided below) (1) intersection improvements at Route 208 and Smith Station Road to alleviate traffic and improve safety; (2) extension and improvements to Germanna Point Drive to provide an alternate travel route for traffic; (3) widening of portions of Route 2 and Route 17 to four lanes; (4) widening of a portion of Harrison Road to include a shared-use path and a pedestrian sidewalk; (5) acquisition, design and construction of a roundabout at the intersection of Old Plank Road and Andora Drive; (6) a minimum of $10,018,213 of Bonds to be allocated to the acquisition, design and construction of improvements to the County's rural roads, including intersection improvements and construction of shoulders to rural roads; and (7) funding of the County's share of other pedestrian, bicycle and shared-use paths and \"Safe Routes to School\" sidewalk projects so that the County may receive matching funds under the Federal aid highway program known as the Transportation Alternatives Program, or any substantially similar or replacement federal or state highway financing program?",
+          "officialStatement": null
+        },
+        {
+          "id": "va-local-measure-2026-92bdc390f922f87ffeee:question",
+          "contestId": "va-local-measure-2026-92bdc390f922f87ffeee",
+          "provenance": {
+            "sourceOrg": "Virginia Department of Elections",
+            "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+            "verifiedAt": "2026-10-20T22:52:21.499451+00:00",
+            "collectedAt": "2026-10-20T22:52:21.499451+00:00"
+          },
+          "questionText": "The revenue from the additional general sales tax not to exceed 1% shall be used solely for capital projects for the renovation or construction of City schools, financing and/or bonds, to the extent the capital projects are to be financed by bonds and/or loans, and the additional general sales tax not to exceed 1% shall expire no later than July 13, 2046.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "va-sbe-2026-amendment-2",
+          "whatItDoes": "Removes Virginia’s constitutional ban on same-sex marriage and replaces it with a right for two adults to marry regardless of sex, gender or race. The state must recognize lawful marriages between two adults and treat them equally, and cannot deny a marriage license because of either person’s sex, gender or race. The existing ban is currently unenforceable under the U.S. Supreme Court’s 2015 Obergefell v. Hodges decision.",
+          "yesMeans": "Replace the existing marriage restrictions with the proposed constitutional right and equal-treatment requirements.",
+          "noMeans": "Leave the current constitutional text unchanged. Its same-sex-marriage ban is currently unenforceable under Obergefell v. Hodges, but would be enforceable again if the Supreme Court overturns that ruling.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+          "sourceHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-6a4ad9ded3ed32a9c5a4",
+          "whatItDoes": "Authorizes Emporia to levy an additional local general retail sales tax of up to 1%, used only for capital projects to build or renovate city schools. If the projects are financed with bonds or loans, the tax expires when those debts are due to be repaid. If the projects are not financed with bonds or loans, the tax expires June 30, 2046.",
+          "yesMeans": "Allow the city to levy this additional sales tax, with the school-project restriction and stated expiration rules.",
+          "noMeans": "Do not authorize this additional sales tax through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-f790d6c721bafe46b51a",
+          "whatItDoes": "Authorizes Isle of Wight County to levy a general retail sales tax of up to 1%, used only for capital projects to build or substantially renovate schools serving the county, including related bond and loan financing costs. The tax expires June 30, 2046.",
+          "yesMeans": "Allow the county to levy this sales tax for the specified school projects and financing costs until June 30, 2046.",
+          "noMeans": "Do not authorize this sales tax through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-90ed087d096f9014fe12",
+          "whatItDoes": "Authorizes New Kent County to levy a general retail sales tax of up to 1%, used only for capital projects to build or substantially renovate schools serving the county, including related bond and loan financing costs. The tax expires June 30, 2046.",
+          "yesMeans": "Allow the county to levy this sales tax for the specified school projects and financing costs until June 30, 2046.",
+          "noMeans": "Do not authorize this sales tax through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-b54993cd694fd6adf315",
+          "whatItDoes": "Adds an additional local general retail sales tax of up to 1% in Norfolk, used only for capital projects to build or substantially renovate schools serving the city. The tax expires June 30, 2046.",
+          "yesMeans": "Approve the additional sales tax for the specified school projects until June 30, 2046.",
+          "noMeans": "Reject this proposed additional sales tax.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-71e59a947fa9ee553245",
+          "whatItDoes": "Authorizes Richmond to levy a general retail sales tax of up to 1%, used only for capital projects to build or substantially renovate city schools. The tax must expire no later than June 30, 2046.",
+          "yesMeans": "Allow the city to levy this sales tax for the specified school projects, ending no later than June 30, 2046.",
+          "noMeans": "Do not authorize this sales tax through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-faf583c06fecee3d069d",
+          "whatItDoes": "Authorizes Spotsylvania County to borrow up to $237,278,605 through general-obligation bonds, together with other available money, for public-school capital projects. These include land for future school sites; new schools, additions and renovations; maintenance such as heating, cooling, roofs and pavement; school buses; technology equipment; and other school capital assets needed to meet residents’ educational needs.",
+          "yesMeans": "Authorize the county to issue up to $237,278,605 in bonds for these school capital projects.",
+          "noMeans": "Do not authorize this school-project bond debt through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-90a0c1c30e64523a3a87",
+          "whatItDoes": "Authorizes Spotsylvania County to borrow up to $67,627,000 through general-obligation bonds, together with other available money, for transportation capital projects. Projects include Route 208/Smith Station Road intersection work; Germanna Point Drive extension and improvements; widening parts of Routes 2 and 17 to four lanes; Harrison Road widening with a shared-use path and sidewalk; and an Old Plank Road/Andora Drive roundabout. At least $10,018,213 in bonds must fund rural-road acquisition, design and improvements, including intersections and shoulders. The bonds may also fund the county’s share of pedestrian, bicycle, shared-use-path and Safe Routes to School sidewalk projects to obtain matching funds through the Transportation Alternatives Program or a substantially similar or replacement federal or state highway financing program.",
+          "yesMeans": "Authorize up to $67,627,000 in transportation bonds, including the minimum rural-road allocation.",
+          "noMeans": "Do not authorize this transportation-project bond debt through this referendum.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "va-local-measure-2026-92bdc390f922f87ffeee",
+          "whatItDoes": "Provides for an additional general sales tax of up to 1% in Waynesboro. Revenue is restricted to capital projects to renovate or build city schools and related financing or bonds when the projects are financed with bonds or loans. The tax must expire no later than July 13, 2046.",
+          "yesMeans": "Approve the proposed additional sales-tax measure with the school-project restrictions and July 13, 2046 deadline.",
+          "noMeans": "Reject this proposed sales-tax measure.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+          "sourceHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:40:38.180Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "e137497e53f51438352dcd3105eba22f6cfe93fe4109fb00804a8a4a65d0f51b",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "publisher": "Virginia Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:51.273419+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-HD20-Candidate-List.xlsx",
+        "reviewedEvidence": "Official House of Delegates District 20 special election list; three locality copies independently match the two candidate records."
+      },
+      {
+        "rawHash": "e5a0ee87a35961198e5b501c4211474b07b025c8d8f8ef99d42f5476c3f60f68",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "publisher": "Virginia Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:06:24.611494+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx",
+        "reviewedEvidence": "Official November 3, 2026 Federal Offices Candidate List; all 38 candidate rows converted, including party, incumbency and filed website."
+      },
+      {
+        "rawHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "publisher": "Virginia Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:06:24.951694+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "reviewedEvidence": "Official November 2026 Proposed Constitutional Amendments and Local Referendums list; all three active statewide questions converted verbatim."
+      },
+      {
+        "rawHash": "16e41ebd8a81b493c470139e3954e5ed005969a4e5a3c869f3e6ce556b45a4fe",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "publisher": "Virginia Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:52:21.496466+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx",
+        "reviewedEvidence": "Replayed exact office, jurisdiction, candidate name, party, incumbency, seat count and official question cells from the saved November 3, 2026 workbook. No campaign mailing addresses were projected."
+      },
+      {
+        "rawHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "publisher": "Virginia Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:52:21.499451+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "reviewedEvidence": "Replayed exact office, jurisdiction, candidate name, party, incumbency, seat count and official question cells from the saved November 3, 2026 workbook. No campaign mailing addresses were projected."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "finalUrl": "https://www.elections.virginia.gov/media/formswarehouse/print-ready-materials-artwork/november-2026-proposed-constitutional-amendments/2026-Nov-Proposed-Constitution-Amendments-Brochure---EN.pdf",
+        "publisher": "www.elections.virginia.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.259023+00:00",
+        "httpStatus": 200,
+        "rawHash": "a561145c79d400db98d2bd5f7a9d74db8136387ebbd080a60553eba003e800de",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "finalUrl": "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Proposed-Constitutional-Amendments-and-Local-Referendums-(rev-9-8-2026).xlsx",
+        "publisher": "www.elections.virginia.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.316936+00:00",
+        "httpStatus": 200,
+        "rawHash": "aba061c904501ae13055cdb7ee30b5e707ec67ce8bc7f67cb30b45ee52b6637c",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

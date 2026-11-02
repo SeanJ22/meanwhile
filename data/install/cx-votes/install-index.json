@@ -2,23 +2,61 @@
   "kind": "CX_VOTES_DATA_INSTALL_INDEX",
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
-  "status": "READY_PACKETS_WITH_OPEN_COVERAGE_LISTED",
-  "preparedAt": "2026-11-02T22:13:24.721885+00:00",
-  "productionAuthorization": "No production writes by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
+  "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
+  "preparedAt": "2026-11-02T23:07:15.465789+00:00",
+  "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
+  "sourceReview": "source-review/install.json",
   "explainerAudit": {
     "heldMeasures": 499,
     "scopesWithMeasures": 44,
     "readerGapsBefore": 100,
     "preparedReaderAttachments": 100,
     "remainingReaderGapsInHeldMeasureAudit": 0,
+    "newOfficialMeasuresWithExplanations": 7,
+    "totalPreparedExplanationsOrAttachmentRepairs": 107,
     "changedJurisdictions": 18,
-    "description": "17 states plus DC; the nationwide baseline contains 56 state/territory scopes. This describes held ballot measures, not an assertion that all local measures have been acquired."
+    "description": "17 states plus DC; the nationwide baseline contains 56 state/territory scopes. This describes held ballot measures and seven newly acquired official questions, not every unacquired local measure."
+  },
+  "newRaceData": {
+    "byState": {
+      "IL": 20,
+      "NH": 186,
+      "PA": 61,
+      "WI": 14
+    },
+    "totalRaces": 281,
+    "candidateEntries": 822,
+    "scope": "Source-verified missing regular legislative races and four held Illinois candidate lists. Exact coverage and dates are in the per-state manifests."
+  },
+  "legislativeCoverageAfterDataInstall": {
+    "PA": {
+      "houseDistricts": 203,
+      "senateDistrictsOn2026Ballot": 25
+    },
+    "IL": {
+      "houseDistricts": 118,
+      "senateDistrictsOn2026Ballot": 39
+    },
+    "WI": {
+      "houseDistricts": 99,
+      "senateDistrictsOn2026Ballot": 17,
+      "officialRegularFieldsIncludingFederalAndStatewide": 128,
+      "nomineesOnAugust25Roster": 260
+    },
+    "NH": {
+      "houseDistricts": 203,
+      "houseSeats": 400,
+      "senateDistricts": 24,
+      "distinctLegislativeCandidates": 758
+    }
   },
   "states": [
     {
       "state": "AL",
-      "explainerGapsPrepared": 3,
+      "heldMeasureReaderGapsPrepared": 3,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 3,
       "dataInstalls": [
         {
           "manifest": "AL/identity-repair/install.json",
@@ -40,7 +78,9 @@
     },
     {
       "state": "AR",
-      "explainerGapsPrepared": 8,
+      "heldMeasureReaderGapsPrepared": 8,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 8,
       "dataInstalls": [
         {
           "manifest": "AR/install.json",
@@ -52,7 +92,9 @@
     },
     {
       "state": "AZ",
-      "explainerGapsPrepared": 6,
+      "heldMeasureReaderGapsPrepared": 6,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 6,
       "dataInstalls": [
         {
           "manifest": "AZ/install.json",
@@ -64,7 +106,9 @@
     },
     {
       "state": "CA",
-      "explainerGapsPrepared": 1,
+      "heldMeasureReaderGapsPrepared": 1,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 1,
       "dataInstalls": [
         {
           "manifest": "CA/install.json",
@@ -92,7 +136,9 @@
     },
     {
       "state": "CO",
-      "explainerGapsPrepared": 19,
+      "heldMeasureReaderGapsPrepared": 19,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 19,
       "dataInstalls": [
         {
           "manifest": "CO/install.json",
@@ -104,7 +150,9 @@
     },
     {
       "state": "DC",
-      "explainerGapsPrepared": 1,
+      "heldMeasureReaderGapsPrepared": 1,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 1,
       "dataInstalls": [
         {
           "manifest": "DC/install.json",
@@ -116,7 +164,9 @@
     },
     {
       "state": "FL",
-      "explainerGapsPrepared": 4,
+      "heldMeasureReaderGapsPrepared": 4,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 4,
       "dataInstalls": [
         {
           "manifest": "FL/install.json",
@@ -128,7 +178,9 @@
     },
     {
       "state": "IL",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "IL/ballot-additions/install.json",
@@ -136,8 +188,8 @@
           "kind": "CX_VOTES_DATA_INSTALL",
           "contractId": "ballot-contests:IL",
           "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
-          "races": 4,
-          "namedChoices": 7
+          "races": 20,
+          "namedChoices": 33
         },
         {
           "manifest": "IL/voting/install.json",
@@ -154,7 +206,9 @@
     },
     {
       "state": "MA",
-      "explainerGapsPrepared": 8,
+      "heldMeasureReaderGapsPrepared": 8,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 8,
       "dataInstalls": [
         {
           "manifest": "MA/install.json",
@@ -178,7 +232,9 @@
     },
     {
       "state": "MD",
-      "explainerGapsPrepared": 6,
+      "heldMeasureReaderGapsPrepared": 6,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 6,
       "dataInstalls": [
         {
           "manifest": "MD/install.json",
@@ -190,7 +246,9 @@
     },
     {
       "state": "MN",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "MN/voting/install.json",
@@ -212,7 +270,9 @@
     },
     {
       "state": "MO",
-      "explainerGapsPrepared": 1,
+      "heldMeasureReaderGapsPrepared": 1,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 1,
       "dataInstalls": [
         {
           "manifest": "MO/install.json",
@@ -224,7 +284,9 @@
     },
     {
       "state": "MS",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "MS/voting/install.json",
@@ -241,7 +303,9 @@
     },
     {
       "state": "NC",
-      "explainerGapsPrepared": 3,
+      "heldMeasureReaderGapsPrepared": 3,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 3,
       "dataInstalls": [
         {
           "manifest": "NC/install.json",
@@ -253,7 +317,9 @@
     },
     {
       "state": "ND",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "ND/ballot-status/install.json",
@@ -266,7 +332,9 @@
     },
     {
       "state": "NE",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "NE/voting/install.json",
@@ -283,13 +351,94 @@
     },
     {
       "state": "NH",
-      "explainerGapsPrepared": 16,
+      "heldMeasureReaderGapsPrepared": 16,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 16,
       "dataInstalls": [
+        {
+          "manifest": "NH/ballot-completeness/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_BALLOT_COMPLETENESS_DATA",
+          "contractId": "ballot-contests:NH",
+          "coverage": {
+            "newLegislativeContests": 9,
+            "stateSenateDistricts": [
+              4
+            ],
+            "houseCounty": "Strafford",
+            "houseDistricts": [
+              11,
+              13,
+              14,
+              15,
+              16,
+              17,
+              20,
+              21
+            ],
+            "printedCandidacies": 19,
+            "districtMemberships": 7,
+            "scope": "Dover ward ballots; whole corresponding legislative districts, including source-backed Strafford20/21 floterials",
+            "statewideComplete": false
+          },
+          "races": 9,
+          "namedChoices": 19
+        },
         {
           "manifest": "NH/install.json",
           "status": "READY_FOR_RIVER_DATA_INSTALL",
           "kind": "CX_VOTES_DATA_INSTALL",
           "contractId": "ballot-contests:NH"
+        },
+        {
+          "manifest": "NH/portsmouth-ballot-completeness/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_BALLOT_COMPLETENESS_DATA",
+          "contractId": "ballot-contests:NH",
+          "coverage": {
+            "newLegislativeContests": 8,
+            "stateSenateDistricts": [
+              21
+            ],
+            "houseCounty": "Rockingham",
+            "houseDistricts": [
+              21,
+              22,
+              26,
+              27,
+              28,
+              37,
+              39
+            ],
+            "printedCandidacies": 10,
+            "districtMemberships": 5,
+            "scope": "Portsmouth wards and corresponding whole legislative districts, including statutory floterials37and39",
+            "statewideComplete": false
+          },
+          "races": 8,
+          "namedChoices": 10
+        },
+        {
+          "manifest": "NH/statewide-ballot-completeness/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_BALLOT_COMPLETENESS_DATA",
+          "contractId": "ballot-contests:NH",
+          "coverage": {
+            "newLegislativeContests": 169,
+            "newCandidacies": 618,
+            "newDistrictMemberships": 70,
+            "combinedSenateDistricts": 24,
+            "combinedHouseDistricts": 203,
+            "combinedHouseSeats": 400,
+            "combinedDistinctCandidates": 758,
+            "printedPartyRows": 762,
+            "fusionCandidates": 4,
+            "scope": "All24Senate and203House districts after retaining the41previouslyheld legislative contests and installing the9Dover+8Portsmouth additions first. This packet adds only the169missingdistricts and70missing whole-base memberships.",
+            "statewideLegislativeCompleteAfterPrerequisites": true,
+            "allBallotOfficesComplete": false
+          },
+          "races": 169,
+          "namedChoices": 618
         },
         {
           "manifest": "NH/voting/install.json",
@@ -320,7 +469,9 @@
     },
     {
       "state": "NY",
-      "explainerGapsPrepared": 5,
+      "heldMeasureReaderGapsPrepared": 5,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 5,
       "dataInstalls": [
         {
           "manifest": "NY/install.json",
@@ -332,7 +483,9 @@
     },
     {
       "state": "OH",
-      "explainerGapsPrepared": 5,
+      "heldMeasureReaderGapsPrepared": 5,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 5,
       "dataInstalls": [
         {
           "manifest": "OH/install.json",
@@ -344,7 +497,9 @@
     },
     {
       "state": "OR",
-      "explainerGapsPrepared": 3,
+      "heldMeasureReaderGapsPrepared": 3,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 3,
       "dataInstalls": [
         {
           "manifest": "OR/install.json",
@@ -356,7 +511,9 @@
     },
     {
       "state": "PA",
-      "explainerGapsPrepared": 1,
+      "heldMeasureReaderGapsPrepared": 1,
+      "newMeasuresWithExplanations": 7,
+      "totalExplanationsOrAttachmentRepairs": 8,
       "dataInstalls": [
         {
           "manifest": "PA/ballot-additions/install.json",
@@ -364,20 +521,33 @@
           "kind": "CX_VOTES_DATA_INSTALL",
           "contractId": "ballot-contests:PA",
           "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
-          "races": 10,
-          "namedChoices": 21
+          "races": 61,
+          "namedChoices": 114
         },
         {
           "manifest": "PA/install.json",
           "status": "READY_FOR_RIVER_DATA_INSTALL",
           "kind": "CX_VOTES_DATA_INSTALL",
           "contractId": "ballot-contests:PA"
+        },
+        {
+          "manifest": "PA/lehigh-measures/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:PA",
+          "coverage": {
+            "newMeasures": 7,
+            "newPlainLanguageExplanations": 7,
+            "scope": "Lehigh County, Allentown, Hanover Township, North Whitehall Township and Whitehall Township"
+          }
         }
       ]
     },
     {
       "state": "RI",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "RI/voting/install.json",
@@ -394,7 +564,9 @@
     },
     {
       "state": "TN",
-      "explainerGapsPrepared": 1,
+      "heldMeasureReaderGapsPrepared": 1,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 1,
       "dataInstalls": [
         {
           "manifest": "TN/install.json",
@@ -406,7 +578,9 @@
     },
     {
       "state": "UT",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "UT/ballot-review/install.json",
@@ -417,7 +591,9 @@
     },
     {
       "state": "VA",
-      "explainerGapsPrepared": 9,
+      "heldMeasureReaderGapsPrepared": 9,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 9,
       "dataInstalls": [
         {
           "manifest": "VA/install.json",
@@ -429,7 +605,9 @@
     },
     {
       "state": "WI",
-      "explainerGapsPrepared": 0,
+      "heldMeasureReaderGapsPrepared": 0,
+      "newMeasuresWithExplanations": 0,
+      "totalExplanationsOrAttachmentRepairs": 0,
       "dataInstalls": [
         {
           "manifest": "WI/ballot-additions/install.json",
@@ -437,33 +615,39 @@
           "kind": "CX_VOTES_DATA_INSTALL",
           "contractId": "ballot-contests:WI",
           "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
-          "races": 9,
-          "namedChoices": 18
+          "races": 14,
+          "namedChoices": 28
         }
       ]
     }
   ],
-  "openWork": [
+  "remainingWork": [
     {
-      "scope": "Ballot race completeness",
-      "owner": "CX-VOTES source preparation, then River installation",
-      "status": "Official-source comparison continues for missing PA, IL, WI and NH district fields; no nationwide race-completeness claim."
+      "scope": "Live installation and reader checks",
+      "owner": "River",
+      "status": "Install the ready packets as data through their existing publication functions, then verify affected ballots, official links and voting sites live. No live installation or under-three-second result is claimed here."
     },
     {
       "scope": "Voting locations",
       "owner": "River",
-      "status": "Install prepared CA/MA/MN/NH doors and source data, then verify live. AL/IL/MS/NE/RI residential checks already worked; their packets preserve discovery sources only."
+      "status": "Install prepared CA/MA/MN/NH doors and source data. AL/IL/MS/NE/RI residential checks already worked; their packets preserve discovery sources only. Coverage is explicitly local, not statewide."
     },
     {
-      "scope": "MN",
-      "owner": "CX-VOTES source acquisition",
-      "status": "Prepared Ramsey precinct0680 only.161other county precinct assignments remain unfilled here."
+      "scope": "Additional write-in eligibility",
+      "owner": "River",
+      "status": "WI official later registered-write-in names are separate source-review data. Their parties/running mates are unknown; the current reader has no verified registered-write-in display distinction. No ordinary printed-nominee rows are invented."
+    },
+    {
+      "scope": "Coverage beyond held and acquired sources",
+      "owner": "Existing source acquisition",
+      "status": "The dated 56-scope source review does not certify every local ballot. Guam is an additional territory acquisition gap; it is not represented as having no election."
     },
     {
       "scope": "Application code freeze",
-      "owner": "River after Nov4ET",
-      "status": "UT84033 ballot election geography is correct; the scope API defaults to representation geography. No code correction or data overwrite is prepared."
+      "owner": "River after Nov 4 ET",
+      "status": "UT84033 election geography and certified candidates are correct. The scope API uses representation geography; no code correction or geography overwrite is prepared."
     }
   ],
-  "nextOwner": "River: use each nested manifest, install as data and verify live; this index does not claim installation, deployment or completion of the listed open coverage."
+  "costScope": "Uses existing stored-data publication and reader paths. No application query or paid provider call was added. Source captures distinguish native bytes from labeled deterministic source-text extractions.",
+  "nextOwner": "River: install as data and verify live. Each state has its own pushed READY commit and nested install manifest."
 }

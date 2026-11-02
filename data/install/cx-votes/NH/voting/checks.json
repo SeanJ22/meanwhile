@@ -1,0 +1,89 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "NH",
+  "coverage": {
+    "wardSites": 12,
+    "wardBoundaries": 12,
+    "assignedWards": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "scope": "Manchester only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/01e2ceb5009091e9e3f537b19e7b03d7146ff6b34e0645b68993c1e1dd1f25f8.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/60bcdb9df056203e954407d24db9dc3060c774bd3c93e091fda7c7f39cd2593f.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/ff50b8246ec53bb3c104072fa706877b5bdd6061eed66b03e7126cbf51b12d96.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/c93ebb94d1056c0cea8f1d7fe7309a76bd8598fe75227c13242abd72f6a3a97a.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/118dd8a4c2dfac4135c3419f453ec39f628658430b130e87c4535751a8e30b61.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/30fb553f7561dfa57c0eee3ffdd51a0c6c0310da32f823dad781854e6314a17d.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/e44f61c937663aeac1dba1eccbe5fe11a51949b5acb72fe6399a2f3df699f796.json",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 2,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 2,
+  "registryPageRows": 2,
+  "boundaryDoorEmptyCoversSchema": "PASS",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "PASS",
+  "checks": [
+    {
+      "doorId": "cx-nh-manchester-ward-polls-2026",
+      "kind": "SITES",
+      "sourceRows": 12,
+      "fullSourceReader": 12,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-nh-manchester-official-wards-2026",
+      "kind": "BOUNDARY",
+      "directBoundaryReader": 12,
+      "fullSourceReader": 12,
+      "official": true,
+      "blankCount": 0
+    }
+  ],
+  "siteKinds": {
+    "electionDay": 12,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 12,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:NH"
+}

@@ -1,0 +1,41 @@
+{
+  "install": false,
+  "routes": [
+    {
+      "id": "cx-nh-manchester-address-lookup-2026",
+      "publisher": "Manchester City Clerk",
+      "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Where-do-I-Vote",
+      "shape": "address-lookup",
+      "covers": [
+        "ELECTION_DAY"
+      ],
+      "scope": {
+        "state": "NH",
+        "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:manchester",
+        "name": "Manchester",
+        "countyFips": "33011",
+        "countySubdivisionGeoid": "3301145140"
+      },
+      "electionDate": "2026-11-03",
+      "electionPageUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Election-Schedules",
+      "extraction": {
+        "format": "html",
+        "addressFields": {
+          "address": "dnn$ctr9112$View$address"
+        }
+      },
+      "access": {
+        "status": "open",
+        "checkedAt": "2026-11-02T21:47:38.539800+00:00",
+        "detail": "Public address-only ASP.NET form verified. Requires fresh hidden form fields/cookie and __EVENTTARGET=dnn$ctr9112$View$searchButton; current source reader records address-lookups as blanks and does not execute this flow."
+      },
+      "model": "ASSIGNED",
+      "matchingUnit": "WARD"
+    }
+  ],
+  "limitations": [
+    "No source-site coordinates are included in the City Clerk list; existing source reader can geocode complete published addresses ahead of requests.",
+    "The generic address-lookup door remains a documented unsupported alternate. Normal address matching uses official ward polygons and ward-school assignments instead.",
+    "General 6am–7pm hours retain official unless-otherwise-posted qualifier in each site locationNotes."
+  ]
+}

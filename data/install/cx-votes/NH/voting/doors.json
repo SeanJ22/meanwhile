@@ -1,0 +1,97 @@
+[
+  {
+    "id": "cx-nh-manchester-ward-polls-2026",
+    "publisher": "Manchester City Clerk",
+    "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Polling-Locations",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:manchester",
+      "name": "Manchester",
+      "countyFips": "33011",
+      "countySubdivisionGeoid": "3301145140"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Election-Schedules",
+    "electionAssociationVerified": true,
+    "title": "Manchester polling locations",
+    "extraction": {
+      "format": "html",
+      "kind": "ELECTION_DAY",
+      "textAssertions": [
+        "Unless otherwise posted, the polling hours are generally from 6:00 AM to 7:00 PM."
+      ],
+      "records": {
+        "pattern": "<p><strong>WARD \\d+</strong>[\\s\\S]*?</p>",
+        "fields": {
+          "ward": {
+            "pattern": "WARD (\\d+)",
+            "group": 1
+          },
+          "precinct": {
+            "pattern": "(WARD \\d+)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "WARD \\d+</strong><br\\s*/?>\\s*([^<]+)",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<br\\s*/?>\\s*((?:\\d+|One) [^<(]+)",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "6:00 AM to 7:00 PM",
+        "locationNotes": "Unless otherwise posted, the polling hours are generally from 6:00 AM to 7:00 PM."
+      }
+    },
+    "model": "ASSIGNED",
+    "matchingUnit": "WARD",
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "Polling Locations",
+      "source": {
+        "publisher": "Manchester City Clerk",
+        "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Polling-Locations",
+        "official": true,
+        "checkedAt": "2026-11-02T21:21:57.726068+00:00",
+        "documentHash": "01e2ceb5009091e9e3f537b19e7b03d7146ff6b34e0645b68993c1e1dd1f25f8",
+        "documentUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Polling-Locations"
+      }
+    }
+  },
+  {
+    "id": "cx-nh-manchester-official-wards-2026",
+    "publisher": "City of Manchester GIS",
+    "url": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3",
+    "shape": "map-service",
+    "covers": [],
+    "scope": {
+      "state": "NH",
+      "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:manchester",
+      "name": "Manchester",
+      "countyFips": "33011",
+      "countySubdivisionGeoid": "3301145140"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Election-Schedules",
+    "electionAssociationVerified": true,
+    "boundaryLayer": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "WARD",
+    "title": "Manchester wards, current City GIS Wards_2022 layer",
+    "extraction": {
+      "format": "json",
+      "columns": {
+        "precinct": "WardName",
+        "ward": "WardNumber"
+      }
+    },
+    "discoveredFrom": "https://www.manchesternh.gov/gis"
+  }
+]

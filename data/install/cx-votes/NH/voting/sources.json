@@ -1,0 +1,135 @@
+[
+  {
+    "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Polling-Locations",
+    "finalUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Polling-Locations",
+    "file": "sources/01e2ceb5009091e9e3f537b19e7b03d7146ff6b34e0645b68993c1e1dd1f25f8.html",
+    "sha256": "01e2ceb5009091e9e3f537b19e7b03d7146ff6b34e0645b68993c1e1dd1f25f8",
+    "byteLength": 198632,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:21:57.726068+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "be1b9bc5220fbe4441c5fd9c921e03cdacba587f027c435c6b5a3daf5c1299d2",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Polling-Locations",
+      "recordedAt": "2026-11-02T21:21:51.217349+00:00"
+    }
+  },
+  {
+    "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Election-Schedules",
+    "finalUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Election-Schedules",
+    "file": "sources/60bcdb9df056203e954407d24db9dc3060c774bd3c93e091fda7c7f39cd2593f.html",
+    "sha256": "60bcdb9df056203e954407d24db9dc3060c774bd3c93e091fda7c7f39cd2593f",
+    "byteLength": 201698,
+    "contentType": "text/html; charset=utf-8",
+    "retrievedAt": "2026-11-02T22:02:43.842835+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "0c117e6895ba16ffb4b4b034b72711f710c9ba1ded553bd1a2827d426edc67d1",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Election-Schedules",
+      "recordedAt": "2026-11-02T22:02:43.842835+00:00"
+    }
+  },
+  {
+    "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Ward-Lines",
+    "finalUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Ward-Lines",
+    "file": "sources/ff50b8246ec53bb3c104072fa706877b5bdd6061eed66b03e7126cbf51b12d96.html",
+    "sha256": "ff50b8246ec53bb3c104072fa706877b5bdd6061eed66b03e7126cbf51b12d96",
+    "byteLength": 199843,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:21:54.179678+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "be1b9bc5220fbe4441c5fd9c921e03cdacba587f027c435c6b5a3daf5c1299d2",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Ward-Lines",
+      "recordedAt": "2026-11-02T21:21:51.217846+00:00"
+    }
+  },
+  {
+    "url": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3/query?where=1%3D1&objectIds=26%2C29%2C30%2C36%2C31%2C34%2C25%2C28%2C32%2C35%2C27%2C33&outFields=%2A&outSR=4326&returnGeometry=true&f=geojson",
+    "finalUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3/query?where=1%3D1&objectIds=26%2C29%2C30%2C36%2C31%2C34%2C25%2C28%2C32%2C35%2C27%2C33&outFields=%2A&outSR=4326&returnGeometry=true&f=geojson",
+    "file": "sources/c93ebb94d1056c0cea8f1d7fe7309a76bd8598fe75227c13242abd72f6a3a97a.json",
+    "sha256": "c93ebb94d1056c0cea8f1d7fe7309a76bd8598fe75227c13242abd72f6a3a97a",
+    "byteLength": 173468,
+    "contentType": "application/geo+json",
+    "retrievedAt": "2026-11-02T21:48:14.588428+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "94d201ee81bb4c51a04b7a67db7626aeca7c10b35ffbca900814fa041dba3e1d",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3/query?where=1%3D1&objectIds=26%2C29%2C30%2C36%2C31%2C34%2C25%2C28%2C32%2C35%2C27%2C33&outFields=%2A&outSR=4326&returnGeometry=true&f=geojson",
+      "recordedAt": "2026-11-02T21:48:14.588428+00:00"
+    }
+  },
+  {
+    "url": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer?f=pjson",
+    "finalUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer?f=pjson",
+    "file": "sources/118dd8a4c2dfac4135c3419f453ec39f628658430b130e87c4535751a8e30b61.json",
+    "sha256": "118dd8a4c2dfac4135c3419f453ec39f628658430b130e87c4535751a8e30b61",
+    "byteLength": 6501,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:47:22.388474+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "19bacc01b5e9f0ed606fae8c83b3183953a1a615c979c1492da56a062228a3d7",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer?f=pjson",
+      "recordedAt": "2026-11-02T21:47:22.388474+00:00"
+    }
+  },
+  {
+    "url": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3?f=pjson",
+    "finalUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3?f=pjson",
+    "file": "sources/30fb553f7561dfa57c0eee3ffdd51a0c6c0310da32f823dad781854e6314a17d.json",
+    "sha256": "30fb553f7561dfa57c0eee3ffdd51a0c6c0310da32f823dad781854e6314a17d",
+    "byteLength": 14353,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:47:56.778015+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "4131b80ca97c421b7966212015b002e2ba39f1ea0e1c44f68649a60a3d267d68",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3?f=pjson",
+      "recordedAt": "2026-11-02T21:47:56.778015+00:00"
+    }
+  },
+  {
+    "url": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3/query?where=1%3D1&returnIdsOnly=true&f=json",
+    "finalUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3/query?where=1%3D1&returnIdsOnly=true&f=json",
+    "file": "sources/e44f61c937663aeac1dba1eccbe5fe11a51949b5acb72fe6399a2f3df699f796.json",
+    "sha256": "e44f61c937663aeac1dba1eccbe5fe11a51949b5acb72fe6399a2f3df699f796",
+    "byteLength": 82,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:47:56.778751+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "4131b80ca97c421b7966212015b002e2ba39f1ea0e1c44f68649a60a3d267d68",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://ags.manchesternh.gov/agsgis7/rest/services/MapGeoWMS/CityArea/MapServer/3/query?where=1%3D1&returnIdsOnly=true&f=json",
+      "recordedAt": "2026-11-02T21:47:56.778751+00:00"
+    }
+  }
+]

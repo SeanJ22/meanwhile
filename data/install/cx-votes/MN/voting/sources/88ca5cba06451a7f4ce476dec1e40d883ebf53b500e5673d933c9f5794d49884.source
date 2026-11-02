@@ -1,0 +1,1653 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 5,
+ "name": "SOC_VotingLocation_ViewOnly",
+ "type": "Feature Layer",
+ "parentLayer": null,
+ "defaultVisibility": true,
+ "minScale": 0,
+ "maxScale": 0,
+ "canScaleSymbols": false,
+ "geometryType": "esriGeometryPoint",
+ "description": "",
+ "copyrightText": "",
+ "editFieldsInfo": {
+  "creationDateField": "created_date",
+  "creatorField": "created_user",
+  "editDateField": "last_edited_date",
+  "editorField": "last_edited_user"
+ },
+ "ownershipBasedAccessControlForFeatures": null,
+ "syncCanReturnChanges": true,
+ "relationships": [
+  {
+   "id": 0,
+   "name": "BOUND_Precinct",
+   "relatedTableId": 18,
+   "cardinality": "esriRelCardinalityOneToMany",
+   "role": "esriRelRoleOrigin",
+   "keyField": "facilityid",
+   "composite": false,
+   "catalogID": "{A95A9D8A-9765-4F6F-B898-42A8BEABCF3C}"
+  }
+ ],
+ "isDataVersioned": true,
+ "isDataArchived": true,
+ "infoInEstimates": [
+  "extent",
+  "count"
+ ],
+ "isDataBranchVersioned": true,
+ "isDataReplicaTracked": false,
+ "isCoGoEnabled": false,
+ "supportsRollbackOnFailureParameter": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": true,
+  "startArchivingMoment": 1765468621000
+ },
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportsValidateSQL": true,
+ "supportsCoordinatesQuantization": true,
+ "supportsQuantizationEditMode": true,
+ "supportsCalculate": true,
+ "supportsASyncCalculate": true,
+ "supportsDatumTransformation": true,
+ "advancedQueryCapabilities": {
+  "supportsPagination": true,
+  "supportsQueryWithDistance": true,
+  "supportsReturningQueryExtent": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsCurrentUserQueries": true,
+  "supportsFullTextSearch": true,
+  "fullTextSearchCapabilities": {
+   "supportsSearchOperator": true,
+   "supportsOperator": false,
+   "supportsSqlExpressionInFullText": true
+  },
+  "fullTextSearchableFields": [],
+  "supportsQueryWithResultType": true,
+  "supportsReturningGeometryCentroid": false,
+  "supportsReturningGeometryEnvelope": false,
+  "supportsSqlExpression": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsQueryAnalytic": false,
+  "supportsQueryWithCacheHint": false
+ },
+ "advancedEditingCapabilities": {
+  "supportedSqlFormatsInCalculate": [
+   "standard"
+  ],
+  "supportsAsyncApplyEdits": true,
+  "supportsApplyEditsbyUploadID": true,
+  "supportedApplyEditsUploadIDFormats": "JSON,PBF"
+ },
+ "hasMetadata": true,
+ "extent": {
+  "xmin": 499092.1059657186,
+  "ymin": 139302.41261439025,
+  "xmax": 603106.9491167217,
+  "ymax": 248746.9824387282,
+  "spatialReference": {
+   "wkid": 103768,
+   "latestWkid": 103768,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -119096800,
+   "falseY": -98462100,
+   "xyUnits": 3048.0060960121928,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "spatialReference": {
+  "wkid": 103768,
+  "latestWkid": 103768,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -119096800,
+  "falseY": -98462100,
+  "xyUnits": 3048.0060960121928,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "sourceSpatialReference": {
+  "wkid": 103768,
+  "latestWkid": 103768,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -119096800,
+  "falseY": -98462100,
+  "xyUnits": 3048.0060960121928,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "drawingInfo": {
+  "renderer": {
+   "type": "uniqueValue",
+   "field1": "FaciltiyType",
+   "uniqueValueGroups": [
+    {
+     "heading": "",
+     "classes": [
+      {
+       "label": "Ballot Return Location",
+       "description": "Ballot Return Location",
+       "symbol": {
+        "type": "esriPMS",
+        "url": "c4b36d3bca74bf1284f50a8d49760a64",
+        "imageData": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAB/FJREFUeNrsXU9oHFUYfztWERHcQw+VQJ0eDL1ItzkED9rdXkQlkI0eFC+7ix4KikmkaAVxs+ChF8mmiLkom14K1UMSCB6CkI14MYd2vQW9TASxB9EtlCJ68X0zb7K7k5nZN2/en29294O32yRl5s37vd/v+773vpkhZGKoLJfp3s/OFehnPuQvDjnYcSaAyB9wGGwY9BJtz9Bms5/zCY7isNah7cj9PthpTwDhB6BMW5GBYCs8G4Cy734jAiiHCIR59m3CurRt0bZNwdkaT0Bm54ABFdqqyFQD5O0mbRsm/FDOEBB1JknYbYO2hk5gchMgcAGT0wAEOOZWRoEIWoO2JgWmq+oEjygGY4V+biqOlnQaTKo3ydT0Efn9l8PsMMRL2FosZxhVAxlbls0WSwEYS/Tzrgkw8k8+ofN0Vfc6vcmHULIgn5iaXqf/umZqyq5/WCH3Hzwkzh9/apsDtF1hEtbBwxAvudsznVOUL82Q+RdnTJy6RcdgFQcgHmWNSFQQDJCs0sx5U11YomPRMguIB8Yehihq/pLHjMKzZ4n99GlT3ajSMdljiqEZkB4YedNgADOqr77Qi00vnjfZnRIbF42AIALDl6swthi0gqh8WQJg5FmOgQKMMAAM+pGgfLV0MGQTU8IHchVkiGHnHgRlSR0gXmhXwpQulyPkyVD4G2arbGFVMiCzc2U3tENmi2+8FO5ZcTCkpyqckZfFCYbN/AYqg/AWwtxQr2o2/A3L6FsyGYLKiQ+TKyTh74nu8vgTi4MdVYJ0L6PSl3vwRF8IrD5MuiyOEHcVIxhxcoXUj/jStZqGIUsYpcqNJ4ewA1n4GwyFS8kB8Rx5nSC1CgcgyMLfQekSYAhaMJJEUAgZ4nYriiVWDDuqWWcHwvB36ISPYsgiQWzlhNETsvA3liVWRGSFlh0iMx5h+HtMdh6GlLFGVi51I5ZKMuhH/IgrPwyQkZIrxOFvD5RIQDxnXsAMhmipD9Lw94RsWSFyhdbS+ALEDCkwIoQCUhk1ucpA+DtABCsQXY2kXCEPf8GKYQwpjapcZSD8PWbIqTCUsFmwzCeNHxH1JaLseor2fe2b3eHlrZAkHuy0Tw04F87BKUyf9b6HLH/HcjTBwNhnTksDdu8LfaXH3QcPycK1G7y1xjD+A4CUeE8Cs6X+NuqAzLi17x6ShY9uuOPFaRd6PqQv7OKxla+3yOX3ric52VhZA8bn3cTjY/c7dTvxDLhzSM69dpVs/XBnggAzkKaLlU/dCSvipuDDuz9karoqEmX98+9/5Pb3P7n3ZLz8/HNjDQZMzFc++Jw491LcmzI1vSbl/pDm7V13Zmi8UQaNgSzVPvvKdd4SJLxg9TuUNNb59TcXlHGSMLhm8BUb3/0o7Zi+ZF0hEu7xGCcJA1UAVtz7677Mw+5bqjo7qhLm5xbLa7dUHN62VNIZQJFJZwy5herI0lI9m8DhQct6ziKYW+ACxDdgCVwMsCaLuQUkwYK5BU5AVEUkOnILkF1IgnVZf2Joqz4ZRGHb9CKP6KyDVdfHH3sUreP+eP1b13FDnzXavmXigjFLmM9kiBRNKKQPiGPiwkEODF14bLhucKIcA3JkqgcgC5KWHbDmFkJOvWuyE77zNGUABpIln44PSMd0TzQ/WmkwPT6DpBrlYKdrzIcErSJhz1zUijhqtto9yULwWO6ywYqQMo5qFCeYGLZN9cR0EVvagg1J9nMQkP1xlCtELGkHAemMs2QYLqLrUrfRGQTE0DPPsdTcQj8MRnrtYB5ynBKMo1whYOp2FCDa/Qim2wQMhr84GMLzNAatk8NMdXynP+2wApmioxMUmRIhYy3M0ARZ6//BitOzLPgPf2FQ1l63ZgntBglwEpCDnQ2iYbFRxmzsLzqQtWKrOfzdCj473uKhETa5gsGHgQ8rOkhbggR+RGP42wj+IgqQpmqWiMoVz45e2ipKTbLVDltDDAfEo5EylojKFZTi8O7opZEwTbLVCPtl3J66MpYklas0pTgi27Iawt/IV/VFA6KQJUnkCgoi0pbiJC1BAgYrXs6pRf1hWNUJsMQxIVe+5MiqekxaRalwGaUZt/8UD4jHkppuuVJZQ8tbglRUI1vdKN/ByxDCtE5a9h4nV3HhrNS1Cg4JU8SQ2rB3VlncB5IgXXE7c7oL1HgkTDIoGzxbHHyASJKuqAtMEs6qkLCoc0uULdh8Wub5j/ylpJ50NWQuS+iuLI8Lq8OqKCUliF0eqfIt+XsMvXdiVEXk6u/dLwdm5nLzFrr7RoDFrU/eOV4+Off61bR3gtXY+iCRy5CeLROB/XdfrmSHs7LNr6L0JSxlkthIAoYYQzyW+K/J436c0+b1973pkqG7qVYX33LzJphAgk48sd8Vf/VqQlDgaT5ZvN8QABGQLCEw0gEiyJQxMGEw0gMyAUUqGKJOPSxHuUwMlBAhs1paMOQwZJAt8G6MpTEDAibkQtRyullAPFDgyWYoX5GkwDoMDEfWAVW94N5moJRGGAzIMVZkHzSntMveS7DqI8aWDvMXSorTc8q733uPVXUEfAWwoqnyJDltl+PJGABTziAQsJXd5F0gzAYgg8DUM8AYrUCYA2QQGAAFnjdvI/MRa0kXBbMPyMlQeZ6Ye5kMgHCTeKWdjsmhyKETitm5AgOmqDBsdhgIUFjexnAXMl5AwgECSYPvC4xBNqfMdZgvgAE/It6NMQ4mAIL2vwADADl4N4aQMeaqAAAAAElFTkSuQmCC",
+        "contentType": "image/png",
+        "width": 16,
+        "height": 16,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0
+       },
+       "values": [
+        [
+         "Ballot Return"
+        ]
+       ]
+      },
+      {
+       "label": "Early Voting",
+       "description": "Early Voting",
+       "symbol": {
+        "type": "esriPMS",
+        "url": "cb7183b3e37367d6a49d705983f45792",
+        "imageData": "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",
+        "contentType": "image/png",
+        "width": 16,
+        "height": 16,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0
+       },
+       "values": [
+        [
+         "Early Voting"
+        ]
+       ]
+      },
+      {
+       "label": "Polling Place",
+       "description": "Polling Place",
+       "symbol": {
+        "type": "esriPMS",
+        "url": "ad12956a676d3f22b04659e29f133d03",
+        "imageData": "iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADX0lEQVRIie2Wa0wUVxTHfzO76i6PXago0shDbAXTEKPBR9SkAfERoybaiBjSNFJW6hdt/WJjPzQ+YtREY40myoIkRGM0PkhIbEUKiWkqBWOroSSloFuagEFWVMRFurPX3F0Xl2WGxUf81H8ymZl7ZuZ3z7nnnDtm3qPM/8M4WR2Fal2EIpIBO4gefKZ24ty/kZ+vvZswltdl4NN2A2tAWBBBgwKKDx5/0EtZbSWaaS8lOT1vDnNe+xaftif8uZykeOq7el/eiXgE21C9X+CsKcSx7Mrrw5y1ThDF4cMpMRYOzv+YuVWN4aY4UKpx1m7GkVc+dpizZqceSCp/WiLZCTam26y0P/GEm1UQJyircVG87OfIsJNXM0GRa6Sr9emJgfO0RPbfduk7IJQKKupnsClnYHSYqu4CTHpfSY2xMG+SLeBhuiFMKhmv9yvgCIaww79aoX/1BJPK93PSSYm2jIAFNXtiLGdzstDEUHr61fKonwO3XXJ8w+iwmGeLAOtzzceR5g7O52bxaVI8RiqYHghpUBfudXP0z47gBOZR/kssXy7uMwijb6q/foBuzyB5P97i0PwZbP1E1rGxNCHY2dTGwTv/hA6raANJgAFMUW28qlq8PsG2G3/R9OAJpYtnYjWrI0APBgYpqGumrvOh3jzsoTfDYQL3S8eG6XRbF4UfTWHF1Ik6tvtGIFC0YR0lzDPRrveObZyZ3A/1125t6iS2N7TqmQbwaJ3GMHtvE4/j3cAwF1alJDBeDYTwXp+Hyr+72DErDYtJJS3WypyEWG71DC1NcOL1bF353Bgmu3fptUoUvgkdXpc22X++7Oqm6HoLjwa9XHJ1cy43i8y4aD5LmzwSJtRT4a6OLGph3ofiLQourkwKGcKvG1r5oblj6LE7D5+SXdXIsYUZ/sl8dzN0BUQjjqUXIsPkNlF29XOEWiXTN8MezfKffvdnZLj6vRqbrrf4kyc52sK//f7u5Makbhx7Iy5eLrv3FhDH/3D3RdzzzrTdD166EeoaipbcHTtMypFXSllNO0KR20VqJCDQgEkpNAKNDpOS28TRKxlEjXMgKAAWhDVpD4I6oILNSy++/W9BIH2P+Q/5H0KUbEF2TLjR7J2UZP8X8RtjhoWqZPUzQLfweeewt9R7hb0AkV4hJT22jOYAAAAASUVORK5CYII=",
+        "contentType": "image/png",
+        "width": 20,
+        "height": 20,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0
+       },
+       "values": [
+        [
+         "Polling Place"
+        ]
+       ]
+      },
+      {
+       "label": "Pop Up Location",
+       "description": "Pop Up Location",
+       "symbol": {
+        "type": "esriPMS",
+        "url": "55cb80fe41afc60a4f8ce4cffd254d1b",
+        "imageData": "iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADbUlEQVRIie2WfUxVZRzHP88994q6xhWYiSZwN0KEaiVDN3XWtFI3WwtZjWUuMULOmtrczDfUExe3q5vLlwK6iTnKWuF0RltDJ6ytmYNWzJxmgS/TSi75gi+IcO953DmB3ns5FxBf5h9+t7Pz/H7Py+d5fs+rnQco+yMY+dpQhJiMEAnYhBNd+FD0Robr9Wiafm/CqLpTgQ+BV4Ehpk8CQoIuoFnxUVC0A+HwULri4sBhanEhyLXh5aaOcVH756lu83GE+AD8eajr3qJ01Q93DlPd20HmhrsTY51syHqR8evLw7NiQf+egqJ3KVuzvf+wguLlViBDb2SkkZk0kuThMTS19IiaDSHKUIuaKF3zY9+wfHcyQhZZdgJ4PSO965+Gp/qgVREH2LaR/2k63gWdvcMUjDlyWLWSFOtkgmtU1wjTI8EA+SR23zzgs8iwhVui8LdmRdkV1s56nsQYZygs7rY9LiGer+dnEdCNpXlbR8+1sH7fQcP/Zu+wztaJCB674Q+wqaaOb/Nm80JKUoTeQ07mUyH2rt+OsaW2vrsDU8y96dXarGE2mYgUZtJ35Rovbd7JxuyXWTR1PL0poEtW7q1hw/6fg90KQnkC+MsaJkVI3Py6zuLKaupP/4N3ziyGOHpOccvVNnLKd1Nz/Na+C8LJYcFmaG0h/kOGzoGhL+t+Z86Ep5mZnmyZV2MFMtuz+SLDdJr4P4ohih4cxbQxLsv2sp5NZcmu/VZZbfj8/0aGxft/wac0IxkR7H7lmRQG2RUzffL8JSoOHWbZ9EkMdthxxQ0jIyGeX8+cCxuVrKZS64gMM05v1V0BLA12z35urPnf03Cc+V9Ucel6O7sb/uCbd7IZGx9H9ri0njBsn4cPteeMdwQ8DFLygBjDNBbFtFQX71fuY3Nt3a1ih//2kenZxsc5M83OrPquNriVnygprOobVq5d4L3iXHS5xwhG6og4Zmz9ylyR4brW0UluRZW5eBJiojlz8bLhPg+Bt/t/EH9SuBfVvRjY1HC22UYf2ll3pDt5ASFeo0Q70X+YodLVW1HXNSJ1L4LRfQGBQ4jAXEq0xoFdnsZFOE9LYaiiIskBjKMkeHO0gzyAtJVTVmiE/S6fBTu0duAj88v3OHF0jMZPNIreQhtnu/Lvw1POu7wVML4ByT7Qig897CbqGSBEZPtC9QAAAABJRU5ErkJggg==",
+        "contentType": "image/png",
+        "width": 20,
+        "height": 20,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0
+       },
+       "values": [
+        [
+         "Pop Up Location"
+        ]
+       ]
+      },
+      {
+       "label": "Post Office Blue Box",
+       "description": "Post Office Blue Box",
+       "symbol": {
+        "type": "esriPMS",
+        "url": "d02bd1f6016a6108d7bd3eab130abf64",
+        "imageData": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACbklEQVRIie3VTUgUYRzH8e/UtBPF7gbZi3XwEJ168S3DoENqYGEKrYnvkUYvJOGhFyLKFuviltSlOkWXsMyXqA7Zi6uhlnTpDUrIsKRSfFkNw3V13Sd2ShPSnV13xIs/mMv8n3k+83/mmRmZWYo8B8/eUq+zGuhVTiPYDZiDml3CAZTT6boIVo9vuEexAYXoEUEYEMlyxU0Xpb5hyEbvSCIDtOEQ3WGkZX6/Tls2rSZqw4qguPs1n/jWMTBpTZ7qopTEtZw6GsvnL/20tfcHBMZEhGI2KbS0OgKHvenuHcRkNHDMaufdhy78yZF9UcRGr8I55PY5TvZVvPugBUefE3tVJvGptzXxgrwoSs7GkZRdwa1rydOHhRAU2RrweAS1lV68jPcfuycdezA3QkV35VTw/GW7T9Tvb7X1UiMeIbBXZZGw5//O92eFU2qNJzm3kvoX2mhAP4ni0iYMC+aryx5n+dd5XsZGrpcksiOznLqmr/5Oh9+wyagQvzWMHoeTZxV/lj06fCVXzieomzBp+xrsjTrDJqPC4zvp9PY51W4LD8TwpjafnwMuUvZW8b1zgPrqLHUvnCiu0wc2TUBT86txDY9iu9rMjbK3DDpHxl+bbZYyFRfAST9w2VfRbFR4Up6uLu8YOhbvjUxMa1vfOO7tXAoGzk1bz6vXHRSeeUrI0kWaXXi7zyl4yL2bFpaYF04f9mZzZCitzYfRO/JUhXO2Bi5cbgpq8iGXO3B4eGRUPWYq8iTnBgHtBxpYfmnDklSDEBZdWUl6pA3Pkw/hdnuQxE5gcZBiP4hKZEORNvzjeA+QxgxHnmlgDuZvfgP/lO1p4VS+vgAAAABJRU5ErkJggg==",
+        "contentType": "image/png",
+        "width": 22,
+        "height": 22,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0
+       },
+       "values": [
+        [
+         "Post Office Blue Box"
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "uniqueValueInfos": [
+    {
+     "symbol": {
+      "type": "esriPMS",
+      "url": "c4b36d3bca74bf1284f50a8d49760a64",
+      "imageData": "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",
+      "contentType": "image/png",
+      "width": 16,
+      "height": 16,
+      "angle": 0,
+      "xoffset": 0,
+      "yoffset": 0
+     },
+     "value": "Ballot Return",
+     "label": "Ballot Return Location"
+    },
+    {
+     "symbol": {
+      "type": "esriPMS",
+      "url": "cb7183b3e37367d6a49d705983f45792",
+      "imageData": "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",
+      "contentType": "image/png",
+      "width": 16,
+      "height": 16,
+      "angle": 0,
+      "xoffset": 0,
+      "yoffset": 0
+     },
+     "value": "Early Voting",
+     "label": "Early Voting"
+    },
+    {
+     "symbol": {
+      "type": "esriPMS",
+      "url": "ad12956a676d3f22b04659e29f133d03",
+      "imageData": "iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADX0lEQVRIie2Wa0wUVxTHfzO76i6PXago0shDbAXTEKPBR9SkAfERoybaiBjSNFJW6hdt/WJjPzQ+YtREY40myoIkRGM0PkhIbEUKiWkqBWOroSSloFuagEFWVMRFurPX3F0Xl2WGxUf81H8ymZl7ZuZ3z7nnnDtm3qPM/8M4WR2Fal2EIpIBO4gefKZ24ty/kZ+vvZswltdl4NN2A2tAWBBBgwKKDx5/0EtZbSWaaS8lOT1vDnNe+xaftif8uZykeOq7el/eiXgE21C9X+CsKcSx7Mrrw5y1ThDF4cMpMRYOzv+YuVWN4aY4UKpx1m7GkVc+dpizZqceSCp/WiLZCTam26y0P/GEm1UQJyircVG87OfIsJNXM0GRa6Sr9emJgfO0RPbfduk7IJQKKupnsClnYHSYqu4CTHpfSY2xMG+SLeBhuiFMKhmv9yvgCIaww79aoX/1BJPK93PSSYm2jIAFNXtiLGdzstDEUHr61fKonwO3XXJ8w+iwmGeLAOtzzceR5g7O52bxaVI8RiqYHghpUBfudXP0z47gBOZR/kssXy7uMwijb6q/foBuzyB5P97i0PwZbP1E1rGxNCHY2dTGwTv/hA6raANJgAFMUW28qlq8PsG2G3/R9OAJpYtnYjWrI0APBgYpqGumrvOh3jzsoTfDYQL3S8eG6XRbF4UfTWHF1Ik6tvtGIFC0YR0lzDPRrveObZyZ3A/1125t6iS2N7TqmQbwaJ3GMHtvE4/j3cAwF1alJDBeDYTwXp+Hyr+72DErDYtJJS3WypyEWG71DC1NcOL1bF353Bgmu3fptUoUvgkdXpc22X++7Oqm6HoLjwa9XHJ1cy43i8y4aD5LmzwSJtRT4a6OLGph3ofiLQourkwKGcKvG1r5oblj6LE7D5+SXdXIsYUZ/sl8dzN0BUQjjqUXIsPkNlF29XOEWiXTN8MezfKffvdnZLj6vRqbrrf4kyc52sK//f7u5Makbhx7Iy5eLrv3FhDH/3D3RdzzzrTdD166EeoaipbcHTtMypFXSllNO0KR20VqJCDQgEkpNAKNDpOS28TRKxlEjXMgKAAWhDVpD4I6oILNSy++/W9BIH2P+Q/5H0KUbEF2TLjR7J2UZP8X8RtjhoWqZPUzQLfweeewt9R7hb0AkV4hJT22jOYAAAAASUVORK5CYII=",
+      "contentType": "image/png",
+      "width": 20,
+      "height": 20,
+      "angle": 0,
+      "xoffset": 0,
+      "yoffset": 0
+     },
+     "value": "Polling Place",
+     "label": "Polling Place"
+    },
+    {
+     "symbol": {
+      "type": "esriPMS",
+      "url": "55cb80fe41afc60a4f8ce4cffd254d1b",
+      "imageData": "iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAYAAACN1PRVAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADbUlEQVRIie2WfUxVZRzHP88994q6xhWYiSZwN0KEaiVDN3XWtFI3WwtZjWUuMULOmtrczDfUExe3q5vLlwK6iTnKWuF0RltDJ6ytmYNWzJxmgS/TSi75gi+IcO953DmB3ns5FxBf5h9+t7Pz/H7Py+d5fs+rnQco+yMY+dpQhJiMEAnYhBNd+FD0Robr9Wiafm/CqLpTgQ+BV4Ehpk8CQoIuoFnxUVC0A+HwULri4sBhanEhyLXh5aaOcVH756lu83GE+AD8eajr3qJ01Q93DlPd20HmhrsTY51syHqR8evLw7NiQf+egqJ3KVuzvf+wguLlViBDb2SkkZk0kuThMTS19IiaDSHKUIuaKF3zY9+wfHcyQhZZdgJ4PSO965+Gp/qgVREH2LaR/2k63gWdvcMUjDlyWLWSFOtkgmtU1wjTI8EA+SR23zzgs8iwhVui8LdmRdkV1s56nsQYZygs7rY9LiGer+dnEdCNpXlbR8+1sH7fQcP/Zu+wztaJCB674Q+wqaaOb/Nm80JKUoTeQ07mUyH2rt+OsaW2vrsDU8y96dXarGE2mYgUZtJ35Rovbd7JxuyXWTR1PL0poEtW7q1hw/6fg90KQnkC+MsaJkVI3Py6zuLKaupP/4N3ziyGOHpOccvVNnLKd1Nz/Na+C8LJYcFmaG0h/kOGzoGhL+t+Z86Ep5mZnmyZV2MFMtuz+SLDdJr4P4ohih4cxbQxLsv2sp5NZcmu/VZZbfj8/0aGxft/wac0IxkR7H7lmRQG2RUzffL8JSoOHWbZ9EkMdthxxQ0jIyGeX8+cCxuVrKZS64gMM05v1V0BLA12z35urPnf03Cc+V9Ucel6O7sb/uCbd7IZGx9H9ri0njBsn4cPteeMdwQ8DFLygBjDNBbFtFQX71fuY3Nt3a1ih//2kenZxsc5M83OrPquNriVnygprOobVq5d4L3iXHS5xwhG6og4Zmz9ylyR4brW0UluRZW5eBJiojlz8bLhPg+Bt/t/EH9SuBfVvRjY1HC22UYf2ll3pDt5ASFeo0Q70X+YodLVW1HXNSJ1L4LRfQGBQ4jAXEq0xoFdnsZFOE9LYaiiIskBjKMkeHO0gzyAtJVTVmiE/S6fBTu0duAj88v3OHF0jMZPNIreQhtnu/Lvw1POu7wVML4ByT7Qig897CbqGSBEZPtC9QAAAABJRU5ErkJggg==",
+      "contentType": "image/png",
+      "width": 20,
+      "height": 20,
+      "angle": 0,
+      "xoffset": 0,
+      "yoffset": 0
+     },
+     "value": "Pop Up Location",
+     "label": "Pop Up Location"
+    },
+    {
+     "symbol": {
+      "type": "esriPMS",
+      "url": "d02bd1f6016a6108d7bd3eab130abf64",
+      "imageData": "iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACbklEQVRIie3VTUgUYRzH8e/UtBPF7gbZi3XwEJ168S3DoENqYGEKrYnvkUYvJOGhFyLKFuviltSlOkWXsMyXqA7Zi6uhlnTpDUrIsKRSfFkNw3V13Sd2ShPSnV13xIs/mMv8n3k+83/mmRmZWYo8B8/eUq+zGuhVTiPYDZiDml3CAZTT6boIVo9vuEexAYXoEUEYEMlyxU0Xpb5hyEbvSCIDtOEQ3WGkZX6/Tls2rSZqw4qguPs1n/jWMTBpTZ7qopTEtZw6GsvnL/20tfcHBMZEhGI2KbS0OgKHvenuHcRkNHDMaufdhy78yZF9UcRGr8I55PY5TvZVvPugBUefE3tVJvGptzXxgrwoSs7GkZRdwa1rydOHhRAU2RrweAS1lV68jPcfuycdezA3QkV35VTw/GW7T9Tvb7X1UiMeIbBXZZGw5//O92eFU2qNJzm3kvoX2mhAP4ni0iYMC+aryx5n+dd5XsZGrpcksiOznLqmr/5Oh9+wyagQvzWMHoeTZxV/lj06fCVXzieomzBp+xrsjTrDJqPC4zvp9PY51W4LD8TwpjafnwMuUvZW8b1zgPrqLHUvnCiu0wc2TUBT86txDY9iu9rMjbK3DDpHxl+bbZYyFRfAST9w2VfRbFR4Up6uLu8YOhbvjUxMa1vfOO7tXAoGzk1bz6vXHRSeeUrI0kWaXXi7zyl4yL2bFpaYF04f9mZzZCitzYfRO/JUhXO2Bi5cbgpq8iGXO3B4eGRUPWYq8iTnBgHtBxpYfmnDklSDEBZdWUl6pA3Pkw/hdnuQxE5gcZBiP4hKZEORNvzjeA+QxgxHnmlgDuZvfgP/lO1p4VS+vgAAAABJRU5ErkJggg==",
+      "contentType": "image/png",
+      "width": 22,
+      "height": 22,
+      "angle": 0,
+      "xoffset": 0,
+      "yoffset": 0
+     },
+     "value": "Post Office Blue Box",
+     "label": "Post Office Blue Box"
+    }
+   ],
+   "fieldDelimiter": ",",
+   "authoringInfo": {
+    "colorRamp": {
+     "type": "algorithmic",
+     "algorithm": "esriHSVAlgorithm",
+     "fromColor": [
+      214,
+      214,
+      255,
+      255
+     ],
+     "toColor": [
+      0,
+      57,
+      148,
+      255
+     ]
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "hasM": true,
+ "hasZ": false,
+ "allowUpdateWithoutMValues": false,
+ "allowGeometryUpdates": true,
+ "allowTrueCurvesUpdates": true,
+ "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+ "hasAttachments": false,
+ "supportsApplyEditsWithGlobalIds": true,
+ "supportsOidReservation": true,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "objectIdField": "OBJECTID",
+ "globalIdField": "GlobalID",
+ "displayField": "Name",
+ "typeIdField": "FaciltiyType",
+ "subtypeField": "",
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null,
+   "editable": false,
+   "nullable": false,
+   "defaultValue": null,
+   "modelName": "OBJECTID"
+  },
+  {
+   "name": "facilityid",
+   "type": "esriFieldTypeString",
+   "alias": "Facility ID",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "facilityid"
+  },
+  {
+   "name": "Name",
+   "type": "esriFieldTypeString",
+   "alias": "Name",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 100,
+   "defaultValue": null,
+   "modelName": "Name"
+  },
+  {
+   "name": "Location",
+   "type": "esriFieldTypeString",
+   "alias": "Location",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "Location"
+  },
+  {
+   "name": "FaciltiyType",
+   "type": "esriFieldTypeString",
+   "alias": "FaciltiyType",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 100,
+   "defaultValue": null,
+   "modelName": "FaciltiyType"
+  },
+  {
+   "name": "type",
+   "type": "esriFieldTypeString",
+   "alias": "Voting Facility Type",
+   "domain": {
+    "type": "codedValue",
+    "name": "elFacilityType",
+    "description": "elFacilityType",
+    "codedValues": [
+     {
+      "name": "Early Voting",
+      "code": "Early Voting"
+     },
+     {
+      "name": "Polling Place",
+      "code": "Polling Place"
+     },
+     {
+      "name": "Post Office Blue Box",
+      "code": "Post Office Blue Box"
+     },
+     {
+      "name": "Voting Center",
+      "code": "Voting Center"
+     },
+     {
+      "name": "Pop Up Location",
+      "code": "Pop Up Location"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   },
+   "editable": true,
+   "nullable": true,
+   "length": 255,
+   "defaultValue": null,
+   "modelName": "type_"
+  },
+  {
+   "name": "fulladdr",
+   "type": "esriFieldTypeString",
+   "alias": "Address",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 255,
+   "defaultValue": null,
+   "modelName": "fulladdr"
+  },
+  {
+   "name": "municipality",
+   "type": "esriFieldTypeString",
+   "alias": "Municipality",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 255,
+   "defaultValue": null,
+   "modelName": "municipality"
+  },
+  {
+   "name": "pstlstate",
+   "type": "esriFieldTypeString",
+   "alias": "State",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 2,
+   "defaultValue": null,
+   "modelName": "pstlstate"
+  },
+  {
+   "name": "pstlzip5",
+   "type": "esriFieldTypeString",
+   "alias": "Zip Code",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "pstlzip5"
+  },
+  {
+   "name": "MCDName",
+   "type": "esriFieldTypeString",
+   "alias": "MCD Name",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "MCDName"
+  },
+  {
+   "name": "PrecinctCode",
+   "type": "esriFieldTypeString",
+   "alias": "Precinct Code",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "PrecinctCode"
+  },
+  {
+   "name": "PrecinctName",
+   "type": "esriFieldTypeString",
+   "alias": "Precinct Name",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "PrecinctName"
+  },
+  {
+   "name": "ElectionYear",
+   "type": "esriFieldTypeString",
+   "alias": "ElectionYear",
+   "domain": {
+    "type": "codedValue",
+    "name": "elElectionYear",
+    "description": "elElectionYear",
+    "codedValues": [
+     {
+      "name": "odd",
+      "code": "odd"
+     },
+     {
+      "name": "even",
+      "code": "even"
+     },
+     {
+      "name": "both",
+      "code": "both"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   },
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "ElectionYear"
+  },
+  {
+   "name": "Status",
+   "type": "esriFieldTypeString",
+   "alias": "Status",
+   "domain": {
+    "type": "codedValue",
+    "name": "geStatus",
+    "description": "Status code for Active or Retired",
+    "codedValues": [
+     {
+      "name": "Active",
+      "code": "Active"
+     },
+     {
+      "name": "Retired",
+      "code": "Retired"
+     },
+     {
+      "name": "Planned",
+      "code": "Planned"
+     },
+     {
+      "name": "Proposed",
+      "code": "Proposed"
+     },
+     {
+      "name": "Inactive",
+      "code": "Inactive"
+     },
+     {
+      "name": "Removed",
+      "code": "Removed"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   },
+   "editable": true,
+   "nullable": true,
+   "length": 15,
+   "defaultValue": null,
+   "modelName": "Status"
+  },
+  {
+   "name": "ActiveDate",
+   "type": "esriFieldTypeDate",
+   "alias": "ActiveDate",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "ActiveDate"
+  },
+  {
+   "name": "RetiredDate",
+   "type": "esriFieldTypeDate",
+   "alias": "RetiredDate",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "RetiredDate"
+  },
+  {
+   "name": "operdays",
+   "type": "esriFieldTypeString",
+   "alias": "Operational Days",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 255,
+   "defaultValue": null,
+   "modelName": "operdays"
+  },
+  {
+   "name": "Day1",
+   "type": "esriFieldTypeString",
+   "alias": "Day1",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day1"
+  },
+  {
+   "name": "Hours1",
+   "type": "esriFieldTypeString",
+   "alias": "Hours1",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours1"
+  },
+  {
+   "name": "Day2",
+   "type": "esriFieldTypeString",
+   "alias": "Day2",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day2"
+  },
+  {
+   "name": "Hours2",
+   "type": "esriFieldTypeString",
+   "alias": "Hours2",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours2"
+  },
+  {
+   "name": "Day3",
+   "type": "esriFieldTypeString",
+   "alias": "Day3",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day3"
+  },
+  {
+   "name": "Hours3",
+   "type": "esriFieldTypeString",
+   "alias": "Hours3",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours3"
+  },
+  {
+   "name": "Day4",
+   "type": "esriFieldTypeString",
+   "alias": "Day4",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day4"
+  },
+  {
+   "name": "Hours4",
+   "type": "esriFieldTypeString",
+   "alias": "Hours4",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours4"
+  },
+  {
+   "name": "Day5",
+   "type": "esriFieldTypeString",
+   "alias": "Day5",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day5"
+  },
+  {
+   "name": "Hours5",
+   "type": "esriFieldTypeString",
+   "alias": "Hours5",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours5"
+  },
+  {
+   "name": "Day6",
+   "type": "esriFieldTypeString",
+   "alias": "Day6",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day6"
+  },
+  {
+   "name": "Hours6",
+   "type": "esriFieldTypeString",
+   "alias": "Hours6",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours6"
+  },
+  {
+   "name": "Day7",
+   "type": "esriFieldTypeString",
+   "alias": "Day7",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "Day7"
+  },
+  {
+   "name": "Hours7",
+   "type": "esriFieldTypeString",
+   "alias": "Hours7",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 25,
+   "defaultValue": null,
+   "modelName": "Hours7"
+  },
+  {
+   "name": "Direction1",
+   "type": "esriFieldTypeString",
+   "alias": "Direction1",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "Direction1"
+  },
+  {
+   "name": "Direction2",
+   "type": "esriFieldTypeString",
+   "alias": "Direction2",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "Direction2"
+  },
+  {
+   "name": "PictureURL",
+   "type": "esriFieldTypeString",
+   "alias": "PictureURL",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "PictureURL"
+  },
+  {
+   "name": "ThumbURL",
+   "type": "esriFieldTypeString",
+   "alias": "ThumbURL",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "ThumbURL"
+  },
+  {
+   "name": "ResourceName1",
+   "type": "esriFieldTypeString",
+   "alias": "ResourceName1",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "ResourceName1"
+  },
+  {
+   "name": "ResourceURL1",
+   "type": "esriFieldTypeString",
+   "alias": "ResourceURL1",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "ResourceURL1"
+  },
+  {
+   "name": "ResourceName2",
+   "type": "esriFieldTypeString",
+   "alias": "ResourceName2",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 50,
+   "defaultValue": null,
+   "modelName": "ResourceName2"
+  },
+  {
+   "name": "ResourceURL2",
+   "type": "esriFieldTypeString",
+   "alias": "ResourceURL2",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 250,
+   "defaultValue": null,
+   "modelName": "ResourceURL2"
+  },
+  {
+   "name": "IconColor",
+   "type": "esriFieldTypeString",
+   "alias": "IconColor",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 15,
+   "defaultValue": null,
+   "modelName": "IconColor"
+  },
+  {
+   "name": "Latitude",
+   "type": "esriFieldTypeDouble",
+   "alias": "Latitude",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "Latitude"
+  },
+  {
+   "name": "Longitude",
+   "type": "esriFieldTypeDouble",
+   "alias": "Longitude",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "Longitude"
+  },
+  {
+   "name": "WaitTime",
+   "type": "esriFieldTypeString",
+   "alias": "WaitTime",
+   "domain": {
+    "type": "codedValue",
+    "name": "elVoteWaitTime",
+    "description": "elVoteWaitTime",
+    "codedValues": [
+     {
+      "name": "< 5 Minutes",
+      "code": "< 5 Minutes"
+     },
+     {
+      "name": "5-15 Minutes",
+      "code": "5-15 Minutes"
+     },
+     {
+      "name": "15-30 Minutes",
+      "code": "15-30 Minutes"
+     },
+     {
+      "name": "30 Min - 1 Hr",
+      "code": "30 Min - 1 Hr"
+     },
+     {
+      "name": "1+ Hours",
+      "code": "1+ Hours"
+     },
+     {
+      "name": "Closed",
+      "code": "Closed"
+     }
+    ],
+    "mergePolicy": "esriMPTDefaultValue",
+    "splitPolicy": "esriSPTDefaultValue"
+   },
+   "editable": true,
+   "nullable": true,
+   "length": 15,
+   "defaultValue": null,
+   "modelName": "WaitTime"
+  },
+  {
+   "name": "phone",
+   "type": "esriFieldTypeString",
+   "alias": "Phone",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 12,
+   "defaultValue": null,
+   "modelName": "phone"
+  },
+  {
+   "name": "agencyurl",
+   "type": "esriFieldTypeString",
+   "alias": "Website",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 150,
+   "defaultValue": null,
+   "modelName": "agencyurl"
+  },
+  {
+   "name": "handicap",
+   "type": "esriFieldTypeString",
+   "alias": "Handicap Accessible",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "handicap"
+  },
+  {
+   "name": "pocname",
+   "type": "esriFieldTypeString",
+   "alias": "Contact Name",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 150,
+   "defaultValue": null,
+   "modelName": "pocname"
+  },
+  {
+   "name": "pocphone",
+   "type": "esriFieldTypeString",
+   "alias": "Contact Phone",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 12,
+   "defaultValue": null,
+   "modelName": "pocphone"
+  },
+  {
+   "name": "pocemail",
+   "type": "esriFieldTypeString",
+   "alias": "Contact Email",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 100,
+   "defaultValue": null,
+   "modelName": "pocemail"
+  },
+  {
+   "name": "earlyvoting",
+   "type": "esriFieldTypeString",
+   "alias": "Early Voting Available",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "earlyvoting"
+  },
+  {
+   "name": "earlyvotingdate",
+   "type": "esriFieldTypeDate",
+   "alias": "Early Voting Date",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "earlyvotingdate"
+  },
+  {
+   "name": "nextelect",
+   "type": "esriFieldTypeDate",
+   "alias": "Next Election Date",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "nextelect"
+  },
+  {
+   "name": "regdate",
+   "type": "esriFieldTypeDate",
+   "alias": "Voter Registration Deadline",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "regdate"
+  },
+  {
+   "name": "voteservices",
+   "type": "esriFieldTypeString",
+   "alias": "Election Services",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "voteservices"
+  },
+  {
+   "name": "dropbox",
+   "type": "esriFieldTypeString",
+   "alias": "Dropbox",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 5,
+   "defaultValue": null,
+   "modelName": "dropbox"
+  },
+  {
+   "name": "boxlocation",
+   "type": "esriFieldTypeString",
+   "alias": "Box Location",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 255,
+   "defaultValue": null,
+   "modelName": "boxlocation"
+  },
+  {
+   "name": "comments",
+   "type": "esriFieldTypeString",
+   "alias": "Comments",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 500,
+   "defaultValue": null,
+   "modelName": "comments"
+  },
+  {
+   "name": "EditDate",
+   "type": "esriFieldTypeDate",
+   "alias": "EditDate",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "EditDate"
+  },
+  {
+   "name": "created_date",
+   "type": "esriFieldTypeDate",
+   "alias": "created_date",
+   "domain": null,
+   "editable": false,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "CreationDate",
+   "required": true
+  },
+  {
+   "name": "created_user",
+   "type": "esriFieldTypeString",
+   "alias": "created_user",
+   "domain": null,
+   "editable": false,
+   "nullable": true,
+   "length": 128,
+   "defaultValue": null,
+   "modelName": "Creator",
+   "required": true
+  },
+  {
+   "name": "last_edited_user",
+   "type": "esriFieldTypeString",
+   "alias": "last_edited_user",
+   "domain": null,
+   "editable": false,
+   "nullable": true,
+   "length": 128,
+   "defaultValue": null,
+   "modelName": "Editor",
+   "required": true
+  },
+  {
+   "name": "last_edited_date",
+   "type": "esriFieldTypeDate",
+   "alias": "last_edited_date",
+   "domain": null,
+   "editable": false,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "EditDate",
+   "required": true
+  },
+  {
+   "name": "GlobalID",
+   "type": "esriFieldTypeGlobalID",
+   "alias": "GlobalID",
+   "domain": null,
+   "editable": false,
+   "nullable": false,
+   "length": 38,
+   "defaultValue": null,
+   "modelName": "GlobalID"
+  }
+ ],
+ "geometryField": {
+  "name": "Shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "Shape",
+  "domain": null,
+  "editable": true,
+  "nullable": true,
+  "defaultValue": null,
+  "modelName": "Shape"
+ },
+ "indexes": [
+  {
+   "name": "UUID_433",
+   "isAscending": true,
+   "isUnique": false,
+   "description": "",
+   "fields": "GlobalID,OBJECTID"
+  },
+  {
+   "name": "G1037facilityid",
+   "isAscending": true,
+   "isUnique": false,
+   "description": "",
+   "fields": "facilityid"
+  },
+  {
+   "name": "S278_idx",
+   "isAscending": true,
+   "isUnique": true,
+   "description": "",
+   "fields": "Shape"
+  }
+ ],
+ "datesInUnknownTimezone": false,
+ "dateFieldsTimeReference": {
+  "timeZone": "UTC",
+  "timeZoneIANA": "Etc/UTC",
+  "respectsDaylightSaving": false
+ },
+ "preferredTimeReference": null,
+ "types": [
+  {
+   "id": "Ballot Return",
+   "name": "Ballot Return Location",
+   "domains": {
+    "type": {"type": "inherited"},
+    "ElectionYear": {"type": "inherited"},
+    "Status": {"type": "inherited"},
+    "WaitTime": {"type": "inherited"}
+   },
+   "templates": [
+    {
+     "name": "Ballot Return",
+     "description": "",
+     "prototype": {
+      "attributes": {
+       "comments": null,
+       "EditDate": null,
+       "facilityid": null,
+       "Name": null,
+       "Location": null,
+       "FaciltiyType": "Ballot Return",
+       "type": null,
+       "fulladdr": null,
+       "municipality": null,
+       "pstlstate": null,
+       "pstlzip5": null,
+       "MCDName": null,
+       "PrecinctCode": null,
+       "PrecinctName": null,
+       "ElectionYear": null,
+       "Status": null,
+       "ActiveDate": null,
+       "RetiredDate": null,
+       "operdays": null,
+       "Day1": null,
+       "Hours1": null,
+       "Day2": null,
+       "Hours2": null,
+       "Day3": null,
+       "Hours3": null,
+       "Day4": null,
+       "Hours4": null,
+       "Day5": null,
+       "Hours5": null,
+       "Day6": null,
+       "Hours6": null,
+       "Day7": null,
+       "Hours7": null,
+       "Direction1": null,
+       "Direction2": null,
+       "PictureURL": null,
+       "ThumbURL": null,
+       "ResourceName1": null,
+       "ResourceURL1": null,
+       "ResourceName2": null,
+       "ResourceURL2": null,
+       "IconColor": null,
+       "Latitude": null,
+       "Longitude": null,
+       "WaitTime": null,
+       "phone": null,
+       "agencyurl": null,
+       "handicap": null,
+       "pocname": null,
+       "pocphone": null,
+       "pocemail": null,
+       "earlyvoting": null,
+       "earlyvotingdate": null,
+       "nextelect": null,
+       "regdate": null,
+       "voteservices": null,
+       "dropbox": null,
+       "boxlocation": null
+      }
+     },
+     "drawingTool": "esriFeatureEditToolPoint"
+    }
+   ]
+  },
+  {
+   "id": "Early Voting",
+   "name": "Early Voting",
+   "domains": {
+    "type": {"type": "inherited"},
+    "ElectionYear": {"type": "inherited"},
+    "Status": {"type": "inherited"},
+    "WaitTime": {"type": "inherited"}
+   },
+   "templates": [
+    {
+     "name": "Early Voting",
+     "description": "",
+     "prototype": {
+      "attributes": {
+       "comments": null,
+       "EditDate": null,
+       "facilityid": null,
+       "Name": null,
+       "Location": null,
+       "FaciltiyType": "Early Voting",
+       "type": null,
+       "fulladdr": null,
+       "municipality": null,
+       "pstlstate": null,
+       "pstlzip5": null,
+       "MCDName": null,
+       "PrecinctCode": null,
+       "PrecinctName": null,
+       "ElectionYear": null,
+       "Status": null,
+       "ActiveDate": null,
+       "RetiredDate": null,
+       "operdays": null,
+       "Day1": null,
+       "Hours1": null,
+       "Day2": null,
+       "Hours2": null,
+       "Day3": null,
+       "Hours3": null,
+       "Day4": null,
+       "Hours4": null,
+       "Day5": null,
+       "Hours5": null,
+       "Day6": null,
+       "Hours6": null,
+       "Day7": null,
+       "Hours7": null,
+       "Direction1": null,
+       "Direction2": null,
+       "PictureURL": null,
+       "ThumbURL": null,
+       "ResourceName1": null,
+       "ResourceURL1": null,
+       "ResourceName2": null,
+       "ResourceURL2": null,
+       "IconColor": null,
+       "Latitude": null,
+       "Longitude": null,
+       "WaitTime": null,
+       "phone": null,
+       "agencyurl": null,
+       "handicap": null,
+       "pocname": null,
+       "pocphone": null,
+       "pocemail": null,
+       "earlyvoting": null,
+       "earlyvotingdate": null,
+       "nextelect": null,
+       "regdate": null,
+       "voteservices": null,
+       "dropbox": null,
+       "boxlocation": null
+      }
+     },
+     "drawingTool": "esriFeatureEditToolPoint"
+    }
+   ]
+  },
+  {
+   "id": "Polling Place",
+   "name": "Polling Place",
+   "domains": {
+    "type": {"type": "inherited"},
+    "ElectionYear": {"type": "inherited"},
+    "Status": {"type": "inherited"},
+    "WaitTime": {"type": "inherited"}
+   },
+   "templates": [
+    {
+     "name": "Polling Place",
+     "description": "",
+     "prototype": {
+      "attributes": {
+       "comments": null,
+       "EditDate": null,
+       "facilityid": null,
+       "Name": null,
+       "Location": null,
+       "FaciltiyType": "Polling Place",
+       "type": null,
+       "fulladdr": null,
+       "municipality": null,
+       "pstlstate": null,
+       "pstlzip5": null,
+       "MCDName": null,
+       "PrecinctCode": null,
+       "PrecinctName": null,
+       "ElectionYear": null,
+       "Status": null,
+       "ActiveDate": null,
+       "RetiredDate": null,
+       "operdays": null,
+       "Day1": null,
+       "Hours1": null,
+       "Day2": null,
+       "Hours2": null,
+       "Day3": null,
+       "Hours3": null,
+       "Day4": null,
+       "Hours4": null,
+       "Day5": null,
+       "Hours5": null,
+       "Day6": null,
+       "Hours6": null,
+       "Day7": null,
+       "Hours7": null,
+       "Direction1": null,
+       "Direction2": null,
+       "PictureURL": null,
+       "ThumbURL": null,
+       "ResourceName1": null,
+       "ResourceURL1": null,
+       "ResourceName2": null,
+       "ResourceURL2": null,
+       "IconColor": null,
+       "Latitude": null,
+       "Longitude": null,
+       "WaitTime": null,
+       "phone": null,
+       "agencyurl": null,
+       "handicap": null,
+       "pocname": null,
+       "pocphone": null,
+       "pocemail": null,
+       "earlyvoting": null,
+       "earlyvotingdate": null,
+       "nextelect": null,
+       "regdate": null,
+       "voteservices": null,
+       "dropbox": null,
+       "boxlocation": null
+      }
+     },
+     "drawingTool": "esriFeatureEditToolPoint"
+    }
+   ]
+  },
+  {
+   "id": "Pop Up Location",
+   "name": "Pop Up Location",
+   "domains": {
+    "type": {"type": "inherited"},
+    "ElectionYear": {"type": "inherited"},
+    "Status": {"type": "inherited"},
+    "WaitTime": {"type": "inherited"}
+   },
+   "templates": [
+    {
+     "name": "Pop Up Location",
+     "description": "",
+     "prototype": {
+      "attributes": {
+       "comments": null,
+       "EditDate": null,
+       "facilityid": null,
+       "Name": null,
+       "Location": null,
+       "FaciltiyType": "Pop Up Location",
+       "type": null,
+       "fulladdr": null,
+       "municipality": null,
+       "pstlstate": null,
+       "pstlzip5": null,
+       "MCDName": null,
+       "PrecinctCode": null,
+       "PrecinctName": null,
+       "ElectionYear": null,
+       "Status": null,
+       "ActiveDate": null,
+       "RetiredDate": null,
+       "operdays": null,
+       "Day1": null,
+       "Hours1": null,
+       "Day2": null,
+       "Hours2": null,
+       "Day3": null,
+       "Hours3": null,
+       "Day4": null,
+       "Hours4": null,
+       "Day5": null,
+       "Hours5": null,
+       "Day6": null,
+       "Hours6": null,
+       "Day7": null,
+       "Hours7": null,
+       "Direction1": null,
+       "Direction2": null,
+       "PictureURL": null,
+       "ThumbURL": null,
+       "ResourceName1": null,
+       "ResourceURL1": null,
+       "ResourceName2": null,
+       "ResourceURL2": null,
+       "IconColor": null,
+       "Latitude": null,
+       "Longitude": null,
+       "WaitTime": null,
+       "phone": null,
+       "agencyurl": null,
+       "handicap": null,
+       "pocname": null,
+       "pocphone": null,
+       "pocemail": null,
+       "earlyvoting": null,
+       "earlyvotingdate": null,
+       "nextelect": null,
+       "regdate": null,
+       "voteservices": null,
+       "dropbox": null,
+       "boxlocation": null
+      }
+     },
+     "drawingTool": "esriFeatureEditToolPoint"
+    }
+   ]
+  },
+  {
+   "id": "Post Office Blue Box",
+   "name": "Post Office Blue Box",
+   "domains": {
+    "type": {"type": "inherited"},
+    "ElectionYear": {"type": "inherited"},
+    "Status": {"type": "inherited"},
+    "WaitTime": {"type": "inherited"}
+   },
+   "templates": [
+    {
+     "name": "Post Office Blue Box",
+     "description": "",
+     "prototype": {
+      "attributes": {
+       "comments": null,
+       "EditDate": null,
+       "facilityid": null,
+       "Name": null,
+       "Location": null,
+       "FaciltiyType": "Post Office Blue Box",
+       "type": null,
+       "fulladdr": null,
+       "municipality": null,
+       "pstlstate": null,
+       "pstlzip5": null,
+       "MCDName": null,
+       "PrecinctCode": null,
+       "PrecinctName": null,
+       "ElectionYear": null,
+       "Status": null,
+       "ActiveDate": null,
+       "RetiredDate": null,
+       "operdays": null,
+       "Day1": null,
+       "Hours1": null,
+       "Day2": null,
+       "Hours2": null,
+       "Day3": null,
+       "Hours3": null,
+       "Day4": null,
+       "Hours4": null,
+       "Day5": null,
+       "Hours5": null,
+       "Day6": null,
+       "Hours6": null,
+       "Day7": null,
+       "Hours7": null,
+       "Direction1": null,
+       "Direction2": null,
+       "PictureURL": null,
+       "ThumbURL": null,
+       "ResourceName1": null,
+       "ResourceURL1": null,
+       "ResourceName2": null,
+       "ResourceURL2": null,
+       "IconColor": null,
+       "Latitude": null,
+       "Longitude": null,
+       "WaitTime": null,
+       "phone": null,
+       "agencyurl": null,
+       "handicap": null,
+       "pocname": null,
+       "pocphone": null,
+       "pocemail": null,
+       "earlyvoting": null,
+       "earlyvotingdate": null,
+       "nextelect": null,
+       "regdate": null,
+       "voteservices": null,
+       "dropbox": null,
+       "boxlocation": null
+      }
+     },
+     "drawingTool": "esriFeatureEditToolPoint"
+    }
+   ]
+  }
+ ],
+ "templates": [],
+ "maxRecordCount": 2000,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+ "capabilities": "Query,ChangeTracking",
+ "useStandardizedQueries": true,
+ "bigIntegerRestrictedTo53Bits": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "supportsAppend": true,
+ "supportedAppendFormats": "FILEGDB,PBF",
+ "standardMaxRecordCount": 32000,
+ "tileMaxRecordCount": 8000,
+ "standardMaxRecordCountNoGeometry": 32000,
+ "maxRecordCountFactor": 1,
+ "serviceItemId": "4c94cf6415aa413da7a4515a133a2097"
+}

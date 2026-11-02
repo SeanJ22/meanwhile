@@ -1,0 +1,974 @@
+[
+  {
+    "precinct": "St. Paul W-7 P-1",
+    "siteId": "voting-28fb343a413aaeb969e7737f",
+    "name": "Dayton's Bluff Recreation Center (W-7 P-1)",
+    "address": "800 Conway St, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-7 P-2",
+    "siteId": "voting-433dfc07df3d0e578cff34d5",
+    "name": "Hazel Park Recreation Center (W-7 P-2)",
+    "address": "945 Hazel St N, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "St. Paul W-7 P-3",
+    "siteId": "voting-28fb343a413aaeb969e7737f",
+    "name": "Dayton's Bluff Recreation Center (W-7 P-3)",
+    "address": "800 Conway St, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-7 P-4",
+    "siteId": "voting-b249d3dcdaf6de99fe28bee9",
+    "name": "Mounds Park United Methodist Church (W-7 P-4)",
+    "address": "1049 Euclid St, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "White Bear Lake W-1 P-1",
+    "siteId": "voting-79f39191fea33315f4b3ebd3",
+    "name": "White Bear Lake City Hall - Council Chambers (W-1 P-1)",
+    "address": "4701 Highway 61, White Bear Lake, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Lake W-2 P-1",
+    "siteId": "voting-de23f0d4353e60ca1342a489",
+    "name": "Ramsey County Library - White Bear Lake (W-2 P-1)",
+    "address": "2150 2nd St, White Bear Lake, MN, 55110"
+  },
+  {
+    "precinct": "St. Paul W-7 P-5",
+    "siteId": "voting-4a72ccc3198bc7319986a04d",
+    "name": "Mounds Theater (W-7 P-5)",
+    "address": "1029 Hudson Rd, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-7 P-6",
+    "siteId": "voting-eb04aa5c5e15c53dd573e2f8",
+    "name": "Eastview Rec Center (W-7 P-6)",
+    "address": "1675 5th St E, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-7 P-7",
+    "siteId": "voting-9008bec42d4132ecb9b1d37f",
+    "name": "Wilson Hi-Rise (W-7 P-7)",
+    "address": "1300 Wilson Ave, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-7 P-8",
+    "siteId": "voting-b1ac3ef7904cf0059db50aa6",
+    "name": "Progressive Baptist Church (W-7 P-8)",
+    "address": "1505 Burns Ave, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-7 P-9",
+    "siteId": "voting-2a651ea247067f58d98e1b08",
+    "name": "Hazel Park Congregational Church (W-7 P-9)",
+    "address": "1831 Minnehaha Ave E, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "St. Paul W-7 P-10",
+    "siteId": "voting-461fe3a96ca68c81e79526a0",
+    "name": "Eastern Heights Elementary School (W-7 P-10)",
+    "address": "2001 Margaret St, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "St. Paul W-7 P-11",
+    "siteId": "voting-691e68d74216e217a04adeee",
+    "name": "Conway Recreation Center (W-7 P-11)",
+    "address": "2090 Conway Ave, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "Arden Hills P-1",
+    "siteId": "voting-f57b235fe82d60d2688b568b",
+    "name": "Presbyterian Church Of The Way (P-1)",
+    "address": "3382 Lexington Ave N, Shoreview, MN, 55126"
+  },
+  {
+    "precinct": "Arden Hills P-2",
+    "siteId": "voting-df5635b2a8d3e7c773f1df7e",
+    "name": "Anderson Center - Bethel University (P-2)",
+    "address": "2 Pine Tree Dr, Arden Hills, MN, 55112"
+  },
+  {
+    "precinct": "St. Paul W-7 P-12",
+    "siteId": "voting-00414b27f310b5850aba9130",
+    "name": "Battle Creek Recreation Center (W-7 P-12)",
+    "address": "75 Winthrop St S, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "Arden Hills P-3",
+    "siteId": "voting-b5f342d09ab4dabb83583945",
+    "name": "North Heights Lutheran Chruch (P-3)",
+    "address": "1700 Highway 96 W, Arden Hills, MN, 55112"
+  },
+  {
+    "precinct": "Blaine W-1 P-10",
+    "siteId": "voting-daed656c564cd6293d5b7e29",
+    "name": "Blaine City Hall (W-1 P-10)",
+    "address": "10801 Town Square Dr NE, Blaine, MN, 55449"
+  },
+  {
+    "precinct": "Falcon Heights P-1",
+    "siteId": "voting-978459b9fc7c1d79fd2b4061",
+    "name": "Falcon Heights City Hall (P-1)",
+    "address": "2077 Larpenteur Ave W, Falcon Heights, MN, 55113"
+  },
+  {
+    "precinct": "Falcon Heights P-2",
+    "siteId": "voting-c33a12bc84891a326d481297",
+    "name": "Garden Community Church (P-2)",
+    "address": "1440 Garden Ave, Falcon Heights, MN, 55113"
+  },
+  {
+    "precinct": "Gem Lake P-1",
+    "siteId": "voting-6d72922b3048358f4e548fd6",
+    "name": "Heritage Hall (P-1)",
+    "address": "4200 Otter Lake Rd, White Bear Township, MN, 55110"
+  },
+  {
+    "precinct": "Lauderdale P-1",
+    "siteId": "voting-b226c2230010cbcbe7366454",
+    "name": "Lauderdale City Hall (P-1)",
+    "address": "1891 Walnut St, Lauderdale, MN, 55113"
+  },
+  {
+    "precinct": "Little Canada P-1",
+    "siteId": "voting-30cfff1de4049a4f8ab16797",
+    "name": "Roseville Area Middle School (P-1)",
+    "address": "15 County Road B2 E, Little Canada, MN, 55117"
+  },
+  {
+    "precinct": "Little Canada P-2",
+    "siteId": "voting-411ea366d2fa2160b921ec5c",
+    "name": "Little Canada Elementary School (P-2)",
+    "address": "400 Eli Rd, Little Canada, MN, 55117"
+  },
+  {
+    "precinct": "Little Canada P-3",
+    "siteId": "voting-ae28a86be490f447dccac556",
+    "name": "Little Canada City Center (P-3)",
+    "address": "515 Little Canada Rd E, Little Canada, MN, 55117"
+  },
+  {
+    "precinct": "Maplewood P-1",
+    "siteId": "voting-d1a3d4d9bb00eed245ccc89c",
+    "name": "Edgerton Elementary School (P-1)",
+    "address": "1929 Edgerton St, Maplewood, MN, 55117"
+  },
+  {
+    "precinct": "Maplewood P-2",
+    "siteId": "voting-d1a3d4d9bb00eed245ccc89c",
+    "name": "Edgerton Elementary School (P-2)",
+    "address": "1929 Edgerton St, Maplewood, MN, 55117"
+  },
+  {
+    "precinct": "Maplewood P-3",
+    "siteId": "voting-664dde6e17a7d5b0cd053634",
+    "name": "Gladstone Community Center (P-3)",
+    "address": "1945 Manton St, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-4",
+    "siteId": "voting-487ebef3f040d425d524f3eb",
+    "name": "Wakefield Park Community Building (P-4)",
+    "address": "1860 Hazelwood St N, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-5",
+    "siteId": "voting-f502f9a6c1d4dd4e83df2f3e",
+    "name": "Maplewood Community Center/YMCA (P-5)",
+    "address": "2100 White Bear Ave N, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-6",
+    "siteId": "voting-d87c21660e2691b5d444aa80",
+    "name": "Redeeming Love Church (P-6)",
+    "address": "2425 White Bear Ave N, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "St. Paul W-7 P-13",
+    "siteId": "voting-8e748cc637b092cca37cc4cd",
+    "name": "Highwood Hills Elementary School (W-7 P-13)",
+    "address": "2188 Londin Ln, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "Maplewood P-7",
+    "siteId": "voting-a0a57ef5e30aadaf226fdf0a",
+    "name": "First Evangelical Free Church (P-7)",
+    "address": "2696 Hazelwood St N, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-8",
+    "siteId": "voting-d0c96c33b3c0c94c6f39565d",
+    "name": "Ramsey County Library (P-8)",
+    "address": "3025 Southlawn Dr, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-9",
+    "siteId": "voting-be01543139651054227ca161",
+    "name": "Justice Alan Page Elementary School (P-9)",
+    "address": "2410 Holloway Ave E, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-10",
+    "siteId": "voting-be01543139651054227ca161",
+    "name": "Justice Alan Page Elementary School (P-10)",
+    "address": "2410 Holloway Ave E, Maplewood, MN, 55109"
+  },
+  {
+    "precinct": "Maplewood P-11",
+    "siteId": "voting-c7446619b9f62d43c54d5c24",
+    "name": "Beaver Lake Education Center (P-11)",
+    "address": "1060 Sterling St N, Maplewood, MN, 55119"
+  },
+  {
+    "precinct": "Maplewood P-12",
+    "siteId": "voting-3084a488bb6b7ce027a81da4",
+    "name": "Carver Elementary School (P-12)",
+    "address": "2680 Upper Afton Rd E, Maplewood, MN, 55119"
+  },
+  {
+    "precinct": "Maplewood P-13",
+    "siteId": "voting-6f36e0afc310dbe62e90d50e",
+    "name": "Lutheran Church of Peace (P-13)",
+    "address": "47 Century Ave S, Maplewood, MN, 55119"
+  },
+  {
+    "precinct": "Mounds View P-1",
+    "siteId": "voting-3d38ee12b137c713c0d2fbd7",
+    "name": "Mounds View Community Center (P-1)",
+    "address": "5394 Edgewood Dr, Mounds View, MN, 55112"
+  },
+  {
+    "precinct": "Mounds View P-2",
+    "siteId": "voting-3d38ee12b137c713c0d2fbd7",
+    "name": "Mounds View Community Center (P-2)",
+    "address": "5394 Edgewood Dr, Mounds View, MN, 55112"
+  },
+  {
+    "precinct": "Mounds View P-3",
+    "siteId": "voting-3d38ee12b137c713c0d2fbd7",
+    "name": "Mounds View Community Center (P-3)",
+    "address": "5394 Edgewood Dr, Mounds View, MN, 55112"
+  },
+  {
+    "precinct": "Mounds View P-4",
+    "siteId": "voting-3d38ee12b137c713c0d2fbd7",
+    "name": "Mounds View Community Center (P-4)",
+    "address": "5394 Edgewood Dr, Mounds View, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-1",
+    "siteId": "voting-762ae413d5b224dbfdb15d4f",
+    "name": "St. John the Baptist Catholic Church (P-1)",
+    "address": "835 2nd Ave NW, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-2",
+    "siteId": "voting-f56e9d40b0ad8e21c1d5d6ca",
+    "name": "Salem Covenent Church (P-2)",
+    "address": "2655 5th St NW, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-3",
+    "siteId": "voting-f56e9d40b0ad8e21c1d5d6ca",
+    "name": "Salem Covenent Church (P-2 & P-3)",
+    "address": "2655 5th St NW, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-4",
+    "siteId": "voting-2dcbfdc3a3e71958eb6301ee",
+    "name": "Christ The King Lutheran Church (P-4)",
+    "address": "1900 7th St NW, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-5",
+    "siteId": "voting-f4b2ee97cbb497f3e7c122bf",
+    "name": "Faith Church (P-5)",
+    "address": "1600 Silver Lake Rd, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-6",
+    "siteId": "voting-8c7193b1147691d77702a2ec",
+    "name": "New Brighton Community Center (P-6)",
+    "address": "400 10th St NW, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-7",
+    "siteId": "voting-f4b2ee97cbb497f3e7c122bf",
+    "name": "Faith Church (P-7)",
+    "address": "1600 Silver Lake Rd, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "New Brighton P-8",
+    "siteId": "voting-06b72b5774a0317505571a23",
+    "name": "Atonement Lutheran Church (P-8)",
+    "address": "1980 Silver Lake Rd NW, New Brighton, MN, 55112"
+  },
+  {
+    "precinct": "North Oaks P-1",
+    "siteId": "voting-3852991e64766f02092e8998",
+    "name": "Peace United Methodist Church (P-1)",
+    "address": "5050 Hodgson Rd, North Oaks, MN, 55126"
+  },
+  {
+    "precinct": "North Oaks P-2",
+    "siteId": "voting-addcd30e8b5b98d9aeb5cfc2",
+    "name": "North Oaks Golf Club (P-2)",
+    "address": "54 East Oaks Rd, North Oaks, MN, 55127"
+  },
+  {
+    "precinct": "North St. Paul P-1",
+    "siteId": "voting-ddf453088ad0783c8d82ea36",
+    "name": "River of God Church (P-1)",
+    "address": "2490 7th Ave E, North Saint Paul, MN, 55109"
+  },
+  {
+    "precinct": "North St. Paul P-2",
+    "siteId": "voting-a899d36bea2cfbf15d02038b",
+    "name": "North Presbyterian Church (P-2)",
+    "address": "2675 Highway 36 E, North Saint Paul, MN, 55109"
+  },
+  {
+    "precinct": "North St. Paul P-3",
+    "siteId": "voting-ba5d19ba621046a75555842b",
+    "name": "Cowern Elementary School (P-3)",
+    "address": "2131 Margaret St N, North Saint Paul, MN, 55109"
+  },
+  {
+    "precinct": "North St. Paul P-4",
+    "siteId": "voting-e19c25d6192517abda769349",
+    "name": "Richardson School Gym (P-4)",
+    "address": "2400 17th Ave E, North Saint Paul, MN, 55109"
+  },
+  {
+    "precinct": "Roseville P-1",
+    "siteId": "voting-0ed03d2a415b6c5a984c02ec",
+    "name": "Centennial United Methodist Church (P-1)",
+    "address": "1524 County Road C2 W, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-2",
+    "siteId": "voting-e566b38726d2819a1e85f7c9",
+    "name": "Roseville Covenant Church (P-2)",
+    "address": "2865 Hamline Ave N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-3",
+    "siteId": "voting-f2b550c970ee777f5f82dd2f",
+    "name": "Advent Lutheran Church (P-3)",
+    "address": "3000 Hamline Ave N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-4",
+    "siteId": "voting-389a8fb01d7a4f684c5bc44b",
+    "name": "North Heights Lutheran Church (P-4)",
+    "address": "2701 Rice St N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-5",
+    "siteId": "voting-7dacb932f20b91d4bf9c10a1",
+    "name": "St. Christopher Episcopal Church (P-5)",
+    "address": "2300 Hamline Ave N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-6",
+    "siteId": "voting-9193c12818e3fda2c8f1b10a",
+    "name": "Prince Of Peace Lutheran Church (P-6)",
+    "address": "2561 Victoria St N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-7",
+    "siteId": "voting-2df523945c97160acfd1e25e",
+    "name": "Central Park Elementary (P-7)",
+    "address": "535 County Road B2 W, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-8",
+    "siteId": "voting-f11ede92532e0fc7a92aef17",
+    "name": "Aŋpétu Téča Education Center (P-8)",
+    "address": "1910 County Road B W, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-9",
+    "siteId": "voting-12a536c44c5089c112e1b133",
+    "name": "Ramsey County Library (P-9)",
+    "address": "2180 Hamline Ave N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-10",
+    "siteId": "voting-f2a94533a12b74777626fbc0",
+    "name": "Roseville Lutheran Church (P-10)",
+    "address": "1215 Roselawn Ave W, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Roseville P-11",
+    "siteId": "voting-9c744887c016ec1600e7843e",
+    "name": "Galilee Evangelical Lutheran Church (P-11)",
+    "address": "145 McCarrons Blvd N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "St. Anthony P-1",
+    "siteId": "voting-494cab537bf58d37fae8ce3d",
+    "name": "Silverwood Park Event Center (P-1)",
+    "address": "2500 County Rd E, Saint Anthony, MN, 55421"
+  },
+  {
+    "precinct": "St. Paul W-1 P-1",
+    "siteId": "voting-dbc415afbe9cc58c92b0e5a7",
+    "name": "Early Childhood Hub West (W-1 P-1)",
+    "address": "1317 Charles Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-1 P-2",
+    "siteId": "voting-541248d80f82f1dbdff1f9f2",
+    "name": "Martin Luther King Recreation Center (W-1 P-2)",
+    "address": "271 Mackubin St, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-1 P-3",
+    "siteId": "voting-33f1bcbf23eb1fb0b1208dc5",
+    "name": "Church of the Redeemer (W-1 P-3)",
+    "address": "739 Lafond Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-1 P-4",
+    "siteId": "voting-33f1bcbf23eb1fb0b1208dc5",
+    "name": "Church of the Redeemer (W-1 P-4)",
+    "address": "739 Lafond Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-1 P-5",
+    "siteId": "voting-770ecfe64a5cbf794c99a9b1",
+    "name": "Maxfield School (W-1 P-5)",
+    "address": "380 Victoria St N, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-1 P-6",
+    "siteId": "voting-8ce70efa302208de522fe065",
+    "name": "Jimmy Lee Recreation Center (W-1 P-6)",
+    "address": "270 Lexington Pkwy N, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-1 P-7",
+    "siteId": "voting-42a7fbcfb21c290887caaa2e",
+    "name": "Unity Unitarian Church (W-1 P-7)",
+    "address": "733 Portland Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-1 P-8",
+    "siteId": "voting-541248d80f82f1dbdff1f9f2",
+    "name": "Martin Luther King Recreation Center (W-1 P-8)",
+    "address": "271 Mackubin St, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-1 P-9",
+    "siteId": "voting-7d4d369021e3b685aaf5bb90",
+    "name": "East African Elementary Magnet School (W-1 P-9)",
+    "address": "437 Edmund Ave W, Saint Paul, MN, 55103"
+  },
+  {
+    "precinct": "St. Paul W-1 P-10",
+    "siteId": "voting-4eef0585b702966a76ff7409",
+    "name": "Mount Zion Temple (W-1 P-10)",
+    "address": "1300 Summit Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-1 P-11",
+    "siteId": "voting-faf06e6bf119a4cf65835561",
+    "name": "Ravoux Hi-Rise (W-1 P-11)",
+    "address": "280 Ravoux St, Saint Paul, MN, 55103"
+  },
+  {
+    "precinct": "St. Paul W-1 P-12",
+    "siteId": "voting-1836a4c6ac2d9ca5e6dc4283",
+    "name": "Rice Street Library (W-1 P-12)",
+    "address": "1011 Rice St, Saint Paul, MN, 55117"
+  },
+  {
+    "precinct": "St. Paul W-1 P-13",
+    "siteId": "voting-ffd08f5eb51cbd926a8bdd9b",
+    "name": "Mount Airy Hi-Rise (W-1 P-13)",
+    "address": "200 Arch St E, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-2 P-1",
+    "siteId": "voting-4f3cfbe4635a542532c945e6",
+    "name": "Central Presbyterian Church (W-2 P-1)",
+    "address": "500 Cedar St, Saint Paul, MN, 55101"
+  },
+  {
+    "precinct": "St. Paul W-2 P-2",
+    "siteId": "voting-059e2901640354f821735112",
+    "name": "St Peter's Lutheran Church (W-2 P-2)",
+    "address": "530 Victoria St S, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-2 P-3",
+    "siteId": "voting-76bcde77d0ad8532f745fb96",
+    "name": "West 7th Community Center (W-2 P-3)",
+    "address": "265 Oneida St, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-2 P-4",
+    "siteId": "voting-190494f881c3473c6b3f608f",
+    "name": "Palace Community Center (W-2 P-4)",
+    "address": "781 Palace Ave, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-2 P-5",
+    "siteId": "voting-6e47a9a26be300a8ebcf9960",
+    "name": "Linwood Recreation Center (W-2 P-5)",
+    "address": "860 St Clair Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-2 P-6",
+    "siteId": "voting-c4b808081480b3868a4d3da4",
+    "name": "Summit Church (W-2 P-6)",
+    "address": "845 Summit Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-2 P-7",
+    "siteId": "voting-b724dd97e663f4142444ae33",
+    "name": "Landmark Center (W-2 P-7)",
+    "address": "75 5th St W, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-2 P-8",
+    "siteId": "voting-9b0df0468ed9ef11370d72d0",
+    "name": "Salvation Army (W-2 P-8)",
+    "address": "401 7th St W, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-2 P-9",
+    "siteId": "voting-5ec26a64ac1aef7d45dd78a0",
+    "name": "St. Matthew's Parish Center (W-2 P-9)",
+    "address": "490 Hall Ave, Saint Paul, MN, 55107"
+  },
+  {
+    "precinct": "St. Paul W-2 P-10",
+    "siteId": "voting-6d2fa0087bc4b60b18f957f6",
+    "name": "El Rio Vista Recreation Center (W-2 P-10)",
+    "address": "179 Robie St E, Saint Paul, MN, 55107"
+  },
+  {
+    "precinct": "St. Paul W-2 P-11",
+    "siteId": "voting-3b732b585c93c22a7cfd0398",
+    "name": "Humboldt High School - Door 26 (W-2 P-11)",
+    "address": "640 Humboldt Ave, Saint Paul, MN, 55107"
+  },
+  {
+    "precinct": "St. Paul W-2 P-12",
+    "siteId": "voting-3b732b585c93c22a7cfd0398",
+    "name": "Humboldt High School - Door 26 (W-2 P-12)",
+    "address": "640 Humboldt Ave, Saint Paul, MN, 55107"
+  },
+  {
+    "precinct": "St. Paul W-2 P-13",
+    "siteId": "voting-39e538dfa420ef5f0a1ee3d8",
+    "name": "Hope Community Academy (W-2 P-13)",
+    "address": "720 Payne Ave, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-3 P-1",
+    "siteId": "voting-01e41878cf581da439a39985",
+    "name": "Temple Of Aaron (W-3 P-1)",
+    "address": "616 Mississippi River Blvd S, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-2",
+    "siteId": "voting-2829176e4fe12b2d2191372c",
+    "name": "Pilgrim Lutheran Church",
+    "address": "1935 St Clair Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-3 P-3",
+    "siteId": "voting-5103d4207d94837eccf95458",
+    "name": "Lumen Christi Catholic Community (W-3 P-3)",
+    "address": "2055 Bohland Ave, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-4",
+    "siteId": "voting-b900eef73409fe6b8dcf7559",
+    "name": "Highland Park Community Center - Hillcrest Rec (W-3 P-4)",
+    "address": "1978 Ford Pkwy, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-5",
+    "siteId": "voting-0bfce008a243678a2def52ba",
+    "name": "Montreal Hi-Rise (W-3 P-5)",
+    "address": "1085 Montreal Ave, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-6",
+    "siteId": "voting-727fcc6a4f81227fd8f0a523",
+    "name": "St. Luke Lutheran Church (W-3 P-6)",
+    "address": "1807 Field Ave, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-7",
+    "siteId": "voting-5fbb6bd4ab2430b40639be15",
+    "name": "Macalester/Plymouth United Church (W-3 P-7)",
+    "address": "1658 Lincoln Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-3 P-8",
+    "siteId": "voting-1dd08263a6aa50489dfac866",
+    "name": "Gloria Dei Lutheran Church (W-3 P-8)",
+    "address": "700 Snelling Ave S, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-9",
+    "siteId": "voting-1dd08263a6aa50489dfac866",
+    "name": "Gloria Dei Lutheran Church (W-3 P-9)",
+    "address": "700 Snelling Ave S, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-10",
+    "siteId": "voting-ae6991c58a73974c9c2f02de",
+    "name": "Highland Park Elementary (W-3 P-10)",
+    "address": "1700 Saunders Ave, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-11",
+    "siteId": "voting-d7be140f7f374c9524db4957",
+    "name": "Highland Path (W-3 P-11)",
+    "address": "1920 Graham Ave W, Saint Paul, MN, 55116"
+  },
+  {
+    "precinct": "St. Paul W-3 P-12",
+    "siteId": "voting-059e2901640354f821735112",
+    "name": "St Peter's Lutheran Church (W-3 P-12)",
+    "address": "530 Victoria St S, Saint Paul, MN, 55102"
+  },
+  {
+    "precinct": "St. Paul W-3 P-13",
+    "siteId": "voting-5b37c3adcb50b78d02d74e29",
+    "name": "Edgcumbe Recreation Center (W-3 P-13)",
+    "address": "320 Griggs St S, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-4 P-1",
+    "siteId": "voting-028d72bff8e105e256e57089",
+    "name": "Luther Seminary Olson Campus Center (W-4 P-1)",
+    "address": "1490 Fulham St, Saint Paul, MN, 55108"
+  },
+  {
+    "precinct": "St. Paul W-4 P-2",
+    "siteId": "voting-9f3d546621b5b66a69709611",
+    "name": "Langford Recreation Center (W-4 P-2)",
+    "address": "30 Langford Park, Saint Paul, MN, 55108"
+  },
+  {
+    "precinct": "St. Paul W-4 P-3",
+    "siteId": "voting-32a13f67cf91f4b1846d1b79",
+    "name": "Seal Hi-Rise (W-4 P-3)",
+    "address": "825 Seal St, Saint Paul, MN, 55114"
+  },
+  {
+    "precinct": "St. Paul W-4 P-4",
+    "siteId": "voting-a7ef0a4d04eeee48a034911f",
+    "name": "Merriam Park Recreation Center (W-4 P-4)",
+    "address": "2000 St Anthony Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-4 P-5",
+    "siteId": "voting-46d9f61d611c635c7626c6af",
+    "name": "McNeely Hall - St. Thomas University (W-4 P-5)",
+    "address": "2060 Summit Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-4 P-6",
+    "siteId": "voting-00ad06564d2501ec881ae214",
+    "name": "Merriam Park Library (W-4 P-6)",
+    "address": "1831 Marshall Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-4 P-7",
+    "siteId": "voting-348b17b0912f96bb5fb276f6",
+    "name": "Irrawaddy Academy/St Columba School (W-4 P-7)",
+    "address": "1330 Blair Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-4 P-8",
+    "siteId": "voting-66aefda04e4372f25ea7e25c",
+    "name": "Hancock School Recreation Center (W-4 P-8)",
+    "address": "1610 Hubbard Ave, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-4 P-9",
+    "siteId": "voting-b60403caa6a216ed280490cb",
+    "name": "Bethlehem Lutheran Church in the Midway (W-4 P-9)",
+    "address": "436 Roy St N, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-4 P-10",
+    "siteId": "voting-40961bf5795d6fab979d918d",
+    "name": "Como Park - Streetcar Station (W-4 P-10)",
+    "address": "1224 Lexington Pkwy N, Saint Paul, MN, 55103"
+  },
+  {
+    "precinct": "St. Paul W-4 P-11",
+    "siteId": "voting-8fe93fec62a559446438c0c1",
+    "name": "Hamline Hi-Rise (W-4 P-11)",
+    "address": "777 Hamline Ave N, Saint Paul, MN, 55104"
+  },
+  {
+    "precinct": "St. Paul W-4 P-12",
+    "siteId": "voting-34ec6574420c8f3f9fb920e6",
+    "name": "Groveland Recreation Center (W-4 P-12)",
+    "address": "2021 St Clair Ave, Saint Paul, MN, 55105"
+  },
+  {
+    "precinct": "St. Paul W-4 P-13",
+    "siteId": "voting-a653b82105f47305a470db98",
+    "name": "Church of the Holy Childhood (W-4 P-13)",
+    "address": "1435 Midway Pkwy, Saint Paul, MN, 55108"
+  },
+  {
+    "precinct": "St. Paul W-5 P-1",
+    "siteId": "voting-5898e3ed3a7539fbc1b69641",
+    "name": "North Dale Recreation Center (W-5 P-1)",
+    "address": "1414 St Albans St N, Saint Paul, MN, 55117"
+  },
+  {
+    "precinct": "St. Paul W-5 P-2",
+    "siteId": "voting-5898e3ed3a7539fbc1b69641",
+    "name": "North Dale Recreation Center (W-5 P-2)",
+    "address": "1414 St Albans St N, Saint Paul, MN, 55117"
+  },
+  {
+    "precinct": "St. Paul W-5 P-3",
+    "siteId": "voting-16cd9887e2fe51b3bfdcd230",
+    "name": "Front Ave Hi-Rise (W-5 P-3)",
+    "address": "727 Front Ave, Saint Paul, MN, 55103"
+  },
+  {
+    "precinct": "St. Paul W-5 P-4",
+    "siteId": "voting-b97478b31c06dbb5ba3adc78",
+    "name": "Washington Technology School (W-5 P-4)",
+    "address": "1495 Rice St, Saint Paul, MN, 55117"
+  },
+  {
+    "precinct": "St. Paul W-5 P-5",
+    "siteId": "voting-4124cec946055d5000c2e048",
+    "name": "McDonough Community Center (W-5 P-5)",
+    "address": "1544 Timberlake Rd, Saint Paul, MN, 55117"
+  },
+  {
+    "precinct": "St. Paul W-5 P-6",
+    "siteId": "voting-25b086c801c702461f29718e",
+    "name": "North End Community Center (W-5 P-6)",
+    "address": "145 Lawson Ave W, Saint Paul, MN, 55117"
+  },
+  {
+    "precinct": "St. Paul W-5 P-7",
+    "siteId": "voting-cf60cf0f62435aa539dcdcf3",
+    "name": "Mosaic Christian Community (W-5 P-7)",
+    "address": "540 Wheelock Pkwy E, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-5 P-8",
+    "siteId": "voting-d7de930555066b739fe049e5",
+    "name": "Arlington Hills Community Center (W-5 P-8)",
+    "address": "1200 Payne Ave, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-5 P-9",
+    "siteId": "voting-08c8b1858e5e6632a1fa75ce",
+    "name": "St. Patrick's of St. Paul (W-5 P-9)",
+    "address": "1095 Desoto St, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-5 P-10",
+    "siteId": "voting-a653b82105f47305a470db98",
+    "name": "Church of the Holy Childhood (W-5 P-10)",
+    "address": "1435 Midway Pkwy, Saint Paul, MN, 55108"
+  },
+  {
+    "precinct": "St. Paul W-6 P-1",
+    "siteId": "voting-03149295c238fe08d8fc7e84",
+    "name": "Txuj Ci Hmong Language & Culture Upper (W-6 P-1)",
+    "address": "1363 Bush Ave, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-2",
+    "siteId": "voting-e986f461bd11fa43bec6756c",
+    "name": "First Covenant Church (W-6 P-2)",
+    "address": "1280 Arcade St, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-3",
+    "siteId": "voting-b30d9c2846deff685a245b3f",
+    "name": "Our Redeemer Lutheran Church (W-6 P-3)",
+    "address": "1390 Larpenteur Ave E, Saint Paul, MN, 55109"
+  },
+  {
+    "precinct": "St. Paul W-6 P-4",
+    "siteId": "voting-ecdb720d42d2db705655209c",
+    "name": "Divinity Lutheran Church (W-6 P-4)",
+    "address": "1655 Cottage Ave E, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-5",
+    "siteId": "voting-4dbc51885e0079ed9a60834f",
+    "name": "Duluth and Case Recreation Center (W-6 P-5)",
+    "address": "1020 Duluth St, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-6",
+    "siteId": "voting-02439357e42f10cd2ccb4593",
+    "name": "Edgerton High Rise (W-6 P-6)",
+    "address": "1000 Edgerton St, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-6 P-7",
+    "siteId": "voting-39e538dfa420ef5f0a1ee3d8",
+    "name": "Hope Community Academy (W-6 P-7)",
+    "address": "720 Payne Ave, Saint Paul, MN, 55130"
+  },
+  {
+    "precinct": "St. Paul W-6 P-8",
+    "siteId": "voting-f95ee7247f5f52d2c28234ad",
+    "name": "Boys and Girls Club (W-6 P-8)",
+    "address": "1620 Ames Ave E, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-9",
+    "siteId": "voting-a0dd5541d7f50233aba4f624",
+    "name": "Hazel Park Prep Academy (W-6 P-9)",
+    "address": "1140 White Bear Ave N, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-10",
+    "siteId": "voting-8370c39d0d24beec5960d0cc",
+    "name": "Iowa Hi-Rise (W-6 P-10)",
+    "address": "1743 Iowa Ave E, Saint Paul, MN, 55106"
+  },
+  {
+    "precinct": "St. Paul W-6 P-11",
+    "siteId": "voting-ce98c4df0227993170c55142",
+    "name": "Hayden Heights Recreation Center (W-6 P-11)",
+    "address": "1965 Hoyt Ave E, Saint Paul, MN, 55119"
+  },
+  {
+    "precinct": "Shoreview P-1",
+    "siteId": "voting-4c4312ce2d75df8036d03c8a",
+    "name": "Lutheran Church of Resurrection (P-1)",
+    "address": "3115 Victoria St N, Roseville, MN, 55113"
+  },
+  {
+    "precinct": "Shoreview P-2",
+    "siteId": "voting-188c5cf30b2190da8846cda7",
+    "name": "Shepherd of the Hills Lutheran Church (P-2)",
+    "address": "3920 Victoria St N, Shoreview, MN, 55126"
+  },
+  {
+    "precinct": "Shoreview P-3",
+    "siteId": "voting-b87ee5e4953563ec6305779a",
+    "name": "Shoreview City Hall (P-3)",
+    "address": "4600 Victoria St N, Shoreview, MN, 55126"
+  },
+  {
+    "precinct": "Shoreview P-4",
+    "siteId": "voting-81684f2374717a8953bda84f",
+    "name": "Shoreview Community Center (P-4)",
+    "address": "4580 Victoria St N, Shoreview, MN, 55126"
+  },
+  {
+    "precinct": "Shoreview P-5",
+    "siteId": "voting-81684f2374717a8953bda84f",
+    "name": "Shoreview Community Center (P-5)",
+    "address": "4580 Victoria St N, Shoreview, MN, 55126"
+  },
+  {
+    "precinct": "Shoreview P-6",
+    "siteId": "voting-604c8d726aa75704b1403398",
+    "name": "Incarnation Lutheran Church (P-6)",
+    "address": "4880 Hodgson Rd, North Oaks, MN, 55126"
+  },
+  {
+    "precinct": "Shoreview P-7",
+    "siteId": "voting-00c2d687fdf34eb997220c56",
+    "name": "Lake Johanna Fire Department (P-7)",
+    "address": "5545 Lexington Ave N, Shoreview, MN, 55126"
+  },
+  {
+    "precinct": "Spring Lake Park P-1R",
+    "siteId": "voting-c2cabb08f9bc7fcd3522490a",
+    "name": "Emmanuel Christian Center (P-1R)",
+    "address": "7777 University Ave NE, Spring Lake Park, MN, 55432"
+  },
+  {
+    "precinct": "Vadnais Heights P-1",
+    "siteId": "voting-3d800a4e65f7da8a0534f9a7",
+    "name": "Vadnais Heights Commons (P-1)",
+    "address": "655 County Road F E, Vadnais Heights, MN, 55127"
+  },
+  {
+    "precinct": "Vadnais Heights P-2",
+    "siteId": "voting-3d800a4e65f7da8a0534f9a7",
+    "name": "Vadnais Heights Commons (P-2)",
+    "address": "655 County Road F E, Vadnais Heights, MN, 55127"
+  },
+  {
+    "precinct": "Vadnais Heights P-3",
+    "siteId": "voting-3d800a4e65f7da8a0534f9a7",
+    "name": "Vadnais Heights Commons (P-3)",
+    "address": "655 County Road F E, Vadnais Heights, MN, 55127"
+  },
+  {
+    "precinct": "Vadnais Heights P-4",
+    "siteId": "voting-2e26a88a21334f8888eaa279",
+    "name": "Vadnais Heights South Fire Station (P-4)",
+    "address": "3595 Arcade St N, Vadnais Heights, MN, 55127"
+  },
+  {
+    "precinct": "White Bear Twp P-1",
+    "siteId": "voting-f99c2a9756792eb73a84c510",
+    "name": "Tamarack Nature Center (P-1)",
+    "address": "5287 Otter Lake Rd, White Bear Township, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Twp P-2",
+    "siteId": "voting-eb8b4fe88bd605dd137bb5bc",
+    "name": "Lakeshore Players Theatre (P-2)",
+    "address": "4941 Long Ave, White Bear Lake, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Twp P-3",
+    "siteId": "voting-2cb8ec390d70b62dd39518b1",
+    "name": "South Shore Trinity Lutheran Church (P-3)",
+    "address": "2480 South Shore Blvd, White Bear Township, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Twp P-4",
+    "siteId": "voting-9d00a6e330dad689a7c713d9",
+    "name": "Heritage Hall (P-4)",
+    "address": "4200 Otter Lake Rd, White Bear Township, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Twp P-5",
+    "siteId": "voting-f99c2a9756792eb73a84c510",
+    "name": "Tamarack Nature Center (P-5)",
+    "address": "5287 Otter Lake Rd, White Bear Township, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Lake W-3 P-1",
+    "siteId": "voting-35f85d0d706eeab1c4441012",
+    "name": "Parkview United Church of Christ (W-3 P-1)",
+    "address": "3737 Bellaire Ave, White Bear Lake, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Lake W-4 P-1",
+    "siteId": "voting-43f073fe107c1924fa666e64",
+    "name": "Redeemer Lutheran Church (W-4 P-1)",
+    "address": "3770 Bellaire Ave, White Bear Lake, MN, 55110"
+  },
+  {
+    "precinct": "White Bear Lake W-5 P-1",
+    "siteId": "voting-1ff69253e0c643a2d89f8f4a",
+    "name": "St. Stephen Lutheran Church (W-5 P-1)",
+    "address": "1965 County Road E E, White Bear Lake, MN, 55110"
+  }
+]

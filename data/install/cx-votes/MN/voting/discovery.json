@@ -2,7 +2,8 @@
   "install": false,
   "routes": [],
   "limitations": [
-    "Wider Ramsey coverage needs current official polling-place assignments for161 other precincts; no countywide coverage is claimed.",
-    "Source response has no polling coordinates or hours. Keep these values unknown; current source reader can geocode the full published public-facility address ahead of requests."
+    "Coverage is RamseyCounty only; statewideMinnesota completeness is not claimed.",
+    "County numeric PrecinctCode values have known contradictions and are unused. Published names and formatting-only number normalization join all162officialSOSprecincts.",
+    "GISlegacy2020schedulefields are not mapped. Current-election association is checked against the current2026countycalendar; detailed hours remain source facts to acquire separately."
   ]
 }

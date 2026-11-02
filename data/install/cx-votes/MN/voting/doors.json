@@ -1,8 +1,8 @@
 [
   {
-    "id": "cx-mn-ramsey-precinct-0680-poll-2026",
-    "publisher": "Office of the Minnesota Secretary of State",
-    "url": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+    "id": "cx-mn-ramsey-ward-precinct-polls-2026",
+    "publisher": "Ramsey County Elections / Ramsey County GIS",
+    "url": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5/query?where=Status+%3D+%27Active%27+AND+type+%3D+%27Polling+Place%27&outFields=OBJECTID%2Cfacilityid%2CName%2CLocation%2Ctype%2Cfulladdr%2Cmunicipality%2Cpstlstate%2Cpstlzip5%2CMCDName%2CPrecinctCode%2CPrecinctName%2CElectionYear%2CStatus%2CActiveDate%2CRetiredDate%2Coperdays%2CDay1%2CHours1%2Cnextelect%2Ccomments%2CEditDate%2Clast_edited_date%2CLatitude%2CLongitude&returnGeometry=false&outSR=4326&f=json",
     "shape": "json",
     "covers": [
       "ELECTION_DAY"
@@ -14,65 +14,211 @@
       "countyFips": "27123"
     },
     "electionDate": "2026-11-03",
-    "electionPageUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
-    "model": "ASSIGNED",
-    "matchingUnit": "PRECINCT",
-    "title": "Current 2026 Election Day polling assignment for Ramsey precinct 0680 only",
-    "access": {
-      "status": "open",
-      "checkedAt": "2026-11-02T21:56:33.213716+00:00",
-      "detail": "Public official response for the polling facility own published address500CedarSt returns current2026 assignment for precinct0680. No residential test address or sample assignment override is persisted."
-    },
+    "electionPageUrl": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5/query?where=Status+%3D+%27Active%27+AND+type+%3D+%27Polling+Place%27&outFields=OBJECTID%2Cfacilityid%2CName%2CLocation%2Ctype%2Cfulladdr%2Cmunicipality%2Cpstlstate%2Cpstlzip5%2CMCDName%2CPrecinctCode%2CPrecinctName%2CElectionYear%2CStatus%2CActiveDate%2CRetiredDate%2Coperdays%2CDay1%2CHours1%2Cnextelect%2Ccomments%2CEditDate%2Clast_edited_date%2CLatitude%2CLongitude&returnGeometry=false&outSR=4326&f=json",
+    "electionAssociationVerified": true,
     "publication": {
       "status": "PUBLISHED",
-      "text": "11/03/2026 STATE GENERAL ELECTION",
+      "text": "2026 General Election: Nov. 3. Current active Ramsey polling records checked November 2, 2026.",
       "source": {
-        "publisher": "Office of the Minnesota Secretary of State",
-        "url": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+        "publisher": "Ramsey County Elections",
+        "url": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
         "official": true,
-        "checkedAt": "2026-11-02T21:56:33.213716+00:00",
-        "documentHash": "6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514",
-        "documentUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926"
+        "checkedAt": "2026-11-02T23:00:25.971368+00:00",
+        "documentUrl": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+        "documentHash": "39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7"
       }
     },
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "title": "Current Ramsey County November 3, 2026 Election Day polling places",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-02T23:00:25.969611+00:00",
+      "detail": "Native public county GIS query; current Active polling records with October2026 edits. Explicit2026/Nov3 association is saved in the current official county election calendar. Numeric PrecinctCode is intentionally not used because the publisher has contradictory codes."
+    },
+    "discoveredFrom": "https://www.arcgis.com/sharing/rest/content/items/ad4043e1de624693ae3260d3738ddf43/data?f=json",
+    "supersedes": [
+      "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926"
+    ],
     "extraction": {
       "format": "html",
       "records": {
-        "pattern": "\"PollingResult\"\\s*:\\s*\\{[\\s\\S]*?\\}",
+        "pattern": "\"attributes\"\\s*:\\s*\\{(?=[^}]*\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) W-0*([0-9]+) P-0*([0-9]+[A-Z]?)\")[^}]*\\}",
         "fields": {
           "name": {
-            "pattern": "\"PollingPlaceName\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "pattern": "\"Name\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
             "group": 1
           },
-          "siteStreet": {
-            "pattern": "\"PollingPlaceAddress1\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+          "street": {
+            "pattern": "\"fulladdr\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
             "group": 1
           },
-          "siteCityStateZip": {
-            "pattern": "\"PollingPlaceCityStateZip\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+          "city": {
+            "pattern": "\"municipality\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
             "group": 1
           },
-          "precinct": {
-            "pattern": "\"PrecinctCode\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+          "state": {
+            "pattern": "\"pstlstate\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
             "group": 1
           },
-          "election": {
-            "pattern": "\"FullElectionDescription\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+          "zip": {
+            "pattern": "\"pstlzip5\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
             "group": 1
+          },
+          "latitude": {
+            "pattern": "\"Latitude\"\\s*:\\s*(-?[0-9]+(?:\\.[0-9]+)?)",
+            "group": 1
+          },
+          "longitude": {
+            "pattern": "\"Longitude\"\\s*:\\s*(-?[0-9]+(?:\\.[0-9]+)?)",
+            "group": 1
+          },
+          "town": {
+            "pattern": "\"MCDName\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "rawPrecinct": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "precinctTown": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) W-0*([0-9]+) P-0*([0-9]+[A-Z]?)\"",
+            "group": 1
+          },
+          "wardNumber": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) W-0*([0-9]+) P-0*([0-9]+[A-Z]?)\"",
+            "group": 2
+          },
+          "precinctNumber": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) W-0*([0-9]+) P-0*([0-9]+[A-Z]?)\"",
+            "group": 3
           }
         }
       },
       "columns": {
         "name": "name",
         "address": [
-          "siteStreet",
-          "siteCityStateZip"
+          "street",
+          "city",
+          "state",
+          "zip"
         ],
-        "precinct": "precinct",
-        "election": "election"
+        "town": "town",
+        "lat": "latitude",
+        "lng": "longitude"
       },
-      "filters": {
-        "precinct": "0680"
+      "templates": {
+        "precinct": "{precinctTown} W-{wardNumber} P-{precinctNumber}"
+      },
+      "kind": "ELECTION_DAY"
+    }
+  },
+  {
+    "id": "cx-mn-ramsey-town-precinct-polls-2026",
+    "publisher": "Ramsey County Elections / Ramsey County GIS",
+    "url": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5/query?where=Status+%3D+%27Active%27+AND+type+%3D+%27Polling+Place%27&outFields=OBJECTID%2Cfacilityid%2CName%2CLocation%2Ctype%2Cfulladdr%2Cmunicipality%2Cpstlstate%2Cpstlzip5%2CMCDName%2CPrecinctCode%2CPrecinctName%2CElectionYear%2CStatus%2CActiveDate%2CRetiredDate%2Coperdays%2CDay1%2CHours1%2Cnextelect%2Ccomments%2CEditDate%2Clast_edited_date%2CLatitude%2CLongitude&returnGeometry=false&outSR=4326&f=json",
+    "shape": "json",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MN",
+      "ocdId": "ocd-division/country:us/state:mn/county:ramsey",
+      "name": "Ramsey County",
+      "countyFips": "27123"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5/query?where=Status+%3D+%27Active%27+AND+type+%3D+%27Polling+Place%27&outFields=OBJECTID%2Cfacilityid%2CName%2CLocation%2Ctype%2Cfulladdr%2Cmunicipality%2Cpstlstate%2Cpstlzip5%2CMCDName%2CPrecinctCode%2CPrecinctName%2CElectionYear%2CStatus%2CActiveDate%2CRetiredDate%2Coperdays%2CDay1%2CHours1%2Cnextelect%2Ccomments%2CEditDate%2Clast_edited_date%2CLatitude%2CLongitude&returnGeometry=false&outSR=4326&f=json",
+    "electionAssociationVerified": true,
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "2026 General Election: Nov. 3. Current active Ramsey polling records checked November 2, 2026.",
+      "source": {
+        "publisher": "Ramsey County Elections",
+        "url": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+        "official": true,
+        "checkedAt": "2026-11-02T23:00:25.971368+00:00",
+        "documentUrl": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+        "documentHash": "39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7"
+      }
+    },
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "title": "Current Ramsey County November 3, 2026 Election Day polling places",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-02T23:00:25.969611+00:00",
+      "detail": "Native public county GIS query; current Active polling records with October2026 edits. Explicit2026/Nov3 association is saved in the current official county election calendar. Numeric PrecinctCode is intentionally not used because the publisher has contradictory codes."
+    },
+    "discoveredFrom": "https://www.arcgis.com/sharing/rest/content/items/ad4043e1de624693ae3260d3738ddf43/data?f=json",
+    "supersedes": [
+      "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\"attributes\"\\s*:\\s*\\{(?=[^}]*\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) P-0*([0-9]+[A-Z]?)\")[^}]*\\}",
+        "fields": {
+          "name": {
+            "pattern": "\"Name\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "street": {
+            "pattern": "\"fulladdr\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "city": {
+            "pattern": "\"municipality\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "state": {
+            "pattern": "\"pstlstate\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "zip": {
+            "pattern": "\"pstlzip5\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "latitude": {
+            "pattern": "\"Latitude\"\\s*:\\s*(-?[0-9]+(?:\\.[0-9]+)?)",
+            "group": 1
+          },
+          "longitude": {
+            "pattern": "\"Longitude\"\\s*:\\s*(-?[0-9]+(?:\\.[0-9]+)?)",
+            "group": 1
+          },
+          "town": {
+            "pattern": "\"MCDName\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "rawPrecinct": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "precinctTown": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) P-0*([0-9]+[A-Z]?)\"",
+            "group": 1
+          },
+          "precinctNumber": {
+            "pattern": "\"PrecinctName\"\\s*:\\s*\"([A-Z. ]+?) P-0*([0-9]+[A-Z]?)\"",
+            "group": 2
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "address": [
+          "street",
+          "city",
+          "state",
+          "zip"
+        ],
+        "town": "town",
+        "lat": "latitude",
+        "lng": "longitude"
+      },
+      "templates": {
+        "precinct": "{precinctTown} P-{precinctNumber}"
       },
       "kind": "ELECTION_DAY"
     }
@@ -95,15 +241,18 @@
     "boundaryLayer": true,
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "title": "Ramsey precinct0680 boundary only, official2026 statewide source",
+    "title": "All162 Ramsey County precincts, official current2026 statewide boundaries",
     "extraction": {
       "format": "json",
-      "dataUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+      "dataUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
       "columns": {
-        "precinct": "pctcode",
-        "ward": "ward"
+        "precinct": "pctname"
       }
     },
-    "discoveredFrom": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf"
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-02T21:50:36.269584+00:00",
+      "detail": "Replaces the earlier one-precinct configuration under its stable source-door ID; official current statewide GeoJSON retains every complete polygon. Uses printed precinct names, not conflicting county numeric codes."
+    }
   }
 ]

@@ -2,23 +2,38 @@
   "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
   "state": "MN",
   "coverage": {
-    "preparedSites": 1,
-    "preparedBoundaries": 1,
-    "assignedPrecinctCodes": [
-      "0680"
-    ],
+    "preparedSites": 142,
+    "preparedBoundaries": 162,
+    "assignedPrecinctNames": 162,
+    "sourceRows": {
+      "wardPrecinctRows": 92,
+      "townPrecinctRows": 71,
+      "singularRowsIncludingOneDuplicateSharedRecord": 163
+    },
     "availableCountyPrecinctCount": 162,
-    "unfilledCountyPrecinctAssignments": 161,
-    "scope": "Ramsey County precinct 0680 only"
+    "unfilledCountyPrecinctAssignments": 0,
+    "scope": "All162current Ramsey County precincts;142published siteIDs retain shared-precinct assignments. Not statewideMinnesota coverage."
   },
   "sourceHashAndByteLength": "PASS",
   "recordedHttpStatuses": [
     {
-      "file": "sources/6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514.source",
+      "file": "sources/780541fee7f67082c3d93d2aade4b3959240dc9ef5b4a79074611e4949b034e1.source",
       "httpStatus": 200
     },
     {
-      "file": "sources/061ef5254f1858d6dbc408903f77e53939b2d19b7a61399ebed7a8a0caceb108.json",
+      "file": "sources/a16643185b9bb45b9757f64d42d035167dbf107fea4c8e6baa26ae79a70a5651.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/09fc1d87d7640b5aa364908331ceccd594a358255d93783eee946b0039a7f622.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/88ca5cba06451a7f4ce476dec1e40d883ebf53b500e5673d933c9f5794d49884.source",
       "httpStatus": 200
     },
     {
@@ -26,19 +41,28 @@
       "httpStatus": 200
     }
   ],
-  "readyDoors": 2,
+  "readyDoors": 3,
   "realInMemoryDoorRegistration": "PASS",
-  "registeredMappings": 2,
+  "registeredMappings": 3,
   "registryPageRows": 2,
   "boundaryDoorEmptyCoversSchema": "PASS",
   "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
   "directParserFullSourceReaderAndBoundaryReader": "PASS",
   "checks": [
     {
-      "doorId": "cx-mn-ramsey-precinct-0680-poll-2026",
+      "doorId": "cx-mn-ramsey-ward-precinct-polls-2026",
       "kind": "SITES",
-      "sourceRows": 1,
-      "fullSourceReader": 1,
+      "sourceRows": 92,
+      "fullSourceReader": 83,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-mn-ramsey-town-precinct-polls-2026",
+      "kind": "SITES",
+      "sourceRows": 71,
+      "fullSourceReader": 59,
       "allCurrentElectionAssociated": true,
       "official": true,
       "blankCount": 0
@@ -46,18 +70,18 @@
     {
       "doorId": "cx-mn-ramsey-precinct-0680-boundary-2026",
       "kind": "BOUNDARY",
-      "directBoundaryReader": 1,
-      "fullSourceReader": 1,
+      "directBoundaryReader": 162,
+      "fullSourceReader": 162,
       "official": true,
       "blankCount": 0
     }
   ],
   "siteKinds": {
-    "electionDay": 1,
+    "electionDay": 142,
     "earlyVoting": 0,
     "dropBoxes": 0
   },
-  "boundaries": 1,
+  "boundaries": 162,
   "productionWrites": 0,
   "networkCalls": 0,
   "contractId": "voting-sites:MN"

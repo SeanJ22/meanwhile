@@ -10,14 +10,17 @@
   "discoveryOnly": "discovery.json",
   "sourceCaptures": "sources.json",
   "coverage": {
-    "preparedSites": 1,
-    "preparedBoundaries": 1,
-    "assignedPrecinctCodes": [
-      "0680"
-    ],
+    "preparedSites": 142,
+    "preparedBoundaries": 162,
+    "assignedPrecinctNames": 162,
+    "sourceRows": {
+      "wardPrecinctRows": 92,
+      "townPrecinctRows": 71,
+      "singularRowsIncludingOneDuplicateSharedRecord": 163
+    },
     "availableCountyPrecinctCount": 162,
-    "unfilledCountyPrecinctAssignments": 161,
-    "scope": "Ramsey County precinct 0680 only"
+    "unfilledCountyPrecinctAssignments": 0,
+    "scope": "All162current Ramsey County precincts;142published siteIDs retain shared-precinct assignments. Not statewideMinnesota coverage."
   },
   "sourceOnlyPrepared": true,
   "liveStatus": "Prepared data awaits River installation and live verification",
@@ -32,8 +35,9 @@
     "outsideCoverage": true
   },
   "limitations": [
-    "Wider Ramsey coverage needs current official polling-place assignments for161 other precincts; no countywide coverage is claimed.",
-    "Source response has no polling coordinates or hours. Keep these values unknown; current source reader can geocode the full published public-facility address ahead of requests."
+    "Coverage is RamseyCounty only; statewideMinnesota completeness is not claimed.",
+    "County numeric PrecinctCode values have known contradictions and are unused. Published names and formatting-only number normalization join all162officialSOSprecincts.",
+    "GISlegacy2020schedulefields are not mapped. Current-election association is checked against the current2026countycalendar; detailed hours remain source facts to acquire separately."
   ],
   "existingInstallOperation": {
     "register": {
@@ -59,11 +63,33 @@
     "productionWriteContext": "Existing prepareProductionCivicDataWrite / workerPublicationContext used by fetch-voting-sites.mts; River performs the authorized install."
   },
   "installOrder": [
-    "Review exact saved source bytes, hashes, scope and limitations.",
-    "Register only doors.json through saveVotingSourceDoor; discovery.json is evidence and is not installed as a working route.",
-    "Run the existing voting-source refresh in the existing authorized publication context; it acquires and publishes data through voting-sites:MN. Preserve unrelated held facts.",
-    "Verify the listed scope on the live where-to-vote page; this preparation makes no statewide completeness or live-fix claim."
+    "Review exact government source bytes and nativeHTTPmetadata, election-association.json and all162sourcejoins.",
+    "Register all3doors through existing saveVotingSourceDoor. The two bulk mappings share one cached document; the boundary mapping updates the existing source under its stableID.",
+    "Run existing refreshVotingSources with these seeds in the authorizedpublicationcontext; publish site mappings as one source group and the current complete boundaries. Existing supersedes removes the earlier0680polling source only after the bulk read succeeds.",
+    "Check the current live where-to-vote page after River installs; this preparedpacket does not claim current live availability."
   ],
   "validationFile": "checks.json",
-  "savedBoundaryData": "boundaries.json"
+  "savedBoundaryData": "boundaries.json",
+  "sourceJoins": "source-joins.json",
+  "assignmentChecks": "assignment-checks.json",
+  "electionAssociation": "election-association.json",
+  "upgrade": {
+    "oldPollingSource": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+    "supersededBy": "Both new bulk-source mappings carry this exact former polling URL in supersedes; existing worker removes its old assignments and skips it after successful bulk publication.",
+    "boundaryDoorId": "cx-mn-ramsey-precinct-0680-boundary-2026",
+    "boundaryRegistration": "The former single-precinct boundary door retains its stableID and source rootURL. saveVotingSourceDoor replaces that mapping with the full162-precinct configuration, preventing the old code0680polygon from returning. The identifier is a legacy internal source ID; coverage/title now explicitly describe all162precincts.",
+    "replacementDeletes": [
+      "Earlier one-precinct APIcapture",
+      "Earlier one-precinct polygoncapture",
+      "Earlier one-boundary deriveddata"
+    ],
+    "preserveUnrelatedHeldFacts": true
+  },
+  "readCost": {
+    "bulkPollingCapturesPerRefresh": 1,
+    "bulkPolygonCapturesPerRefresh": 1,
+    "perAddressSourceLookups": 0,
+    "siteGeocodingLookups": 0,
+    "coordinates": "Every site has original publisher latitude/longitude; every address can use held official polygons."
+  }
 }

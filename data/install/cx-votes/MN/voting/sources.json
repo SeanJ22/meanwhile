@@ -1,41 +1,63 @@
 [
   {
-    "url": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
-    "finalUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
-    "file": "sources/6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514.source",
-    "sha256": "6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514",
-    "byteLength": 25451,
-    "contentType": "text/plain; charset=utf-8",
-    "retrievedAt": "2026-11-02T21:56:33.213716+00:00",
-    "retrievedAtBasis": "native response metadata",
+    "url": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5/query?where=Status+%3D+%27Active%27+AND+type+%3D+%27Polling+Place%27&outFields=OBJECTID%2Cfacilityid%2CName%2CLocation%2Ctype%2Cfulladdr%2Cmunicipality%2Cpstlstate%2Cpstlzip5%2CMCDName%2CPrecinctCode%2CPrecinctName%2CElectionYear%2CStatus%2CActiveDate%2CRetiredDate%2Coperdays%2CDay1%2CHours1%2Cnextelect%2Ccomments%2CEditDate%2Clast_edited_date%2CLatitude%2CLongitude&returnGeometry=false&outSR=4326&f=json",
+    "finalUrl": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5/query?where=Status+%3D+%27Active%27+AND+type+%3D+%27Polling+Place%27&outFields=OBJECTID%2Cfacilityid%2CName%2CLocation%2Ctype%2Cfulladdr%2Cmunicipality%2Cpstlstate%2Cpstlzip5%2CMCDName%2CPrecinctCode%2CPrecinctName%2CElectionYear%2CStatus%2CActiveDate%2CRetiredDate%2Coperdays%2CDay1%2CHours1%2Cnextelect%2Ccomments%2CEditDate%2Clast_edited_date%2CLatitude%2CLongitude&returnGeometry=false&outSR=4326&f=json",
+    "file": "sources/780541fee7f67082c3d93d2aade4b3959240dc9ef5b4a79074611e4949b034e1.source",
+    "sha256": "780541fee7f67082c3d93d2aade4b3959240dc9ef5b4a79074611e4949b034e1",
+    "byteLength": 109375,
     "httpStatus": 200,
-    "httpStatusBasis": "Exact matching saved capture metadata",
-    "use": "PUBLIC_SOURCE_EVIDENCE",
-    "captureMetadata": {
-      "sha256": "7f7cff0646d65b1f8d35ca8213d7283b84d3be88b64b6d977dc9f7855ecd89a0",
-      "recordedHttpStatus": 200,
-      "recordedUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
-      "recordedAt": "2026-11-02T21:56:33.213716+00:00"
-    }
+    "contentType": "application/json; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:00:25.969611+00:00",
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
   },
   {
-    "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
-    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
-    "file": "sources/061ef5254f1858d6dbc408903f77e53939b2d19b7a61399ebed7a8a0caceb108.json",
-    "sha256": "061ef5254f1858d6dbc408903f77e53939b2d19b7a61399ebed7a8a0caceb108",
-    "byteLength": 6445,
-    "contentType": "application/geo+json;charset=UTF-8",
-    "retrievedAt": "2026-11-02T21:55:50.886324+00:00",
-    "retrievedAtBasis": "native response metadata",
+    "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+    "file": "sources/a16643185b9bb45b9757f64d42d035167dbf107fea4c8e6baa26ae79a70a5651.source",
+    "sha256": "a16643185b9bb45b9757f64d42d035167dbf107fea4c8e6baa26ae79a70a5651",
+    "byteLength": 1144768,
     "httpStatus": 200,
-    "httpStatusBasis": "Exact matching saved capture metadata",
-    "use": "PUBLIC_SOURCE_EVIDENCE",
-    "captureMetadata": {
-      "sha256": "07c41deb8ccb4eb69bcbd6ed5fe5565bb76c14092b06266b96c81f3747f81cfd",
-      "recordedHttpStatus": 200,
-      "recordedUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
-      "recordedAt": "2026-11-02T21:55:50.886324+00:00"
-    }
+    "contentType": "application/geo+json;charset=UTF-8",
+    "retrievedAt": "2026-11-02T21:50:36.269584+00:00",
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
+  },
+  {
+    "url": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+    "finalUrl": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+    "file": "sources/39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7.source",
+    "sha256": "39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7",
+    "byteLength": 35432,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "retrievedAt": "2026-11-02T23:00:25.971368+00:00",
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
+  },
+  {
+    "url": "https://www.ramseycountymn.gov/residents/elections-voting/voters/vote-on-election-day",
+    "finalUrl": "https://www.ramseycountymn.gov/residents/elections-voting/voters/vote-on-election-day",
+    "file": "sources/09fc1d87d7640b5aa364908331ceccd594a358255d93783eee946b0039a7f622.source",
+    "sha256": "09fc1d87d7640b5aa364908331ceccd594a358255d93783eee946b0039a7f622",
+    "byteLength": 35188,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "retrievedAt": "2026-11-02T23:00:25.970469+00:00",
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
+  },
+  {
+    "url": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5?f=pjson",
+    "finalUrl": "https://gis.ramseycountymn.gov/server/rest/services/Boundary/BOUND_Precinct_ViewOnly/FeatureServer/5?f=pjson",
+    "file": "sources/88ca5cba06451a7f4ce476dec1e40d883ebf53b500e5673d933c9f5794d49884.source",
+    "sha256": "88ca5cba06451a7f4ce476dec1e40d883ebf53b500e5673d933c9f5794d49884",
+    "byteLength": 54743,
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "retrievedAt": "2026-11-02T22:55:44.671665+00:00",
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
   },
   {
     "url": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf",
@@ -43,17 +65,10 @@
     "file": "sources/d7c4e903fbd6a2e999e2e1c6f2277d34ddaba15224f5f5d790e2ad1769e842eb.pdf",
     "sha256": "d7c4e903fbd6a2e999e2e1c6f2277d34ddaba15224f5f5d790e2ad1769e842eb",
     "byteLength": 120173,
+    "httpStatus": 200,
     "contentType": "application/pdf",
     "retrievedAt": "2026-11-02T21:49:27.549358+00:00",
-    "retrievedAtBasis": "native response metadata",
-    "httpStatus": 200,
-    "httpStatusBasis": "Exact matching saved capture metadata",
-    "use": "PUBLIC_SOURCE_EVIDENCE",
-    "captureMetadata": {
-      "sha256": "d69c3f9752dbd9fa372748049c216b663ce922f608253cb5e81af4abb27727ef",
-      "recordedHttpStatus": 200,
-      "recordedUrl": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf",
-      "recordedAt": "2026-11-02T21:49:27.549358+00:00"
-    }
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
   }
 ]

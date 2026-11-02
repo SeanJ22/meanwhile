@@ -1,0 +1,19 @@
+{
+  "state": "MN",
+  "readySourceMappings": 3,
+  "physicalSiteIds": 142,
+  "currentPrecinctAssignments": 162,
+  "unchangedOfficialSOSPolygons": 162,
+  "all162ActualReaderProjections": "PASS",
+  "earlierOnePrecinctDataUpgrade": "PASS",
+  "earlierBoundaryDoorReplacedInRegistry": "PASS",
+  "earlierPollingApiSuperseded": "PASS",
+  "explicit2026November3CalendarAssociation": "PASS",
+  "allPublisherCoordinatesPresent": true,
+  "sourceHashesAndLengths": "PASS",
+  "noNumericCodeJoin": true,
+  "noGeometryChanges": true,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "modelCalls": 0
+}

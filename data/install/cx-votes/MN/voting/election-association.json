@@ -1,0 +1,50 @@
+{
+  "state": "MN",
+  "county": "Ramsey",
+  "electionDate": "2026-11-03",
+  "officialCalendar": {
+    "url": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+    "finalUrl": "https://www.ramseycountymn.gov/residents/elections-voting/voters/key-election-dates-voters",
+    "file": "sources/39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7.source",
+    "sha256": "39634ea6041bdf6721e0a80f4430f8a9881e3460663a2de0176802391b7d81e7",
+    "byteLength": 35432,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "retrievedAt": "2026-11-02T23:00:25.971368+00:00",
+    "httpStatusBasis": "Native government HTTP response metadata",
+    "use": "CURRENT_OFFICIAL_SOURCE_EVIDENCE"
+  },
+  "yearQuote": "Important dates for the 2026 elections.",
+  "dateRowQuote": "Nov. 3 General Election Day.",
+  "associationBasis": [
+    "The current official county election calendar explicitly supplies2026 andNov3GeneralElectionDay.",
+    "The current official county GIS layer supplies the active polling facilities for RamseyCounty, the same election authority and county. The saved rawJSON includes Status Active, ElectionYear both or unstated, and October2026 edit timestamps.",
+    "Each of the162current official SOS precinct names matches exactly one countyfacility after formatting-only numeric zero-padding normalization. Complete official SOS polygons are retained unchanged."
+  ],
+  "siteSource": "sources/780541fee7f67082c3d93d2aade4b3959240dc9ef5b4a79074611e4949b034e1.source",
+  "siteSourceSha256": "780541fee7f67082c3d93d2aade4b3959240dc9ef5b4a79074611e4949b034e1",
+  "polygonSource": "sources/a16643185b9bb45b9757f64d42d035167dbf107fea4c8e6baa26ae79a70a5651.source",
+  "polygonSourceSha256": "a16643185b9bb45b9757f64d42d035167dbf107fea4c8e6baa26ae79a70a5651",
+  "metadataSource": "sources/88ca5cba06451a7f4ce476dec1e40d883ebf53b500e5673d933c9f5794d49884.source",
+  "normalization": "Existing configured regex captures the printed municipality, ward number and precinct number, excluding number padding; existing templates join those exact captured parts. It does not use the county numeric PrecinctCode, alter polygons, create political IDs or persist address assignments.",
+  "sharedFacilities": "Every individual published precinct row is retained; grouped duplicate display rows are unnecessary because each current precinct already has its own facility/address row. Existing source merge retains distinct per-precinct assignments at a shared physical site.",
+  "knownPublisherCodeDefects": [
+    {
+      "precinct": "St. Paul W-2 P-9",
+      "countyPrintedCode": "0800",
+      "officialSOSCode": "0760"
+    },
+    {
+      "precinct": "Shoreview P-7",
+      "countyPrintedCode": "1640",
+      "officialSOSCode": "1645"
+    },
+    {
+      "precinct": "Shoreview P-6",
+      "countyPrintedCode": "1630",
+      "officialSOSCode": "1640"
+    }
+  ],
+  "legacyScheduleFields": "The nativeGISresponse also holds legacy2020nextelect/Day1 values. These fields are deliberately unmapped; no historical schedule is published. The explicit2026date association comes from the current countycalendar.",
+  "modelChecksRun": 0
+}

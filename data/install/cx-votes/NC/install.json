@@ -1,0 +1,34 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "NC",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NC",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "nc-local-measure-2026-transportation-bonds",
+      "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf"
+    },
+    {
+      "id": "nc-local-measure-2026-housing-bonds",
+      "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf"
+    },
+    {
+      "id": "nc-local-measure-2026-neighborhood-improvement-bonds",
+      "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 0
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

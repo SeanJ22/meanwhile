@@ -1,0 +1,202 @@
+{
+  "ballots": {
+    "NC:nc-2026-11-03": {
+      "election": {
+        "id": "nc-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NC"
+      },
+      "contests": [
+        {
+          "id": "nc-local-measure-2026-transportation-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nc/place:charlotte",
+          "title": "City of Charlotte — Transportation Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nc-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Mecklenburg County Board of Elections",
+            "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+            "verifiedAt": "2026-10-20T23:03:17.096952+00:00",
+            "collectedAt": "2026-10-20T23:03:17.096952+00:00"
+          },
+          "measureTextUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "nc-local-measure-2026-housing-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nc/place:charlotte",
+          "title": "City of Charlotte — Housing Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nc-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Mecklenburg County Board of Elections",
+            "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+            "verifiedAt": "2026-10-20T23:03:17.096952+00:00",
+            "collectedAt": "2026-10-20T23:03:17.096952+00:00"
+          },
+          "measureTextUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "nc-local-measure-2026-neighborhood-improvement-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nc/place:charlotte",
+          "title": "City of Charlotte — Neighborhood Improvement Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nc-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Mecklenburg County Board of Elections",
+            "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+            "verifiedAt": "2026-10-20T23:03:17.096952+00:00",
+            "collectedAt": "2026-10-20T23:03:17.096952+00:00"
+          },
+          "measureTextUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        }
+      ],
+      "measures": [
+        {
+          "id": "nc-local-measure-2026-transportation-bonds:question",
+          "contestId": "nc-local-measure-2026-transportation-bonds",
+          "provenance": {
+            "sourceOrg": "Mecklenburg County Board of Elections",
+            "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+            "verifiedAt": "2026-10-20T23:03:17.096952+00:00",
+            "collectedAt": "2026-10-20T23:03:17.096952+00:00"
+          },
+          "questionText": "Additional property taxes may be levied on property located in the City of Charlotte in an amount sufficient to pay the principal of and interest on bonds if approved by the following ballot question. Shall the order authorizing $280,000,000 of bonds plus interest to provide funds to pay the capital costs of constructing, reconstructing, enlarging, extending and improving certain streets, including streets and roads constituting a part of the State highway system or otherwise the responsibility of the State and including the cost of related studies, streetscape and pedestrian improvements, relocation of utilities, plans and design; acquiring, constructing, reconstructing, widening, extending, paving, milling, resurfacing, grading or improving streets, roads, intersections, parking lots and pedestrian and bicycle paths; acquiring, constructing, reconstructing or improving sidewalks, curbs, gutters, storm drainage, bridges, overpasses, underpasses and grade crossings and providing related landscaping, lighting and traffic controls, signals and markers; and the acquisition of interests in land and rights-of-way required therefor, and providing that additional taxes may be levied in an amount sufficient to pay the principal of and interest on the bonds be approved, in light of the following: (1) The estimated cumulative cost over the life of the bond, using the highest interest rate charged for similar debt over the last 20 years, would be $437,113,600 (consisting of $280,000,000 principal amount of bonds plus $157,113,600 of interest). (2) The estimated amount of property tax liability increase for each one hundred thousand dollars ($100,000) of property tax value to service the cumulative cost over the life of the bond provided above would be $0.00 per year.",
+          "officialStatement": null
+        },
+        {
+          "id": "nc-local-measure-2026-housing-bonds:question",
+          "contestId": "nc-local-measure-2026-housing-bonds",
+          "provenance": {
+            "sourceOrg": "Mecklenburg County Board of Elections",
+            "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+            "verifiedAt": "2026-10-20T23:03:17.096952+00:00",
+            "collectedAt": "2026-10-20T23:03:17.096952+00:00"
+          },
+          "questionText": "Additional property taxes may be levied on property located in the City of Charlotte in an amount sufficient to pay the principal of and interest on bonds if approved by the following ballot question. Shall the order authorizing $125,000,000 of bonds plus interest to provide funds to pay the capital costs of housing projects for the benefit of persons of low income, or moderate income, or low and moderate income, including construction of infrastructure improvements related thereto and the acquisition of land and rights-of-way required therefor, and providing that additional taxes may be levied in an amount sufficient to pay the principal of and interest on the bonds be approved, in light of the following: (1) The estimated cumulative cost over the life of the bond, using the highest interest rate charged for similar debt over the last 20 years, would be $198,396,313 (consisting of $125,000,000 principal amount of bonds plus $73,396,313 of interest). (2) The estimated amount of property tax liability increase for each one hundred thousand dollars ($100,000) of property tax value to service the cumulative cost over the life of the bond provided above would be $0.00 per year.",
+          "officialStatement": null
+        },
+        {
+          "id": "nc-local-measure-2026-neighborhood-improvement-bonds:question",
+          "contestId": "nc-local-measure-2026-neighborhood-improvement-bonds",
+          "provenance": {
+            "sourceOrg": "Mecklenburg County Board of Elections",
+            "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+            "verifiedAt": "2026-10-20T23:03:17.096952+00:00",
+            "collectedAt": "2026-10-20T23:03:17.096952+00:00"
+          },
+          "questionText": "Additional property taxes may be levied on property located in the City of Charlotte in an amount sufficient to pay the principal of and interest on bonds if approved by the following ballot question. Shall the order authorizing $20,000,000 of bonds plus interest to provide funds to pay the capital costs of infrastructure improvements for various neighborhoods of the City, including the cost of related studies, plans and design, acquiring, constructing, reconstructing, improving, installing or providing curbs, gutters, storm drainage, sidewalks, pedestrian and bicycle paths, and relocation of utilities; paving, milling, resurfacing, grading or improving streets, roads and intersections, providing public open space, landscaping, lighting and traffic controls, signals and markers, and acquiring any necessary equipment, land, interests in land and rights-of-way therefor, and providing that additional taxes may be levied in an amount sufficient to pay the principal of and interest on the bonds be approved, in light of the following: (1) The estimated cumulative cost over the life of the bond, using the highest interest rate charged for similar debt over the last 20 years, would be $31,222,400 (consisting of $20,000,000 principal amount of bonds plus $11,222,400 of interest). (2) The estimated amount of property tax liability increase for each one hundred thousand dollars ($100,000) of property tax value to service the cumulative cost over the life of the bond provided above would be $0.00 per year.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nc-local-measure-2026-transportation-bonds",
+          "whatItDoes": "Allows Charlotte to borrow $280 million plus interest for streets, roads, intersections, sidewalks, bridges, bicycle and pedestrian paths and related work. The city may levy property taxes sufficient to repay the debt. Using the highest interest rate for similar debt over the past 20 years, the official estimate puts total principal and interest at $437,113,600 and estimates no annual property-tax increase per $100,000 of taxable value.",
+          "yesMeans": "Authorize the $280 million bond order, including authority to levy property taxes needed for repayment.",
+          "noMeans": "Reject this bond order and its associated repayment-tax authorization.",
+          "parts": [],
+          "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+          "sourceHash": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nc-local-measure-2026-housing-bonds",
+          "whatItDoes": "Allows Charlotte to borrow $125 million plus interest for housing projects for people with low or moderate incomes, including related infrastructure and land. The city may levy property taxes sufficient to repay the debt. Using the highest interest rate for similar debt over the past 20 years, the official estimate puts total principal and interest at $198,396,313 and estimates no annual property-tax increase per $100,000 of taxable value.",
+          "yesMeans": "Authorize the $125 million bond order, including authority to levy property taxes needed for repayment.",
+          "noMeans": "Reject this bond order and its associated repayment-tax authorization.",
+          "parts": [],
+          "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+          "sourceHash": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nc-local-measure-2026-neighborhood-improvement-bonds",
+          "whatItDoes": "Allows Charlotte to borrow $20 million plus interest for neighborhood infrastructure such as streets, sidewalks, drainage, bicycle and pedestrian paths, public open space and related work. The city may levy property taxes sufficient to repay the debt. Using the highest interest rate for similar debt over the past 20 years, the official estimate puts total principal and interest at $31,222,400 and estimates no annual property-tax increase per $100,000 of taxable value.",
+          "yesMeans": "Authorize the $20 million bond order, including authority to levy property taxes needed for repayment.",
+          "noMeans": "Reject this bond order and its associated repayment-tax authorization.",
+          "parts": [],
+          "sourceUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+          "sourceHash": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:43:12.874Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "378ca3dde9e97f65a921c922171aa34942bcc68582ef46e713b371e0b6caf11d",
+        "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
+        "publisher": "North Carolina State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:09.083478Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
+        "reviewedEvidence": "2026 general-election federal/state candidate list grouped by contest; all 189 required candidate contests and all 366 candidate names and printed party labels were matched exactly to the general-election CSV."
+      },
+      {
+        "rawHash": "69ccd53f9bb0cd06e80dae6da85906e9be68cced144c2e46df8a8973b35506a0",
+        "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/statewide_referendums_20261103.pdf",
+        "publisher": "North Carolina State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:09.390749Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/statewide_referendums_20261103.pdf",
+        "reviewedEvidence": "Complete statewide November 3, 2026 referendum list: three constitutional-amendment titles and exact For/Against question descriptions."
+      },
+      {
+        "rawHash": "2f1c1b932dff920bc690c3e5fc1813ff4389cb5a28ef0b99d4bb06c9fef09cbe",
+        "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+        "publisher": "North Carolina State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:52:21.488912+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+        "reviewedEvidence": "Exact current general-election candidate row or rows, parties, websites when provided, and seat counts, scoped only to the specific council district."
+      },
+      {
+        "rawHash": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+        "finalUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+        "publisher": "Mecklenburg County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:03:17.096952+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+        "reviewedEvidence": "Current official sample ballot B0009, linked from the county government's voter lookup, provides exact full Charlotte bond questions and the Mecklenburg local races."
+      },
+      {
+        "requestedUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+        "finalUrl": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+        "publisher": "apps.meckboe.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:08:59.620055+00:00",
+        "httpStatus": 200,
+        "rawHash": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

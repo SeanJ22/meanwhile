@@ -26,13 +26,21 @@
       "ocdId": "ocd-division/country:us/state:il/sldl:79",
       "candidates": 1,
       "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-118",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY ONE HUNDRED AND EIGHTEENTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:118",
+      "candidates": 2,
+      "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot"
     }
   ],
   "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",
   "resolvedHeldContests": [
     "il-sbe-2026-state-senate-36",
     "il-sbe-2026-state-house-71",
-    "il-sbe-2026-state-house-79"
+    "il-sbe-2026-state-house-79",
+    "il-sbe-2026-state-house-118"
   ],
   "validation": {
     "sourceBytesAndExactQuoteLines": "PASS",

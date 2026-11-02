@@ -18,5 +18,15 @@
     "excerptFile": "sources/0b0a589b516a18016ea8b0616b6fb6261fc32726b80f00ae628a7000486a7ae8.txt",
     "excerptSha256": "0b0a589b516a18016ea8b0616b6fb6261fc32726b80f00ae628a7000486a7ae8",
     "evidence": "The official November 3, 2026 sample ballot was read in full for each listed office block; all printed named candidates and party labels match these additions. Blank write-in lines and no-candidate placeholders are not named candidates."
+  },
+  {
+    "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+    "finalUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+    "sourceCheckedAt": "2026-11-02T22:01:43.656502+00:00",
+    "sha256": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
+    "sourceFile": "sources/57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2.source",
+    "excerptFile": "sources/16149e115947620a137cb3cc21ff977b8069b7cd24f24af6175aa2580477d68a.txt",
+    "excerptSha256": "16149e115947620a137cb3cc21ff977b8069b7cd24f24af6175aa2580477d68a",
+    "evidence": "Fresh official 2026 General Election preview ballot, November 3, 2026, page 1. The bounded HD118 office field was visually reviewed against the retained source image and contains exactly Scott Doody (REPUBLICAN) and Homer \"Chip\" Markel (DEMOCRATIC), vote for one. All four source pages were searched for additional occurrences; only this office field supplies HD118 choices. Original PDF, render coordinates, uncorrected OCR, and verified field transcription are retained."
   }
 ]

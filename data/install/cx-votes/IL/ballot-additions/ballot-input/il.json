@@ -64,6 +64,26 @@
             "verifiedAt": "2026-11-02T21:37:41.405883+00:00",
             "quote": "REPRESENTATIVE DISTRICT\nSEVENTY-NINTH\nTHE GENERAL ASSEMBLY\nFOR REPRESENTATIVE IN\n(Vote for one)\nREPUBLICAN\nJackie Haas\nDEMOCRATIC\nNo Candidate"
           }
+        },
+        {
+          "id": "il-sbe-2026-state-house-118",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:118",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY ONE HUNDRED AND EIGHTEENTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+            "sourceOrg": "Jackson County Clerk & Recorder",
+            "collectedAt": "2026-11-02T22:01:43.656502+00:00",
+            "verifiedAt": "2026-11-02T22:07:04.923Z",
+            "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nONE HUNDRED AND EIGHTEENTH REPRESENTATIVE\nDISTRICT\n(Vote for one)\nScott Doody\nREPUBLICAN\nHomer \"Chip\" Markel\nDEMOCRATIC"
+          }
         }
       ],
       "candidacies": [
@@ -151,6 +171,42 @@
             "verifiedAt": "2026-11-02T21:37:41.405883+00:00",
             "quote": "REPRESENTATIVE DISTRICT\nSEVENTY-NINTH\nTHE GENERAL ASSEMBLY\nFOR REPRESENTATIVE IN\n(Vote for one)\nREPUBLICAN\nJackie Haas\nDEMOCRATIC\nNo Candidate"
           }
+        },
+        {
+          "id": "il-sbe-2026-state-house-118-45488ed08e01e5ed",
+          "contestId": "il-sbe-2026-state-house-118",
+          "givenName": "Homer \"Chip\"",
+          "familyName": "Markel",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+            "sourceOrg": "Jackson County Clerk & Recorder",
+            "collectedAt": "2026-11-02T22:01:43.656502+00:00",
+            "verifiedAt": "2026-11-02T22:07:04.923Z",
+            "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nONE HUNDRED AND EIGHTEENTH REPRESENTATIVE\nDISTRICT\n(Vote for one)\nScott Doody\nREPUBLICAN\nHomer \"Chip\" Markel\nDEMOCRATIC"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-118-ee8f165ca4f7107d",
+          "contestId": "il-sbe-2026-state-house-118",
+          "givenName": "Scott",
+          "familyName": "Doody",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+            "sourceOrg": "Jackson County Clerk & Recorder",
+            "collectedAt": "2026-11-02T22:01:43.656502+00:00",
+            "verifiedAt": "2026-11-02T22:07:04.923Z",
+            "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nONE HUNDRED AND EIGHTEENTH REPRESENTATIVE\nDISTRICT\n(Vote for one)\nScott Doody\nREPUBLICAN\nHomer \"Chip\" Markel\nDEMOCRATIC"
+          }
         }
       ],
       "measures": [],
@@ -159,7 +215,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T22:00:46.231Z",
+    "reviewedAt": "2026-11-02T22:08:06.720Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -549,6 +605,16 @@
         "publisher": "Kankakee County Clerk",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "The official November 3, 2026 sample ballot was read in full for each listed office block; all printed named candidates and party labels match these additions. Blank write-in lines and no-candidate placeholders are not named candidates."
+      },
+      {
+        "requestedUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+        "finalUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+        "publisher": "Jackson County Clerk & Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:01:43.656502+00:00",
+        "httpStatus": 200,
+        "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
+        "reviewedEvidence": "Fresh official 2026 General Election preview ballot, November 3, 2026, page 1. The bounded HD118 office field was visually reviewed against the retained source image and contains exactly Scott Doody (REPUBLICAN) and Homer \"Chip\" Markel (DEMOCRATIC), vote for one. All four source pages were searched for additional occurrences; only this office field supplies HD118 choices. Original PDF, render coordinates, uncorrected OCR, and verified field transcription are retained."
       }
     ]
   }

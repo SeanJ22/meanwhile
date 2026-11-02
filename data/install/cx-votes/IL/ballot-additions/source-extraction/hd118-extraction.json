@@ -1,0 +1,125 @@
+{
+  "sourceFile": "../sources/57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2.source",
+  "sourceSha256": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
+  "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot",
+  "fetchedAt": "2026-11-02T22:01:43.656502+00:00",
+  "sourcePageCount": 4,
+  "sourcePage": 1,
+  "sourcePdfRotation": 270,
+  "render": {
+    "tool": "pdftoppm",
+    "arguments": "-r 220 -png",
+    "imageSizePixels": [
+      1870,
+      2420
+    ]
+  },
+  "boundedOffice": {
+    "left": 940,
+    "top": 1830,
+    "right": 1530,
+    "bottom": 2120,
+    "coordinateUnit": "rendered image pixels",
+    "cropFile": "il118-office-crop.png"
+  },
+  "ocr": {
+    "tool": "tesseract",
+    "psm": 6,
+    "threadLimit": 1,
+    "uncorrectedOutputFile": "il118-office-crop.uncorrected-ocr.txt",
+    "fullBallotOutputFile": "full-ballot.uncorrected-ocr.txt"
+  },
+  "verifiedTranscript": {
+    "file": "il118-office-field.txt",
+    "sha256": "16149e115947620a137cb3cc21ff977b8069b7cd24f24af6175aa2580477d68a",
+    "method": "Visually compared the exact retained office crop to the original page image. Corrected OCR punctuation/capitalization and excluded checkbox glyphs; raw OCR remains unchanged.",
+    "materialFieldsVerified": [
+      "HD118 office identity",
+      "Vote for one",
+      "Scott Doody",
+      "REPUBLICAN",
+      "Homer \"Chip\" Markel",
+      "DEMOCRATIC",
+      "No additional printed named choices in this bounded office field"
+    ]
+  },
+  "electionHeader": {
+    "sourcePage": 1,
+    "text": "2026 General Election\nNovember 3, 2026\nJackson County, IL\nPUBLICATION"
+  },
+  "discovery": {
+    "source": "Public Document Center frontend, loadSource 7, Clerk & Recorder folder 52",
+    "readRequestMeta": {
+      "requestedUrl": "https://www.jacksoncounty-il.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+      "requestMethod": "POST",
+      "readOnlyOperation": "Public frontend listing/search",
+      "requestBody": {
+        "folderId": 52,
+        "getDocuments": 1,
+        "imageRepo": false,
+        "renderMode": 0,
+        "loadSource": 7,
+        "requestingModuleID": 75,
+        "searchString": "",
+        "pageNumber": 1,
+        "rowsPerPage": 100,
+        "sortColumn": "DisplayName",
+        "sortOrder": 0
+      },
+      "finalUrl": "https://www.jacksoncounty-il.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+      "httpStatus": 200,
+      "rawHash": "21e612adb5620de499e4f9c67cb355a92a567bde564a6019719b46875a62e7bd",
+      "retrievedAt": "2026-11-02T22:01:33.457619+00:00",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 12474,
+      "path": "public-clerk-document-list.json"
+    },
+    "publicListingFile": "public-clerk-document-list.json",
+    "publicListingHash": "21e612adb5620de499e4f9c67cb355a92a567bde564a6019719b46875a62e7bd",
+    "entry": {
+      "ID": 1227,
+      "Name": null,
+      "DisplayName": "2026 Preview Ballot",
+      "Description": "",
+      "FileSize": 1407,
+      "CreatedDate": "/Date(-62135575200000)/",
+      "CreatedBy": 0,
+      "LastModifiedDate": "/Date(-62135575200000)/",
+      "ModifiedBy": 0,
+      "FileUploadedDate": "/Date(-62135575200000)/",
+      "FileUploadedBy": 0,
+      "IsVisible": false,
+      "StartDate": null,
+      "EndDate": null,
+      "Target": false,
+      "Status": 0,
+      "StringStatus": null,
+      "StringStatusLowerCase": "",
+      "FolderID": 0,
+      "IsArchived": false,
+      "ShowArchive": false,
+      "LastArchivedDate": null,
+      "ArchivedBy": null,
+      "ArchivedReason": null,
+      "ArchivedDocumentID": null,
+      "FileType": "pdf",
+      "Action": null,
+      "FolderPath": null,
+      "AbsoluteFolderPath": null,
+      "DisplayLastModified": null,
+      "URL": "/DocumentCenter/View/1227/2026-Preview-Ballot",
+      "Thumbnail": "",
+      "AltText": null,
+      "FileID": null,
+      "RelatedBidIds": [],
+      "ComImageID": null,
+      "ReferenceCount": 0,
+      "DocumentType": 0,
+      "Actions": null,
+      "LastModifiedDateString": "Oct 31, 2026",
+      "CopyLink": null,
+      "PreviewLink": null,
+      "IsDecorativeImage": false
+    }
+  }
+}

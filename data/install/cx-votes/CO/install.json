@@ -1,0 +1,96 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-sos-2026-general-amendment-81",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-amendment-82",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-amendment-83",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-amendment-84",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-amendment-85",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-amendment-86",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-amendment-87",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-proposition-132",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-proposition-133",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-proposition-134",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-proposition-135",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-proposition-136",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-sos-2026-general-proposition-137",
+      "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf"
+    },
+    {
+      "id": "co-denver-2026-referred-question-2h",
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+    },
+    {
+      "id": "co-denver-2026-referred-question-2i",
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+    },
+    {
+      "id": "co-denver-2026-referred-question-2j",
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+    },
+    {
+      "id": "co-denver-2026-referred-question-2k",
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+    },
+    {
+      "id": "co-denver-2026-initiated-ordinance-311",
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf"
+    },
+    {
+      "id": "co-el_paso-general-2026-ballot-issue-1a",
+      "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidatesAndExplanations": "UNCHANGED"
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

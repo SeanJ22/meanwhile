@@ -1,0 +1,566 @@
+87                       Amendment 87: Graduated
+                               Income Tax
+                               Placed on the ballot by citizen initiative • Passes with a majority vote
+
+
+
+
+Amendment 87 proposes amending the Colorado Constitution and Colorado
+statutes to:
+y   remove the constitutional requirement that the state income tax be set at a single flat rate;
+
+y   replace the current flat income tax with a graduated state income tax that sets lower rates for lower
+    incomes and higher rates for higher incomes;
+
+y   spend the additional revenue collected from these income tax rate changes on K-12 education,
+    health care, and early childhood care and education; and
+
+y   exempt additional revenue collected under the measure from the state’s constitutional revenue
+    limit.
+
+What Your Vote Means
+
+
+YES            A “yes” vote on Amendment 87
+               creates a graduated state income
+tax that increases revenue; uses the additional
+                                                           NO            A “no” vote on Amendment 87 keeps
+                                                                         the current constitutional requirement
+                                                           for a flat state income tax rate.
+money for K-12 education, health care, and early
+childhood care and education; and exempts
+additional revenue collected from the state’s
+constitutional revenue limit.
+
+
+Summary and Analysis of Amendment 87
+
+What does Amendment 87 do?
+The measure replaces the state’s current flat income tax rate for individuals and businesses with a
+graduated income tax that lowers taxes for taxable income below $500,000 and raises taxes for taxable
+income above $500,000. It requires that the additional money collected from this change be spent on
+K-12 education, health care, and early childhood care and education, and exempts this money from the
+state’s constitutional revenue limit, also known as the Taxpayer’s Bill of Rights (TABOR) limit. The state
+must produce an audited annual report on how much additional revenue was collected and how it
+was spent.
+                                                                                                             33
+  87        Graduated Income Tax
+
+
+What is the state’s current income tax structure?
+Since 1987, Colorado has had a flat income tax rate, in which all taxpayers, including individuals and
+businesses, pay the same income tax rate on their income. The state’s current flat income tax rate is
+4.4 percent. The majority of state income tax revenue is used for general state programs and services.
+The TABOR amendment in the state constitution requires that income be taxed at a flat rate.
+
+Income tax is paid on a portion of a household’s or business’s income, which is called taxable income.
+For example, a married couple earning $42,000 in income per year may have about $10,000 in taxable
+income and owe $440 in taxes annually. A married couple earning $130,000 in income per year may
+have about $100,000 in taxable income and owe $4,400 in taxes annually.
+
+What is the graduated income tax structure proposed in Amendment 87?
+Amendment 87 removes the constitutional requirement that income be taxed at a flat rate and creates
+a graduated income tax starting in 2027. In this graduated tax system, an individual’s or business’s
+income is split into six ranges—called brackets—with the lowest income tax bracket taxed at the lowest
+rate and each higher bracket taxed at increasing rates, as shown in Table 1.
+
+This is similar to how the federal income tax works. Unlike the federal income tax, the new state income
+tax brackets are not adjusted for inflation, so more of taxpayers’ incomes will fall into the higher
+brackets over time. Each tax rate is only applied to the portion of taxable income that falls into that
+bracket.
+
+                                            Table 1
+               Graduated Income Tax Rates by Income Bracket Under Amendment 87
+
+                                                          Current    Amendment 87
+ Taxable Income Bracket                                  Tax Rate         Tax Rate           Difference
+ $25,000 or less                                             4.4%               3.7%                -0.7
+ $25,001 to $100,000                                         4.4%               4.2%                -0.2
+ $100,001 to $500,000                                        4.4%               4.4%                 0.0
+ $500,001 to $750,000                                        4.4%               7.4%               +3.0
+ $750,001 to $1,000,000                                      4.4%               7.9%               +3.5
+ More than $1,000,000                                        4.4%               8.4%               +4.0
+
+
+For example, as shown in Figure 1 below, an individual or business earning $125,000 a year in taxable
+income is taxed at a rate of 3.7 percent for the first $25,000. The next portion of taxable income
+between $25,000 and $100,000 is taxed at a rate of 4.2 percent. The remaining $25,000 is taxed at the
+rate of 4.4 percent. The total tax owed under the measure would be $5,175, or $325 less than the $5,500
+they would owe under current law.
+
+
+
+
+34
+                                                                                     Analysis            87
+
+                                             Figure11
+                                             Figure
+             Tax Rates
+                 Rates and Taxes Owed for a Taxpayerwith
+                       and Taxes Owed for a Taxpayer  with$125,000
+                                                          $125,000in
+                                                                   inTaxable
+                                                                      TaxableIncome
+                                                                              Income
+     $125,000
+                                                            $100,001 to
+                                                                                 $25,000 x 4.4% = $1,100
+                                                             $125,000
+     $100,000
+
+
+      $75,000
+                     $125,000      x 4.4% = $5,500           $25,001 to          $75,000 x 4.2% = $3,150
+                                                              $100,000
+      $50,000
+
+
+      $25,000
+                                                                                 $25,000 x 3.7% = $925
+                                          $5,500           First $25,000               $5,175
+             $0
+                    Current Law         Current Law        Amendment 87           Amendment 87
+                  Taxable Income        Taxes Owed         Taxable Income          Taxes Owed
+
+
+How does Amendment 87 change the amount of taxes owed?
+For individuals and businesses with taxable incomes of less than $500,000, the measure decreases the
+amount of income taxes owed, up to a maximum reduction of $325 per taxpayer. For taxpayers with
+incomes of about $500,000 and above, the measure increases the amount of income taxes owed.
+
+Table 2 shows an example of taxes owed under the measure and under current law for seven
+hypothetical taxpayers with different levels of taxable income.
+
+                                            Table 2
+                        Taxes Owed Under Current Law and Amendment 87
+
+Example                                  Current             Amendment 87                      Difference in
+Taxable Income                  Income Tax Owed            Income Tax Owed                 Income Tax Owed
+$25,000                                   $1,100                          $925                           -$175
+$62,500                                   $2,750                      $2,500                             -$250
+$125,000                                  $5,500                      $5,175                             -$325
+$300,000                                 $13,200                     $12,875                             -$325
+$550,000                                 $24,200                     $25,375                         +$1,175
+$625,000                                 $27,500                     $30,925                         +$3,425
+$875,000                                 $38,500                     $50,050                        +$11,550
+$2,000,000                               $88,000                    $143,925                        +$55,925
+
+
+
+
+                                                                                                              35
+                                                     -1-
+    87         Graduated Income Tax
+
+
+How does Amendment 87 change state revenue?
+By changing tax rates for individuals and businesses, Amendment 87 is expected to increase state
+income tax revenue by an estimated $2 billion in the first full year and more in later years. However,
+actual revenue collections may be more or less than this estimate depending on economic conditions
+and other factors.
+
+The change in state revenue under the measure is calculated as the difference between the actual
+income tax revenue collected under the measure’s graduated income tax rates and the income tax
+revenue that would have been collected under the state’s current rate of 4.4 percent. See the Fiscal
+Impact section below for additional detail.
+
+Does Amendment 87 impact TABOR refunds?
+The measure has no impact on current TABOR refunds or TABOR refund mechanisms. Under current
+law, the state is expected to collect $15 billion in income tax revenue in 2028. Under this measure, it
+is expected to collect $2 billion more in income tax revenue, for a total of $17 billion. The additional
+$2 billion is exempt from the TABOR limit. The TABOR limit and the amount of revenue subject to the
+limit remain the same, and estimated TABOR refunds will not change. For additional information, see
+the LCS memorandum titled, “A Brief Overview of the TABOR Revenue Limit.”1
+
+How will the additional revenue be spent?
+The increased revenue collected under Amendment 87 must be spent on K-12 education, health care,
+and early childhood care and education. It must add to, and not replace, spending on those services.
+The state legislature will decide what specific programs will receive additional funding and how much.
+
+What happens if Amendment 87 and Proposition 136 both pass?
+Proposition 136 limits the state income tax rate at the current law rate of 4.4 percent. If both
+Amendment 87 and Proposition 136 are approved by voters, the proposed tax rates for income over
+$500,000 in Amendment 87 would be higher than the 4.4 percent limit in Proposition 136.
+
+Generally, when parts of voter-approved measures conflict, the policy outcome is determined by
+the measure that received more votes. However, if both measures are approved by voters, the exact
+outcome is unclear. The state legislature or a court will need to determine how to resolve any conflicts.
+
+Fiscal Impact of Amendment 87
+
+Taxpayer Impacts
+Amendment 87 will decrease the amount of income tax owed by taxpayers with Colorado taxable
+income of less than $510,834 and increase the amount of income tax owed by taxpayers with Colorado
+taxable income of $510,834 and above. State law requires Legislative Council Staff to estimate the
+potential tax burden on affected taxpayers within specified federal adjusted gross income categories.
+Federal adjusted gross income is total income from all sources, with certain adjustments, as determined
+when filing federal income taxes. Colorado taxable income, calculated when filing state income taxes,
+is based on federal adjusted gross income with additional adjustments required or allowed under state
+law. Table 3 shows the expected change in tax burden by federal adjusted gross income category. The
+measure has no impact on current TABOR refunds or TABOR refund mechanisms.
+
+                                                   Table 3
+                                   Estimated Impact on Taxpayers by Income
+
+                                               Estimated Number               Total Change in         Average Change in
+ Income Category                                     of Taxpayers                 Tax Burden                Tax Burden
+ $14,999 or less                                            579,309                  -$638,951                          -$1
+ $15,000 to $29,999                                         408,924               -$16,093,434                         -$39
+ $30,000 to $39,999                                         272,616               -$29,611,480                       -$109
+ $40,000 to $49,999                                         238,539               -$38,651,945                       -$162
+ $50,000 to $69,999                                         443,000               -$85,925,358                       -$194
+ $70,000 to $99,999                                         408,912               -$93,232,609                       -$228
+ $100,000 to $149,999                                       408,912              -$115,554,178                       -$283
+ $150,000 to $199,999                                       238,532               -$77,522,900                       -$325
+ $200,000 to $249,000                                       102,228               -$33,224,100                       -$325
+ $250,000 to $499,999                                       204,456               -$66,448,200                       -$325
+ $500,000 to $999,999                                        55,900               -$15,893,609                       -$284
+ $1,000,000 or more                                          46,328             $1,208,468,497                   +$26,085
+
+Income is federal adjusted gross income, not Colorado taxable income; therefore, the income ranges and tax rates do not align
+with those in Table 2. The estimated number of taxpayers column counts joint filers as one taxpayer. Estimates are based on
+Colorado Department of Revenue data for all residents for tax year 2023 and Legislative Council Staff estimates.
+
+State Revenue
+By replacing the state flat income tax with a graduated income tax, the measure increases revenue from
+income taxes by an estimated $958.4 million in budget year 2026-27, $1.972 billion in budget year
+2027-28, and increasing amounts in future years based on income and population growth. The estimate
+for budget year 2026-27 represents a half-year impact for tax year 2027. The additional revenue will
+be credited to the Colorado Future’s Account created in the measure. The increased revenue is exempt
+from TABOR as a voter-approved revenue change. The state budget year begins each July 1 and ends
+on June 30.
+
+38
+                                                                                        Analysis          87
+
+State law requires Legislative Council Staff to include an estimate of the maximum dollar amount of
+the change in state government revenue for the first full fiscal year of a proposed tax increase. This is
+the number that appears in the ballot question. The estimates in the previous paragraph represent the
+revenue impact of the measure under the current Legislative Council Staff revenue forecast. Based on
+forecast error that could occur, the maximum dollar amount of the change in state government revenue
+and fiscal year spending for budget year 2027-28 is estimated as an increase of $2.7 billion.
+
+State Spending
+The measure increases the amount of state revenue available to spend for the purposes identified in the
+measure, including K-12 education, health care, and early childhood care and education, in FY 2026-27
+and future fiscal years. To administer the tax rate change, the measure is expected to increase one-time
+spending in the Department of Revenue by $98,000.
+
+School District Revenue and Spending
+The measure increases available state funding to school districts. The exact amount distributed to
+school districts will depend on decisions made by the General Assembly when allocating money from
+the Colorado Future’s Account.
+
+State Spending and Tax Increases
+
+Article X, Section 20, of the Colorado Constitution requires that the following fiscal information be
+provided when a tax increase question is on the ballot:
+
+y   estimates or actual amounts of state fiscal year spending for the current year and each of the past
+    four years with the overall percentage and dollar change; and
+
+y   for the first full year of the proposed tax increase, estimates of the maximum dollar amount of the
+    tax increase and of fiscal year spending without the increase.
+
+“Fiscal year spending” is a legal term in the Colorado Constitution. It equals the amount of revenue
+subject to the constitutional spending limit that the state or a district is permitted to keep and either
+spend or save for a single year. Table 4 shows state fiscal year spending for the current year and each of
+the past four years.
+
+                                                       Table 4
+                                             State Fiscal Year Spending
+
+                                  Actual             Actual           Actual           Actual        Estimated
+ Fiscal Year                  FY 2022‑23         FY 2023‑24       FY 2024‑25       FY 2025‑26       FY 2026‑27
+ Fiscal Year Spending       $16.66 billion      $18.07 billion   $19.15 billion   $19.84 billion   $20.50 billion
+
+Four-Year Dollar Change in State Spending: $3.85 billion
+Four-Year Percent Change in State Spending: 23.1 percent
+
+
+
+
+                                                                                                               39
+  87        Graduated Income Tax
+
+
+Table 5 shows the maximum revenue expected from the income tax increase in Amendment 87 for
+FY 2027-28, the first full fiscal year for which the tax increase would be in place, and an estimate of state
+fiscal year spending without the tax increase.
+
+                                               Table 5
+            Estimated State Fiscal Year Spending and the Proposed Tax Revenue Increase
+
+                                                                                      FY 2027‑28 Estimate
+  Fiscal Year Spending Without the Tax Increase                                               $24.62 billion
+  Revenue Increase from Increased Income Taxes                                                  $2.7 billion
+
+
+
+
+40
+
+Amendment 87
+                                            Graduated Income Tax
+The ballot title below is a summary drafted by the professional staff of the offices of the secretary of state, the
+attorney general, and the legal staff for the general assembly for ballot purposes only. The ballot title will not
+appear in the Colorado constitution or Colorado Revised Statutes. The text of the measure that will appear in the
+Colorado constitution and Colorado Revised Statutes below was drafted by the proponents of the initiative. The
+initiated measure is included on the ballot as a proposed change to current law because the proponents gathered
+the required amount of petition signatures.
+Ballot Title:
+SHALL STATE TAXES BE INCREASED $2.7 BILLION ANNUALLY, IN ORDER TO INCREASE OR IMPROVE LEVELS
+OF PUBLIC SERVICES, INCLUDING K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE
+AND EDUCATION SERVICES, BY AN AMENDMENT TO THE COLORADO CONSTITUTION AND A CHANGE TO
+THE COLORADO REVISED STATUTES REPEALING EXISTING LAW AND CREATING NEW LAW TO REPLACE THE
+UNIFORM STATE INCOME TAX RATE WITH A GRADUATED INCOME TAX STRUCTURE, AND, IN CONNECTION
+THEREWITH, AMENDING THE TAXPAYER’S BILL OF RIGHTS TO ELIMINATE THE CONSTITUTIONAL REQUIREMENT
+FOR ALL TAXABLE NET INCOME TO BE TAXED AT ONE RATE WITH NO ADDED TAX ON INCOME; ESTABLISHING
+VARIOUS INCOME TAX RATES BASED ON THE AMOUNT OF TAXABLE INCOME EARNED BY INDIVIDUALS, ESTATES,
+TRUSTS, AND CORPORATIONS, WHILE MAINTAINING THE CURRENT 4.4% TAX ON INCOME FROM THE SALE
+OF A PRINCIPAL RESIDENCE, WHICH WILL RESULT IN THE ESTIMATED CHANGE IN INCOME TAXES OWED BY
+INDIVIDUALS AS IDENTIFIED IN THE FOLLOWING TABLE; AND AUTHORIZING THE STATE TO RETAIN AND SPEND
+ANY INCREASED REVENUE FROM THE NEW TAX STRUCTURE, AS A VOTER-APPROVED REVENUE CHANGE, TO
+SUPPLEMENT CURRENT LEVELS OF FUNDING FOR K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY
+CHILD CARE AND EDUCATION PROGRAMS?
+                                                                                                                 79
+             Text & Titles
+
+
+                                               Amendment 87
+                               Change in Income Taxes Owed by Income Category
+
+
+                                                                                                  Proposed Change in
+                                                                                                  Average Income Tax
+                                         Current Average             Proposed Average                 Owed if Passed
+ Income Categories                     Income Tax Owed               Income Tax Owed                           + or ‑
+ $25,000 or less                                        $59                           $50                            -$9
+ $25,001 - $50,000                                    $751                           $632                         -$119
+ $50,001 - $100,000                                 $1,877                         $1,666                         -$210
+ $100,001 - $200,000                                $4,126                         $3,828                         -$298
+ $200,001 - $500,000                                $9,344                         $9,019                         -$325
+ $500,001 - $1,000,000                             $19,288                        $18,963                         -$325
+ $1,000,001 - $2,000,000                           $29,432                        $34,196                       +$4,764
+ $2,000,001 - $5,000,000                           $41,196                        $55,110                     +$13,914
+
+Income categories use adjusted gross income reported to the federal Internal Revenue Service.
+
+Text of Measure:
+Be it Enacted by the People of the State of Colorado:
+SECTION 1. Legislative Declaration
+(1) The people of the state of Colorado find, determine, and declare that:
+(a) Colorado taxpayers are entitled to a fair and equitable tax system that recognizes the affordability challenges
+facing working families, promotes a vibrant statewide economy, and adequately supports our public education,
+health care, and child care systems and other essential public services available to all Coloradans;
+(b) Colorado’s current flat income tax system, unlike the graduated income tax system at the federal level and in
+27 other states, taxes millionaires and corporations at the same rate as regular working people;
+(c) Combining state income, sales, and property taxes, the wealthiest 1% of Coloradans–those making over
+$850,000 per year–pay only 7% of their income in state and local taxes every year, whereas the 60% of Coloradans
+making between $25,000 and $150,000 per year pay between 9-10%.
+(d) The 97% of Colorado taxpayers making less than $500,000 would benefit from a tax cut to help them afford
+the high cost of living;
+(e) The Taxpayer’s Bill of Rights, or the TABOR amendment, has significantly limited the ability of state and local
+governments to invest in supporting teachers and care workers, building infrastructure, and keeping up with a
+changing economy;
+(f) TABOR can be amended to allow a graduated income tax without impacting TABOR refunds or the voters’ right
+to approve any future tax increases;
+(g) As demonstrated by recent state-commissioned adequacy studies, Colorado’s public schools have been
+underfunded for decades, and despite the elimination of the Budget Stabilization Factor in 2024, teacher wage
+competitiveness is still 50th in the country.
+(h) Health care in Colorado is too expensive, and the cuts in the federal budget bill are expected to exceed $2
+billion per year by 2032, with rural hospitals and clinics facing the greatest risks for closing or limiting services; and
+(i) Child care in Colorado is too expensive, making it harder for parents to work while raising their families, and
+yet wages are so low that 46 percent of early childhood workers in the state rely on social welfare programs like
+Medicaid and SNAP;
+(2) The people of the state of Colorado find, therefore, that:
+(a) A graduated income tax system will:
+(I) Better support Colorado’s children and families, working people, and older adults by cutting taxes for
+individuals and small businesses making less than $500,000 per year while only increasing taxes on individuals and
+corporations making more than $500,000 per year;
+(II) Increase Colorado’s ability to adequately invest in our public schools, health care, and child care systems and
+
+80
+                                                                                   Text & Titles
+
+
+programs to improve the affordability of health care and child care;
+(b) A graduated income tax system will not:
+(I) Change the Constitutional requirement that the state government cannot raise any tax rates without another
+vote of the people;
+(II) Reduce or otherwise impact TABOR refunds, because any revenue raised from Colorado’s current 4.4% flat
+income tax, 2.9% sales tax, and various other taxes and fees that exceeds the TABOR spending limit will be
+required to be refunded to taxpayers;
+(c) All new revenue from graduated income tax that exceeds what would have otherwise been collected under
+Colorado’s current tax rates will be transferred into the Colorado’s Future Fund, with spending limited to the
+following purposes:
+(I) Improving our public education system, increasing pay to attract and retain great teachers, reducing class sizes,
+supporting rural schools, and supporting affordable pathways to higher education and workforce training;
+(II) Improving our health care system, making health care more affordable, replacing federal Medicaid funds
+that were cut by the federal budget bill, implementing new requirements in the federal budget bill, increasing
+access to mental and behavioral health care and primary care, supporting services for older adults and people
+with disabilities, increasing access to nutritious food, supporting our health care workforce, and supporting rural
+hospitals and clinics;
+(III) Improving our early child care and education systems, helping families afford child care, and increasing pay to
+attract and retain great child care providers;
+(d) New revenues are intended to supplement rather than supplant existing funding;
+(e) Taxpayers will be able to monitor and assure responsible and effective usage of all new revenue based on the
+following requirements:
+(I) The nonpartisan office of legislative council will produce an annual report on all spending of new revenue that
+will be accessible to the public in various formats including the general assembly’s website with plain language
+descriptions and understandable data visualizations;
+(II) The nonpartisan and independent office of the state auditor will annually audit this report and present findings
+to the Joint Budget Committee and the public;
+SECTION 2 In the constitution of the state of Colorado, section 20 of article X, amend (8)(a) as follows:
+(8) Revenue limits. (a) New or increased transfer tax rates on real property are prohibited. No new state real
+property tax or local district income tax shall be imposed. Neither an income tax rate increase nor a new state
+definition of taxable income shall apply before the next tax year. Any income tax law change after July 1, 1992
+shall also require all taxable net income to be taxed at one rate, excluding refund tax credits or voter-approved tax
+credits, with no added tax or surcharge.
+SECTION 3. In Colorado Revised Statutes, 39-22-104, amend (1.7)(c) and (2); and add (1.8) as follows:
+39‑22‑104. Income tax imposed on individuals, estates, and trusts ‑ report ‑ tax preference performance
+statement ‑ legislative declaration ‑ definitions ‑ repeal. (1.7)(c) Except as otherwise provided in section 39-
+22-627, subject to subsection (2) of this section, with respect to taxable years commencing on or after January
+1, 2022, but before January 1, 2027, a tax of four and forty one-hundredths percent is imposed on the federal
+taxable income, as determined pursuant to section 63 of the internal revenue code, of every individual, estate, and
+trust.
+(1.8)(a) Except as otherwise provided in section 39-22-627, subject to subsection (2) of this section, with
+respect to taxable years commencing on or after January 1, 2027, a graduated tax is imposed on federal
+taxable income, as determined by section 63 of the internal revenue code, of every individual, estate, and trust,
+as follows:
+(I) For federal taxable income less than or equal to twenty five thousand dollars, the tax is three and seventy
+one-hundredths percent;
+(II) For federal taxable income greater than twenty five thousand dollars but less than or equal to one
+hundred thousand dollars, the tax is (A) three and seventy one-hundredths percent on the amount up to and
+including twenty five thousand dollars and (B) four and twenty one-hundredths percent on the amount
+greater than twenty five thousand dollars but less than or equal to one hundred thousand dollars;
+(III) For federal taxable income greater than one hundred thousand dollars but less than or equal to five
+hundred thousand dollars, the tax is (A) three and seventy one-hundredths percent on the amount up to and
+including twenty five thousand dollars, (B) four and twenty one-hundredths percent on the amount greater
+than twenty five thousand dollars but less than or equal to one hundred thousand dollars, and (C) four
+and forty one-hundredths percent on the amount greater than one hundred thousand dollars;
+(IV) For federal taxable income greater than five hundred thousand dollars but less than or equal to seven
+
+                                                                                                                  81
+             Text & Titles
+
+hundred fifty thousand dollars, the tax is (A) three and seventy one-hundredths percent on the amount up
+to and including twenty five thousand dollars, (B) four and twenty one-hundredths percent on the amount
+greater than twenty five thousand dollars but less than or equal to one hundred thousand dollars, (C) four
+and forty one-hundredths percent on the amount greater than one hundred thousand dollars but less than
+or equal to five hundred thousand dollars, and (D) seven and forty one-hundredths percent on the amount
+greater than five hundred thousand dollars;
+(V) For federal taxable income greater than seven hundred fifty thousand dollars but less than or equal
+to one million dollars, the tax is (A) three and seventy one-hundredths percent on the amount up to and
+including twenty five thousand dollars, (B) four and twenty one-hundredths percent on the amount greater
+than twenty five thousand dollars but less than or equal to one hundred thousand dollars, (C) four and
+forty one-hundredths percent on the amount greater than one hundred thousand dollars but less than or
+equal to five hundred thousand dollars, (D) seven and forty one-hundredths percent on the amount over
+five hundred thousand dollars but less than or equal to seven hundred fifty thousand dollars, and (E) seven
+and ninety one-hundredths percent on the amount over seven hundred fifty thousand dollars; and
+(VI) For federal taxable income greater than one million dollars, the tax is (A) three and seventy one-
+hundredths percent on the amount up to and including twenty five thousand dollars, (B) four and twenty
+one-hundredths percent on the amount greater than twenty five thousand dollars but less than or equal
+to one hundred thousand dollars, (C) four and forty one-hundredths percent on the amount greater than
+one hundred thousand dollars but less than or equal to five hundred thousand dollars, (D) seven and forty
+one-hundredths percent on the amount greater than five hundred thousand dollars but less than or equal
+to seven hundred fifty thousand dollars, (E) seven and ninety one-hundredths percent on the amount greater
+than seven hundred fifty thousand dollars but less than or equal to one million dollars; and (F) eight and
+forty one-hundredths percent on the amount greater than one million dollars.
+(b) For purposes of subsection (1.8)(a) of this section, taxable net income from the sale or exchange of
+a principal residence exceeding the amount excluded from federal taxable income under Section 121 of
+the Internal Revenue Code shall be subject to tax under this section at the rate of four and forty one-
+hundredths percent.
+(2) Prior to the application of the rate of tax prescribed in subsection (1), (1.5), or (1.7), or (1.8) of this section, the
+federal taxable income shall be modified as provided in subsections (3) and (4) of this section.
+SECTION 4. In Colorado Revised Statutes, 39-22-301, amend (1)(d)(I)(K) and add (1)(d)(I)(L) as follows:
+39‑22‑301. Corporate tax imposed – repeal. (1)(d)(I)(K). Except as otherwise provided in section 39-22-627,
+for income tax years commencing on or after January 1, 2022, but before January 1, 2027, four and forty one-
+hundredths percent of the Colorado net income.
+(1)(d)(I)(L) Except as otherwise provided in section 39-22-627, for income tax years commencing on or after
+January 1, 2027, a graduated tax is imposed on Colorado net income, as determined under this section, of
+every domestic C corporation, foreign C corporation, and combined group, as defined in section 39-22-303(12)
+(a.3), doing business in Colorado annually in an amount of the net income of such C corporation during the
+year derived from sources within Colorado as set forth in the following schedule of rates, as follows:
+(i) for Colorado net income less than or equal to twenty five thousand dollars, the tax is three and seventy
+one-hundredths percent;
+(ii) For Colorado net income greater than twenty five thousand dollars but less than or equal to one
+hundred thousand dollars, the tax is (I) three and seventy one-hundredths percent on the amount up to and
+including twenty five thousand dollars and (II) four and twenty one-hundredths percent on the amount
+greater than twenty five thousand dollars but less than or equal to one hundred thousand dollars;
+(iii) For Colorado net income greater than one hundred thousand dollars but less than or equal to five
+hundred thousand dollars, the tax is (I) three and seventy one-hundredths percent on the amount up to and
+including twenty five thousand dollars, (II) four and twenty one-hundredths percent on the amount greater
+than twenty five thousand dollars but less than or equal to one hundred thousand dollars, and (III) four
+and forty one-hundredths percent on the amount greater than one hundred thousand dollars;
+(iv) For Colorado net income greater than five hundred thousand dollars but less than or equal to seven
+hundred fifty thousand dollars, the tax is (I) three and seventy one-hundredths percent on the amount up
+to and including twenty five thousand dollars, (II) four and twenty one-hundredths percent on the amount
+greater than twenty five thousand dollars but less than or equal to one hundred thousand dollars, (III) four
+and forty one-hundredths percent on the amount greater than one hundred thousand dollars but less than
+or equal to five hundred thousand dollars, and (IV) seven and forty one-hundredths percent on the amount
+greater than five hundred thousand dollars;
+
+82
+                                                                                Text & Titles
+
+(v) For Colorado net income greater than seven hundred fifty thousand dollars but less than or equal to one
+million dollars, the tax is (I) three and seventy one-hundredths percent on the amount up to and including
+twenty five thousand dollars, (II) four and twenty one-hundredths percent on the amount greater than
+twenty five thousand dollars but less than or equal to one hundred thousand dollars, (III) four and forty
+one-hundredths percent on the amount greater than one hundred thousand dollars but less than or equal
+to five hundred thousand dollars, (IV) seven and forty one-hundredths percent on the amount over five
+hundred thousand dollars but less than or equal to seven hundred fifty thousand dollars, and (V) seven and
+ninety one-hundredths percent on the amount over seven hundred fifty thousand dollars; and
+(vi) For Colorado net income greater than one million dollars, the tax is (I) three and seventy one-
+hundredths percent on the amount up to and including twenty five thousand dollars, (II) four and twenty
+one-hundredths percent on the amount greater than twenty five thousand dollars but less than or equal to
+one hundred thousand dollars, (III) four and forty one-hundredths percent on the amount greater than one
+hundred thousand dollars but less than or equal to five hundred thousand dollars, (IV) seven and forty one-
+hundredths percent on the amount greater than five hundred thousand dollars but less than or equal to
+seven hundred fifty thousand dollars, (V) seven and ninety one-hundredths percent on the amount greater
+than seven hundred fifty thousand dollars but less than or equal to one million dollars; and (VI) eight and
+forty one-hundredths percent on the amount greater than one million dollars.
+SECTION 5. In Colorado Revised Statutes, add 24-77-103.3 as follows:
+24‑77‑103.3. Voter approved revenue change – retention and use of revenue – accountability. (1)
+Notwithstanding any provision of law to the contrary, for each state fiscal year commencing on or after
+January 1, 2026, all revenue collected under the income tax rates established by section 39-22-104(1.8) and
+section 39-22-301(1)(d)(I)(L) in excess of the revenue that would be generated in any such state fiscal year
+by applying the income tax rate that existed as of December 31, 2026 (“excess revenue”), shall constitute a
+voter approved revenue change under section 20(7)(d) of article X of the Colorado constitution, and may be
+collected, kept, and spent notwithstanding any other limits in subsection (20)(7)(d).
+(2) For purposes of administering the dedication of the excess revenue specified in subsection (1) of this
+section, there is hereby created in the general fund the Colorado Future’s account, which shall consist of
+an amount of moneys equal to the amount of the excess revenue specified in subsection (1) of this section.
+The moneys in the account shall be appropriated or transferred by the general assembly for the following
+programs and purposes and must supplement and not supplant current levels of appropriations thereto:
+(a) K-12 Public school education, including:
+(I) Improving kindergarten through 12th grade;
+(II) Increasing access to career and technical education programs;
+(III) Increasing teacher pay;
+(b) Health care, including:
+(I) Programs to help families afford health care;
+(II) Replacing medicaid funding lost due to recent federal legislation, and paying for implementation of new
+federal requirements;
+(III) Increasing funding for primary care, behavioral health and rural health care;
+(IV) Supporting health care, long-term care, and other supports for older adults and people with disabilities;
+(V) Programs that increase access to nutritious food; and
+(c) Early child care and education, including:
+(I) Programs to help families afford child care;
+(II) Increasing pay and support for the child care workforce;
+(III) Improving access to high-quality early childhood education programs;
+(3)(a) For each fiscal year commencing on or after January 1, 2026, that the state receives excess revenue as
+defined in subsection (1) of this section, the director of research of the nonpartisan staff of the legislative
+council shall prepare a report, to be transmitted to the general assembly and made publicly available and
+easily accessible on or via a link from the general assembly’s website, specifying the uses to which such revenue
+has been appropriated or transferred and to ensure that such revenue is appropriated, transferred, and spent,
+as directed by the people of Colorado, in accordance with this section. the office of the state auditor shall
+annually audit the report, which must at a minimum contain the following information:
+(I)the amount of such excess revenue; and
+(II)a specification and description of the amounts, programs and purposes to which such revenue has been
+allocated and appropriated or transferred.
+(b) the report shall include a plain language summary and, where possible, easily understandable
+visualizations of this information, and shall be made reasonably available in other formats when requested.
+                                                                                                              83
+             Text & Titles

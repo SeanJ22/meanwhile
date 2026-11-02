@@ -1,0 +1,143 @@
+Amendment 81: Law Enforcement
+
+      81                        Communication with Federal
+                                Immigration Authorities
+                                Placed on the ballot by citizen initiative • Passes with 55 percent of the vote
+
+
+
+
+Amendment 81 proposes amending the Colorado Constitution to:
+y   require state and local law enforcement to make a reasonable effort to determine whether an
+    individual charged with a crime is lawfully present, if the charge is a crime of violence or the
+    individual has a prior felony conviction; and
+
+y   notify federal immigration authorities within 72 hours of filing charges if law enforcement cannot
+    determine that the charged individual is lawfully present in the United States.
+
+What Your Vote Means
+
+
+YES           A “yes” vote on Amendment 81
+              requires law enforcement to notify
+federal immigration authorities after filing certain
+                                                            NO           A “no” vote on Amendment 81
+                                                                         maintains current law, which allows
+                                                             cooperation with federal immigration authorities
+criminal charges against individuals who are not             in some criminal matters, but limits state and local
+confirmed to be lawfully present.                            law enforcement involvement in civil immigration
+                                                             enforcement.
+
+Summary and Analysis of Amendment 81
+
+What does the measure do?
+Amendment 81 requires certified peace officers employed by a law enforcement agency, correctional
+officers, and district attorney personnel to notify the federal Department of Homeland Security (DHS)
+within 72 hours of charging someone with a crime if the charge is a crime of violence or if the individual
+has a prior felony conviction. The notification requirement applies if the charged individual is not
+lawfully present in the United States, or if their lawful status cannot be determined.
+
+Which individuals are subject to notification?
+The measure applies to an individual charged with, but not yet convicted of, a crime of violence, which
+are crimes causing serious bodily harm or death to another person, or involving the use of a deadly
+weapon. This includes crimes such as murder, assault, arson, escape, extortion, kidnapping, aggravated
+robbery, and certain sexual offenses and human trafficking.
+
+
+                                                                                                                  15
+  81       Law Enforcement Communication with Federal Immigration Authorities
+
+
+
+The measure also applies to individuals with any prior felony conviction, regardless of when it occurred,
+who are charged with any type of crime—including traffic violations, petty offenses, misdemeanors, and
+felonies.
+
+In all cases, the measure applies once the individual is formally charged with a crime, not at the time of
+arrest, and before any legal process has determined whether they are guilty or innocent.
+
+What is current law related to communication with federal immigration authorities?
+Colorado law currently permits state and local law enforcement to cooperate in the enforcement of
+federal criminal law, but limits state and local participation in civil immigration enforcement. Among
+other restrictions, state and local government agencies and employees are prohibited from sharing
+certain nonpublic personal information with federal immigration authorities, unless directed by federal
+law, a court order, or a judicial warrant. Employees who violate these prohibitions may be subject to a
+fine of up to $50,000. However, neither federal nor state law require law enforcement agencies to notify
+federal immigration authorities when unlawfully present individuals are charged with crimes. State and
+local authorities do not currently track or publish data on how many unlawfully present individuals are
+charged with crimes of violence or are charged with any crime after a prior felony conviction.
+
+What authority do local governments have to engage with federal immigration
+authorities?
+Unless prohibited by state law, local governments have the authority to determine their level of
+cooperation and communication with federal immigration authorities. For example, the City and County
+of Denver expanded upon state law by prohibiting federal immigration authorities from accessing
+city-controlled property like courthouses. Conversely, El Paso County requires officers to notify federal
+immigration authorities if they suspect that an individual in their custody does not have legal status.
+
+Fiscal Impact of Amendment 81
+
+State Spending
+In state budget year 2026-27, state spending and workload will increase for agencies that employ
+law enforcement officers. Two departments require system updates: the Department of Revenue
+requires $50,000 to access federal databases and make programming changes, and the Department
+of Natural Resources requires $10,000 to update computer systems. The measure does not specify a
+funding source to pay for these costs and it is assumed that they will be paid from the General Fund.
+Workload may also increase in these departments, as well as the departments of Higher Education,
+Human Services, Judicial, Law, and Public Safety, to the extent they are required to determine a charged
+individual's immigration status and communicate with the federal government on affected cases;
+however, this work will be primarily conducted by local governments.
+
+
+
+
+                                                                                                          17
+  81       Law Enforcement Communication with Federal Immigration Authorities
+
+
+
+Local Government Spending
+Local law enforcement agencies, including police, district attorney offices, and Regional Transportation
+District officers, will have increased workload and potential spending. As with the state, the added
+workload involves determining a charged individual's immigration status and communicating with
+the federal government on affected cases. Because this determination happens after charges are filed,
+most of the workload will fall on district attorney offices. The amount of work will vary by jurisdiction
+depending on how many individuals are charged there. Spending, if incurred, will be on systems
+updates.
+
+
+
+
+18
+
+Amendment 81
+               Law Enforcement Communication with Federal Immigration Authorities
+The ballot title below is a summary drafted by the professional staff of the offices of the secretary of state, the
+attorney general, and the legal staff for the general assembly for ballot purposes only. The ballot title will not
+appear in the Colorado constitution. The text of the measure that will appear in the Colorado constitution below
+was drafted by the proponents of the initiative. The initiated measure is included on the ballot as a proposed
+change to current law because the proponents gathered the required amount of petition signatures.
+Ballot Title:
+Shall there be an amendment to the Colorado Constitution requiring law enforcement to notify the department
+of homeland security when a person is charged with either a violent crime or any crime if the person has a prior
+felony conviction if law enforcement cannot determine that the person is lawfully present in the United States?
+Text of Measure:
+Be it enacted by the People of the State of Colorado:
+SECTION 1. In the constitution of the state of Colorado, add section 17 to article XVIII as follows:
+Section 17. Notification requirements for felons and violent offenders unlawfully present in the United
+States
+(1) Definitions. As used in this section, unless the context otherwise requires, “Law enforcement” means:
+(a) A certified peace officer described in law, who is employed by a law enforcement agency;
+(b) A correctional officer; or
+(c) An attorney or investigator who is employed by a district attorney.
+(2) Requirement to notify upon charging. Notwithstanding any other provision of Colorado law, law
+enforcement shall notify the federal department of homeland security within seventy-two hours after
+charging the person with a crime if:
+(a) The person is not lawfully present in the United States or the status of the person’s lawful presence is
+unknown after a reasonable attempt to determine it has been made by law enforcement; and
+(b) Either:
+(I) The person is charged with a crime of violence as defined by Colorado statute; or
+(II) The person has been convicted of a prior felony.
+(3) Reasonable effort required. Law enforcement has a duty to make a reasonable effort to determine
+whether a person charged who would be the subject of a notification under this section is lawfully present
+in the United States.

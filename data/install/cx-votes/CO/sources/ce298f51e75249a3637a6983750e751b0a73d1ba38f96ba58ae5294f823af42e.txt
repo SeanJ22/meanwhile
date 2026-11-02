@@ -1,0 +1,150 @@
+84                        Amendment 84: Mail Ballot
+                                 Voter Identification
+                                 Placed on the ballot by citizen initiative • Passes with 55 percent of the vote
+
+
+
+
+Amendment 84 proposes amending the Colorado Constitution to:
+
+●    require voters to provide identification information, in addition to their signature, for their mail
+     ballots to be counted.
+
+What Your Vote Means
+
+
+YES            A “yes” vote on Amendment
+               84 requires voters to provide
+identification information with their mail ballot, in
+                                                             NO           A “no” vote on Amendment 84
+                                                                          continues the current signature-only
+                                                             verification system for mail ballots.
+addition to their signature.
+
+Summary and Analysis of Amendment 84
+
+What does this measure do?
+For federal and statewide elections, the measure requires voters to include the last four digits of
+a government-issued identification number when submitting their mail ballot. Acceptable forms
+of identification are a social security number, a Colorado driver’s license number, or a Colorado
+identification card number. Any form of Colorado identification provided must be compliant with the
+federal Real ID law. This new verification process created by the measure is in addition to the current
+signature verification process for mail ballots.
+
+If a voter’s identification information is missing or cannot be matched to the state voter registration
+database, the county election office must contact the voter to tell them how to correct the discrepancy.
+Consistent with the existing signature verification process, the ballot will not be counted unless the
+voter takes steps within eight days of election day to confirm their identify. Specifically, a voter may
+submit a copy of one of the forms of identification allowed under the measure. Alternately, a voter
+may provide a copy of a U.S. passport, a U.S. military identification card, or a tribal photo identification
+card. During this process, identification may be provided in-person or digitally. Voters with qualifying
+physical disabilities or elderly voters who are entitled under federal law to vote by mail may submit a
+broader range of acceptable forms of identification.
+
+
+
+
+24
+                                                                                   Analysis          84
+
+What is the role of mail ballots in Colorado elections?
+Every Colorado voter receives a mail ballot for federal and statewide elections. Coloradans can vote by
+returning their mail ballot at a drop box or through the mail, or they may vote in person at any voter
+service and polling center in their county. In 2024, 92 percent of all ballots cast in Colorado were mail
+ballots, most of which were returned to a drop box.
+
+How are mail ballots verified under current law?
+Colorado currently uses signature verification to determine that mail ballots come from eligible voters.
+When a voter returns a mail ballot, they must sign the envelope. Once the ballot is received by the
+county election office, the signature on the envelope is then compared to the voter’s signature on file
+from election and driver’s license records. If a signature discrepancy is found, the signature is then
+reviewed by two election judges of different political parties. If they both agree that the signature likely
+does not belong to the voter, the county election office must contact the voter to have them confirm
+their identity and that they submitted the ballot. If the voter does not confirm their identity within eight
+days after election day, the ballot is not counted.
+
+Does the measure affect the allowable forms of identification for in‑person voting?
+No. The measure does not change the forms of identification that may be presented when voting in
+person at a voter service and polling center. The allowable forms of identification for in-person voting
+are broader than those required for mail ballots under this measure, including documents that show a
+person’s name and address.
+
+Fiscal Impact of Amendment 84
+
+The measure will increase state and local spending by up to $2.7 million in the initial budget year
+2026-27, and $1.2 million annually in future years for voter outreach, printing, and election staff to verify
+voter information. These costs will be divided between state and local governments as discussed below.
+
+Local Government Spending
+The new verification process under the measure will increase county spending by up to $2.5 million in
+the 2026-27 budget year and up to $1.2 million in future years. About 45 percent of these county costs
+will be reimbursed by the state government. These costs are driven from several new requirements
+under the measure. First, election judges must review identification numbers provided by voters, which
+will increase staffing hours and overtime during elections. Second, county election offices must notify
+voters of any discrepancies involving their identification information, which will require sending a
+postcard or digital notification to voters and segregating ballots until valid identification is provided.
+Lastly, county election offices will also be required to update ballot materials and envelopes, modify
+various elections systems, and conduct voter outreach.
+
+State Spending
+The Department of State will have increased costs to inform voters of the changes to mail voting across
+the state and to reimburse counties. Specifically, the department will need to conduct an outreach and
+communication campaign at a cost of $100,000 in state budget year 2026-27 and $200,000 in state
+budget year 2027-28. The department will also have ongoing workload and costs for outreach and
+printed materials estimated at $20,000 for each presidential primary, statewide primary, and general
+election. As discussed above, the state will also have costs to reimburse counties for a portion of
+their costs under the measure. This reimbursement is estimated to be up to $1.1 million in during the
+2026-27 budget year, and up to $500,000 for in future years. Historically, these costs have been paid
+using fees and other revenue collected by the department, rather than from the state General Fund.
+
+State Revenue
+To cover the costs in the Department of State discussed above, business filing fees may need to be
+raised to cover all or some of the costs of this measure. The fees affected, the timing of any increase,
+and the actual amount of fee charges will be set administratively by the department based on its
+available fund balance and total program costs.
+
+
+
+
+26
+
+Amendment 84
+                                        Mail Ballot Voter Identification
+The ballot title below is a summary drafted by the professional staff of the offices of the secretary of state, the
+attorney general, and the legal staff for the general assembly for ballot purposes only. The ballot title will not
+appear in the Colorado constitution. The text of the measure that will appear in the Colorado constitution below
+was drafted by the proponents of the initiative. The initiated measure is included on the ballot as a proposed
+change to current law because the proponents gathered the required amount of petition signatures.
+Ballot Title:
+Shall there be an amendment to the Colorado Constitution requiring a voter to sign and include the last four
+digits of their social security number or their Colorado driver’s license or identification card number on the outside
+of their mail ballot for any federal or state election, and, in connection therewith, allowing the voter to correct
+missing or incorrect information, including with alternative forms of identification; and prohibiting a county clerk
+and recorder from counting the mail ballot unless the problem is fixed?
+Text of Measure:
+Be it enacted by the People of the State of Colorado:
+SECTION 1. In the constitution of the state of Colorado, add Section 13 to article VII as follows:
+Section 13. Voter Authentication
+(1) For any federal or statewide election, a voter is required to affix their signature and include either the
+last four digits of their social security number or Colorado real identification number or Colorado real
+identification driver’s license number, as codified in 49 U.S.C. sec. 30301 note or its successor section and
+sections 42-2-101, 42-2-301, and 42-2-402 or their successor sections, on the self-affirmation of a returned
+
+70
+                                                                                   Text & Titles
+
+
+mail ballot. A voter may alternatively include the last four digits of another form of Colorado identification
+that meets the requirements of the Federal Real ID Act of 2005 or successor legislation. if the voter fails
+to fill out all or part of the required affirmation, or if an election judge is unable to confirm that the
+information provided matches the voter’s information contained in the statewide voter registration database,
+the county clerk and recorder or other designated election official must send notice to the voter informing
+them of the process to correct the discrepancy. The county clerk and recorder shall not count the ballot
+until the discrepancy is corrected.
+(2) A discrepancy may be corrected by providing a copy of the voter’s identification in subsection (1) of this
+section, US passport, US Military Identification card, or tribal photo identification, in person or digitally, to
+the county clerk and recorder or other designated election official.
+(3) Notwithstanding subsection (2) of this section, a voter who is provided the right to vote otherwise than
+in person under section (b)(2)(B)(ii) of the federal “Voting Accessibility for the Elderly and Handicapped Act”,
+52 U.S.C. sec. 20102 et seq., may provide any form of identification deemed acceptable under section 1-1-104
+(19.5) or its successor to correct a discrepancy.

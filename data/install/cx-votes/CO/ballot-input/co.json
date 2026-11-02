@@ -1,0 +1,992 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-sos-2026-general-amendment-81",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 81 — Law Enforcement Reporting Requirements to Federal Authorities",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution requiring law enforcement to notify the department of homeland security when a person is charged with either a violent crime or any crime if the person has a prior felony conviction if law enforcement cannot determine that the person is lawfully present in the United States?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/95Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-82",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 82 — Right to Natural Gas",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution creating new law granting the right for consumers to purchase natural gas for cooking or heating in homes or businesses and for distributors and utilities to sell natural gas to consumers?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/177Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-83",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 83 — Constitutional Right to Hunt and Fish",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution creating a constitutional right to hunt, fish, and harvest fish and wildlife by traditional methods, including all species of fish and wildlife managed by the state except non-game species, endangered species, or any species that is illegal to hunt under federal law, and, in connection therewith, establishing hunting and fishing as the preferred means of managing fish and wildlife populations; and preserving the right of the state to regulate hunting, fishing, and wildlife management if necessary for sound scientific wildlife conservation and management, public safety, or to preserve the future of hunting and fishing opportunities for all species?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/302Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-84",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 84 — Mail Ballot Voter Identification",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution requiring a voter to sign and include the last four digits of their social security number or their Colorado driver’s license or identification card number on the outside of their mail ballot for any federal or state election, and, in connection therewith, allowing the voter to correct missing or incorrect information, including with alternative forms of identification; and prohibiting a county clerk and recorder from counting the mail ballot unless the problem is fixed?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/362Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-85",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 85 — Plain Language Ballot Questions",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution concerning ballot question language, and, in connection therewith, requiring all state and local ballot questions to be written in plain language and at no more than an 8th grade reading level and prohibiting a state statute from requiring language that conflicts with these requirements in ballot questions for citizen-initiated measures?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/234Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-86",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 86 — Congressional Redistricting",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution concerning congressional redistricting, and, in connection therewith, reenacting the current process for congressional redistricting in the Colorado Constitution and prohibiting modifications to a final map unless at least three public meetings are held, the modifications do not have the effect of dividing communities of interest or purposefully favoring one political party, and are approved by the congressional redistricting commission and the Colorado Supreme Court?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/256Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-amendment-87",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Amendment 87 — Graduated Income Tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "SHALL STATE TAXES BE INCREASED $2.7 BILLION ANNUALLY, IN ORDER TO INCREASE OR IMPROVE LEVELS OF PUBLIC SERVICES, INCLUDING K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION SERVICES, BY AN AMENDMENT TO THE COLORADO CONSTITUTION AND A CHANGE TO THE COLORADO REVISED STATUTES REPEALING EXISTING LAW AND CREATING NEW LAW TO REPLACE THE UNIFORM STATE INCOME TAX RATE WITH A GRADUATED INCOME TAX STRUCTURE, AND, IN CONNECTION THEREWITH, AMENDING THE TAXPAYER’S BILL OF RIGHTS TO ELIMINATE THE CONSTITUTIONAL REQUIREMENT FOR ALL TAXABLE NET INCOME TO BE TAXED AT ONE RATE WITH NO ADDED TAX ON INCOME; ESTABLISHING VARIOUS INCOME TAX RATES BASED ON THE AMOUNT OF TAXABLE INCOME EARNED BY INDIVIDUALS, ESTATES, TRUSTS, AND CORPORATIONS, WHILE MAINTAINING THE CURRENT 4.4% TAX ON INCOME FROM THE SALE OF A PRINCIPAL RESIDENCE, WHICH WILL RESULT IN THE ESTIMATED CHANGE IN INCOME TAXES OWED BY INDIVIDUALS AS IDENTIFIED IN THE FOLLOWING TABLE; AND AUTHORIZING THE STATE TO RETAIN AND SPEND ANY INCREASED REVENUE FROM THE NEW TAX STRUCTURE, AS A VOTER-APPROVED REVENUE CHANGE, TO SUPPLEMENT CURRENT LEVELS OF FUNDING FOR K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION PROGRAMS?\n\nInitiative 195 Change in Income Taxes Owed by Income Category\nIncome Categories\tCurrent Average Income Tax Owed\tProposed Average Income Tax Owed\tProposed Change in Average Income Tax Owed if Passed + or -\n$25,000 or less\t$59\t$50\t-$9\n$25,001 - $50,000\t$751\t$632\t-$119\n$50,001 - $100,000\t$1,877\t$1,666\t-$210\n$100,001 - $200,000\t$4,126\t$3,828\t-$298\n$200,001 - $500,000\t$9,344\t$9,019\t-$325\n$500,001 - $1,000,000\t$19,288\t$18,963\t-$325\n$1,000,001 - $2,000,000\t$29,432\t$34,196\t+$4,764\n$2,000,001 - $5,000,000\t$41,196\t$55,110\t+$13,914\nIncome categories use adjusted gross income reported to the federal Internal Revenue Service.",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/195Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-132",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Proposition 132 — Penalties for Fentanyl Crimes",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes concerning criminal penalties for fentanyl and certain synthetic opioids, and, in connection therewith, increasing the felony classifications of drug-related crimes for distribution, manufacturing, dispensing, sale, or possession of fentanyl and certain synthetic opioids; creating mandated treatment for certain drug felony violations based on possession amount; and changing sentencing provisions to narrow or eliminate exemptions for crimes related to fentanyl and certain synthetic opioids and drug-related deaths?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/85Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-133",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Proposition 133 — Penalties for Human Trafficking of a Minor",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes modifying existing law concerning human trafficking of a minor for sexual servitude, and, in connection therewith, creating new law expanding human trafficking of a minor for sexual servitude to include knowingly trading anything of monetary value to buy or sell sexual activity with a minor and increasing the penalty to be life in prison without parole or release?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/108Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-134",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Proposition 134 — Male and Female Participation in School Sports",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes creating new law restricting participation in all K-12 and collegiate school sports based on the participant’s sex as determined by certain aspects of their biological reproductive system, and, in connection therewith, requiring a school, institution of higher education, or athletic association to designate each school or intramural athletic team or sport as male, female, or coeducational; only allowing participants to compete on the team or sport of their designated sex or to compete on a coeducational team; creating an exception to allow a female to participate on a male-designated team or sport if there is no female team available; prohibiting a government entity, licensing or accrediting organization, or athletic association from entertaining a complaint, opening an investigation, or taking other adverse action against a school for maintaining separate teams or sports for females; and providing the commissioner of education with the authority to enforce the proposed initiative for K-12 school districts?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/109Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-135",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Proposition 135 — Prohibit Certain Surgeries on Minors",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes modifying existing law by prohibiting surgery on a minor for the purpose of altering the minor’s biological sex characteristics, and, in connection therewith, prohibiting any health-care professional or other person from knowingly performing, prescribing, administering, or providing any surgery to a minor for the purpose of altering the minor’s biological sex characteristics and prohibiting the use of state or federal funds, Medicaid reimbursement, or insurance coverage to pay for this type of surgery?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/110Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-136",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Proposition 136 — Income Tax Rate Cap",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes capping the state income tax rate at 4.4% of federal taxable income for individuals and corporations?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/232FinalCorrected.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-sos-2026-general-proposition-137",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co",
+          "title": "Proposition 137 — Designate Sporting Goods Sales Tax Revenue for Conservation",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes creating new law to increase water and land conservation funding without raising taxes, and, in connection therewith, through a voter-approved revenue change, allowing the state to keep and spend a portion of revenue from the state sales tax on sporting goods and equipment to conserve and protect Colorado’s water, land, and forests, prevent wildfires, support outdoor recreation training and activities, and reduce revenue spent on these conservation purposes if necessary to preserve funding for certain tax credits?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "measureTextUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/titleBoard/filings/2025-2026/308Final.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "co-denver-2026-referred-question-2h",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "title": "Referred Question 2H",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "co-denver-2026-referred-question-2i",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "title": "Referred Question 2I",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "co-denver-2026-referred-question-2j",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "title": "Referred Question 2J",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "co-denver-2026-referred-question-2k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "title": "Referred Question 2K",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "co-denver-2026-initiated-ordinance-311",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "title": "Initiated Ordinance 311",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "measureTextUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "co-el_paso-general-2026-ballot-issue-1a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:co/county:el_paso",
+          "title": "El Paso County Ballot Issue 1A",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "co-2026-general",
+          "provenance": {
+            "quote": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00"
+          },
+          "measureTextUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "co-sos-2026-general-amendment-81-question",
+          "contestId": "co-sos-2026-general-amendment-81",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution requiring law enforcement to notify the department of homeland security when a person is charged with either a violent crime or any crime if the person has a prior felony conviction if law enforcement cannot determine that the person is lawfully present in the United States?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be an amendment to the Colorado Constitution requiring law enforcement to notify the department of homeland security when a person is charged with either a violent crime or any crime if the person has a prior felony conviction if law enforcement cannot determine that the person is lawfully present in the United States?",
+          "officialNumber": "Amendment 81",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-amendment-82-question",
+          "contestId": "co-sos-2026-general-amendment-82",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution creating new law granting the right for consumers to purchase natural gas for cooking or heating in homes or businesses and for distributors and utilities to sell natural gas to consumers?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be an amendment to the Colorado Constitution creating new law granting the right for consumers to purchase natural gas for cooking or heating in homes or businesses and for distributors and utilities to sell natural gas to consumers?",
+          "officialNumber": "Amendment 82",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-amendment-83-question",
+          "contestId": "co-sos-2026-general-amendment-83",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution creating a constitutional right to hunt, fish, and harvest fish and wildlife by traditional methods, including all species of fish and wildlife managed by the state except non-game species, endangered species, or any species that is illegal to hunt under federal law, and, in connection therewith, establishing hunting and fishing as the preferred means of managing fish and wildlife populations; and preserving the right of the state to regulate hunting, fishing, and wildlife management if necessary for sound scientific wildlife conservation and management, public safety, or to preserve the future of hunting and fishing opportunities for all species?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be an amendment to the Colorado Constitution creating a constitutional right to hunt, fish, and harvest fish and wildlife by traditional methods, including all species of fish and wildlife managed by the state except non-game species, endangered species, or any species that is illegal to hunt under federal law, and, in connection therewith, establishing hunting and fishing as the preferred means of managing fish and wildlife populations; and preserving the right of the state to regulate hunting, fishing, and wildlife management if necessary for sound scientific wildlife conservation and management, public safety, or to preserve the future of hunting and fishing opportunities for all species?",
+          "officialNumber": "Amendment 83",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-amendment-84-question",
+          "contestId": "co-sos-2026-general-amendment-84",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution requiring a voter to sign and include the last four digits of their social security number or their Colorado driver’s license or identification card number on the outside of their mail ballot for any federal or state election, and, in connection therewith, allowing the voter to correct missing or incorrect information, including with alternative forms of identification; and prohibiting a county clerk and recorder from counting the mail ballot unless the problem is fixed?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be an amendment to the Colorado Constitution requiring a voter to sign and include the last four digits of their social security number or their Colorado driver’s license or identification card number on the outside of their mail ballot for any federal or state election, and, in connection therewith, allowing the voter to correct missing or incorrect information, including with alternative forms of identification; and prohibiting a county clerk and recorder from counting the mail ballot unless the problem is fixed?",
+          "officialNumber": "Amendment 84",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-amendment-85-question",
+          "contestId": "co-sos-2026-general-amendment-85",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution concerning ballot question language, and, in connection therewith, requiring all state and local ballot questions to be written in plain language and at no more than an 8th grade reading level and prohibiting a state statute from requiring language that conflicts with these requirements in ballot questions for citizen-initiated measures?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be an amendment to the Colorado Constitution concerning ballot question language, and, in connection therewith, requiring all state and local ballot questions to be written in plain language and at no more than an 8th grade reading level and prohibiting a state statute from requiring language that conflicts with these requirements in ballot questions for citizen-initiated measures?",
+          "officialNumber": "Amendment 85",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-amendment-86-question",
+          "contestId": "co-sos-2026-general-amendment-86",
+          "provenance": {
+            "quote": "Shall there be an amendment to the Colorado Constitution concerning congressional redistricting, and, in connection therewith, reenacting the current process for congressional redistricting in the Colorado Constitution and prohibiting modifications to a final map unless at least three public meetings are held, the modifications do not have the effect of dividing communities of interest or purposefully favoring one political party, and are approved by the congressional redistricting commission and the Colorado Supreme Court?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be an amendment to the Colorado Constitution concerning congressional redistricting, and, in connection therewith, reenacting the current process for congressional redistricting in the Colorado Constitution and prohibiting modifications to a final map unless at least three public meetings are held, the modifications do not have the effect of dividing communities of interest or purposefully favoring one political party, and are approved by the congressional redistricting commission and the Colorado Supreme Court?",
+          "officialNumber": "Amendment 86",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-amendment-87-question",
+          "contestId": "co-sos-2026-general-amendment-87",
+          "provenance": {
+            "quote": "SHALL STATE TAXES BE INCREASED $2.7 BILLION ANNUALLY, IN ORDER TO INCREASE OR IMPROVE LEVELS OF PUBLIC SERVICES, INCLUDING K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION SERVICES, BY AN AMENDMENT TO THE COLORADO CONSTITUTION AND A CHANGE TO THE COLORADO REVISED STATUTES REPEALING EXISTING LAW AND CREATING NEW LAW TO REPLACE THE UNIFORM STATE INCOME TAX RATE WITH A GRADUATED INCOME TAX STRUCTURE, AND, IN CONNECTION THEREWITH, AMENDING THE TAXPAYER’S BILL OF RIGHTS TO ELIMINATE THE CONSTITUTIONAL REQUIREMENT FOR ALL TAXABLE NET INCOME TO BE TAXED AT ONE RATE WITH NO ADDED TAX ON INCOME; ESTABLISHING VARIOUS INCOME TAX RATES BASED ON THE AMOUNT OF TAXABLE INCOME EARNED BY INDIVIDUALS, ESTATES, TRUSTS, AND CORPORATIONS, WHILE MAINTAINING THE CURRENT 4.4% TAX ON INCOME FROM THE SALE OF A PRINCIPAL RESIDENCE, WHICH WILL RESULT IN THE ESTIMATED CHANGE IN INCOME TAXES OWED BY INDIVIDUALS AS IDENTIFIED IN THE FOLLOWING TABLE; AND AUTHORIZING THE STATE TO RETAIN AND SPEND ANY INCREASED REVENUE FROM THE NEW TAX STRUCTURE, AS A VOTER-APPROVED REVENUE CHANGE, TO SUPPLEMENT CURRENT LEVELS OF FUNDING FOR K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION PROGRAMS?\n\nInitiative 195 Change in Income Taxes Owed by Income Category\nIncome Categories\tCurrent Average Income Tax Owed\tProposed Average Income Tax Owed\tProposed Change in Average Income Tax Owed if Passed + or -\n$25,000 or less\t$59\t$50\t-$9\n$25,001 - $50,000\t$751\t$632\t-$119\n$50,001 - $100,000\t$1,877\t$1,666\t-$210\n$100,001 - $200,000\t$4,126\t$3,828\t-$298\n$200,001 - $500,000\t$9,344\t$9,019\t-$325\n$500,001 - $1,000,000\t$19,288\t$18,963\t-$325\n$1,000,001 - $2,000,000\t$29,432\t$34,196\t+$4,764\n$2,000,001 - $5,000,000\t$41,196\t$55,110\t+$13,914\nIncome categories use adjusted gross income reported to the federal Internal Revenue Service.",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "SHALL STATE TAXES BE INCREASED $2.7 BILLION ANNUALLY, IN ORDER TO INCREASE OR IMPROVE LEVELS OF PUBLIC SERVICES, INCLUDING K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION SERVICES, BY AN AMENDMENT TO THE COLORADO CONSTITUTION AND A CHANGE TO THE COLORADO REVISED STATUTES REPEALING EXISTING LAW AND CREATING NEW LAW TO REPLACE THE UNIFORM STATE INCOME TAX RATE WITH A GRADUATED INCOME TAX STRUCTURE, AND, IN CONNECTION THEREWITH, AMENDING THE TAXPAYER’S BILL OF RIGHTS TO ELIMINATE THE CONSTITUTIONAL REQUIREMENT FOR ALL TAXABLE NET INCOME TO BE TAXED AT ONE RATE WITH NO ADDED TAX ON INCOME; ESTABLISHING VARIOUS INCOME TAX RATES BASED ON THE AMOUNT OF TAXABLE INCOME EARNED BY INDIVIDUALS, ESTATES, TRUSTS, AND CORPORATIONS, WHILE MAINTAINING THE CURRENT 4.4% TAX ON INCOME FROM THE SALE OF A PRINCIPAL RESIDENCE, WHICH WILL RESULT IN THE ESTIMATED CHANGE IN INCOME TAXES OWED BY INDIVIDUALS AS IDENTIFIED IN THE FOLLOWING TABLE; AND AUTHORIZING THE STATE TO RETAIN AND SPEND ANY INCREASED REVENUE FROM THE NEW TAX STRUCTURE, AS A VOTER-APPROVED REVENUE CHANGE, TO SUPPLEMENT CURRENT LEVELS OF FUNDING FOR K-12 PUBLIC SCHOOL EDUCATION, HEALTH CARE, AND EARLY CHILD CARE AND EDUCATION PROGRAMS?\n\nInitiative 195 Change in Income Taxes Owed by Income Category\nIncome Categories\tCurrent Average Income Tax Owed\tProposed Average Income Tax Owed\tProposed Change in Average Income Tax Owed if Passed + or -\n$25,000 or less\t$59\t$50\t-$9\n$25,001 - $50,000\t$751\t$632\t-$119\n$50,001 - $100,000\t$1,877\t$1,666\t-$210\n$100,001 - $200,000\t$4,126\t$3,828\t-$298\n$200,001 - $500,000\t$9,344\t$9,019\t-$325\n$500,001 - $1,000,000\t$19,288\t$18,963\t-$325\n$1,000,001 - $2,000,000\t$29,432\t$34,196\t+$4,764\n$2,000,001 - $5,000,000\t$41,196\t$55,110\t+$13,914\nIncome categories use adjusted gross income reported to the federal Internal Revenue Service.",
+          "officialNumber": "Amendment 87",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-proposition-132-question",
+          "contestId": "co-sos-2026-general-proposition-132",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes concerning criminal penalties for fentanyl and certain synthetic opioids, and, in connection therewith, increasing the felony classifications of drug-related crimes for distribution, manufacturing, dispensing, sale, or possession of fentanyl and certain synthetic opioids; creating mandated treatment for certain drug felony violations based on possession amount; and changing sentencing provisions to narrow or eliminate exemptions for crimes related to fentanyl and certain synthetic opioids and drug-related deaths?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be a change to the Colorado Revised Statutes concerning criminal penalties for fentanyl and certain synthetic opioids, and, in connection therewith, increasing the felony classifications of drug-related crimes for distribution, manufacturing, dispensing, sale, or possession of fentanyl and certain synthetic opioids; creating mandated treatment for certain drug felony violations based on possession amount; and changing sentencing provisions to narrow or eliminate exemptions for crimes related to fentanyl and certain synthetic opioids and drug-related deaths?",
+          "officialNumber": "Proposition 132",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-proposition-133-question",
+          "contestId": "co-sos-2026-general-proposition-133",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes modifying existing law concerning human trafficking of a minor for sexual servitude, and, in connection therewith, creating new law expanding human trafficking of a minor for sexual servitude to include knowingly trading anything of monetary value to buy or sell sexual activity with a minor and increasing the penalty to be life in prison without parole or release?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be a change to the Colorado Revised Statutes modifying existing law concerning human trafficking of a minor for sexual servitude, and, in connection therewith, creating new law expanding human trafficking of a minor for sexual servitude to include knowingly trading anything of monetary value to buy or sell sexual activity with a minor and increasing the penalty to be life in prison without parole or release?",
+          "officialNumber": "Proposition 133",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-proposition-134-question",
+          "contestId": "co-sos-2026-general-proposition-134",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes creating new law restricting participation in all K-12 and collegiate school sports based on the participant’s sex as determined by certain aspects of their biological reproductive system, and, in connection therewith, requiring a school, institution of higher education, or athletic association to designate each school or intramural athletic team or sport as male, female, or coeducational; only allowing participants to compete on the team or sport of their designated sex or to compete on a coeducational team; creating an exception to allow a female to participate on a male-designated team or sport if there is no female team available; prohibiting a government entity, licensing or accrediting organization, or athletic association from entertaining a complaint, opening an investigation, or taking other adverse action against a school for maintaining separate teams or sports for females; and providing the commissioner of education with the authority to enforce the proposed initiative for K-12 school districts?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be a change to the Colorado Revised Statutes creating new law restricting participation in all K-12 and collegiate school sports based on the participant’s sex as determined by certain aspects of their biological reproductive system, and, in connection therewith, requiring a school, institution of higher education, or athletic association to designate each school or intramural athletic team or sport as male, female, or coeducational; only allowing participants to compete on the team or sport of their designated sex or to compete on a coeducational team; creating an exception to allow a female to participate on a male-designated team or sport if there is no female team available; prohibiting a government entity, licensing or accrediting organization, or athletic association from entertaining a complaint, opening an investigation, or taking other adverse action against a school for maintaining separate teams or sports for females; and providing the commissioner of education with the authority to enforce the proposed initiative for K-12 school districts?",
+          "officialNumber": "Proposition 134",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-proposition-135-question",
+          "contestId": "co-sos-2026-general-proposition-135",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes modifying existing law by prohibiting surgery on a minor for the purpose of altering the minor’s biological sex characteristics, and, in connection therewith, prohibiting any health-care professional or other person from knowingly performing, prescribing, administering, or providing any surgery to a minor for the purpose of altering the minor’s biological sex characteristics and prohibiting the use of state or federal funds, Medicaid reimbursement, or insurance coverage to pay for this type of surgery?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be a change to the Colorado Revised Statutes modifying existing law by prohibiting surgery on a minor for the purpose of altering the minor’s biological sex characteristics, and, in connection therewith, prohibiting any health-care professional or other person from knowingly performing, prescribing, administering, or providing any surgery to a minor for the purpose of altering the minor’s biological sex characteristics and prohibiting the use of state or federal funds, Medicaid reimbursement, or insurance coverage to pay for this type of surgery?",
+          "officialNumber": "Proposition 135",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-proposition-136-question",
+          "contestId": "co-sos-2026-general-proposition-136",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes capping the state income tax rate at 4.4% of federal taxable income for individuals and corporations?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be a change to the Colorado Revised Statutes capping the state income tax rate at 4.4% of federal taxable income for individuals and corporations?",
+          "officialNumber": "Proposition 136",
+          "officialStatement": null
+        },
+        {
+          "id": "co-sos-2026-general-proposition-137-question",
+          "contestId": "co-sos-2026-general-proposition-137",
+          "provenance": {
+            "quote": "Shall there be a change to the Colorado Revised Statutes creating new law to increase water and land conservation funding without raising taxes, and, in connection therewith, through a voter-approved revenue change, allowing the state to keep and spend a portion of revenue from the state sales tax on sporting goods and equipment to conserve and protect Colorado’s water, land, and forests, prevent wildfires, support outdoor recreation training and activities, and reduce revenue spent on these conservation purposes if necessary to preserve funding for certain tax credits?",
+            "doorId": "fec-co-chief",
+            "sourceOrg": "Colorado Secretary of State",
+            "sourceUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+            "verifiedAt": "2026-10-14T05:01:00.508Z",
+            "collectedAt": "2026-10-14T05:01:00.508Z"
+          },
+          "questionText": "Shall there be a change to the Colorado Revised Statutes creating new law to increase water and land conservation funding without raising taxes, and, in connection therewith, through a voter-approved revenue change, allowing the state to keep and spend a portion of revenue from the state sales tax on sporting goods and equipment to conserve and protect Colorado’s water, land, and forests, prevent wildfires, support outdoor recreation training and activities, and reduce revenue spent on these conservation purposes if necessary to preserve funding for certain tax credits?",
+          "officialNumber": "Proposition 137",
+          "officialStatement": null
+        },
+        {
+          "id": "co-denver-2026-referred-question-2h#question",
+          "contestId": "co-denver-2026-referred-question-2h",
+          "provenance": {
+            "quote": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "questionText": "Shall the Charter of the City and County of Denver be amended to expressly clarify that the Auditor’s Office may continue to enforce wage laws, worker protection laws, and other workplace rights laws in accordance with ordinances passed by City Council?",
+          "officialNumber": "2H",
+          "officialStatement": null
+        },
+        {
+          "id": "co-denver-2026-referred-question-2i#question",
+          "contestId": "co-denver-2026-referred-question-2i",
+          "provenance": {
+            "quote": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "questionText": "Shall the Charter of the City and County of Denver be amended to adjust the City and County’s budget and appropriation process, and in connection therewith, allowing the City Council to adopt a two-year budget planning and adoption process and modernizing or repealing certain charter sections?",
+          "officialNumber": "2I",
+          "officialStatement": null
+        },
+        {
+          "id": "co-denver-2026-referred-question-2j#question",
+          "contestId": "co-denver-2026-referred-question-2j",
+          "provenance": {
+            "quote": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "questionText": "Shall the Charter of the City and County of Denver be amended to modernize the Civil Service Commission and Department of Safety by removing outdated language, giving City Council the ability to add duties via code, and providing for an extension of probation when required for medical, military, or other approved leave?",
+          "officialNumber": "2J",
+          "officialStatement": null
+        },
+        {
+          "id": "co-denver-2026-referred-question-2k#question",
+          "contestId": "co-denver-2026-referred-question-2k",
+          "provenance": {
+            "quote": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "questionText": "Shall the City and County of Denver approve the terms of a twenty-year franchise contract, starting January 1, 2027, with Public Service Company of Colorado (Xcel Energy) to continue its program for undergrounding overhead electrical lines, maintaining infrastructure safety, and partnering with the City for emergency management coordination, and to require that Xcel Energy continue to pay the City for reasonable use of public rights-of-way and other City property necessary to provide safe and reliable utility services for the benefit of the City, its residents, and its businesses?",
+          "officialNumber": "2K",
+          "officialStatement": null
+        },
+        {
+          "id": "co-denver-2026-initiated-ordinance-311#question",
+          "contestId": "co-denver-2026-initiated-ordinance-311",
+          "provenance": {
+            "quote": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?",
+            "sourceOrg": "Denver Elections Division",
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "verifiedAt": "2026-10-20T23:03:13.867465+00:00",
+            "collectedAt": "2026-10-20T23:03:13.867465+00:00"
+          },
+          "questionText": "Shall the voters of the City and County of Denver adopt an ordinance prohibiting the force-feeding of birds and, in connection therewith, prohibiting the sale of products derived from force-feeding birds, including foie gras?",
+          "officialNumber": "311",
+          "officialStatement": null
+        },
+        {
+          "id": "co-el_paso-general-2026-ballot-issue-1a#question",
+          "contestId": "co-el_paso-general-2026-ballot-issue-1a",
+          "provenance": {
+            "quote": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?",
+            "sourceOrg": "El Paso County Clerk and Recorder",
+            "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+            "verifiedAt": "2026-10-20T23:38:46.797378+00:00",
+            "collectedAt": "2026-10-20T23:38:46.797378+00:00"
+          },
+          "questionText": "WITHOUT RAISING ADDITIONAL TAXES, SHALL THE EXISTING 0.23% (TWENTY-THREE HUNDREDTHS OF ONE CENT) PUBLIC SAFETY SALES AND USE TAX BE EXTENDED TO JANUARY 1, 2037, WITH THE OFFICE OF THE SHERIFF REPORTING REVENUE AND EXPENDITURES ANNUALLY TO THE PUBLIC AT A BOARD OF COUNTY COMMISSIONERS HEARING, AND WITH ALL REVENUES GENERATED TO BE USED ONLY FOR THE FOLLOWING PURPOSES: 1. CONTINUING LAW ENFORCEMENT NEEDS HIRING, TRAINING AND EQUIPPING • PATROL DEPUTIES, INVESTIGATORS AND CIVILIAN SUPPORT STAFF CONDUCTING FIRE AND CRIMINAL • INVESTIGATIONS MAINTAINING AND REPAIRING • COMMUNICATIONS EQUIPMENT AND REPLACING IT AS IT BECOMES OBSOLETE OR WEARS OUT PURCHASING AMMUNITION, FUEL • AND OTHER OPERATIONAL SUPPLIES AND EQUIPMENT, INCLUDING REPLACEMENT OF VEHICLES AS THEY WEAR OUT 2. CRIMINAL JUSTICE NEEDS HIRING, EMPLOYING, TRAINING AND • EQUIPPING DETENTION DEPUTIES, CIVILIAN DETENTION SECURITY PERSONNEL AND SUPPORT STAFF TO ASSURE ADEQUATE STAFFING TO MAINTAIN INMATE AND PERSONNEL SAFETY IN THE COUNTY JAIL CONDUCTING CRIMINAL EXTRADITION • MAINTAINING AND REPAIRING VIDEO • SURVEILLANCE AND VIDEO VISITATION SYSTEMS AND REPLACING THEM AS THEY BECOME OBSOLETE PURCHASING OPERATIONAL • EQUIPMENT AND SUPPLIES ADDRESSING ADDITIONAL SECURITY, • SAFETY, OPERATIONS AND MAINTENANCE COSTS AT THE COUNTY JAIL 3. EMERGENCY RESPONSE NEEDS HIRING, EMPLOYING AND TRAINING • WILDLAND FIRE STAFF AND FUNDING EMERGENCY RESPONSE AND MITIGATION EFFORTS MAINTAINING THE EMERGENCY • VEHICLE RESPONSE CENTER PURCHASING FIRE AND EMERGENCY • SERVICES EQUIPMENT, MAINTAINING WILDLAND FIRE TRUCKS AND REPLACING WILDLAND FIRE TRUCKS AS THEY WEAR OUT WITH SUCH PUBLIC SAFETY SALES AND USE TAX BEING COLLECTED, ADMINISTERED AND ENFORCED PURSUANT TO EL PASO COUNTY BOARD OF COUNTY COMMISSIONERS RESOLUTION NOS. 12-309 AMENDED AND 26 - 249?",
+          "officialNumber": "1A",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-sos-2026-general-amendment-81",
+          "whatItDoes": "Requires state and local law enforcement to try to determine whether a person charged with a violent crime, or with any crime after a prior felony conviction, is lawfully in the United States. If lawful presence cannot be confirmed, law enforcement must notify federal immigration authorities within 72 hours of filing charges.",
+          "yesMeans": "Add these immigration-status checks and notification requirements to the Colorado Constitution.",
+          "noMeans": "Keep current law, which allows cooperation with federal immigration authorities in some criminal matters and limits state and local involvement in civil immigration enforcement.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-amendment-82",
+          "whatItDoes": "Adds a right to the Colorado Constitution for consumers to buy natural gas for cooking or heating and for utilities and distributors to sell natural gas for homes and businesses.",
+          "yesMeans": "Create a constitutional right to buy and sell natural gas for these uses.",
+          "noMeans": "Keep current laws and regulations governing the purchase and sale of natural gas.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-amendment-83",
+          "whatItDoes": "Creates a constitutional right to hunt and fish certain wildlife using traditional methods and makes hunting and fishing the preferred way to manage wildlife populations. Endangered species, species not normally hunted or fished, and species protected from hunting by federal law are excluded. Existing private-property trespass laws remain, and the state can regulate hunting and fishing for science, safety, and future opportunities.",
+          "yesMeans": "Add the qualified right to hunt and fish and the wildlife-management policy to the Colorado Constitution.",
+          "noMeans": "Keep hunting and fishing governed by existing state and federal laws without adding this constitutional right.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-amendment-84",
+          "whatItDoes": "Requires mail ballots in federal and statewide elections to include the last four digits of a Social Security number, Colorado driver’s license number or Colorado identification-card number, in addition to a signature. Colorado identification must meet federal Real ID requirements. County election offices must contact voters whose information is missing or does not match; voters have eight days after Election Day to confirm their identity, with broader identification options for qualifying elderly or disabled voters.",
+          "yesMeans": "Add identification-number verification to the current signature check for mail ballots.",
+          "noMeans": "Keep the current signature-based verification system for mail ballots.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-amendment-85",
+          "whatItDoes": "Requires ballot titles to use plain language at no more than an eighth-grade reading level. It also bars laws requiring specific wording in citizen-initiative titles when that wording interferes with the plain-language standard.",
+          "yesMeans": "Add the reading-level rule to the Colorado Constitution and limit conflicting wording requirements for citizen initiatives.",
+          "noMeans": "Keep current plain-language requirements, which do not set a specific reading-grade standard.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-amendment-86",
+          "whatItDoes": "Requires congressional district changes between the regular ten-year redraws to be approved by Colorado’s independent congressional redistricting commission and adopted by the Colorado Supreme Court. The commission must first hold at least three public hearings. The new maps cannot intentionally favor a political party or unnecessarily split communities with shared interests.",
+          "yesMeans": "Apply these commission, court-review, public-hearing and map-drawing requirements to off-cycle congressional redistricting.",
+          "noMeans": "Keep the existing constitutional redistricting rules without adding a specific process for off-cycle congressional changes.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-amendment-87",
+          "whatItDoes": "Starting in 2027, replaces Colorado’s flat income tax with six brackets for individuals and businesses. Each rate applies only to taxable income in that bracket: 3.7% on the first $25,000; 4.2% from $25,001 to $100,000; 4.4% from $100,001 to $500,000; 7.4% from $500,001 to $750,000; 7.9% from $750,001 to $1 million; and 8.4% above $1 million. The brackets do not adjust for inflation. Additional revenue must add to, rather than replace, spending on K–12 education, health care, and early childhood care and education. It is exempt from the state revenue limit and tracked in an audited annual report.",
+          "yesMeans": "Adopt the graduated income tax and the requirements for spending and reporting its additional revenue.",
+          "noMeans": "Keep the constitutional requirement for a flat state income tax rate.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-proposition-132",
+          "whatItDoes": "Makes unlawful possession of any amount of fentanyl or related synthetic opioids a felony and requires 8 to 32 years in prison for illegal distribution of any amount. Courts must order drug treatment for possession of less than one gram of a substance containing fentanyl; successful completion can reduce the charge to a misdemeanor. The measure removes other reduced-penalty options for certain possession and distribution cases.",
+          "yesMeans": "Adopt the higher fentanyl penalties and sentencing restrictions, while retaining the treatment-based reduction for possession of less than one gram.",
+          "noMeans": "Keep current quantity-based fentanyl penalties, including misdemeanor penalties in qualifying small-possession cases and existing reduced-penalty options.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-proposition-133",
+          "whatItDoes": "Requires life in prison without parole for child sex-trafficking convictions and expands the crime to include buying sexual activity with a minor.",
+          "yesMeans": "Adopt the expanded crime and mandatory life-without-parole sentence.",
+          "noMeans": "Keep current child sex-trafficking law and its sentencing range of 8 to 48 years in prison plus a mandatory parole period.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-proposition-134",
+          "whatItDoes": "Requires school-based sports from elementary school through college to be designated male-only, female-only, or mixed, with participation based on biological sex as defined by the measure. Female students may join a male team when no equivalent female team is offered, and mixed teams remain open to all. Schools must adopt eligibility policies, and the measure bars investigations or penalties for designating a team as female-only.",
+          "yesMeans": "Adopt the team-designation, eligibility-policy and related enforcement rules for school-based sports.",
+          "noMeans": "Let schools, school districts and athletic associations continue setting eligibility policies under current state and federal law.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-proposition-135",
+          "whatItDoes": "Prohibits surgery on anyone under 18 when it changes biological sex characteristics in response to that person’s perception of sex or gender. It also bars state or federal funding and private insurance coverage for prohibited surgeries. Exceptions allow male circumcision and treatment of medically verifiable disorders of sex development or acquired physical or chemical abnormalities; non-surgical gender-related treatment is not restricted.",
+          "yesMeans": "Adopt the surgical prohibition and payment restrictions, with the stated exceptions.",
+          "noMeans": "Keep current Colorado law protecting access to these surgeries and allowing public and private health coverage to pay for them.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-proposition-136",
+          "whatItDoes": "Beginning January 1, 2027, sets the current 4.4% state income tax rate as the highest rate allowed in state law for individual and corporate taxpayers.",
+          "yesMeans": "Add a 4.4% statutory income-tax rate limit.",
+          "noMeans": "Keep the current 4.4% rate without adding this new statutory limit.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-sos-2026-general-proposition-137",
+          "whatItDoes": "Directs part of existing sales-tax revenue from sporting-goods purchases and rentals to conservation, wildfire-risk reduction, watershed and outdoor-recreation programs. It does not raise the tax rate. The money is exempt from the state revenue limit, reducing refunds when revenue is above that limit; the transfer can be reduced to protect two tax credits for low- and moderate-income households.",
+          "yesMeans": "Dedicate this existing sales-tax revenue to the listed programs and let the state retain it outside its revenue limit.",
+          "noMeans": "Keep that revenue in the state’s general budget and subject to the revenue limit, including refunds when required.",
+          "parts": [],
+          "sourceUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+          "sourceHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2h",
+          "whatItDoes": "Clarifies in Denver’s charter that the Auditor’s Office can continue enforcing wage, worker-protection and other workplace-rights laws adopted by City Council.",
+          "yesMeans": "Add that express clarification to the city charter.",
+          "noMeans": "Leave the city charter unchanged on this question.",
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2i",
+          "whatItDoes": "Changes Denver’s charter rules for budgeting and authorizing spending. It allows City Council to adopt a two-year budget-planning and approval process and updates or repeals certain charter provisions.",
+          "yesMeans": "Approve these changes to the city’s budget process and charter.",
+          "noMeans": "Keep the current charter provisions for the budget process.",
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2j",
+          "whatItDoes": "Updates Denver’s charter provisions for the Civil Service Commission and Department of Safety. It removes outdated wording, lets City Council add duties through city law, and allows probationary periods to be extended for medical, military or other approved leave.",
+          "yesMeans": "Approve these charter changes to duties, wording and probationary periods.",
+          "noMeans": "Keep the current charter provisions for the commission and department.",
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-denver-2026-referred-question-2k",
+          "whatItDoes": "Approves a 20-year utility franchise agreement with Xcel Energy starting January 1, 2027. It continues undergrounding overhead electrical lines, infrastructure-safety work and emergency coordination, and requires Xcel to keep paying Denver for use of public streets and other city property.",
+          "yesMeans": "Approve the proposed 20-year franchise agreement.",
+          "noMeans": "Reject this proposed franchise agreement.",
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-denver-2026-initiated-ordinance-311",
+          "whatItDoes": "Bans force-feeding birds in Denver and selling products made from force-fed birds, including foie gras.",
+          "yesMeans": "Adopt the bans on force-feeding birds and selling products made from them.",
+          "noMeans": "Leave current city law unchanged.",
+          "parts": [],
+          "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+          "sourceHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-el_paso-general-2026-ballot-issue-1a",
+          "whatItDoes": "Extends El Paso County’s existing 0.23% public-safety sales and use tax to January 1, 2037. The revenue remains restricted to listed law-enforcement, jail, and emergency-response needs, with annual public revenue and spending reports at a county commissioners’ hearing.",
+          "yesMeans": "Extend the existing tax to January 1, 2037, with the listed spending limits and reporting requirements.",
+          "noMeans": "Reject the proposed extension of the existing tax to January 1, 2037.",
+          "parts": [],
+          "sourceUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+          "sourceHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:17.218Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:30:54.406Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "bf9c303010eb6b2544bc7f3d96e7a1f419d033143c69019eb8c6c2a8f9b3d1b2",
+        "finalUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+        "publisher": "Colorado Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:01:00.114Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+        "reviewedEvidence": "Official election-office navigation from fec-co-chief; certified 2026 candidate list, certified statewide ballot questions, or linked official measure text, converted by convert.py."
+      },
+      {
+        "rawHash": "4d95b4dc628d399e2f2c7f452d7934faa0fbd55979300fd5fab5356ff58eb908",
+        "finalUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+        "publisher": "Colorado Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:01:00.508Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Initiatives/ballot/contacts/2026.html",
+        "reviewedEvidence": "Official election-office navigation from fec-co-chief; certified 2026 candidate list, certified statewide ballot questions, or linked official measure text, converted by convert.py."
+      },
+      {
+        "rawHash": "aa4a36f29654ea925a207fbd566e7fca22571047184976a4d403fc9c12bb7cae",
+        "finalUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+        "publisher": "Colorado Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:53:06.911820+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved full source document in co-general-candidates.html; code extracted the exact published office, name, party or ballot text."
+      },
+      {
+        "rawHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "publisher": "Denver Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:03:13.867465+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved full source document in denver-sample-ballot.txt; code extracted the exact published office, name, party or ballot text."
+      },
+      {
+        "rawHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+        "finalUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "publisher": "El Paso County Clerk and Recorder",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:38:46.797378+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 master sample linked by clerkandrecorder.elpasoco.com/elections/election-information/. Colorado SOS .gov CountyElectionOffices directory explicitly links that official clerk site. Custom PDF font recovered by codepoint+29; five county office cells,every local retention question,and county1A were visually checked against saved rendered PDF excerpts. Commissioner districts and municipalities are not widened to the county. Surveyor has no candidate and is held separately."
+      },
+      {
+        "requestedUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+        "finalUrl": "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf",
+        "publisher": "content.leg.colorado.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:08:45.952Z",
+        "httpStatus": 200,
+        "rawHash": "137ba55ce1c6880e871d67a077312072686e6aec9a475c387e482d9700164248",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "publisher": "www.denvergov.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.477Z",
+        "httpStatus": 200,
+        "rawHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "finalUrl": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf",
+        "publisher": "epc-assets.elpasoco.com",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.101Z",
+        "httpStatus": 200,
+        "rawHash": "baa62eb322582917df797442e27f5e00dda1561a0d49b2520ea914101c02dd19",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

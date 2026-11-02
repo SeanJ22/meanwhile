@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_BALLOT_COMPLETENESS_DATA",
+  "state": "NH",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NH",
+  "inputDirectory": "ballot-input",
+  "sourceCaptures": "sources.json",
+  "sourceSupport": "source-support.json",
+  "districtIdentities": "district-identities.json",
+  "statewideCoverage": "statewide-coverage.json",
+  "coverage": {
+    "newLegislativeContests": 169,
+    "newCandidacies": 618,
+    "newDistrictMemberships": 70,
+    "combinedSenateDistricts": 24,
+    "combinedHouseDistricts": 203,
+    "combinedHouseSeats": 400,
+    "combinedDistinctCandidates": 758,
+    "printedPartyRows": 762,
+    "fusionCandidates": 4,
+    "scope": "All24Senate and203House districts after retaining the41previouslyheld legislative contests and installing the9Dover+8Portsmouth additions first. This packet adds only the169missingdistricts and70missing whole-base memberships.",
+    "statewideLegislativeCompleteAfterPrerequisites": true,
+    "allBallotOfficesComplete": false
+  },
+  "prerequisites": [
+    "../ballot-completeness/ballot-input",
+    "../portsmouth-ballot-completeness/ballot-input"
+  ],
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "NH",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "installNotes": [
+    "Use the existing ballot-contests data publication flow; preserve unrelated facts and all58prior municipal legislative records.",
+    "Retain the newer current Goffstownballot spelling HenryR.GiassonIII; the older Sept17statewidePDF prints HenryR.Giasson.",
+    "The existing districtMemberships reader expands the source-backed floterials from exact base districts.31new overlay IDs are clearly labeled project aliases, not Census codes.",
+    "Four multiple-party nominations have one candidate entry with combined source-party labels. CLA and UND stay literal sourcecodes where applicable.",
+    "The complete source-text hash is not the originalPDFhash. Direct originHTTPstatus remains unknown for the successful public-reader capture; separate nativegovernment fetch returned403.",
+    "River installs thedata and checks affected liveballots andsource links; no live success claimed by this packet."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json"
+}

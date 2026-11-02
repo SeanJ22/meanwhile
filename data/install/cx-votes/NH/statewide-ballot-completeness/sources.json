@@ -1,0 +1,50 @@
+[
+  {
+    "url": "https://mm.nh.gov/files/uploads/sos/docs/2026-ge-candidate-list.pdf",
+    "file": "sources/4e2b5e5030c812602e46224888334afe1fb6aa25f56298cbdeaf743ce178e1c1.source",
+    "sha256": "4e2b5e5030c812602e46224888334afe1fb6aa25f56298cbdeaf743ce178e1c1",
+    "byteLength": 72070,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Exact complete saved public-reader response text, not original government PDF or HTML bytes.",
+    "retrievedAt": "2026-11-02T22:30:21.904362+00:00",
+    "httpStatus": 200,
+    "originHttpStatus": null,
+    "nativeGovernmentFetchHttpStatus": 403,
+    "readerUrl": "https://r.jina.ai/https://mm.nh.gov/files/uploads/sos/docs/2026-ge-candidate-list.pdf",
+    "contentType": "text/plain; charset=utf-8"
+  },
+  {
+    "url": "https://www.sos.nh.gov/2026-election-details",
+    "file": "sources/1fbc57a2eb24b46a93ed64d5bfbeacbb4e037eef0bef029f728116594bfa52c6.source",
+    "sha256": "1fbc57a2eb24b46a93ed64d5bfbeacbb4e037eef0bef029f728116594bfa52c6",
+    "byteLength": 15065,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Exact complete saved public-reader response text, not original government PDF or HTML bytes.",
+    "retrievedAt": "2026-11-02T22:32:55.652933+00:00",
+    "httpStatus": 200,
+    "originHttpStatus": null,
+    "nativeGovernmentFetchHttpStatus": 403,
+    "readerUrl": "https://r.jina.ai/https://www.sos.nh.gov/2026-election-details",
+    "contentType": "text/plain; charset=utf-8"
+  },
+  {
+    "url": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "file": "sources/418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26.source",
+    "sha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "byteLength": 47334,
+    "rawFormat": "GOVERNMENT_HTML_BYTES",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:16:21.331835+00:00"
+  },
+  {
+    "url": "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip",
+    "file": "sources/57dd011dec91efc9a0b4e5782d41425e0c0e516702f986a2adefa0179360a851.source",
+    "sha256": "57dd011dec91efc9a0b4e5782d41425e0c0e516702f986a2adefa0179360a851",
+    "byteLength": 953894,
+    "rawFormat": "GOVERNMENT_ZIP_BYTES",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:39:57.168981+00:00",
+    "retrievedAtBasis": "Filesystem modification time when curl completed the fresh official download.",
+    "supports": "Fresh official Census TIGER2026 DBF exact district names and numeric codes; original source ZIP retained unchanged."
+  }
+]

@@ -1,0 +1,2833 @@
+{
+  "sourceSummary": {
+    "senateContests": 24,
+    "senateRows": 47,
+    "houseContests": 203,
+    "houseRows": 715,
+    "houseDistrictCounts": {
+      "Belknap": 8,
+      "Carroll": 8,
+      "Cheshire": 18,
+      "Coos": 7,
+      "Grafton": 18,
+      "Hillsborough": 45,
+      "Merrimack": 30,
+      "Rockingham": 40,
+      "Strafford": 21,
+      "Sullivan": 8
+    },
+    "uniqueCandidatePartyRows": 762
+  },
+  "distinctPrintedCandidates": 758,
+  "legislativeDistricts": [
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:1",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:2",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:3",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:4",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-4"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:5",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-5"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:6",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:7",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "ballot-nh-merrimack:state-senate-7"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:8",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:9",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:10",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:11",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:12",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:13",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:14",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:15",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-15"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:16",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-16"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:17",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:18",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-18"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 19,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:19",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 20,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:20",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-20"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 21,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:21",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-senator-district-21"
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 22,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:22",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 23,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:23",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "SENATE",
+      "county": null,
+      "district": 24,
+      "ocdId": "ocd-division/country:us/state:nh/sldu:24",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:1",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:2",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:3",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:4",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:5",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:6",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:7",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Belknap",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:belknap_8",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:101",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:102",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:103",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:104",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:105",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:106",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:carroll_7",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Carroll",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:carroll_8",
+      "voteFor": 2,
+      "printedPartyRows": 5,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:201",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:202",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:203",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:204",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:205",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:206",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:207",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:208",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:209",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:210",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:211",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:212",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:213",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:214",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:cheshire_15",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:cheshire_16",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:cheshire_17",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Cheshire",
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:cheshire_18",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:301",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:302",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:303",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:304",
+      "voteFor": 1,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:305",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:306",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Coos",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:coos_7",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:401",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:402",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:403",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:404",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:405",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:406",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:407",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:408",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:409",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:410",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:411",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:412",
+      "voteFor": 4,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:413",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-grafton-county-district-13"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:414",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-grafton-county-district-14"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:415",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-grafton-county-district-15"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:416",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:grafton_17",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-grafton-county-district-17"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Grafton",
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:grafton_18",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:501",
+      "voteFor": 4,
+      "printedPartyRows": 7,
+      "distinctCandidates": 7,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:502",
+      "voteFor": 7,
+      "printedPartyRows": 14,
+      "distinctCandidates": 14,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:503",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:504",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:505",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:506",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:507",
+      "voteFor": 3,
+      "printedPartyRows": 5,
+      "distinctCandidates": 5,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:508",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:509",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:510",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:511",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:512",
+      "voteFor": 8,
+      "printedPartyRows": 17,
+      "distinctCandidates": 17,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:513",
+      "voteFor": 6,
+      "printedPartyRows": 12,
+      "distinctCandidates": 12,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:514",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:515",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-15"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:516",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-16"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:517",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-17"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:518",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-18"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 19,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:519",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-19"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 20,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:520",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-20"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 21,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:521",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-21"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 22,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:522",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-22"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 23,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:523",
+      "voteFor": 2,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-23"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 24,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:524",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-24"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 25,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:525",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-25"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 26,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:526",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-26"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 27,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:527",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 28,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:528",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 29,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:529",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-29"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 30,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:530",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 31,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:531",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 32,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:532",
+      "voteFor": 3,
+      "printedPartyRows": 5,
+      "distinctCandidates": 5,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 33,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:533",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 34,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:534",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 35,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:535",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 36,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:536",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 37,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_37",
+      "voteFor": 1,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 38,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_38",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 39,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_39",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-39"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 40,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_40",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-40"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 41,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_41",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-41"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 42,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:542",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 43,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:543",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 44,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_44",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-hillsborough-county-district-44"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Hillsborough",
+      "district": 45,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_45",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:601",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:602",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:603",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:604",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:605",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:606",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:607",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "ballot-nh-merrimack:state-house-merrimack-7"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:608",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:609",
+      "voteFor": 4,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:610",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:611",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:612",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:613",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:614",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:615",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-15"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:616",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-16"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:617",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-17"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:618",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-18"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 19,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:619",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-19"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 20,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:620",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-20"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 21,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:621",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-21"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 22,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:622",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-22"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 23,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:623",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-23"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 24,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:624",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-24"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 25,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_25",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 26,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_26",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 27,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_27",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 28,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_28",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-28"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 29,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_29",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-29"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Merrimack",
+      "district": 30,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_30",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-merrimack-county-district-30"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:701",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:702",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:703",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:704",
+      "voteFor": 3,
+      "printedPartyRows": 5,
+      "distinctCandidates": 5,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:705",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:706",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:707",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:708",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:709",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:710",
+      "voteFor": 3,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:711",
+      "voteFor": 4,
+      "printedPartyRows": 5,
+      "distinctCandidates": 5,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:712",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:713",
+      "voteFor": 10,
+      "printedPartyRows": 20,
+      "distinctCandidates": 20,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:714",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:715",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:716",
+      "voteFor": 7,
+      "printedPartyRows": 14,
+      "distinctCandidates": 14,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:717",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:718",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 19,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:719",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 20,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:720",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 21,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:721",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-21"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 22,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:722",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-22"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 23,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:723",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 24,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:724",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 25,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:725",
+      "voteFor": 9,
+      "printedPartyRows": 12,
+      "distinctCandidates": 12,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 26,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:726",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-26"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 27,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:727",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-27"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 28,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:728",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-28"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 29,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:729",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 30,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:730",
+      "voteFor": 2,
+      "printedPartyRows": 3,
+      "distinctCandidates": 3,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 31,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_31",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 32,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_32",
+      "voteFor": 1,
+      "printedPartyRows": 3,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 33,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_33",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 34,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_34",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 35,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_35",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 36,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_36",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 37,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-37"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 38,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_38",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 39,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-rockingham-county-district-39"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Rockingham",
+      "district": 40,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_40",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:801",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:802",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:803",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:804",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:805",
+      "voteFor": 1,
+      "printedPartyRows": 3,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:806",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:807",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:808",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 9,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:809",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 10,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:810",
+      "voteFor": 4,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 11,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:811",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-11"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 12,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:812",
+      "voteFor": 4,
+      "printedPartyRows": 8,
+      "distinctCandidates": 8,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 13,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:813",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-13"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 14,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:814",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-14"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 15,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:815",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-15"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 16,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:816",
+      "voteFor": 1,
+      "printedPartyRows": 1,
+      "distinctCandidates": 1,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-16"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 17,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:817",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-17"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 18,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_18",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 19,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_19",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 20,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-20"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Strafford",
+      "district": 21,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "voteFor": 3,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "PRESERVE_HELD_CURRENT_OFFICIAL_BALLOT",
+      "existingContestId": "nh-2026-general:state-representative-strafford-county-district-21"
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 1,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:901",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 2,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:902",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 3,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:903",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 4,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:904",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 5,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:905",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 6,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:906",
+      "voteFor": 3,
+      "printedPartyRows": 6,
+      "distinctCandidates": 6,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 7,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:sullivan_7",
+      "voteFor": 1,
+      "printedPartyRows": 2,
+      "distinctCandidates": 2,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    },
+    {
+      "office": "HOUSE",
+      "county": "Sullivan",
+      "district": 8,
+      "ocdId": "ocd-division/country:us/state:nh/sldl:sullivan_8",
+      "voteFor": 2,
+      "printedPartyRows": 4,
+      "distinctCandidates": 4,
+      "status": "ADDED_FROM_COMPLETE_STATEWIDE_OFFICIAL_LIST",
+      "existingContestId": null
+    }
+  ],
+  "preservedExistingDistricts": [
+    {
+      "contestId": "ballot-nh-merrimack:state-senate-7",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:7",
+      "sourceUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "ballot-nh-merrimack:state-house-merrimack-7",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:607",
+      "sourceUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-16",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:16",
+      "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-29",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:529",
+      "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-44",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_44",
+      "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-21",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:521",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%201%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-17",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:517",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%202%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-23",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:523",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%203%20Sample%20Ballot.pdf?ver=2026-09-28-153540-490"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-24",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:524",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%204%20Sample%20Ballot.pdf?ver=2026-09-28-153540-490"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-25",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:525",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%205%20Sample%20Ballot.pdf?ver=2026-09-28-153540-597"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-16",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:516",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%206%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-26",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:526",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%207%20Sample%20Ballot.pdf?ver=2026-09-28-153540-537"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-15",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:515",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%208%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-20",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:520",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%209%20Sample%20Ballot.pdf?ver=2026-09-28-153540-643"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-19",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:519",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2010%20Sample%20Ballot.pdf?ver=2026-09-28-153540-630"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-22",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:522",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2011%20Sample%20Ballot.pdf?ver=2026-09-28-153540-630"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-18",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:518",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2012%20Sample%20Ballot.pdf?ver=2026-09-28-153540-643"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-40",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_40",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%201%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-41",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_41",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%202%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-hillsborough-county-district-39",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:hillsborough_39",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%206%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-18",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:18",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%205%20Sample%20Ballot.pdf?ver=2026-09-28-153540-597"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-20",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:20",
+      "sourceUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%202%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-15",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:615",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-16",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:616",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-17",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:617",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-18",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:618",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-19",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:619",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-20",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:620",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-21",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:621",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-22",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:622",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-23",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:623",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-24",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:624",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-28",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_28",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-29",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_29",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-merrimack-county-district-30",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:merrimack_30",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-15",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:15",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-5",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:5",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId="
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-grafton-county-district-13",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:413",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId="
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-grafton-county-district-17",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:grafton_17",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId="
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-grafton-county-district-14",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:414",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId="
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-grafton-county-district-15",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:415",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId="
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-14",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:814",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-15",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:815",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-16",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:816",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-11",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:811",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-17",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:817",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-13",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:813",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-20",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-strafford-county-district-21",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-4",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:4",
+      "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-21",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:721",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-28",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:728",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-26",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:726",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-27",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:727",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-22",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:722",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-37",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-representative-rockingham-county-district-39",
+      "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    },
+    {
+      "contestId": "nh-2026-general:state-senator-district-21",
+      "ocdId": "ocd-division/country:us/state:nh/sldu:21",
+      "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"
+    }
+  ],
+  "comparisonWithHeldMunicipalSources": {
+    "differences": [
+      {
+        "input": "2026-general",
+        "title": "State Representative, Hillsborough County District 29",
+        "oldOnlyOrPartyDifferent": {
+          "henryrgiassoniii": [
+            "Republican"
+          ]
+        },
+        "statewideOnly": {
+          "henryrgiasson": [
+            "Republican"
+          ]
+        }
+      }
+    ],
+    "municipalDocumentsCompared": 3
+  },
+  "sourceCaptureCaveat": "Complete extractiontext capture through public reader; native government request403. No originalPDFbyte hash claimed."
+}

@@ -18,9 +18,34 @@
       "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614"
     },
     {
+      "id": "ma-2026-11-03:question-5",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5"
+    },
+    {
+      "id": "ma-2026-11-03:question-8",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5"
+    },
+    {
+      "id": "ma-2026-11-03:question-2",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5"
+    },
+    {
       "id": "ma-2026-11-03:question-3",
       "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
       "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614"
+    },
+    {
+      "id": "ma-2026-11-03:question-4",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5"
+    },
+    {
+      "id": "ma-2026-11-03:question-1",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5"
     }
   ],
   "vaultObjects": [
@@ -45,6 +70,16 @@
       }
     },
     {
+      "key": "project/freshness/raw/sha256/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+      "file": "sources/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5.txt",
+      "meta": {
+        "contentType": "application/octet-stream",
+        "contentHash": "sha256-1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+        "byteLength": 89960,
+        "objectClass": "IMMUTABLE_BODY"
+      }
+    },
+    {
       "key": "project/freshness/raw/sha256/b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd",
       "file": "sources/b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd.txt",
       "meta": {
@@ -62,6 +97,13 @@
       "sha256": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
       "byteLength": 89981,
       "retrievedAt": "2026-11-02T21:12:59.624744+00:00"
+    },
+    {
+      "url": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "file": "sources/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5.source",
+      "sha256": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+      "byteLength": 89960,
+      "retrievedAt": "2026-11-02T21:32:14.904516+00:00"
     }
   ],
   "installOrder": [
@@ -72,7 +114,7 @@
   "validation": {
     "translationRecordIssue": "PASS",
     "manualProjectionCandidate": "PASS",
-    "withMeasureTranslations": "PASS: 3 exact current contest attachments"
+    "withMeasureTranslations": "PASS: 8 exact current contest attachments"
   },
   "productionWritesByThisBundle": false
 }

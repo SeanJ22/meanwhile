@@ -1,10 +1,10 @@
 {
   "contractId": "plain-english-translations",
-  "version": "translations-v2:2026-11-02T21:24:06.882Z",
-  "sourceThrough": "2026-11-02T21:12:59.624744+00:00",
+  "version": "translations-v2:2026-11-02T21:35:09.543Z",
+  "sourceThrough": "2026-11-02T21:32:14.904516+00:00",
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T21:24:06.882Z",
+    "reviewedAt": "2026-11-02T21:35:09.543Z",
     "reviewedBy": "claude-sonnet-5-5",
     "sources": [
       {
@@ -26,6 +26,17 @@
         "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
         "httpStatus": 200,
         "rawHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."
+      },
+      {
+        "requestedUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "finalUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "publisher": "www.boston.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:32:14.904516+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."
       },
@@ -481,6 +492,271 @@
         }
       },
       {
+        "id": "translation:ma-2026-11-03:question-5",
+        "kind": "MEASURE",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "checked": [
+          {
+            "text": "This proposed law would change the limit on how much revenue the state can collect in a given year.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "It would limit state revenue in a given year to the net amount of state revenue from the year before, increased by a rate equal to the average growth of wages and salaries in Massachusetts over the most recent three years.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "If revenue collected by the state in a given year exceeds the limit, the excess amount would be refunded to taxpayers the following year.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "All revenue from the surtax on incomes over $1 million would count when calculating the limit and when deciding whether revenue exceeds it.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "The provisions would all be effective as of July 1, 2027.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "A YES vote would change the limit on state revenue collection, tying it to prior year collections plus average wage and salary growth, and provide for a rebate of revenue exceeding that limit.",
+            "field": "yesMeans",
+            "supported": true
+          },
+          {
+            "text": "A NO vote would make no change in the law relative to state revenue collection.",
+            "field": "noMeans",
+            "supported": true
+          }
+        ],
+        "measure": {
+          "parts": [],
+          "noMeans": "A NO vote would make no change in the law relative to state revenue collection.",
+          "yesMeans": "A YES vote would change the limit on state revenue collection, tying it to prior year collections plus average wage and salary growth, and provide for a rebate of revenue exceeding that limit.",
+          "contestId": "ma-2026-11-03:question-5",
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "writtenAt": "2026-10-24T06:52:01.894Z",
+          "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "whatItDoes": "This proposed law would change the limit on how much revenue the state can collect in a given year. It would limit state revenue in a given year to the net amount of state revenue from the year before, increased by a rate equal to the average growth of wages and salaries in Massachusetts over the most recent three years. If revenue collected by the state in a given year exceeds the limit, the excess amount would be refunded to taxpayers the following year. All revenue from the surtax on incomes over $1 million would count when calculating the limit and when deciding whether revenue exceeds it. The provisions would all be effective as of July 1, 2027."
+        },
+        "sentences": [
+          {
+            "text": "This proposed law would change the limit on how much revenue the state can collect in a given year.",
+            "field": "whatItDoes",
+            "quote": "This proposed law would change the limit on how much revenue the state can collect in a given year."
+          },
+          {
+            "text": "It would limit state revenue in a given year to the net amount of state revenue from the year before, increased by a rate equal to the average growth of wages and salaries in Massachusetts over the most recent three years.",
+            "field": "whatItDoes",
+            "quote": "The proposal would limit state revenue in a given year to the net amount of state revenue from the year before, increased by a rate equal to the average growth of wages and salaries in Massachusetts over the most recent three years."
+          },
+          {
+            "text": "If revenue collected by the state in a given year exceeds the limit, the excess amount would be refunded to taxpayers the following year.",
+            "field": "whatItDoes",
+            "quote": "If revenue collected by the state in a given year exceeds the limit, the excess amount would be refunded to taxpayers the following year."
+          },
+          {
+            "text": "All revenue from the surtax on incomes over $1 million would count when calculating the limit and when deciding whether revenue exceeds it.",
+            "field": "whatItDoes",
+            "quote": "The proposed law would include all revenue from the surtax on incomes over $1 million when calculating the revenue limit and when determining whether state revenue exceeds the limit."
+          },
+          {
+            "text": "The provisions would all be effective as of July 1, 2027.",
+            "field": "whatItDoes",
+            "quote": "The provisions of the proposed law would all be effective as of July 1, 2027."
+          },
+          {
+            "text": "A YES vote would change the limit on state revenue collection, tying it to prior year collections plus average wage and salary growth, and provide for a rebate of revenue exceeding that limit.",
+            "field": "yesMeans",
+            "quote": "would change the limit on state revenue collection, tying it to prior year collections plus average wage and salary growth, and provide for a rebate of revenue exceeding that limit."
+          },
+          {
+            "text": "A NO vote would make no change in the law relative to state revenue collection.",
+            "field": "noMeans",
+            "quote": "would make no change in the law relative to state revenue collection."
+          }
+        ],
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "subjectId": "ma-2026-11-03:question-5",
+        "writtenAt": "2026-10-24T06:52:01.894Z",
+        "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+        "sourceText": "Question 5 - State Revenue Limit and Rebate\nThis proposed law would change the limit on how much revenue the state can collect in a given year.\nThe proposal would limit state revenue in a given year to the net amount of state revenue from the year before, increased by a rate equal to the average growth of wages and salaries in Massachusetts over the most recent three years.\nIf revenue collected by the state in a given year exceeds the limit, the excess amount would be refunded to taxpayers the following year.\nThe proposed law would include all revenue from the surtax on incomes over $1 million when calculating the revenue limit and when determining whether state revenue exceeds the limit.\nThe provisions of the proposed law would all be effective as of July 1, 2027.\nwould change the limit on state revenue collection, tying it to prior year collections plus average wage and salary growth, and provide for a rebate of revenue exceeding that limit.\nwould make no change in the law relative to state revenue collection.",
+        "retrievedAt": "2026-11-02T21:32:14.904516+00:00",
+        "writerModel": "claude-sonnet-5-5",
+        "checkerModel": "claude-haiku-5-5",
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "rawHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "byteLength": 89960
+        },
+        "sourceTextHash": "a8faa2be3831d2e2fa0a7b1ca17ba7abcf7fae66d0b849dce7ff4c4fb47a1c7c",
+        "playbookVersion": "263b15754bb561b64eae82571e10e7c26b548a83f00aa346e25d30ec14048055",
+        "subjectQuote": "Question 5 - State Revenue Limit and Rebate"
+      },
+      {
+        "id": "translation:ma-2026-11-03:question-8",
+        "kind": "MEASURE",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "checked": [
+          {
+            "text": "This proposed law would repeal the laws that legalize, regulate, and tax the retail sale of adult recreational use marijuana in Massachusetts.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "It would permit persons 21 years of age and older to possess 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "The proposed law would take effect on January 1, 2028.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "A YES vote would prohibit the legalization, regulation, and taxation of the retail sale of adult recreational use marijuana, and change the penalties for possession of marijuana.",
+            "field": "yesMeans",
+            "supported": true
+          },
+          {
+            "text": "A NO vote would make no change to the law relative to marijuana.",
+            "field": "noMeans",
+            "supported": true
+          }
+        ],
+        "measure": {
+          "parts": [],
+          "noMeans": "A NO vote would make no change to the law relative to marijuana.",
+          "yesMeans": "A YES vote would prohibit the legalization, regulation, and taxation of the retail sale of adult recreational use marijuana, and change the penalties for possession of marijuana.",
+          "contestId": "ma-2026-11-03:question-8",
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "writtenAt": "2026-10-24T06:52:01.894Z",
+          "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "whatItDoes": "This proposed law would repeal the laws that legalize, regulate, and tax the retail sale of adult recreational use marijuana in Massachusetts. It would permit persons 21 years of age and older to possess 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate. The proposed law would take effect on January 1, 2028."
+        },
+        "sentences": [
+          {
+            "text": "This proposed law would repeal the laws that legalize, regulate, and tax the retail sale of adult recreational use marijuana in Massachusetts.",
+            "field": "whatItDoes",
+            "quote": "by repealing the laws that legalize, regulate, and tax the retail sale of adult recreational use marijuana in Massachusetts."
+          },
+          {
+            "text": "It would permit persons 21 years of age and older to possess 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate.",
+            "field": "whatItDoes",
+            "quote": "The proposed law would also permit persons 21 years of age and older to possess 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate"
+          },
+          {
+            "text": "The proposed law would take effect on January 1, 2028.",
+            "field": "whatItDoes",
+            "quote": "The proposed law would take effect on January 1, 2028."
+          },
+          {
+            "text": "A YES vote would prohibit the legalization, regulation, and taxation of the retail sale of adult recreational use marijuana, and change the penalties for possession of marijuana.",
+            "field": "yesMeans",
+            "quote": "would prohibit the legalization, regulation, and taxation of the retail sale of adult recreational use marijuana, and change the penalties for possession of marijuana."
+          },
+          {
+            "text": "A NO vote would make no change to the law relative to marijuana.",
+            "field": "noMeans",
+            "quote": "would make no change to the law relative to marijuana."
+          }
+        ],
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "subjectId": "ma-2026-11-03:question-8",
+        "writtenAt": "2026-10-24T06:52:01.894Z",
+        "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+        "sourceText": "Question 8 - Prohibit Retail Sale of Adult Recreational Use Marijuana\nby repealing the laws that legalize, regulate, and tax the retail sale of adult recreational use marijuana in Massachusetts.\nThe proposed law would also permit persons 21 years of age and older to possess 1 ounce or less of marijuana including no more than 5 grams in the form of concentrate\nThe proposed law would take effect on January 1, 2028.\nwould prohibit the legalization, regulation, and taxation of the retail sale of adult recreational use marijuana, and change the penalties for possession of marijuana.\nwould make no change to the law relative to marijuana.",
+        "retrievedAt": "2026-11-02T21:32:14.904516+00:00",
+        "writerModel": "claude-sonnet-5-5",
+        "checkerModel": "claude-haiku-5-5",
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "rawHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "byteLength": 89960
+        },
+        "sourceTextHash": "c321c8fc61623ba7271f13c06316daf84409c203da79414f0aca442decdc12e1",
+        "playbookVersion": "263b15754bb561b64eae82571e10e7c26b548a83f00aa346e25d30ec14048055",
+        "subjectQuote": "Question 8 - Prohibit Retail Sale of Adult Recreational Use Marijuana"
+      },
+      {
+        "id": "translation:ma-2026-11-03:question-2",
+        "kind": "MEASURE",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "checked": [
+          {
+            "text": "This proposed law would specify that employees of the Committee for Public Counsel Services (“CPCS”) are permitted to engage in collective bargaining with their employer.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "It would also require CPCS, after executing a collective bargaining agreement, to request the appropriation necessary to fund such agreement from the Governor.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "A YES vote would specify that Committee for Public Counsel Services employees may form a union to collectively bargain with their employer.",
+            "field": "yesMeans",
+            "supported": true
+          },
+          {
+            "text": "A NO vote would make no change to the law governing labor relations for Committee for Public Counsel Service employees.",
+            "field": "noMeans",
+            "supported": true
+          }
+        ],
+        "measure": {
+          "parts": [],
+          "noMeans": "A NO vote would make no change to the law governing labor relations for Committee for Public Counsel Service employees.",
+          "yesMeans": "A YES vote would specify that Committee for Public Counsel Services employees may form a union to collectively bargain with their employer.",
+          "contestId": "ma-2026-11-03:question-2",
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "writtenAt": "2026-10-24T06:52:01.894Z",
+          "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "whatItDoes": "This proposed law would specify that employees of the Committee for Public Counsel Services (“CPCS”) are permitted to engage in collective bargaining with their employer. It would also require CPCS, after executing a collective bargaining agreement, to request the appropriation necessary to fund such agreement from the Governor."
+        },
+        "sentences": [
+          {
+            "text": "This proposed law would specify that employees of the Committee for Public Counsel Services (“CPCS”) are permitted to engage in collective bargaining with their employer.",
+            "field": "whatItDoes",
+            "quote": "This proposed law would specify that employees of the Committee for Public Counsel Services (“CPCS”) are permitted to engage in collective bargaining with their employer."
+          },
+          {
+            "text": "It would also require CPCS, after executing a collective bargaining agreement, to request the appropriation necessary to fund such agreement from the Governor.",
+            "field": "whatItDoes",
+            "quote": "It would also require CPCS, after executing a collective bargaining agreement, to request the appropriation necessary to fund such agreement from the Governor."
+          },
+          {
+            "text": "A YES vote would specify that Committee for Public Counsel Services employees may form a union to collectively bargain with their employer.",
+            "field": "yesMeans",
+            "quote": "A YES VOTE would specify that Committee for Public Counsel Services employees may form a union to collectively bargain with their employer."
+          },
+          {
+            "text": "A NO vote would make no change to the law governing labor relations for Committee for Public Counsel Service employees.",
+            "field": "noMeans",
+            "quote": "A NO VOTE would make no change to the law governing labor relations for Committee for Public Counsel Service employees."
+          }
+        ],
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "subjectId": "ma-2026-11-03:question-2",
+        "writtenAt": "2026-10-24T06:52:01.894Z",
+        "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+        "sourceText": "Question 2 - Collective Bargaining for CPCS Employees\nThis proposed law would specify that employees of the Committee for Public Counsel Services (“CPCS”) are permitted to engage in collective bargaining with their employer.\nIt would also require CPCS, after executing a collective bargaining agreement, to request the appropriation necessary to fund such agreement from the Governor.\nA YES VOTE would specify that Committee for Public Counsel Services employees may form a union to collectively bargain with their employer.\nA NO VOTE would make no change to the law governing labor relations for Committee for Public Counsel Service employees.",
+        "retrievedAt": "2026-11-02T21:32:14.904516+00:00",
+        "writerModel": "claude-sonnet-5-5",
+        "checkerModel": "claude-haiku-5-5",
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "rawHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "byteLength": 89960
+        },
+        "sourceTextHash": "e37f268537e6d720e92c7470171f651773517a119ae605234a2f14fe64a0e283",
+        "playbookVersion": "263b15754bb561b64eae82571e10e7c26b548a83f00aa346e25d30ec14048055",
+        "subjectQuote": "Question 2 - Collective Bargaining for CPCS Employees"
+      },
+      {
         "id": "translation:ma-2026-11-03:question-3",
         "kind": "MEASURE",
         "subjectId": "ma-2026-11-03:question-3",
@@ -581,6 +857,186 @@
           "rawHash": "b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd",
           "byteLength": 1296
         }
+      },
+      {
+        "id": "translation:ma-2026-11-03:question-4",
+        "kind": "MEASURE",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "checked": [
+          {
+            "text": "This proposed law would permit eligible individuals to register to vote or update their voter registration address on Election Day.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "An individual who is eligible to vote could register to vote on Election Day by going to the polling place in the precinct where they live during voting hours and presenting proof of residency and signing a written oath.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "If an individual did not present proof of residency, they would be allowed to cast a provisional ballot, which would be counted only if the individual returned to provide the required information before the close of polls for a municipal election; within two days after a state primary; or within six days after a state election.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "Individuals who are already registered to vote would not be able to change their political party affiliation on Election Day.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "The proposed law would take effect on January 1, 2028.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "A YES vote would permit eligible citizens to register to vote or to update their voter registration address at their polling place on Election Day.",
+            "field": "yesMeans",
+            "supported": true
+          },
+          {
+            "text": "A NO vote would make no change to the laws governing voter registration.",
+            "field": "noMeans",
+            "supported": true
+          }
+        ],
+        "measure": {
+          "parts": [],
+          "noMeans": "A NO vote would make no change to the laws governing voter registration.",
+          "yesMeans": "A YES vote would permit eligible citizens to register to vote or to update their voter registration address at their polling place on Election Day.",
+          "contestId": "ma-2026-11-03:question-4",
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "writtenAt": "2026-10-24T06:52:01.894Z",
+          "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "whatItDoes": "This proposed law would permit eligible individuals to register to vote or update their voter registration address on Election Day. An individual who is eligible to vote could register to vote on Election Day by going to the polling place in the precinct where they live during voting hours and presenting proof of residency and signing a written oath. If an individual did not present proof of residency, they would be allowed to cast a provisional ballot, which would be counted only if the individual returned to provide the required information before the close of polls for a municipal election; within two days after a state primary; or within six days after a state election. Individuals who are already registered to vote would not be able to change their political party affiliation on Election Day. The proposed law would take effect on January 1, 2028."
+        },
+        "sentences": [
+          {
+            "text": "This proposed law would permit eligible individuals to register to vote or update their voter registration address on Election Day.",
+            "field": "whatItDoes",
+            "quote": "This proposed law would permit eligible individuals to register to vote or update their voter registration address on Election Day."
+          },
+          {
+            "text": "An individual who is eligible to vote could register to vote on Election Day by going to the polling place in the precinct where they live during voting hours and presenting proof of residency and signing a written oath.",
+            "field": "whatItDoes",
+            "quote": "An individual who is eligible to vote could register to vote on Election Day by going to the polling place in the precinct where they live during voting hours and presenting proof of residency and signing a written oath."
+          },
+          {
+            "text": "If an individual did not present proof of residency, they would be allowed to cast a provisional ballot, which would be counted only if the individual returned to provide the required information before the close of polls for a municipal election; within two days after a state primary; or within six days after a state election.",
+            "field": "whatItDoes",
+            "quote": "If an individual did not present proof of residency, they would be allowed to cast a provisional ballot, which would be counted only if the individual returned to provide the required information before the close of polls for a municipal election; within two days after a state primary; or within six days after a state election."
+          },
+          {
+            "text": "Individuals who are already registered to vote would not be able to change their political party affiliation on Election Day.",
+            "field": "whatItDoes",
+            "quote": "Individuals who are already registered to vote would not be able to change their political party affiliation on Election Day."
+          },
+          {
+            "text": "The proposed law would take effect on January 1, 2028.",
+            "field": "whatItDoes",
+            "quote": "The proposed law would take effect on January 1, 2028."
+          },
+          {
+            "text": "A YES vote would permit eligible citizens to register to vote or to update their voter registration address at their polling place on Election Day.",
+            "field": "yesMeans",
+            "quote": "would permit eligible citizens to register to vote or to update their voter registration address at their polling place on Election Day."
+          },
+          {
+            "text": "A NO vote would make no change to the laws governing voter registration.",
+            "field": "noMeans",
+            "quote": "would make no change to the laws governing voter registration."
+          }
+        ],
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "subjectId": "ma-2026-11-03:question-4",
+        "writtenAt": "2026-10-24T06:52:01.894Z",
+        "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+        "sourceText": "Question 4 - Election Day Registration\nThis proposed law would permit eligible individuals to register to vote or update their voter registration address on Election Day.\nAn individual who is eligible to vote could register to vote on Election Day by going to the polling place in the precinct where they live during voting hours and presenting proof of residency and signing a written oath.\nIf an individual did not present proof of residency, they would be allowed to cast a provisional ballot, which would be counted only if the individual returned to provide the required information before the close of polls for a municipal election; within two days after a state primary; or within six days after a state election.\nIndividuals who are already registered to vote would not be able to change their political party affiliation on Election Day.\nThe proposed law would take effect on January 1, 2028.\nwould permit eligible citizens to register to vote or to update their voter registration address at their polling place on Election Day.\nwould make no change to the laws governing voter registration.",
+        "retrievedAt": "2026-11-02T21:32:14.904516+00:00",
+        "writerModel": "claude-sonnet-5-5",
+        "checkerModel": "claude-haiku-5-5",
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "rawHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "byteLength": 89960
+        },
+        "sourceTextHash": "ecbdfe5f7fd337b1e56b0c0ca6d4551c3e7e1fcdb300f620a44c2d60491c4802",
+        "playbookVersion": "263b15754bb561b64eae82571e10e7c26b548a83f00aa346e25d30ec14048055",
+        "subjectQuote": "Question 4 - Election Day Registration"
+      },
+      {
+        "id": "translation:ma-2026-11-03:question-1",
+        "kind": "MEASURE",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "checked": [
+          {
+            "text": "This proposed law would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "It would exempt documents related to the development of public policy and communications between legislators and their constituents, if those communications are reasonably related to a constituent’s request for assistance in obtaining government-provided benefits or services or interacting with a government agency.",
+            "field": "whatItDoes",
+            "supported": true
+          },
+          {
+            "text": "A YES vote would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.",
+            "field": "yesMeans",
+            "supported": true
+          },
+          {
+            "text": "A NO vote would make no change to the Massachusetts Public Records Law.",
+            "field": "noMeans",
+            "supported": true
+          }
+        ],
+        "measure": {
+          "parts": [],
+          "noMeans": "A NO vote would make no change to the Massachusetts Public Records Law.",
+          "yesMeans": "A YES vote would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.",
+          "contestId": "ma-2026-11-03:question-1",
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "writtenAt": "2026-10-24T06:52:01.894Z",
+          "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "whatItDoes": "This proposed law would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law. It would exempt documents related to the development of public policy and communications between legislators and their constituents, if those communications are reasonably related to a constituent’s request for assistance in obtaining government-provided benefits or services or interacting with a government agency."
+        },
+        "sentences": [
+          {
+            "text": "This proposed law would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.",
+            "field": "whatItDoes",
+            "quote": "This proposed law would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law."
+          },
+          {
+            "text": "It would exempt documents related to the development of public policy and communications between legislators and their constituents, if those communications are reasonably related to a constituent’s request for assistance in obtaining government-provided benefits or services or interacting with a government agency.",
+            "field": "whatItDoes",
+            "quote": "This proposed law would exempt documents related to the development of public policy and communications between legislators and their constituents, if those communications are reasonably related to a constituent’s request for assistance in obtaining government-provided benefits or services or interacting with a government agency."
+          },
+          {
+            "text": "A YES vote would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.",
+            "field": "yesMeans",
+            "quote": "A YES VOTE would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law."
+          },
+          {
+            "text": "A NO vote would make no change to the Massachusetts Public Records Law.",
+            "field": "noMeans",
+            "quote": "A NO VOTE would make no change to the Massachusetts Public Records Law."
+          }
+        ],
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "subjectId": "ma-2026-11-03:question-1",
+        "writtenAt": "2026-10-24T06:52:01.894Z",
+        "sourceHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+        "sourceText": "Question 1 - Expanding the Public Records Law\nThis proposed law would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.\nThis proposed law would exempt documents related to the development of public policy and communications between legislators and their constituents, if those communications are reasonably related to a constituent’s request for assistance in obtaining government-provided benefits or services or interacting with a government agency.\nA YES VOTE would make most records held by the Legislature and the Office of the Governor public records under the Massachusetts Public Records Law.\nA NO VOTE would make no change to the Massachusetts Public Records Law.",
+        "retrievedAt": "2026-11-02T21:32:14.904516+00:00",
+        "writerModel": "claude-sonnet-5-5",
+        "checkerModel": "claude-haiku-5-5",
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "rawHash": "1b93e47fb095f76181ee14476c8b2555da8b66ee4437239cc39c08806a9390e5",
+          "byteLength": 89960
+        },
+        "sourceTextHash": "d257786ec5d3a35867f27712434d3597084b7ccf200c97b9e147daa8ff56fd36",
+        "playbookVersion": "263b15754bb561b64eae82571e10e7c26b548a83f00aa346e25d30ec14048055",
+        "subjectQuote": "Question 1 - Expanding the Public Records Law"
       }
     ]
   }

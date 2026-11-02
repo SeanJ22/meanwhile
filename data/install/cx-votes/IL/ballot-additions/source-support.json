@@ -337,7 +337,8 @@
     "sourceFile": "sources/59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f.source",
     "excerptFile": "sources/59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f.txt",
     "excerptSha256": "59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f",
-    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes.",
+    "readerQuoteSelection": "Noncontiguous verbatim source spans separated by newlines. The candidate filed mailing address is omitted from reader provenance. Original captured source text and its hash are unchanged."
   },
   {
     "captureFormat": "CAPTURED_SOURCE_TEXT",

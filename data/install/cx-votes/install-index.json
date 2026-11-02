@@ -657,5 +657,11 @@
     }
   ],
   "costScope": "Uses existing stored-data publication and reader paths. No application query or paid provider call was added. Source captures distinguish native bytes from labeled deterministic source-text extractions.",
-  "nextOwner": "River: install as data and verify live. Each state has its own pushed READY commit and nested install manifest."
+  "nextOwner": "River: install as data and verify live. Each state has its own pushed READY commit and nested install manifest.",
+  "verification": {
+    "pnpmGates": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
+    "dataChecks": "Official source hashes and quotations; existing publication admission; explainer reader attachments; legislative district and candidate reconciliation; voting-source parsers and official-boundary assignment replay.",
+    "readerPublication": "Not performed. River installs these packets as data and checks the live pages.",
+    "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained."
+  }
 }

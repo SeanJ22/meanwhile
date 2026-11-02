@@ -162,8 +162,10 @@
     "manualProjectionCandidate": "PASS",
     "authorityForManualReceipt": "PASS",
     "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
-    "candidateAliasesEnriched": 3
+    "candidateAliasesEnriched": 3,
+    "candidateFiledMailingAddressesInReaderQuotes": "OMITTED"
   },
   "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
-  "nextOwner": "River: install as data and verify these districts and candidates live."
+  "nextOwner": "River: install as data and verify these districts and candidates live.",
+  "readerQuoteSelection": "District 54 reader quotes retain exact name, office, party and status spans. A filed mailing address is omitted; complete captured source evidence remains in the source archive."
 }

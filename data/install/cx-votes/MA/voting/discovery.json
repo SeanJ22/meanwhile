@@ -1,0 +1,7 @@
+{
+  "install": false,
+  "routes": [],
+  "limitations": [
+    "Assigned precincts need current official precinct geometry to match an address without the current Google/VIP fallback; table acquisition alone does not establish address assignment."
+  ]
+}

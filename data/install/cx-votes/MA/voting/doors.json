@@ -1,0 +1,69 @@
+[
+  {
+    "id": "vs04-ma-boston-polls",
+    "publisher": "Boston Election Department",
+    "url": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MA",
+      "ocdId": "ocd-division/country:us/state:ma/county:suffolk/place:boston",
+      "name": "Boston",
+      "countyFips": "25025",
+      "countySubdivisionGeoid": "2502507000"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+    "extraction": {
+      "kind": "ELECTION_DAY",
+      "records": {
+        "within": {
+          "pattern": "<label for=\"ward-\\d+-input\"[\\s\\S]*?</table>",
+          "fields": {
+            "ward": {
+              "pattern": "for=\"ward-(\\d+)-input\"",
+              "group": 1
+            }
+          }
+        },
+        "pattern": "<tr\\b[^>]*>\\s*<td\\b[^>]*>\\s*\\d+[\\s\\S]*?</tr>",
+        "fields": {
+          "precinct": {
+            "pattern": "<td\\b[^>]*>\\s*(\\d+)",
+            "group": 1
+          },
+          "name": {
+            "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)(?: - |,)\\s*(?=(?:Voter Entrance )?\\d)",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?(?: - |,)\\s*((?:Voter Entrance )?\\d[^<\\n]*)",
+            "group": 1
+          }
+        }
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-02T21:47:38.539800+00:00",
+      "detail": "Fresh saved official current-election page, independently re-parsed without network or writes."
+    },
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "electionAssociationVerified": true,
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "Polling Locations for 2026 State Election",
+      "source": {
+        "publisher": "Boston Election Department",
+        "url": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+        "official": true,
+        "checkedAt": "2026-11-02T21:21:18.475399+00:00",
+        "documentHash": "9187b1100a8e693725d3b97bb5a9d00d56241a9057193f1ca14e02a845354914",
+        "documentUrl": "https://www.boston.gov/departments/elections/city-boston-polling-locations"
+      }
+    }
+  }
+]

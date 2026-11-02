@@ -1,0 +1,40 @@
+[
+  {
+    "url": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+    "finalUrl": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+    "file": "sources/9187b1100a8e693725d3b97bb5a9d00d56241a9057193f1ca14e02a845354914.html",
+    "sha256": "9187b1100a8e693725d3b97bb5a9d00d56241a9057193f1ca14e02a845354914",
+    "byteLength": 143959,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:21:18.475399+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "e8ec581c53dc381217a96f4ba5fc6d489ad7dcb9deb90fa53a33664e5dc702a7",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+      "recordedAt": "2026-11-02T21:21:18.475399+00:00"
+    }
+  },
+  {
+    "url": "https://www.boston.gov/sites/default/files/file/2026/10/2026-11-03-Polling-Locations-UPDATE.pdf",
+    "finalUrl": "https://www.boston.gov/sites/default/files/file/2026/10/2026-11-03-Polling-Locations-UPDATE.pdf",
+    "file": "sources/ebb06fd9dd075a67ab2b6de91cb6ff5cb234c1c6c5d2404618dd5b7d1f46863e.pdf",
+    "sha256": "ebb06fd9dd075a67ab2b6de91cb6ff5cb234c1c6c5d2404618dd5b7d1f46863e",
+    "byteLength": 271729,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-02T21:40:15.347527+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "6f06a4bb27f123bd506dca09a120bcbf802862fb8df2d6ab2fd62554553bcbc5",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.boston.gov/sites/default/files/file/2026/10/2026-11-03-Polling-Locations-UPDATE.pdf",
+      "recordedAt": "2026-11-02T21:40:15.347527+00:00"
+    }
+  }
+]

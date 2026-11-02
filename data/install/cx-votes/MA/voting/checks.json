@@ -1,0 +1,48 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "MA",
+  "coverage": {
+    "physicalSites": 164,
+    "precinctRows": 275,
+    "preparedBoundaries": 0,
+    "scope": "Boston only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/9187b1100a8e693725d3b97bb5a9d00d56241a9057193f1ca14e02a845354914.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/ebb06fd9dd075a67ab2b6de91cb6ff5cb234c1c6c5d2404618dd5b7d1f46863e.pdf",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 1,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 1,
+  "registryPageRows": 1,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "PASS",
+  "checks": [
+    {
+      "doorId": "vs04-ma-boston-polls",
+      "kind": "SITES",
+      "sourceRows": 275,
+      "fullSourceReader": 164,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    }
+  ],
+  "siteKinds": {
+    "electionDay": 164,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:MA"
+}

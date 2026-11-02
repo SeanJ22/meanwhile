@@ -1,0 +1,53 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "IL",
+  "coverage": {
+    "preparedSites": 0,
+    "preparedBoundaries": 0,
+    "scope": "Read-only check in Springfield; official source discovery only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/f7783bf0f18449c4f3447fa4a37d7af4873ebba4a01ef03587035347b094b5e3.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/0e948c7c4a299fb5621b897f3559ff535dea780eee4e997a9ad69b65071dd624.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/a6a8d0aa26e0861bbe966f208b9c035042dbfc132525e16979a976007f59d3d6.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/ec8f50558c19897ac0145861e2dfac69c0ec14c33c73ca1c304d6472fceb0449.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/b90277eee2a28f202e9e7cd0aeef90f16123a6cad8bbed28a10ec07a11d49cf7.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/ae696dc5d5721ce867add998197f92e5e9c4cf1b4443c6359765e88ff7a8e237.json",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 0,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 0,
+  "registryPageRows": 0,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "NOT_APPLICABLE_DISCOVERY_ONLY",
+  "checks": [],
+  "siteKinds": {
+    "electionDay": 0,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:IL"
+}

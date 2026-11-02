@@ -1,0 +1,116 @@
+[
+  {
+    "url": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/listing-of-polling-places/within-city-of-springfield",
+    "finalUrl": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/listing-of-polling-places/within-city-of-springfield",
+    "file": "sources/f7783bf0f18449c4f3447fa4a37d7af4873ebba4a01ef03587035347b094b5e3.html",
+    "sha256": "f7783bf0f18449c4f3447fa4a37d7af4873ebba4a01ef03587035347b094b5e3",
+    "byteLength": 78371,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:22:50.250439+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "9e218cb08074d570684d12e2573ff4c16f43bb097b50faeb91de9effc85f33ac",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/listing-of-polling-places/within-city-of-springfield",
+      "recordedAt": "2026-11-02T21:22:49.813257+00:00"
+    }
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/d59cd0bcd0a6475b8d6232f015652ae6/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/d59cd0bcd0a6475b8d6232f015652ae6/data?f=json",
+    "file": "sources/0e948c7c4a299fb5621b897f3559ff535dea780eee4e997a9ad69b65071dd624.json",
+    "sha256": "0e948c7c4a299fb5621b897f3559ff535dea780eee4e997a9ad69b65071dd624",
+    "byteLength": 47497,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:40:14.967158+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "6db0c20e1624e55f6629fd79dd87b228a4e944be339ce4b9235a130ff033537c",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.arcgis.com/sharing/rest/content/items/d59cd0bcd0a6475b8d6232f015652ae6/data?f=json",
+      "recordedAt": "2026-11-02T21:40:14.967158+00:00"
+    }
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/6c1a4cac3344475683da810bdaab7cb1/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/6c1a4cac3344475683da810bdaab7cb1/data?f=json",
+    "file": "sources/a6a8d0aa26e0861bbe966f208b9c035042dbfc132525e16979a976007f59d3d6.json",
+    "sha256": "a6a8d0aa26e0861bbe966f208b9c035042dbfc132525e16979a976007f59d3d6",
+    "byteLength": 10901,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:41:08.378971+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "0824747cec6ab4ba34ebb34ea87919ecc7559ae89e23c83df4b024328e820a1d",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.arcgis.com/sharing/rest/content/items/6c1a4cac3344475683da810bdaab7cb1/data?f=json",
+      "recordedAt": "2026-11-02T21:41:08.378971+00:00"
+    }
+  },
+  {
+    "url": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/0?f=json",
+    "finalUrl": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/0?f=json",
+    "file": "sources/ec8f50558c19897ac0145861e2dfac69c0ec14c33c73ca1c304d6472fceb0449.json",
+    "sha256": "ec8f50558c19897ac0145861e2dfac69c0ec14c33c73ca1c304d6472fceb0449",
+    "byteLength": 16002,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:41:54.614822+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "9963ddd567448559426ddfc901bdff648e31a6db7ffa763b5f9e98eaffd25eee",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/0?f=json",
+      "recordedAt": "2026-11-02T21:41:54.614822+00:00"
+    }
+  },
+  {
+    "url": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=json",
+    "finalUrl": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=json",
+    "file": "sources/b90277eee2a28f202e9e7cd0aeef90f16123a6cad8bbed28a10ec07a11d49cf7.json",
+    "sha256": "b90277eee2a28f202e9e7cd0aeef90f16123a6cad8bbed28a10ec07a11d49cf7",
+    "byteLength": 51098,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:41:54.615501+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "18e58303c1e956c40f3ed43c2f5b7b70a71640427aff2a6e3d5b06a3469aae46",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=json",
+      "recordedAt": "2026-11-02T21:41:54.615501+00:00"
+    }
+  },
+  {
+    "url": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/1?f=json",
+    "finalUrl": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/1?f=json",
+    "file": "sources/ae696dc5d5721ce867add998197f92e5e9c4cf1b4443c6359765e88ff7a8e237.json",
+    "sha256": "ae696dc5d5721ce867add998197f92e5e9c4cf1b4443c6359765e88ff7a8e237",
+    "byteLength": 10381,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:41:54.616058+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "a754f24dfc9fc45105b9a0a0ab988fba97398ca71045358ccd0832176b73a15d",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://services.arcgis.com/XqG0RpqsNfIBGGb2/arcgis/rest/services/ElecitionPollingAndPrecincts2023/FeatureServer/1?f=json",
+      "recordedAt": "2026-11-02T21:41:54.616058+00:00"
+    }
+  }
+]

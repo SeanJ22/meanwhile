@@ -1,0 +1,35 @@
+{
+  "install": false,
+  "routes": [
+    {
+      "id": "cx-il-sangamon-springfield-polls",
+      "publisher": "Sangamon County Clerk",
+      "url": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/listing-of-polling-places/within-city-of-springfield",
+      "shape": "list-page",
+      "covers": [
+        "ELECTION_DAY"
+      ],
+      "scope": {
+        "state": "IL",
+        "ocdId": "ocd-division/country:us/state:il/county:sangamon",
+        "name": "Sangamon County",
+        "countyFips": "17167"
+      },
+      "electionDate": "2026-11-03",
+      "electionPageUrl": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/listing-of-polling-places/within-city-of-springfield",
+      "electionAssociationVerified": false,
+      "title": "City of Springfield Polling Places",
+      "access": {
+        "status": "open",
+        "checkedAt": "2026-11-02T21:47:38.539800+00:00",
+        "detail": "Official list contains Capital Township precincts 1–93 as ordered-list positions; current generic HTML reader does not preserve implicit ordered-list numbering. No lossy precinct-free extraction is proposed."
+      },
+      "model": "ASSIGNED",
+      "matchingUnit": "PRECINCT"
+    }
+  ],
+  "limitations": [
+    "Fresh county GIS polling layer is labeled next election November 5, 2024 (NEXTELECT=1730808000000) and last data edit July 2024. Do not promote its polling sites as the 2026 list.",
+    "County current HTML list is reachable and shows changes, but exact 2026 association and publisher precinct IDs must be preserved before ingesting it; working residential live result currently comes from Google/VIP."
+  ]
+}

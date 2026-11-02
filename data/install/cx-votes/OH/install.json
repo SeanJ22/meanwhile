@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "OH",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OH",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "oh-sos-2026-general-issue-3",
+      "sourceUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf"
+    },
+    {
+      "id": "oh-ba01-akron-issue-11",
+      "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X"
+    },
+    {
+      "id": "oh-ba01-akron-issue-12",
+      "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X"
+    },
+    {
+      "id": "oh-ba01-akron-issue-13",
+      "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X"
+    },
+    {
+      "id": "oh-ba01-columbus-issue-8-city-council-district-elections-by-petition-place-columbus",
+      "sourceUrl": "https://vote.franklincountyohio.gov/getmedia/a7a2dd78-e53f-4e74-933a-0ba0de9aaa4c/8-Full-OCOS-Charter-Amendment",
+      "operation": "Update only contest.measureTextUrl and retain the unchanged official question row and existing saved checked translation."
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidatesAndExplanations": "UNCHANGED",
+    "actualReaderOverlay": "PASS:5targetmeasures",
+    "existingColumbusExplanation": "UNCHANGED",
+    "onlyExistingContestChange": "ColumbusIssue8measureTextUrlupdatedtofullofficialamendment",
+    "freshSourceReceipts": "Bothpreservedininputandsupport;currentmergeprunesuncitedobservations"
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

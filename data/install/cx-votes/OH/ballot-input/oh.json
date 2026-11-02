@@ -1,0 +1,922 @@
+{
+  "ballots": {
+    "OH:oh-2026-general": {
+      "election": {
+        "id": "oh-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OH"
+      },
+      "contests": [
+        {
+          "id": "oh-sos-2026-general-issue-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:oh",
+          "title": "Issue 3 — Proposed Constitutional Amendment TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "oh-2026-general",
+          "provenance": {
+            "doorId": "fec-oh-chief",
+            "sourceOrg": "Ohio Secretary of State",
+            "sourceUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+            "verifiedAt": "2026-10-14T05:06:11Z",
+            "collectedAt": "2026-10-14T05:06:11Z"
+          },
+          "measureTextUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "oh-ba01-akron-issue-11",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:oh/place:akron",
+          "title": "Akron Issue 11 — Proposed Charter Amendment",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "oh-2026-general",
+          "provenance": {
+            "quote": "Shall the Charter of the City of Akron be amended to enact Section 101b so as to require property owners or operators to permit security deposits for residential rentals to be paid over three or six month periods; to require operators to inform tenants or prospective tenants of their right to make security deposit payments over three or six months; criminalizing the failure to provide the notification; banning fees, charges, deposits or other payments prior to executing rental agreements for residential rental properties; and criminalizing the collection of an application fee for residential rentals?",
+            "sourceOrg": "Summit County Board of Elections",
+            "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+            "verifiedAt": "2026-10-21T00:57:49.662036Z",
+            "collectedAt": "2026-10-21T00:22:36.814477+00:00"
+          },
+          "measureTextUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "oh-ba01-akron-issue-12",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:oh/place:akron",
+          "title": "Akron Issue 12 — Proposed Charter Amendment",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "oh-2026-general",
+          "provenance": {
+            "quote": "Shall the Charter of the City of Akron be amended to enact Section 100a to add the City of Akron's existing codified anti-discrimination protections in the Charter; to, with exceptions for sex offenders and arson offenders, prohibit owners and operators from declining to rent to, or engage in real estate transaction with, an individual on the basis of that individual's criminal history such as arrests, convictions, incarceration; making individuals with criminal histories a protected class similar to race, gender, sexual orientation, and other existing protected classes as it relates to renting, home sales, and other real estate transactions; giving Akron Civil Rights Commission jurisdiction over all real estate discrimination claims arising in Akron; and requiring City Council to enact implementing legislation within ninety (90) days of the effective date of this amendment?",
+            "sourceOrg": "Summit County Board of Elections",
+            "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+            "verifiedAt": "2026-10-21T00:57:49.662036Z",
+            "collectedAt": "2026-10-21T00:22:36.814477+00:00"
+          },
+          "measureTextUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "oh-ba01-akron-issue-13",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:oh/place:akron",
+          "title": "Akron Issue 13 — Proposed Charter Amendment",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "oh-2026-general",
+          "provenance": {
+            "quote": "Shall Section 68a of the Charter of the City of Akron be amended to change the composition and board member-appointment process of the citizen's police oversight board by reducing the number of members appointed by City Council and requiring the Board to select one-third of its own members from a preselected list provided by a committee comprised of individuals who are members of a \"qualifying civil rights organization\"; to establish procedures and timing requirements for the Mayor, Chief of Police, and City Council to respond to recommendations made by the Office of the Independent Police Auditor; to explicitly authorize the Office of the Independent Police Auditor to issue subpoenas compelling production of records in the possession of public or private entities or individuals; and to authorize the Office of Independent Police Auditor to compel attendance and testimony from private citizens and public employees?",
+            "sourceOrg": "Summit County Board of Elections",
+            "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+            "verifiedAt": "2026-10-21T00:57:49.662036Z",
+            "collectedAt": "2026-10-21T00:22:36.814477+00:00"
+          },
+          "measureTextUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "oh-ba01-columbus-issue-8-city-council-district-elections-by-petition-place-columbus",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:oh/place:columbus",
+          "title": "Columbus Issue 8 — City Council District Elections (By Petition)",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "oh-2026-general",
+          "provenance": {
+            "quote": "This proposed charter amendment would limit the ability to vote for candidates for Columbus City Council to only those electors living within the districts that those candidates seek to represent. The amendment specifies that ballots within council districts will include both citywide races as well as the district race. The amendment allows for the initiation of a recall election of a council district representative if a petition is submitted bearing the signatures of the electors of that district in an amount that is at least fifteen (15%) percent of the votes cast within the district in the preceding mayoral election. Shall the proposed charter amendment be approved?",
+            "sourceOrg": "Franklin County Board of Elections",
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+            "verifiedAt": "2026-10-20T23:00:33.444558Z",
+            "collectedAt": "2026-10-20T22:58:31.652460Z"
+          },
+          "measureTextUrl": "https://vote.franklincountyohio.gov/getmedia/a7a2dd78-e53f-4e74-933a-0ba0de9aaa4c/8-Full-OCOS-Charter-Amendment",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "oh-sos-2026-general-issue-3-question",
+          "contestId": "oh-sos-2026-general-issue-3",
+          "provenance": {
+            "doorId": "fec-oh-chief",
+            "sourceOrg": "Ohio Secretary of State",
+            "sourceUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+            "verifiedAt": "2026-10-14T05:06:11Z",
+            "collectedAt": "2026-10-14T05:06:11Z"
+          },
+          "questionText": "Proposed Constitutional Amendment\nTO REQUIRE VOTERS TO PRESENT PHOTO\nIDENTIFICATION IN ORDER TO VOTE\nProposed by Joint Resolution of the General Assembly\nTo enact Section 5 of Article V of the Constitution\nof the State of Ohio\nA majority yes vote is required for the adoption of Section 5.\nThis proposed amendment would:\n• Require voters to present an approved form of government-\nissued photo identification in order to vote.\n• Allow state law to provide for an alternative method of\nverifying a voter’s identity for a voter who has a sincere\nreligious objection to being photographed and, therefore,\ndoes not possess an approved form of government-issued\nphoto identification.\n• Require that voters who do not vote in person provide an\napproved form of government-issued photo identification,\nunless the law authorizes those persons to vote by providing a\nsignature and at least one other specified unique identifier.\n• Define approved forms of government-issued photo\nidentification as an unexpired Ohio driver license or state\nidentification card; a United States passport or passport card;\nor a United States military identification card, Ohio National\nGuard identification card, or United States Department of\nVeterans Affairs identification card.\nIf approved, the amendment shall take effect immediately.\nA “YES” vote means approval of the amendment.\nA “NO” vote means disapproval of the amendment.\nSHALL THE AMENDMENT BE APPROVED?",
+          "officialNumber": "3",
+          "officialStatement": null
+        },
+        {
+          "id": "oh-ba01-akron-issue-11-question",
+          "contestId": "oh-ba01-akron-issue-11",
+          "provenance": {
+            "quote": "Shall the Charter of the City of Akron be amended to enact Section 101b so as to require property owners or operators to permit security deposits for residential rentals to be paid over three or six month periods; to require operators to inform tenants or prospective tenants of their right to make security deposit payments over three or six months; criminalizing the failure to provide the notification; banning fees, charges, deposits or other payments prior to executing rental agreements for residential rental properties; and criminalizing the collection of an application fee for residential rentals?",
+            "sourceOrg": "Summit County Board of Elections",
+            "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+            "verifiedAt": "2026-10-21T00:57:49.662036Z",
+            "collectedAt": "2026-10-21T00:22:36.814477+00:00"
+          },
+          "questionText": "Shall the Charter of the City of Akron be amended to enact Section 101b so as to require property owners or operators to permit security deposits for residential rentals to be paid over three or six month periods; to require operators to inform tenants or prospective tenants of their right to make security deposit payments over three or six months; criminalizing the failure to provide the notification; banning fees, charges, deposits or other payments prior to executing rental agreements for residential rental properties; and criminalizing the collection of an application fee for residential rentals?",
+          "officialNumber": "11",
+          "officialStatement": null
+        },
+        {
+          "id": "oh-ba01-akron-issue-12-question",
+          "contestId": "oh-ba01-akron-issue-12",
+          "provenance": {
+            "quote": "Shall the Charter of the City of Akron be amended to enact Section 100a to add the City of Akron's existing codified anti-discrimination protections in the Charter; to, with exceptions for sex offenders and arson offenders, prohibit owners and operators from declining to rent to, or engage in real estate transaction with, an individual on the basis of that individual's criminal history such as arrests, convictions, incarceration; making individuals with criminal histories a protected class similar to race, gender, sexual orientation, and other existing protected classes as it relates to renting, home sales, and other real estate transactions; giving Akron Civil Rights Commission jurisdiction over all real estate discrimination claims arising in Akron; and requiring City Council to enact implementing legislation within ninety (90) days of the effective date of this amendment?",
+            "sourceOrg": "Summit County Board of Elections",
+            "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+            "verifiedAt": "2026-10-21T00:57:49.662036Z",
+            "collectedAt": "2026-10-21T00:22:36.814477+00:00"
+          },
+          "questionText": "Shall the Charter of the City of Akron be amended to enact Section 100a to add the City of Akron's existing codified anti-discrimination protections in the Charter; to, with exceptions for sex offenders and arson offenders, prohibit owners and operators from declining to rent to, or engage in real estate transaction with, an individual on the basis of that individual's criminal history such as arrests, convictions, incarceration; making individuals with criminal histories a protected class similar to race, gender, sexual orientation, and other existing protected classes as it relates to renting, home sales, and other real estate transactions; giving Akron Civil Rights Commission jurisdiction over all real estate discrimination claims arising in Akron; and requiring City Council to enact implementing legislation within ninety (90) days of the effective date of this amendment?",
+          "officialNumber": "12",
+          "officialStatement": null
+        },
+        {
+          "id": "oh-ba01-akron-issue-13-question",
+          "contestId": "oh-ba01-akron-issue-13",
+          "provenance": {
+            "quote": "Shall Section 68a of the Charter of the City of Akron be amended to change the composition and board member-appointment process of the citizen's police oversight board by reducing the number of members appointed by City Council and requiring the Board to select one-third of its own members from a preselected list provided by a committee comprised of individuals who are members of a \"qualifying civil rights organization\"; to establish procedures and timing requirements for the Mayor, Chief of Police, and City Council to respond to recommendations made by the Office of the Independent Police Auditor; to explicitly authorize the Office of the Independent Police Auditor to issue subpoenas compelling production of records in the possession of public or private entities or individuals; and to authorize the Office of Independent Police Auditor to compel attendance and testimony from private citizens and public employees?",
+            "sourceOrg": "Summit County Board of Elections",
+            "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+            "verifiedAt": "2026-10-21T00:57:49.662036Z",
+            "collectedAt": "2026-10-21T00:22:36.814477+00:00"
+          },
+          "questionText": "Shall Section 68a of the Charter of the City of Akron be amended to change the composition and board member-appointment process of the citizen's police oversight board by reducing the number of members appointed by City Council and requiring the Board to select one-third of its own members from a preselected list provided by a committee comprised of individuals who are members of a \"qualifying civil rights organization\"; to establish procedures and timing requirements for the Mayor, Chief of Police, and City Council to respond to recommendations made by the Office of the Independent Police Auditor; to explicitly authorize the Office of the Independent Police Auditor to issue subpoenas compelling production of records in the possession of public or private entities or individuals; and to authorize the Office of Independent Police Auditor to compel attendance and testimony from private citizens and public employees?",
+          "officialNumber": "13",
+          "officialStatement": null
+        },
+        {
+          "id": "oh-ba01-columbus-issue-8-city-council-district-elections-by-petition-place-columbus-question",
+          "contestId": "oh-ba01-columbus-issue-8-city-council-district-elections-by-petition-place-columbus",
+          "provenance": {
+            "quote": "This proposed charter amendment would limit the ability to vote for candidates for Columbus City Council to only those electors living within the districts that those candidates seek to represent. The amendment specifies that ballots within council districts will include both citywide races as well as the district race. The amendment allows for the initiation of a recall election of a council district representative if a petition is submitted bearing the signatures of the electors of that district in an amount that is at least fifteen (15%) percent of the votes cast within the district in the preceding mayoral election. Shall the proposed charter amendment be approved?",
+            "sourceOrg": "Franklin County Board of Elections",
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+            "verifiedAt": "2026-10-20T23:00:33.444558Z",
+            "collectedAt": "2026-10-20T22:58:31.652460Z"
+          },
+          "questionText": "This proposed charter amendment would limit the ability to vote for candidates for Columbus City Council to only those electors living within the districts that those candidates seek to represent. The amendment specifies that ballots within council districts will include both citywide races as well as the district race. The amendment allows for the initiation of a recall election of a council district representative if a petition is submitted bearing the signatures of the electors of that district in an amount that is at least fifteen (15%) percent of the votes cast within the district in the preceding mayoral election. Shall the proposed charter amendment be approved?",
+          "officialNumber": "8",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "oh-sos-2026-general-issue-3",
+          "whatItDoes": "Requires approved photo ID for in-person voting, while allowing state law to provide another identity check for voters who lack photo ID because of a sincere religious objection to being photographed. For voting by mail or another permitted method, requires photo ID or, if state law allows, a signature and another approved unique identifier: a government-assigned number or code, or a shortened version. Approved IDs include Ohio driver’s licenses or state ID cards, qualifying temporary state ID documents, U.S. passports or passport cards, and U.S. military, Ohio National Guard or Veterans Affairs IDs. All must be unexpired and include the voter’s name and photo.",
+          "yesMeans": "Approve constitutional photo-ID requirements, effective immediately.",
+          "noMeans": "Reject this constitutional amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+          "sourceHash": "638d8582d14bec302d925cf042c8bfad765c0dabb534d9fc93af16d6eb269925",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-ba01-akron-issue-11",
+          "whatItDoes": "Requires landlords to let tenants pay residential security deposits over three or six months and notify tenants and prospective tenants of that option. Makes failing to provide that notice a crime. Prohibits residential rental application fees and other fees, charges, deposits or payments before a rental agreement is signed, and makes collecting an application fee a crime.",
+          "yesMeans": "Add these rental-payment requirements and penalties to Akron’s charter.",
+          "noMeans": "Reject the proposed charter changes.",
+          "parts": [],
+          "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "sourceHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-ba01-akron-issue-12",
+          "whatItDoes": "Adds the city’s existing anti-discrimination protections to Akron’s charter and generally bars refusing to rent or enter a real-estate transaction because of a person’s criminal history, with exceptions for sex offenders and arson offenders. Gives the Akron Civil Rights Commission authority over all real-estate discrimination claims arising in Akron and requires City Council to adopt implementing legislation within 90 days of the amendment taking effect.",
+          "yesMeans": "Add these anti-discrimination provisions to Akron’s charter.",
+          "noMeans": "Reject this proposed charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "sourceHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "oh-ba01-akron-issue-13",
+          "whatItDoes": "Changes how Akron’s civilian police oversight board is chosen: City Council would appoint fewer members, and the board would select one-third of its members from a list supplied by a committee of members of a qualifying civil-rights organization. Sets procedures and deadlines for the mayor, police chief and City Council to respond to the Independent Police Auditor’s recommendations. Authorizes the auditor to subpoena records held by public or private entities or individuals and compel attendance and testimony from private citizens and public employees.",
+          "yesMeans": "Approve these changes to the oversight board and police auditor’s powers.",
+          "noMeans": "Reject this proposed charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+          "sourceHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:43:51.742Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "d3c0441930796d8f06db94911dbe899885265db9f0185b990e720d27c5b1903b",
+        "finalUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+        "publisher": "Ohio Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:06:10Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
+        "reviewedEvidence": "Script-extracted certified November 3, 2026 ballot data from the saved official PDF."
+      },
+      {
+        "rawHash": "638d8582d14bec302d925cf042c8bfad765c0dabb534d9fc93af16d6eb269925",
+        "finalUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "publisher": "Ohio Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:06:11Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "reviewedEvidence": "Script-extracted certified November 3, 2026 ballot data from the saved official PDF."
+      },
+      {
+        "rawHash": "88ff917e686f4450d716078f04ee6de8f3f8204d0dc6fd73959c5427b77f6b34",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "publisher": "Franklin County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:37.370675Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-franklin.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "fdea9d74f0c5e1c313e260011730e5b79fd34ffffa136e073c7a386dceabe22e",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "publisher": "Franklin County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:31.652460Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-columbus-8.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "cc62290d2df75b6cbe7d8aaebc0819226b6ac557779d431f0e8b155fa4444780",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council",
+        "publisher": "Franklin County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:32.192464Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-columbus-9.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "cf0e8add9d32b96736cd0a5d16d7e0b2c9e78e90d4cfc6b8fa74359e7f3cb79d",
+        "finalUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:05:46.447727Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-cuyahoga.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "c5ed94fd062c687e4d3d0d9368248e18e4caa82f9436001761ce4491a16c6659",
+        "finalUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "publisher": "Summit County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:05:47.379734Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-summit.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "4a271e1540d571bf4ad8502fb485f6db834080ae1463e167b8902ef9882be096",
+        "finalUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "publisher": "Montgomery County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:09:00.809293Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-montgomery.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "5a3fc80f28e7bbf97eec1474c4473bfdb156d06ae04ed8f222da8f7ce671547d",
+        "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:00.122694Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-hamilton.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "079802316743f264e26c560645fe88d8216a1bccabac7149f49632e8cabf79f1",
+        "finalUrl": "https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf",
+        "publisher": "Erie County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:00.666698Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/erie/c/upload/Election_Candidates.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-erie.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "9ff0e84dbf779e413111d6c1036ce3d8e19d0098bcb771357c43b81a7edd1d8a",
+        "finalUrl": "https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf",
+        "publisher": "Licking County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:13.162793Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/licking/c/upload/ELECTION_Candidates.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-licking.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "13deac73a73195af49d82cfc6d18c7d7d45aaf6d6c8c88cf5967af71513016ba",
+        "finalUrl": "https://www.boe.ohio.gov/ashtabula/c/upload/Election_Candidates.pdf",
+        "publisher": "Ashtabula County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:13.714797Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/ashtabula/c/upload/Election_Candidates.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-ashtabula.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "e0295ec7efc450c10bffc5a8c77d375d868969f1fa8a7b7bf5231b99c15a5277",
+        "finalUrl": "https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf",
+        "publisher": "Lake County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:12:50.775076Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-lake.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "d2c34d9064f05ab8a354dd86cfffd057d61cce3f7682e7646624f512fb375a28",
+        "finalUrl": "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
+        "publisher": "Lorain County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:13:11.535237Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-lorain.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "1fb9f66017e764928cf92aeed3d39327c355473d1c2ebda5487cf37a3736b033",
+        "finalUrl": "https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf",
+        "publisher": "Butler County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:13:12.099241Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-butler.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "3731aa3cfa81f58fa178aae85e1583a8eccb84a1297e4a94f59331e3b52686a3",
+        "finalUrl": "https://www.boe.ohio.gov/fairfield/c/upload/Election_Candidates.pdf",
+        "publisher": "Fairfield County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:15:51.720438Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/fairfield/c/upload/Election_Candidates.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-fairfield.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "d2126d3d791dcad3b73c1a96dc3a75c0ac9a65dbfb55fccdf4796ae1b0a51984",
+        "finalUrl": "https://www.boe.ohio.gov/medina/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Medina County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:17:04.576978Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/medina/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-medina.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "f1d5b518f1712e1f43178e4f730ec1c9d41a1c9042d3f86d2645f7c22945be3c",
+        "finalUrl": "https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf",
+        "publisher": "Greene County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:17:53.165669Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/greene/c/upload/Election_CandidatesList.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-greene.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "0c21de77cfe6acbb3e9baa557f19c69025e4efbd7d8dd339edbf377a4519c260",
+        "finalUrl": "https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Jefferson County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:21:48.275109Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/jefferson/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-jefferson.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "e8d1fb182ea11062d6b38f6bb902c0c309ce1783447c0bccf5eb3e98aaec7fb6",
+        "finalUrl": "https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Clark County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:21:48.811113Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/clark/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-clark.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "04e692cfc2c7cb005a46f061f8ab28b77d54a2157e8485dd82a8648a4efdb97d",
+        "finalUrl": "https://www.boe.ohio.gov/brown/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Brown County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:43.723530Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/brown/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-brown.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "b0ac8b9214ebf9f5211032b72d59319ff49051afeaecb16178b896f1fba114f6",
+        "finalUrl": "https://www.boe.ohio.gov/shelby/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Shelby County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:44.259533Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/shelby/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-shelby.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "7a0bc808fc50638cfe00a1f7d0b8fa75c175268d73377b79db9d45d230f9eaf7",
+        "finalUrl": "https://www.boe.ohio.gov/paulding/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Paulding County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:45.879543Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/paulding/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-paulding.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "5fdc25f9d91dd5aedbd57f191b5efe032566e063b1c83ad2a99688d05d1cef07",
+        "finalUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Wyandot County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:47.027551Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/wyandot/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-wyandot.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "8653f5384dbd2b657a817e9fd293c3a017f377f70a8f2dbf32e3a62a183c250c",
+        "finalUrl": "https://www.boe.ohio.gov/lawrence/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Lawrence County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:47.839557Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/lawrence/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-lawrence.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "ed2d0b4169d235b45d872c074ce7ccbc1e14a5d4881f7c986302e5b52152f8a6",
+        "finalUrl": "https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Holmes County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:48.763564Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-holmes.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "16df796e752ee4da1f740d681bfd71782b3d462f965be14b8cc7a2196738dea8",
+        "finalUrl": "https://www.boe.ohio.gov/knox/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Knox County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:22:51.543585Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/knox/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-knox.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "ea5e37632db2fb479bdc2fbe31b0b8946da8a0987a5b4ad9be6ec9f59b438b47",
+        "finalUrl": "https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=",
+        "publisher": "Mahoning County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:24:40.640398Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-mahoning.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "8a68161739100627038e106d264faba55f39ef81b77c74e532134d86474d4955",
+        "finalUrl": "https://boe.co.trumbull.oh.gov/pdfs/46%20day%20notice.pdf",
+        "publisher": "Trumbull County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:24:24.536279Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://boe.co.trumbull.oh.gov/pdfs/46%20day%20notice.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-trumbull-fwab.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "7987aa7e922618cfeb6baf883bedf2182b4c89ac67a42f59bec1b7ac744c1f21",
+        "finalUrl": "https://www.boe.ohio.gov/richland/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Richland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:06.273410Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/richland/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-richland.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "e36a4b28b62a6f53e84957c318e3394dfe690ccee365b7d7b0161ef4bba64269",
+        "finalUrl": "https://www.boe.ohio.gov/ross/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Ross County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:07.241417Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/ross/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-ross.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "fba7969666a0f3031cab9a87916b136e509a082dc33aa74523b2ebc794e6ad77",
+        "finalUrl": "https://www.boe.ohio.gov/washington/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Washington County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:08.117424Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/washington/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-washington.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "ea4762faa82c6cee3210a24290cd94cd4a5cf73f0d48bb6fefd84b72f368fa01",
+        "finalUrl": "https://www.boe.ohio.gov/belmont/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Belmont County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:09.053431Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/belmont/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved web-extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-belmont.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "35768dc3424a6a9e65305660eadd43537f37d83e0abc34e34b8bc877f700d2a1",
+        "finalUrl": "https://www.henrycountyohio.gov/DocumentCenter/View/1059/46-Day-Notice-PDF",
+        "publisher": "Henry County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:53.045746Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.henrycountyohio.gov/DocumentCenter/View/1059/46-Day-Notice-PDF",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-henry.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "90c2b7210de5f3706363dc48134130ddf2edacee9ec6f1528fe2d22c445c25f2",
+        "finalUrl": "https://www.mercercountyoh.gov/bskpdf/46-day--updated-10-15-26/",
+        "publisher": "Mercer County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:27:53.593750Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.mercercountyoh.gov/bskpdf/46-day--updated-10-15-26/",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-mercer.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "08704835d54b72ab30f41c3eff584cbe0d8308af0f7e4176ae6d7f496f96616b",
+        "finalUrl": "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
+        "publisher": "Allen County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:01.746596Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-allen.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "eb910de6766beb41710b4c44d15bad0ef62a33b4aba1f9a2250ca1b94e273bb9",
+        "finalUrl": "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
+        "publisher": "Hancock County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:01.746927Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://docs.google.com/document/d/1hsyr289kQ_Q32VhOIQeOn_fEeRk04fQecBoveOXyc4Y/export?format=txt",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-hancock.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "6360ca07ff0704c8776465635cbbbac371dfa72343c57bce3a758a0dcc407ff6",
+        "finalUrl": "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
+        "publisher": "Union County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:00.470222Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-union.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "feb0839432edbc735acf71375d3e1848caf3d71d61318dbc8091a9a57612757a",
+        "finalUrl": "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Muskingum County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:32:33.503813Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/muskingum/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-muskingum.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "0dd1f854aed82e6e2101d08c1835d4631d2044ddc331f77688e3791e9bfe5af1",
+        "finalUrl": "https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf",
+        "publisher": "Stark County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:54.951711Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.starkcountyohio.gov/Board%20of%20Elections/Candidates%20List%20General.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-stark.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "4bff9e9e0a4d6644bcf9c806a72d687379ad2391640567a72e4341684406fb61",
+        "finalUrl": "https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List",
+        "publisher": "Wood County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.200126Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://boe.woodcountyohio.gov/DocumentCenter/View/1006/Candidate-List",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-wood.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "8d737eec0634a38e58dcc3779a79856aa2996b40c6139bb7b2f1db6cb60d5ba7",
+        "finalUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "publisher": "Wayne County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.474571Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.waynecountyoh.gov/wp-content/uploads/2026/10/Form-120-46-Day-FWAB-Gen-26-10162026-0910.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-wayne.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "c30abd5c8576c53060e8e594910c9203fe9324bc8b96f7d7a6ecd1c371199307",
+        "finalUrl": "https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf",
+        "publisher": "Columbiana County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.719107Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-columbiana.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "1e9e8284088da9e5737565aa8566f362d5e6a28c54d24902d6ba7ffc229ebfb1",
+        "finalUrl": "https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Darke County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.976099Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/darke/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-darke.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "17f08272cee9d4ae1e1229d99b21d2b3acf1c14d163fef35c2789e302535c91c",
+        "finalUrl": "https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf",
+        "publisher": "Seneca County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.223871Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-seneca.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "f306db343239bce684c3824bd9f1d691902856d4e52f48273f8a1e20567e915c",
+        "finalUrl": "https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530",
+        "publisher": "Clermont County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:43:57.695812Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-clermont.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "c3de7abf5b528558c6be66d390d236ddee516d7268372969745d4f04ea4788a6",
+        "finalUrl": "https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf",
+        "publisher": "Portage County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:43:57.702142Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-portage.web.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "39ed0a3cb2475c8c05a678774148110fe777faadb6573934edf26d8882ce62a4",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "publisher": "Warren County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.870189Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-warren-fifty-fifth-house.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "fb5d074576924f814d490c98e35eb7f40ec0155d4d730bb7aa4b29a535fb801c",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X",
+        "publisher": "Warren County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.889928Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-warren-fifty-sixth-house.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "332a293c2af867881cc3d3f9cce1e16e87f3007df4f0e7541e189d293005def7",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+        "publisher": "Delaware County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.861171Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-delaware-60th-house-district.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "5060911feb5086e9ab24190d0d8f871c59cc8f4c8cb6bb289d05a7be257e6539",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=002A__1&bpty=X",
+        "publisher": "Lucas County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.847114Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=002A__1&bpty=X",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-lucas-house-district-41.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "489cdb5d9f4690fff5e943e2c8a0ebce9212246d72cb5e513b2890e55d1a956d",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X",
+        "publisher": "Lucas County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.837523Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-lucas-house-district-42.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "0c83089184341c5b95518e8c1051cd2a89772b14f065c451ef4dd83c940eae9a",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+        "publisher": "Lucas County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:47:29.882002Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+        "reviewedEvidence": "Saved extracted official document text: data/ballot/evidence/ba01-great-lakes/oh-sample-lucas-house-district-43.right.txt. Code replays each full candidate name, party and office from this capture. Hash identifies captured text bytes, not original PDF bytes."
+      },
+      {
+        "rawHash": "18910e2d7e4e939ead11e0459dcc0a721c2ad10c473986e4102d087396185b4d",
+        "finalUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:41.500648+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-cuyahoga.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "8a210b840e9b9eec8bd4f3981690a768927d670c431311896dc29f43430a6a52",
+        "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f3040163-09d3-4b35-a603-4ba4c3d8bbce/",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:23:29.654688+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f3040163-09d3-4b35-a603-4ba4c3d8bbce/",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-cuyahoga.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "f09ce1896fdb7100d5c0dc83e7b7aa988b7a0f73801e01fb68c497939c331ef4",
+        "finalUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:41.442390+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-hamilton.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "76df955b3c436e8a6352f65a9ace53201262ce51310c9a0d472cd17a08fc4e98",
+        "finalUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "publisher": "Hamilton County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:22:56.999629+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-hamilton.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "a5dcd8d8c2035442b1690e7293566fc0e8201a888859b627976cffe89c699d84",
+        "finalUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "publisher": "Summit County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:41.685541+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-summit.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "publisher": "Summit County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:22:36.814477+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-summit.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "1cc46bf191c363d86d7f2231812c713a5b15856039527685f8b02cac38b0d999",
+        "finalUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "publisher": "Montgomery County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:19:40.946717+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-next-montgomery.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "470de0ffe873e2459b65fc5a502e31e688eec33ffeb86af911fca898341acf71",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+        "publisher": "Montgomery County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:22:36.985689+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=0010__1&bpty=X",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-montgomery.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+        "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "publisher": "Ohio General Assembly",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:20:51.691571+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-appellate-current-law.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "e6ec5f040c29634ea2490247f660eff986ac4235caf073a9ec8199d92a07191d",
+        "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f187e327-50a8-410a-a248-5f91ad385d7e/",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:30:58.537123+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/f187e327-50a8-410a-a248-5f91ad385d7e/",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-cuyahoga-part2.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "rawHash": "513af88b1163ba0ae749b06e23f040fd11326b9c16a77cf486e59ab0886029bd",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=1960__1&bpty=X",
+        "publisher": "Montgomery County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:30:52.861000+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=1960__1&bpty=X",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-montgomery-new-lebanon.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "finalUrl": "https://www.ohiosos.gov/assets/2026-11-statewide-issue-3-report.pdf",
+        "publisher": "www.ohiosos.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:10:58.371300+00:00",
+        "httpStatus": 200,
+        "rawHash": "638d8582d14bec302d925cf042c8bfad765c0dabb534d9fc93af16d6eb269925",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+        "publisher": "lookup.boe.ohio.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:18:04.962607+00:00",
+        "httpStatus": 200,
+        "rawHash": "d939f43c4997bfa4042b0a54c90a78b08bb63efd91ee51d52dc64fd4dc0e0ece",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://vote.franklincountyohio.gov/getmedia/a7a2dd78-e53f-4e74-933a-0ba0de9aaa4c/8-Full-OCOS-Charter-Amendment",
+        "finalUrl": "https://vote.franklincountyohio.gov/getmedia/a7a2dd78-e53f-4e74-933a-0ba0de9aaa4c/8-Full-OCOS-Charter-Amendment",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:32:51.883666+00:00",
+        "httpStatus": 200,
+        "rawHash": "06faa06bf25c373b0d94ef2853282ece9af78386e822e0cf542e9a5bd49f9cb1",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Fresh official full Columbus Issue 8 charter-amendment PDF. Its original response bytes exactly match the sourceHash of the unchanged held checked translation; the contest now links this full text."
+      },
+      {
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:32:51.884543+00:00",
+        "httpStatus": 200,
+        "rawHash": "dc2334452c36982a651e85a552ccd42ed77b4e9fa528389b64a14db46346bdbf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Fresh official Columbus Issue 8 election-notice PDF. Existing contest provenance and official question remain unchanged; original legacy text-capture receipt is also retained."
+      }
+    ]
+  }
+}

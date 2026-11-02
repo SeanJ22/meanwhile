@@ -1,0 +1,34 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "OR",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OR",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+      "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download"
+    },
+    {
+      "id": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+      "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download"
+    },
+    {
+      "id": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department",
+      "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 0
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

@@ -1,0 +1,211 @@
+{
+  "ballots": {
+    "OR:or-2026-11-03": {
+      "election": {
+        "id": "or-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "OR"
+      },
+      "contests": [
+        {
+          "id": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:or/place:portland",
+          "title": "City of Portland, Measure 26-267 — Amends Charter: Portland residents decide 2% of city's annual discretionary budget.",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "or-2026-11-03",
+          "provenance": {
+            "quote": "Measure No: 26-267\nAmends Charter: Portland residents decide 2% of city's annual discretionary budget.\nShould Portland create participatory budgeting program for residents to make binding decisions to spend 2% of city’s discretionary budget?",
+            "sourceOrg": "Multnomah County Elections",
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "collectedAt": "2026-10-20T22:54:21.282897Z"
+          },
+          "measureTextUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+          "title": "City of Troutdale, Measure 26-265 — Five-year Local Option Levy for Police, Fire & 911 Operations.",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "or-2026-11-03",
+          "provenance": {
+            "quote": "Measure No: 26-265\nFive-year Local Option Levy for Police, Fire & 911 Operations.\nShall Troutdale adopt a local option levy at $1.60 per $1,000 of assessed value for police, fire & 911 services? This measure may cause property taxes to increase more than three percent.",
+            "sourceOrg": "Multnomah County Elections",
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "collectedAt": "2026-10-20T22:54:21.282897Z"
+          },
+          "measureTextUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:or/place:troutdale",
+          "title": "City of Troutdale, Measure 26-266 — ADVISORY VOTE: Should Troutdale Create a Municipal Police Department?",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "or-2026-11-03",
+          "provenance": {
+            "quote": "Measure No: 26-266\nADVISORY VOTE: Should Troutdale Create a Municipal Police Department?\nADVISORY VOTE: Should the City proceed with planning and creation of a Troutdale Police Department?",
+            "sourceOrg": "Multnomah County Elections",
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "collectedAt": "2026-10-20T22:54:21.282897Z"
+          },
+          "measureTextUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget:question",
+          "contestId": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+          "provenance": {
+            "quote": "Measure No: 26-267\nAmends Charter: Portland residents decide 2% of city's annual discretionary budget.\nShould Portland create participatory budgeting program for residents to make binding decisions to spend 2% of city’s discretionary budget?",
+            "sourceOrg": "Multnomah County Elections",
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "collectedAt": "2026-10-20T22:54:21.282897Z"
+          },
+          "questionText": "Should Portland create participatory budgeting program for residents to make binding decisions to spend 2% of city’s discretionary budget?",
+          "officialNumber": "26-267",
+          "officialStatement": null
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations:question",
+          "contestId": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+          "provenance": {
+            "quote": "Measure No: 26-265\nFive-year Local Option Levy for Police, Fire & 911 Operations.\nShall Troutdale adopt a local option levy at $1.60 per $1,000 of assessed value for police, fire & 911 services? This measure may cause property taxes to increase more than three percent.",
+            "sourceOrg": "Multnomah County Elections",
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "collectedAt": "2026-10-20T22:54:21.282897Z"
+          },
+          "questionText": "Shall Troutdale adopt a local option levy at $1.60 per $1,000 of assessed value for police, fire & 911 services? This measure may cause property taxes to increase more than three percent.",
+          "officialNumber": "26-265",
+          "officialStatement": null
+        },
+        {
+          "id": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department:question",
+          "contestId": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department",
+          "provenance": {
+            "quote": "Measure No: 26-266\nADVISORY VOTE: Should Troutdale Create a Municipal Police Department?\nADVISORY VOTE: Should the City proceed with planning and creation of a Troutdale Police Department?",
+            "sourceOrg": "Multnomah County Elections",
+            "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+            "verifiedAt": "2026-10-20T22:54:21.282897Z",
+            "collectedAt": "2026-10-20T22:54:21.282897Z"
+          },
+          "questionText": "ADVISORY VOTE: Should the City proceed with planning and creation of a Troutdale Police Department?",
+          "officialNumber": "26-266",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ba01-or-city-of-portland-measure-26-267-amends-charter-portland-residents-decide-2-of-city-s-annual-discretionary-budget",
+          "whatItDoes": "Requires a program, operating by July 2027, in which Portland residents propose projects and make binding choices about funding them. The city must allocate at least the equivalent of 2% of ongoing discretionary General Fund spending, although the council may draw that money from the wider city budget. Staff and residents from all council districts would help develop feasible proposals, with resident oversight and a selection process open to all residents.",
+          "yesMeans": "Create and fund the resident-led budgeting program under the amended charter.",
+          "noMeans": "Keep the current process in which the mayor proposes a budget and the council reviews and adopts it after public hearings.",
+          "parts": [],
+          "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "sourceHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ba01-or-city-of-troutdale-measure-26-265-five-year-local-option-levy-for-police-fire-911-operations",
+          "whatItDoes": "Adds a five-year property-tax levy of $1.60 per $1,000 of assessed value for police, fire and 911 services, from 2027–28 through 2031–32. The official summary says the current council will replace the $25 monthly public-safety fee with this levy. For a home assessed at $267,800, it estimates $428.48 a year in levy taxes and a net annual increase of $128.48 after removing the $300 annual fee. The levy may increase property taxes by more than 3%.",
+          "yesMeans": "Authorize the five-year property-tax levy for police, fire and 911 services.",
+          "noMeans": "Do not authorize this five-year property-tax levy.",
+          "parts": [],
+          "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "sourceHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ba01-or-city-of-troutdale-measure-26-266-advisory-vote-should-troutdale-create-a-municipal-police-department",
+          "whatItDoes": "Asks whether Troutdale should continue planning and creating its own police department while comparing that option with continued service from the Multnomah County Sheriff. The vote is advisory and does not authorize taxes, fees or spending; the council will consider the result in later decisions.",
+          "yesMeans": "Advise the council to proceed with planning and creation of a city police department.",
+          "noMeans": "Advise the council against proceeding with the proposed city police department.",
+          "parts": [],
+          "sourceUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+          "sourceHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:43:15.431Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
+        "finalUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+        "publisher": "Oregon Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:06:40.467Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+        "reviewedEvidence": "Official Oregon election office route and dated general-election ballot statement; script extracts certified candidate names, printed parties, offices, and the explicit statewide-measure absence."
+      },
+      {
+        "rawHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+        "finalUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+        "publisher": "Multnomah County Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:21.282897Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+        "reviewedEvidence": "Official general-election ballot content; printed count 63 contests and 116 candidates. Ranked-choice county and Portland contests are in a separate RCV ballot document."
+      },
+      {
+        "rawHash": "c1be7b04d586051f2600be7b8ee8c17ee93d4d6a491ecc8f416c36e613af19f0",
+        "finalUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+        "publisher": "Multnomah County Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:21.298283Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+        "reviewedEvidence": "Official ranked-choice ballot content records seven local contests and 46 names, including countywide chair, auditor and sheriff, County District 2, Portland auditor and Council Districts 3 and 4."
+      },
+      {
+        "rawHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
+        "finalUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+        "publisher": "Oregon Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:52:40.414418Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+        "reviewedEvidence": "Official Directive 2026-09 supplies all 83 federal/statewide/legislative contests and their 167 candidates plus seven circuit-court contests and three district-attorney contests."
+      },
+      {
+        "requestedUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+        "finalUrl": "https://multco.us/file/ballot_content_-_nov._2026/download",
+        "publisher": "multco.us",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:00.022146+00:00",
+        "httpStatus": 200,
+        "rawHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

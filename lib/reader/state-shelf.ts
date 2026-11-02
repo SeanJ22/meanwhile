@@ -38,14 +38,15 @@ export function stateRegistry(state: string): Promise<StateRegistry> {
   return part.read();
 }
 
-/** A state's own family calendar, without its rows: the sources it reports and the boards it follows. Every place in the state carries it. */
+/** A state's own family calendar (or its held history), without its rows: the sources it reports and the boards it follows. Every place in the state carries it. */
 export interface StateFamily { readonly scope: string; readonly version: string; readonly confirmation: string | null; readonly header: Record<string, unknown>; readonly members: readonly Record<string, unknown>[] | null }
 const families = new Map<string, ReturnType<typeof shelfPart<StateFamily | null>>>();
-export function stateFamily(state: string): Promise<StateFamily | null> {
-  let part = families.get(state);
+export function stateFamily(state: string, history = false): Promise<StateFamily | null> {
+  const name = `family:${state}${history ? ":history" : ""}`;
+  let part = families.get(name);
   if (!part) {
-    const key = `MEETING:source:derived:family:US-${state}`;
-    families.set(state, part = shelfPart(`family:${state}`, () => publicationVersion([key]), async () => {
+    const key = `MEETING:source:derived:family:US-${state}${history ? ":history" : ""}`;
+    families.set(name, part = shelfPart(name, () => publicationVersion([key]), async () => {
       const query = readerDatabaseQuery();
       if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
       const [[row]] = await query([{ text: MEETING_PARTITIONS_SQL, params: [[key], []] }]);

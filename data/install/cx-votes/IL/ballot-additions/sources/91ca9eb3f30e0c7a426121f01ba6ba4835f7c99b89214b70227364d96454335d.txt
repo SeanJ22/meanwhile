@@ -1,0 +1,350 @@
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# " class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+<noscript><style>form.antibot > * { display: none !important; } form.antibot noscript { display: block !important; }</style>
+</noscript><style type="text/css">  /* Prevent layout shift for common elements */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Add min-height to containers to prevent shift */
+  .banner, .header, [role="banner"] {
+    min-height: 60px;
+  }
+
+  /* Ensure forms don't shift */
+  button, input[type="submit"], input[type="button"] {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  /* Fix font rendering for better LCP */
+  body {
+    font-display: swap;
+  }</style>
+<meta name="Generator" content="Drupal 11 (https://www.drupal.org)">
+<meta name="MobileOptimized" content="width">
+<meta name="HandheldFriendly" content="true">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+				/* Show icon field and style it as blue circle background */
+				h2#block-mainnavigation-menu + ul .field--name-field-section-icon {
+					width: 150px !important;
+					height: 150px !important;
+					background: linear-gradient(135deg, #0b5fa5, #0d6dbd) !important;
+					border-radius: 50% !important;
+					margin: 0 auto 1rem !important;
+					display: flex !important;
+					align-items: center !important;
+					justify-content: center !important;
+					box-shadow: 0 4px 12px rgba(11, 95, 165, 0.3) !important;
+					overflow: visible !important;
+				}
+				/* Size the icon image to fit nicely in the circle */
+				h2#block-mainnavigation-menu + ul .field--name-field-section-icon img {
+					width: 100px !important;
+					height: 100px !important;
+					display: block !important;
+				}
+				/* Make the whole dropdown card clickable-looking */
+				h2#block-mainnavigation-menu + ul .menu-dropdown {
+					transition: transform 0.2s ease;
+				}
+				h2#block-mainnavigation-menu + ul .menu-dropdown:hover {
+					transform: translateY(-4px);
+				}
+      </style>
+<meta name="description" content="Find your Champaign County Board district, elected officials, and candidate information by address.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Champaign County Clerk","item":"https://champaigncountyclerkil.gov/"},{"@type":"ListItem","position":2,"name":"Candidate and Elected Official Information","item":"https://champaigncountyclerkil.gov/elections/who-represents-me"}]}</script>
+<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="canonical" href="https://champaigncountyclerkil.gov/elections/who-represents-me">
+<link rel="shortlink" href="https://champaigncountyclerkil.gov/node/254">
+
+    <title>Candidate and Elected Official Information | Champaign County Clerk</title>
+        <link rel="icon" href="/sites/default/files/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="/sites/default/files/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/sites/default/files/champaign-county-seal.png">
+                <link rel="stylesheet" media="all" href="/sites/default/files/css/css_0bfTc1InYqrOmTqbNsPczBKD5IBWdoskLydywgFAXnY.css?delta=0&language=en&theme=ccco&include=eJxtjlEOgzAMQy_UrUeqQhpKRWlQ0k1w-2WdtInBZ54d24gYIq0gbaHaAnJhUY_Mcya7qhp1eGk6ke5bchJo5AGRJWZLOOBBoMbATxLJkY7aIweqE1Skd-hHWyH1Hc2Itz4w6zp1jX0qPEC5adtLrsnhTDE3lvDt_q24j9JDolPGDCUs5oVgf7P6M7q3yUY43bXR4gdQcka2_8bNBl0z5lRotEotjFBeA5aNgw">
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_2t4ll3Pha4URNP4A8cEXY8ZdeWHSacodPDMCARA5rH0.css?delta=1&language=en&theme=ccco&include=eJxtjlEOgzAMQy_UrUeqQhpKRWlQ0k1w-2WdtInBZ54d24gYIq0gbaHaAnJhUY_Mcya7qhp1eGk6ke5bchJo5AGRJWZLOOBBoMbATxLJkY7aIweqE1Skd-hHWyH1Hc2Itz4w6zp1jX0qPEC5adtLrsnhTDE3lvDt_q24j9JDolPGDCUs5oVgf7P6M7q3yUY43bXR4gdQcka2_8bNBl0z5lRotEotjFBeA5aNgw">
+
+        
+  </head>
+  <body class="department-elections path-elections-who-represents-me inner-page page-type-page one-sidebar sidebar-left">
+    <a href="#main-content" class="visually-hidden focusable">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas="">
+    
+
+
+
+  <div class="courthouse-header-wrapper">
+    <picture>
+      <source srcset="/sites/default/files/champaignccheaderblue.webp" type="image/webp">
+      <img src="/sites/default/files/champaignccheaderblue.png" alt="Champaign County Clerk" class="courthouse-header-image" width="1720" height="397">
+    </picture>
+        <a href="/" class="header-seal-hotspot" title="Champaign County Clerk" aria-label="Go to home page"></a>
+  </div>
+
+        <nav class="nav-main" role="navigation" aria-label="Main Navigation">
+      <div class="container">
+                <button class="mobile-menu-ccco" role="button" aria-label="Toggle Main Navigation" aria-expanded="false" aria-controls="ccco-primary-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        
+                <div class="nav-primary-wrapper" id="ccco-primary-menu">
+                    <button class="mobile-menu-close" role="button" aria-label="Close Main Navigation" style="display: none;">
+            <span></span>
+            <span></span>
+          </button>
+          
+                        <div class="block-region region-primary-menu">
+    <nav role="navigation" aria-labelledby="block-ccco-main-menu-menu" id="block-ccco-main-menu" class="settings-tray-editable block block-menu" data-drupal-settingstray="editable">
+            
+  <h2 class="visually-hidden block-title" id="block-ccco-main-menu-menu">Main navigation</h2>
+  
+
+        
+              <ul class="menu">
+                    <li class="menu-item menu-item-level-1">
+        <a href="/elections" data-drupal-link-system-path="node/206">Elections</a>
+              </li>
+                <li class="menu-item menu-item-level-1">
+        <a href="/property-taxes" data-drupal-link-system-path="node/212">Property Taxes</a>
+              </li>
+                <li class="menu-item menu-item-level-1">
+        <a href="/vital-records" data-drupal-link-system-path="node/305">Vital Records</a>
+              </li>
+                <li class="menu-item menu-item-level-1">
+        <a href="/recorder-deeds" data-drupal-link-system-path="node/190">Recorder / Deeds</a>
+              </li>
+                <li class="menu-item menu-item-level-1">
+        <a href="/county-board" data-drupal-link-system-path="node/198">County Board</a>
+              </li>
+                <li class="menu-item menu-item-level-1">
+        <a href="/government-bodies" data-drupal-link-system-path="node/187">Government Bodies</a>
+              </li>
+                <li class="menu-item menu-item-level-1">
+        <a href="https://sei.champaigncountyclerk.com/sei_home">SEI Portal</a>
+              </li>
+        </ul>
+  
+
+
+  </nav>
+
+  </div>
+
+                  </div>
+        
+                <div class="secondary-menu-wrapper">
+                  </div>
+      </div>
+    </nav>
+  
+
+    <div id="page-wrapper" class="page-wrapper">
+      <div class="main-wrapper">
+        <div class="container">
+          <div class="main-container">
+                        
+                        <main id="main-content" class="main-content" role="main">
+                <div class="block-region region-content">
+    <div data-drupal-messages-fallback="" class="hidden"></div><div id="block-ccco-content" class="block">
+  
+    
+  <div class="block-content">
+      <article class="node--department-elections node node-type-page node-view-mode-full" data-department="elections" about="/elections/who-represents-me" typeof="schema:WebPage">
+
+    <span property="schema:name" content="Candidate and Elected Official Information" class="hidden"></span>
+
+
+  <div class="node-content">
+    
+            <div property="schema:text" class="field field--name-body field--type-text-with-summary field--label-hidden field-item"><h4 class="list-header">YOUR CURRENT ELECTED OFFICIALS&#160;</h4><dl class="ckeditor-accordion"><dt>District Maps</dt><dd><p>Champaign County GIS Consortium has an excellent mapping service. Users can overlay districts, search addresses, and more.<a href="https://ccgisc.maps.arcgis.com/home/index.html" target="_blank"> Click here to access the interactive mapping tool.</a></p><p>You can also find precinct, county board district, legislative, and congressional maps <a href="/government-bodies/relevant-county-maps" rel="noopener" target="_blank">here</a>.</p></dd><dt>Current Elected Officials</dt><dd><ul><li data-list-item-id="eac9967030d0b2fae86b6589a7c6d469f"><a href="https://champaigncountyillinois-my.sharepoint.com/:x:/g/personal/elections_champaigncountyil_gov/Ecxo-YUzF4VDusySdmW7ezcBdRujfnbaRqoqVZM9thghPw?e=OrlhFQ" rel="noopener" target="_blank" title="All Elected Officials In Champaign County">All Elected Officials In Champaign County</a></li><li data-list-item-id="ed334ac5d06f2ed6f23c3fa8d0deff863"><a href="https://champaigncountyillinois-my.sharepoint.com/:x:/g/personal/elections_champaigncountyil_gov/EVcP6xspYdZOsFmC2Qd81SwB4jjZBB9L1Gg_cIRnU5ytPw?e=VkWJJ7" title="Democratic Precinct Committee People- updated 12-6-2023">Democratic Precinct Committee People</a> - updated 09/29/2025</li><li data-list-item-id="e4eb690873f5968bae27280196fbc3265"><a href="https://champaigncountyillinois-my.sharepoint.com/:x:/g/personal/elections_champaigncountyil_gov/ERWqRhzKegxOhfw_GBwBDjkBV_nDulsH0dsu93i2XbrQxg?e=v2Szoi">Republican Precinct Committee People</a> - updated 7/23/2024</li></ul></dd></dl><h4 class="list-header">2026 CANDIDATES</h4><dl class="ckeditor-accordion"><dt>FEDERAL</dt><dd><table class="table table-style-align-center"><tbody><tr><td><p class="text-align-center"><strong>FEDERAL OFFICE</strong></p></td><td><p class="text-align-center"><strong>REPUBLICAN&#160;</strong><br><strong>CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>DEMOCRATIC&#160;</strong><br><strong>CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>OTHER PARTY</strong><br><strong>CANDIDATES</strong></p></td></tr><tr><td><p class="text-align-center">US SENATE</p></td><td><p class="text-align-center">DON TRACY</p></td><td><p class="text-align-center">JULIANA STRATTON</p></td><td><p class="text-align-center">WHITFIELD&#160;<br>HARRINGTON Jr<br>(AMERICAN&#160;<br>CENTER PARTY)</p></td></tr><tr><td><p class="text-align-center">2ND CONGRESSIONAL</p></td><td><p class="text-align-center">MICHAEL SCOTT<br>NOACK</p></td><td><p class="text-align-center">DONNA MILLER</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">13TH CONGRESSIONAL</p></td><td><p class="text-align-center">JEFF WILSON</p></td><td><p class="text-align-center">NIKKI BUDZINSKI</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">15TH CONGRESSIONAL</p></td><td><p class="text-align-center">MARY E. MILLER</p></td><td><p class="text-align-center">JENNIFER TODD</p></td><td><p class="text-align-center">&#160;</p></td></tr></tbody></table></dd><dt>STATEWIDE</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>STATEWIDE&#160;</strong><br><strong>OFFICE</strong></p></td><td><p class="text-align-center"><strong>REPUBLICAN</strong><br><strong>CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>DEMOCRATIC&#160;</strong><br><strong>CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>OTHER PARTY&#160;</strong><br><strong>CANDIDATES</strong></p></td></tr><tr><td><p class="text-align-center">GOVERNOR/<br>LIEUTENANT&#160;<br>GOVERNOR</p></td><td><p class="text-align-center">DARREN BAILEY/<br>AARON B. DEL MAR</p></td><td><p class="text-align-center">JB PRITZER/<br>CHRISTIAN MITCHELL</p></td><td><p class="text-align-center">COLLIN CORBETT/<br>CAROLYN SCHOFIELD</p></td></tr><tr><td><p class="text-align-center">ATTORNEY<br>GENERAL</p></td><td><p class="text-align-center">ROBERT W. FIORETTI</p></td><td><p class="text-align-center">KWAME RAOUL</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">SECRETARY OF STATE</p></td><td><p class="text-align-center">DIANE M. HARRIS</p></td><td><p class="text-align-center">ALEXI GIANNOULIAS</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">COMPTROLLER</p></td><td><p class="text-align-center">BRYAN DREW</p></td><td><p class="text-align-center">MARGARET CROKE</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">TREASURER</p></td><td><p class="text-align-center">MAX SOLOMON&#160;</p></td><td><p class="text-align-center">MICHAEL W. FRERICHS</p></td><td><p class="text-align-center">&#160;</p></td></tr></tbody></table></dd><dt>ILLINOIS GENERAL ASSEMBLY</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>OFFICE</strong></p></td><td><p class="text-align-center"><strong>REPUBLICAN CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>DEMOCRATIC CANDIDATES</strong></p></td></tr><tr><td><p class="text-align-center">51ST LEGISLATIVE</p></td><td><p class="text-align-center">CHAPIN ROSE</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">101ST REPRESENTATIVE</p></td><td><p class="text-align-center">CHRIS G. MILLER</p></td><td><p class="text-align-center">DOUGLAS FAGAN</p></td></tr><tr><td><p class="text-align-center">102ND REPRESENTATIVE</p></td><td><p class="text-align-center">ADAM M. NIEMERG</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">103RD REPRESENTATIVE</p></td><td><p class="text-align-center">&#160;</p></td><td><p class="text-align-center">CAROL AMMONS</p></td></tr><tr><td><p class="text-align-center">104TH REPRESENTATIVE</p></td><td><p class="text-align-center">BRANDUN SCHWEIZER</p></td><td><p class="text-align-center">MARY CATHERINE ROBERSON</p></td></tr></tbody></table></dd><dt>REGIONAL SUPERINTENDENT OF SCHOOLS</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>REGIONAL OFFICE</strong></p></td><td><p class="text-align-center"><strong>REPUBLICAN&#160;</strong><br><strong>CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>DEMOCRATIC&#160;</strong><br><strong>CANDIDATES</strong></p></td></tr><tr><td><p class="text-align-center">CHAMPAIGN-FORD</p></td><td><p class="text-align-center">JON KELLY</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">CLARK, COLES,<br>CUMBERLAND,<br>DOUGLAS, EDGAR,<br>MOULTRIE, AND SHELBY</p></td><td><p class="text-align-center">KYLE THOMPSON</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">MACON-PIATT</p></td><td><p class="text-align-center">JILL R. REEDY</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">VERMILION</p></td><td><p class="text-align-center">AARON HIRD</p></td><td><p class="text-align-center">&#160;</p></td></tr></tbody></table></dd><dt>COUNTY-WIDE OFFICES</dt><dd><table class="table" border="1" cellpadding="1" cellspacing="1"><tbody><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:224px;"><strong style="box-sizing:border-box;">COUNTY OFFICE</strong></td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;"><strong style="box-sizing:border-box;">REPUBLICAN CANDIDATES</strong></td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;"><strong style="box-sizing:border-box;">DEMOCRATIC CANDIDATES</strong></td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:224px;" colspan="1">COUNTY CLERK</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">ALAN ANDERSON</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">AARON AMMONS</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:224px;" colspan="1" rowspan="1">COUNTY EXECUTIVE</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">MICHELLE JETT</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:224px;">COUNTY TREASURER</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">BYRON CLARK</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:224px;">COUNTY SHERIFF</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">GREGORY A. WORRELL</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:306px;">DUSTIN D. HEUERMAN</td></tr></tbody></table></dd><dt>COUNTY BOARD</dt><dd><table class="table" border="1" cellpadding="1" cellspacing="1"><tbody><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;"><strong style="box-sizing:border-box;">COUNTY BOARD DISTRICT</strong></td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;"><strong style="box-sizing:border-box;">REPUBLICAN CANDIDATES</strong></td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;"><strong style="box-sizing:border-box;">DEMOCRATIC CANDIDATES</strong></td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 1</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">ANDREW SCHUYLER</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 2</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">THOMAS ED SEXTON</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 3</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">AARON ESRY</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 4</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">JENNIFER "JENNY" LOKSHIN</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 5</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">BETHANY A VANICHTHEERANONT</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 6</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">CHYNA FIGUEROA-DIXON</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 6<br>UNEXPIRED TERM</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">DENNISE ARRES</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 7</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">WILLIAM SCHOELL</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 8</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">STEPHANIE FORTADO</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 9</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">JASON VOTAVA</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 10</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">MONIQUE SETTLES</td></tr><tr><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:179px;">DISTRICT 11</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">&#160;</td><td class="text-align-center" style="box-sizing:border-box;padding:0px;text-align:center;width:274px;">LORRAINE COWART</td></tr></tbody></table></dd><dt>JUDICIAL</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>APPELLATE COURT</strong></p></td><td><p class="text-align-center"><strong>REPUBLICAN CANDIDATES</strong></p></td><td><p class="text-align-center"><strong>DEMOCRATIC CANDIDATES</strong></p></td></tr><tr><td><p class="text-align-center">FIFTH JUDICIAL<br>DISTRICT</p><p class="text-align-center">(To fill the vacancy of the<br>&#160;Hon. Thomas M. Welch)</p></td><td><p class="text-align-center">AMY E. SHOLAR</p></td><td><p class="text-align-center">&#160;</p></td></tr></tbody></table><p>Shall the following judges be retained:</p><table class="table"><tbody><tr><td><p class="text-align-center"><strong>COURT</strong></p></td><td><p class="text-align-center"><strong>JUDGE</strong></p></td></tr><tr><td><p class="text-align-center">APPELLATE FOUTH JUDICIAL DISTRICT</p></td><td><p class="text-align-center">JAMES A. KNECHT</p></td></tr><tr><td><p class="text-align-center">APPELLATE FIFTH JUDICIAL DISTRICT</p></td><td><p class="text-align-center">JOHN B. BARBERIS, Jr.</p></td></tr><tr><td><p class="text-align-center">SIXTH JUDICIAL CIRCUIT</p></td><td><p class="text-align-center">ROBERT C. "R.C." BOLLINGER</p></td></tr><tr><td><p class="text-align-center">SIXTH JUDICIAL CIRCUIT</p></td><td><p class="text-align-center">JASON M. BOHM</p></td></tr><tr><td><p class="text-align-center">SIXTH JUDICIAL CIRCUIT</p></td><td><p class="text-align-center">DANA RHOADES</p></td></tr><tr><td><p class="text-align-center">SIXTH JUDICIAL CIRCUIT</p></td><td><p class="text-align-center">RAMONA M. SULLIVAN</p></td></tr></tbody></table></dd><dt>WRITE-IN CANDIDATES</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>OFFICE</strong></p></td><td><p class="text-align-center"><strong>CANDIDATE</strong></p></td></tr><tr><td><p class="text-align-center">UNITED STATES SENATOR</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td rowspan="5"><p class="text-align-center">GOVERNOR/<br>LIEUTENANT GOVERNOR</p></td><td><p class="text-align-center">RICHARD BENEDICT MAYERS</p></td></tr><tr><td><p class="text-align-center">MIKE VICK/GARY PIERCE</p></td></tr><tr><td><p class="text-align-center">RAFAEL VARELA</p></td></tr><tr><td><p class="text-align-center">PATRICIA L. TILLAMN</p></td></tr><tr><td><p class="text-align-center">EYDE ARNDELL (LT. GOVERNOR</p></td></tr><tr><td><p class="text-align-center">ATTORNEY GENERAL</p></td><td><p class="text-align-center">&#160;</p></td></tr><tr><td><p class="text-align-center">COMPTROLLER</p></td><td><p class="text-align-center">ANNA SCHIEFELBEIN</p></td></tr><tr><td><p class="text-align-center">TREASURER</p></td><td><p class="text-align-center">TIMOTHEA PAPAS</p></td></tr><tr><td><p class="text-align-center">103RD REPRESENTATIVE</p></td><td><p class="text-align-center">KEITH CAMERON SMITH</p></td></tr></tbody></table></dd><dt>CANDIDATE CONTACT INFORMATION</dt><dd><p>PLEASE NOTE: Our office can only provide the public contact information made available to us by the candidates. We will continue updating our list as more information becomes available.</p><p><a href="https://champaigncountyillinois-my.sharepoint.com/:x:/g/personal/elections_champaigncountyil_gov/ERDtJeygtY9IhIK7znpm_AQBTdzXkyGWSZh27zcRir1_mg?e=n8XKJI" title="CANDIDATE CONTACT INFORMATION"><strong><u>CANDIDATE CONTACT INFORMATION LINK&#160;</u></strong></a></p></dd></dl><p>&#160;</p><h4>2026 PUBLIC QUESTIONS</h4><dl class="ckeditor-accordion"><dt>CHAMPAIGN CUSD</dt><dd><table class="table" border="1" cellpadding="1" cellspacing="1"><tbody><tr><td class="text-align-center"><strong>QUESTION TITLE</strong></td><td class="text-align-center"><strong>QUESTION</strong></td><td class="text-align-center" colspan="2"><strong>ANSWER OPTIONS</strong></td></tr><tr><td><strong>PROPOSITION TO ISSUE $192,000,000 SCHOOL BUILDING BONDS</strong></td><td>Shall the Board of Education of Champaign Community Unit School District Number 4, Champaign County, Illinois, build and equip a new middle school building; alter, repair and equip the Jefferson Middle School Building;<br>demolish the existing Franklin STEAM Academy Building and build&#160;<br>and equip a new Franklin STEAM Academy Building on that site;&#160;<br>demolish the sixth through eighth grade International Prep Academy Building&#160;<br>and build and equip a sixth through eighth grade addition to and alter, repair&#160;<br>and equip the kindergarten through fifth grade International Prep Academy Building;&#160;<br>alter, repair and equip the Garden Hills Academy Building, including improving its geothermal HVAC system; improve special education facilities; improve school sites; and acquire land; and issue bonds of said School District to the amount of $192,000,000 for the purpose of paying costs thereof?</td><td class="text-align-center">YES</td><td class="text-align-center">NO</td></tr></tbody></table><p>&#160;</p></dd><dt>CHAMPAIGN TOWNSHIP</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>QUESTION TITLE</strong></p></td><td><p class="text-align-center"><strong>QUESTION</strong></p></td><td colspan="2"><p class="text-align-center"><strong>ANSWER OPTIONS</strong></p></td></tr><tr><td>&#160;</td><td>Shall the State of Illinois repeal amendments to the Illinois Pension Code that penalize American businesses for boycotting the State of Israel?</td><td><p class="text-align-center">YES</p></td><td><p class="text-align-center">NO</p></td></tr></tbody></table></dd><dt>CUNNINGHAM TOWNSHIP</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>QUESTION</strong><br><strong>TITLE</strong></p></td><td><p class="text-align-center"><strong>QUESTION</strong></p></td><td colspan="2"><p class="text-align-center"><strong>&#160; &#160; &#160;ANSWER &#160; &#160;&#160;</strong><br>&#160; &#160; &#160;<strong>OPTIONS &#160; &#160;&#160;</strong></p></td></tr><tr><td>&#160;</td><td>Shall the State of Illinois repeal amendments to the Illinois Pension Code that penalize&#160;<br>American businesses for boycotting the State of Israel?</td><td><p class="text-align-center">YES</p></td><td><p class="text-align-center">NO</p></td></tr></tbody></table></dd><dt>MAHOMET-SEYMOUR CUSD 3</dt><dd><table class="table"><tbody><tr><td>QUESTION TITLE</td><td>QUESTION</td><td colspan="2">ANSWER&#160;<br>OPTIONS</td></tr><tr><td>PROPOSITION TO&#160;<br>ISSUE $84,000,000&#160;<br>SCHOOL BUILDING&#160;<br>BONDS</td><td>Shall the Board of Education of Mahomet-Seymour&#160;<br>Community Unit School District Number 3, Champaign and&#160;<br>Piatt Counties, Illinois, build and equip a new Junior High&#160;<br>School Building, improve the site thereof, and issue bonds of&#160;<br>said School District to the amount of $84,000,000 for the&#160;<br>purpose of paying the costs thereof?</td><td>YES</td><td>NO</td></tr></tbody></table></dd><dt>VILLAGE OF RANTOUL</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>QUESTION TITLE</strong></p></td><td><p class="text-align-center"><strong>QUESTION</strong></p></td><td colspan="2"><p class="text-align-center"><strong>ANSWER&#160;</strong><br><strong>OPTIONS</strong></p></td></tr><tr><td>PROPOSITION TO&#160;<br>ABANDON ELECTION OF&#160;<br>TRUSTEES BY&#160;<br>DISTRICT</td><td>Shall the Village of Rantoul abandon the method of electing&#160;<br>trustees from districts so that trustees shall be hereafter&#160;<br>elected on a village wide basis?</td><td>YES</td><td>NO</td></tr><tr><td>ADVISORY&#160;<br>REFERENDUM&#160;<br>CONCERNING&#160;<br>ALLOWING&#160;<br>CANNABIS&#160;<br>BUSINESSES TO&#160;<br>LOCATE AND&#160;<br>OPERATE WITHIN&#160;<br>THE VILLAGE OF RANTOUL</td><td>Shall the Village of Rantoul allow cannabis businesses to&#160;<br>locate and operate within the village?</td><td>YES</td><td>NO</td></tr></tbody></table></dd><dt>THOMASBORO CCSD 130</dt><dd><table class="table"><tbody><tr><td><p class="text-align-center"><strong>QUESTION</strong><br><strong>TITLE</strong></p></td><td><p class="text-align-center"><strong>QUESTION</strong></p></td><td><p class="text-align-center"><strong>EXPLAINATION</strong></p></td><td colspan="2"><p class="text-align-center"><strong>ANSWER</strong><br><strong>OPTIONS</strong></p></td></tr><tr><td>PROPOSITION&#160;<br>TO INCREASE&#160;<br>THE LIMITING&#160;<br>RATE</td><td>Shall the limiting rate under<br>&#160;the Property Tax Extension&#160;<br>Limitation Law for&#160;<br>Thomasboro Community&#160;<br>Consolidated School District&#160;<br>Number 130, Champaign&#160;<br>County, Illinois, be increased&#160;<br>by an additional amount&#160;<br>equal to 0.7500% above the&#160;<br>limiting rate for school&#160;<br>purposes for levy year 2025&#160;<br>and be equal to 2.7451% of&#160;<br>the equalized assessed&#160;<br>value of the taxable property&#160;<br>therein for levy year 2026?</td><td>(1) The approximate amount of taxes&#160;<br>extendable at the most recently&#160;<br>extended limiting rate is $928,502,&#160;<br>and the approximate amount of taxes&#160;<br>extendable if the proposition is&#160;<br>approved is $1,277,546.&#160;<br>(2) For the 2026 levy year the&#160;<br>approximate amount of the additional&#160;<br>tax extendable against property&#160;<br>containing a single family residence&#160;<br>and having a fair market value at the&#160;<br>time of the referendum of $100,000 is&#160;<br>estimated to be $250.&#160;<br>(3) If the proposition is approved, the&#160;<br>aggregate extension for 2026 will be&#160;<br>determined by the limiting rate set forth&#160;<br>in the proposition, rather than the&#160;<br>otherwise applicable limiting rate calculated<br>&#160;under the provisions of the Property Tax&#160;<br>Extension Limitation Law (commonly&#160;<br>known as the Property Tax Cap Law).</td><td>YES</td><td>NO</td></tr></tbody></table></dd></dl><hr><dl class="ckeditor-accordion"><dt>VOTE BY MAIL PROCESSING</dt><dd><p>Vote by Mail processing will occur every weekday from 11:30-4:30pm.&#160;<br><br><strong>No processing will occur on the following dates:</strong></p><ul><li data-list-item-id="ea6b969b4573ad25d4dba2b38ea3bbc50">October 2, 2026</li><li data-list-item-id="ec9eac367bc367e0de7c2f2fca3ed67bb">October 23, 2026</li><li data-list-item-id="e6645ca6b377339168b8217213703e13d">November 3, 2026 (Election Day)</li></ul></dd></dl><hr><h2 class="text-align-center">2026 General Election Specimen Ballot</h2><p class="text-align-center"><a href="https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf"><em>Link for mobile/download</em></a></p><hr><div style="display:flex;justify-content:center;"><iframe style="border-style:none;" title="County Board district map (PDF)" src="https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf" width="650" height="650"></iframe></div></div>
+      
+  </div>
+</article>
+
+    </div><!--/.block-content -->
+</div><!--/.block -->
+
+  </div>
+
+            </main>
+
+                                      <aside class="sidebar sidebar-first region-sidebar-first" role="complementary" aria-label="Sidebar">
+                  <div class="block-region region-sidebar-first">
+    <div id="block-ccco-ccc-migrate-elections-links-block" class="settings-tray-editable block" data-drupal-settingstray="editable">
+  
+    
+  <div class="block-content">
+      <div class="elections-links-block" aria-label="Elections Links">
+  <h2>Elections Section Links</h2>
+      <ul class="menu menu-level-0">
+              <li class="menu-item menu-item-level-1"><a href="https://champaignilted.precinctcentral.com/TED/ElectionForcePortal/Launchpad.aspx">Election Judge Application</a></li>
+              <li class="menu-item menu-item-level-1"><a href="/sites/default/files/election-forms/vote-by-mail-application.pdf">Vote By Mail Registration Form</a></li>
+              <li class="menu-item menu-item-level-1"><a href="/sites/default/files/election-forms/form-signature-update.pdf">Signature Update Form</a></li>
+              <li class="menu-item menu-item-level-1"><a href="/sites/default/files/election-forms/form-change-address.pdf">Change of Address Form</a></li>
+              <li class="menu-item menu-item-level-1"><a href="/sites/default/files/election-forms/form-removal-request.pdf">Removal Request Form</a></li>
+              <li class="menu-item menu-item-level-1"><a href="/sites/default/files/election-forms/form-voter-registration.pdf">Voter Registration Form</a></li>
+          </ul>
+  
+      <h2>Elections Helpful Links</h2>
+    <ul class="menu menu-level-0 small">
+              <li class="menu-item menu-item-level-1"><a href="https://www.elections.il.gov/" target="_blank" rel="noopener">Illinois State Board of Election</a></li>
+              <li class="menu-item menu-item-level-1"><a href="https://ilga.gov/Legislation/ILCS/Acts?ChapterID=3" target="_blank" rel="noopener">Illinois Election Code</a></li>
+              <li class="menu-item menu-item-level-1"><a href="https://move.elections.il.gov/" target="_blank" rel="noopener">Illinois Military and Overseas Voter Empowerment (MOVE)</a></li>
+          </ul>
+  </div>
+
+    </div><!--/.block-content -->
+</div><!--/.block -->
+
+  </div>
+
+              </aside>
+            
+                      </div>
+        </div>
+      </div>
+
+        <div class="breadcrumb-bottom-wrapper">
+      <div class="container">
+          <div class="block-region region-breadcrumb">
+    <div id="block-ccco-breadcrumbs" class="settings-tray-editable block" data-drupal-settingstray="editable">
+  
+    
+  <div class="block-content">
+        <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+    <ol class="breadcrumb-items">
+          <li class="breadcrumb-item">
+                  <a href="/">Home</a><span><i class="icon-angle-right"></i></span>
+              </li>
+          <li class="breadcrumb-item">
+                  <a href="/elections">Elections</a><span><i class="icon-angle-right"></i></span>
+              </li>
+          <li class="breadcrumb-item">
+                  Candidate and Elected Official Information
+              </li>
+        </ol>
+  </nav>
+
+    </div><!--/.block-content -->
+</div><!--/.block -->
+
+  </div>
+
+      </div>
+    </div>
+  
+    <footer class="footer ccco-footer" role="contentinfo">
+  <div class="container">
+        <div class="ccco-footer__grid">
+      <div class="ccco-footer__col">
+        <h2 class="ccco-footer__heading">Champaign County Clerk</h2>
+                              <p>Aaron Ammons, County Clerk &amp; Recorder</p>
+                      <p>102 E Main St., Urbana, IL 61801</p>
+                      <p>Hours: Mon–Fri, 8:00 AM – 4:30 PM</p>
+                        </div>
+      <div class="ccco-footer__col ccco-footer__col--links">
+        <h2 class="ccco-footer__heading">Quick Links</h2>
+        <ul class="ccco-footer__links ccco-footer__links--two-col">
+                                    <li><a href="/elections">Elections</a></li>
+                          <li><a href="/vital-records">Vital Records</a></li>
+                          <li><a href="/recorder-deeds">Recorder of Deeds</a></li>
+                          <li><a href="/property-taxes">Property Taxes</a></li>
+                          <li><a href="/contact-us">Contact Us</a></li>
+                          <li><a href="https://sei.champaigncountyclerk.com/sei_home">SEI Portal</a></li>
+                              </ul>
+      </div>
+              <div class="ccco-footer__col ccco-footer__col--menu">
+          <h2 class="ccco-footer__heading">Legal</h2>
+          <ul class="ccco-footer__links">
+                          <li><a href="/accessibility-information">Accessibility Info</a></li>
+                          <li><a href="/privacy-policy">Privacy Policy</a></li>
+                          <li><a href="/foia-requests">FOIA Requests</a></li>
+                          <li><a href="/terms-of-use">Terms of Use</a></li>
+                      </ul>
+        </div>
+                    <div class="ccco-footer__col ccco-footer__col--menu">
+          <h2 class="ccco-footer__heading">About</h2>
+          <ul class="ccco-footer__links">
+                          <li><a href="/press-releases">Press Releases</a></li>
+                          <li><a href="/social-media-policy">Social Media Policy</a></li>
+                      </ul>
+        </div>
+          </div>
+    <div class="ccco-footer__contact">
+      <h2 class="ccco-footer__heading">Contact</h2>
+      <div class="ccco-footer__contact-grid">
+                                          <div class="ccco-footer__contact-item">
+              <h3 class="ccco-footer__contact-dept">Election Services</h3>
+                              <p><a href="tel:+12173843724">(217) 384-3724</a></p>
+                                            <p><a href="mailto:elections@champaigncountyclerkil.gov">elections@champaigncountyclerkil.gov</a></p>
+                          </div>
+                                  <div class="ccco-footer__contact-item">
+              <h3 class="ccco-footer__contact-dept">Vital Records</h3>
+                              <p><a href="tel:+12173843720">(217) 384-3720</a></p>
+                                            <p><a href="mailto:vitals@champaigncountyil.gov">vitals@champaigncountyil.gov</a></p>
+                          </div>
+                                  <div class="ccco-footer__contact-item">
+              <h3 class="ccco-footer__contact-dept">Recorder of Deeds</h3>
+                              <p><a href="tel:+12173843774">(217) 384-3774</a></p>
+                                            <p><a href="mailto:recorderofdeeds@champaigncountyil.gov">recorderofdeeds@champaigncountyil.gov</a></p>
+                          </div>
+                                  <div class="ccco-footer__contact-item">
+              <h3 class="ccco-footer__contact-dept">Property Tax</h3>
+                              <p><a href="tel:+12173843722">(217) 384-3722</a></p>
+                                            <p><a href="mailto:proptax@champaigncountyil.gov">proptax@champaigncountyil.gov</a></p>
+                          </div>
+                        </div>
+    </div>
+    <div class="ccco-footer__bottom">
+      <p>© 2026 Champaign County Clerk &amp; Recorder of Deeds’ Office. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</div>
+
+
+
+  </div>
+
+    
+          
+        <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/254","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ckeditorAccordion":{"accordionStyle":{"collapseAll":null,"keepRowsOpen":null,"animateAccordionOpenAndClose":1,"openTabsWithHash":1,"allowHtmlInTitles":0}},"user":{"uid":0,"permissionsHash":"9ba2dda6e5c4d26d9620811d624c13ea0b9f508f8aa38ac698a40639713aced4"}}</script>
+<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+<script src="/sites/default/files/js/js_PDQDfK1A2_TFm_kyBxE_VGZWhE9jIZMCuLdeOqodlPM.js?scope=footer&delta=1&language=en&theme=ccco&include=eJxtjFEOwjAMQy9U6JGq4IYuWpegNEjj9ox9gBh8-tl-AErlG3ksrFFg3XxkmM3CW9Kx0YS_ox-y7xZpTsGZAPMqm-EL36WwTqTg13HvLLduF-qnEY8u2hJmrhLm5e342M5XNw3WmmLi9fhcyenAnoD5WNc"></script>
+<script src="/modules/contrib/ckeditor_accordion/js/accordion.frontend.min.js?tmtqmn"></script>
+<script src="/sites/default/files/js/js_6E_-Pbb5dpsDmqdq7hEuo7biUoIHynq6v5rduzpYwyk.js?scope=footer&delta=3&language=en&theme=ccco&include=eJxtjFEOwjAMQy9U6JGq4IYuWpegNEjj9ox9gBh8-tl-AErlG3ksrFFg3XxkmM3CW9Kx0YS_ox-y7xZpTsGZAPMqm-EL36WwTqTg13HvLLduF-qnEY8u2hJmrhLm5e342M5XNw3WmmLi9fhcyenAnoD5WNc"></script>
+
+    
+            <div class="floating-accessibility-widget" id="floating-accessibility-widget">
+            <a href="/" class="accessibility-home-btn" aria-label="Go to home page" title="Go to home page">
+        <span class="home-icon">🏠</span>
+      </a>
+      
+            <button class="accessibility-button" aria-label="Open Accessibility Options" aria-expanded="false" aria-controls="accessibility-menu">
+        <svg class="accessibility-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" />
+      </button>
+      
+            <div id="accessibility-menu" class="accessibility-menu" style="display: none;">
+        <h3>Accessibility Options</h3>
+        <ul>
+          <li><button class="text-size-btn" data-size="small" aria-label="Use small text size">Small Text</button></li>
+          <li><button class="text-size-btn" data-size="medium" aria-label="Use medium text size">Medium Text</button></li>
+          <li><button class="text-size-btn" data-size="large" aria-label="Use large text size">Large Text</button></li>
+        </ul>
+      </div>
+    </div>
+        
+      </body>
+</html>

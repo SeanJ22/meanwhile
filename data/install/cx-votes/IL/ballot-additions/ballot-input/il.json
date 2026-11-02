@@ -84,6 +84,310 @@
             "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
             "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nONE HUNDRED AND EIGHTEENTH REPRESENTATIVE\nDISTRICT\n(Vote for one)\nScott Doody\nREPUBLICAN\nHomer \"Chip\" Markel\nDEMOCRATIC"
           }
+        },
+        {
+          "id": "il-sbe-2026-state-house-103",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:103",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY ONE HUNDRED AND THIRD REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+            "sourceOrg": "Champaign County Clerk and Recorder of Deeds",
+            "collectedAt": "2026-11-02T22:29:11.224517+00:00",
+            "verifiedAt": "2026-11-02T22:29:11.224517+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY \n\nONE HUNDRED AND THIRD REPRESENTATIVE DISTRICT \n\n(Vote for One) NO CANDIDATE REPUBLICAN CAROL AMMONS DEMOCRATIC "
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-104",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:104",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY ONE HUNDRED AND FOURTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+            "sourceOrg": "Champaign County Clerk and Recorder of Deeds",
+            "collectedAt": "2026-11-02T22:29:11.224517+00:00",
+            "verifiedAt": "2026-11-02T22:29:11.224517+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY \n\nONE HUNDRED AND FOURTH REPRESENTATIVE DISTRICT \n\n(Vote for One) BRANDUN SCHWEIZER REPUBLICAN MARY CATHERINE ROBERSON DEMOCRATIC "
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-37",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:37",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY THIRTY-SEVENTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nTHIRTY-SEVENTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC No Candidate\nREPUBLICAN Patrick Sheehan"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-38",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:38",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY THIRTY-EIGHTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nTHIRTY-EIGHTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Debbie Meyers-Martin\nREPUBLICAN No Candidate"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-80",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:80",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY EIGHTIETH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nEIGHTIETH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Anthony DeLuca\nREPUBLICAN Adam M. Beaty"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-86",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:86",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY EIGHTY-SIXTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nEIGHTY-SIXTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Lawrence \"Larry\" M. Walsh, Jr.\nREPUBLICAN No Candidate"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-97",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:97",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-SEVENTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nNINETY-SEVENTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Jessica Dixon Heitman\nREPUBLICAN Gabby Shanahan"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-98",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:98",
+          "divisionVintage": "2022",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-EIGHTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nNINETY-EIGHTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Natalie A. Manley\nREPUBLICAN Nona Parker"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-63",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:63",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 63rd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+            "sourceOrg": "McHenry County Clerk",
+            "collectedAt": "2026-11-02T22:36:17.953046+00:00",
+            "verifiedAt": "2026-11-02T22:36:17.953046+00:00",
+            "quote": "State Representative -, 63rd Dist Vote For: 1 1420 \n\nSteven Reick, Republican"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-2",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:2",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:47:44.776172+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.915282+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Hernandez, Elizabeth \"Lisa\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBIch%2f8RsqZovw%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [2ND REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBjl1%2fHZaTOL8w%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Hruska, Laura](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBLq7Q7mEaq%2fwg%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [2ND REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBjl1%2fHZaTOL8w%3d%3d) | REPUBLICAN | 11/3/2025 1:50 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-17",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:17",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 District 17",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.854120+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.923770+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Gong-Gershowitz, Jennifer](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=WVKrwM7oDOrxqFPPIugQzg%3d%3d&ElectionID=sejIrI%2bQmww%3d) Redaction Requested |  |  | [17TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=GsuFFk4X1Y9cWoVnxU%2bdgw%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Geldermann, James \"Jim\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=WVKrwM7oDOpeUvLvQyUQmA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [17TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=GsuFFk4X1Y9cWoVnxU%2bdgw%3d%3d) | REPUBLICAN | 11/3/2025 2:14 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-30",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:30",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 District 30",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.862228+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.924284+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Davis, William \"Will\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBIr4O6FHZHK2g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [30TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBgIWk50T3KvUQ%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-44",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:44",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 District 44",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.866093+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.279980+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Crespo, Fred](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=PapNB22r2PiQ3KVjF8vEhQ%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [44TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=TqsZGSu95ngLGqWt12bHAw%3d%3d) | DEMOCRATIC | 10/28/2025 2:34 PM | Active 10/28/2025 |\n| [Black, Ralph](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=PapNB22r2Pixxe%2bbZiHi7g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [44TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=TqsZGSu95ngLGqWt12bHAw%3d%3d) | REPUBLICAN | 11/3/2025 2:17 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-53",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:53",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 District 53",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:45.560310+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.289326+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Grasse, Nicolle](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6z0WBLoA87qA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Bauer, Elizabeth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6bM3pnqgZE6g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | REPUBLICAN | 11/3/2025 2:07 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-54",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:54",
+          "divisionVintage": "2022",
+          "title": "State Representative \u2013 District 54",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:47:44.776586+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.626134+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Canty, Mary Beth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL7E9Ccc9vMVeg%3d%3d&ElectionID=sejIrI%2bQmww%3d) Redaction Requested |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Keen, Wayne](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=ZwnDpjPfz5V%2bQmXpNOw%2bAQ%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | REPUBLICAN | 11/3/2025 2:24 PM | Withdrawn 4/13/2026 |\n| [Tracy, Joseph M.](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=AcJyzlttDtn5lUPq6p5Pzw%3d%3d&ElectionID=sejIrI%2bQmww%3d) 344 N. Lytle Dr. Palatine, IL 60074 |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | REPUBLICAN | 5/29/2026 10:18 AM | Active 5/29/2026 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-senate-27",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldu:27",
+          "divisionVintage": "2022",
+          "title": "State Senator \u2013 District 27",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:45.757382+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.653881+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Santa Maria, Carina](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=expxj%2fd98Bn2eckTI9ctfA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [27TH SENATE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=fx%2b49W3qbQhni9gltJVDsw%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Mathis, David](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=expxj%2fd98BnO6lwpTFhL9A%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [27TH SENATE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=fx%2b49W3qbQhni9gltJVDsw%3d%3d) | REPUBLICAN | 11/3/2025 11:17 AM | Active 11/3/2025 |"
+          }
         }
       ],
       "candidacies": [
@@ -207,6 +511,448 @@
             "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
             "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nONE HUNDRED AND EIGHTEENTH REPRESENTATIVE\nDISTRICT\n(Vote for one)\nScott Doody\nREPUBLICAN\nHomer \"Chip\" Markel\nDEMOCRATIC"
           }
+        },
+        {
+          "id": "il-sbe-2026-state-house-103:carol-ammons-democratic",
+          "contestId": "il-sbe-2026-state-house-103",
+          "givenName": "CAROL",
+          "familyName": "AMMONS",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+            "sourceOrg": "Champaign County Clerk and Recorder of Deeds",
+            "collectedAt": "2026-11-02T22:29:11.224517+00:00",
+            "verifiedAt": "2026-11-02T22:29:11.224517+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY \n\nONE HUNDRED AND THIRD REPRESENTATIVE DISTRICT \n\n(Vote for One) NO CANDIDATE REPUBLICAN CAROL AMMONS DEMOCRATIC "
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-104:brandun-schweizer-republican",
+          "contestId": "il-sbe-2026-state-house-104",
+          "givenName": "BRANDUN",
+          "familyName": "SCHWEIZER",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+            "sourceOrg": "Champaign County Clerk and Recorder of Deeds",
+            "collectedAt": "2026-11-02T22:29:11.224517+00:00",
+            "verifiedAt": "2026-11-02T22:29:11.224517+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY \n\nONE HUNDRED AND FOURTH REPRESENTATIVE DISTRICT \n\n(Vote for One) BRANDUN SCHWEIZER REPUBLICAN MARY CATHERINE ROBERSON DEMOCRATIC "
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-104:mary-catherine-roberson-democratic",
+          "contestId": "il-sbe-2026-state-house-104",
+          "givenName": "MARY CATHERINE",
+          "familyName": "ROBERSON",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+            "sourceOrg": "Champaign County Clerk and Recorder of Deeds",
+            "collectedAt": "2026-11-02T22:29:11.224517+00:00",
+            "verifiedAt": "2026-11-02T22:29:11.224517+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY \n\nONE HUNDRED AND FOURTH REPRESENTATIVE DISTRICT \n\n(Vote for One) BRANDUN SCHWEIZER REPUBLICAN MARY CATHERINE ROBERSON DEMOCRATIC "
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-37:patrick-sheehan-republican",
+          "contestId": "il-sbe-2026-state-house-37",
+          "givenName": "Patrick",
+          "familyName": "Sheehan",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nTHIRTY-SEVENTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC No Candidate\nREPUBLICAN Patrick Sheehan"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-38:debbie-meyers-martin-democratic",
+          "contestId": "il-sbe-2026-state-house-38",
+          "givenName": "Debbie",
+          "familyName": "Meyers-Martin",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nTHIRTY-EIGHTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Debbie Meyers-Martin\nREPUBLICAN No Candidate"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-80:anthony-deluca-democratic",
+          "contestId": "il-sbe-2026-state-house-80",
+          "givenName": "Anthony",
+          "familyName": "DeLuca",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nEIGHTIETH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Anthony DeLuca\nREPUBLICAN Adam M. Beaty"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-80:adam-m-beaty-republican",
+          "contestId": "il-sbe-2026-state-house-80",
+          "givenName": "Adam M.",
+          "familyName": "Beaty",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nEIGHTIETH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Anthony DeLuca\nREPUBLICAN Adam M. Beaty"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-86:lawrence-larry-m-walsh-jr-democratic",
+          "contestId": "il-sbe-2026-state-house-86",
+          "givenName": "Lawrence \"Larry\" M.",
+          "familyName": "Walsh, Jr.",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nEIGHTY-SIXTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Lawrence \"Larry\" M. Walsh, Jr.\nREPUBLICAN No Candidate"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-97:jessica-dixon-heitman-democratic",
+          "contestId": "il-sbe-2026-state-house-97",
+          "givenName": "Jessica Dixon",
+          "familyName": "Heitman",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nNINETY-SEVENTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Jessica Dixon Heitman\nREPUBLICAN Gabby Shanahan"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-97:gabby-shanahan-republican",
+          "contestId": "il-sbe-2026-state-house-97",
+          "givenName": "Gabby",
+          "familyName": "Shanahan",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nNINETY-SEVENTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Jessica Dixon Heitman\nREPUBLICAN Gabby Shanahan"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-98:natalie-a-manley-democratic",
+          "contestId": "il-sbe-2026-state-house-98",
+          "givenName": "Natalie A.",
+          "familyName": "Manley",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nNINETY-EIGHTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Natalie A. Manley\nREPUBLICAN Nona Parker"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-98:nona-parker-republican",
+          "contestId": "il-sbe-2026-state-house-98",
+          "givenName": "Nona",
+          "familyName": "Parker",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+            "sourceOrg": "Illinois State Board of Elections / Will County Clerk",
+            "collectedAt": "2026-11-02T22:38:27.951315+00:00",
+            "verifiedAt": "2026-11-02T22:38:27.951850+00:00",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY\nNINETY-EIGHTH REPRESENTATIVE DISTRICT\n(Vote for one)\nDEMOCRATIC Natalie A. Manley\nREPUBLICAN Nona Parker"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-63:steven-reick-republican",
+          "contestId": "il-sbe-2026-state-house-63",
+          "givenName": "Steven",
+          "familyName": "Reick",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+            "sourceOrg": "McHenry County Clerk",
+            "collectedAt": "2026-11-02T22:36:17.953046+00:00",
+            "verifiedAt": "2026-11-02T22:36:17.953046+00:00",
+            "quote": "State Representative -, 63rd Dist Vote For: 1 1420 \n\nSteven Reick, Republican"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-2:elizabeth-lisa-hernandez-democratic",
+          "contestId": "il-sbe-2026-state-house-2",
+          "givenName": "Elizabeth \"Lisa\"",
+          "familyName": "Hernandez",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:47:44.776172+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.915282+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Hernandez, Elizabeth \"Lisa\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBIch%2f8RsqZovw%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [2ND REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBjl1%2fHZaTOL8w%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Hruska, Laura](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBLq7Q7mEaq%2fwg%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [2ND REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBjl1%2fHZaTOL8w%3d%3d) | REPUBLICAN | 11/3/2025 1:50 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-2:laura-hruska-republican",
+          "contestId": "il-sbe-2026-state-house-2",
+          "givenName": "Laura",
+          "familyName": "Hruska",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:47:44.776172+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.915282+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Hernandez, Elizabeth \"Lisa\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBIch%2f8RsqZovw%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [2ND REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBjl1%2fHZaTOL8w%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Hruska, Laura](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBLq7Q7mEaq%2fwg%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [2ND REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBjl1%2fHZaTOL8w%3d%3d) | REPUBLICAN | 11/3/2025 1:50 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-17:jennifer-gong-gershowitz-democratic",
+          "contestId": "il-sbe-2026-state-house-17",
+          "givenName": "Jennifer",
+          "familyName": "Gong-Gershowitz",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.854120+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.923770+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Gong-Gershowitz, Jennifer](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=WVKrwM7oDOrxqFPPIugQzg%3d%3d&ElectionID=sejIrI%2bQmww%3d) Redaction Requested |  |  | [17TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=GsuFFk4X1Y9cWoVnxU%2bdgw%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Geldermann, James \"Jim\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=WVKrwM7oDOpeUvLvQyUQmA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [17TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=GsuFFk4X1Y9cWoVnxU%2bdgw%3d%3d) | REPUBLICAN | 11/3/2025 2:14 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-17:james-jim-geldermann-republican",
+          "contestId": "il-sbe-2026-state-house-17",
+          "givenName": "James \"Jim\"",
+          "familyName": "Geldermann",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.854120+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.923770+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Gong-Gershowitz, Jennifer](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=WVKrwM7oDOrxqFPPIugQzg%3d%3d&ElectionID=sejIrI%2bQmww%3d) Redaction Requested |  |  | [17TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=GsuFFk4X1Y9cWoVnxU%2bdgw%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Geldermann, James \"Jim\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=WVKrwM7oDOpeUvLvQyUQmA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [17TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=GsuFFk4X1Y9cWoVnxU%2bdgw%3d%3d) | REPUBLICAN | 11/3/2025 2:14 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-30:william-will-davis-democratic",
+          "contestId": "il-sbe-2026-state-house-30",
+          "givenName": "William \"Will\"",
+          "familyName": "Davis",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.862228+00:00",
+            "verifiedAt": "2026-11-02T22:52:34.924284+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Davis, William \"Will\"](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=d0P6eEAusBIr4O6FHZHK2g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [30TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=C58DPBDIkBgIWk50T3KvUQ%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-44:fred-crespo-democratic",
+          "contestId": "il-sbe-2026-state-house-44",
+          "givenName": "Fred",
+          "familyName": "Crespo",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.866093+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.279980+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Crespo, Fred](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=PapNB22r2PiQ3KVjF8vEhQ%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [44TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=TqsZGSu95ngLGqWt12bHAw%3d%3d) | DEMOCRATIC | 10/28/2025 2:34 PM | Active 10/28/2025 |\n| [Black, Ralph](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=PapNB22r2Pixxe%2bbZiHi7g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [44TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=TqsZGSu95ngLGqWt12bHAw%3d%3d) | REPUBLICAN | 11/3/2025 2:17 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-44:ralph-black-republican",
+          "contestId": "il-sbe-2026-state-house-44",
+          "givenName": "Ralph",
+          "familyName": "Black",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:40.866093+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.279980+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Crespo, Fred](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=PapNB22r2PiQ3KVjF8vEhQ%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [44TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=TqsZGSu95ngLGqWt12bHAw%3d%3d) | DEMOCRATIC | 10/28/2025 2:34 PM | Active 10/28/2025 |\n| [Black, Ralph](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=PapNB22r2Pixxe%2bbZiHi7g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [44TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=TqsZGSu95ngLGqWt12bHAw%3d%3d) | REPUBLICAN | 11/3/2025 2:17 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-53:nicolle-grasse-democratic",
+          "contestId": "il-sbe-2026-state-house-53",
+          "givenName": "Nicolle",
+          "familyName": "Grasse",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:45.560310+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.289326+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Grasse, Nicolle](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6z0WBLoA87qA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Bauer, Elizabeth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6bM3pnqgZE6g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | REPUBLICAN | 11/3/2025 2:07 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-53:elizabeth-bauer-republican",
+          "contestId": "il-sbe-2026-state-house-53",
+          "givenName": "Elizabeth",
+          "familyName": "Bauer",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:45.560310+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.289326+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Grasse, Nicolle](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6z0WBLoA87qA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Bauer, Elizabeth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6bM3pnqgZE6g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | REPUBLICAN | 11/3/2025 2:07 PM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-54:mary-beth-canty-democratic",
+          "contestId": "il-sbe-2026-state-house-54",
+          "givenName": "Mary Beth",
+          "familyName": "Canty",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:47:44.776586+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.626134+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Canty, Mary Beth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL7E9Ccc9vMVeg%3d%3d&ElectionID=sejIrI%2bQmww%3d) Redaction Requested |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Keen, Wayne](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=ZwnDpjPfz5V%2bQmXpNOw%2bAQ%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | REPUBLICAN | 11/3/2025 2:24 PM | Withdrawn 4/13/2026 |\n| [Tracy, Joseph M.](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=AcJyzlttDtn5lUPq6p5Pzw%3d%3d&ElectionID=sejIrI%2bQmww%3d) 344 N. Lytle Dr. Palatine, IL 60074 |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | REPUBLICAN | 5/29/2026 10:18 AM | Active 5/29/2026 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-house-54:joseph-m-tracy-republican",
+          "contestId": "il-sbe-2026-state-house-54",
+          "givenName": "Joseph M.",
+          "familyName": "Tracy",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:47:44.776586+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.626134+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Canty, Mary Beth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL7E9Ccc9vMVeg%3d%3d&ElectionID=sejIrI%2bQmww%3d) Redaction Requested |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Keen, Wayne](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=ZwnDpjPfz5V%2bQmXpNOw%2bAQ%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | REPUBLICAN | 11/3/2025 2:24 PM | Withdrawn 4/13/2026 |\n| [Tracy, Joseph M.](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=AcJyzlttDtn5lUPq6p5Pzw%3d%3d&ElectionID=sejIrI%2bQmww%3d) 344 N. Lytle Dr. Palatine, IL 60074 |  |  | [54TH REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=sJqQOcFxxlwF5PLZRTBJ9w%3d%3d) | REPUBLICAN | 5/29/2026 10:18 AM | Active 5/29/2026 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-senate-27:carina-santa-maria-democratic",
+          "contestId": "il-sbe-2026-state-senate-27",
+          "givenName": "Carina",
+          "familyName": "Santa Maria",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:45.757382+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.653881+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Santa Maria, Carina](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=expxj%2fd98Bn2eckTI9ctfA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [27TH SENATE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=fx%2b49W3qbQhni9gltJVDsw%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Mathis, David](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=expxj%2fd98BnO6lwpTFhL9A%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [27TH SENATE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=fx%2b49W3qbQhni9gltJVDsw%3d%3d) | REPUBLICAN | 11/3/2025 11:17 AM | Active 11/3/2025 |"
+          }
+        },
+        {
+          "id": "il-sbe-2026-state-senate-27:david-mathis-republican",
+          "contestId": "il-sbe-2026-state-senate-27",
+          "givenName": "David",
+          "familyName": "Mathis",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+            "sourceOrg": "Illinois State Board of Elections",
+            "collectedAt": "2026-11-02T22:49:45.757382+00:00",
+            "verifiedAt": "2026-11-02T22:52:35.653881+00:00",
+            "quote": "GENERAL ELECTION - 11/3/2026\n\n| Name | Write-In | Objection Pending | Office | Party | File Date | Status |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Santa Maria, Carina](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=expxj%2fd98Bn2eckTI9ctfA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [27TH SENATE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=fx%2b49W3qbQhni9gltJVDsw%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |\n| [Mathis, David](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=expxj%2fd98BnO6lwpTFhL9A%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [27TH SENATE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=fx%2b49W3qbQhni9gltJVDsw%3d%3d) | REPUBLICAN | 11/3/2025 11:17 AM | Active 11/3/2025 |"
+          }
         }
       ],
       "measures": [],
@@ -215,7 +961,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T22:08:06.720Z",
+    "reviewedAt": "2026-11-02T22:59:33.532Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -615,6 +1361,296 @@
         "httpStatus": 200,
         "rawHash": "57969116f857117b50067989fb245e6314e3c9f731c2b0b8327e2b5e5ce658e2",
         "reviewedEvidence": "Fresh official 2026 General Election preview ballot, November 3, 2026, page 1. The bounded HD118 office field was visually reviewed against the retained source image and contains exactly Scott Doody (REPUBLICAN) and Homer \"Chip\" Markel (DEMOCRATIC), vote for one. All four source pages were searched for additional occurrences; only this office field supplies HD118 choices. Original PDF, render coordinates, uncorrected OCR, and verified field transcription are retained."
+      },
+      {
+        "requestedUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+        "finalUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+        "httpStatus": 200,
+        "rawHash": "8ed90534e0778d5cb194d98b3a4f04716d6dbd931412241e9ba78d210a7e1d80",
+        "retrievedAt": "2026-11-02T22:29:11.224517+00:00",
+        "publisher": "Champaign County Clerk and Recorder of Deeds",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete saved official4pagePDF extraction response text; not originalPDF orHTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.champaigncountyclerk.com/elections/who-represents-me",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.champaigncountyclerk.com/elections/who-represents-me",
+          "reportedFinalURL": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+          "reportedPDFPages": 4,
+          "reportedPublishedTime": "Wed, 07 Oct 2026 17:38:52 GMT",
+          "captureSucceeded": true,
+          "originHttpStatus": null,
+          "nativeCountyPageHttpStatus": 403,
+          "savedBytes": 11583
+        },
+        "reviewedEvidence": "The complete four-page officialpublication-ballot text was captured by the public deterministic reader and saved byte-for-byte as UTF8. Header identifies OFFICIAL BALLOT GENERAL ELECTION November3,2026. Full House103 and104 printed office blocks contain all named choices and party slots. Hash identifies this complete captured text only, never originalPDFbytes. Native county candidate-page request returned403. No model/checker verification metadata is fabricated."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+        "httpStatus": 200,
+        "rawHash": "5f0d73f6ffe7d7cc92cea1d06660b17b4ad671716872d3bb4b70d38e1a01e8e4",
+        "retrievedAt": "2026-11-02T22:38:27.951315+00:00",
+        "publisher": "Illinois State Board of Elections / Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "PDF",
+        "hashScope": "Original nativePDFresponse bytes.",
+        "reviewedEvidence": "Full native current2026 official certificate/specimen reviewed for each included complete office block. Names and party slots agree across both government-published documents. Nongovstaticasset source is linked by the saved current official.govGeneralElection HTML."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+        "httpStatus": 200,
+        "rawHash": "6cea72d2a108413e0431a3efd7186b1d6366e9903c2c06ef96afa274649c6e24",
+        "retrievedAt": "2026-11-02T22:38:27.951850+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "PDF",
+        "hashScope": "Original nativePDFresponse bytes.",
+        "reviewedEvidence": "Full native current2026 official certificate/specimen reviewed for each included complete office block. Names and party slots agree across both government-published documents. Nongovstaticasset source is linked by the saved current official.govGeneralElection HTML."
+      },
+      {
+        "requestedUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+        "finalUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+        "httpStatus": 200,
+        "rawHash": "742280db356312d8050913ac7fb30b027ad02bc6d67b1c6a57bf749b62c47239",
+        "retrievedAt": "2026-11-02T22:36:17.953046+00:00",
+        "publisher": "McHenry County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete saved official4pagePDF public-reader extraction text; not originalPDFbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+          "reportedPDFPages": 4,
+          "reportedPublishedTime": "Mon, 24 Aug 2026 07:17:06 GMT",
+          "originHttpStatus": null,
+          "nativeCountyCandidatePageHttpStatus": 403
+        },
+        "reviewedEvidence": "Complete current county CertifiedCandidateList for General11/3/2026 is saved as UTF8public-reader text. FullHouse63 officeblock lists StevenReick(Republican) alone before nextHouse64 block. Current official.govcandidatepage links this list as updated8/24/2026. Hashcoverscompletecapturedtext only, not PDFbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+        "httpStatus": 200,
+        "rawHash": "d7de0708b953ad91c76893033c1d2083e65698ce1141f3e0865015d7ccc1f818",
+        "retrievedAt": "2026-11-02T22:47:44.776172+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 3108,
+          "completeCapturedHtmlPath": "sources/e189786d9c8b24a369103200e9d85481b4b542f37abf051c888fab6d9ae5a5b7.txt",
+          "completeCapturedHtmlSha256": "e189786d9c8b24a369103200e9d85481b4b542f37abf051c888fab6d9ae5a5b7",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 2,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+        "httpStatus": 200,
+        "rawHash": "716e348bd8ce66b05522d8a510da9ba9a9ecafbe19a8626dd0e502dfb6fce47b",
+        "retrievedAt": "2026-11-02T22:49:40.854120+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 3134,
+          "completeCapturedHtmlPath": "sources/5031986cd109b145821b57e2aad917397891c0ae787807bd173c758a281b50ac.txt",
+          "completeCapturedHtmlSha256": "5031986cd109b145821b57e2aad917397891c0ae787807bd173c758a281b50ac",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 2,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+        "httpStatus": 200,
+        "rawHash": "f43a984c943af0129907d2e2eeb9c0be508f5047e46facff62e159a1a5526242",
+        "retrievedAt": "2026-11-02T22:49:40.862228+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 2717,
+          "completeCapturedHtmlPath": "sources/7379e897b1ebeb5db29d720ae0b2fb7b4c470b6d52c389502fce78ac41be9457.txt",
+          "completeCapturedHtmlSha256": "7379e897b1ebeb5db29d720ae0b2fb7b4c470b6d52c389502fce78ac41be9457",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 1,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+        "httpStatus": 200,
+        "rawHash": "3a6183da78f86b25d30c1078c7adb5491d46084493d0821e3c7573dcf85fe3bf",
+        "retrievedAt": "2026-11-02T22:49:40.866093+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 3086,
+          "completeCapturedHtmlPath": "sources/4393639dbc265e8fcf4e0269186d36f3f1f02a71849d6a6659c7d0a249883de3.txt",
+          "completeCapturedHtmlSha256": "4393639dbc265e8fcf4e0269186d36f3f1f02a71849d6a6659c7d0a249883de3",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 2,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+        "httpStatus": 200,
+        "rawHash": "189c1cf16e4ed37c5f8c23c1c5a9a5b851023bbc4800a16a88409c81daa35165",
+        "retrievedAt": "2026-11-02T22:49:45.560310+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 3095,
+          "completeCapturedHtmlPath": "sources/9301642128461cbdfaed2128f14c9559d4b6271fcde21a48759c915beb183fa5.txt",
+          "completeCapturedHtmlSha256": "9301642128461cbdfaed2128f14c9559d4b6271fcde21a48759c915beb183fa5",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 2,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+        "httpStatus": 200,
+        "rawHash": "59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f",
+        "retrievedAt": "2026-11-02T22:47:44.776586+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 3533,
+          "completeCapturedHtmlPath": "sources/c6eb631fb2a682b1952543461b1ac2cf7f833cdb9efeb74978362de772cd3c7c.txt",
+          "completeCapturedHtmlSha256": "c6eb631fb2a682b1952543461b1ac2cf7f833cdb9efeb74978362de772cd3c7c",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 3,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+      },
+      {
+        "requestedUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+        "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+        "httpStatus": 200,
+        "rawHash": "2226c85b06b1b9db42159ec274006275b69e09f5151fdab6d445e924371d7c56",
+        "retrievedAt": "2026-11-02T22:49:45.757382+00:00",
+        "publisher": "Illinois State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+        "captureMetadata": {
+          "provider": "Jina Reader public text extraction",
+          "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+          "readerHttpStatus": 200,
+          "readerContentType": "text/plain; charset=utf-8",
+          "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+          "originHttpStatus": null,
+          "nativeRelatedGovernmentFetch": {
+            "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+            "httpStatus": 403
+          },
+          "fullReaderResponseBytes": 3087,
+          "completeCapturedHtmlPath": "sources/a47a00694141716201aa38257b7c6a26801186c0f824bb71cb81bf26b3e874cf.txt",
+          "completeCapturedHtmlSha256": "a47a00694141716201aa38257b7c6a26801186c0f824bb71cb81bf26b3e874cf",
+          "htmlReaderHttpStatus": 200,
+          "observedOfficeTableRowCount": 2,
+          "publisherStatedTotalRecordCount": null,
+          "paginationActionsPresent": false
+        },
+        "reviewedEvidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
       }
     ]
   }

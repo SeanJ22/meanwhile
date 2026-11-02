@@ -33,6 +33,118 @@
       "ocdId": "ocd-division/country:us/state:il/sldl:118",
       "candidates": 2,
       "sourceUrl": "https://www.jacksoncounty-il.gov/DocumentCenter/View/1227/2026-Preview-Ballot"
+    },
+    {
+      "id": "il-sbe-2026-state-house-103",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY ONE HUNDRED AND THIRD REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:103",
+      "candidates": 1,
+      "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-104",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY ONE HUNDRED AND FOURTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:104",
+      "candidates": 2,
+      "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-37",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY THIRTY-SEVENTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:37",
+      "candidates": 1,
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-38",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY THIRTY-EIGHTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:38",
+      "candidates": 1,
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-80",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY EIGHTIETH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:80",
+      "candidates": 2,
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-86",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY EIGHTY-SIXTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:86",
+      "candidates": 1,
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-97",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-SEVENTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:97",
+      "candidates": 2,
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-98",
+      "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-EIGHTH REPRESENTATIVE DISTRICT",
+      "ocdId": "ocd-division/country:us/state:il/sldl:98",
+      "candidates": 2,
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf"
+    },
+    {
+      "id": "il-sbe-2026-state-house-63",
+      "title": "State Representative – 63rd District",
+      "ocdId": "ocd-division/country:us/state:il/sldl:63",
+      "candidates": 1,
+      "sourceUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000"
+    },
+    {
+      "id": "il-sbe-2026-state-house-2",
+      "title": "State Representative – District 2",
+      "ocdId": "ocd-division/country:us/state:il/sldl:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211"
+    },
+    {
+      "id": "il-sbe-2026-state-house-17",
+      "title": "State Representative – District 17",
+      "ocdId": "ocd-division/country:us/state:il/sldl:17",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179"
+    },
+    {
+      "id": "il-sbe-2026-state-house-30",
+      "title": "State Representative – District 30",
+      "ocdId": "ocd-division/country:us/state:il/sldl:30",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213"
+    },
+    {
+      "id": "il-sbe-2026-state-house-44",
+      "title": "State Representative – District 44",
+      "ocdId": "ocd-division/country:us/state:il/sldl:44",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241"
+    },
+    {
+      "id": "il-sbe-2026-state-house-53",
+      "title": "State Representative – District 53",
+      "ocdId": "ocd-division/country:us/state:il/sldl:53",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259"
+    },
+    {
+      "id": "il-sbe-2026-state-house-54",
+      "title": "State Representative – District 54",
+      "ocdId": "ocd-division/country:us/state:il/sldl:54",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261"
+    },
+    {
+      "id": "il-sbe-2026-state-senate-27",
+      "title": "State Senator – District 27",
+      "ocdId": "ocd-division/country:us/state:il/sldu:27",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203"
     }
   ],
   "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",
@@ -48,6 +160,7 @@
     "BallotContestMerge": "PASS",
     "genericBallotProblems": "PASS",
     "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
     "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
     "candidateAliasesEnriched": 3
   },

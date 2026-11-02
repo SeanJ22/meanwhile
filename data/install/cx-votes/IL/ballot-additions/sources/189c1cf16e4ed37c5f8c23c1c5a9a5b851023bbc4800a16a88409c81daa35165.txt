@@ -1,0 +1,29 @@
+Title: Candidate List
+
+URL Source: https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259
+
+Markdown Content:
+[Illinois State Board of Elections](https://www.elections.il.gov/Default.aspx)
+
+P2
+
+[Home](https://www.elections.il.gov/Default.aspx)[Publications](https://www.elections.il.gov/Main/Publications.aspx)[Feedback](https://www.elections.il.gov/Main/Feedback.aspx)
+
+[Information For Voters](https://www.elections.il.gov/InformationForVoters.aspx?MID=I0cuvBFuZRw%3d)[Campaign Disclosure](https://www.elections.il.gov/CampaignDisclosure.aspx?MID=rfZ%2buidMSDY%3d)[Voting Systems](https://www.elections.il.gov/VotingSystems.aspx?MID=RDsPmNG6UtQ%3d)[Running for Office](https://www.elections.il.gov/RunningForOffice.aspx?MID=rOlNCTNZd9A%3d)[Candidate Filing and Results](https://www.elections.il.gov/CandidateFilingAndResults.aspx?MID=kvB0px3%2bckA%3d)[Business Registration](https://www.elections.il.gov/BEREP.aspx?MID=5kJmo5Vlmig%3d)[Press Room](https://www.elections.il.gov/PressRoom.aspx?MID=7gaOXOhipwU%3d)[Forms](https://www.elections.il.gov/Forms.aspx?MID=F1cqdrOu5Po%3d)[About The Board](https://www.elections.il.gov/AboutTheBoard.aspx?MID=cmHrvo7CZrE%3d)
+
+[Tab0](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)[Tab1](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)[Tab2](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)[Tab3](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)[Tab4](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)[Tab5](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)[Tab6](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259#)
+
+Candidate List
+
+GENERAL ELECTION - 11/3/2026
+
+  
+
+[Print This List](https://www.elections.il.gov/ElectionOperations/EOPDFViewer.aspx?ElectionID=sejIrI%2bQmww%3d&QueryType=xF443FTCAJbIL3atac%2fUjEg7Y4yklgT1&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d&Status=P2wRQXkiFoo%3d)
+
+  
+
+| Name | Write-In | Objection Pending | Office | Party | File Date | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| [Grasse, Nicolle](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6z0WBLoA87qA%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | DEMOCRATIC | 10/27/2025 8:00 AM | Active 10/27/2025 |
+| [Bauer, Elizabeth](https://www.elections.il.gov/ElectionOperations/CandidateDetailEO.aspx?CandidateID=08P%2f1ChZzL6bM3pnqgZE6g%3d%3d&ElectionID=sejIrI%2bQmww%3d) |  |  | [53RD REPRESENTATIVE](https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=sejIrI%2bQmww%3d&OfficeID=uvxzyezb8YuQBn27vHzNCQ%3d%3d) | REPUBLICAN | 11/3/2025 2:07 PM | Active 11/3/2025 |

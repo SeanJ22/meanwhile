@@ -28,5 +28,346 @@
     "excerptFile": "sources/16149e115947620a137cb3cc21ff977b8069b7cd24f24af6175aa2580477d68a.txt",
     "excerptSha256": "16149e115947620a137cb3cc21ff977b8069b7cd24f24af6175aa2580477d68a",
     "evidence": "Fresh official 2026 General Election preview ballot, November 3, 2026, page 1. The bounded HD118 office field was visually reviewed against the retained source image and contains exactly Scott Doody (REPUBLICAN) and Homer \"Chip\" Markel (DEMOCRATIC), vote for one. All four source pages were searched for additional occurrences; only this office field supplies HD118 choices. Original PDF, render coordinates, uncorrected OCR, and verified field transcription are retained."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete saved official4pagePDF extraction response text; not originalPDF orHTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.champaigncountyclerk.com/elections/who-represents-me",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.champaigncountyclerk.com/elections/who-represents-me",
+      "reportedFinalURL": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+      "reportedPDFPages": 4,
+      "reportedPublishedTime": "Wed, 07 Oct 2026 17:38:52 GMT",
+      "captureSucceeded": true,
+      "originHttpStatus": null,
+      "nativeCountyPageHttpStatus": 403,
+      "savedBytes": 11583
+    },
+    "sourceUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+    "finalUrl": "https://champaigncountyclerk.com/sites/default/files/2026-10/26GILCHM-Chopped%201%20%281%29.pdf",
+    "sourceCheckedAt": "2026-11-02T22:29:11.224517+00:00",
+    "sha256": "8ed90534e0778d5cb194d98b3a4f04716d6dbd931412241e9ba78d210a7e1d80",
+    "sourceFile": "sources/8ed90534e0778d5cb194d98b3a4f04716d6dbd931412241e9ba78d210a7e1d80.source",
+    "excerptFile": "sources/8ed90534e0778d5cb194d98b3a4f04716d6dbd931412241e9ba78d210a7e1d80.txt",
+    "excerptSha256": "8ed90534e0778d5cb194d98b3a4f04716d6dbd931412241e9ba78d210a7e1d80",
+    "evidence": "The complete four-page officialpublication-ballot text was captured by the public deterministic reader and saved byte-for-byte as UTF8. Header identifies OFFICIAL BALLOT GENERAL ELECTION November3,2026. Full House103 and104 printed office blocks contain all named choices and party slots. Hash identifies this complete captured text only, never originalPDFbytes. Native county candidate-page request returned403. No model/checker verification metadata is fabricated.",
+    "officialLinkingPage": {
+      "url": "https://www.champaigncountyclerkil.gov/elections/who-represents-me",
+      "file": "sources/91ca9eb3f30e0c7a426121f01ba6ba4835f7c99b89214b70227364d96454335d.html",
+      "sha256": "91ca9eb3f30e0c7a426121f01ba6ba4835f7c99b89214b70227364d96454335d",
+      "captureFormat": "CAPTURED_SOURCE_HTML",
+      "captureMetadata": {
+        "readerUrl": "https://r.jina.ai/https://www.champaigncountyclerkil.gov/elections/who-represents-me",
+        "officialUrl": "https://www.champaigncountyclerkil.gov/elections/who-represents-me",
+        "requestedFormat": "html",
+        "retrievedAt": "2026-11-02T22:41:27.744226+00:00",
+        "httpStatus": 200,
+        "contentType": "text/plain; charset=utf-8",
+        "rawHash": "91ca9eb3f30e0c7a426121f01ba6ba4835f7c99b89214b70227364d96454335d",
+        "bytes": 43808,
+        "path": "sources/91ca9eb3f30e0c7a426121f01ba6ba4835f7c99b89214b70227364d96454335d.txt"
+      }
+    }
+  },
+  {
+    "captureFormat": "PDF",
+    "hashScope": "Original nativePDFresponse bytes.",
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+    "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+    "sourceCheckedAt": "2026-11-02T22:38:27.951315+00:00",
+    "sha256": "5f0d73f6ffe7d7cc92cea1d06660b17b4ad671716872d3bb4b70d38e1a01e8e4",
+    "sourceFile": "sources/5f0d73f6ffe7d7cc92cea1d06660b17b4ad671716872d3bb4b70d38e1a01e8e4.source",
+    "excerptFile": "sources/95211f29a959f0b05b34ade4d49af8eb1a9ffc6619d5c5c06aed713b2b228864.txt",
+    "excerptSha256": "95211f29a959f0b05b34ade4d49af8eb1a9ffc6619d5c5c06aed713b2b228864",
+    "evidence": "Full native current2026 official certificate/specimen reviewed for each included complete office block. Names and party slots agree across both government-published documents. Nongovstaticasset source is linked by the saved current official.govGeneralElection HTML.",
+    "officialLinkingPage": {
+      "url": "https://www.willcountyclerk.gov/november-3-2026-general-election/",
+      "file": "sources/8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d.html",
+      "sha256": "8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d",
+      "captureFormat": "CAPTURED_SOURCE_HTML",
+      "captureMetadata": {
+        "readerUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/november-3-2026-general-election/",
+        "officialUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/",
+        "requestedFormat": "html",
+        "retrievedAt": "2026-11-02T22:40:22.568838+00:00",
+        "httpStatus": 200,
+        "contentType": "text/plain; charset=utf-8",
+        "rawHash": "8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d",
+        "bytes": 122152,
+        "path": "sources/8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d.txt"
+      }
+    }
+  },
+  {
+    "captureFormat": "PDF",
+    "hashScope": "Original nativePDFresponse bytes.",
+    "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+    "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+    "sourceCheckedAt": "2026-11-02T22:38:27.951850+00:00",
+    "sha256": "6cea72d2a108413e0431a3efd7186b1d6366e9903c2c06ef96afa274649c6e24",
+    "sourceFile": "sources/6cea72d2a108413e0431a3efd7186b1d6366e9903c2c06ef96afa274649c6e24.source",
+    "excerptFile": "sources/852b85cb2248096965bff58ec14c88da3ae336f5494720fb3e5b7ad85e95a3de.txt",
+    "excerptSha256": "852b85cb2248096965bff58ec14c88da3ae336f5494720fb3e5b7ad85e95a3de",
+    "evidence": "Full native current2026 official certificate/specimen reviewed for each included complete office block. Names and party slots agree across both government-published documents. Nongovstaticasset source is linked by the saved current official.govGeneralElection HTML.",
+    "officialLinkingPage": {
+      "url": "https://www.willcountyclerk.gov/november-3-2026-general-election/",
+      "file": "sources/8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d.html",
+      "sha256": "8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d",
+      "captureFormat": "CAPTURED_SOURCE_HTML",
+      "captureMetadata": {
+        "readerUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/november-3-2026-general-election/",
+        "officialUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/",
+        "requestedFormat": "html",
+        "retrievedAt": "2026-11-02T22:40:22.568838+00:00",
+        "httpStatus": 200,
+        "contentType": "text/plain; charset=utf-8",
+        "rawHash": "8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d",
+        "bytes": 122152,
+        "path": "sources/8527025390603cf03497b2f24258d0bb5e0a96ebed6bff18f13bbc0bddf0ff1d.txt"
+      }
+    }
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete saved official4pagePDF public-reader extraction text; not originalPDFbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+      "reportedPDFPages": 4,
+      "reportedPublishedTime": "Mon, 24 Aug 2026 07:17:06 GMT",
+      "originHttpStatus": null,
+      "nativeCountyCandidatePageHttpStatus": 403
+    },
+    "sourceUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+    "finalUrl": "https://www.mchenrycountyil.gov/home/showpublisheddocument/122937/639231562267270000",
+    "sourceCheckedAt": "2026-11-02T22:36:17.953046+00:00",
+    "sha256": "742280db356312d8050913ac7fb30b027ad02bc6d67b1c6a57bf749b62c47239",
+    "sourceFile": "sources/742280db356312d8050913ac7fb30b027ad02bc6d67b1c6a57bf749b62c47239.source",
+    "excerptFile": "sources/742280db356312d8050913ac7fb30b027ad02bc6d67b1c6a57bf749b62c47239.txt",
+    "excerptSha256": "742280db356312d8050913ac7fb30b027ad02bc6d67b1c6a57bf749b62c47239",
+    "evidence": "Complete current county CertifiedCandidateList for General11/3/2026 is saved as UTF8public-reader text. FullHouse63 officeblock lists StevenReick(Republican) alone before nextHouse64 block. Current official.govcandidatepage links this list as updated8/24/2026. Hashcoverscompletecapturedtext only, not PDFbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 3108,
+      "completeCapturedHtmlPath": "sources/e189786d9c8b24a369103200e9d85481b4b542f37abf051c888fab6d9ae5a5b7.txt",
+      "completeCapturedHtmlSha256": "e189786d9c8b24a369103200e9d85481b4b542f37abf051c888fab6d9ae5a5b7",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 2,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13211",
+    "sourceCheckedAt": "2026-11-02T22:47:44.776172+00:00",
+    "sha256": "d7de0708b953ad91c76893033c1d2083e65698ce1141f3e0865015d7ccc1f818",
+    "sourceFile": "sources/d7de0708b953ad91c76893033c1d2083e65698ce1141f3e0865015d7ccc1f818.source",
+    "excerptFile": "sources/d7de0708b953ad91c76893033c1d2083e65698ce1141f3e0865015d7ccc1f818.txt",
+    "excerptSha256": "d7de0708b953ad91c76893033c1d2083e65698ce1141f3e0865015d7ccc1f818",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 3134,
+      "completeCapturedHtmlPath": "sources/5031986cd109b145821b57e2aad917397891c0ae787807bd173c758a281b50ac.txt",
+      "completeCapturedHtmlSha256": "5031986cd109b145821b57e2aad917397891c0ae787807bd173c758a281b50ac",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 2,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13179",
+    "sourceCheckedAt": "2026-11-02T22:49:40.854120+00:00",
+    "sha256": "716e348bd8ce66b05522d8a510da9ba9a9ecafbe19a8626dd0e502dfb6fce47b",
+    "sourceFile": "sources/716e348bd8ce66b05522d8a510da9ba9a9ecafbe19a8626dd0e502dfb6fce47b.source",
+    "excerptFile": "sources/716e348bd8ce66b05522d8a510da9ba9a9ecafbe19a8626dd0e502dfb6fce47b.txt",
+    "excerptSha256": "716e348bd8ce66b05522d8a510da9ba9a9ecafbe19a8626dd0e502dfb6fce47b",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 2717,
+      "completeCapturedHtmlPath": "sources/7379e897b1ebeb5db29d720ae0b2fb7b4c470b6d52c389502fce78ac41be9457.txt",
+      "completeCapturedHtmlSha256": "7379e897b1ebeb5db29d720ae0b2fb7b4c470b6d52c389502fce78ac41be9457",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 1,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13213",
+    "sourceCheckedAt": "2026-11-02T22:49:40.862228+00:00",
+    "sha256": "f43a984c943af0129907d2e2eeb9c0be508f5047e46facff62e159a1a5526242",
+    "sourceFile": "sources/f43a984c943af0129907d2e2eeb9c0be508f5047e46facff62e159a1a5526242.source",
+    "excerptFile": "sources/f43a984c943af0129907d2e2eeb9c0be508f5047e46facff62e159a1a5526242.txt",
+    "excerptSha256": "f43a984c943af0129907d2e2eeb9c0be508f5047e46facff62e159a1a5526242",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 3086,
+      "completeCapturedHtmlPath": "sources/4393639dbc265e8fcf4e0269186d36f3f1f02a71849d6a6659c7d0a249883de3.txt",
+      "completeCapturedHtmlSha256": "4393639dbc265e8fcf4e0269186d36f3f1f02a71849d6a6659c7d0a249883de3",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 2,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13241",
+    "sourceCheckedAt": "2026-11-02T22:49:40.866093+00:00",
+    "sha256": "3a6183da78f86b25d30c1078c7adb5491d46084493d0821e3c7573dcf85fe3bf",
+    "sourceFile": "sources/3a6183da78f86b25d30c1078c7adb5491d46084493d0821e3c7573dcf85fe3bf.source",
+    "excerptFile": "sources/3a6183da78f86b25d30c1078c7adb5491d46084493d0821e3c7573dcf85fe3bf.txt",
+    "excerptSha256": "3a6183da78f86b25d30c1078c7adb5491d46084493d0821e3c7573dcf85fe3bf",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 3095,
+      "completeCapturedHtmlPath": "sources/9301642128461cbdfaed2128f14c9559d4b6271fcde21a48759c915beb183fa5.txt",
+      "completeCapturedHtmlSha256": "9301642128461cbdfaed2128f14c9559d4b6271fcde21a48759c915beb183fa5",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 2,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13259",
+    "sourceCheckedAt": "2026-11-02T22:49:45.560310+00:00",
+    "sha256": "189c1cf16e4ed37c5f8c23c1c5a9a5b851023bbc4800a16a88409c81daa35165",
+    "sourceFile": "sources/189c1cf16e4ed37c5f8c23c1c5a9a5b851023bbc4800a16a88409c81daa35165.source",
+    "excerptFile": "sources/189c1cf16e4ed37c5f8c23c1c5a9a5b851023bbc4800a16a88409c81daa35165.txt",
+    "excerptSha256": "189c1cf16e4ed37c5f8c23c1c5a9a5b851023bbc4800a16a88409c81daa35165",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 3533,
+      "completeCapturedHtmlPath": "sources/c6eb631fb2a682b1952543461b1ac2cf7f833cdb9efeb74978362de772cd3c7c.txt",
+      "completeCapturedHtmlSha256": "c6eb631fb2a682b1952543461b1ac2cf7f833cdb9efeb74978362de772cd3c7c",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 3,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13261",
+    "sourceCheckedAt": "2026-11-02T22:47:44.776586+00:00",
+    "sha256": "59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f",
+    "sourceFile": "sources/59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f.source",
+    "excerptFile": "sources/59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f.txt",
+    "excerptSha256": "59273182badf670c770fa14645b444b5e87e59c7d5933d8d85ea37391235888f",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete public-reader office-filtered officialHTML extraction text; not originalHTTP HTMLbytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public text extraction",
+      "readerUrl": "https://r.jina.ai/https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+      "readerHttpStatus": 200,
+      "readerContentType": "text/plain; charset=utf-8",
+      "reportedURLSource": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+      "originHttpStatus": null,
+      "nativeRelatedGovernmentFetch": {
+        "url": "https://www.elections.il.gov/ElectionOperations/CandidateFilingSearch.aspx?ID=sejIrI%2BQmww%3D",
+        "httpStatus": 403
+      },
+      "fullReaderResponseBytes": 3087,
+      "completeCapturedHtmlPath": "sources/a47a00694141716201aa38257b7c6a26801186c0f824bb71cb81bf26b3e874cf.txt",
+      "completeCapturedHtmlSha256": "a47a00694141716201aa38257b7c6a26801186c0f824bb71cb81bf26b3e874cf",
+      "htmlReaderHttpStatus": 200,
+      "observedOfficeTableRowCount": 2,
+      "publisherStatedTotalRecordCount": null,
+      "paginationActionsPresent": false
+    },
+    "sourceUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+    "finalUrl": "https://www.elections.il.gov/ElectionOperations/CandidateList.aspx?ElectionID=71&OfficeID=13203",
+    "sourceCheckedAt": "2026-11-02T22:49:45.757382+00:00",
+    "sha256": "2226c85b06b1b9db42159ec274006275b69e09f5151fdab6d445e924371d7c56",
+    "sourceFile": "sources/2226c85b06b1b9db42159ec274006275b69e09f5151fdab6d445e924371d7c56.source",
+    "excerptFile": "sources/2226c85b06b1b9db42159ec274006275b69e09f5151fdab6d445e924371d7c56.txt",
+    "excerptSha256": "2226c85b06b1b9db42159ec274006275b69e09f5151fdab6d445e924371d7c56",
+    "evidence": "Complete current GENERAL ELECTION11/3/2026 office-filtered response saved whole; Markdown rows independently match all named rows in complete captured officialHTML gvCandidates table. All rows belong to this exact state office; source tables render fewer than ten rows and no paging actions. Only StatusActive and unmarked/non-write-in rows enter printed choices. Withdrawn,Removed,and registeredwrite-in rows are retained as evidence and excluded. httpStatus200 marks source-text capture success, not an asserted originHTTPstatus. HashcoversUTF8capturedtext, not originalHTMLbytes."
   }
 ]

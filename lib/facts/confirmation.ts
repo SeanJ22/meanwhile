@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { FactDb, Query } from "./publish.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, type ReaderCachePurger } from "../reader/cache.ts";
-import { markSlices, slicesOf } from "../core/slice-marks.ts";
+import { markSlices, slicesOfConfirmed } from "../core/slice-marks.ts";
 
 export interface FactConfirmation {
   readonly copyId: number;
@@ -11,13 +11,16 @@ export interface FactConfirmation {
   readonly receipts?: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
 }
 
-/** The receipt can move without modifying any of the confirmed fact versions. */
-export async function recordFactConfirmation(query: Query, input: FactConfirmation): Promise<readonly string[]> {
+/** The receipt can move without modifying any of the confirmed fact versions. `shown` collects the entities whose confirmation moved more than the date: the page, the quote or the kind a card shows. */
+export async function recordFactConfirmation(query: Query, input: FactConfirmation, shown?: Set<string>): Promise<readonly string[]> {
   if (!input.factIds.length) return [];
   // One round trip per source; each persisted scope still covers at most 500 ids.
   const rows = await query(`WITH eligible AS MATERIALIZED (
     SELECT id,entity_id,id/500 AS bucket,md5(value::text) AS value_hash,jsonb_build_object('value_text',value_text,'quote',quote,'quote_start',quote_start,
-      'second_copy_id',second_copy_id,'provenance_kind',provenance_kind) AS receipt
+      'second_copy_id',second_copy_id,'provenance_kind',provenance_kind) AS receipt,
+      ((SELECT url FROM source_copy WHERE id=source_copy_id) IS DISTINCT FROM (SELECT url FROM source_copy WHERE id=$1)
+        OR provenance_kind IS DISTINCT FROM coalesce($5::jsonb->id::text->>'provenance_kind',provenance_kind)
+        OR quote IS DISTINCT FROM CASE WHEN $5::jsonb->id::text ? 'quote' THEN $5::jsonb->id::text->>'quote' ELSE quote END) AS shown
     FROM checked_fact WHERE id=ANY($4::bigint[]) AND status='live'
       AND (checked_at<$3::timestamptz OR checked_at=$3::timestamptz AND (source_copy_id IS DISTINCT FROM $1::bigint
         OR NOT jsonb_build_object('value_text',value_text,'quote',quote,'quote_start',quote_start,
@@ -32,9 +35,10 @@ export async function recordFactConfirmation(query: Query, input: FactConfirmati
     WHERE fact_confirmation.checked_at<EXCLUDED.checked_at OR NOT fact_confirmation.fact_ids @> EXCLUDED.fact_ids
       OR NOT fact_confirmation.receipts @> EXCLUDED.receipts
     RETURNING scope
-  ) SELECT DISTINCT entity_id FROM eligible WHERE EXISTS(SELECT 1 FROM saved WHERE scope=$2||':facts:'||eligible.bucket)`,
+  ) SELECT entity_id,bool_or(shown) AS shown FROM eligible WHERE EXISTS(SELECT 1 FROM saved WHERE scope=$2||':facts:'||eligible.bucket) GROUP BY entity_id`,
   [input.copyId,input.scope,input.at,input.factIds,JSON.stringify(input.receipts ?? {})]);
   const entities = rows.map(row => String(row.entity_id));
+  for (const row of rows) if (shown && row.shown === true) shown.add(String(row.entity_id));
   if (entities.length) await query(`INSERT INTO fact_watermark(scope,version)
     SELECT scope,1 FROM (
       SELECT DISTINCT state::text AS scope FROM entity WHERE id=ANY($1::text[]) AND state IS NOT NULL
@@ -61,11 +65,11 @@ export async function confirmFactSource(db: FactDb, confirmation: FactConfirmati
 
 async function saveConfirmations(db: FactDb, confirmations: readonly FactConfirmation[], purge?: ReaderCachePurger): Promise<void> {
   const affected = await db.transaction(async query => {
-    const entities = new Set<string>();
-    for (const confirmation of confirmations) for (const id of await recordFactConfirmation(query,confirmation)) entities.add(id);
+    const entities = new Set<string>(), shown = new Set<string>();
+    for (const confirmation of confirmations) for (const id of await recordFactConfirmation(query,confirmation,shown)) entities.add(id);
     if (entities.size) await enqueueReaderPlaces({entities:[...entities]},query);
     const states = entities.size ? await query("SELECT DISTINCT state FROM entity WHERE id=ANY($1::text[]) AND state IS NOT NULL",[[...entities]]) : [];
-    return {entities:[...entities],states:states.map(row=>String(row.state)),marks:entities.size ? await slicesOf(query,[...entities]) : []};
+    return {entities:[...entities],states:states.map(row=>String(row.state)),marks:await slicesOfConfirmed(query,[...entities],shown)};
   });
   await markSlices(affected.marks);
   if (affected.entities.length) await invalidateReaderCache({states:affected.states.filter(state=>state!=="US"),

@@ -131,7 +131,7 @@ test("a release drain lets the rebuild in hand finish, ends the lane without fai
     await sliceTurn({ list, facts: db.query, now });
     await publish(db, "office_phone", "520-555-0100", "Phone");
     turn.beat(line => lines.push(line));
-    await runSliceLane({ list, facts: (sql, params) => { turn.ask(); return db.query(sql, params); }, total, stopRequested: turn.asked, log: () => {} });
+    await runSliceLane({ list, facts: (sql, params) => { if (sql.includes("entity_place")) turn.ask(); return db.query(sql, params); }, total, stopRequested: turn.asked, log: () => {} });
     turn.beat(line => lines.push(line));
     assert.deepEqual(await db.query("SELECT DISTINCT status FROM work"), [{ status: "done" }]);
     assert.ok(lines[0] !== lines[1] && progressLines()(`${lines[1]}\n`) === 1);

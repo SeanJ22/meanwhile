@@ -5,7 +5,7 @@
     "sourceFile": "sources/2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f.source",
     "sourceSha256": "2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f",
     "sourcePage": 1,
-    "officeBlock": "Representative in the General Assembly – 14th Legislative District (Two Year Term – Vote For One)\n        Bradley Jacob Young                        Democratic              New Brighton Borough\n           Roman Kozak                             Republican               City of Beaver Falls",
+    "officeBlock": "Representative in the General Assembly \u2013 14th Legislative District (Two Year Term \u2013 Vote For One)\n        Bradley Jacob Young                        Democratic              New Brighton Borough\n           Roman Kozak                             Republican               City of Beaver Falls",
     "namedChoices": [
       {
         "name": "Bradley Jacob Young",
@@ -24,7 +24,7 @@
     "sourceFile": "sources/2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f.source",
     "sourceSha256": "2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f",
     "sourcePage": 1,
-    "officeBlock": "Representative in the General Assembly – 16th Legislative District (Two Year Term – Vote For One)\n          Robert F Matzie                         Democratic                 Harmony Township\n           John Costanza                          Republican                  Center Township",
+    "officeBlock": "Representative in the General Assembly \u2013 16th Legislative District (Two Year Term \u2013 Vote For One)\n          Robert F Matzie                         Democratic                 Harmony Township\n           John Costanza                          Republican                  Center Township",
     "namedChoices": [
       {
         "name": "Robert F Matzie",
@@ -43,7 +43,7 @@
     "sourceFile": "sources/d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f.source",
     "sourceSha256": "d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f",
     "sourcePage": 1,
-    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE          101ST DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne          101ST DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     JOHN SCHLEGEL\n                 REPUBLICAN\n\n\n          Write-in",
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE          101ST DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne          101ST DISTRITOu              T\u00e9rmino de Dos a\u00f1os\n                  Vote por Uno\n\n     JOHN SCHLEGEL\n                 REPUBLICAN\n\n\n          Write-in",
     "namedChoices": [
       {
         "name": "JOHN SCHLEGEL",
@@ -58,7 +58,7 @@
     "sourceFile": "sources/d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f.source",
     "sourceSha256": "d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f",
     "sourcePage": 16,
-    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE         102ND DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne         102ND DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     MATTHEW DUVALL\n                DEMOCRATIC\n     RUSS DIAMOND\n                 REPUBLICAN\n\n\n          Write-in",
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE         102ND DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne         102ND DISTRITOu              T\u00e9rmino de Dos a\u00f1os\n                  Vote por Uno\n\n     MATTHEW DUVALL\n                DEMOCRATIC\n     RUSS DIAMOND\n                 REPUBLICAN\n\n\n          Write-in",
     "namedChoices": [
       {
         "name": "MATTHEW DUVALL",
@@ -270,7 +270,7 @@
     "sourceFile": "sources/bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723.source",
     "sourceSha256": "bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723",
     "sourcePage": 1,
-    "officeBlock": "REPRESENTATIVE IN\nTHE GENERAL ASSEMBLY\n139th District\n2 Year Term\nVote for ONE\nDominique Azzollini\nDemocratic\nJeff Olsommer\nRepublican\nWrite-in",
+    "officeBlock": "REPRESENTATIVE\u00a0IN\nTHE\u00a0GENERAL\u00a0ASSEMBLY\n139th\u00a0District\n2\u00a0Year\u00a0Term\nVote\u00a0for\u00a0ONE\nDominique\u00a0Azzollini\nDemocratic\nJeff\u00a0Olsommer\nRepublican\nWrite-in",
     "namedChoices": [
       {
         "name": "Dominique Azzollini",
@@ -400,7 +400,7 @@
     "sourceFile": "sources/567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d.source",
     "sourceSha256": "567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d",
     "sourcePage": 1,
-    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n9TH DISTRICT\n2 YEAR TERM\nVOTE FOR ONE\nREPRESENTANTE EN LA ASAMBLEA\nTérmino de Dos años\nVote por Uno\nSHAY MICCO\nDEMOCRATIC\nMARLA GALLO BROWN\nREPUBLICAN\nWrite-in/Por Escrito",
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n9TH DISTRICT\n2 YEAR TERM\nVOTE FOR ONE\nREPRESENTANTE EN LA ASAMBLEA\nT\u00e9rmino de Dos a\u00f1os\nVote por Uno\nSHAY MICCO\nDEMOCRATIC\nMARLA GALLO BROWN\nREPUBLICAN\nWrite-in/Por Escrito",
     "namedChoices": [
       {
         "name": "SHAY MICCO",
@@ -419,7 +419,7 @@
     "sourceFile": "sources/567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d.source",
     "sourceSha256": "567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d",
     "sourcePage": 1,
-    "officeBlock": "SENATOR IN THE GENERAL\nASSEMBLY\n50th DISTRICT\n4 YEAR TERM\nVOTE FOR ONE\nSENADOR EN LA ASAMBLEA\nTérmino de Cuatro años\nVote por Uno\nSUE MULVEY\nDEMOCRATIC\nMICHELE BROOKS\nREPUBLICAN\nWrite-in/Por Escrito",
+    "officeBlock": "SENATOR IN THE GENERAL\nASSEMBLY\n50th DISTRICT\n4 YEAR TERM\nVOTE FOR ONE\nSENADOR EN LA ASAMBLEA\nT\u00e9rmino de Cuatro a\u00f1os\nVote por Uno\nSUE MULVEY\nDEMOCRATIC\nMICHELE BROOKS\nREPUBLICAN\nWrite-in/Por Escrito",
     "namedChoices": [
       {
         "name": "SUE MULVEY",
@@ -494,7 +494,7 @@
     "sourcePage": 1,
     "sourceFile": "sources/42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a.source",
     "sourceSha256": "42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a",
-    "officeBlock": "Representative in the\nGeneral Assembly\n122nd District\n(Vote for ONE)\nChristian Bartulovich\nDemocratic\nDoyle Heffley\nRepublican\n  Write-In",
+    "officeBlock": "Representative\u00a0in\u00a0the\nGeneral\u00a0Assembly\n122nd\u00a0District\n(Vote\u00a0for\u00a0ONE)\nChristian\u00a0Bartulovich\nDemocratic\nDoyle\u00a0Heffley\nRepublican\n\u00a0\u00a0Write-In",
     "namedChoices": [
       {
         "name": "Christian Bartulovich",
@@ -506,5 +506,632 @@
       }
     ],
     "proofScope": "All printed named choices in the complete currentHouse122 office block; no statewide/local-ballot completeness claim."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldu-14",
+    "division": "ocd-division/country:us/state:pa/sldu:14",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Senator in General Assembly \u2013 14th Senatorial District\nDEM NICK MILLER\nREP OMY MALDONADO",
+    "namedChoices": [
+      {
+        "name": "NICK MILLER",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "OMY MALDONADO",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldu-18",
+    "division": "ocd-division/country:us/state:pa/sldu:18",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Senator in General Assembly \u2013 18th Senatorial District\nDEM LISA BOSCOLA\nREP SCOTT JANNEY",
+    "namedChoices": [
+      {
+        "name": "LISA BOSCOLA",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "SCOTT JANNEY",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-135",
+    "division": "ocd-division/country:us/state:pa/sldl:135",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Representative in the General Assembly \u2013 135th Representative District\nDEM STEVE SAMUELSON\nREP JOE POPLAWSKI",
+    "namedChoices": [
+      {
+        "name": "STEVE SAMUELSON",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "JOE POPLAWSKI",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-136",
+    "division": "ocd-division/country:us/state:pa/sldl:136",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Representative in the General Assembly \u2013 136th Representative District\nDEM ROBERT FREEMAN\nREP PILAR CAVALLO-CAMPISI",
+    "namedChoices": [
+      {
+        "name": "ROBERT FREEMAN",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "PILAR CAVALLO-CAMPISI",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-137",
+    "division": "ocd-division/country:us/state:pa/sldl:137",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Representative in the General Assembly \u2013 137th Representative District\nDEM JEFF WARREN\nREP JOE EMRICK",
+    "namedChoices": [
+      {
+        "name": "JEFF WARREN",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "JOE EMRICK",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-138",
+    "division": "ocd-division/country:us/state:pa/sldl:138",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Representative in the General Assembly \u2013 138th Representative District\nDEM JARED BITTING\nREP ANN FLOOD",
+    "namedChoices": [
+      {
+        "name": "JARED BITTING",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "ANN FLOOD",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-183",
+    "division": "ocd-division/country:us/state:pa/sldl:183",
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceTextPath": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.txt",
+    "sourceTextSha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "officeBlock": "One (1) Representative in the General Assembly \u2013 183rd Representative District\nDEM DEIRDRE KAMBER TODD\nREP ZACH MAKO",
+    "namedChoices": [
+      {
+        "name": "DEIRDRE KAMBER TODD",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "ZACH MAKO",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Full official2pagePDF extraction contains the complete nominal candidate list for this office. Both printed party rows retained; official county page labels this GE2026 OFFICIAL UMOVA Candidate list.",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-22",
+    "division": "ocd-division/country:us/state:pa/sldl:22",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextPath": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.txt",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourcePage": 1,
+    "textOffset": 3290,
+    "officeBlock": "Representative in the General Assembly in the 22nd Legislative District \n\n> (Vote for ONE)\n\nRepresentante en la Asamblea General en el Distrito Legislativo 22 \n\n> (Vote por UNO)\n\nCe Ce Gerlach \n\n> Democratic\n\nRobert E Smith Jr \n\n> Republican\n> Write-in / Por Escrito",
+    "namedChoices": [
+      {
+        "name": "Ce Ce Gerlach",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Robert E Smith Jr",
+        "partyLabel": "Republican"
+      }
+    ],
+    "matchingPrintedOfficeBlocksInPacket": 25,
+    "candidateListCompleteBasis": "Full official revised158pageNov3general-election samplepacket read through deterministic publicreader. The complete office block ends at the printed generic write-in line. All repeated copies of this district field have the exact same named nominee set.",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-132",
+    "division": "ocd-division/country:us/state:pa/sldl:132",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextPath": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.txt",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourcePage": 12,
+    "textOffset": 70689,
+    "officeBlock": "Representative in the General Assembly in the 132nd Legislative District \n\n> (Vote for ONE)\n\nRepresentante en la Asamblea General en el Distrito Legislativo 132 \n\n> (Vote por UNO)\n\nMike Schlossberg \n\n> Democratic\n\nCaren Lowrey \n\n> Republican\n> Write-in / Por Escrito",
+    "namedChoices": [
+      {
+        "name": "Mike Schlossberg",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Caren Lowrey",
+        "partyLabel": "Republican"
+      }
+    ],
+    "matchingPrintedOfficeBlocksInPacket": 26,
+    "candidateListCompleteBasis": "Full official revised158pageNov3general-election samplepacket read through deterministic publicreader. The complete office block ends at the printed generic write-in line. All repeated copies of this district field have the exact same named nominee set.",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-133",
+    "division": "ocd-division/country:us/state:pa/sldl:133",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextPath": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.txt",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourcePage": 56,
+    "textOffset": 340727,
+    "officeBlock": "Representative in the General Assembly in the 133rd Legislative District \n\n> (Vote for ONE)\n\nRepresentante en la Asamblea General en el Distrito Legislativo 133 \n\n> (Vote por UNO)\n\nJeanne McNeill \n\n> Democratic\n> Write-in / Por Escrito",
+    "namedChoices": [
+      {
+        "name": "Jeanne McNeill",
+        "partyLabel": "Democratic"
+      }
+    ],
+    "matchingPrintedOfficeBlocksInPacket": 33,
+    "candidateListCompleteBasis": "Full official revised158pageNov3general-election samplepacket read through deterministic publicreader. The complete office block ends at the printed generic write-in line. All repeated copies of this district field have the exact same named nominee set.",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-134",
+    "division": "ocd-division/country:us/state:pa/sldl:134",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextPath": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.txt",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourcePage": 2,
+    "textOffset": 9407,
+    "officeBlock": "Representative in the General Assembly in the 134th Legislative District \n\n> (Vote for ONE)\n\nRepresentante en la Asamblea General en el Distrito Legislativo 134 \n\n> (Vote por UNO)\n\nPeter Schweyer \n\n> Democratic\n\nMiriam Maldonado \n\n> Republican\n> Write-in / Por Escrito",
+    "namedChoices": [
+      {
+        "name": "Peter Schweyer",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Miriam Maldonado",
+        "partyLabel": "Republican"
+      }
+    ],
+    "matchingPrintedOfficeBlocksInPacket": 30,
+    "candidateListCompleteBasis": "Full official revised158pageNov3general-election samplepacket read through deterministic publicreader. The complete office block ends at the printed generic write-in line. All repeated copies of this district field have the exact same named nominee set.",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source"
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-187",
+    "division": "ocd-division/country:us/state:pa/sldl:187",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextPath": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.txt",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourcePage": 68,
+    "textOffset": 407152,
+    "officeBlock": "Representative in the General Assembly in the 187th Legislative District \n\n> (Vote for ONE)\n\nRepresentante en la Asamblea General en el Distrito Legislativo 187 \n\n> (Vote por UNO)\n\nRachel Cuevas \n\n> Democratic\n\nGary Day \n\n> Republican\n> Write-in / Por Escrito",
+    "namedChoices": [
+      {
+        "name": "Rachel Cuevas",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Gary Day",
+        "partyLabel": "Republican"
+      }
+    ],
+    "matchingPrintedOfficeBlocksInPacket": 23,
+    "candidateListCompleteBasis": "Full official revised158pageNov3general-election samplepacket read through deterministic publicreader. The complete office block ends at the printed generic write-in line. All repeated copies of this district field have the exact same named nominee set.",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source"
+  },
+  {
+    "number": 65,
+    "stem": "warren-umova",
+    "sourcePage": 2,
+    "rectanglePoints": null,
+    "textFile": "sources/cf515ffc904f8d071bdeaae9d6d15e1c751e367350be824dfd6d9db85b3a3091.txt",
+    "quote": "REPRESENTATIVE IN THE GENERAL ASSEMBLY \u2013 65th District \u2013 Vote for One \u2013 All Precincts \nwithin Warren County\no DESTINY HOWARD, DEMOCRATIC PARTY\no KATHY L RAPP, REPUBLICAN PARTY",
+    "names": [
+      [
+        "DESTINY HOWARD",
+        "Democratic"
+      ],
+      [
+        "KATHY L RAPP",
+        "Republican"
+      ]
+    ],
+    "publisher": "Warren County Elections and Voter Registration",
+    "termYears": null,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-65",
+    "sourceUrl": "https://warrencountypa.gov/DocumentCenter/View/3887/UMOVA-Notice-General-Election-Nov-3-2026",
+    "sourceSha256": "81756627783f352ef356b488e8544ab55cec52553198ea80da746130b9f6ba8f",
+    "sourceFile": "sources/81756627783f352ef356b488e8544ab55cec52553198ea80da746130b9f6ba8f.source",
+    "retrievedAt": "2026-11-02T22:10:12.445588+00:00",
+    "textSha256": "cf515ffc904f8d071bdeaae9d6d15e1c751e367350be824dfd6d9db85b3a3091",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 67,
+    "stem": "mckean-general-sample",
+    "sourcePage": 1,
+    "rectanglePoints": [
+      248,
+      350,
+      485,
+      548
+    ],
+    "textFile": "sources/fd947ee0171f4088fb9e2bf3e62f8033fa9a8c345f2c4e3d51a9f28c7ccd89f2.txt",
+    "quote": "Representative in General Assembly\n           67th District\n             Vote for ONE\n\n\n Zachary Ware\n Democratic\n\n\n Martin T Causer\n Republican\n\n\n\n\n  Write-in",
+    "names": [
+      [
+        "Zachary Ware",
+        "Democratic"
+      ],
+      [
+        "Martin T Causer",
+        "Republican"
+      ]
+    ],
+    "publisher": "McKean County Board of Elections",
+    "termYears": null,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-67",
+    "sourceUrl": "https://www.mckeancountypa.gov/Sample%20-%20PA%20McKean%20261103%20General_03.pdf?t=202608281150060",
+    "sourceSha256": "e98bd25b6490e6546a130cca02e75ec9d48d77418d5b4b96e433990975605d38",
+    "sourceFile": "sources/e98bd25b6490e6546a130cca02e75ec9d48d77418d5b4b96e433990975605d38.source",
+    "retrievedAt": "2026-11-02T22:15:58.098539+00:00",
+    "textSha256": "fd947ee0171f4088fb9e2bf3e62f8033fa9a8c345f2c4e3d51a9f28c7ccd89f2",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 75,
+    "stem": "clearfield-general-sample",
+    "sourcePage": 17,
+    "rectanglePoints": [
+      30,
+      680,
+      245,
+      865
+    ],
+    "textFile": "sources/3a459ba173d4ececf50aac1c8ad8c1cf39bb8e939dcedffbb9a0fcebd89dd854.txt",
+    "quote": "REPRESENTATIVE IN THE GENERAL\n         ASSEMBLY\n        75TH DISTRICT\n           Vote for One\n\n    KIM KOHLHEPP\n    DEMOCRATIC\n\n\n   MIKE ARMANINI\n    REPUBLICAN\n\n\n\n\n      Write-in",
+    "names": [
+      [
+        "KIM KOHLHEPP",
+        "Democratic"
+      ],
+      [
+        "MIKE ARMANINI",
+        "Republican"
+      ]
+    ],
+    "publisher": "Clearfield County Board of Elections",
+    "termYears": null,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-75",
+    "sourceUrl": "https://clearfieldcountypa.gov/DocumentCenter/View/1174/2026-General-Election-Sample-PDF",
+    "sourceSha256": "637b772bc5a910ef9e8501887a3144b2b513a01eb978f5c1211640410d15ee43",
+    "sourceFile": "sources/637b772bc5a910ef9e8501887a3144b2b513a01eb978f5c1211640410d15ee43.source",
+    "retrievedAt": "2026-11-02T22:15:57.775497+00:00",
+    "textSha256": "3a459ba173d4ececf50aac1c8ad8c1cf39bb8e939dcedffbb9a0fcebd89dd854",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 76,
+    "stem": "union-general-sample",
+    "sourcePage": 1,
+    "rectanglePoints": [
+      320,
+      180,
+      603,
+      312
+    ],
+    "textFile": "sources/e1e890c86dbb21b5a5690277dfb2066b93bfce9261a1a5bec588cae8454d3085.txt",
+    "quote": "REPRESENTATIVE IN THE GENERAL\n                         ASSEMBLY\n                           76TH DISTRICT\n\n\n                                          (Vote for ONE)\n               SARA EGGLER                     DEMOCRATIC\n                STEPHANIE BOROWICZ             REPUBLICAN\n                       Write-in",
+    "names": [
+      [
+        "SARA EGGLER",
+        "Democratic"
+      ],
+      [
+        "STEPHANIE BOROWICZ",
+        "Republican"
+      ]
+    ],
+    "publisher": "Union County Board of Elections",
+    "termYears": null,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-76",
+    "sourceUrl": "https://drive.google.com/file/d/1cFxzyIpm5eZX0sJ9ek4gotJrVAJ9H69t/view?usp=sharing",
+    "sourceSha256": "5ae7aaef4734b6732d677b97861175a0b5bac15775757d18641a5f895deeeb65",
+    "sourceFile": "sources/5ae7aaef4734b6732d677b97861175a0b5bac15775757d18641a5f895deeeb65.source",
+    "retrievedAt": "2026-11-02T22:21:47.528455+00:00",
+    "textSha256": "e1e890c86dbb21b5a5690277dfb2066b93bfce9261a1a5bec588cae8454d3085",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 78,
+    "stem": "bedford-borough-sample",
+    "sourcePage": 1,
+    "rectanglePoints": null,
+    "textFile": "sources/b09bf74476778a5e676be246390d3e761bb3795e91c1ec9338d62770dea1324c.txt",
+    "quote": "Representative in the\nGeneral Assembly\n78th Legislative District\n(Vote for ONE)\nJesse Topper\nRepublican\nWrite-In",
+    "names": [
+      [
+        "Jesse Topper",
+        "Republican"
+      ]
+    ],
+    "publisher": "Bedford County Board of Elections",
+    "termYears": null,
+    "method": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "cropPixels": [
+      1195,
+      828,
+      1733,
+      1215
+    ],
+    "contestId": "pa-dos:pa-2026-general:sldl-78",
+    "sourceUrl": "https://www.bedfordcountypa.org/0101%20Bedford%20Borough%20East%20Ward%20ELECTION%20DAY%20SAMPLE.pdf?t=202610080811500",
+    "sourceSha256": "0a16dbd154e9b453c9274f324cae1d73aecce476900dc70987f196d63513c317",
+    "sourceFile": "sources/0a16dbd154e9b453c9274f324cae1d73aecce476900dc70987f196d63513c317.source",
+    "retrievedAt": "2026-11-02T22:17:15.354615+00:00",
+    "textSha256": "b09bf74476778a5e676be246390d3e761bb3795e91c1ec9338d62770dea1324c",
+    "completeNamedChoiceCount": 1
+  },
+  {
+    "number": 107,
+    "stem": "schuylkill-eldred",
+    "sourcePage": 1,
+    "rectanglePoints": [
+      400,
+      210,
+      600,
+      420
+    ],
+    "textFile": "sources/ddcc59639aed77df6f9008d5708781034ebb4dea2b999aa9227979c332a5976d.txt",
+    "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      107th Legislative District\n           2 Year Term\n             Vote for ONE\n\n\n   Ryan T. Coleman\n     Democratic\n\n\n   Joanne Stehr\n     Republican\n\n\n\n\n\n       Write In",
+    "names": [
+      [
+        "Ryan T. Coleman",
+        "Democratic"
+      ],
+      [
+        "Joanne Stehr",
+        "Republican"
+      ]
+    ],
+    "publisher": "Schuylkill County Board of Elections",
+    "termYears": 2,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-107",
+    "sourceUrl": "https://www.schuylkillcountypa.gov/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/122%20Eldred%20Township.pdf?t=202609241501550",
+    "sourceSha256": "0f5f3354614378d33ec25383172cf541a94265585e3ae34613ea87a461826338",
+    "sourceFile": "sources/0f5f3354614378d33ec25383172cf541a94265585e3ae34613ea87a461826338.source",
+    "retrievedAt": "2026-11-02T22:17:15.615704+00:00",
+    "textSha256": "ddcc59639aed77df6f9008d5708781034ebb4dea2b999aa9227979c332a5976d",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 108,
+    "stem": "montour-general-sample",
+    "sourcePage": 1,
+    "rectanglePoints": [
+      248,
+      395,
+      490,
+      593
+    ],
+    "textFile": "sources/84fca2a430fafadabf91e5741bdc10a61960d11f2406377a5b3c738a7e05b806.txt",
+    "quote": "REPRESENTATIVE IN THE\n    GENERAL ASSEMBLY\n 108TH LEGISLATIVE DISTRICT\n        VOTE FOR ONE\n\n\nAMBER L NEIDIG\n  Democratic\n\n\nMICHAEL STENDER\n  Republican\n\n\n\n\nWrite-in",
+    "names": [
+      [
+        "AMBER L NEIDIG",
+        "Democratic"
+      ],
+      [
+        "MICHAEL STENDER",
+        "Republican"
+      ]
+    ],
+    "publisher": "Montour County Board of Elections",
+    "termYears": null,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-108",
+    "sourceUrl": "https://www.montourcounty.gov/getmedia/6ba67729-ba6d-4401-8b64-b455865005e9/PA-Montour-261103-General.pdf",
+    "sourceSha256": "11ed0a22ae54b0839d7e56cc409e9f12a319d9b6174f8020458d8944ec20775d",
+    "sourceFile": "sources/11ed0a22ae54b0839d7e56cc409e9f12a319d9b6174f8020458d8944ec20775d.source",
+    "retrievedAt": "2026-11-02T22:15:57.581760+00:00",
+    "textSha256": "84fca2a430fafadabf91e5741bdc10a61960d11f2406377a5b3c738a7e05b806",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 110,
+    "stem": "bradford-towanda",
+    "sourcePage": 1,
+    "rectanglePoints": [
+      320,
+      180,
+      595,
+      345
+    ],
+    "textFile": "sources/892af8d3823296a945e62d876ded4f43cf798da86568df79f00eff7eb80efba1.txt",
+    "quote": "REPRESENTATIVE IN THE GENERAL\n                       ASSEMBLY\n                   110TH LEGISLATIVE DISTRICT\n\n                                      (Vote for ONE)\n\n\n                PAMELA J HEMANN\n                     DEMOCRATIC\n\n\n                  TINA PICKETT\n                      REPUBLICAN\n\n\n                        Write-in",
+    "names": [
+      [
+        "PAMELA J HEMANN",
+        "Democratic"
+      ],
+      [
+        "TINA PICKETT",
+        "Republican"
+      ]
+    ],
+    "publisher": "Bradford County Board of Elections",
+    "termYears": null,
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "cropPixels": null,
+    "contestId": "pa-dos:pa-2026-general:sldl-110",
+    "sourceUrl": "https://www.bradfordcountypa.gov/DocumentCenter/View/1671/TOWANDA-BOROUGH-1ST-WARDpdf",
+    "sourceSha256": "6ecced5d25955253a22fdaef27c84467c8aade8f760f5f02e1b064fd8f465d13",
+    "sourceFile": "sources/6ecced5d25955253a22fdaef27c84467c8aade8f760f5f02e1b064fd8f465d13.source",
+    "retrievedAt": "2026-11-02T22:10:11.928160+00:00",
+    "textSha256": "892af8d3823296a945e62d876ded4f43cf798da86568df79f00eff7eb80efba1",
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 81,
+    "stem": "huntingdon-general-sample",
+    "rectanglePoints": [
+      234,
+      282,
+      414,
+      445
+    ],
+    "names": [
+      [
+        "CALEB J DONAHUE",
+        "Democratic"
+      ],
+      [
+        "RICH IRVIN",
+        "Republican"
+      ]
+    ],
+    "publisher": "Huntingdon County Board of Elections",
+    "method": "BOUNDED_NATIVE_PDF_TEXT",
+    "contestId": "pa-dos:pa-2026-general:sldl-81",
+    "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+    "sourcePage": 1,
+    "sourceFile": "sources/485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff.source",
+    "sourceSha256": "485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff",
+    "retrievedAt": "2026-11-02T22:36:13.743217+00:00",
+    "textFile": "sources/f7ef6587912527b290a93ea7b01e53d46e9538b1169632dad1785e6d10df25a4.txt",
+    "textSha256": "f7ef6587912527b290a93ea7b01e53d46e9538b1169632dad1785e6d10df25a4",
+    "nativeTextFile": "sources/f7ef6587912527b290a93ea7b01e53d46e9538b1169632dad1785e6d10df25a4.txt",
+    "imageFile": "sources/6360a716f848cee1e34022003dc9cf62cbd133ae6858de19a26878ddebe30008.png",
+    "quote": "REPRESENTATIVE IN GENERAL\n        ASSEMBLY\n       81ST DISTRICT\n        VOTE FOR ONE\n\nCALEB J DONAHUE\n Democratic\n\n\nRICH IRVIN\n Republican\n\n\n\n\nWrite-in",
+    "termYears": null,
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 89,
+    "stem": "franklin-chambersburg-export",
+    "rectanglePoints": [
+      233,
+      147,
+      415,
+      335
+    ],
+    "names": [
+      [
+        "Shannon Michael Jackson",
+        "Democratic"
+      ],
+      [
+        "Rob Kauffman",
+        "Republican"
+      ]
+    ],
+    "publisher": "Franklin County Board of Elections",
+    "method": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n89th Legislative District\nVote for ONE\nShannon Michael Jackson\nDemocratic\nRob Kauffman\nRepublican\nWrite-in",
+    "contestId": "pa-dos:pa-2026-general:sldl-89",
+    "sourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311047&dbid=0&repo=FranklinCounty",
+    "sourcePage": 1,
+    "sourceFile": "sources/602e03976f476b0202968b1e889cbf525ce069a8ad1c984d8321811eb99e0f6f.source",
+    "sourceSha256": "602e03976f476b0202968b1e889cbf525ce069a8ad1c984d8321811eb99e0f6f",
+    "retrievedAt": "2026-11-02T22:36:56.905074+00:00",
+    "textFile": "sources/7342d6744e4d9cc8acde25b8591315d541d73007c0c752185adcf155fb280a05.txt",
+    "textSha256": "7342d6744e4d9cc8acde25b8591315d541d73007c0c752185adcf155fb280a05",
+    "nativeTextFile": "sources/6c1a738e8bbb92cf4428e5c6a9b8856fceb7e12735d69459817125e346a0de1c.txt",
+    "imageFile": "sources/401d52f18db8a3f9a81881e3b13b1151c7b4f6cc98cbd8774a05845cef9f0ad3.png",
+    "termYears": null,
+    "completeNamedChoiceCount": 2
+  },
+  {
+    "number": 90,
+    "stem": "franklin-waynesboro-export",
+    "rectanglePoints": [
+      233,
+      147,
+      415,
+      290
+    ],
+    "names": [
+      [
+        "Chad G. Reichard",
+        "Republican"
+      ]
+    ],
+    "publisher": "Franklin County Board of Elections",
+    "method": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n90th Legislative District\nVote for ONE\nChad G. Reichard\nRepublican\nWrite-in",
+    "contestId": "pa-dos:pa-2026-general:sldl-90",
+    "sourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311110&dbid=0&repo=FranklinCounty",
+    "sourcePage": 1,
+    "sourceFile": "sources/48024c9990cb04e663bea9bdc14f5ebcab8dc90ac9baba7011d752c92cf7ff8b.source",
+    "sourceSha256": "48024c9990cb04e663bea9bdc14f5ebcab8dc90ac9baba7011d752c92cf7ff8b",
+    "retrievedAt": "2026-11-02T22:36:56.866335+00:00",
+    "textFile": "sources/b5d1d3bb677a41721fe87efbdb275f4ea954095643d6a03461fb3211c90cc8b1.txt",
+    "textSha256": "b5d1d3bb677a41721fe87efbdb275f4ea954095643d6a03461fb3211c90cc8b1",
+    "nativeTextFile": "sources/f6aa2efc7c8cfab59d3f13898650d7900ed7819c67c8b3b9171f58da85ae45bd.txt",
+    "imageFile": "sources/b88564e8322e07e931ea353d7eac5e78e4d261b2889ed49f5fa51c5e88c4033d.png",
+    "termYears": null,
+    "completeNamedChoiceCount": 1
   }
 ]

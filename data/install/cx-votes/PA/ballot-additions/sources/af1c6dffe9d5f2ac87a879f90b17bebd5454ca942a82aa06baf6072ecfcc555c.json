@@ -1,0 +1,17 @@
+{
+  "requestedUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocumentService.aspx/GetTextHtmlForPage",
+  "requestMethod": "POST",
+  "readOnlyOperation": "Public document page text",
+  "requestBody": {
+    "repoName": "FranklinCounty",
+    "documentId": 14311110,
+    "pageNum": 1,
+    "showAnn": true,
+    "searchUuid": ""
+  },
+  "finalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocumentService.aspx/GetTextHtmlForPage",
+  "httpStatus": 200,
+  "rawHash": "60e2c829c1d2604f58e3a4a71759cb1281fa1b11a2a45881f1b0ce212482a8e8",
+  "retrievedAt": "2026-11-02T22:24:35.063334+00:00",
+  "path": "/workspace/work/election-day/pa-west/franklin-waynesboro-page-text.json"
+}

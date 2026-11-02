@@ -1,0 +1,14 @@
+{
+  "requestedUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/aaf42e38-c0ac-4383-9cce-ccef07ff3f41/14311110",
+  "requestMethod": "GET",
+  "requestBody": null,
+  "readOnlyOperation": "Ordinary anonymous public document view or Print to PDF export",
+  "finalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/aaf42e38-c0ac-4383-9cce-ccef07ff3f41/14311110",
+  "httpStatus": 200,
+  "rawHash": "48024c9990cb04e663bea9bdc14f5ebcab8dc90ac9baba7011d752c92cf7ff8b",
+  "retrievedAt": "2026-11-02T22:36:56.866335+00:00",
+  "contentType": "application/pdf; name=\"Waynesboro 1-1 - Presbyterian Church of Waynesboro.pdf\"; charset=utf-8",
+  "byteLength": 577775,
+  "path": "/workspace/work/election-day/pa-west/franklin-waynesboro-export.pdf",
+  "stablePublicSourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311110&dbid=0&repo=FranklinCounty"
+}

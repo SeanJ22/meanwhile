@@ -14,8 +14,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Hempfield School District and precinct 1501, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -33,8 +39,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Warwick School District and precinct 4600, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -52,8 +64,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Hempfield School District and precinct 4901, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -71,8 +89,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Ephrata Area School District and precinct 1101, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -90,8 +114,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Lancaster School District and precinct 0202, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -109,8 +139,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Lampeter-Strasburg School District and precinct 5206, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -128,8 +164,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Donegal School District and precinct 3801, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -147,8 +189,14 @@
     "evidence": "Public November 03, 2026 election sample viewer; select school district Solanco School District and precinct 2900, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
     "officialLinkingPage": {
       "url": "https://www.lancastercountypa.gov/299/Election-Information",
-      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
-      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+      "file": "sources/e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f.html",
+      "sha256": "e94505f92e9f30a8626963518ee45edd67fcb988f4fde7547785c7ada6a11e2f",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
     }
   },
   {
@@ -475,6 +523,357 @@
         "file": "sources/2b3798238492c6e087c61dc4b89ac38983590d61ecb823684a8a6fd9f561235b.html",
         "sha256": "2b3798238492c6e087c61dc4b89ac38983590d61ecb823684a8a6fd9f561235b"
       }
+    }
+  },
+  {
+    "sourceUrl": "https://warrencountypa.gov/DocumentCenter/View/3887/UMOVA-Notice-General-Election-Nov-3-2026",
+    "finalUrl": "https://warrencountypa.gov/DocumentCenter/View/3887/UMOVA-Notice-General-Election-Nov-3-2026",
+    "sourceCheckedAt": "2026-11-02T22:10:12.445588+00:00",
+    "sha256": "81756627783f352ef356b488e8544ab55cec52553198ea80da746130b9f6ba8f",
+    "sourceFile": "sources/81756627783f352ef356b488e8544ab55cec52553198ea80da746130b9f6ba8f.source",
+    "excerptFile": "sources/cf515ffc904f8d071bdeaae9d6d15e1c751e367350be824dfd6d9db85b3a3091.txt",
+    "excerptSha256": "cf515ffc904f8d071bdeaae9d6d15e1c751e367350be824dfd6d9db85b3a3091",
+    "publicSelection": {
+      "sourcePage": 2,
+      "rectanglePoints": null,
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates."
+  },
+  {
+    "sourceUrl": "https://www.mckeancountypa.gov/Sample%20-%20PA%20McKean%20261103%20General_03.pdf?t=202608281150060",
+    "finalUrl": "https://cms6.revize.com/revize/mckeancountypa/Sample%20-%20PA%20McKean%20261103%20General_03.pdf?t=202608281150060",
+    "sourceCheckedAt": "2026-11-02T22:15:58.098539+00:00",
+    "sha256": "e98bd25b6490e6546a130cca02e75ec9d48d77418d5b4b96e433990975605d38",
+    "sourceFile": "sources/e98bd25b6490e6546a130cca02e75ec9d48d77418d5b4b96e433990975605d38.source",
+    "excerptFile": "sources/fd947ee0171f4088fb9e2bf3e62f8033fa9a8c345f2c4e3d51a9f28c7ccd89f2.txt",
+    "excerptSha256": "fd947ee0171f4088fb9e2bf3e62f8033fa9a8c345f2c4e3d51a9f28c7ccd89f2",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        248,
+        350,
+        485,
+        548
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates."
+  },
+  {
+    "sourceUrl": "https://clearfieldcountypa.gov/DocumentCenter/View/1174/2026-General-Election-Sample-PDF",
+    "finalUrl": "https://clearfieldcountypa.gov/DocumentCenter/View/1174/2026-General-Election-Sample-PDF",
+    "sourceCheckedAt": "2026-11-02T22:15:57.775497+00:00",
+    "sha256": "637b772bc5a910ef9e8501887a3144b2b513a01eb978f5c1211640410d15ee43",
+    "sourceFile": "sources/637b772bc5a910ef9e8501887a3144b2b513a01eb978f5c1211640410d15ee43.source",
+    "excerptFile": "sources/3a459ba173d4ececf50aac1c8ad8c1cf39bb8e939dcedffbb9a0fcebd89dd854.txt",
+    "excerptSha256": "3a459ba173d4ececf50aac1c8ad8c1cf39bb8e939dcedffbb9a0fcebd89dd854",
+    "publicSelection": {
+      "sourcePage": 17,
+      "rectanglePoints": [
+        30,
+        680,
+        245,
+        865
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates."
+  },
+  {
+    "sourceUrl": "https://drive.google.com/file/d/1cFxzyIpm5eZX0sJ9ek4gotJrVAJ9H69t/view?usp=sharing",
+    "finalUrl": "https://drive.google.com/file/d/1cFxzyIpm5eZX0sJ9ek4gotJrVAJ9H69t/view?usp=sharing",
+    "sourceCheckedAt": "2026-11-02T22:21:47.528455+00:00",
+    "sha256": "5ae7aaef4734b6732d677b97861175a0b5bac15775757d18641a5f895deeeb65",
+    "sourceFile": "sources/5ae7aaef4734b6732d677b97861175a0b5bac15775757d18641a5f895deeeb65.source",
+    "excerptFile": "sources/e1e890c86dbb21b5a5690277dfb2066b93bfce9261a1a5bec588cae8454d3085.txt",
+    "excerptSha256": "e1e890c86dbb21b5a5690277dfb2066b93bfce9261a1a5bec588cae8454d3085",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        320,
+        180,
+        603,
+        312
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates.",
+    "officialLinkingPage": {
+      "url": "https://sites.google.com/unionco.org/unioncoelections/home",
+      "file": "sources/6b6fb5f8643fa5f76b30c1985f8e798c18b1c8a52bb2621515a6c1f004314524.html",
+      "sha256": "6b6fb5f8643fa5f76b30c1985f8e798c18b1c8a52bb2621515a6c1f004314524",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "c8a390641f75307d747041ac0a9f0f0f0a42070d3741d86601a64dc662e0554a",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "linkingPage": {
+        "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+        "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+        "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+      }
+    }
+  },
+  {
+    "sourceUrl": "https://www.bedfordcountypa.org/0101%20Bedford%20Borough%20East%20Ward%20ELECTION%20DAY%20SAMPLE.pdf?t=202610080811500",
+    "finalUrl": "https://www.bedfordcountypa.org/0101%20Bedford%20Borough%20East%20Ward%20ELECTION%20DAY%20SAMPLE.pdf?t=202610080811500",
+    "sourceCheckedAt": "2026-11-02T22:17:15.354615+00:00",
+    "sha256": "0a16dbd154e9b453c9274f324cae1d73aecce476900dc70987f196d63513c317",
+    "sourceFile": "sources/0a16dbd154e9b453c9274f324cae1d73aecce476900dc70987f196d63513c317.source",
+    "excerptFile": "sources/b09bf74476778a5e676be246390d3e761bb3795e91c1ec9338d62770dea1324c.txt",
+    "excerptSha256": "b09bf74476778a5e676be246390d3e761bb3795e91c1ec9338d62770dea1324c",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": null,
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "cropPixels": [
+        1195,
+        828,
+        1733,
+        1215
+      ],
+      "imageFile": "sources/22c0f30d2c755cbd6b757671e762faababac8f631787d5668dc72c9dd4b8aa13.png",
+      "rawOcrFile": "sources/3505abee64db3286dcc7cf2f1f4f0b5928613292c211a89ab2b345b52276b604.txt"
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "sourceUrl": "https://www.schuylkillcountypa.gov/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/122%20Eldred%20Township.pdf?t=202609241501550",
+    "finalUrl": "https://cms8.revize.com/revize/schuylkillcountypa/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/122%20Eldred%20Township.pdf?t=202609241501550",
+    "sourceCheckedAt": "2026-11-02T22:17:15.615704+00:00",
+    "sha256": "0f5f3354614378d33ec25383172cf541a94265585e3ae34613ea87a461826338",
+    "sourceFile": "sources/0f5f3354614378d33ec25383172cf541a94265585e3ae34613ea87a461826338.source",
+    "excerptFile": "sources/ddcc59639aed77df6f9008d5708781034ebb4dea2b999aa9227979c332a5976d.txt",
+    "excerptSha256": "ddcc59639aed77df6f9008d5708781034ebb4dea2b999aa9227979c332a5976d",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        400,
+        210,
+        600,
+        420
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates."
+  },
+  {
+    "sourceUrl": "https://www.montourcounty.gov/getmedia/6ba67729-ba6d-4401-8b64-b455865005e9/PA-Montour-261103-General.pdf",
+    "finalUrl": "https://www.montourcounty.gov/getmedia/6ba67729-ba6d-4401-8b64-b455865005e9/PA-Montour-261103-General.pdf",
+    "sourceCheckedAt": "2026-11-02T22:15:57.581760+00:00",
+    "sha256": "11ed0a22ae54b0839d7e56cc409e9f12a319d9b6174f8020458d8944ec20775d",
+    "sourceFile": "sources/11ed0a22ae54b0839d7e56cc409e9f12a319d9b6174f8020458d8944ec20775d.source",
+    "excerptFile": "sources/84fca2a430fafadabf91e5741bdc10a61960d11f2406377a5b3c738a7e05b806.txt",
+    "excerptSha256": "84fca2a430fafadabf91e5741bdc10a61960d11f2406377a5b3c738a7e05b806",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        248,
+        395,
+        490,
+        593
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates."
+  },
+  {
+    "sourceUrl": "https://www.bradfordcountypa.gov/DocumentCenter/View/1671/TOWANDA-BOROUGH-1ST-WARDpdf",
+    "finalUrl": "https://www.bradfordcountypa.gov/DocumentCenter/View/1671/TOWANDA-BOROUGH-1ST-WARDpdf",
+    "sourceCheckedAt": "2026-11-02T22:10:11.928160+00:00",
+    "sha256": "6ecced5d25955253a22fdaef27c84467c8aade8f760f5f02e1b064fd8f465d13",
+    "sourceFile": "sources/6ecced5d25955253a22fdaef27c84467c8aade8f760f5f02e1b064fd8f465d13.source",
+    "excerptFile": "sources/892af8d3823296a945e62d876ded4f43cf798da86568df79f00eff7eb80efba1.txt",
+    "excerptSha256": "892af8d3823296a945e62d876ded4f43cf798da86568df79f00eff7eb80efba1",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        320,
+        180,
+        595,
+        345
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "cropPixels": null
+    },
+    "evidence": "Fresh official November 3, 2026 general-election source. Complete bounded office block preserves every printed named choice and party. Source page, clip coordinates, exact field text, and any visual-transcription details are retained in pa-west-proof.json. Write-in lines are not named candidates."
+  },
+  {
+    "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+    "finalUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf",
+    "sourceCheckedAt": "2026-11-02T22:36:13.743217+00:00",
+    "sha256": "485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff",
+    "sourceFile": "sources/485b95ec1ff6b751553a6eb907bebf7888e015f849b20e2fae1f155a302dcbff.source",
+    "excerptFile": "sources/f7ef6587912527b290a93ea7b01e53d46e9538b1169632dad1785e6d10df25a4.txt",
+    "excerptSha256": "f7ef6587912527b290a93ea7b01e53d46e9538b1169632dad1785e6d10df25a4",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        234,
+        282,
+        414,
+        445
+      ],
+      "pagePoints": [
+        648,
+        1044
+      ],
+      "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT",
+      "imageFile": "sources/6360a716f848cee1e34022003dc9cf62cbd133ae6858de19a26878ddebe30008.png",
+      "nativeTextFile": "sources/f7ef6587912527b290a93ea7b01e53d46e9538b1169632dad1785e6d10df25a4.txt",
+      "imageRenderScale": 2
+    },
+    "evidence": "Fresh official November 3, 2026 general-election sample ballot. Complete bounded office block preserves every printed named choice and party, plus the blank write-in line. Exact page, crop, extracted or visually verified text, and original source bytes retained. The blank write-in line is not a named candidate."
+  },
+  {
+    "sourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311047&dbid=0&repo=FranklinCounty",
+    "finalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/711f3337-e339-4219-9fde-69f014cba361/14311047",
+    "sourceCheckedAt": "2026-11-02T22:36:56.905074+00:00",
+    "sha256": "602e03976f476b0202968b1e889cbf525ce069a8ad1c984d8321811eb99e0f6f",
+    "sourceFile": "sources/602e03976f476b0202968b1e889cbf525ce069a8ad1c984d8321811eb99e0f6f.source",
+    "excerptFile": "sources/7342d6744e4d9cc8acde25b8591315d541d73007c0c752185adcf155fb280a05.txt",
+    "excerptSha256": "7342d6744e4d9cc8acde25b8591315d541d73007c0c752185adcf155fb280a05",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        233,
+        147,
+        415,
+        335
+      ],
+      "pagePoints": [
+        648,
+        1044
+      ],
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "imageFile": "sources/401d52f18db8a3f9a81881e3b13b1151c7b4f6cc98cbd8774a05845cef9f0ad3.png",
+      "nativeTextFile": "sources/6c1a738e8bbb92cf4428e5c6a9b8856fceb7e12735d69459817125e346a0de1c.txt",
+      "imageRenderScale": 2,
+      "visualReviewNote": "Native OCR fuses name and party labels. HD89 native OCR also renders Kauffman incorrectly as Kauf man. The bounded transcript reflects the visibly printed ballot image and preserves the full office block."
+    },
+    "evidence": "Fresh official November 3, 2026 general-election sample ballot. Complete bounded office block preserves every printed named choice and party, plus the blank write-in line. Exact page, crop, extracted or visually verified text, and original source bytes retained. The blank write-in line is not a named candidate. Stable DocView URL identifies the logical source document; finalUrl is the actual public PDF export download, acquired using the viewer\u2019s built-in Print to PDF workflow with an ordinary anonymous session (not a claimed HTTP redirect). The original export bytes are hashed. Native OCR fuses name and party labels; exact visual transcript verified against the page image.",
+    "captureWorkflow": {
+      "method": "PUBLIC_DOCUMENT_PRINT_PDF",
+      "stableDocumentUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311047&dbid=0&repo=FranklinCounty",
+      "actualPdfRequestUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/711f3337-e339-4219-9fde-69f014cba361/14311047",
+      "actualPdfFinalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/711f3337-e339-4219-9fde-69f014cba361/14311047",
+      "actualPdfReceiptFile": "sources/f31c6e09c18efe9e163ec61a5aa3286c30c0fd0b85af78ac863256c49ef69db3.json",
+      "publicViewerFile": "sources/281e7a6d4c893d043f2e2c6d9756512a7bc6b43b1b309bc5e3e0baf1290454a8.html",
+      "textApiReceiptFile": "sources/e0406ebf8547329b1e54fc4b869d96b2de895e9fa60c63f2f1730921fde6c8d5.json",
+      "exportInitiationFile": "sources/016ff8fde09baa934a8212a0462e6bff2259f5c0479ee13cb147018128f61791.txt",
+      "note": "The stable logical public document was opened in an ordinary anonymous session, and its built-in Print to PDF workflow returned these exact original PDF bytes. This is a multi-request document export, not an HTTP redirect from DocView to PDF10. PDF10 cache URL may expire; DocView is the stable reader link. POST requests only read the public document or request its export; no county data was changed."
+    }
+  },
+  {
+    "sourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311110&dbid=0&repo=FranklinCounty",
+    "finalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/aaf42e38-c0ac-4383-9cce-ccef07ff3f41/14311110",
+    "sourceCheckedAt": "2026-11-02T22:36:56.866335+00:00",
+    "sha256": "48024c9990cb04e663bea9bdc14f5ebcab8dc90ac9baba7011d752c92cf7ff8b",
+    "sourceFile": "sources/48024c9990cb04e663bea9bdc14f5ebcab8dc90ac9baba7011d752c92cf7ff8b.source",
+    "excerptFile": "sources/b5d1d3bb677a41721fe87efbdb275f4ea954095643d6a03461fb3211c90cc8b1.txt",
+    "excerptSha256": "b5d1d3bb677a41721fe87efbdb275f4ea954095643d6a03461fb3211c90cc8b1",
+    "publicSelection": {
+      "sourcePage": 1,
+      "rectanglePoints": [
+        233,
+        147,
+        415,
+        290
+      ],
+      "pagePoints": [
+        648,
+        1044
+      ],
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "imageFile": "sources/b88564e8322e07e931ea353d7eac5e78e4d261b2889ed49f5fa51c5e88c4033d.png",
+      "nativeTextFile": "sources/f6aa2efc7c8cfab59d3f13898650d7900ed7819c67c8b3b9171f58da85ae45bd.txt",
+      "imageRenderScale": 2,
+      "visualReviewNote": "Native OCR fuses name and party labels. HD89 native OCR also renders Kauffman incorrectly as Kauf man. The bounded transcript reflects the visibly printed ballot image and preserves the full office block."
+    },
+    "evidence": "Fresh official November 3, 2026 general-election sample ballot. Complete bounded office block preserves every printed named choice and party, plus the blank write-in line. Exact page, crop, extracted or visually verified text, and original source bytes retained. The blank write-in line is not a named candidate. Stable DocView URL identifies the logical source document; finalUrl is the actual public PDF export download, acquired using the viewer\u2019s built-in Print to PDF workflow with an ordinary anonymous session (not a claimed HTTP redirect). The original export bytes are hashed. Native OCR fuses name and party labels; exact visual transcript verified against the page image.",
+    "captureWorkflow": {
+      "method": "PUBLIC_DOCUMENT_PRINT_PDF",
+      "stableDocumentUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311110&dbid=0&repo=FranklinCounty",
+      "actualPdfRequestUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/aaf42e38-c0ac-4383-9cce-ccef07ff3f41/14311110",
+      "actualPdfFinalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/aaf42e38-c0ac-4383-9cce-ccef07ff3f41/14311110",
+      "actualPdfReceiptFile": "sources/0c428d2eadbd2a885de0bcdff8368aa01ecbc1ad57f6b42bed0cad738d7829a1.json",
+      "publicViewerFile": "sources/40c0fc9c1456de9704a2535874219adf04cad41acc2c87d80eb3104c3335a708.html",
+      "textApiReceiptFile": "sources/af1c6dffe9d5f2ac87a879f90b17bebd5454ca942a82aa06baf6072ecfcc555c.json",
+      "exportInitiationFile": "sources/4fb0ccf37187ae0fedc7410193b7aff6411615ff920fa3c4af04ff726a174bd0.txt",
+      "note": "The stable logical public document was opened in an ordinary anonymous session, and its built-in Print to PDF workflow returned these exact original PDF bytes. This is a multi-request document export, not an HTTP redirect from DocView to PDF10. PDF10 cache URL may expire; DocView is the stable reader link. POST requests only read the public document or request its export; no county data was changed."
+    }
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete saved official-PDF web extraction text; not original PDF bytes.",
+    "captureMetadata": {
+      "provider": "search_service_web_run",
+      "operation": {
+        "click": {
+          "ref_id": "turn132946view1",
+          "id": 13
+        }
+      },
+      "reportedContentType": "application/pdf",
+      "reportedPageCount": 2,
+      "reportedTotalLines": 54,
+      "savedLineCount": 54,
+      "reportedCrawledAt": "today",
+      "captureSucceeded": true,
+      "originHttpStatus": null,
+      "nativeGovernmentFetchHttpStatus": 403,
+      "nativeGovernmentFetchBody": "Page Not Found county HTML; no candidate data."
+    },
+    "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "finalUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf",
+    "sourceCheckedAt": "2026-11-02T22:28:49.764973+00:00",
+    "sha256": "c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44",
+    "sourceFile": "sources/c3063455c5094402d8768f8bc9c0853e524d56cae2632c439da4ff4a1d031b44.source",
+    "excerptFile": "sources/0e91544cca4e17fe9be44fa29bc7e507c5449883f5ce499a7b66b53afc4a9e48.txt",
+    "excerptSha256": "0e91544cca4e17fe9be44fa29bc7e507c5449883f5ce499a7b66b53afc4a9e48",
+    "evidence": "Full official2page general-election PDF read through the web document tool; all54returned lines preserved in northampton-official-list.web.txt. rawHash identifies that complete capturedtext artifact, never originalPDFbytes. httpStatus200 marks successful source-text capture; the tool does not report originHTTPstatus. A separate local directPDF request returned403PageNotFound. Countyofficial page labels this GE2026 OFFICIAL UMOVA Candidate list, and document identifies November3,2026GeneralElection. CompleteHouse135/Senate18 choices also agree with the current officialBethlehem samplePDF opened independently."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Exact complete928196byte deterministic-reader extraction of officialPDF; not originalPDFbytes.",
+    "captureMetadata": {
+      "provider": "deterministic_public_reader",
+      "readerUrl": "https://r.jina.ai/https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ==",
+      "reportedTitle": "REVISED SAMPLE - PA Lehigh 261103 General_06.PDF",
+      "reportedPublishedAt": "2026-10-22T15:35:31Z",
+      "reportedPageCount": 158,
+      "observedCurrentElectionHeaders": 158,
+      "observedHouseOfficeBlocks": 158,
+      "nativeGovernmentFetchHttpStatus": 503,
+      "nativeFailure": "TLS certificate verification failure through inherited proxy; no verification disabled."
+    },
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "finalUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceCheckedAt": "2026-11-02T22:32:59.010612+00:00",
+    "sha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source",
+    "excerptFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.txt",
+    "excerptSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "evidence": "Complete official revised2026General samplePDF extracted by public deterministicreader. Original governmentURL is published on the officialcounty electionhomepage, which is linked by PA.gov county electiondirectory. All158currentNov3ballotheaders and158Houseofficeblocks preserved; every repeated candidate set agrees. rawHash is the entire savedsource-text artifact, notPDFbytes. httpStatus200 is the actual observedreaderresponse. Direct governmentPDF bytes were unavailable through localTLS route.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
     }
   }
 ]

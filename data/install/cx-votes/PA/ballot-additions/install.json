@@ -271,6 +271,167 @@
       "ocdId": "ocd-division/country:us/state:pa/sldl:122",
       "candidates": 2,
       "sourceUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-65",
+      "title": "Representative in the General Assembly – District 65",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:65",
+      "candidates": 2,
+      "sourceUrl": "https://warrencountypa.gov/DocumentCenter/View/3887/UMOVA-Notice-General-Election-Nov-3-2026"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-67",
+      "title": "Representative in the General Assembly – District 67",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:67",
+      "candidates": 2,
+      "sourceUrl": "https://www.mckeancountypa.gov/Sample%20-%20PA%20McKean%20261103%20General_03.pdf?t=202608281150060"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-75",
+      "title": "Representative in the General Assembly – District 75",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:75",
+      "candidates": 2,
+      "sourceUrl": "https://clearfieldcountypa.gov/DocumentCenter/View/1174/2026-General-Election-Sample-PDF"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-76",
+      "title": "Representative in the General Assembly – District 76",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:76",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/file/d/1cFxzyIpm5eZX0sJ9ek4gotJrVAJ9H69t/view?usp=sharing"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-78",
+      "title": "Representative in the General Assembly – District 78",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:78",
+      "candidates": 1,
+      "sourceUrl": "https://www.bedfordcountypa.org/0101%20Bedford%20Borough%20East%20Ward%20ELECTION%20DAY%20SAMPLE.pdf?t=202610080811500"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-107",
+      "title": "Representative in the General Assembly – District 107",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:107",
+      "candidates": 2,
+      "sourceUrl": "https://www.schuylkillcountypa.gov/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/122%20Eldred%20Township.pdf?t=202609241501550"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-108",
+      "title": "Representative in the General Assembly – District 108",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:108",
+      "candidates": 2,
+      "sourceUrl": "https://www.montourcounty.gov/getmedia/6ba67729-ba6d-4401-8b64-b455865005e9/PA-Montour-261103-General.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-110",
+      "title": "Representative in the General Assembly – District 110",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:110",
+      "candidates": 2,
+      "sourceUrl": "https://www.bradfordcountypa.gov/DocumentCenter/View/1671/TOWANDA-BOROUGH-1ST-WARDpdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-81",
+      "title": "Representative in the General Assembly – District 81",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:81",
+      "candidates": 2,
+      "sourceUrl": "https://www.huntingdoncountypa.gov/getmedia/30deeb5d-db3d-47ad-b849-1a11cca9b602/2026-General-Sample-Ballot.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-89",
+      "title": "Representative in the General Assembly – District 89",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:89",
+      "candidates": 2,
+      "sourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311047&dbid=0&repo=FranklinCounty"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-90",
+      "title": "Representative in the General Assembly – District 90",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:90",
+      "candidates": 1,
+      "sourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311110&dbid=0&repo=FranklinCounty"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-14",
+      "title": "Senator in the General Assembly – District 14",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:14",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-18",
+      "title": "Senator in the General Assembly – District 18",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:18",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-135",
+      "title": "Representative in the General Assembly – District 135",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:135",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-136",
+      "title": "Representative in the General Assembly – District 136",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:136",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-137",
+      "title": "Representative in the General Assembly – District 137",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:137",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-138",
+      "title": "Representative in the General Assembly – District 138",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:138",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-183",
+      "title": "Representative in the General Assembly – District 183",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:183",
+      "candidates": 2,
+      "sourceUrl": "https://www.norcopa.gov/corecode/uploads/document6/uploaded_pdfs/corecode/GE26%20UMOVA%20NOTICE_Candidate%20List_2770.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-22",
+      "title": "Representative in the General Assembly – District 22",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:22",
+      "candidates": 2,
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-132",
+      "title": "Representative in the General Assembly – District 132",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:132",
+      "candidates": 2,
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-133",
+      "title": "Representative in the General Assembly – District 133",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:133",
+      "candidates": 1,
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-134",
+      "title": "Representative in the General Assembly – District 134",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:134",
+      "candidates": 2,
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-187",
+      "title": "Representative in the General Assembly – District 187",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:187",
+      "candidates": 2,
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
     }
   ],
   "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",

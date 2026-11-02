@@ -1,0 +1,17 @@
+{
+  "requestedUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocumentService.aspx/GetTextHtmlForPage",
+  "requestMethod": "POST",
+  "readOnlyOperation": "Public document page text",
+  "requestBody": {
+    "repoName": "FranklinCounty",
+    "documentId": 14311047,
+    "pageNum": 1,
+    "showAnn": true,
+    "searchUuid": ""
+  },
+  "finalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocumentService.aspx/GetTextHtmlForPage",
+  "httpStatus": 200,
+  "rawHash": "d7c0bab39bd958d215cdb25347f8900acf2a2bbb3ec6b637adb42aaa34f70b5d",
+  "retrievedAt": "2026-11-02T22:24:35.081486+00:00",
+  "path": "/workspace/work/election-day/pa-west/franklin-chambersburg-page-text.json"
+}

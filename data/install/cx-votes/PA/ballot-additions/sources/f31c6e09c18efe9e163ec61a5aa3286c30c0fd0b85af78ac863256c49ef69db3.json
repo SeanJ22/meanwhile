@@ -1,0 +1,14 @@
+{
+  "requestedUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/711f3337-e339-4219-9fde-69f014cba361/14311047",
+  "requestMethod": "GET",
+  "requestBody": null,
+  "readOnlyOperation": "Ordinary anonymous public document view or Print to PDF export",
+  "finalUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/PDF10/711f3337-e339-4219-9fde-69f014cba361/14311047",
+  "httpStatus": 200,
+  "rawHash": "602e03976f476b0202968b1e889cbf525ce069a8ad1c984d8321811eb99e0f6f",
+  "retrievedAt": "2026-11-02T22:36:56.905074+00:00",
+  "contentType": "application/pdf; name=\"Chambersburg 1-1 - St Paul United Methodist Church.pdf\"; charset=utf-8",
+  "byteLength": 585447,
+  "path": "/workspace/work/election-day/pa-west/franklin-chambersburg-export.pdf",
+  "stablePublicSourceUrl": "https://lfweb.franklincountypa.gov/WebLink8Public/DocView.aspx?id=14311047&dbid=0&repo=FranklinCounty"
+}

@@ -1,0 +1,96 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "CA",
+  "coverage": {
+    "voteCenters": 92,
+    "dropBoxes": 63,
+    "scope": "Sacramento County only",
+    "sourceRows": {
+      "elevenDayVoteCenters": 19,
+      "fourDayVoteCenters": 73,
+      "dropBoxes": 63
+    }
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/3d383a11d075cf9e782ec43b5f4dfd330187f4e4f345eb5ebbe83354c8c0b404.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9.html",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9.html",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 5,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 5,
+  "registryPageRows": 2,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "PASS",
+  "checks": [
+    {
+      "doorId": "cx-ca-sacramento-0-election-day-2026",
+      "kind": "SITES",
+      "sourceRows": 19,
+      "fullSourceReader": 19,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-ca-sacramento-0-early-voting-2026",
+      "kind": "SITES",
+      "sourceRows": 19,
+      "fullSourceReader": 19,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-ca-sacramento-1-election-day-2026",
+      "kind": "SITES",
+      "sourceRows": 73,
+      "fullSourceReader": 73,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-ca-sacramento-1-early-voting-2026",
+      "kind": "SITES",
+      "sourceRows": 73,
+      "fullSourceReader": 73,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-ca-sacramento-drop-boxes-2026",
+      "kind": "SITES",
+      "sourceRows": 63,
+      "fullSourceReader": 63,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    }
+  ],
+  "siteKinds": {
+    "electionDay": 92,
+    "earlyVoting": 92,
+    "dropBoxes": 63
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:CA"
+}

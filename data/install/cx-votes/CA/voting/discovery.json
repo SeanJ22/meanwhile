@@ -1,0 +1,7 @@
+{
+  "install": false,
+  "routes": [],
+  "limitations": [
+    "No current official coordinates are published in these HTML tables. Keep existing source-reader geocoding ahead of requests; this packet does not assign coordinates from invented points."
+  ]
+}

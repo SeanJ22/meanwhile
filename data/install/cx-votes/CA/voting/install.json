@@ -1,0 +1,66 @@
+{
+  "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+  "state": "CA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+  "productionWritesByThisBundle": false,
+  "appCodeChanges": false,
+  "contractId": "voting-sites:CA",
+  "readyDoors": "doors.json",
+  "discoveryOnly": "discovery.json",
+  "sourceCaptures": "sources.json",
+  "coverage": {
+    "voteCenters": 92,
+    "dropBoxes": 63,
+    "scope": "Sacramento County only",
+    "sourceRows": {
+      "elevenDayVoteCenters": 19,
+      "fourDayVoteCenters": 73,
+      "dropBoxes": 63
+    }
+  },
+  "sourceOnlyPrepared": true,
+  "liveStatus": "Prepared data awaits River installation and live verification",
+  "priorResidentialCheck": {
+    "hasSites": true,
+    "siteRows": 174,
+    "googleFallback": {
+      "available": true,
+      "requested": true
+    },
+    "outsideCoverage": false
+  },
+  "limitations": [
+    "No current official coordinates are published in these HTML tables. Keep existing source-reader geocoding ahead of requests; this packet does not assign coordinates from invented points."
+  ],
+  "existingInstallOperation": {
+    "register": {
+      "module": "lib/ballot/voting-source-publication.ts",
+      "function": "saveVotingSourceDoor",
+      "arguments": [
+        "context.repos.doors",
+        "each door from doors.json",
+        "actual install timestamp"
+      ]
+    },
+    "refresh": {
+      "module": "scripts/fetch-voting-sites.mts",
+      "function": "refreshVotingSources",
+      "arguments": {
+        "state": "CA",
+        "store": "existing PostgresRoutineDataStore",
+        "context": "existing workerPublicationContext",
+        "seeds": "ready doors from doors.json"
+      },
+      "existingCliAfterRegistration": "node --experimental-strip-types scripts/fetch-voting-sites.mts --state=CA --promote"
+    },
+    "productionWriteContext": "Existing prepareProductionCivicDataWrite / workerPublicationContext used by fetch-voting-sites.mts; River performs the authorized install."
+  },
+  "installOrder": [
+    "Review exact saved source bytes, hashes, scope and limitations.",
+    "Register only doors.json through saveVotingSourceDoor; discovery.json is evidence and is not installed as a working route.",
+    "Run the existing voting-source refresh in the existing authorized publication context; it acquires and publishes data through voting-sites:CA. Preserve unrelated held facts.",
+    "Verify the listed scope on the live where-to-vote page; this preparation makes no statewide completeness or live-fix claim."
+  ],
+  "validationFile": "checks.json"
+}

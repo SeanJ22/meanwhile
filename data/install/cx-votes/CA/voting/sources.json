@@ -1,0 +1,78 @@
+[
+  {
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "finalUrl": "http://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "file": "sources/3d383a11d075cf9e782ec43b5f4dfd330187f4e4f345eb5ebbe83354c8c0b404.html",
+    "sha256": "3d383a11d075cf9e782ec43b5f4dfd330187f4e4f345eb5ebbe83354c8c0b404",
+    "byteLength": 44126,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:22:03.995953+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "42af0bec51a92adaaa5e9f52168751c87a932eed87c342a5912622deac793531",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://elections.saccounty.gov/VoteCenters/Pages/Locations.aspx",
+      "recordedAt": "2026-11-02T21:22:03.995953+00:00"
+    }
+  },
+  {
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+    "finalUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+    "file": "sources/9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4.html",
+    "sha256": "9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4",
+    "byteLength": 62721,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:22:49.811938+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "0331975e7186eb8ebefc2f3a3b017f3f84c0bba36dc3400df9ea2125c5a21306",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+      "recordedAt": "2026-11-02T21:22:49.811938+00:00"
+    }
+  },
+  {
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+    "finalUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+    "file": "sources/f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9.html",
+    "sha256": "f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9",
+    "byteLength": 56687,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:22:49.812852+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "b7e281c6a74c927bea16c50e2790890e980e2855591f1d77da72237c798d7be2",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://elections.saccounty.gov/content/vre/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+      "recordedAt": "2026-11-02T21:45:10.232221+00:00"
+    }
+  },
+  {
+    "url": "https://elections.saccounty.gov/content/vre/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+    "finalUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+    "file": "sources/f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9.html",
+    "sha256": "f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9",
+    "byteLength": 56687,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:45:10.232221+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "b7e281c6a74c927bea16c50e2790890e980e2855591f1d77da72237c798d7be2",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://elections.saccounty.gov/content/vre/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+      "recordedAt": "2026-11-02T21:45:10.232221+00:00"
+    }
+  }
+]

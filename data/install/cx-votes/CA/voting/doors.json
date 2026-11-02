@@ -1,0 +1,280 @@
+[
+  {
+    "id": "cx-ca-sacramento-0-election-day-2026",
+    "publisher": "Sacramento County Voter Registration and Elections",
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento",
+      "name": "Sacramento County",
+      "countyFips": "06067"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "electionAssociationVerified": true,
+    "title": "November 3, 2026 General Election vote centers",
+    "extraction": {
+      "format": "html",
+      "tableIndex": 0,
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "name": "Vote Center Name",
+        "address": [
+          "Address",
+          "City"
+        ],
+        "hours": "Hours",
+        "locationNotes": "Language Assistance"
+      },
+      "constants": {
+        "days": "November 3"
+      },
+      "transforms": {
+        "hours": {
+          "column": "Hours",
+          "pattern": "Election Day:\\s*([\\s\\S]+)",
+          "group": 1
+        }
+      }
+    },
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "11-Day Vote Centers",
+      "source": {
+        "publisher": "Sacramento County Voter Registration and Elections",
+        "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+        "official": true,
+        "checkedAt": "2026-11-02T21:22:49.811938+00:00",
+        "documentHash": "9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4",
+        "documentUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html"
+      }
+    }
+  },
+  {
+    "id": "cx-ca-sacramento-0-early-voting-2026",
+    "publisher": "Sacramento County Voter Registration and Elections",
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento",
+      "name": "Sacramento County",
+      "countyFips": "06067"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "electionAssociationVerified": true,
+    "title": "November 3, 2026 General Election vote centers",
+    "extraction": {
+      "format": "html",
+      "tableIndex": 0,
+      "kind": "EARLY_VOTING",
+      "columns": {
+        "name": "Vote Center Name",
+        "address": [
+          "Address",
+          "City"
+        ],
+        "hours": "Hours",
+        "locationNotes": "Language Assistance"
+      },
+      "constants": {
+        "days": "October 24 - November 3"
+      },
+      "transforms": {
+        "hours": {
+          "column": "Hours",
+          "pattern": "Daily:\\s*([\\s\\S]*?)\\s*Election Day:",
+          "group": 1
+        }
+      }
+    },
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "11-Day Vote Centers",
+      "source": {
+        "publisher": "Sacramento County Voter Registration and Elections",
+        "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+        "official": true,
+        "checkedAt": "2026-11-02T21:22:49.811938+00:00",
+        "documentHash": "9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4",
+        "documentUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html"
+      }
+    }
+  },
+  {
+    "id": "cx-ca-sacramento-1-election-day-2026",
+    "publisher": "Sacramento County Voter Registration and Elections",
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento",
+      "name": "Sacramento County",
+      "countyFips": "06067"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "electionAssociationVerified": true,
+    "title": "November 3, 2026 General Election vote centers",
+    "extraction": {
+      "format": "html",
+      "tableIndex": 1,
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "name": "Vote Center Name",
+        "address": [
+          "Address",
+          "City"
+        ],
+        "hours": "Hours",
+        "locationNotes": "Language Assistance"
+      },
+      "constants": {
+        "days": "November 3"
+      },
+      "transforms": {
+        "hours": {
+          "column": "Hours",
+          "pattern": "Election Day:\\s*([\\s\\S]+)",
+          "group": 1
+        }
+      }
+    },
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "4-Day Vote Centers",
+      "source": {
+        "publisher": "Sacramento County Voter Registration and Elections",
+        "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+        "official": true,
+        "checkedAt": "2026-11-02T21:22:49.811938+00:00",
+        "documentHash": "9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4",
+        "documentUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html"
+      }
+    }
+  },
+  {
+    "id": "cx-ca-sacramento-1-early-voting-2026",
+    "publisher": "Sacramento County Voter Registration and Elections",
+    "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento",
+      "name": "Sacramento County",
+      "countyFips": "06067"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "electionAssociationVerified": true,
+    "title": "November 3, 2026 General Election vote centers",
+    "extraction": {
+      "format": "html",
+      "tableIndex": 1,
+      "kind": "EARLY_VOTING",
+      "columns": {
+        "name": "Vote Center Name",
+        "address": [
+          "Address",
+          "City"
+        ],
+        "hours": "Hours",
+        "locationNotes": "Language Assistance"
+      },
+      "constants": {
+        "days": "October 31 - November 3"
+      },
+      "transforms": {
+        "hours": {
+          "column": "Hours",
+          "pattern": "Daily:\\s*([\\s\\S]*?)\\s*Election Day:",
+          "group": 1
+        }
+      }
+    },
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "4-Day Vote Centers",
+      "source": {
+        "publisher": "Sacramento County Voter Registration and Elections",
+        "url": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html",
+        "official": true,
+        "checkedAt": "2026-11-02T21:22:49.811938+00:00",
+        "documentHash": "9390c6a58c82efbc8d48eab7fd692cc0011a7c413c0f50e5144d9fd0f85684b4",
+        "documentUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-g---vote-center-locations.html"
+      }
+    }
+  },
+  {
+    "id": "cx-ca-sacramento-drop-boxes-2026",
+    "publisher": "Sacramento County Voter Registration and Elections",
+    "url": "https://elections.saccounty.gov/content/vre/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento",
+      "name": "Sacramento County",
+      "countyFips": "06067"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.saccounty.gov/us/en/vote-centers/locations.html",
+    "electionAssociationVerified": true,
+    "title": "November 3, 2026 General Election drop boxes",
+    "extraction": {
+      "format": "html",
+      "dataUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+      "tableIndex": 0,
+      "kind": "DROP_BOX",
+      "columns": {
+        "name": "Location Name",
+        "address": [
+          "Address",
+          "City"
+        ],
+        "hours": "Daily Hours"
+      },
+      "templates": {
+        "hours": "Daily Hours: {Daily Hours}; Election Day Hours: {Election Day Hours}"
+      }
+    },
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "Official Ballot Drop Boxes",
+      "source": {
+        "publisher": "Sacramento County Voter Registration and Elections",
+        "url": "https://elections.saccounty.gov/content/vre/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html",
+        "official": true,
+        "checkedAt": "2026-11-02T21:45:10.232221+00:00",
+        "documentHash": "f8cceb38f9add5ef8653d3dca54646550c231b111c559b3733541f6d9bb770e9",
+        "documentUrl": "https://elections.saccounty.gov/us/en/vote-centers/election-administration-plan-/election-administration-plan--appendix-h---dropbox-locations-and.html"
+      }
+    }
+  }
+]

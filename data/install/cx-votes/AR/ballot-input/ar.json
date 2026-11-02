@@ -1,0 +1,1451 @@
+{
+  "ballots": {
+    "AR:ar-2026-11-03-general": {
+      "election": {
+        "id": "ar-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "AR"
+      },
+      "contests": [
+        {
+          "id": "ar-ba01-benton-2026-place-little-flock-little-flock-sales-and-compensating-use-tax",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:little_flock",
+          "title": "Little Flock — Sales and Compensating Use Tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "An ordinance levying an additional one\npercent (1%) Sales and Compensating\nUse Tax within the City of Little Flock,\nArkansas, to be used for general\noperational purposes; prescribing other\nmatters relating to the levy; and for\nother purposes.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-refunding-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:rogers",
+          "title": "Rogers — Refunding Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$118,000,000 for the purpose of refunding\nthe City's outstanding Sales and Use Tax\nBonds, Improvement Series 2018B and\nSales and Use Tax Bonds, Series 2022\nand, in order to pay the bonds, the levy\nand pledge of a 1% local sales and use tax\nwithin the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-street-improvement-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:rogers",
+          "title": "Rogers — Street Improvement Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$195,500,000 for the purpose of financing\nall or a portion of the costs of streets,\nroads, trails and bridges, including any\ncurb, gutter, drainage, flood control and\nother related improvements, equipment\nand land acquisition to accomplish such\nimprovements, and street lighting, utility\nadjustments, sidewalks and traffic signals\nrelated thereto and, in order to pay the\nbonds, the levy and pledge of a 1% local\nsales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-park-and-recreational-improvement-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:rogers",
+          "title": "Rogers — Park and Recreational Improvement Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$81,500,000 for the purpose of financing\nall or a portion of the costs of park and\nrecreational facilities and improvements\nand any necessary land acquisition and\nparking, furnishings, equipment, drainage,\nflood control, lighting, road, trail, and utility\nimprovements therefor and, in order to pay\nthe bonds, the levy and pledge of a 1%\nlocal sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-fire-improvement-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:rogers",
+          "title": "Rogers — Fire Improvement Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$32,750,000 for the purpose of financing\nall or a portion of the costs of fire\ndepartment facilities, equipment and\napparatus and parking, furnishings,\ndrainage, flood control, lighting, road, and\nutility improvements therefor and, in order\nto pay the bonds, the levy and pledge of a\n1% local sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-police-improvement-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:rogers",
+          "title": "Rogers — Police Improvement Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$20,750,000 for the purpose of financing\nall or a portion of the costs of police\ndepartment facilities, equipment and\napparatus and parking, furnishings,\ndrainage, flood control, lighting, road, and\nutility improvements therefor and, in order\nto pay the bonds, the levy and pledge of a\n1% local sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-animal-services-improvement-bonds",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:rogers",
+          "title": "Rogers — Animal Services Improvement Bonds",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$8,750,000 for the purpose of financing all\nor a portion of the costs of animal services\nfacilities, equipment and apparatus and\nparking, furnishings, drainage, flood\ncontrol, lighting, road, and utility\nimprovements therefor and, in order to pay\nthe bonds, the levy and pledge of a 1%\nlocal sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-siloam-springs-siloam-springs-wastewater-bonds-and-tax",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ar/place:siloam_springs",
+          "title": "Siloam Springs — Wastewater Bonds and Tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ar-2026-11-03-general",
+          "provenance": {
+            "quote": "Bonds of the City of Siloam Springs in\nthe maximum aggregate principal\namount of $55,000,000 for the purpose\nof financing all or a portion of the costs\nof extensions, betterments and\nimprovements to the City's wastewater\nfacilities, including particularly, without\nlimitation, wastewater treatment plant\nand sewer collection infrastructure,\nand, in order to pay the bonds, the levy\nand pledge of a 0.625% local sales\nand use tax within the City.\nIf the bonds are approved, there will be\nlevied within the City a 0.625% local\nsales and use tax (the \"Bond Tax\"), the\nnet collections of which remaining after\ndeduction of the administrative charges\nof the State of Arkansas and required\nrebates will be used solely to retire or\npay obligations with respect to the\nbonds in accordance with Amendment\nNo. 62 to the Arkansas Constitution.\nThe Bond Tax will expire after the\nbonds have been paid or provision is\nmade therefor in accordance with\nArkansas statutes. The Bond Tax will\nreplace the City's existing 0.625%\nsales and use tax levied in 2018 for the\npurpose of retiring bonds to finance\nwater improvements (the \"2018 Tax\").\nThe effective date of the Bond Tax will\nbe the day following the date that the\n2018 Tax expires. Proceeds of the\nbonds may fund a debt service reserve\nand pay expenses of issuing the\nbonds. The bonds may be issued at\none time or in series from time to time.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "measureTextUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "ar-ba01-benton-2026-place-little-flock-little-flock-sales-and-compensating-use-tax-text",
+          "contestId": "ar-ba01-benton-2026-place-little-flock-little-flock-sales-and-compensating-use-tax",
+          "provenance": {
+            "quote": "An ordinance levying an additional one\npercent (1%) Sales and Compensating\nUse Tax within the City of Little Flock,\nArkansas, to be used for general\noperational purposes; prescribing other\nmatters relating to the levy; and for\nother purposes.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "An ordinance levying an additional one\npercent (1%) Sales and Compensating\nUse Tax within the City of Little Flock,\nArkansas, to be used for general\noperational purposes; prescribing other\nmatters relating to the levy; and for\nother purposes.",
+          "officialNumber": "Ordinance No. 2026-006",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-refunding-bonds-text",
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-refunding-bonds",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$118,000,000 for the purpose of refunding\nthe City's outstanding Sales and Use Tax\nBonds, Improvement Series 2018B and\nSales and Use Tax Bonds, Series 2022\nand, in order to pay the bonds, the levy\nand pledge of a 1% local sales and use tax\nwithin the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "The bonds described below that are\napproved may be combined into a single\nissue or may be issued in series from time\nto time. If the bonds for one or more of the\npurposes are approved and one of such\npurposes is the Refunding Bonds, there\nwill be levied a new 1% sales and use tax,\nthe net collections of which remaining after\ndeduction of the administrative charges of\nthe State of Arkansas and required rebates\nwill be used solely to retire the bonds and\nobligations of the City with respect thereto.\nThe tax will replace the City's existing 1%\nsales and use tax levied in 2018 for the\nsole purpose of retiring bonds. The\neffective date of the new tax will be the day\nfollowing the date the existing tax expires.\nThe rate of taxation will be 1% even if\nbonds for more than one purpose are\napproved. No bonds will be issued for any\npurpose unless the Refunding Bonds are\nalso approved. The 1% sales and use tax\nwill expire after the bonds have been paid\nor provision is made therefor in\naccordance with Arkansas statutes.\n\nBonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$118,000,000 for the purpose of refunding\nthe City's outstanding Sales and Use Tax\nBonds, Improvement Series 2018B and\nSales and Use Tax Bonds, Series 2022\nand, in order to pay the bonds, the levy\nand pledge of a 1% local sales and use tax\nwithin the City.",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-street-improvement-bonds-text",
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-street-improvement-bonds",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$195,500,000 for the purpose of financing\nall or a portion of the costs of streets,\nroads, trails and bridges, including any\ncurb, gutter, drainage, flood control and\nother related improvements, equipment\nand land acquisition to accomplish such\nimprovements, and street lighting, utility\nadjustments, sidewalks and traffic signals\nrelated thereto and, in order to pay the\nbonds, the levy and pledge of a 1% local\nsales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "The bonds described below that are\napproved may be combined into a single\nissue or may be issued in series from time\nto time. If the bonds for one or more of the\npurposes are approved and one of such\npurposes is the Refunding Bonds, there\nwill be levied a new 1% sales and use tax,\nthe net collections of which remaining after\ndeduction of the administrative charges of\nthe State of Arkansas and required rebates\nwill be used solely to retire the bonds and\nobligations of the City with respect thereto.\nThe tax will replace the City's existing 1%\nsales and use tax levied in 2018 for the\nsole purpose of retiring bonds. The\neffective date of the new tax will be the day\nfollowing the date the existing tax expires.\nThe rate of taxation will be 1% even if\nbonds for more than one purpose are\napproved. No bonds will be issued for any\npurpose unless the Refunding Bonds are\nalso approved. The 1% sales and use tax\nwill expire after the bonds have been paid\nor provision is made therefor in\naccordance with Arkansas statutes.\n\nBonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$195,500,000 for the purpose of financing\nall or a portion of the costs of streets,\nroads, trails and bridges, including any\ncurb, gutter, drainage, flood control and\nother related improvements, equipment\nand land acquisition to accomplish such\nimprovements, and street lighting, utility\nadjustments, sidewalks and traffic signals\nrelated thereto and, in order to pay the\nbonds, the levy and pledge of a 1% local\nsales and use tax within the City.",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-park-and-recreational-improvement-bonds-text",
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-park-and-recreational-improvement-bonds",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$81,500,000 for the purpose of financing\nall or a portion of the costs of park and\nrecreational facilities and improvements\nand any necessary land acquisition and\nparking, furnishings, equipment, drainage,\nflood control, lighting, road, trail, and utility\nimprovements therefor and, in order to pay\nthe bonds, the levy and pledge of a 1%\nlocal sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "The bonds described below that are\napproved may be combined into a single\nissue or may be issued in series from time\nto time. If the bonds for one or more of the\npurposes are approved and one of such\npurposes is the Refunding Bonds, there\nwill be levied a new 1% sales and use tax,\nthe net collections of which remaining after\ndeduction of the administrative charges of\nthe State of Arkansas and required rebates\nwill be used solely to retire the bonds and\nobligations of the City with respect thereto.\nThe tax will replace the City's existing 1%\nsales and use tax levied in 2018 for the\nsole purpose of retiring bonds. The\neffective date of the new tax will be the day\nfollowing the date the existing tax expires.\nThe rate of taxation will be 1% even if\nbonds for more than one purpose are\napproved. No bonds will be issued for any\npurpose unless the Refunding Bonds are\nalso approved. The 1% sales and use tax\nwill expire after the bonds have been paid\nor provision is made therefor in\naccordance with Arkansas statutes.\n\nBonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$81,500,000 for the purpose of financing\nall or a portion of the costs of park and\nrecreational facilities and improvements\nand any necessary land acquisition and\nparking, furnishings, equipment, drainage,\nflood control, lighting, road, trail, and utility\nimprovements therefor and, in order to pay\nthe bonds, the levy and pledge of a 1%\nlocal sales and use tax within the City.",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-fire-improvement-bonds-text",
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-fire-improvement-bonds",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$32,750,000 for the purpose of financing\nall or a portion of the costs of fire\ndepartment facilities, equipment and\napparatus and parking, furnishings,\ndrainage, flood control, lighting, road, and\nutility improvements therefor and, in order\nto pay the bonds, the levy and pledge of a\n1% local sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "The bonds described below that are\napproved may be combined into a single\nissue or may be issued in series from time\nto time. If the bonds for one or more of the\npurposes are approved and one of such\npurposes is the Refunding Bonds, there\nwill be levied a new 1% sales and use tax,\nthe net collections of which remaining after\ndeduction of the administrative charges of\nthe State of Arkansas and required rebates\nwill be used solely to retire the bonds and\nobligations of the City with respect thereto.\nThe tax will replace the City's existing 1%\nsales and use tax levied in 2018 for the\nsole purpose of retiring bonds. The\neffective date of the new tax will be the day\nfollowing the date the existing tax expires.\nThe rate of taxation will be 1% even if\nbonds for more than one purpose are\napproved. No bonds will be issued for any\npurpose unless the Refunding Bonds are\nalso approved. The 1% sales and use tax\nwill expire after the bonds have been paid\nor provision is made therefor in\naccordance with Arkansas statutes.\n\nBonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$32,750,000 for the purpose of financing\nall or a portion of the costs of fire\ndepartment facilities, equipment and\napparatus and parking, furnishings,\ndrainage, flood control, lighting, road, and\nutility improvements therefor and, in order\nto pay the bonds, the levy and pledge of a\n1% local sales and use tax within the City.",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-police-improvement-bonds-text",
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-police-improvement-bonds",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$20,750,000 for the purpose of financing\nall or a portion of the costs of police\ndepartment facilities, equipment and\napparatus and parking, furnishings,\ndrainage, flood control, lighting, road, and\nutility improvements therefor and, in order\nto pay the bonds, the levy and pledge of a\n1% local sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "The bonds described below that are\napproved may be combined into a single\nissue or may be issued in series from time\nto time. If the bonds for one or more of the\npurposes are approved and one of such\npurposes is the Refunding Bonds, there\nwill be levied a new 1% sales and use tax,\nthe net collections of which remaining after\ndeduction of the administrative charges of\nthe State of Arkansas and required rebates\nwill be used solely to retire the bonds and\nobligations of the City with respect thereto.\nThe tax will replace the City's existing 1%\nsales and use tax levied in 2018 for the\nsole purpose of retiring bonds. The\neffective date of the new tax will be the day\nfollowing the date the existing tax expires.\nThe rate of taxation will be 1% even if\nbonds for more than one purpose are\napproved. No bonds will be issued for any\npurpose unless the Refunding Bonds are\nalso approved. The 1% sales and use tax\nwill expire after the bonds have been paid\nor provision is made therefor in\naccordance with Arkansas statutes.\n\nBonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$20,750,000 for the purpose of financing\nall or a portion of the costs of police\ndepartment facilities, equipment and\napparatus and parking, furnishings,\ndrainage, flood control, lighting, road, and\nutility improvements therefor and, in order\nto pay the bonds, the levy and pledge of a\n1% local sales and use tax within the City.",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-rogers-rogers-animal-services-improvement-bonds-text",
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-animal-services-improvement-bonds",
+          "provenance": {
+            "quote": "Bonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$8,750,000 for the purpose of financing all\nor a portion of the costs of animal services\nfacilities, equipment and apparatus and\nparking, furnishings, drainage, flood\ncontrol, lighting, road, and utility\nimprovements therefor and, in order to pay\nthe bonds, the levy and pledge of a 1%\nlocal sales and use tax within the City.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "The bonds described below that are\napproved may be combined into a single\nissue or may be issued in series from time\nto time. If the bonds for one or more of the\npurposes are approved and one of such\npurposes is the Refunding Bonds, there\nwill be levied a new 1% sales and use tax,\nthe net collections of which remaining after\ndeduction of the administrative charges of\nthe State of Arkansas and required rebates\nwill be used solely to retire the bonds and\nobligations of the City with respect thereto.\nThe tax will replace the City's existing 1%\nsales and use tax levied in 2018 for the\nsole purpose of retiring bonds. The\neffective date of the new tax will be the day\nfollowing the date the existing tax expires.\nThe rate of taxation will be 1% even if\nbonds for more than one purpose are\napproved. No bonds will be issued for any\npurpose unless the Refunding Bonds are\nalso approved. The 1% sales and use tax\nwill expire after the bonds have been paid\nor provision is made therefor in\naccordance with Arkansas statutes.\n\nBonds of the City of Rogers in the\nmaximum aggregate principal amount of\n$8,750,000 for the purpose of financing all\nor a portion of the costs of animal services\nfacilities, equipment and apparatus and\nparking, furnishings, drainage, flood\ncontrol, lighting, road, and utility\nimprovements therefor and, in order to pay\nthe bonds, the levy and pledge of a 1%\nlocal sales and use tax within the City.",
+          "officialStatement": null
+        },
+        {
+          "id": "ar-ba01-benton-2026-place-siloam-springs-siloam-springs-wastewater-bonds-and-tax-text",
+          "contestId": "ar-ba01-benton-2026-place-siloam-springs-siloam-springs-wastewater-bonds-and-tax",
+          "provenance": {
+            "quote": "Bonds of the City of Siloam Springs in\nthe maximum aggregate principal\namount of $55,000,000 for the purpose\nof financing all or a portion of the costs\nof extensions, betterments and\nimprovements to the City's wastewater\nfacilities, including particularly, without\nlimitation, wastewater treatment plant\nand sewer collection infrastructure,\nand, in order to pay the bonds, the levy\nand pledge of a 0.625% local sales\nand use tax within the City.\nIf the bonds are approved, there will be\nlevied within the City a 0.625% local\nsales and use tax (the \"Bond Tax\"), the\nnet collections of which remaining after\ndeduction of the administrative charges\nof the State of Arkansas and required\nrebates will be used solely to retire or\npay obligations with respect to the\nbonds in accordance with Amendment\nNo. 62 to the Arkansas Constitution.\nThe Bond Tax will expire after the\nbonds have been paid or provision is\nmade therefor in accordance with\nArkansas statutes. The Bond Tax will\nreplace the City's existing 0.625%\nsales and use tax levied in 2018 for the\npurpose of retiring bonds to finance\nwater improvements (the \"2018 Tax\").\nThe effective date of the Bond Tax will\nbe the day following the date that the\n2018 Tax expires. Proceeds of the\nbonds may fund a debt service reserve\nand pay expenses of issuing the\nbonds. The bonds may be issued at\none time or in series from time to time.",
+            "sourceOrg": "Benton County Election Commission",
+            "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+            "verifiedAt": "2026-10-20T22:54:02.499440+00:00",
+            "collectedAt": "2026-10-20T22:54:02.499440+00:00"
+          },
+          "questionText": "Bonds of the City of Siloam Springs in\nthe maximum aggregate principal\namount of $55,000,000 for the purpose\nof financing all or a portion of the costs\nof extensions, betterments and\nimprovements to the City's wastewater\nfacilities, including particularly, without\nlimitation, wastewater treatment plant\nand sewer collection infrastructure,\nand, in order to pay the bonds, the levy\nand pledge of a 0.625% local sales\nand use tax within the City.\nIf the bonds are approved, there will be\nlevied within the City a 0.625% local\nsales and use tax (the \"Bond Tax\"), the\nnet collections of which remaining after\ndeduction of the administrative charges\nof the State of Arkansas and required\nrebates will be used solely to retire or\npay obligations with respect to the\nbonds in accordance with Amendment\nNo. 62 to the Arkansas Constitution.\nThe Bond Tax will expire after the\nbonds have been paid or provision is\nmade therefor in accordance with\nArkansas statutes. The Bond Tax will\nreplace the City's existing 0.625%\nsales and use tax levied in 2018 for the\npurpose of retiring bonds to finance\nwater improvements (the \"2018 Tax\").\nThe effective date of the Bond Tax will\nbe the day following the date that the\n2018 Tax expires. Proceeds of the\nbonds may fund a debt service reserve\nand pay expenses of issuing the\nbonds. The bonds may be issued at\none time or in series from time to time.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ar-ba01-benton-2026-place-little-flock-little-flock-sales-and-compensating-use-tax",
+          "whatItDoes": "Adds a 1% city sales and use tax in Little Flock to pay for general city operations.",
+          "yesMeans": "Approve the additional 1% sales and use tax for city operations.",
+          "noMeans": "Reject the additional 1% city sales and use tax.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-refunding-bonds",
+          "whatItDoes": "Lets Rogers borrow up to $118 million to refinance its 2018B and 2022 sales-tax bonds. A replacement 1% sales and use tax would repay the bonds, beginning the day after the existing bond tax expires and ending when repayment is completed or otherwise legally provided for. The rate stays at 1% even if several bond questions pass, and no bonds in the package can be issued unless this refunding question passes.",
+          "yesMeans": "Authorize the refinancing bonds and replacement 1% sales and use tax, allowing other approved bonds in the package to proceed.",
+          "noMeans": "Reject these refinancing bonds; no other bonds in this package could then be issued.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-street-improvement-bonds",
+          "whatItDoes": "Lets Rogers borrow up to $195.5 million for streets, roads, trails and bridges, with related drainage, flood-control, lighting, sidewalks, traffic signals and utility work. The bonds depend on approval of the separate refunding-bonds question. A replacement 1% city sales and use tax would repay approved bonds; it replaces the existing bond tax beginning the day after that tax expires, stays at 1% even if several bond questions pass, and ends when the bonds are paid or payment is otherwise legally provided for.",
+          "yesMeans": "Authorize up to $195.5 million in bonds for these improvements, subject to approval of the refunding question and repayment through the replacement 1% tax.",
+          "noMeans": "Reject this bond authorization for this purpose; the other bond questions are decided separately.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-park-and-recreational-improvement-bonds",
+          "whatItDoes": "Lets Rogers borrow up to $81.5 million for parks and recreation facilities, including related land, parking, equipment, drainage, roads, trails and utility work. The bonds depend on approval of the separate refunding-bonds question. A replacement 1% city sales and use tax would repay approved bonds; it replaces the existing bond tax beginning the day after that tax expires, stays at 1% even if several bond questions pass, and ends when the bonds are paid or payment is otherwise legally provided for.",
+          "yesMeans": "Authorize up to $81.5 million in bonds for these improvements, subject to approval of the refunding question and repayment through the replacement 1% tax.",
+          "noMeans": "Reject this bond authorization for this purpose; the other bond questions are decided separately.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-fire-improvement-bonds",
+          "whatItDoes": "Lets Rogers borrow up to $32.75 million for fire-department facilities and equipment, with related site and utility improvements. The bonds depend on approval of the separate refunding-bonds question. A replacement 1% city sales and use tax would repay approved bonds; it replaces the existing bond tax beginning the day after that tax expires, stays at 1% even if several bond questions pass, and ends when the bonds are paid or payment is otherwise legally provided for.",
+          "yesMeans": "Authorize up to $32.75 million in bonds for these improvements, subject to approval of the refunding question and repayment through the replacement 1% tax.",
+          "noMeans": "Reject this bond authorization for this purpose; the other bond questions are decided separately.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-police-improvement-bonds",
+          "whatItDoes": "Lets Rogers borrow up to $20.75 million for police-department facilities and equipment, with related site and utility improvements. The bonds depend on approval of the separate refunding-bonds question. A replacement 1% city sales and use tax would repay approved bonds; it replaces the existing bond tax beginning the day after that tax expires, stays at 1% even if several bond questions pass, and ends when the bonds are paid or payment is otherwise legally provided for.",
+          "yesMeans": "Authorize up to $20.75 million in bonds for these improvements, subject to approval of the refunding question and repayment through the replacement 1% tax.",
+          "noMeans": "Reject this bond authorization for this purpose; the other bond questions are decided separately.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-rogers-rogers-animal-services-improvement-bonds",
+          "whatItDoes": "Lets Rogers borrow up to $8.75 million for animal-services buildings and equipment, with related site and utility improvements. The bonds depend on approval of the separate refunding-bonds question. A replacement 1% city sales and use tax would repay approved bonds; it replaces the existing bond tax beginning the day after that tax expires, stays at 1% even if several bond questions pass, and ends when the bonds are paid or payment is otherwise legally provided for.",
+          "yesMeans": "Authorize up to $8.75 million in bonds for these improvements, subject to approval of the refunding question and repayment through the replacement 1% tax.",
+          "noMeans": "Reject this bond authorization for this purpose; the other bond questions are decided separately.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ar-ba01-benton-2026-place-siloam-springs-siloam-springs-wastewater-bonds-and-tax",
+          "whatItDoes": "Lets Siloam Springs borrow up to $55 million for wastewater-treatment and sewer-system improvements. A 0.625% city sales and use tax would repay the bonds, replacing the existing 2018 water-bond tax of the same rate beginning the day after it expires. The new tax ends once the bonds are paid or payment is otherwise legally provided for, and bond proceeds may also cover a repayment reserve and issuance costs.",
+          "yesMeans": "Authorize the wastewater bonds and their replacement 0.625% sales and use tax.",
+          "noMeans": "Reject this wastewater-bond and replacement-tax proposal.",
+          "parts": [],
+          "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+          "sourceHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:35:13.765Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:43:09.152Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "a407233628beeaca047d8847d9625fa7871b729bf72abafa4993c5ceb8baee8e",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+        "publisher": "Arkansas Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:26.924395Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._1_HJR_1018_of_2026_.pdf_.pdf",
+        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO CREATE \"THE CITIZENS ONLY VOTING AMENDMENT\"; TO PROVIDE THAT ONLY A CITIZEN OF THE UNITED STATES MEETING THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION MAY VOTE IN AN ELECTION IN THIS STATE; AND PROVIDING THAT A PERSON WHO DOES NOT MEET THE QUALIFICATIONS OF AN ELECTOR UNDER THE ARKANSAS CONSTITUTION SHALL NOT BE PERMITTED TO VOTE IN ANY STATE OR LOCAL ELECTION HELD IN THIS STATE."
+      },
+      {
+        "rawHash": "e466c5ebd03fe5e6b4b9ee18397e3725cd6452d9685b59c696361b546e38905e",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+        "publisher": "Arkansas Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:27.039040Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._2_SJR_11_of_2026_.pdf",
+        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION TO PROVIDE THAT THE CITIZENS OF THE STATE OF ARKANSAS SHALL HAVE THE RIGHT TO KEEP AND BEAR ARMS FOR THEIR COMMON DEFENSE, FOR LAWFUL HUNTING AND RECREATIONAL USE, AND FOR ANY OTHER LAWFUL PURPOSE; PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS INCLUDES WITHOUT LIMITATION THE POSSESSION AND USE OF AMMUNITION, FIREARM ACCESSORIES, AND FIREARM COMPONENTS; AND PROVIDING THAT THE RIGHT TO KEEP AND BEAR ARMS IS A NATURAL, FUNDAMENTAL, AND INDIVIDUAL RIGHT THAT SHALL NOT BE INFRINGED."
+      },
+      {
+        "rawHash": "77bbd722f11c971d70393f056b7a20a6f203484a0993f13ce47810d3063adb9f",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+        "publisher": "Arkansas Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:27.130228Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._3_SJR_15_of_2026_.pdf",
+        "reviewedEvidence": "AN AMENDMENT TO THE ARKANSAS CONSTITUTION CONCERNING ECONOMIC DEVELOPMENT IN THE STATE OF ARKANSAS; AND AUTHORIZING THE GENERAL ASSEMBLY TO PROVIDE FOR THE CREATION OF ECONOMIC DEVELOPMENT DISTRICTS WITHIN CITIES, COUNTIES, OR COOPERATIVE AREAS TO PROMOTE ECONOMIC DEVELOPMENT WITHIN THE ECONOMIC DEVELOPMENT DISTRICT."
+      },
+      {
+        "rawHash": "55046ad3bcd40b0297973b1c1154053eb47ca672f3df688105537a7e49601416",
+        "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+        "publisher": "Arkansas Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:27.244077Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/Issue_No._4_Act_578_of_2026_.pdf",
+        "reviewedEvidence": "Shall the Arkansas Natural Resources Commission be authorized to issue general obligation bonds under the authority of the Arkansas Water, Waste Disposal, and Pollution Abatement Facilities Financing Act of 2025, for the financing and refinancing of the development of water, waste disposal, water pollution control, abatement and prevention, drainage, irrigation, flood control, and wetlands and aquatic resources projects to serve the citizens of the State of Arkansas, in total principal amount not to exceed five hundred million dollars ($500,000,000), with no more than one hundred sixty-five million dollars ($165,000,000) in total principal amount of such bonds to be issued to finance and refinance the development of irrigation facilities, in series from time to time in principal amounts not to exceed, without prior approval of the General Assembly, sixty million dollars ($60,000,000) in any two-year period beginning on July 1 of each odd-numbered year, which bonds shall be secured by a pledge of the full faith and credit of the State of Arkansas?"
+      },
+      {
+        "rawHash": "d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e",
+        "finalUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+        "publisher": "Sebastian County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:06:55.364623Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+        "reviewedEvidence": "Notice of Election, General Election, Tuesday November 3, 2026, revised 9-28-26; pages 3–4 list federal, state and county candidates and party labels. All 18 requested-scope contests and all 33 candidates in those contests were converted from the official scanned list by OCR script and checked against its rendered pages."
+      },
+      {
+        "rawHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+        "finalUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+        "publisher": "Benton County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:02.499440+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official six-page November 3, 2026 Benton County composite sample ballot. scripts/ba01-south-benton.py replays all included names, parties, offices and verbatim local measure language against the saved PDF text. Ward, school and special-district races require their own boundary mapping and remain unacquired."
+      },
+      {
+        "rawHash": "c6042722045ff51dca7c20b0d88220aec02e6ca36bd75b84841a403dd0a0b8c1",
+        "finalUrl": "https://votepulaskiar.gov/wp-content/uploads/11032026_Notice-of-Election_v1.pdf",
+        "publisher": "Pulaski County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:57:21.066032+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://votepulaskiar.gov/wp-content/uploads/11032026_Notice-of-Election_v1.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official five-page November 3, 2026 Pulaski County Notice of Election. scripts/ba01-south-pulaski.py replays every included candidate, printed party abbreviation and complete Jacksonville measure text. Unopposed non-mayor municipal offices and county offices except Circuit Clerk are not treated as printed ballot contests; ward and township races need exact boundaries."
+      },
+      {
+        "rawHash": "bbc9d35fe596246c01edb373150d8d1bb19d0235615b117c2cc63ff7df7a963c",
+        "finalUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+        "publisher": "Garland County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:16:49.047651+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/2026_general_sample_ballots_all.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 county sample ballot. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+      },
+      {
+        "rawHash": "442635b01c5cf15fa1524c144aa1bf3abcfdcb686faf29864bd103c5d96e1182",
+        "finalUrl": "https://cms2.revize.com/revize/salinecountyar/Documents/Government/County%20Clerk/Elections/2026%20Elections/Election%20Notice%20for%20General%20Election%202026.pdf?t=202609081826150",
+        "publisher": "Saline County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:18:19.496153+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.salinecounty.org/Documents/Government/County%20Clerk/Elections/2026%20Elections/Election%20Notice%20for%20General%20Election%202026.pdf?t=202609081826150",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 county election publication. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+      },
+      {
+        "rawHash": "35ace5f8acd72290dd3b3959457a243b75a3dda52b001b8bd6857cb94fff0ade",
+        "finalUrl": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+        "publisher": "Stone County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:20:50.668400+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.stonecountyar.gov/plugins/show_image.php?id=33",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 county election publication. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+      },
+      {
+        "rawHash": "62a0aa58625d809417f4907bda8a119580199a1d3c0658047e893da1a5747dc6",
+        "finalUrl": "https://whitecounty.ar.gov/_files/ugd/f1ffd5_f5d03a4310554c4c9978646f770299d8.docx?dn=NEW%20NOTICE%20OF%20ELECTION.docx",
+        "publisher": "White County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:23:57.097793+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://whitecounty.ar.gov/_files/ugd/f1ffd5_f5d03a4310554c4c9978646f770299d8.docx?dn=NEW%20NOTICE%20OF%20ELECTION.docx",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 county election publication. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+      },
+      {
+        "rawHash": "f9c0c1c08618684060307ea28a2187af9d80d1d2901cd545f2bca48dc363fb7c",
+        "finalUrl": "https://irp.cdn-website.com/cd460db7/files/uploaded/Notice+of+Election+-+GENERAL+ELECTION+2026.pdf",
+        "publisher": "Marion County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:28:34.819072+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://irp.cdn-website.com/cd460db7/files/uploaded/Notice+of+Election+-+GENERAL+ELECTION+2026.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 county election publication. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+      },
+      {
+        "rawHash": "af3c9747a36979bbac31dd1e21dbf45e8ab4cdc4c4d2aa81bed5f0f711fe2084",
+        "finalUrl": "https://crawford-county-elections.org/site/images/user-files/26-ge-state-list.pdf",
+        "publisher": "Crawford County Election Commission",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:31:15.954145+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://crawford-county-elections.org/site/images/user-files/26-ge-state-list.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 county election publication. scripts/ba01-south-ar-core.py replays complete legislative office/district/name/party blocks and deduplicates repeated ballot styles; existing verified rows remain."
+      },
+      {
+        "rawHash": "ad5352157632ede2ed704011be78d660003176d46337f56b5b1b639becd4f319",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/all?draw=1&start=0&length=1000&search%5Bvalue%5D=&search%5Bregex%5D=false&order%5B0%5D%5Bcolumn%5D=1&order%5B0%5D%5Bdir%5D=asc&postID=2941&rand=2424&columns%5B0%5D%5Bdata%5D=FilerID&columns%5B0%5D%5Bname%5D=&columns%5B0%5D%5Bsearchable%5D=true&columns%5B0%5D%5Borderable%5D=false&columns%5B0%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B0%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B1%5D%5Bdata%5D=CanBallotName&columns%5B1%5D%5Bname%5D=&columns%5B1%5D%5Bsearchable%5D=true&columns%5B1%5D%5Borderable%5D=true&columns%5B1%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B1%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B2%5D%5Bdata%5D=Descript&columns%5B2%5D%5Bname%5D=&columns%5B2%5D%5Bsearchable%5D=true&columns%5B2%5D%5Borderable%5D=true&columns%5B2%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B2%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B3%5D%5Bdata%5D=PartyAffiliation&columns%5B3%5D%5Bname%5D=&columns%5B3%5D%5Bsearchable%5D=true&columns%5B3%5D%5Borderable%5D=true&columns%5B3%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B3%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B4%5D%5Bdata%5D=FilingDate&columns%5B4%5D%5Bname%5D=&columns%5B4%5D%5Bsearchable%5D=true&columns%5B4%5D%5Borderable%5D=true&columns%5B4%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B4%5D%5Bsearch%5D%5Bregex%5D=false&CanBallotName=&Descript=",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:35:19.085155+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/all?draw=1&start=0&length=1000&search%5Bvalue%5D=&search%5Bregex%5D=false&order%5B0%5D%5Bcolumn%5D=1&order%5B0%5D%5Bdir%5D=asc&postID=2941&rand=2424&columns%5B0%5D%5Bdata%5D=FilerID&columns%5B0%5D%5Bname%5D=&columns%5B0%5D%5Bsearchable%5D=true&columns%5B0%5D%5Borderable%5D=false&columns%5B0%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B0%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B1%5D%5Bdata%5D=CanBallotName&columns%5B1%5D%5Bname%5D=&columns%5B1%5D%5Bsearchable%5D=true&columns%5B1%5D%5Borderable%5D=true&columns%5B1%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B1%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B2%5D%5Bdata%5D=Descript&columns%5B2%5D%5Bname%5D=&columns%5B2%5D%5Bsearchable%5D=true&columns%5B2%5D%5Borderable%5D=true&columns%5B2%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B2%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B3%5D%5Bdata%5D=PartyAffiliation&columns%5B3%5D%5Bname%5D=&columns%5B3%5D%5Bsearchable%5D=true&columns%5B3%5D%5Borderable%5D=true&columns%5B3%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B3%5D%5Bsearch%5D%5Bregex%5D=false&columns%5B4%5D%5Bdata%5D=FilingDate&columns%5B4%5D%5Bname%5D=&columns%5B4%5D%5Bsearchable%5D=true&columns%5B4%5D%5Borderable%5D=true&columns%5B4%5D%5Bsearch%5D%5Bvalue%5D=&columns%5B4%5D%5Bsearch%5D%5Bregex%5D=false&CanBallotName=&Descript=",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "0f736e4bacc57359f4bda830ad35fe5be884cc9e78b7285293b3eb324c20f39e",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1048",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:46.961146+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1048",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "9961ef8a43ab58baa7dfb756cb5c58bd56b243f8947923c88aa721aa71d3e61c",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=118",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:50.720259+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=118",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "eaff50a6d4c441d49690f43e3b7a34040092142a81a0f44419c03ef752b0b628",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=120",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:51.857079+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=120",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "1612857b14ff7bb87edfd08584a7faac2d4a1e9d803077ed9ba469ef4d319534",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=123",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:52.425607+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=123",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "d88bd10f5fae19864feca697a13b2eee18b6aa436487a566e50df8b2e08a9785",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=124",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:58.988699+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=124",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "808815f14e7fa820674cdcc3425922bbbac5196089c7a53421fc0e0abb3d4116",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=139",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:50.168892+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=139",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "bbf4ce851ed57bf18fa4bbe1896c2a4eda077a80ce10fa3784921a93b8de895d",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=142",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.531127+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=142",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "2416b249ad57ba96edc172b805383df17512cecda5ae004585a5b54ffa74c499",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1443",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.095269+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1443",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "66d71d7711b6db8d7f74923b36c0c6365533b7d2a397c642bfd0d18446bfbecf",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=146",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:51.308481+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=146",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "8e753bd3502cac5af26b88b7760e384fd79ff5d31d8477ee812fa761a3ea7e56",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=150",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.858568+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=150",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "cbb3db383f16147ec05d1368dd7152ba4a39bbe94100e7a7ab93ed8f4fdd57d8",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=159",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:54.078737+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=159",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "7de77cd0df743e6ad6d9bedc2e35200bfb080e8f511793a19b37e27c089c86c8",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=162",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:51.470711+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=162",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "cda5c8b110173a7a64782cfdc8f99b0124f37d02f6d9c68e8695577940650168",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=170",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.312846+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=170",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "13fc9a6f673a5e6ff517f1a48bb77a4c33844838a7e574248d4364629d618177",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1912",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:40:00.167982+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1912",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "3d3259da58e4be7c3147d17fcd40dfb519efb034b1052075b281ad79c7509d1a",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=192",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.526922+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=192",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "62665a7891dee394fdfb6a9991b23fdaf654b2f66dfb96ddc90836c9c2c78bbd",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1923",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:52.100230+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1923",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "1e2f071ab20c08f32cd433ea7d5a354a0322089b9490bdf9601969c0c438e69b",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1925",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:51.238655+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1925",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "a52545f173dadf19e230fc58ee838f2a629057090557b3ac9dc12afd616644d6",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1933",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:50.769618+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1933",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "f2d36d87b6bc7037f02416b814f914bec4596b6f8dd0b915b31be9eb1bae277f",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1955",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:53.451315+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=1955",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "8d1436d2a0e624eaee501f91d29b3d8f8ea8bfad6bab8e032f585fce969b5452",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=222",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:59.462321+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=222",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "6e0ed28974700e2074796808df95c940f5b8388e467e5ac94b63168cfdecbfec",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=2331",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.563107+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=2331",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "95aae79a0353eccc3644ec38fd3368363e42309dc1fdbca67a3fd86c77d5bf03",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=234",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:51.932668+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=234",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "bb0d62dfaf73fc56c0300fbe29ddf642c0f402939d818196c24b2e097166dac2",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=2564",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:40:00.304268+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=2564",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "5a389ea77b178e57dd4cb4a0816e3bb2e854596bcf35d81d3eabb9eb9d33a6a4",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=2702",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:57.314823+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=2702",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "6620a641c632c3d1abe02a7019b96f1b6ec4c15e7a3fa29a27ebcd63e639a43f",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=283",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.934232+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=283",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "3463fe94e0da815a5a05437cd33fdb5a7ab7f93175169d1d1805313212ef30aa",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=290",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:52.497532+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=290",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "69f3dcf7ef4756f864a299deb5a1d429a6b10c01764adf27acfa70e6adc7c68a",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3038",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:51.225576+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3038",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "6a9ae63c4ee8bf797cd4dae97afe1e8e65ac29242c427ffeeedab370cdf85d51",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=311",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.633073+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=311",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "78278ba0b8e34424f27a4de410e685f88133ae0047a75745c6f4f483ebfaad4b",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3231",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:58.019338+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3231",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "dbaef305ad24452563a8297822c797b3162f3ef9e84025143839320cfee6b98b",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=331",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:59.382067+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=331",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "215697191445d57089747608c16a3ff5baeb203adc9734f7642c4e5f3e3afad4",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3383",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:52.611023+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3383",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "f191e7cc17acac1977a6cdd57d58da5e7bc2ad64e07c540952e2c132b1edea35",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3427",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:59.497929+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3427",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "cb2422896936e552b04449e54a815a1ea6610d7257ca0f9b8c426168dd8dbbba",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3435",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:44.562153+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3435",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "10627c36920feae20620804f7830196df438648d430f53a4c86afd9a062ddfc1",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3437",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:53.328697+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3437",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "32ef3cf924ae062d5c7f6cb7e749bf0b1006b6cef8b6eab961febf32fb366722",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3449",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:58.072485+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3449",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "e6700179dd71367d8163c6d06cca931880f8c5d753d3907ec788c0e57823f1dd",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3456",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.318183+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3456",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "7b46e66d9f63ec8e5386b49a3642117eb77a6488ae39730dee18f216901defe4",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3478",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.796764+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3478",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "39fee584258b6330b2d9a8917dba34837961edfc8da30fbbf63875c38e6e0c44",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3488",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:57.363807+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3488",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "8476d291a46cc49ba5459a1f0d9d4836511e11e47b512ca77d5d5198fe47958f",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3491",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:50.735994+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3491",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "cba1955e9f31922fede7077c17f9cdc0d38abfb9aef451b80c8fdccefbfe9fda",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3510",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:40:00.536031+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3510",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "894293a7681422e68b09a4b49352bdb5ace60409c9a6d7801840b09e92d92af4",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3511",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:44.470393+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3511",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "c84271f1a7d2ac2210dc30cb1d48eda38b1c8dfcaa8d39094008ccb44259c9e7",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3559",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:43.448636+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3559",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "80cac8917a71ee4d1accec74685d074cd9ef9c81dfb130439650ea55cd2bfa2b",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3587",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:40:00.011223+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3587",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "b3d0c42edd3520d9eaa767feaaf84e6bc0f452444922de1615c6b14c67089bb8",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=359",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:53.734477+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=359",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "dddfce5992f452a37ab20b74c1456dfbf7088face33d8bcebfaaa43a23fa26fd",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=360",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:44.345622+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=360",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "e4995771d55183cf44c987d718170f9b0c89397144aa2226d32100a00302d723",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3787",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:48.777603+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3787",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "97c400982017b00ca9308f09b2d5b4f84f77074ec1c33f79c5b1b8abc1cb7a92",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3828",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:55.963996+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=3828",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "6763b342d84aa17476498f1278a2e9efab575ea2b5647a05060145c514bec2b5",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4126",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:53.148561+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4126",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "27c6ff0f3a60b59b87241efce49c25c54e71ecf2c9ec4e658007dc86a8e46926",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4223",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:57.816449+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4223",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "b1119bc5922fcda39ed0e7c8288f35f542ef0562393fe40eb5e5b09eee9adc8d",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4262",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:54.981442+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4262",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "7514ba3dfd163209e403518525779bb47b3f2bdd805045ca7704aea34f148cde",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4281",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:56.615998+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4281",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "a793ff6d1fb1f996cfc659b9e49789f27797caf49bc00e7fd74cfe22fae27220",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4301",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:43.647617+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4301",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "c634660620e6a060fd2494c060d485482b0795313f27edcfc755cab59ee0b7ea",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4314",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:45.045639+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4314",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "a007c061a735d742a858a8b2969b84c004e52de2f2b2225e6482587b9ab96118",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4349",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:50.899391+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4349",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "3ff1cb06b8437c8ef509f41fb6f8d57f291b6f65bef5494e6a6c0c4b647d0cb1",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4358",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:45.273172+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4358",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "a7df1c1e6347de7d600ebd5b7b5ea433132fc1a3a56c1f27478050e47b0e8e7a",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4623",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:53.287542+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4623",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "012e61ca99b9af1bb4d71820ee121b85b997692f00626bf8c7728d0eef6c9988",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4630",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:47.362236+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4630",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "5536b4dbb67a99e82a5dcdf2331aced2ece46db68ca46475eb66101f2f0281ac",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4639",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:40:01.425429+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4639",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "8132d555bc1dfc6d17e0cf318f0880ac1a3163e7cf5620c710c1459b506e1108",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4646",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:47.820454+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4646",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "aa941187c35da9ff1539098b7215928b7aa3935a70ac031f5a0726893c6f8c62",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4653",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:41.010685+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4653",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "a11a832574a087fac36964ba544eef2c5afcbaf802255be463c3d7c0bfb4032e",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4665",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:46.604376+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4665",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "c1febb4dd78d39a521610b557eb313bf8e5406e63b1ff2bc14c60d1377f8d648",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4666",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:41.757835+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4666",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "82bd196df2ca2a058a513402f8dc043d32494eae61e6aae69e51db102c5ea5d7",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4667",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:49.364923+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4667",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "2ce56b9044b3a9b9b24b33714b6ce70d8708914e1834ce3db11e601317588946",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4669",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:54.517141+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4669",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "d2187a9f9bac277182747f6b2d93ceb6e294780218611ceebe3838194379ffc5",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4671",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:41.635561+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4671",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "a2514cbe9dd3c5323e9993a090d1cb1e2ea73b551bfc78d3f47fa21206c6696a",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4672",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:48.612810+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4672",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "4d3b13c66e883420b3a0026ea9975fa8e9aeb748c9ee550fa7b2cd98e63342b7",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4679",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:46.681121+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4679",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "1b8da95b77b21b75b662b5689c951dbc6d462a90fc24fc195c9ab46a4de21f64",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4690",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:46.020817+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4690",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "167c992c0ce1d0af9177246e56673b205b17d7b612518d40fbc209aa70bf1a20",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4691",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:48.579804+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4691",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "172c08c8604f467b4b3678d20d90e4bf327143fd19ff6b55ebfea208d551c0ff",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4701",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:47.728645+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4701",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "7441b28df29212d8028a359cfce67013d4066cf5b0d387addb8312dab01cefed",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4703",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:42.833368+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4703",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "3968d29f8e16bf2a4d9706a3adb520de0dcecec0fe3f8e318d4d062403e600b8",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4712",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:46.389420+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4712",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "15efbabe1a98c654a5ecd93aa27d6e2e33bc96dccc348d60cd12d6712888efe8",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4730",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:49.298164+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4730",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "1bbe5961c51d47c06315e866c0eedc9a0749e67ddf3c19e110973505274185cb",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4732",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:48.330864+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4732",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "3d24eccd43805c79652f3bfb4e264897f6e446a0504ee18a6b18c73d6b3104fa",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4739",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:47.833185+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4739",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "7b7b4419c108e17899a2e849a1c4f397574193ddd18a2a3d14dd1a430d83e9c1",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4744",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:42.460702+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4744",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "41e54fa68928e92ee0ba26f4636abd1087c53878322f163fc159e3da6a9db0d7",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4746",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:46.272738+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4746",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "fb10e485e1e96720cb656b514a8d911d5385e3a95b0c643239983c7382836a2a",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4749",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:41.506785+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4749",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "718deaea18e0c5e68f81f4eaa1eb87bc9c4956d93269cac6a835ca7a28492e9d",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4750",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:50.057974+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4750",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "aa3a86ecdea18da1ad057451580852b7cc1c9514d77f068a99c093ef9b196136",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4755",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:48.608003+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4755",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "aa71a0bf3fee29c7e51d7f03512ade5c13ad7ff37832f6add15f7ab31a7259a8",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4793",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:41.982709+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4793",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "0f755fcf498c47b3a925d760a3e24d7aaa2ada112dd141470507eceed910c8c6",
+        "finalUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4796",
+        "publisher": "Arkansas Secretary of State, Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:39:53.299696+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.arkansas.gov/wp-json/metl/v1/find?postID=2941&key=FilerID&value=4796",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official 2026 general-ballot roster and public candidate-modal responses; scripts/ba01-south-ar-general.py checks every record's office, printed name, party, general/runoff election cycle, OnGeneralBallot=True and Withdrawn=False. The governor's proclamation identifies the November 3 Senate District 1 special election. Filing addresses and contacts are not imported."
+      },
+      {
+        "rawHash": "29a9f4b3e2519523310ecc10a5c6f81a288f72ceeacfd1ebe8ddcbf3345dad0a",
+        "finalUrl": "https://arcourts.gov/directories/circuit-judges",
+        "publisher": "Arkansas Judiciary",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:45:57.603804+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://arcourts.gov/directories/circuit-judges",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official Circuit Judges directory county-captioned tables place each entire county in the named circuit and list the division. scripts/ba01-south-ar-circuits.py checks every membership, all candidate pairs and explicit general-ballot status against saved responses; canonical district IDs match the captured OCD registry."
+      },
+      {
+        "requestedUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+        "finalUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf",
+        "publisher": "bentoncountyar.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:08:59.488849+00:00",
+        "httpStatus": 200,
+        "rawHash": "f064c2aaebb8efcd226a0406e4a53fda47e3d5c827e8467a4faceb7f73bc99fa",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

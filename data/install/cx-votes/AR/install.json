@@ -1,0 +1,54 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "AR",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AR",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ar-ba01-benton-2026-place-little-flock-little-flock-sales-and-compensating-use-tax",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-rogers-rogers-refunding-bonds",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-rogers-rogers-street-improvement-bonds",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-rogers-rogers-park-and-recreational-improvement-bonds",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-rogers-rogers-fire-improvement-bonds",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-rogers-rogers-police-improvement-bonds",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-rogers-rogers-animal-services-improvement-bonds",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    },
+    {
+      "id": "ar-ba01-benton-2026-place-siloam-springs-siloam-springs-wastewater-bonds-and-tax",
+      "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/2026-General-Election-Sample-26-4-1-10-13-36-Copy.pdf"
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateChoicesFactsAndExplanations": "UNCHANGED",
+    "existingMergeAddedAliasesForCandidates": 0
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

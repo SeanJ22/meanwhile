@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ca-ba01-la-measure-city_of_santa_monica-rr",
+    "sourceUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+    "sourceFile": "sources/a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5.source",
+    "sourceHash": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5",
+    "excerptFile": "sources/d807e44e44ecd8bc796d3efae80d37ca06e6b3b653b3ec4d4ac1d2c494731b7f.txt",
+    "excerptSha256": "d807e44e44ecd8bc796d3efae80d37ca06e6b3b653b3ec4d4ac1d2c494731b7f",
+    "sourceCheckedAt": "2026-11-02T21:09:10.748140+00:00",
+    "fields": {
+      "whatItDoes": [
+        "MEASURE RR: Shall the City Charter be amended to prohibit evictions based on non-\n      payment of rent when a tenant owes less than one month of the average of fair market\n      rents, set annually by the U.S. Department of Housing and Urban Development, for ZIP\n      codes in Santa Monica?"
+      ],
+      "yesMeans": [
+        "MEASURE RR: Shall the City Charter be amended to prohibit evictions based on non-\n      payment of rent when a tenant owes less than one month of the average of fair market\n      rents, set annually by the U.S. Department of Housing and Urban Development, for ZIP\n      codes in Santa Monica?"
+      ],
+      "noMeans": [
+        "MEASURE RR: Shall the City Charter be amended to prohibit evictions based on non-\n      payment of rent when a tenant owes less than one month of the average of fair market\n      rents, set annually by the U.S. Department of Housing and Urban Development, for ZIP\n      codes in Santa Monica?"
+      ]
+    }
+  }
+]

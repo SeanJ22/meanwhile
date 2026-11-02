@@ -1,0 +1,202 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-ba01-la-measure-city_of_santa_monica-rr",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:santa_monica",
+          "title": "City Of Santa Monica — Measure RR",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "quote": "CITY OF SANTA MONICA | RR | MEASURE RR: Shall the City Charter be amended to prohibit evictions based on non- payment of rent when a tenant owes less than one month of the average of fair market rents, set annually by the U.S. Department of Housing and Urban Development, for ZIP codes in Santa Monica?",
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+            "verifiedAt": "2026-10-21T00:55:25.504898+00:00",
+            "collectedAt": "2026-10-21T00:55:25.504898+00:00"
+          },
+          "measureTextUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "ca-ba01-la-measure-city_of_santa_monica-rr:question",
+          "contestId": "ca-ba01-la-measure-city_of_santa_monica-rr",
+          "provenance": {
+            "quote": "CITY OF SANTA MONICA | RR | MEASURE RR: Shall the City Charter be amended to prohibit evictions based on non- payment of rent when a tenant owes less than one month of the average of fair market rents, set annually by the U.S. Department of Housing and Urban Development, for ZIP codes in Santa Monica?",
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+            "verifiedAt": "2026-10-21T00:55:25.504898+00:00",
+            "collectedAt": "2026-10-21T00:55:25.504898+00:00"
+          },
+          "questionText": "MEASURE RR: Shall the City Charter be amended to prohibit evictions based on non- payment of rent when a tenant owes less than one month of the average of fair market rents, set annually by the U.S. Department of Housing and Urban Development, for ZIP codes in Santa Monica?",
+          "officialNumber": "RR",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-ba01-la-measure-city_of_santa_monica-rr",
+          "whatItDoes": "Prevents eviction for unpaid rent when a tenant owes less than one month of the average fair-market rent for Santa Monica ZIP codes, as set each year by the U.S. Department of Housing and Urban Development.",
+          "yesMeans": "Add this unpaid-rent eviction limit to Santa Monica’s charter.",
+          "noMeans": "Reject this proposed charter change.",
+          "parts": [],
+          "sourceUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+          "sourceHash": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:44:18.332Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "0e514ae7b14378b1837bcea99c07e6a05ce35baa9db4c3d3a2297704dc7e6017",
+        "finalUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+        "publisher": "California Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:36.108608Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official certified general-election candidate list, contacts, qualified statewide propositions, voter guide and linked proposed laws, acquired from the official election-office door."
+      },
+      {
+        "rawHash": "b5287a7f5fad976ead2d7a79128bc206901c26f3464f5125e8e78ace6ee6df0c",
+        "finalUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/contact-list.pdf",
+        "publisher": "California Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:00:37.107048Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/contact-list.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official certified general-election candidate list, contacts, qualified statewide propositions, voter guide and linked proposed laws, acquired from the official election-office door."
+      },
+      {
+        "rawHash": "a82b32388fe1d940130c9d9f4bb6a154438a80147b93f6680ad1b30e981b6f06",
+        "finalUrl": "https://elections.cdn.sos.ca.gov/ccrov/2026/august/26211jj.pdf",
+        "publisher": "California Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:38.503133Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://elections.cdn.sos.ca.gov/ccrov/2026/august/26211jj.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Final English ballot labels and titles and summaries; memorandums certify no court changes."
+      },
+      {
+        "rawHash": "59f410e98008088d39e0d3c7354acdc1e1e1d153fbe54ae203d933a11b136def",
+        "finalUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "publisher": "San Francisco Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:56:28.397Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
+      },
+      {
+        "rawHash": "9b2ea8145475b99f65f32e062ee8bf328a58996b10ea496a1ce2acc83c6d3753",
+        "finalUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+        "publisher": "San Francisco Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:26.392Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
+      },
+      {
+        "rawHash": "9c6bcf0b49b5a04c1f03de363d5727458c673d8807ef2932c2912ed40d786136",
+        "finalUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+        "publisher": "San Francisco Department of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:55:55.383Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official document; BA-01 parser replays candidate headings and exact ballot questions."
+      },
+      {
+        "rawHash": "08fe601a32f89a6f8a0fc0e10dbf0298dfd9e11a2f810bcfdb3f9d3a97f329f0",
+        "finalUrl": "https://appellate.courts.ca.gov/",
+        "publisher": "Judicial Council of California",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:55:24.901715+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://appellate.courts.ca.gov/",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      },
+      {
+        "rawHash": "e3ef96b5fcb9051bedff102e090b6578dae023419369771d6bdaefd31daf12ba",
+        "finalUrl": "https://appellate.courts.ca.gov/about-courts/appellate-retention-elections",
+        "publisher": "Judicial Council of California",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:55:25.305582+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://appellate.courts.ca.gov/appellate-retention-elections",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      },
+      {
+        "rawHash": "49f9f856430dd121ce4fdfa9b1b7e99291076656724a9ff842b9aff0378de539",
+        "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:55:25.475251+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      },
+      {
+        "rawHash": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5",
+        "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:55:25.504898+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      },
+      {
+        "rawHash": "0e3f20af15b617d3facf3446faf9493a88464d139ac5f6ece71425a5151ba1ac",
+        "finalUrl": "https://www.lavote.gov/home/voting-elections/current-elections/upcoming-elections",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:55:03.198876+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.lavote.gov/home/voting-elections/current-elections/upcoming-elections",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      },
+      {
+        "requestedUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+        "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026.pdf",
+        "publisher": "content.lavote.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:10.748140+00:00",
+        "httpStatus": 200,
+        "rawHash": "a754b9452fbc7d623a235b4257a33b2caf021ee610b0a3c88973db0a733d2cb5",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

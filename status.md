@@ -4,8 +4,8 @@ build_state: LIVE: release 173 main a8ffb2dca, PR #892; site/runner, three minut
 worker: RIVER-CX
 provider: Codex
 run_id: river-cx-173
-lock: river-cx-173
-heartbeat: 2026-11-01T06:39:59.075Z
+lock: none
+heartbeat: 2026-11-02T21:08:05Z
 
 <!-- river-cx-173 -->
 ## Release 173 — RIVER-CX

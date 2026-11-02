@@ -1,0 +1,469 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL_INDEX",
+  "step": "CX-VOTES",
+  "branch": "stream/cx-votes",
+  "status": "READY_PACKETS_WITH_OPEN_COVERAGE_LISTED",
+  "preparedAt": "2026-11-02T22:13:24.721885+00:00",
+  "productionAuthorization": "No production writes by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
+  "appCodeChanged": false,
+  "explainerAudit": {
+    "heldMeasures": 499,
+    "scopesWithMeasures": 44,
+    "readerGapsBefore": 100,
+    "preparedReaderAttachments": 100,
+    "remainingReaderGapsInHeldMeasureAudit": 0,
+    "changedJurisdictions": 18,
+    "description": "17 states plus DC; the nationwide baseline contains 56 state/territory scopes. This describes held ballot measures, not an assertion that all local measures have been acquired."
+  },
+  "states": [
+    {
+      "state": "AL",
+      "explainerGapsPrepared": 3,
+      "dataInstalls": [
+        {
+          "manifest": "AL/identity-repair/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "MEASURE_EXPLAINER_DATA_PREPARATION"
+        },
+        {
+          "manifest": "AL/voting/install.json",
+          "status": "DISCOVERY_ONLY_NO_NEW_SITE_DATA",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:AL",
+          "coverage": {
+            "preparedSites": 0,
+            "preparedBoundaries": 0,
+            "scope": "Read-only check in Montgomery; official source discovery only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "AR",
+      "explainerGapsPrepared": 8,
+      "dataInstalls": [
+        {
+          "manifest": "AR/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:AR"
+        }
+      ]
+    },
+    {
+      "state": "AZ",
+      "explainerGapsPrepared": 6,
+      "dataInstalls": [
+        {
+          "manifest": "AZ/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:AZ"
+        }
+      ]
+    },
+    {
+      "state": "CA",
+      "explainerGapsPrepared": 1,
+      "dataInstalls": [
+        {
+          "manifest": "CA/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:CA"
+        },
+        {
+          "manifest": "CA/voting/install.json",
+          "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:CA",
+          "coverage": {
+            "voteCenters": 92,
+            "dropBoxes": 63,
+            "scope": "Sacramento County only",
+            "sourceRows": {
+              "elevenDayVoteCenters": 19,
+              "fourDayVoteCenters": 73,
+              "dropBoxes": 63
+            }
+          }
+        }
+      ]
+    },
+    {
+      "state": "CO",
+      "explainerGapsPrepared": 19,
+      "dataInstalls": [
+        {
+          "manifest": "CO/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:CO"
+        }
+      ]
+    },
+    {
+      "state": "DC",
+      "explainerGapsPrepared": 1,
+      "dataInstalls": [
+        {
+          "manifest": "DC/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:DC"
+        }
+      ]
+    },
+    {
+      "state": "FL",
+      "explainerGapsPrepared": 4,
+      "dataInstalls": [
+        {
+          "manifest": "FL/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:FL"
+        }
+      ]
+    },
+    {
+      "state": "IL",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "IL/ballot-additions/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:IL",
+          "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
+          "races": 4,
+          "namedChoices": 7
+        },
+        {
+          "manifest": "IL/voting/install.json",
+          "status": "DISCOVERY_ONLY_NO_NEW_SITE_DATA",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:IL",
+          "coverage": {
+            "preparedSites": 0,
+            "preparedBoundaries": 0,
+            "scope": "Read-only check in Springfield; official source discovery only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "MA",
+      "explainerGapsPrepared": 8,
+      "dataInstalls": [
+        {
+          "manifest": "MA/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "plain-english-translations"
+        },
+        {
+          "manifest": "MA/voting/install.json",
+          "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:MA",
+          "coverage": {
+            "physicalSites": 164,
+            "precinctRows": 275,
+            "preparedBoundaries": 0,
+            "scope": "Boston only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "MD",
+      "explainerGapsPrepared": 6,
+      "dataInstalls": [
+        {
+          "manifest": "MD/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:MD"
+        }
+      ]
+    },
+    {
+      "state": "MN",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "MN/voting/install.json",
+          "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:MN",
+          "coverage": {
+            "preparedSites": 1,
+            "preparedBoundaries": 1,
+            "assignedPrecinctCodes": [
+              "0680"
+            ],
+            "availableCountyPrecinctCount": 162,
+            "unfilledCountyPrecinctAssignments": 161,
+            "scope": "Ramsey County precinct 0680 only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "MO",
+      "explainerGapsPrepared": 1,
+      "dataInstalls": [
+        {
+          "manifest": "MO/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:MO"
+        }
+      ]
+    },
+    {
+      "state": "MS",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "MS/voting/install.json",
+          "status": "DISCOVERY_ONLY_NO_NEW_SITE_DATA",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:MS",
+          "coverage": {
+            "preparedSites": 0,
+            "preparedBoundaries": 0,
+            "scope": "Read-only check in Jackson; official source discovery only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "NC",
+      "explainerGapsPrepared": 3,
+      "dataInstalls": [
+        {
+          "manifest": "NC/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:NC"
+        }
+      ]
+    },
+    {
+      "state": "ND",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "ND/ballot-status/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:ND",
+          "officeStatusUpdates": 6
+        }
+      ]
+    },
+    {
+      "state": "NE",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "NE/voting/install.json",
+          "status": "DISCOVERY_ONLY_NO_NEW_SITE_DATA",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:NE",
+          "coverage": {
+            "preparedSites": 0,
+            "preparedBoundaries": 0,
+            "scope": "Read-only check in Lincoln; official source discovery only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "NH",
+      "explainerGapsPrepared": 16,
+      "dataInstalls": [
+        {
+          "manifest": "NH/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:NH"
+        },
+        {
+          "manifest": "NH/voting/install.json",
+          "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:NH",
+          "coverage": {
+            "wardSites": 12,
+            "wardBoundaries": 12,
+            "assignedWards": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12"
+            ],
+            "scope": "Manchester only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "NY",
+      "explainerGapsPrepared": 5,
+      "dataInstalls": [
+        {
+          "manifest": "NY/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:NY"
+        }
+      ]
+    },
+    {
+      "state": "OH",
+      "explainerGapsPrepared": 5,
+      "dataInstalls": [
+        {
+          "manifest": "OH/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:OH"
+        }
+      ]
+    },
+    {
+      "state": "OR",
+      "explainerGapsPrepared": 3,
+      "dataInstalls": [
+        {
+          "manifest": "OR/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:OR"
+        }
+      ]
+    },
+    {
+      "state": "PA",
+      "explainerGapsPrepared": 1,
+      "dataInstalls": [
+        {
+          "manifest": "PA/ballot-additions/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:PA",
+          "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
+          "races": 10,
+          "namedChoices": 21
+        },
+        {
+          "manifest": "PA/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:PA"
+        }
+      ]
+    },
+    {
+      "state": "RI",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "RI/voting/install.json",
+          "status": "DISCOVERY_ONLY_NO_NEW_SITE_DATA",
+          "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+          "contractId": "voting-sites:RI",
+          "coverage": {
+            "preparedSites": 0,
+            "preparedBoundaries": 0,
+            "scope": "Read-only check in Providence; official source discovery only"
+          }
+        }
+      ]
+    },
+    {
+      "state": "TN",
+      "explainerGapsPrepared": 1,
+      "dataInstalls": [
+        {
+          "manifest": "TN/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:TN"
+        }
+      ]
+    },
+    {
+      "state": "UT",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "UT/ballot-review/install.json",
+          "status": "VERIFIED_NO_DATA_CHANGE",
+          "kind": "CX_VOTES_BALLOT_SOURCE_REVIEW"
+        }
+      ]
+    },
+    {
+      "state": "VA",
+      "explainerGapsPrepared": 9,
+      "dataInstalls": [
+        {
+          "manifest": "VA/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:VA"
+        }
+      ]
+    },
+    {
+      "state": "WI",
+      "explainerGapsPrepared": 0,
+      "dataInstalls": [
+        {
+          "manifest": "WI/ballot-additions/install.json",
+          "status": "READY_FOR_RIVER_DATA_INSTALL",
+          "kind": "CX_VOTES_DATA_INSTALL",
+          "contractId": "ballot-contests:WI",
+          "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
+          "races": 9,
+          "namedChoices": 18
+        }
+      ]
+    }
+  ],
+  "openWork": [
+    {
+      "scope": "Ballot race completeness",
+      "owner": "CX-VOTES source preparation, then River installation",
+      "status": "Official-source comparison continues for missing PA, IL, WI and NH district fields; no nationwide race-completeness claim."
+    },
+    {
+      "scope": "Voting locations",
+      "owner": "River",
+      "status": "Install prepared CA/MA/MN/NH doors and source data, then verify live. AL/IL/MS/NE/RI residential checks already worked; their packets preserve discovery sources only."
+    },
+    {
+      "scope": "MN",
+      "owner": "CX-VOTES source acquisition",
+      "status": "Prepared Ramsey precinct0680 only.161other county precinct assignments remain unfilled here."
+    },
+    {
+      "scope": "Application code freeze",
+      "owner": "River after Nov4ET",
+      "status": "UT84033 ballot election geography is correct; the scope API defaults to representation geography. No code correction or data overwrite is prepared."
+    }
+  ],
+  "nextOwner": "River: use each nested manifest, install as data and verify live; this index does not claim installation, deployment or completion of the listed open coverage."
+}

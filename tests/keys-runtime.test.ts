@@ -30,13 +30,15 @@ test("direct runtime reads honor their role, record real openings, refresh chang
     const runner = savedKeysRuntime(query, master, "runner", () => now, message => warnings.push(message));
     await runner.refresh();
     assert.equal(storedKeyValue("WTP_PRODUCTION_DATABASE_URL_WRITE"), "saved-writer");
+    assert.equal((await store.list())[0].runnerReadAt, null, "a lane child's startup read writes nothing");
+    await runner.refresh(true);
     const readAt = (await store.list()).find(row => row.name === "ANTHROPIC_API_KEY")!.runnerReadAt;
     assert.ok(readAt);
     statements.length = 0;
     await runner.refresh();
     assert.equal(statements.length, 0, "a warm request within the minute needs no database read");
     now += 60_000;
-    await runner.refresh();
+    await runner.refresh(true);
     assert.equal(statements.length, 2, "one version read and one conditional batch receipt");
     assert.ok(!statements[0].includes("locked"));
     assert.equal((await store.list()).find(row => row.name === "ANTHROPIC_API_KEY")!.runnerReadAt, readAt, "unchanged cached bytes are not claimed as a new opening");

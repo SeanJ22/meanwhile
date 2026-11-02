@@ -1,0 +1,79 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "WI",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "wi-cx-2026-general-assembly-91",
+      "title": "Representative to the Assembly – District 91",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:91",
+      "candidates": 2,
+      "sourceUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-93",
+      "title": "Representative to the Assembly – District 93",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:93",
+      "candidates": 2,
+      "sourceUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-22",
+      "title": "Representative to the Assembly – District 22",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:22",
+      "candidates": 2,
+      "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-30",
+      "title": "Representative to the Assembly – District 30",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:30",
+      "candidates": 2,
+      "sourceUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-13",
+      "title": "Representative to the Assembly District 13",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:13",
+      "candidates": 2,
+      "sourceUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-24",
+      "title": "Representative to the Assembly District 24",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:24",
+      "candidates": 2,
+      "sourceUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-82",
+      "title": "Representative to the Assembly District 82",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:82",
+      "candidates": 2,
+      "sourceUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-98",
+      "title": "Representative to the Assembly District 98",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:98",
+      "candidates": 2,
+      "sourceUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
+    "candidateAliasesEnriched": 0
+  },
+  "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
+  "nextOwner": "River: install as data and verify these districts and candidates live."
+}

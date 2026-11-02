@@ -1,0 +1,42 @@
+[
+  {
+    "sourceUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190",
+    "finalUrl": "https://cms2.revize.com/revize/eauclairecountywi/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190&t=202610281029190",
+    "sourceCheckedAt": "2026-11-02T21:43:26.073260+00:00",
+    "sha256": "2f0d28f39988e43c8f48da1148b1d91c3d1624de2a7faa835c9a0f2c11452fbd",
+    "sourceFile": "sources/2f0d28f39988e43c8f48da1148b1d91c3d1624de2a7faa835c9a0f2c11452fbd.source",
+    "excerptFile": "sources/168ec0f44ee9f50a677b1d770676ef19856ba9194d1253625cb3ea9062e23dc5.txt",
+    "excerptSha256": "168ec0f44ee9f50a677b1d770676ef19856ba9194d1253625cb3ea9062e23dc5",
+    "evidence": "Official November 3, 2026 sample notice page 3 prints separate complete AD91 and AD93 nominee blocks. Both printed named nominees retained for each district. Source linked by the official current county elections page."
+  },
+  {
+    "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary",
+    "finalUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary?bidId=",
+    "sourceCheckedAt": "2026-11-02T21:56:16.761597+00:00",
+    "sha256": "0469fded34b70548d016ed5b126fef2eee6dbd6d7f8b4b7b35ae52136a32a475",
+    "sourceFile": "sources/0469fded34b70548d016ed5b126fef2eee6dbd6d7f8b4b7b35ae52136a32a475.source",
+    "excerptFile": "sources/064d4342cfe6ce6e26e9f0032359ffa7dec30924635196b841d8b56b6e5d518e.txt",
+    "excerptSha256": "064d4342cfe6ce6e26e9f0032359ffa7dec30924635196b841d8b56b6e5d518e",
+    "evidence": "Official county current November 3, 2026 general election summary template enumerates complete AD22 candidate names Paul Melotik and Dana Glasstein, plus a blank write-in line. Zero of 33 precincts reported; only the candidate names are imported. The source omits party labels, which remain null. Both names and the two-candidate field independently match the WEC-authored discovery PDF. No vote totals/results are imported."
+  },
+  {
+    "sourceUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",
+    "finalUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",
+    "sourceCheckedAt": "2026-11-02T21:49:52.797786+00:00",
+    "sha256": "11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063",
+    "sourceFile": "sources/11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063.source",
+    "excerptFile": "sources/f2b889f2fe05d4e8a01bcfcd2ab91f5d6f3aa90550a75c05808fe4a651d935e1.txt",
+    "excerptSha256": "f2b889f2fe05d4e8a01bcfcd2ab91f5d6f3aa90550a75c05808fe4a651d935e1",
+    "evidence": "Official November 3, 2026 sample ballot page 5 prints the complete AD30 nominee block; both named candidates and parties retained. County election page links the full sample packet."
+  },
+  {
+    "sourceUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1",
+    "finalUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1",
+    "sourceCheckedAt": "2026-11-02T21:52:46.678683+00:00",
+    "sha256": "9e290ac7c292c7afc8ff55f042c2aa30274889debf9ba136dc7924aa4f84bcdb",
+    "sourceFile": "sources/9e290ac7c292c7afc8ff55f042c2aa30274889debf9ba136dc7924aa4f84bcdb.source",
+    "excerptFile": "sources/d03fbf9ceff06bc526040de7c0ba3d956f41cbfc389afe03d3c2a151d36b733b.txt",
+    "excerptSha256": "d03fbf9ceff06bc526040de7c0ba3d956f41cbfc389afe03d3c2a151d36b733b",
+    "evidence": "Official county upcoming 2026 General Election page explicitly dates the election November 3, 2026 and enumerates complete named candidate fields plus a blank write-in placeholder for each office. AD13,24,82,98 candidate fields read in full; two named candidates each. REP/DEM expanded to Republican/Democratic. All four fields independently agree with the WEC-authored candidate PDF discovery copy. This captures candidate listings only; zero reporting/results values are never imported."
+  }
+]

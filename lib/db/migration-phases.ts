@@ -178,8 +178,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0081_spn01e_page_marks": { phase: "expand", why: "A place page carries its own rebuild mark, lease, priority and the entities it shows, so the rebuild queue and the dependency table can go once readers and writers use them.", lockFirst: ["place_page"] },
-  "RIVER-174_slice_cards": { phase: "contract", why: "Widens the card names a slice may have to the meetings, history and agenda cards without reading existing rows, so its table lock lasts only the swap." },
-  "RIVER-174_slice_cards_validate": { phase: "contract", why: "Checks existing slices against the widened card names under a lock that never blocks readers or writers, so its full scan may outlast the default second.", contractStatementTimeoutMs: 60_000 },
+  "0082_river_174_slice_cards": { phase: "contract", why: "Widens the card names a slice may have to the meetings, history and agenda cards without reading existing rows, so its table lock lasts only the swap." },
+  "0082_river_174_slice_cards_validate": { phase: "contract", why: "Checks existing slices against the widened card names under a lock that never blocks readers or writers, so its full scan may outlast the default second.", contractStatementTimeoutMs: 60_000 },
   "SPN-01D_place_slice": { phase: "expand", why: "Adds the table that holds one small slice per card per place; nothing reads it until readers switch." },
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",
     lockFirst: CIVIC_DATA_STATUS_WRITE_TABLES, lockFirstMode: "SHARE ROW EXCLUSIVE" },

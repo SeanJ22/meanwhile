@@ -1,0 +1,332 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-doe-2026-general-amendment-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "title": "Amendment 3: INCREASED HOMESTEAD EXEMPTION; LOWER CAP ON INCREASES IN NON-HOMESTEAD PROPERTY ASSESSMENTS",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "fl-2026-11-03-general",
+          "provenance": {
+            "quote": "This amendment increases the homestead exemption, for all non-school taxes, to $150,000 in 2027 and $250,000 in 2028, and adjusts for inflation thereafter. It requires the Legislature to prescribe a uniform procedure for counties and municipalities, for their respective levies, to increase the homestead exemption up to full assessed value, and allows special districts, subject to referendum approval, to do the same. Persons who are not Florida residents on December 31, 2026, will receive the existing homestead exemption upon qualifying for a homestead exemption, with the increased homestead exemption beginning with the fifth year of exemption, to the extent permitted by the U.S. Constitution. This amendment reduces the annual cap on assessment increases for non-homestead properties from 10% to 5%. This amendment requires counties and municipalities to use property taxes solely for public safety, education and schools, infrastructure, natural resources, bond debt service, retirement benefits for employees, and operations and administration. Other expenditures may be approved by county officers or county or municipal governing bodies unless prohibited by general law, notwithstanding Article VII, Section 9(a) of the Florida Constitution, which allows counties and municipalities to levy property taxes for their respective purposes. This amendment takes effect January 1, 2027.",
+            "doorId": "fec-fl-chief",
+            "sourceOrg": "Florida Division of Elections",
+            "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+            "verifiedAt": "2026-10-14T05:05:18.650Z",
+            "collectedAt": "2026-10-14T05:05:18.650Z"
+          },
+          "measureTextUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "fl-hillsborough-2026-referendum-1",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+          "title": "Hillsborough County Referendum 1 — Providing for an Elected, Rather than an Appointed, Superintendent of Schools",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "fl-2026-11-03-general",
+          "provenance": {
+            "quote": "No. 1 Hillsborough County Referendum | Providing for an Elected, Rather than an Appointed, Superintendent of Schools",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "verifiedAt": "2026-10-21T01:02:17.706255+00:00",
+            "collectedAt": "2026-10-21T00:44:38.531872+00:00"
+          },
+          "divisionVintage": "OCD_CURRENT",
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-hillsborough-2026-referendum-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+          "title": "Hillsborough County Referendum 3 — One-Half Cent Sales Surtax for Public School Air Conditioning and Capital Improvements",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "fl-2026-11-03-general",
+          "provenance": {
+            "quote": "No. 3 Hillsborough County Referendum | One-Half Cent Sales Surtax for Public School Air Conditioning and Capital Improvements",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "verifiedAt": "2026-10-21T01:02:17.706255+00:00",
+            "collectedAt": "2026-10-21T00:44:38.531872+00:00"
+          },
+          "divisionVintage": "OCD_CURRENT",
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-hillsborough-2026-referendum-2",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:fl/county:hillsborough",
+          "title": "Hillsborough County Referendum 2 — Amending the County Charter to Increase Number of County Commissioners, All Elected From Single-Member Districts",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "fl-2026-11-03-general",
+          "provenance": {
+            "quote": "No. 2 Hillsborough County Referendum | Amending the County Charter to Increase Number of County Commissioners, All Elected From Single-Member Districts",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "verifiedAt": "2026-10-21T01:02:17.706255+00:00",
+            "collectedAt": "2026-10-21T00:44:38.531872+00:00"
+          },
+          "divisionVintage": "OCD_CURRENT",
+          "candidateListComplete": true
+        }
+      ],
+      "measures": [
+        {
+          "id": "fl-doe-2026-general-amendment-3-measure",
+          "contestId": "fl-doe-2026-general-amendment-3",
+          "provenance": {
+            "quote": "This amendment increases the homestead exemption, for all non-school taxes, to $150,000 in 2027 and $250,000 in 2028, and adjusts for inflation thereafter. It requires the Legislature to prescribe a uniform procedure for counties and municipalities, for their respective levies, to increase the homestead exemption up to full assessed value, and allows special districts, subject to referendum approval, to do the same. Persons who are not Florida residents on December 31, 2026, will receive the existing homestead exemption upon qualifying for a homestead exemption, with the increased homestead exemption beginning with the fifth year of exemption, to the extent permitted by the U.S. Constitution. This amendment reduces the annual cap on assessment increases for non-homestead properties from 10% to 5%. This amendment requires counties and municipalities to use property taxes solely for public safety, education and schools, infrastructure, natural resources, bond debt service, retirement benefits for employees, and operations and administration. Other expenditures may be approved by county officers or county or municipal governing bodies unless prohibited by general law, notwithstanding Article VII, Section 9(a) of the Florida Constitution, which allows counties and municipalities to levy property taxes for their respective purposes. This amendment takes effect January 1, 2027.",
+            "doorId": "fec-fl-chief",
+            "sourceOrg": "Florida Division of Elections",
+            "sourceUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+            "verifiedAt": "2026-10-14T05:05:18.650Z",
+            "collectedAt": "2026-10-14T05:05:18.650Z"
+          },
+          "questionText": "This amendment increases the homestead exemption, for all non-school taxes, to $150,000 in 2027 and $250,000 in 2028, and adjusts for inflation thereafter. It requires the Legislature to prescribe a uniform procedure for counties and municipalities, for their respective levies, to increase the homestead exemption up to full assessed value, and allows special districts, subject to referendum approval, to do the same. Persons who are not Florida residents on December 31, 2026, will receive the existing homestead exemption upon qualifying for a homestead exemption, with the increased homestead exemption beginning with the fifth year of exemption, to the extent permitted by the U.S. Constitution. This amendment reduces the annual cap on assessment increases for non-homestead properties from 10% to 5%. This amendment requires counties and municipalities to use property taxes solely for public safety, education and schools, infrastructure, natural resources, bond debt service, retirement benefits for employees, and operations and administration. Other expenditures may be approved by county officers or county or municipal governing bodies unless prohibited by general law, notwithstanding Article VII, Section 9(a) of the Florida Constitution, which allows counties and municipalities to levy property taxes for their respective purposes. This amendment takes effect January 1, 2027.",
+          "officialNumber": "3",
+          "officialStatement": null
+        },
+        {
+          "id": "fl-hillsborough-2026-referendum-1-measure",
+          "contestId": "fl-hillsborough-2026-referendum-1",
+          "provenance": {
+            "quote": "Shall Chapter 2026-196, Laws of Florida, which provides that the Superintendent of Schools for Hillsborough County Public Schools shall no longer be appointed by the School Board, but shall be elected in a partisan election for a term of 4 years, beginning with the 2028 general election, become effective?",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "verifiedAt": "2026-10-21T01:02:17.706255+00:00",
+            "collectedAt": "2026-10-21T00:44:38.531872+00:00"
+          },
+          "questionText": "Shall Chapter 2026-196, Laws of Florida, which provides that the Superintendent of Schools for Hillsborough County Public Schools shall no longer be appointed by the School Board, but shall be elected in a partisan election for a term of 4 years, beginning with the 2028 general election, become effective?",
+          "officialNumber": "1",
+          "officialStatement": null
+        },
+        {
+          "id": "fl-hillsborough-2026-referendum-3-measure",
+          "contestId": "fl-hillsborough-2026-referendum-3",
+          "provenance": {
+            "quote": "Shall a one-half cent school capital outlay sales surtax be continued for a ten (10) year levy by the School Board of Hillsborough County beginning January 1, 2029, to fund air conditioning replacement and repairs, capital improvements and construction of other schools, building enhancements for school security and other maintenance needs?",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "verifiedAt": "2026-10-21T01:02:17.706255+00:00",
+            "collectedAt": "2026-10-21T00:44:38.531872+00:00"
+          },
+          "questionText": "Shall a one-half cent school capital outlay sales surtax be continued for a ten (10) year levy by the School Board of Hillsborough County beginning January 1, 2029, to fund air conditioning replacement and repairs, capital improvements and construction of other schools, building enhancements for school security and other maintenance needs?",
+          "officialNumber": "3",
+          "officialStatement": null
+        },
+        {
+          "id": "fl-hillsborough-2026-referendum-2-measure",
+          "contestId": "fl-hillsborough-2026-referendum-2",
+          "provenance": {
+            "quote": "Shall the Hillsborough County Charter be amended to increase the number of members of board of county commissioners from 7 to 9 members, with an increase to 11 members once the county has a population of at least 2,500,000, require all county commissioners to be elected to office from single-member districts by electors residing in each of those districts only?",
+            "sourceOrg": "Hillsborough County Supervisor of Elections",
+            "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+            "verifiedAt": "2026-10-21T01:02:17.706255+00:00",
+            "collectedAt": "2026-10-21T00:44:38.531872+00:00"
+          },
+          "questionText": "Shall the Hillsborough County Charter be amended to increase the number of members of board of county commissioners from 7 to 9 members, with an increase to 11 members once the county has a population of at least 2,500,000, require all county commissioners to be elected to office from single-member districts by electors residing in each of those districts only?",
+          "officialNumber": "2",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-doe-2026-general-amendment-3",
+          "whatItDoes": "Raises the homestead exemption for taxes other than school taxes to $150,000 in 2027 and $250,000 in 2028, with later inflation adjustments. People who are not Florida residents on December 31, 2026, would wait until their fifth year of exemption for the larger amount, to the extent the U.S. Constitution permits. Requires the Legislature to set a uniform process for counties and cities to raise their own homestead exemptions up to the full assessed value, and allows special districts to do so with voter approval. Cuts the annual limit on assessment increases for non-homestead property from 10% to 5%. Lists permitted uses for county and city property taxes, including public safety, education, infrastructure, natural resources, bond payments, employee retirement, operations and administration, while allowing other spending approved by the relevant officials unless state law prohibits it.",
+          "yesMeans": "Approve these constitutional changes, taking effect January 1, 2027.",
+          "noMeans": "Reject the proposed changes to homestead exemptions, assessment limits and local property-tax rules.",
+          "parts": [],
+          "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF",
+          "sourceHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-hillsborough-2026-referendum-1",
+          "whatItDoes": "This measure asks Hillsborough County voters whether the county school superintendent should be elected instead of appointed. Chapter 2026-196 of the Laws of Florida says the superintendent of Hillsborough County Public Schools would no longer be appointed by the School Board. Under that chapter, the superintendent would be elected in a partisan election for a term of 4 years, beginning with the 2028 general election. The question asks whether that chapter should become effective.",
+          "yesMeans": "A YES vote makes Chapter 2026-196 of the Laws of Florida effective. The superintendent would then be elected in a partisan election for a 4-year term, beginning with the 2028 general election, instead of being appointed by the School Board.",
+          "noMeans": "A NO vote means Chapter 2026-196 of the Laws of Florida would not become effective through this vote.",
+          "parts": [],
+          "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF",
+          "sourceHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+          "writtenAt": "2026-11-02T21:20:43.633Z"
+        },
+        {
+          "contestId": "fl-hillsborough-2026-referendum-3",
+          "whatItDoes": "This measure asks voters whether to continue a one-half cent school capital outlay sales surtax. The surtax would be levied for ten years. The School Board of Hillsborough County would levy it, beginning January 1, 2029. The money would fund air conditioning replacement and repairs, capital improvements and construction of other schools, building enhancements for school security, and other maintenance needs.",
+          "yesMeans": "A YES vote approves continuing the one-half cent school capital outlay sales surtax for ten years, starting January 1, 2029. The money would fund air conditioning replacement and repairs, capital improvements and construction of other schools, building enhancements for school security, and other maintenance needs.",
+          "noMeans": "A NO vote rejects continuing the one-half cent school capital outlay sales surtax for ten years, starting January 1, 2029.",
+          "parts": [],
+          "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF",
+          "sourceHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+          "writtenAt": "2026-11-02T21:21:33.532Z"
+        },
+        {
+          "contestId": "fl-hillsborough-2026-referendum-2",
+          "whatItDoes": "This measure would change the Hillsborough County Charter to increase the number of county commissioners. The board of county commissioners would grow from 7 to 9 members. The board would grow to 11 members once the county has a population of at least 2,500,000. All county commissioners would be elected from single-member districts. Only voters who live in a district would elect that district's commissioner.",
+          "yesMeans": "A YES vote would approve the change to the county charter. The board would grow from 7 to 9 members, and to 11 members once the county reaches 2,500,000 people. All commissioners would be elected from single-member districts by voters who live in each district.",
+          "noMeans": "A NO vote would reject this change to the county charter.",
+          "parts": [],
+          "sourceUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF",
+          "sourceHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+          "writtenAt": "2026-11-02T21:21:18.627Z"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:44:20.682Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF",
+        "publisher": "www.votehillsborough.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:13:35.694542+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

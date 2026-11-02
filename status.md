@@ -1,22 +1,45 @@
 # River status
 
-build_state: LIVE: release 173 main a8ffb2dca, PR #892; site/runner, three minute key-check finishes and ten-state byte parity verified. Completion HELD: contract 0082 failed both automatic attempts (06:17:06Z and 06:32:15Z) on its one-second statement limit; integrity DEGRADED, 82/83 applied. A one-field 0082-only 10-second candidate passed 61 focused tests, lint and types locally; NOT SHIPPED pending Sean scope approval under the no-extra-code instruction.
-worker: RIVER-CX
+build_state: WIP — RIVER-CX STOPPED; handed to Claude River. Release 173 is live at a8ffb2dca; migration 0082 remains unapplied (82/83), all attempts rolled back on the one-second statement limit. WIP timeout proposal pushed as river-cx173-contract d305e9cd0; do not apply or ship from this session. Exact SQL/rollback evidence and branch inventory below and in PR #892.
+worker: none (RIVER-CX stopped; handed to Claude River)
 provider: Codex
-run_id: river-cx-173
+run_id: river-cx-173-stopped
 lock: none
-heartbeat: 2026-11-02T21:08:05Z
+heartbeat: 2026-11-02T21:09:28.976Z
 
 <!-- river-cx-173 -->
-## Release 173 — RIVER-CX
+## RIVER-CX handoff — STOPPED / WIP
 
-- PR https://github.com/SeanJ22/meanwhile/pull/892 merged to main a8ffb2dca4ea62f9d577c4a68acc42019d3e1853; site published 06:02:04Z Nov 1. Runner reports that SHA and CONSISTENT from 06:17:00Z. Saved key checks finished at 06:16:59.100Z, 06:17:58.287Z and 06:18:58.358Z on their existing minute schedule.
-- Folded exact SPN-01 e3/e4 READYs and KB-01 ac6f60602; only added source change is the canonical-context test ordering fix debdb588fe. The test falsely ordered independent ZIP-map and territory completions; controlled completion order fails both old branches and passes the repair. Under four busy CPU loops, original 30/30 on each branch and repaired 30/30 on each branch passed.
-- All nine local gate commands passed across the full run and focused environment-recovery reruns. Final CI 10,478 passed, five skipped, zero failed; unchanged Admin polling fixture race and its targeted retry remain documented in the PR.
-- River 50-ZIP usable under three seconds: phone 26→45, tablet 25→47, desktop 17→46. Code 671,601→670,840 lines (−761). Ten-state ballot payloads and full voting-site responses match exact saved hashes; all HTTP 200, no page errors.
-- Pre-deploy facts/read cutoffs aligned to actual publish: 15,560 facts in preceding 24h, 1.94 GB/h over preceding six full hours. Earlier baseline 15,691/1.92 retained in PR. Post-deploy 24h/six-full-hour windows are incomplete and are not claimed passed.
-- Expand 0081 applied in the build. Automatic contract 0082 failed at 06:17:06Z and 06:32:15Z on the one-second statement timeout; 82/83 applied. No invalid card rows; a warm serial read was 141 ms, which does not establish the timeout cause. Both failure receipts and the early REFUSED observer are preserved. No manual DDL.
-- Additional local candidate on river-cx173-contract, work/release173/contract-fix: only 0082 gains contractStatementTimeoutMs:10_000 through the existing declaration; lock_timeout stays 250 ms, other budgets and SQL/journal untouched. 61 focused migration tests, lint and full type checking passed. Candidate remains uncommitted and unshipped. Exact proposal is in #892; Sean has been asked for scope approval because he said no code beyond the original fix. RIVER-CX will finish automatic migration and integrity verification if approved; do not report release completion until then.
+Sean stopped this session and moved River back to Claude. Release record: [PR #892](https://github.com/SeanJ22/meanwhile/pull/892). The previous scope-approval request is superseded. Do not apply 0082 or ship further changes from this session. No migration, deploy, merge, observer rerun, or additional test run was triggered during this handoff.
+
+Migration state read at **Nov 2, 2026, 2:07:33 p.m. Phoenix** (`2026-11-02T21:07:33.265Z`):
+- Production has **82 of 83** journal entries. Expand **0081 is applied**; **0082 is absent from the journal**.
+- `place_slice_card_check` is still installed and validated with the original five values: `governs, bodies, ballot, money, more`. `meetings, history, agenda` have not been added by 0082.
+- Latest recorded automatic contract attempt: **Nov 2, 1:57:08 p.m. Phoenix** (`2026-11-02T20:57:08.498Z`), on `a8ffb2dca4ea62f9d577c4a68acc42019d3e1853`: FAILED, “canceling statement due to statement timeout”; “transaction rolled back before the journal row was written”; “0082_spn01e4_slice_cards applied no durable statements”.
+- **Exactly zero 0082 DDL statements have committed.** The existing runner continues its already-configured automatic retry clock; this handoff did not trigger it, pause it, or change its settings.
+
+The two migration DDL statements are, in this order:
+```sql
+ALTER TABLE place_slice DROP CONSTRAINT place_slice_card_check;
+
+ALTER TABLE place_slice ADD CONSTRAINT place_slice_card_check
+CHECK (card IN
+  ('governs','bodies','ballot','money','more','meetings','history','agenda'));
+```
+The runner submits them as sequential EXECUTEs inside one DO block and one transaction with the journal INSERT. The source transaction sequence also includes `SET LOCAL lock_timeout = '250ms'`, `SET LOCAL statement_timeout = '1000ms'`, the migration advisory-lock SELECT, and the final applied-row SELECT. These describe the submitted sequence, not independent completion receipts. The retained error output has no per-EXECUTE trace: it does **not** establish whether the DROP completed before cancellation or whether cancellation occurred during ADD/validation. Do not infer that either statement committed. The journal and current constraint confirm the rollback. The proposed ten-second setting below has never been merged or deployed.
+
+| Branch/ref | Commit | Contents / status |
+| --- | --- | --- |
+| `main` | `a8ffb2dca4ea62f9d577c4a68acc42019d3e1853` | Release 173, already shipped; merged PR #892. |
+| `river` | `936ab7a6d7a7e55c618b443c00af9ba0533cfedd` | Tested release fold: exact SPN-01 e3 `793b9c669`, e4 `218fa0e74`, KB-01 `ac6f60602`, reader-test fix `debdb588f`, generated read-baseline locations. Already in main. |
+| `river-cx173-contract` | `d305e9cd08a3bfb90009e43db2361a1469393ce2` | **WIP**, pushed. Only one declaration gains `contractStatementTimeoutMs: 10_000` for 0082. SQL/journal and the 250 ms lock limit are unchanged. Not READY, merged, or deployed. Prior local verification: 61 focused migration tests, lint and full type checking passed on Nov 1. No production verification of this proposal. |
+| `wip/river-cx173-fold` | `936ab7a6d7a7e55c618b443c00af9ba0533cfedd` | Pushed checkpoint of local `river-next`; same code as the shipped fold, with no additional changes. |
+| `wip/river-cx173-board` | `abfad3f3610143e6a9f93d394bdcd6342fce5de1` | Pushed metadata-only local board checkpoint. Its older pending-approval text is historical; this stopped handoff on `board/river` is current. |
+| Remote `river-next` | `38e6b38c1f938d11373767d6f182e80cb6504976` | Existing shared ref, left at its original head. Local `river-next` is saved as `wip/river-cx173-fold` above. |
+
+Other local baselines have no new changes: `release/173` is the original `e846b734c35213700c67c596ade4842e37a38171` fold (already an ancestor of shipped main; the remote release branch is absent); root `work` remains release 172 at `051f0fb65`; the detached load-test worktree remains old river `222f18b40` and its temporary test edit was restored. All tracked working trees are clean after the WIP commit. Untracked diagnostic scripts/logs remain under `work/release173/`; evidence and before/after numbers are in this release PR. The temporary production-read credential file was removed.
+
+The RIVER-CX lock is released. Unfinished migration/integrity work is **WIP, owned by the incoming Claude River session**. No approval request from RIVER-CX remains active.
 <!-- /river-cx-173 -->
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)

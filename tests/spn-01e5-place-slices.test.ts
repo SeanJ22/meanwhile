@@ -3,6 +3,8 @@ import test from "node:test";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
+import { PLACE_SLICES_SQL } from "../lib/reader/place-slices.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { readReaderEdgeMeetings } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import type { Query } from "../lib/facts/publish.ts";
@@ -113,5 +115,26 @@ test("the order a page is read in is the same however the facts and registration
     assert.deepEqual(held.governments.map(government => government.id), ["g-a", "g-z"], "governments by id, not by the order the registration lists them");
     assert.deepEqual(held.bodies.find(body => body.id === BODY)!.sittings.map(row => row.field), ["title", "agendaUrl"], "a sitting's facts in the order they were filed, each field once");
     assert.equal(JSON.stringify(await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, db.query)), JSON.stringify(held), "reading again gives the same bytes");
+  } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
+});
+
+test("the map and the ballot share one slice read for their request, and a later request reads current data", async () => {
+  const db = await open();
+  try {
+    await seedPlaceSlices(db.query, { state: "AZ", divisionIds: [PLACE] });
+    let reads = 0;
+    installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => {
+      if (statement.text === PLACE_SLICES_SQL) reads++;
+      return (await db.pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows;
+    })));
+    const selection = { keys: new Set(["85701"]), states: ["AZ"] };
+    await withReaderSelection(selection, async () => {
+      const map = readPlacePackage({ state: "az", divisionIds: [PLACE] }), ballot = readPlacePackage({ state: "AZ", divisionIds: [PLACE, PLACE] });
+      assert.equal(map, ballot);
+      assert.equal(await map, await ballot);
+      assert.equal(reads, 1);
+    });
+    await withReaderSelection({ ...selection }, () => readPlacePackage({ state: "AZ", divisionIds: [PLACE] }));
+    assert.equal(reads, 2, "a settled place response cannot outlive its request");
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
 });

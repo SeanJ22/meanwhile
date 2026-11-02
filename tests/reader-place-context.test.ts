@@ -45,7 +45,7 @@ test("the slices keep exact current, history and empty answers, agenda papers on
         bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{rows:[{holder:{id:person,officeTitle:"Member",divisions:[CITY],futureMetadata:metadata}}]},
         officialPhotos:{photos:[]},rosterPhotos:{}}});
     await publish({id:"registration",recordClass:"REGISTRATION",scope:"US-AZ:registration:v1",sourceId:"fixture",at:AT,
-      value:{formatVersion:1,state:"AZ",governments:[],divisions:[{ocdId:ROOT,label:"Arizona"},{ocdId:CITY,label:"Wire fixture"}]}});
+      value:{formatVersion:1,state:"AZ",governments:[{id:"g-city",name:"Wire fixture",jurisdictionId:"g-city",associations:[{divisionId:CITY}]}],divisions:[{ocdId:ROOT,label:"Arizona"},{ocdId:CITY,label:"Wire fixture"}]}});
     await seedPlaceSlices(query,{state:"AZ",divisionIds:[CITY]});
     const cases:PlaceInput[]=[];
     for(const divisionIds of [[CITY],[]]) for(const includeHistory of [false,true]) for(const flags of [{},{includeAgenda:true}])

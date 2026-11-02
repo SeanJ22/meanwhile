@@ -68,10 +68,6 @@ SELECT jsonb_build_object(
   'entities',(SELECT jsonb_object_agg(e.id,jsonb_build_array(e.name,e.parent_id,e.state)) FROM entity e WHERE e.id IN (SELECT id FROM wanted)),
   'parents',(SELECT jsonb_object_agg(p.id,jsonb_build_array(p.kind,p.name,p.parent_id,gp.kind)) FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id
     WHERE p.id IN (SELECT b.parent_id FROM entity b WHERE b.id IN (SELECT id FROM wanted))),
-  'classes',(SELECT jsonb_object_agg(g.id,g.class) FROM (SELECT p.id,(SELECT reader_payload_value(r.value)->>'governmentClass' FROM civic_data_rows r
-    WHERE r.promotion_key='REGISTRATION:US-'||$6||':registration:v1' AND r.collection='governments' AND (r.row_id=p.id OR r.aliases @> ARRAY[p.id]) AND r.version_id=
-      (SELECT current_version_id FROM civic_data_promotions WHERE key='REGISTRATION:US-'||$6||':registration:v1') LIMIT 1) AS class
-    FROM (SELECT DISTINCT b.parent_id AS id FROM entity b WHERE b.id IN (SELECT id FROM wanted) AND b.parent_id IS NOT NULL) p) g WHERE g.class IS NOT NULL),
   'states',(SELECT jsonb_object_agg(b.id,b.state) FROM entity b WHERE b.id IN (SELECT id FROM wanted) AND b.state IS DISTINCT FROM $6::char(2))) AS read`;
 
 export interface SlicedRows { readonly rows: Row[]; readonly headers: BodyHeaders; readonly pages: string[] }
@@ -79,7 +75,7 @@ export interface SlicedRows { readonly rows: Row[]; readonly headers: BodyHeader
 interface Read {
   places: [number, string, unknown][] | null; boards: [string, unknown][] | null; filed: [number, string, string][] | null; meta: [number, string, string | null, boolean][] | null; req: string[] | null;
   entities: Record<string, [string, string | null, string | null]> | null; parents: Record<string, [string, string, string | null, string | null]> | null;
-  classes: Record<string, string> | null; states: Record<string, string> | null;
+  states: Record<string, string> | null;
 }
 
 /**
@@ -90,7 +86,8 @@ interface Read {
 export async function readSlicedRows(input: PlaceInput, query: Query): Promise<SlicedRows> {
   const state = input.state.toUpperCase(), history = input.includeHistory === true, agenda = input.includeAgenda === true, agendaOnly = input.meetingIds !== undefined;
   const placeIds = [...new Set([...input.divisionIds, ...input.namedDivisionIds ?? []])], named = [...new Set(input.bodyIds ?? [])];
-  const registry = await stateRegistry(state);
+  // The country is not a state with a registry of its own; its boards and calendars are read like any other place's.
+  const registry = state === "US" ? { model: null, registrationHeld: false } : await stateRegistry(state);
   const family = await stateFamily(state), familyHistory = history ? await stateFamily(state, true) : null;
   if (!placeIds.length && !named.length) {
     const runtime = registry.model ? placeRegistry(registry.model, { divisionIds: [], boardIds: [], aliasOf: new Map(), filed: new Map(), names: new Map() }) : null;
@@ -109,7 +106,7 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   for (const [n, card, body] of out.places ?? []) {
     if (card === "meetings" || card === "history" || card === "agenda") { keep(unpackSlice<{ s: string }>(body), card); continue; }
     const slice = unpackSlice<SliceBody>(body);
-    if (card === "bodies" && n < LENT) regs.set(n, slice.reg);
+    if (card === "bodies") regs.set(n, slice.reg);
     for (const entity of slice.entities) {
       if (entity.k === "body") { if (!boards.has(entity.id)) boards.set(entity.id, { id: entity.id, name: entity.n, parent: entity.p ?? null, aliases: entity.a ?? [], filed: [...new Set(entity.d ?? [])], host: entity.h === 1, facts: heldFacts(slice, entity.f) }); }
       else if (entity.k === "person") people.set(entity.id, { facts: new Map([...people.get(entity.id)?.facts ?? [], ...heldFacts(slice, entity.f)]), shown: entity.x ?? people.get(entity.id)?.shown ?? "" });
@@ -129,6 +126,8 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   for (const board of shownBoards.values()) { headers[board.id] = { id: board.id, name: board.name }; for (const alias of board.aliases) headers[alias] = { id: board.id, name: board.name }; }
 
   const parents = out.parents ?? {}, foreign = out.states ?? {};
+  // The class of a board's government is what the registration held on the places it is filed on says of it.
+  const classes = new Map([...regs.values()].flatMap(reg => (reg?.governments ?? []).flatMap(government => [government.id, government.jurisdictionId].flatMap(id => id ? [[id, government.governmentClass ?? null] as const] : []))));
 
   const build = (pageId: string, kind: "place" | "body", n: number | null, divisions: readonly string[], mine: readonly Board[]): Row => {
     const fields: Row[] = [], rosters: Row[] = [], comments: Row[] = [], sittings: Row[] = [], partitions: Row[] = [], archivedMeetings: Row[] = [], archivedDocuments: Row[] = [], documents: Row[] = [];
@@ -168,12 +167,12 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
         divisions: board.filed, division: home ?? board.id.split("#")[0], placement_basis: board.host ? "HOST_COUNTY" : "SERVICE_AREA",
         government: government?.[1] ?? null, government_id: government ? board.parent : null, government_class: null as string | null, registered_name: null as string | null };
     });
-    const reg = n === null ? undefined : regs.get(n);
+    const reg = n === null || n >= LENT ? undefined : regs.get(n);
     const runtime = registry.model ? placeRegistry(registry.model, { divisionIds: [...divisions], boardIds: mine.map(board => board.id), aliasOf, filed, names,
       peopleIds: rosters.flatMap(row => [String(row.person_id), String(row.shown_id)]) }) : null;
     for (const entity of entities) {
       entity.registered_name = (runtime?.registry.bodies.find(body => body.id === entity.id)?.name as string | undefined) ?? null;
-      entity.government_class = (entity.parent_id === null ? null : out.classes?.[entity.parent_id]) ?? null;
+      entity.government_class = (entity.parent_id === null ? null : classes.get(entity.parent_id)) ?? null;
     }
     if (kind === "place") takeCards(cards.get(pageId));
     // A state's family calendar is on every page of the state; its rows are those the slices hold for this page's boards and for the place itself.

@@ -488,10 +488,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "lib/civic-data/planner-archive-state-read.ts",
-      "table": "civic_data_candidates"
-    },
-    {
       "file": "lib/civic-data/planner-clock-state-read.ts",
       "table": "civic_data_candidate_events"
     },
@@ -501,18 +497,6 @@
     },
     {
       "file": "lib/civic-data/planner-clock-state-read.ts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/civic-data/planner-meeting-state-read.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/civic-data/planner-meeting-state-read.ts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "lib/civic-data/planner-meeting-state-read.ts",
       "table": "civic_data_promotions"
     },
     {

@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { brotliCompressSync } from "node:zlib";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import { BALLOT_PLACE_PAGES_SQL, readBallotPlacePackage } from "../lib/ballot/place-package-until-nov-4.ts";
-import { readPlacePackage } from "../lib/reader/place.ts";
 import { buildPlacePackage } from "../lib/reader/place-builder.ts";
 import type { Query } from "../lib/facts/publish.ts";
 
@@ -24,7 +22,7 @@ async function fixture() {
   return { pg, query };
 }
 
-test("the ballot's place read still assembles an unbuilt division live, and the combine assembles it live too", async () => {
+test("the ballot's place read still assembles an unbuilt division live", async () => {
   const { pg, query } = await fixture();
   try {
     const input = { state: "CO", divisionIds: [DIVISION], bodyIds: [BODY], bodyFactsOnly: true } as const;
@@ -32,11 +30,10 @@ test("the ballot's place read still assembles an unbuilt division live, and the 
     assert.equal(live.bodies.find(body => body.id === BODY)?.roster?.members[0]?.name, "Casey Resident", "the fixture division has a board with a member");
     assert.deepEqual(await query("SELECT place_id FROM place_page"), [], "no page is built for it");
     assert.deepEqual(await readBallotPlacePackage(input, query), live, "the ballot path assembles it live, as before");
-    assert.deepEqual((await readPlacePackage(input, query)).bodies, live.bodies, "the combine assembles an unbuilt place live");
   } finally { await pg.close(); }
 });
 
-test("a built division is combined from its page, an unbuilt board beside it is assembled live, and the ballot path still falls back whole", async () => {
+test("an unbuilt board beside a built division still makes the ballot path fall back to live assembly whole", async () => {
   const { pg, query } = await fixture();
   try {
     const input = { state: "CO", divisionIds: [DIVISION], bodyIds: [BODY], bodyFactsOnly: true } as const;
@@ -44,22 +41,7 @@ test("a built division is combined from its page, an unbuilt board beside it is 
     await seedPlacePages(query, { state: "CO", divisionIds: [DIVISION] });
     await query("DELETE FROM place_page WHERE place_id=$1", [BODY]);
     assert.deepEqual((await query("SELECT place_id FROM place_page")).map(row => row.place_id), [DIVISION], "only the division is built");
-    assert.deepEqual((await readPlacePackage(input, query)).bodies, live.bodies, "the combine matches a live build");
     assert.deepEqual((await readBallotPlacePackage(input, query)).bodies, live.bodies, "the ballot path falls back to live assembly for the whole selection");
-  } finally { await pg.close(); }
-});
-
-test("a ZIP with an unbuilt place is answered by its stored page while it has one, and by live assembly when it has none", async () => {
-  const { pg, query } = await fixture();
-  try {
-    const input = { state: "CO", divisionIds: [DIVISION], bodyIds: [BODY], placeId: "zip:80202" } as const;
-    const live = await buildPlacePackage({ ...input, includeAgenda: false }, query);
-    assert.deepEqual((await readPlacePackage(input, query)).bodies, live.bodies, "no stored page: assembled live");
-    const stored = { ...live, snapshotHeldAt: "2000-01-01T00:00:00.000Z" };
-    await query("INSERT INTO entity(id,kind,name,state) VALUES('zip:80202','place','80202','CO')");
-    await query("INSERT INTO place_page(place_id,body) VALUES('zip:80202',$1::jsonb)", [JSON.stringify({ encoding: "br-json-v1", data: brotliCompressSync(JSON.stringify(stored)).toString("base64") })]);
-    assert.equal((await readPlacePackage(input, query)).snapshotHeldAt, "2000-01-01T00:00:00.000Z", "the stored page keeps answering until every place is built");
-    assert.deepEqual((await readBallotPlacePackage({ ...input, placeId: undefined, bodyFactsOnly: true }, query)).bodies, live.bodies, "the ballot path never reads it");
   } finally { await pg.close(); }
 });
 

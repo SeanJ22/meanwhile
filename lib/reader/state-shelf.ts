@@ -19,7 +19,7 @@ async function loadRegistry(state: string): Promise<StateRegistry> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const [read, [[held]]] = await Promise.all([
     readCanonicalShelf([entry]).then(store => readPromotedCivicData<RegistryRuntimeReadModel>(entry.recordClass, entry.scope, { store })),
-    query([{ text: "SELECT EXISTS(SELECT 1 FROM civic_data_promotions WHERE key=$1 AND record_class='REGISTRATION') AS held", params: [keyOf(state).registration] }]),
+    query([{ text: "SELECT EXISTS(SELECT 1 FROM civic_data_rows WHERE promotion_key=$1 AND collection='governments') AS held", params: [keyOf(state).registration] }]),
   ]);
   if (read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
   return { model: read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value : null, registrationHeld: held?.held === true };

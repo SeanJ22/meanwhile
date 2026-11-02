@@ -61,7 +61,7 @@ test("a board's meetings cards hold its calendars, sittings, agenda papers and h
     assert.deepEqual([own!.c, own!.v, meetings.s], [null, "cv-1", BODY]); assert.ok("acquisitions" in (own!.h.sources as Record<string, unknown>[])[0]!, "a board's own calendar keeps its acquisitions");
     assert.ok(!("acquisitions" in (family!.h.sources as Record<string, unknown>[])[0]!), "the family's sources are reported without their acquisitions"); assert.deepEqual(family!.m!.map(member => member.bodyId), [BODY]);
     assert.ok(!("meetings" in own!.h) && !("agendaDocuments" in own!.h), "a header holds no rows");
-    assert.deepEqual(meetings.sittings.map(row => [row[0], row[1], row[2], row[3], row[5], row.length]), [[BODY, "meeting:legistar:m1", "room", "Room 4", "live", 7], [BODY, "meeting:legistar:m1", "title", "Regular meeting", "live", 6]],
+    assert.deepEqual(meetings.sittings.map(row => [row[0], row[1], row[2], row[3], row[5], row.length]), [[BODY, "meeting:legistar:m1", "title", "Regular meeting", "live", 6], [BODY, "meeting:legistar:m1", "room", "Room 4", "live", 7]],
       "a sitting's quote is kept only when it is not the value");
     assert.deepEqual([meetings.sources, meetings.stamps], [["https://example.gov/cal"], [[0, AT]]]);
     assert.deepEqual((built.get(BODY)!.get("agenda") as AgendaBody).documents.map(document => document.id), ["d1"]);
@@ -159,7 +159,7 @@ test("a state's registry gives a place the boards that serve it, its divisions a
     officialCandidacies: { formatVersion: 1, rule: "x", rows: [holder("p1", []), holder("someone", [OTHER]), holder("mayor", [PLACE]), holder("gov", [])] },
     officialPhotos: { photos: [{ officeholderId: "p1" }, { officeholderId: "someone" }, { officeholderId: "x", personId: "p1" }] },
     rosterPhotos: { "roster:b1#1": "u1", "roster:b2#1": "u2" } } as unknown as RegistryRuntimeReadModel;
-  const mine = placeRegistry(model, { divisionIds: [PLACE, "state:az"], boardIds: ["b4"] });
+  const mine = placeRegistry(model, { divisionIds: [PLACE, "state:az"], boardIds: ["b4"], aliasOf: new Map(), filed: new Map(), names: new Map() });
   assert.deepEqual(mine.registry.bodies.map(row => row.id), ["b1", "b3", "b4"], "boards that serve it, or also serve it, or its page already has");
   assert.deepEqual(mine.registry.divisions.map(row => row.ocdId), [PLACE, "state:az", OTHER], "its divisions, the parents of its boards' divisions");
   assert.deepEqual(mine.bodyRosters.map(row => row.bodyId), ["b1"]);

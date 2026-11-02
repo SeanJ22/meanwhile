@@ -1,5 +1,6 @@
 import { ensureGoverningBody } from "../core/door.ts";
 export { ensureGoverningBody } from "../core/door.ts";
+import { markSlices, slicesOf } from "../core/slice-marks.ts";
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -447,7 +448,7 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       JOIN entity p ON p.id=ep.place_id
       WHERE e.id=ANY($1::text[]) AND b.layer='district'
       GROUP BY e.id,p.state ORDER BY e.id,p.state`,[registration.governments.map(g => g[1])]));
-    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["ENTITY_OWNERSHIP_V2", stateBodies, legislators, associations,ownerRows]))]));
+    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["ENTITY_OWNERSHIP_V3", stateBodies, legislators, associations,ownerRows]))]));
     if (loaded.get(`registration:${st}`) === hash) continue;
     const batch = stateEntities(registration, census, stateBodies, legislators,registeredOwners);
     const places = new Set(batch.entities.filter(row => row.kind === "place").map(row => row.id));
@@ -463,13 +464,17 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
           ...territory.map(p => [String(id), p.placeId, p.boundaryYear, p.basis] as EntityBatch["places"][number]));
       }
     }
-    await db.transaction(async query => {
+    const marks = await db.transaction(async query => {
       const canonical=await canonicalEntities(query,batch),before=await batchStates(query,canonical);
       await insertEntities(query,canonical);
+      const settled = await settleBoards(query, st.toUpperCase());
       await query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
         ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`registration:${st}`, hash]);
       await enqueueReaderPlaces({ states: [...new Set([st,...before,...await batchStates(query,canonical)])] }, query);
+      // Each place a board was newly filed on rebuilds its slices.
+      return settled.length ? slicesOf(query, settled) : [];
     });
+    await markSlices(marks);
     done.push(st);
   }
   return done;
@@ -513,6 +518,47 @@ async function bodyGovernment(query: Query, id: string, named: string | null | u
   return null;
 }
 
+/**
+ * Who a board belongs to when nothing has named its government: the place its id is named for (`<place>#body:<slug>`), the registered
+ * government of a Census of Governments id (`government:US-XX:cog:<id>#…`), or the one local government that alone holds the site the
+ * board publishes on. A site shared by two governments, or none, names nobody: the board waits, and its page says so.
+ */
+async function boardOwner(query: Query, id: string, state: string | null): Promise<string | null> {
+  const { root, tail } = splitSubject(id);
+  if (tail) {
+    const [place] = await query("SELECT id FROM entity WHERE id=$1 AND kind='place' AND (state IS NULL OR $2::char(2) IS NULL OR state=$2::char(2))", [root, state]);
+    if (place) return root;
+    const government = await registeredGovernment(query, root);
+    const [held] = await query("SELECT id FROM entity WHERE id=$1 AND kind='government'", [government]);
+    if (held) return government;
+  }
+  const hosted = await query(`SELECT DISTINCT g.id FROM entity_host mine JOIN entity_host site ON site.host=mine.host
+    JOIN entity g ON g.id=site.entity_id AND g.kind='government' AND ($2::char(2) IS NULL OR g.state=$2::char(2))
+    WHERE mine.entity_id=$1 AND EXISTS (SELECT 1 FROM entity_place p WHERE p.entity_id=g.id AND p.place_id !~ '${BARE_ROOT}')
+      AND NOT EXISTS (SELECT 1 FROM entity_host other JOIN entity og ON og.id=other.entity_id AND og.kind='government' AND og.id<>g.id WHERE other.host=site.host)`, [id, state]);
+  return hosted.length === 1 ? String(hosted[0]!.id) : null;
+}
+
+/**
+ * Gives each of a state's boards that sit on no place the owner its id or its site names, and files it where that owner is filed. Run with
+ * the state's load, so boards the doors created before they could name an owner, and registry boards hung on the bare state, reach the
+ * pages of the places they serve. Returns the boards that were filed.
+ */
+export async function settleBoards(query: Query, state: string): Promise<readonly string[]> {
+  const unplaced = await query(`SELECT b.id,b.parent_id FROM entity b WHERE b.kind='body' AND b.state=$1::char(2)
+    AND NOT EXISTS (SELECT 1 FROM entity_place p WHERE p.entity_id=b.id)
+    AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=b.id) ORDER BY b.id`, [state]);
+  const filed: string[] = [];
+  for (const board of unplaced) {
+    const id = String(board.id), parent = board.parent_id === null ? null : String(board.parent_id);
+    const owner = parent !== null && !new RegExp(BARE_ROOT).test(parent) ? parent : await boardOwner(query, id, state);
+    if (owner === null) continue;
+    if (owner !== parent) await query("UPDATE entity SET parent_id=$2 WHERE id=$1", [id, owner]);
+    if ((await fileEntityPlaces(query, id, [], owner)).moved) filed.push(id);
+  }
+  return filed;
+}
+
 /** Mints an entity found after the backfill and returns its durable identity; aliased boards reuse the surviving entity.
  * A board hangs on its registered government, and a held board left on a bare state root moves to the government or local place a writer now names. */
 export async function ensureEntity(query: Query, row: EntityRow): Promise<string> {
@@ -534,14 +580,14 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
     }
     return body.id;
   }
-  const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
+  const parentId = row.kind !== "body" ? row.parentId : await bodyGovernment(query, id, row.government) ?? (row.parentId && !new RegExp(BARE_ROOT).test(row.parentId) ? row.parentId : null) ?? await boardOwner(query, id, row.state) ?? row.parentId;
   const changed = await query(`WITH held AS MATERIALIZED (SELECT parent_id FROM entity WHERE id=$1), changed AS (
     INSERT INTO entity (id, kind, name, state, parent_id)
     SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = coalesce(
       (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $5), $5))
     ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
       WHERE entity.kind = 'body' AND EXCLUDED.kind = 'body' AND entity.state IS NOT DISTINCT FROM EXCLUDED.state
-        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'
+        AND (entity.parent_id IS NULL OR entity.parent_id ~ '${BARE_ROOT}') AND EXCLUDED.parent_id !~ '${BARE_ROOT}'
     RETURNING id
   ) SELECT id,(SELECT parent_id FROM held) AS old_parent FROM changed`,
   [id, row.kind, row.name, row.state, parentId]);

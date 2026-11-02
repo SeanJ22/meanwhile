@@ -1,3 +1,4 @@
+import { buildSlices, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "../../lib/reader/slices.ts";
 import { buildPageBody } from "../../lib/reader/place-builder.ts";
 import { packPlaceContext } from "../../lib/reader/place-ready.ts";
 import type { Query } from "../../lib/facts/publish.ts";
@@ -25,4 +26,25 @@ export async function seedPlacePages(query: Query, input: PlaceInput): Promise<v
       ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,context=excluded.context`,
     [id, JSON.stringify(packPlaceContext(await buildPageBody(id, kind, state, query) as unknown as Record<string, unknown>))]);
   }
+}
+
+/** The slices of the places and boards a selection names, built from the facts held, as the slice job writes them. */
+export async function seedPlaceSlices(query: Query, input: PlaceInput): Promise<void> {
+  const state = input.state.toUpperCase(), places = new Set([...input.divisionIds, ...input.namedDivisionIds ?? []]);
+  const boards = new Set<string>();
+  for (const requested of input.bodyIds ?? []) {
+    const [alias] = await query("SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=$1", [requested]);
+    boards.add(String(alias?.entity_id ?? requested));
+  }
+  if (input.neighbors) for (const id of boards) {
+    if (id.startsWith("ocd-division/")) places.add(id.split("#")[0]!);
+    for (const row of await query("SELECT place_id FROM entity_place WHERE entity_id=$1", [id])) places.add(String(row.place_id));
+  }
+  for (const id of places) await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,$2) ON CONFLICT DO NOTHING", [id, state]);
+  // The slice job builds every place a board is filed on, whether or not a page names it.
+  for (const row of await query("SELECT DISTINCT place_id FROM entity_place WHERE entity_id=ANY($1::text[])", [[...boards]])) places.add(String(row.place_id));
+  for (const row of await query(`SELECT DISTINCT coalesce(x.entity_id,e.id) AS id FROM entity_place ep JOIN entity e ON e.id=ep.entity_id AND e.kind='body'
+    LEFT JOIN entity_external_id x ON x.scheme='body-alias' AND x.value=e.id WHERE ep.place_id=ANY($1::text[])`, [[...places]])) boards.add(String(row.id));
+  const wanted = new Map<string, ReadonlySet<SliceCard>>([...[...places].map(id => [id, new Set<SliceCard>(SLICE_CARDS)] as const), ...[...boards].map(id => [id, new Set<SliceCard>(MEETING_CARDS)] as const)]);
+  await writeSlices(query, await buildSlices(query, wanted));
 }

@@ -50,7 +50,7 @@ const SITTINGS_SQL = `SELECT m.parent_id AS board,m.id AS entity,f.field,f.value
     f.quote IS NOT DISTINCT FROM (f.value#>>'{}') AS same,f.checked_at,f.status,f.source_copy_id AS copy
   FROM entity m JOIN checked_fact f ON f.entity_id=m.id
   WHERE m.kind='meeting' AND m.parent_id=ANY($1::text[]) AND (f.status='live' OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')
-  ORDER BY m.id,f.field`;
+  ORDER BY m.id,f.id`;
 
 /**
  * The meetings cards of these boards and places. A board's card holds its own calendar partitions with only its meetings (and, from a

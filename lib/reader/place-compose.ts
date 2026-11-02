@@ -43,7 +43,7 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   const canonical = (id: unknown): string => { let at = String(id); for (const seen = new Set<string>(); aliases[at] && !seen.has(at); at = aliases[at]!) seen.add(at); return at; };
   const canonicalRow = (row: Row,key="bodyId"): Row => row[key] && canonical(row[key])!==row[key] ? {...row,[key]:canonical(row[key])} : row;
   const explicitBodies = new Set((input.bodyIds ?? []).map(canonical));
-  const active = pages.filter(({ row }) => input.allBodies || row.page_kind === "body"
+  const active = pages.filter(({ row }) => row.page_kind === "body"
     || row.page_kind === "empty" && input.divisionIds.length === 0 && !(input.bodyIds?.length)
     || strings(row.division_ids).some(id => selected.has(id))
     || typeof row.page_id === "string" && selected.has(row.page_id)
@@ -90,7 +90,7 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     }
   }
   const agendaOnly = input.meetingIds !== undefined;
-  const registry = lastRegistry && !input.bodyFactsOnly ? {
+  const registry = lastRegistry ? {
     ...lastRegistry,
     registry: {
       ...record(lastRegistry.registry),
@@ -148,9 +148,9 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     body_aliases: aliases,
     division_ids: [...new Set([...input.divisionIds, ...(input.neighbors ? active.flatMap(page => strings(page.row.division_ids)) : [])])],
     registry,
-    registration_held: !input.bodyFactsOnly && !agendaOnly && active.some(page => page.row.registration_held === true),
-    governments: input.bodyFactsOnly || agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)),
-    divisions: input.bodyFactsOnly || agendaOnly ? [] : allDivisions.filter(division => selected.has(String(division.ocdId)) || named.has(String(division.ocdId))),
+    registration_held: !agendaOnly && active.some(page => page.row.registration_held === true),
+    governments: agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)).sort(byText("id")),
+    divisions: agendaOnly ? [] : allDivisions.filter(division => selected.has(String(division.ocdId)) || named.has(String(division.ocdId))).sort(byText("ocdId")),
     entities: [...entities.values()].sort(byText("id")),
     fields: ownRows("fields", "entity_id").sort(byText("entity_id")),
     // A person seated under a folded board and under the board it was folded into is one member.

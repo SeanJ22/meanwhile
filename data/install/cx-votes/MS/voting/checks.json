@@ -1,0 +1,33 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "MS",
+  "coverage": {
+    "preparedSites": 0,
+    "preparedBoundaries": 0,
+    "scope": "Read-only check in Jackson; official source discovery only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c.html",
+      "httpStatus": 403
+    }
+  ],
+  "readyDoors": 0,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 0,
+  "registryPageRows": 0,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "NOT_APPLICABLE_DISCOVERY_ONLY",
+  "checks": [],
+  "siteKinds": {
+    "electionDay": 0,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:MS"
+}

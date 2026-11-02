@@ -1,0 +1,21 @@
+[
+  {
+    "url": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+    "finalUrl": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+    "file": "sources/2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c.html",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "byteLength": 17,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:40:14.966026+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 403,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "FAILURE_EVIDENCE_ONLY",
+    "captureMetadata": {
+      "sha256": "7c7bf94b2275977bf7eb5b8b90fa1535c3b2eb9709ede710a2fbae5a211606b2",
+      "recordedHttpStatus": 403,
+      "recordedUrl": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+      "recordedAt": "2026-11-02T21:40:14.966026+00:00"
+    }
+  }
+]

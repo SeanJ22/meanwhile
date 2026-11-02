@@ -1,0 +1,59 @@
+{
+  "kind": "CX_VOTES_VOTING_DATA_INSTALL",
+  "state": "MS",
+  "step": "CX-VOTES",
+  "status": "DISCOVERY_ONLY_NO_NEW_SITE_DATA",
+  "productionWritesByThisBundle": false,
+  "appCodeChanges": false,
+  "contractId": "voting-sites:MS",
+  "readyDoors": "doors.json",
+  "discoveryOnly": "discovery.json",
+  "sourceCaptures": "sources.json",
+  "coverage": {
+    "preparedSites": 0,
+    "preparedBoundaries": 0,
+    "scope": "Read-only check in Jackson; official source discovery only"
+  },
+  "sourceOnlyPrepared": false,
+  "liveStatus": "Residential check already returned sites; no new polling-site data is claimed",
+  "priorResidentialCheck": {
+    "hasSites": true,
+    "siteRows": 1,
+    "googleFallback": {
+      "available": true,
+      "requested": true
+    },
+    "outsideCoverage": false
+  },
+  "limitations": [
+    "Do not ingest HTTP error bytes as a publication or infer no polling locations from this fetch failure."
+  ],
+  "existingInstallOperation": {
+    "register": {
+      "module": "lib/ballot/voting-source-publication.ts",
+      "function": "saveVotingSourceDoor",
+      "arguments": [
+        "context.repos.doors",
+        "each door from doors.json",
+        "actual install timestamp"
+      ]
+    },
+    "refresh": {
+      "module": "scripts/fetch-voting-sites.mts",
+      "function": "refreshVotingSources",
+      "arguments": {
+        "state": "MS",
+        "store": "existing PostgresRoutineDataStore",
+        "context": "existing workerPublicationContext",
+        "seeds": "ready doors from doors.json"
+      },
+      "existingCliAfterRegistration": "node --experimental-strip-types scripts/fetch-voting-sites.mts --state=MS --promote"
+    },
+    "productionWriteContext": "Existing prepareProductionCivicDataWrite / workerPublicationContext used by fetch-voting-sites.mts; River performs the authorized install."
+  },
+  "installOrder": [
+    "No site-data operation is prepared. Retain discovery.json and source evidence for the existing source hunt.",
+    "The residential read-only check succeeded through current live data; this packet does not claim a data fix."
+  ],
+  "validationFile": "checks.json"
+}

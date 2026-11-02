@@ -1,0 +1,31 @@
+{
+  "install": false,
+  "routes": [
+    {
+      "id": "cx-ms-official-polling-source-2026",
+      "publisher": "Mississippi Secretary of State",
+      "url": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+      "shape": "list-page",
+      "covers": [
+        "ELECTION_DAY"
+      ],
+      "scope": {
+        "state": "MS",
+        "ocdId": "ocd-division/country:us/state:ms",
+        "name": "Mississippi"
+      },
+      "electionDate": "2026-11-03",
+      "electionPageUrl": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+      "access": {
+        "status": "unreachable",
+        "checkedAt": "2026-11-02T21:40:14.966026+00:00",
+        "detail": "Official public source returned HTTP 403. No location or input field extraction was verified."
+      },
+      "model": "ASSIGNED",
+      "matchingUnit": "PRECINCT"
+    }
+  ],
+  "limitations": [
+    "Do not ingest HTTP error bytes as a publication or infer no polling locations from this fetch failure."
+  ]
+}

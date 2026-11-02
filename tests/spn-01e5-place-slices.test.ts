@@ -112,7 +112,7 @@ test("the order a page is read in is the same however the facts and registration
       { id: "g-z", name: "Zeta", jurisdictionId: "g-z", associations: [{ divisionId: PLACE }] }, { id: "g-a", name: "Alpha", jurisdictionId: "g-a", associations: [{ divisionId: PLACE }] }], divisions: [] } });
     await seedPlaceSlices(db.query, { state: "AZ", divisionIds: [PLACE] });
     const held = await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, db.query);
-    assert.deepEqual(held.governments.map(government => government.id), ["g-a", "g-z"], "governments by id, not by the order the registration lists them");
+    assert.deepEqual(held.governments.map(government => government.id), ["g-z", "g-a"], "governments in the order the registration lists them, whatever place each came from");
     assert.deepEqual(held.bodies.find(body => body.id === BODY)!.sittings.map(row => row.field), ["title", "agendaUrl"], "a sitting's facts in the order they were filed, each field once");
     assert.equal(JSON.stringify(await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, db.query)), JSON.stringify(held), "reading again gives the same bytes");
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }

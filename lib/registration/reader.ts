@@ -61,13 +61,13 @@ const normalizedGovernment = (value: string) => {
   return `btrim(regexp_replace(replace(regexp_replace(${flat},'^(.+?),\\s*(CITY|TOWN|TOWNSHIP|VILLAGE|BOROUGH|COUNTY)\\s+OF$','\\2 OF \\1'),',',''),'\\s+',' ','g'))`;
 };
 
-/** The state's registered governments that name any of these divisions, each with its .gov domains and whether its name is its own alone, and those divisions' registration rows. */
+/** The state's registered governments that name any of these divisions, each with its place in the registration's own order and its .gov domains and whether its name is its own alone, and those divisions' registration rows. */
 export const PLACE_REGISTRATION_SQL = `WITH registration AS MATERIALIZED (
   SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), identities AS MATERIALIZED (
-  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
+  SELECT g,ord,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
     count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names
-  FROM (SELECT named.g,${normalizedGovernment("named.g->>'name'")} AS identity,${federalGovernmentNameSql("named.g->>'name'")} AS recipient_identity
+  FROM (SELECT named.g,member.ordinal_index AS ord,${normalizedGovernment("named.g->>'name'")} AS identity,${federalGovernmentNameSql("named.g->>'name'")} AS recipient_identity
     FROM registration,LATERAL reader_payload_members(payload->'governments') member,
       LATERAL (SELECT reader_payload_node(member.item) AS original) header,
       LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named) inventory
@@ -78,9 +78,9 @@ export const PLACE_REGISTRATION_SQL = `WITH registration AS MATERIALIZED (
 )
 SELECT 'government' AS kind,reader_payload_value(g.g) || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d.d->>'domain','website','https://'||(d.d->>'domain'),'sourceUrl',d.source->>'url','checkedAt',d.source->>'readAt'))
-    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb)) AS value
+    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb)) AS value,g.ord AS ordinal
   FROM identities g WHERE EXISTS (SELECT 1 FROM reader_payload_members(g.g->'associations') member,LATERAL (SELECT reader_payload_node(member.item) AS a) association
     WHERE a->>'divisionId'=ANY($2::text[]))
 UNION ALL
-SELECT 'division',reader_payload_value(member.item) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
+SELECT 'division',reader_payload_value(member.item),NULL::bigint FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
   LATERAL (SELECT reader_payload_node(member.item) AS d) division WHERE d->>'ocdId'=ANY($2::text[])`;

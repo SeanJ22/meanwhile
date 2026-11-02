@@ -108,6 +108,8 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   for (const [n, card, body] of out.places ?? []) {
     if (card === "meetings" || card === "history" || card === "agenda") { keep(unpackSlice<{ s: string }>(body), card); continue; }
     const slice = unpackSlice<SliceBody>(body);
+    // A card written by an earlier slice job is not read as this one; it is rebuilt by the lane.
+    if (slice.v !== 2) continue;
     if (card === "bodies") regs.set(n, slice.reg);
     for (const entity of slice.entities) {
       if (entity.k === "body") { if (!boards.has(entity.id)) boards.set(entity.id, { id: entity.id, name: entity.n, parent: entity.p ?? null, aliases: entity.a ?? [], filed: [...new Set(entity.d ?? [])], host: entity.h === 1, facts: heldFacts(slice, entity.f) }); }
@@ -196,7 +198,7 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
       seen.add(id); target.agendaDocuments.push(document);
     }
     return { page_id: pageId, page_kind: kind, built_at: 0, division_ids: [...divisions], registration_held: registry.registrationHeld,
-      registry: runtime, governments: reg?.governments ?? [], divisions: reg?.divisions ?? [],
+      registry: runtime, governments: reg?.governments ?? [], divisions: reg?.divisions ?? [], government_order: Object.fromEntries((reg?.governments ?? []).map((government, at) => [government.id, reg?.order?.[at] ?? 0])),
       entities, fields, rosters, comments, sittings, meeting_rows: partitions, archived_meetings: archivedMeetings, archived_documents: archivedDocuments, archived_document_links: [], agenda_texts: [], parts: {}, publication_attempts: [] };
   };
 

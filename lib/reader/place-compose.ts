@@ -144,12 +144,14 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   const archivedByPage = new Map(ordered.map(page => [page, records(page.row.archived_meetings).filter(meeting => owns(page, meeting.bodyId)).map(meeting=>canonicalRow(meeting))]));
   const archived = [...archivedByPage.values()].flat();
   const allDivisions = unique(pages.flatMap(page => records(page.row.divisions)), row => String(row.ocdId));
+  // Governments are listed in the order the state's registration lists them.
+  const registered = Object.assign({}, ...ordered.map(page => record(page.row.government_order))) as Record<string, number>;
   return {
     body_aliases: aliases,
     division_ids: [...new Set([...input.divisionIds, ...(input.neighbors ? active.flatMap(page => strings(page.row.division_ids)) : [])])],
     registry,
     registration_held: !agendaOnly && active.some(page => page.row.registration_held === true),
-    governments: agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)).sort(byText("id")),
+    governments: agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)).sort((a, b) => (registered[String(a.id)] ?? 0) - (registered[String(b.id)] ?? 0) || byText("id")(a, b)),
     divisions: agendaOnly ? [] : allDivisions.filter(division => selected.has(String(division.ocdId)) || named.has(String(division.ocdId))).sort(byText("ocdId")),
     entities: [...entities.values()].sort(byText("id")),
     fields: ownRows("fields", "entity_id").sort(byText("entity_id")),

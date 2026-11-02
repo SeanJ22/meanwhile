@@ -54,7 +54,7 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
-import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { hostMemoryReading, reportingWorkerSlots, routineProcessSlots, type WorkerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
@@ -394,7 +394,6 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     "scripts/freshness-shadow.mts",
     `--provider=${provider}`,
 
-    `--interval=${INTERVAL_MIN}`,
     ...(maxArg ? [maxArg] : []),
     ...(onlyArg ? [onlyArg] : []),
     ...(idsArg ? [idsArg] : []),
@@ -1288,18 +1287,20 @@ const laneChildren = new Map<string, ChildProcess>();
 // Expected SQL request and response bytes for one 55-minute turn of the page readers: claims, page copies, fact checks and new links.
 const PARSER_LANE_DATABASE_BYTES = 150_000_000;
 /** One turn of a standing lane's child. The child ends itself by exit 0 when idle or drained, and that is a finish; a kill or any other exit is a stop. */
-async function runLaneChild(id: string, databaseBytesPerRun: number, script: string, deadlineMs: number, stopped: string): Promise<void> {
+async function runLaneChild(id: string, databaseBytesPerRun: number, script: string, deadlineMs: number, stopped: string, memory?: WorkerProcessSlots): Promise<void> {
   if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed(id)) return;
-  const [run] = await runRuntimeChildren([{ id, databaseBytesPerRun, executable: process.execPath, args: [...TS_CHILD, script],
-    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
-    cwd: CODE_ROOT, env: storedKeyEnvironment(), deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
-    onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
-    onStarted: (_id, child) => { laneChildren.set(id, child); } });
-  laneChildren.delete(id);
-  if (run?.status === 0) return;
-  // The reason: the runner's own kill reason, else the exit or signal and last error lines, fitted to the 400 characters the heartbeat keeps.
-  const lines = run?.stderr.split("\n").filter(Boolean) ?? [], errors = lines.filter(line => /^(?:\w*Error\b|[A-Z][A-Z_]{4,}:)/.test(line));
-  throw new Error(`${stopped}: ${privateText(run?.errorMessage ?? [`exit ${run?.status ?? `signal ${run?.signal}`}`, ...(errors.length ? errors : lines.slice(-1)).slice(-2)].join("; ")).slice(0, 380 - stopped.length)}`);
+  const release = await memory?.acquire(script.split("/").at(-1), deadlineMs);
+  try {
+    const [run] = await runRuntimeChildren([{ id, databaseBytesPerRun, executable: process.execPath, args: [...TS_CHILD, script],
+      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs) }], {
+      cwd: CODE_ROOT, env: storedKeyEnvironment(), deadlineMs, maxBufferBytes: 16 * 1024 * 1024, noProgressMs: RUNTIME_NO_PROGRESS_MS,
+      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output),
+      onStarted: (_id, child) => { laneChildren.set(id, child); if (child.pid) release?.observe?.(child.pid); } });
+    if (run?.status === 0) return;
+    // The reason: the runner's own kill reason, else the exit or signal and last error lines, fitted to the 400 characters the heartbeat keeps.
+    const lines = run?.stderr.split("\n").filter(Boolean) ?? [], errors = lines.filter(line => /^(?:\w*Error\b|[A-Z][A-Z_]{4,}:)/.test(line));
+    throw new Error(`${stopped}: ${privateText(run?.errorMessage ?? [`exit ${run?.status ?? `signal ${run?.signal}`}`, ...(errors.length ? errors : lines.slice(-1)).slice(-2)].join("; ")).slice(0, 380 - stopped.length)}`);
+  } finally { laneChildren.delete(id); release?.(); }
 }
 function drainLaneChildren(): void {
   for (const [id, child] of laneChildren) if (child.connected) child.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => { if (error) console.error(`${id} drain failed`, error); });
@@ -1321,22 +1322,9 @@ const auditPasses = auditPassClock({
   env: () => standingChildEnvironment("CONSOLE_PUBLISHER"),
 });
 
-const censusMemory = routineProcessSlots();
+const censusMemory = reportingWorkerSlots(routineProcessSlots());
 async function runPlatformCensus(deadlineMs: number): Promise<void> {
-  if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
-  if (!jobLaunchAllowed("platform-census")) return;
-  const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
-  try {
-    const [run] = await runRuntimeChildren([{
-      id: "platform-census",
-      databaseBytesPerRun: 11_852_414, executable: process.execPath,
-      args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
-      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
-    }], { cwd: CODE_ROOT, env: storedKeyEnvironment(), maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
-      onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
-      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
-    if (!run || run.status !== 0) throw new Error(`CENSUS_LANE_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
-  } finally { release(); }
+  await runLaneChild("platform-census", 11_852_414, "scripts/platform-census-runner.mts", deadlineMs, "Platform census stopped; unvisited sources remain due", censusMemory);
 }
 
 /** Place pages are built by the runner, the one process holding the production write address. */

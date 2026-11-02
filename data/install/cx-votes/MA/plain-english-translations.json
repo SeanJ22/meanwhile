@@ -1,0 +1,587 @@
+{
+  "contractId": "plain-english-translations",
+  "version": "translations-v2:2026-11-02T21:24:06.882Z",
+  "sourceThrough": "2026-11-02T21:12:59.624744+00:00",
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:24:06.882Z",
+    "reviewedBy": "claude-sonnet-5-5",
+    "sources": [
+      {
+        "requestedUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "finalUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "publisher": "www.boston.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
+        "httpStatus": 200,
+        "rawHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."
+      },
+      {
+        "requestedUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "finalUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "publisher": "www.boston.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
+        "httpStatus": 200,
+        "rawHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."
+      },
+      {
+        "requestedUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "finalUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "publisher": "www.boston.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
+        "httpStatus": 200,
+        "rawHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."
+      }
+    ]
+  },
+  "payload": {
+    "kind": "plain-english-translations",
+    "records": [
+      {
+        "id": "translation:ma-2026-11-03:question-7",
+        "kind": "MEASURE",
+        "subjectId": "ma-2026-11-03:question-7",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "sourceText": "Question 7 - Single Family Homes\nQuestion 7 - Single Family Homes\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would allow single-family homes to be built in a residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they \nresidentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they \nresidentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they can be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.\n\n\n\n\nA YES VOTE\n\n would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas, subject to reasonable local regulation of certain aspects of those homes.\n\ncan be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.\n\n\n\n\nA YES VOTE\n\n would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas, subject to reasonable local regulation of certain aspects of those homes.\n\n\n\n\n\nA NO VOTE\n\n would make no change to the law relative to building single-family homes.",
+        "sourceTextHash": "5ec2f87d12f8548b121dd9fc3f953c9ad30e1e66b96e8728082e3d4471d8628a",
+        "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
+        "writtenAt": "2026-11-02T21:19:16.976Z",
+        "writerModel": "claude-haiku-5-5",
+        "checkerModel": "claude-sonnet-5-5",
+        "playbookVersion": "1e216c95b85f918f66a358ad853c43ea4f7600a58a6151fa40d03b7df3529e97",
+        "measure": {
+          "contestId": "ma-2026-11-03:question-7",
+          "whatItDoes": "This measure would allow single-family homes to be built in a residentially zoned area. A lot must be at least 5,000 square feet for this to apply. The lot must also have at least 50 feet of land bordering the street, road, or public way it faces. The lot must also have access to public sewer and water services. Cities and towns could reasonably regulate certain aspects of those homes, including their height, distance from neighboring buildings, open space, and parking requirements. Cities and towns could also regulate whether the homes can be rented out on a short-term basis. The Executive Office of Housing and Livable Communities could issue guidance or regulations to carry out the measure.",
+          "yesMeans": "A YES vote would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas. This applies to lots that also have at least 50 feet bordering the street and access to public sewer and water services. Those homes would remain subject to reasonable local regulation of certain aspects of them.",
+          "noMeans": "A NO vote would make no change to the law relative to building single-family homes.",
+          "parts": [],
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+          "writtenAt": "2026-11-02T21:19:16.976Z"
+        },
+        "sentences": [
+          {
+            "field": "whatItDoes",
+            "text": "This measure would allow single-family homes to be built in a residentially zoned area.",
+            "quote": "Question 7 - Single Family Homes\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would allow single-family homes to be built in a residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "A lot must be at least 5,000 square feet for this to apply.",
+            "quote": "residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The lot must also have at least 50 feet of land bordering the street, road, or public way it faces.",
+            "quote": "residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The lot must also have access to public sewer and water services.",
+            "quote": "residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Cities and towns could reasonably regulate certain aspects of those homes, including their height, distance from neighboring buildings, open space, and parking requirements.",
+            "quote": "residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Cities and towns could also regulate whether the homes can be rented out on a short-term basis.",
+            "quote": "residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they can be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.\n\n\n\n\nA YES VOTE\n\n would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas, subject to reasonable local regulation of certain aspects of those homes.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office of Housing and Livable Communities could issue guidance or regulations to carry out the measure.",
+            "quote": "can be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.\n\n\n\n\nA YES VOTE\n\n would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas, subject to reasonable local regulation of certain aspects of those homes.\n"
+          },
+          {
+            "field": "yesMeans",
+            "text": "A YES vote would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas.",
+            "quote": "can be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.\n\n\n\n\nA YES VOTE\n\n would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas, subject to reasonable local regulation of certain aspects of those homes.\n"
+          },
+          {
+            "field": "yesMeans",
+            "text": "This applies to lots that also have at least 50 feet bordering the street and access to public sewer and water services.",
+            "quote": "residentially zoned area as long as the land on which it is to be constructed is at least 5,000 square feet, has at least 50 feet of land bordering the street, road, or public way that it faces, and has access to public sewer and water services.\n\n\nThe proposed law would allow cities and towns to reasonably regulate certain aspects of those single-family homes, including their height, distance from neighboring buildings, open space, parking requirements, and whether they "
+          },
+          {
+            "field": "yesMeans",
+            "text": "Those homes would remain subject to reasonable local regulation of certain aspects of them.",
+            "quote": "can be rented out on a short-term basis. The proposed law would also allow the Executive Office of Housing and Livable Communities to issue guidance or regulations to administer the proposed law.\n\n\n\n\nA YES VOTE\n\n would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas, subject to reasonable local regulation of certain aspects of those homes.\n"
+          },
+          {
+            "field": "noMeans",
+            "text": "A NO vote would make no change to the law relative to building single-family homes.",
+            "quote": "\n\n\n\nA NO VOTE\n\n would make no change to the law relative to building single-family homes."
+          }
+        ],
+        "writingRulesVersion": "bf73e21308120d7309335f2dc490dc2dad7357075b77cc4d734cc61b69ad51be",
+        "subjectQuote": "Question 7 - Single Family Homes",
+        "checked": [
+          {
+            "field": "whatItDoes",
+            "text": "This measure would allow single-family homes to be built in a residentially zoned area.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "A lot must be at least 5,000 square feet for this to apply.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The lot must also have at least 50 feet of land bordering the street, road, or public way it faces.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The lot must also have access to public sewer and water services.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Cities and towns could reasonably regulate certain aspects of those homes, including their height, distance from neighboring buildings, open space, and parking requirements.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Cities and towns could also regulate whether the homes can be rented out on a short-term basis.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office of Housing and Livable Communities could issue guidance or regulations to carry out the measure.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "yesMeans",
+            "text": "A YES vote would allow single-family homes to be built on lots of 5,000 square feet or more in residential areas.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "yesMeans",
+            "text": "This applies to lots that also have at least 50 feet bordering the street and access to public sewer and water services.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "yesMeans",
+            "text": "Those homes would remain subject to reasonable local regulation of certain aspects of them.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "noMeans",
+            "text": "A NO vote would make no change to the law relative to building single-family homes.",
+            "supported": true,
+            "reason": ""
+          }
+        ],
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/075441495ae4cedddbfd252ce447cf432248a122990d0d9b694877e8c0097aa8",
+          "rawHash": "075441495ae4cedddbfd252ce447cf432248a122990d0d9b694877e8c0097aa8",
+          "byteLength": 1249
+        }
+      },
+      {
+        "id": "translation:ma-2026-11-03:question-6",
+        "kind": "MEASURE",
+        "subjectId": "ma-2026-11-03:question-6",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "sourceText": "Question 6 - Natural Resource Conservation Fund\nQuestion 6 - Natural Resource Conservation Fund\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would establish a Nature for All Fund that, subject to appropriation by the Legislature, would receive 50% of state taxes collected from the sale and use of sporting goods, recreational vehicles, and golf courses for the first year of its operation. \nAfter July 1, 2028, the Nature for All Fund would begin receiving, subject to appropriation by the Legislature, 100% of state taxes collected on the sale and use of sporting goods, recreational vehicles, and golf courses. The sales tax revenue received by the Nature for All Fund would exclude sales tax revenue transferred to the Massachusetts Bay Transportation Authority State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund. \nThe proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend the money in the Nature for All Fund for natural resource conservation.\n\n\nThe proposed law would allow public and private donations to the Nature for All Fund. \nThe proposed law would prevent the state comptroller from transferring surplus funds in the Nature for All Fund at the end of the fiscal year. It would also allow state agencies, municipalities, public charities involved in natural resource conservation, tribal governments, and other regional public entities to receive money from the Nature for All Fund.\n\n\n\nNatural resource conservation would include the conservation or restoration of land to protect drinking water, streams, rivers, lakes, coasts, farms, forests, connectivity between open spaces, and lands and natural resources of indigenous cultural significance. \nNatural resource conservation would also include the creation, improvement, and management of parks, trails, greenspaces or outdoor recreation access.\n\n\nThe proposed law would establish a 15-member Nature for All Board that consists of five state officials and ten members of the public appointed by the Governor. \nThe proposed law would require the ten members of the public to include representatives of underserved communities and indigenous peoples and at least one person with expertise or experience in natural resource conservation. The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend money from the Nature for All Fund to hire staff \nThe proposed law would require the ten members of the public to include representatives of underserved communities and indigenous peoples and at least one person with expertise or experience in natural resource conservation. The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend money from the Nature for All Fund to hire staff to manage the fund. The proposed law would also require the Nature for All Board to establish rules about how the money in the Nature for All Fund should be spent, including rules regarding alignment with environmental justice principles, access to and restoration of lands and natural resources of indigenous cultural significance, promotion of affordable housing development, and other matters regarding spending and bond issuance.\n\nto manage the fund. The proposed law would also require the Nature for All Board to establish rules about how the money in the Nature for All Fund should be spent, including rules regarding alignment with environmental justice principles, access to and restoration of lands and natural resources of indigenous cultural significance, promotion of affordable housing development, and other matters regarding spending and bond issuance.\n\n\n\nThe proposed law would require the state Executive Office of Energy and Environmental Affairs to submit an annual report to various state committees regarding the funds spent to buy or improve land in cities and towns containing environmental justice populations.\n\n\n\nThe proposed law would take effect on July 1, 2027.\n\n\n\n\nA YES VOTE\n\n would create a fund that could be utilized for natural resource conservation that would receive some state taxes collected on the sale and use of sporting goods and recreational vehicles, and the use of golf courses.\n\n\n\n\n\nA NO VOTE\n\n would not create this natural resource conservation fund or change how sales and use taxes are spent.",
+        "sourceTextHash": "d5109dff0d340b87559470614627d6949922cc317b71c92e8df6a24034d3c30e",
+        "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
+        "writtenAt": "2026-11-02T21:18:46.383Z",
+        "writerModel": "claude-haiku-5-5",
+        "checkerModel": "claude-sonnet-5-5",
+        "playbookVersion": "1e216c95b85f918f66a358ad853c43ea4f7600a58a6151fa40d03b7df3529e97",
+        "measure": {
+          "contestId": "ma-2026-11-03:question-6",
+          "whatItDoes": "The measure would create a Nature for All Fund for natural resource conservation. The fund would get 50% of state taxes from sporting goods, recreational vehicles, and golf courses in its first year. The money would go to the fund only if the Legislature appropriates it. Starting after July 1, 2028, the fund would get 100% of those state taxes, still subject to appropriation. Sales tax money sent to the MBTA State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund would not count toward the fund. The Executive Office of Energy and Environmental Affairs could spend fund money on natural resource conservation. Public and private donations to the fund would be allowed. The state comptroller would be barred from moving fund surplus at the end of the fiscal year. State agencies, cities and towns, public charities doing conservation work, tribal governments, and other regional public entities could receive fund money. Natural resource conservation would cover protecting or restoring land for drinking water, streams, rivers, lakes, coasts, farms, forests, open-space connections, and lands of indigenous cultural significance. It would also cover creating, improving, and managing parks, trails, greenspaces, or outdoor recreation access. A 15-member Nature for All Board would be set up: five state officials and ten public members appointed by the Governor. The ten public members would have to include representatives of underserved communities and indigenous peoples, and at least one person with expertise or experience in natural resource conservation. The Executive Office could spend fund money to hire staff to manage the fund. The board would set rules on how fund money is spent. Those rules would cover alignment with environmental justice principles, access to and restoration of lands of indigenous cultural significance, promotion of affordable housing development, and other spending and bond issuance matters. The Executive Office would file an annual report with state committees on money spent to buy or improve land in cities and towns with environmental justice populations. The law would take effect on July 1, 2027.",
+          "yesMeans": "A YES vote would approve the Nature for All Fund for natural resource conservation. The fund would receive some state taxes on the sale and use of sporting goods and recreational vehicles, and on the use of golf courses.",
+          "noMeans": "A NO vote would not create this natural resource conservation fund. It would also not change how sales and use taxes are spent.",
+          "parts": [],
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+          "writtenAt": "2026-11-02T21:18:46.383Z"
+        },
+        "sentences": [
+          {
+            "field": "whatItDoes",
+            "text": "The measure would create a Nature for All Fund for natural resource conservation.",
+            "quote": "Question 6 - Natural Resource Conservation Fund\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would establish a Nature for All Fund that, subject to appropriation by the Legislature, would receive 50% of state taxes collected from the sale and use of sporting goods, recreational vehicles, and golf courses for the first year of its operation. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The fund would get 50% of state taxes from sporting goods, recreational vehicles, and golf courses in its first year.",
+            "quote": "Question 6 - Natural Resource Conservation Fund\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would establish a Nature for All Fund that, subject to appropriation by the Legislature, would receive 50% of state taxes collected from the sale and use of sporting goods, recreational vehicles, and golf courses for the first year of its operation. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The money would go to the fund only if the Legislature appropriates it.",
+            "quote": "Question 6 - Natural Resource Conservation Fund\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would establish a Nature for All Fund that, subject to appropriation by the Legislature, would receive 50% of state taxes collected from the sale and use of sporting goods, recreational vehicles, and golf courses for the first year of its operation. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Starting after July 1, 2028, the fund would get 100% of those state taxes, still subject to appropriation.",
+            "quote": "After July 1, 2028, the Nature for All Fund would begin receiving, subject to appropriation by the Legislature, 100% of state taxes collected on the sale and use of sporting goods, recreational vehicles, and golf courses. The sales tax revenue received by the Nature for All Fund would exclude sales tax revenue transferred to the Massachusetts Bay Transportation Authority State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Sales tax money sent to the MBTA State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund would not count toward the fund.",
+            "quote": "After July 1, 2028, the Nature for All Fund would begin receiving, subject to appropriation by the Legislature, 100% of state taxes collected on the sale and use of sporting goods, recreational vehicles, and golf courses. The sales tax revenue received by the Nature for All Fund would exclude sales tax revenue transferred to the Massachusetts Bay Transportation Authority State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office of Energy and Environmental Affairs could spend fund money on natural resource conservation.",
+            "quote": "The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend the money in the Nature for All Fund for natural resource conservation.\n\n\nThe proposed law would allow public and private donations to the Nature for All Fund. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Public and private donations to the fund would be allowed.",
+            "quote": "The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend the money in the Nature for All Fund for natural resource conservation.\n\n\nThe proposed law would allow public and private donations to the Nature for All Fund. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The state comptroller would be barred from moving fund surplus at the end of the fiscal year.",
+            "quote": "The proposed law would prevent the state comptroller from transferring surplus funds in the Nature for All Fund at the end of the fiscal year. It would also allow state agencies, municipalities, public charities involved in natural resource conservation, tribal governments, and other regional public entities to receive money from the Nature for All Fund.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "State agencies, cities and towns, public charities doing conservation work, tribal governments, and other regional public entities could receive fund money.",
+            "quote": "The proposed law would prevent the state comptroller from transferring surplus funds in the Nature for All Fund at the end of the fiscal year. It would also allow state agencies, municipalities, public charities involved in natural resource conservation, tribal governments, and other regional public entities to receive money from the Nature for All Fund.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Natural resource conservation would cover protecting or restoring land for drinking water, streams, rivers, lakes, coasts, farms, forests, open-space connections, and lands of indigenous cultural significance.",
+            "quote": "\n\nNatural resource conservation would include the conservation or restoration of land to protect drinking water, streams, rivers, lakes, coasts, farms, forests, connectivity between open spaces, and lands and natural resources of indigenous cultural significance. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "It would also cover creating, improving, and managing parks, trails, greenspaces, or outdoor recreation access.",
+            "quote": "Natural resource conservation would also include the creation, improvement, and management of parks, trails, greenspaces or outdoor recreation access.\n\n\nThe proposed law would establish a 15-member Nature for All Board that consists of five state officials and ten members of the public appointed by the Governor. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "A 15-member Nature for All Board would be set up: five state officials and ten public members appointed by the Governor.",
+            "quote": "Natural resource conservation would also include the creation, improvement, and management of parks, trails, greenspaces or outdoor recreation access.\n\n\nThe proposed law would establish a 15-member Nature for All Board that consists of five state officials and ten members of the public appointed by the Governor. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The ten public members would have to include representatives of underserved communities and indigenous peoples, and at least one person with expertise or experience in natural resource conservation.",
+            "quote": "The proposed law would require the ten members of the public to include representatives of underserved communities and indigenous peoples and at least one person with expertise or experience in natural resource conservation. The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend money from the Nature for All Fund to hire staff "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office could spend fund money to hire staff to manage the fund.",
+            "quote": "The proposed law would require the ten members of the public to include representatives of underserved communities and indigenous peoples and at least one person with expertise or experience in natural resource conservation. The proposed law would allow the state Executive Office of Energy and Environmental Affairs to spend money from the Nature for All Fund to hire staff to manage the fund. The proposed law would also require the Nature for All Board to establish rules about how the money in the Nature for All Fund should be spent, including rules regarding alignment with environmental justice principles, access to and restoration of lands and natural resources of indigenous cultural significance, promotion of affordable housing development, and other matters regarding spending and bond issuance.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The board would set rules on how fund money is spent.",
+            "quote": "to manage the fund. The proposed law would also require the Nature for All Board to establish rules about how the money in the Nature for All Fund should be spent, including rules regarding alignment with environmental justice principles, access to and restoration of lands and natural resources of indigenous cultural significance, promotion of affordable housing development, and other matters regarding spending and bond issuance.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Those rules would cover alignment with environmental justice principles, access to and restoration of lands of indigenous cultural significance, promotion of affordable housing development, and other spending and bond issuance matters.",
+            "quote": "to manage the fund. The proposed law would also require the Nature for All Board to establish rules about how the money in the Nature for All Fund should be spent, including rules regarding alignment with environmental justice principles, access to and restoration of lands and natural resources of indigenous cultural significance, promotion of affordable housing development, and other matters regarding spending and bond issuance.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office would file an annual report with state committees on money spent to buy or improve land in cities and towns with environmental justice populations.",
+            "quote": "\n\nThe proposed law would require the state Executive Office of Energy and Environmental Affairs to submit an annual report to various state committees regarding the funds spent to buy or improve land in cities and towns containing environmental justice populations.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The law would take effect on July 1, 2027.",
+            "quote": "\n\nThe proposed law would take effect on July 1, 2027.\n\n\n\n\nA YES VOTE\n\n would create a fund that could be utilized for natural resource conservation that would receive some state taxes collected on the sale and use of sporting goods and recreational vehicles, and the use of golf courses.\n"
+          },
+          {
+            "field": "yesMeans",
+            "text": "A YES vote would approve the Nature for All Fund for natural resource conservation.",
+            "quote": "\n\nThe proposed law would take effect on July 1, 2027.\n\n\n\n\nA YES VOTE\n\n would create a fund that could be utilized for natural resource conservation that would receive some state taxes collected on the sale and use of sporting goods and recreational vehicles, and the use of golf courses.\n"
+          },
+          {
+            "field": "yesMeans",
+            "text": "The fund would receive some state taxes on the sale and use of sporting goods and recreational vehicles, and on the use of golf courses.",
+            "quote": "\n\nThe proposed law would take effect on July 1, 2027.\n\n\n\n\nA YES VOTE\n\n would create a fund that could be utilized for natural resource conservation that would receive some state taxes collected on the sale and use of sporting goods and recreational vehicles, and the use of golf courses.\n"
+          },
+          {
+            "field": "noMeans",
+            "text": "A NO vote would not create this natural resource conservation fund.",
+            "quote": "\n\n\n\nA NO VOTE\n\n would not create this natural resource conservation fund or change how sales and use taxes are spent."
+          },
+          {
+            "field": "noMeans",
+            "text": "It would also not change how sales and use taxes are spent.",
+            "quote": "\n\n\n\nA NO VOTE\n\n would not create this natural resource conservation fund or change how sales and use taxes are spent."
+          }
+        ],
+        "writingRulesVersion": "bf73e21308120d7309335f2dc490dc2dad7357075b77cc4d734cc61b69ad51be",
+        "subjectQuote": "Question 6 - Natural Resource Conservation Fund",
+        "checked": [
+          {
+            "field": "whatItDoes",
+            "text": "The measure would create a Nature for All Fund for natural resource conservation.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The fund would get 50% of state taxes from sporting goods, recreational vehicles, and golf courses in its first year.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The money would go to the fund only if the Legislature appropriates it.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Starting after July 1, 2028, the fund would get 100% of those state taxes, still subject to appropriation.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Sales tax money sent to the MBTA State and Local Contribution Fund and the School Modernization and Reconstruction Trust Fund would not count toward the fund.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office of Energy and Environmental Affairs could spend fund money on natural resource conservation.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Public and private donations to the fund would be allowed.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The state comptroller would be barred from moving fund surplus at the end of the fiscal year.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "State agencies, cities and towns, public charities doing conservation work, tribal governments, and other regional public entities could receive fund money.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Natural resource conservation would cover protecting or restoring land for drinking water, streams, rivers, lakes, coasts, farms, forests, open-space connections, and lands of indigenous cultural significance.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "It would also cover creating, improving, and managing parks, trails, greenspaces, or outdoor recreation access.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "A 15-member Nature for All Board would be set up: five state officials and ten public members appointed by the Governor.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The ten public members would have to include representatives of underserved communities and indigenous peoples, and at least one person with expertise or experience in natural resource conservation.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office could spend fund money to hire staff to manage the fund.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The board would set rules on how fund money is spent.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "Those rules would cover alignment with environmental justice principles, access to and restoration of lands of indigenous cultural significance, promotion of affordable housing development, and other spending and bond issuance matters.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The Executive Office would file an annual report with state committees on money spent to buy or improve land in cities and towns with environmental justice populations.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The law would take effect on July 1, 2027.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "yesMeans",
+            "text": "A YES vote would approve the Nature for All Fund for natural resource conservation.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "yesMeans",
+            "text": "The fund would receive some state taxes on the sale and use of sporting goods and recreational vehicles, and on the use of golf courses.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "noMeans",
+            "text": "A NO vote would not create this natural resource conservation fund.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "noMeans",
+            "text": "It would also not change how sales and use taxes are spent.",
+            "supported": true,
+            "reason": ""
+          }
+        ],
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/f66e929e16c52a563525f3558938d1c8fe0c3ad3c4689a88934ea1f51dad485a",
+          "rawHash": "f66e929e16c52a563525f3558938d1c8fe0c3ad3c4689a88934ea1f51dad485a",
+          "byteLength": 3655
+        }
+      },
+      {
+        "id": "translation:ma-2026-11-03:question-3",
+        "kind": "MEASURE",
+        "subjectId": "ma-2026-11-03:question-3",
+        "ocdId": "ocd-division/country:us/state:ma",
+        "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+        "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+        "sourceText": "Question 3 - State Primary Elections\nQuestion 3 - State Primary Elections\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would eliminate political party primaries for state elections and instead establish a system where there would be a single, all-party primary in which all candidates, regardless of their party affiliation, would be listed on one ballot, and voters could vote for any candidate on the ballot. \nThe two candidates receiving the most votes in the primary would advance to the general election ballot.\n\n\nThis proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.\n\n\nThis proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.\n\n\n\n\n\nA YES VOTE\n\n would eliminate separate party primaries for state elections and require a single primary in which all candidates appear on one ballot, voters could vote for any candidate, and the top two candidates would advance to the general election.\n\n\n\n\n\nA NO VOTE\n\n would make no change to the laws governing primary elections.",
+        "sourceTextHash": "8d1c40b1320ce20d6c927afbc6042750ab1bae8f47dbd60ec2f0c8bebbc93e25",
+        "retrievedAt": "2026-11-02T21:12:59.624744+00:00",
+        "writtenAt": "2026-11-02T21:18:28.550Z",
+        "writerModel": "claude-haiku-5-5",
+        "checkerModel": "claude-sonnet-5-5",
+        "playbookVersion": "1e216c95b85f918f66a358ad853c43ea4f7600a58a6151fa40d03b7df3529e97",
+        "measure": {
+          "contestId": "ma-2026-11-03:question-3",
+          "whatItDoes": "This proposed law would eliminate political party primaries for state elections and instead establish a system where there would be a single, all-party primary in which all candidates, regardless of their party affiliation, would be listed on one ballot, and voters could vote for any candidate on the ballot. The two candidates receiving the most votes in the primary would advance to the general election ballot. This proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary. This proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.",
+          "yesMeans": "would eliminate separate party primaries for state elections and require a single primary in which all candidates appear on one ballot, voters could vote for any candidate, and the top two candidates would advance to the general election.",
+          "noMeans": "would make no change to the laws governing primary elections.",
+          "parts": [],
+          "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+          "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+          "writtenAt": "2026-11-02T21:18:28.550Z"
+        },
+        "sentences": [
+          {
+            "field": "whatItDoes",
+            "text": "This proposed law would eliminate political party primaries for state elections and instead establish a system where there would be a single, all-party primary in which all candidates, regardless of their party affiliation, would be listed on one ballot, and voters could vote for any candidate on the ballot.",
+            "quote": "Question 3 - State Primary Elections\t\t\t\t\t\t\n\n\t\t\t\t\n\t\t\n\n\n\n\t    \n\n\n\t\n\n    \t\t\n\n  \n\n    \t\t\nDo you approve of a law summarized below, on which no vote was taken by the Senate or the House of Representatives before May 6, 2026?\n\n\nSUMMARY\n\n\nThis proposed law would eliminate political party primaries for state elections and instead establish a system where there would be a single, all-party primary in which all candidates, regardless of their party affiliation, would be listed on one ballot, and voters could vote for any candidate on the ballot. "
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The two candidates receiving the most votes in the primary would advance to the general election ballot.",
+            "quote": "The two candidates receiving the most votes in the primary would advance to the general election ballot.\n\n\nThis proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.\n\n\nThis proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "This proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.",
+            "quote": "The two candidates receiving the most votes in the primary would advance to the general election ballot.\n\n\nThis proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.\n\n\nThis proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.\n"
+          },
+          {
+            "field": "whatItDoes",
+            "text": "This proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.",
+            "quote": "The two candidates receiving the most votes in the primary would advance to the general election ballot.\n\n\nThis proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.\n\n\nThis proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.\n"
+          },
+          {
+            "field": "yesMeans",
+            "text": "would eliminate separate party primaries for state elections and require a single primary in which all candidates appear on one ballot, voters could vote for any candidate, and the top two candidates would advance to the general election.",
+            "quote": "\n\n\n\nA YES VOTE\n\n would eliminate separate party primaries for state elections and require a single primary in which all candidates appear on one ballot, voters could vote for any candidate, and the top two candidates would advance to the general election.\n"
+          },
+          {
+            "field": "noMeans",
+            "text": "would make no change to the laws governing primary elections.",
+            "quote": "\n\n\n\nA NO VOTE\n\n would make no change to the laws governing primary elections."
+          }
+        ],
+        "writingRulesVersion": "bf73e21308120d7309335f2dc490dc2dad7357075b77cc4d734cc61b69ad51be",
+        "subjectQuote": "Question 3 - State Primary Elections",
+        "checked": [
+          {
+            "field": "whatItDoes",
+            "text": "This proposed law would eliminate political party primaries for state elections and instead establish a system where there would be a single, all-party primary in which all candidates, regardless of their party affiliation, would be listed on one ballot, and voters could vote for any candidate on the ballot.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "The two candidates receiving the most votes in the primary would advance to the general election ballot.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "This proposed law would require candidates for governor and lieutenant governor to run and be listed jointly on the ballot in the primary.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "whatItDoes",
+            "text": "This proposed law would provide political party status to any group whose candidates for any statewide office received at least 3% of the ballots cast in the state primary.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "yesMeans",
+            "text": "would eliminate separate party primaries for state elections and require a single primary in which all candidates appear on one ballot, voters could vote for any candidate, and the top two candidates would advance to the general election.",
+            "supported": true,
+            "reason": ""
+          },
+          {
+            "field": "noMeans",
+            "text": "would make no change to the laws governing primary elections.",
+            "supported": true,
+            "reason": ""
+          }
+        ],
+        "sourceCapture": {
+          "vaultKey": "project/freshness/raw/sha256/b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd",
+          "rawHash": "b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd",
+          "byteLength": 1296
+        }
+      }
+    ]
+  }
+}

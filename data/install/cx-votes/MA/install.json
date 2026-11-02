@@ -1,0 +1,78 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "division": "ocd-division/country:us/state:ma",
+  "contractId": "plain-english-translations",
+  "package": "plain-english-translations.json",
+  "subjects": [
+    {
+      "id": "ma-2026-11-03:question-7",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614"
+    },
+    {
+      "id": "ma-2026-11-03:question-6",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614"
+    },
+    {
+      "id": "ma-2026-11-03:question-3",
+      "sourceUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceHash": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614"
+    }
+  ],
+  "vaultObjects": [
+    {
+      "key": "project/freshness/raw/sha256/075441495ae4cedddbfd252ce447cf432248a122990d0d9b694877e8c0097aa8",
+      "file": "sources/075441495ae4cedddbfd252ce447cf432248a122990d0d9b694877e8c0097aa8.txt",
+      "meta": {
+        "contentType": "application/octet-stream",
+        "contentHash": "sha256-075441495ae4cedddbfd252ce447cf432248a122990d0d9b694877e8c0097aa8",
+        "byteLength": 1249,
+        "objectClass": "IMMUTABLE_BODY"
+      }
+    },
+    {
+      "key": "project/freshness/raw/sha256/f66e929e16c52a563525f3558938d1c8fe0c3ad3c4689a88934ea1f51dad485a",
+      "file": "sources/f66e929e16c52a563525f3558938d1c8fe0c3ad3c4689a88934ea1f51dad485a.txt",
+      "meta": {
+        "contentType": "application/octet-stream",
+        "contentHash": "sha256-f66e929e16c52a563525f3558938d1c8fe0c3ad3c4689a88934ea1f51dad485a",
+        "byteLength": 3655,
+        "objectClass": "IMMUTABLE_BODY"
+      }
+    },
+    {
+      "key": "project/freshness/raw/sha256/b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd",
+      "file": "sources/b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd.txt",
+      "meta": {
+        "contentType": "application/octet-stream",
+        "contentHash": "sha256-b108b00794889a2abfb34920d50467cdaf25b0c653749fa7c8ffb49eacbe56dd",
+        "byteLength": 1296,
+        "objectClass": "IMMUTABLE_BODY"
+      }
+    }
+  ],
+  "originalSources": [
+    {
+      "url": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "file": "sources/7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614.source",
+      "sha256": "7a18983ec5fafdc5ee7e171502f2eafff19aa9df10106bd13bc90d15b75ed614",
+      "byteLength": 89981,
+      "retrievedAt": "2026-11-02T21:12:59.624744+00:00"
+    }
+  ],
+  "installOrder": [
+    "Upload vaultObjects through the existing evidence store, verifying each saved hash.",
+    "Stage the package outside the repository and use scripts/promote-manual-civic-projection.mts --contract=plain-english-translations --package=<staged absolute path>.",
+    "Check all subjects on the live ballot and their Sources sections."
+  ],
+  "validation": {
+    "translationRecordIssue": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "withMeasureTranslations": "PASS: 3 exact current contest attachments"
+  },
+  "productionWritesByThisBundle": false
+}

@@ -1,0 +1,26 @@
+{
+  "n": 176,
+  "branch": "release/176",
+  "head_sha": "cfffd405211a80fccdacebe88ac7cf6fc0b97443",
+  "base_river_sha": "936ab7a6d7a7e55c618b443c00af9ba0533cfedd",
+  "main_sha": "a8ffb2dca4ea62f9d577c4a68acc42019d3e1853",
+  "lanes": [
+    {
+      "lane": "river-174",
+      "steps": [
+        "RL-174"
+      ],
+      "ready_sha": "04fc8748b1890f43473c4ca0c6c6e7f403c93b5f",
+      "result_sha": "a87998197399f358106cc9522527a6946b3f9064"
+    }
+  ],
+  "steps": [
+    "RL-174"
+  ],
+  "pr": {
+    "number": 895,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/895"
+  },
+  "ci": "running",
+  "at": "2026-11-02T22:48:13Z"
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "contestId": "pa-lehigh-2026-general:city-of-allentown-referendum",
+    "firstSourcePage": 1,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nAllentown 1st Ward \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0001 Spl:01",
+    "questionHeadingQuote": "City of Allentown Referendum",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:hanover-township-referendum",
+    "firstSourcePage": 88,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nHanover \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0088 Spl:01",
+    "questionHeadingQuote": "Hanover Township Referendum",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-1",
+    "firstSourcePage": 1,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nAllentown 1st Ward \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0001 Spl:01",
+    "questionHeadingQuote": "Lehigh County Referendum 1",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-2",
+    "firstSourcePage": 1,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nAllentown 1st Ward \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0001 Spl:01",
+    "questionHeadingQuote": "Lehigh County Referendum 2",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-3",
+    "firstSourcePage": 1,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nAllentown 1st Ward \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0001 Spl:01",
+    "questionHeadingQuote": "Lehigh County Referendum 3",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:north-whitehall-township-referendum",
+    "firstSourcePage": 105,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nNorth Whitehall 1st District \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0105 Spl:01",
+    "questionHeadingQuote": "North Whitehall Township Referendum",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:whitehall-township-referendum",
+    "firstSourcePage": 147,
+    "officialBallotPageHeaderQuote": "OFFICIAL BALLOT BOLETA OFICIAL \n\nWhitehall 1st District \n\n## LEHIGH COUNTY, PENNSYLVANIA CONDADO DE LEHIGH, PENNSYLVANIA GENERAL ELECTION, NOVEMBER 3, 2026 ELECCIONES GENERALES, 3 DE NOVIEMBRE DE 2026 Typ:01 Seq:0147 Spl:01",
+    "questionHeadingQuote": "Whitehall Township Referendum",
+    "sourceTextSha256": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9"
+  }
+]

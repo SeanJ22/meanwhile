@@ -1,0 +1,537 @@
+[
+  {
+    "id": "pa-lehigh-2026-general:city-of-allentown-referendum",
+    "contestId": "pa-lehigh-2026-general:city-of-allentown-referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:allentown_city",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/9e5633c720e03ae5886740337737bc1818a1f197b2e2552306c7873aa7e3c66d.txt",
+    "excerptSha256": "9e5633c720e03ae5886740337737bc1818a1f197b2e2552306c7873aa7e3c66d",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "City of Allentown Referendum",
+    "questionText": "Do you favor amending the City of Allentown Public Health Code by adding a new chapter titled \"Paid Sick Leave Act?\" Such an addition would require businesses to provide paid sick time to employees.",
+    "officialStatement": null,
+    "measureRecordSourceHash": "a4e1ea19e87abc08a6e259ebf8c26bbb50878310b66511dbf7010cd120f16b25",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "Do you favor amending the City of Allentown Public Health Code by adding a new chapter titled \"Paid Sick Leave Act?\" Such an addition would require businesses to provide paid sick time to employees."
+      ],
+      "yesMeans": [
+        "Such an addition would require businesses to provide paid sick time to employees."
+      ],
+      "noMeans": [
+        "Do you favor amending the City of Allentown Public Health Code by adding a new chapter titled \"Paid Sick Leave Act?\" Such an addition would require businesses to provide paid sick time to employees."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Adds a Paid Sick Leave Act chapter to Allentown’s Public Health Code, requiring businesses to provide employees with paid sick time.",
+        "quote": "Do you favor amending the City of Allentown Public Health Code by adding a new chapter titled \"Paid Sick Leave Act?\" Such an addition would require businesses to provide paid sick time to employees."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the code amendment requiring businesses to provide employees with paid sick time.",
+        "quote": "Such an addition would require businesses to provide paid sick time to employees."
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject the proposed paid-sick-time requirement in the Public Health Code.",
+        "quote": "Do you favor amending the City of Allentown Public Health Code by adding a new chapter titled \"Paid Sick Leave Act?\" Such an addition would require businesses to provide paid sick time to employees."
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "City of Allentown Public Health Code; new Paid Sick Leave Act chapter",
+        "quote": "amending the City of Allentown Public Health Code by adding a new chapter titled \"Paid Sick Leave Act?\""
+      },
+      {
+        "condition": "Businesses must provide employees paid sick time",
+        "quote": "Such an addition would require businesses to provide paid sick time to employees."
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 1,
+    "matchingQuestionOccurrences": 55,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "id": "pa-lehigh-2026-general:hanover-township-referendum",
+    "contestId": "pa-lehigh-2026-general:hanover-township-referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:hanover_township",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/e6db56414e797058750b7aedda54277baed2ab2c057d48c2f1d9f8ad083bc542.txt",
+    "excerptSha256": "e6db56414e797058750b7aedda54277baed2ab2c057d48c2f1d9f8ad083bc542",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "Hanover Township Referendum",
+    "questionText": "Shall Section 3.10 of the Hanover Township Home Rule Charter be amended to allow Council Members to participate remotely in meetings and count toward a quorum and vote?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "57823d4ce2a5f146399f7216f364976f099a2912f7f4067ce7abf61a467418d8",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 3.10 of the Hanover Township Home Rule Charter be amended to allow Council Members to participate remotely in meetings and count toward a quorum and vote?"
+      ],
+      "yesMeans": [
+        "allow Council Members to participate remotely in meetings and count toward a quorum and vote?"
+      ],
+      "noMeans": [
+        "Shall Section 3.10 of the Hanover Township Home Rule Charter be amended to allow Council Members to participate remotely in meetings and count toward a quorum and vote?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes Section 3.10 of Hanover Township’s Home Rule Charter so Council members can join meetings remotely, count toward the minimum attendance needed to conduct Council business, and vote.",
+        "quote": "Shall Section 3.10 of the Hanover Township Home Rule Charter be amended to allow Council Members to participate remotely in meetings and count toward a quorum and vote?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Allow Council members to join meetings remotely, count toward the minimum attendance needed to conduct Council business, and vote.",
+        "quote": "allow Council Members to participate remotely in meetings and count toward a quorum and vote?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed charter change for remote Council participation, attendance and voting.",
+        "quote": "Shall Section 3.10 of the Hanover Township Home Rule Charter be amended to allow Council Members to participate remotely in meetings and count toward a quorum and vote?"
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "Section 3.10 of Hanover Township Home Rule Charter",
+        "quote": "Section 3.10 of the Hanover Township Home Rule Charter"
+      },
+      {
+        "condition": "Council members participate remotely in meetings",
+        "quote": "allow Council Members to participate remotely in meetings"
+      },
+      {
+        "condition": "Remote members count toward quorum and can vote",
+        "quote": "count toward a quorum and vote"
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 88,
+    "matchingQuestionOccurrences": 1,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "id": "pa-lehigh-2026-general:lehigh-county-referendum-1",
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-1",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/5ce94aa0c371ad76c30e5fc232d80d5c828ad962ffa08ea0a33678667ac54cae.txt",
+    "excerptSha256": "5ce94aa0c371ad76c30e5fc232d80d5c828ad962ffa08ea0a33678667ac54cae",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "Lehigh County Referendum 1",
+    "questionText": "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members, consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent), and to revise the appointment process to provide residents the opportunity to apply for the Commission?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "93c4a085c2da62a241941d9fa3a199e82fd2bc4f643f8965b17f1bafe5e7969f",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members",
+        "consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent)",
+        "and to revise the appointment process to provide residents the opportunity to apply for the Commission?"
+      ],
+      "yesMeans": [
+        "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members, consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent), and to revise the appointment process to provide residents the opportunity to apply for the Commission?"
+      ],
+      "noMeans": [
+        "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members, consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent), and to revise the appointment process to provide residents the opportunity to apply for the Commission?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes the county’s Home Rule Charter to increase the Election and Registration Commission from 3 voting members to 5.",
+        "quote": "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "There would be 2 members from each of the county’s two largest political affiliations and 1 from the third largest, including people with no political affiliation or an independent affiliation.",
+        "quote": "consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent)"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The appointment process would also change to give residents a chance to apply to serve on the commission.",
+        "quote": "and to revise the appointment process to provide residents the opportunity to apply for the Commission?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the five-member commission with the political-affiliation seats described above and a chance for residents to apply.",
+        "quote": "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members, consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent), and to revise the appointment process to provide residents the opportunity to apply for the Commission?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject these proposed changes to the commission’s membership and appointment process.",
+        "quote": "Shall the Lehigh County Home Rule Charter be amended to expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members, consisting of 2 members from each of the two largest political affiliations in the County, and 1 member from the third largest political affiliation (inclusive of non-affiliated/independent), and to revise the appointment process to provide residents the opportunity to apply for the Commission?"
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "Lehigh County Home Rule Charter",
+        "quote": "Lehigh County Home Rule Charter"
+      },
+      {
+        "condition": "Election and Registration Commission voting membership expands 3 to 5",
+        "quote": "expand the membership of the Election and Registration Commission from 3 voting members to 5 voting members"
+      },
+      {
+        "condition": "2 members each from county’s two largest political affiliations",
+        "quote": "2 members from each of the two largest political affiliations in the County"
+      },
+      {
+        "condition": "1 member from third largest affiliation; non-affiliated/independent included",
+        "quote": "1 member from the third largest political affiliation (inclusive of non-affiliated/independent)"
+      },
+      {
+        "condition": "Appointment process revised; residents can apply",
+        "quote": "revise the appointment process to provide residents the opportunity to apply for the Commission"
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 1,
+    "matchingQuestionOccurrences": 158,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "id": "pa-lehigh-2026-general:lehigh-county-referendum-2",
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-2",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/5a95f10033c9314d293f93dd0f54853d66b07811bcb629b8a9100f90ed0aadb9.txt",
+    "excerptSha256": "5a95f10033c9314d293f93dd0f54853d66b07811bcb629b8a9100f90ed0aadb9",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "Lehigh County Referendum 2",
+    "questionText": "Shall multiple sections of the Lehigh County Home Rule Charter be amended to allow the County to publish notices in at least one newspaper of general circulation instead of the currently required two newspapers?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "2a9ec6ac1c8244b2f8ea736dc005ec6bee9000beccb72e8ba97312a2c07db9c2",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "Shall multiple sections of the Lehigh County Home Rule Charter be amended to allow the County to publish notices in at least one newspaper of general circulation instead of the currently required two newspapers?"
+      ],
+      "yesMeans": [
+        "allow the County to publish notices in at least one newspaper of general circulation instead of the currently required two newspapers?"
+      ],
+      "noMeans": [
+        "instead of the currently required two newspapers?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes multiple sections of the county’s Home Rule Charter so the county could publish notices in at least one newspaper of general circulation instead of the two newspapers now required.",
+        "quote": "Shall multiple sections of the Lehigh County Home Rule Charter be amended to allow the County to publish notices in at least one newspaper of general circulation instead of the currently required two newspapers?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Allow the county to meet this newspaper notice requirement by publishing in at least one newspaper of general circulation.",
+        "quote": "allow the County to publish notices in at least one newspaper of general circulation instead of the currently required two newspapers?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this change to the current requirement for publication in two newspapers.",
+        "quote": "instead of the currently required two newspapers?"
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "Multiple sections of county Home Rule Charter amended",
+        "quote": "multiple sections of the Lehigh County Home Rule Charter be amended"
+      },
+      {
+        "condition": "County notices: at least one newspaper of general circulation",
+        "quote": "allow the County to publish notices in at least one newspaper of general circulation"
+      },
+      {
+        "condition": "Current minimum is two newspapers",
+        "quote": "instead of the currently required two newspapers"
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 1,
+    "matchingQuestionOccurrences": 158,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "id": "pa-lehigh-2026-general:lehigh-county-referendum-3",
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-3",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/851fbd0abd801c04d0647f856a363e9994ca8eb9d3409b074452bc68dc9b06e1.txt",
+    "excerptSha256": "851fbd0abd801c04d0647f856a363e9994ca8eb9d3409b074452bc68dc9b06e1",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "Lehigh County Referendum 3",
+    "questionText": "Shall Section 606 of the Lehigh County Home Rule Charter be amended to eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board, and replace the Chair with another member of the Board of Commissioners?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "e71fdcda59b4a3648f5a24884088517c8c68382bd57489764928bf3ba6e87776",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 606 of the Lehigh County Home Rule Charter be amended to eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board",
+        "and replace the Chair with another member of the Board of Commissioners?"
+      ],
+      "yesMeans": [
+        "eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board, and replace the Chair with another member of the Board of Commissioners?"
+      ],
+      "noMeans": [
+        "eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board, and replace the Chair with another member of the Board of Commissioners?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes Section 606 of the county’s Home Rule Charter so the chair of the Board of Commissioners would no longer be required to serve on the county Retirement Board.",
+        "quote": "Shall Section 606 of the Lehigh County Home Rule Charter be amended to eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Another member of the Board of Commissioners would take the chair’s place on the Retirement Board.",
+        "quote": "and replace the Chair with another member of the Board of Commissioners?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve replacing the commissioners’ chair on the Retirement Board with another commissioner.",
+        "quote": "eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board, and replace the Chair with another member of the Board of Commissioners?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed change to the Retirement Board seat held by the commissioners’ chair.",
+        "quote": "eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board, and replace the Chair with another member of the Board of Commissioners?"
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "Section 606 of county Home Rule Charter",
+        "quote": "Section 606 of the Lehigh County Home Rule Charter"
+      },
+      {
+        "condition": "Commissioners’ chair no longer required to serve on county Retirement Board",
+        "quote": "eliminate the requirement that the Chair of the Board of Commissioners serve on the Lehigh County Retirement Board"
+      },
+      {
+        "condition": "Replacement must be another Board of Commissioners member",
+        "quote": "replace the Chair with another member of the Board of Commissioners"
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 1,
+    "matchingQuestionOccurrences": 158,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "id": "pa-lehigh-2026-general:north-whitehall-township-referendum",
+    "contestId": "pa-lehigh-2026-general:north-whitehall-township-referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:north_whitehall_township",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/4e6e230f76b4f4cbb5f5d9659acbb33be5bf6cc6d79478c3c2154156d5e714be.txt",
+    "excerptSha256": "4e6e230f76b4f4cbb5f5d9659acbb33be5bf6cc6d79478c3c2154156d5e714be",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "North Whitehall Township Referendum",
+    "questionText": "Do you favor the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township to be used to finance the acquisition of interests in real property to preserve open space?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "8944b9c4bb39440868d89a177e4ca3f5abc37f3e2446dc13d18b5ad842d54286",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township",
+        "to be used to finance the acquisition of interests in real property to preserve open space?"
+      ],
+      "yesMeans": [
+        "Do you favor the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township to be used to finance the acquisition of interests in real property to preserve open space?"
+      ],
+      "noMeans": [
+        "Do you favor the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township to be used to finance the acquisition of interests in real property to preserve open space?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Adds a 0.15% earned income tax in North Whitehall Township.",
+        "quote": "the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The money would pay to acquire property rights to preserve open space.",
+        "quote": "to be used to finance the acquisition of interests in real property to preserve open space?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the additional 0.15% earned income tax to acquire property rights for open-space preservation.",
+        "quote": "Do you favor the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township to be used to finance the acquisition of interests in real property to preserve open space?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject the additional 0.15% earned income tax for this purpose.",
+        "quote": "Do you favor the imposition of an additional earned income tax at the rate of 0.15% by North Whitehall Township to be used to finance the acquisition of interests in real property to preserve open space?"
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "Additional earned income tax; 0.15% rate",
+        "quote": "an additional earned income tax at the rate of 0.15%"
+      },
+      {
+        "condition": "North Whitehall Township imposes tax",
+        "quote": "by North Whitehall Township"
+      },
+      {
+        "condition": "Finance acquisition of interests in real property to preserve open space",
+        "quote": "to be used to finance the acquisition of interests in real property to preserve open space"
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 105,
+    "matchingQuestionOccurrences": 6,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  },
+  {
+    "id": "pa-lehigh-2026-general:whitehall-township-referendum",
+    "contestId": "pa-lehigh-2026-general:whitehall-township-referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:whitehall_township",
+    "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d",
+    "sourceFile": "sources/95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9.source-text",
+    "sourceHash": "95700957fc2af4733ef7d40f2ccf9874bf4aef8cc36c3498d94d95be4e873ac9",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceHashScope": "Complete saved deterministic-reader extraction of official PDF, not original PDF bytes.",
+    "excerptFile": "sources/7e3fd0eaefb06927c328ffc3c80c441128ded887bca7580e64ef5aea4922f0d5.txt",
+    "excerptSha256": "7e3fd0eaefb06927c328ffc3c80c441128ded887bca7580e64ef5aea4922f0d5",
+    "sourceCheckedAt": "2026-11-02T22:44:14.957719+00:00",
+    "subjectQuote": "Whitehall Township Referendum",
+    "questionText": "Do you favor eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term and having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?",
+    "officialStatement": null,
+    "measureRecordSourceHash": "aeda201700a4e8db788fde540ad9a660c5e0bb33a2403df4f7ea7a8e25594ea9",
+    "measureRecordSourceHashKind": "HELD_TEXT",
+    "measureRecordHashFormula": "sha256(exact questionText + '\\n' + (officialStatement ?? ''))",
+    "fields": {
+      "whatItDoes": [
+        "eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term",
+        "having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?"
+      ],
+      "yesMeans": [
+        "Do you favor eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term and having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?"
+      ],
+      "noMeans": [
+        "Do you favor eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term and having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Ends Whitehall Township’s elected Treasurer position when the current Treasurer’s term ends.",
+        "quote": "eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The mayor would appoint a Finance Director to perform both the Treasurer’s and Tax Collector’s duties.",
+        "quote": "having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve ending the elected Treasurer position after the current term and having a mayor-appointed Finance Director take over the Treasurer’s and Tax Collector’s duties.",
+        "quote": "Do you favor eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term and having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject the proposed elimination of the elected Treasurer position and transfer of the Treasurer’s and Tax Collector’s duties to an appointed Finance Director.",
+        "quote": "Do you favor eliminating Whitehall Township’s elected Treasurer position at the end of the current Treasurer’s term and having the mayor appoint a Finance Director to handle the Treasurer’s and Tax Collector’s duties?"
+      }
+    ],
+    "materialConditions": [
+      {
+        "condition": "Whitehall elected Treasurer position eliminated",
+        "quote": "eliminating Whitehall Township’s elected Treasurer position"
+      },
+      {
+        "condition": "Effective at end of current Treasurer’s term",
+        "quote": "at the end of the current Treasurer’s term"
+      },
+      {
+        "condition": "Mayor appoints a Finance Director",
+        "quote": "having the mayor appoint a Finance Director"
+      },
+      {
+        "condition": "Finance Director handles both Treasurer and Tax Collector duties",
+        "quote": "to handle the Treasurer’s and Tax Collector’s duties"
+      }
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "sourcePage": 147,
+    "matchingQuestionOccurrences": 12,
+    "reviewStatus": "DRAFT_FOR_INDEPENDENT_PEER_REVIEW",
+    "voteMeaningBasis": "YES approves the proposal printed as a ballot question; NO rejects that proposal. No additional consequence of rejection is inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+      "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+      "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574"
+    }
+  }
+]

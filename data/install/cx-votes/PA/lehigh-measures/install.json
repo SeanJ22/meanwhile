@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "PA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:PA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve independently installed races and explanations.",
+  "subjects": [
+    {
+      "id": "pa-lehigh-2026-general:city-of-allentown-referendum",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:allentown_city",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-lehigh-2026-general:hanover-township-referendum",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:hanover_township",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-lehigh-2026-general:lehigh-county-referendum-1",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-lehigh-2026-general:lehigh-county-referendum-2",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-lehigh-2026-general:lehigh-county-referendum-3",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-lehigh-2026-general:north-whitehall-township-referendum",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:north_whitehall_township",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    },
+    {
+      "id": "pa-lehigh-2026-general:whitehall-township-referendum",
+      "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:whitehall_township",
+      "sourceUrl": "https://www.lehighcounty.org/Portals/0/PDF/Voter/Sample_PALehigh261103General.pdf?ver=4QNrhFrRTwUM9oXHia3oZQ%3d%3d"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 7,
+    "newPlainLanguageExplanations": 7,
+    "scope": "Lehigh County, Allentown, Hanover Township, North Whitehall Township and Whitehall Township"
+  },
+  "validation": {
+    "sourceHashesAndExactQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "independentSemanticReview": "PASS",
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderExplanationsAndJurisdictions": "PASS",
+    "allPriorBallotFacts": "UNCHANGED"
+  },
+  "sourceFormat": "Full official PDF extraction is CAPTURED_SOURCE_TEXT; each explanation is separately hashed as HELD_TEXT of its exact official question.",
+  "nextOwner": "River: install as data and verify all seven ballot questions, explanations and official links live."
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "contestId": "pa-lehigh-2026-general:city-of-allentown-referendum",
+    "publishedHeading": "City of Allentown Referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:allentown_city",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1577,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh/place:allentown_city",
+      "cousub",
+      "4207702000",
+      "Allentown city"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 1
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:hanover-township-referendum",
+    "publishedHeading": "Hanover Township Referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:hanover_township",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1584,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh/place:hanover_township",
+      "cousub",
+      "4207732400",
+      "Hanover township"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 88
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-1",
+    "publishedHeading": "Lehigh County Referendum 1",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1575,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh",
+      "county",
+      "42077",
+      "Lehigh County"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 1
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-2",
+    "publishedHeading": "Lehigh County Referendum 2",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1575,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh",
+      "county",
+      "42077",
+      "Lehigh County"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 1
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-3",
+    "publishedHeading": "Lehigh County Referendum 3",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1575,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh",
+      "county",
+      "42077",
+      "Lehigh County"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 1
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:north-whitehall-township-referendum",
+    "publishedHeading": "North Whitehall Township Referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:north_whitehall_township",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1591,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh/place:north_whitehall_township",
+      "cousub",
+      "4207755576",
+      "North Whitehall township"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 105
+  },
+  {
+    "contestId": "pa-lehigh-2026-general:whitehall-township-referendum",
+    "publishedHeading": "Whitehall Township Referendum",
+    "ocdId": "ocd-division/country:us/state:pa/county:lehigh/place:whitehall_township",
+    "divisionVintage": "2023",
+    "knownRegistryRowIndex": 1600,
+    "knownRegistryRow": [
+      "ocd-division/country:us/state:pa/county:lehigh/place:whitehall_township",
+      "cousub",
+      "4207784528",
+      "Whitehall township"
+    ],
+    "knownRegistryPath": "repository:data/derived/registration/pa.json",
+    "knownRegistrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "knownRegistrySourceIndexPath": "repository:data/derived/registration/index.json",
+    "knownRegistrySourceIndexSha256": "613d18db957a547f26085537c05a1d330036923f707fe92ebd263ae9a8d786cb",
+    "knownRegistrySourceDeclaration": "Divisions: the 2023 Census cartographic-boundary layers (ids from scripts/lib/national-division-ids.mts). Governments: data/reference/census_govt_units_2022.csv (sha256 7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097) and data/reference/census_govt_units_2022_dependent_school_systems.csv (sha256 899627179e139458b1e5d7f4d81732455bf86a8aa43f43a84ed9a504f8c4681a), the 2022 Census of Governments; for the territories, which it does not enumerate, data/reference/census_tiger_2023_territory_functional_status.csv (sha256 6da303e89c501d8b8e206aa9ef2c980c7ee9aee2454f3de94317ba785640fbb3), TIGER/Line 2023 functional status.",
+    "bindingBasis": "Exact existing Census-derived county/county-subdivision name and GEOID match in the held Pennsylvania registration data. Official Lehigh County ballot heading identifies the same jurisdiction; the county packet prevents confusion with Hanover Township in other counties.",
+    "sourceQuestionPage": 147
+  }
+]

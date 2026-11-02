@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-02T23:11:57.444249+00:00",
+  "preparedAt": "2026-11-02T23:37:13.417778+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -222,9 +222,9 @@
           "kind": "CX_VOTES_VOTING_DATA_INSTALL",
           "contractId": "voting-sites:MA",
           "coverage": {
-            "physicalSites": 164,
+            "physicalSites": 168,
             "precinctRows": 275,
-            "preparedBoundaries": 0,
+            "preparedBoundaries": 275,
             "scope": "Boston only"
           }
         }

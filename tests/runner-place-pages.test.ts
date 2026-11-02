@@ -11,7 +11,7 @@ import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV, JOB_SLOWED_WORDS, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
 import { JobRunBook } from "../lib/control-plane/job-runs.ts";
-import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, reportingWorkerSlots, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
   rebuildPlacePageTurn } from "../lib/reader/place-page-worker.ts";
@@ -211,14 +211,14 @@ test("a place-page turn reserves its measured peak on the shared host memory", a
   await assert.rejects(reserve(WORKER_MEMORY_HEADROOM_MIB + 836), /WORKER_MEMORY_DEADLINE/, "a turn waits rather than starving other workers");
 });
 
-test("a pending restart drains the members, slice and page-reader children, and a drained exit 0 is a finish, not a stop", async () => {
-  for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["slices", "runSliceLane", /Slices stopped/], ["parser-lane", "runParserLane", /page readers stopped/]] as const) {
+test("a pending restart drains the standing lane children, and a drained exit 0 is a finish, not a stop", async () => {
+  for (const [lane, run, stopped] of [["legistar-members", "runMemberLane", /Legistar members stopped/], ["slices", "runSliceLane", /Slices stopped/], ["parser-lane", "runParserLane", /page readers stopped/], ["platform-census", "runPlatformCensus", /Platform census stopped/]] as const) {
     for (const status of [0, null]) {
       const sent: unknown[] = [];
       const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, pendingRestart: new PendingRestart(), jobLaunchAllowed: () => true,
         standingRuntimeScheduler: { inFlightIds: () => [lane] }, researchCycleActive: false, drainHunterLane: () => {}, console: { log: () => {}, error: () => {} }, process,
         SLICE_JOB: { id: "slices", databaseBytesPerRun: 1 }, LEGISTAR_MEMBER_DATABASE_BYTES: 1, PARSER_LANE_DATABASE_BYTES: 1, TS_CHILD: [], CODE_ROOT: process.cwd(),
-        RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true,
+        RUNTIME_NO_PROGRESS_MS: 1, withPassDeadline, standingChildEnvironment: () => ({}), AUTO_RELEASE_HANDOFF: true, censusMemory: { acquire: async () => () => {} },
         runRuntimeChildren: async (_commands: unknown, options: { onStarted(id: string, child: unknown): void }) => {
           options.onStarted(lane, { connected: true, send: (message: unknown) => { sent.push(message); } });
           runInContext(`holdForRestart("${"c".repeat(40)}")`, context);
@@ -233,19 +233,56 @@ test("a pending restart drains the members, slice and page-reader children, and 
   }
 });
 
+test("census waits past a minute for memory, reports the wait, observes the child and returns its reservation", async t => {
+  t.mock.timers.enable({ apis: ["Date", "setTimeout", "setInterval"], now: Date.now() });
+  let available = 0, started = 0, returned = 0;
+  const observed: number[] = [], lines: string[] = [], until = Date.now() + 600_000;
+  const slots = reportingWorkerSlots(routineProcessSlots({ availableBytes: () => available }), { write: line => lines.push(line) });
+  const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
+    RUNTIME_NO_PROGRESS_MS: 600_000, withPassDeadline, standingChildEnvironment: () => ({}), Date,
+    censusMemory: { acquire: async (entry: string, deadline: number) => {
+      assert.equal(entry, "platform-census-runner.mts"); assert.equal(deadline, until);
+      const release = await slots.acquire(entry, deadline);
+      return Object.assign(() => { returned++; release(); }, { observe: (pid: number) => observed.push(pid) });
+    } },
+    runRuntimeChildren: async (commands: { id: string; env: NodeJS.ProcessEnv }[], options: { deadlineMs: number; onStarted(id: string, child: object): void }) => {
+      started++; assert.equal(options.deadlineMs, until); assert.equal(passDeadlineFromEnv(commands[0]!.env), until);
+      options.onStarted(commands[0]!.id, { pid: 123 }); return [{ status: 0 }];
+    } });
+  runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", "runPlatformCensus"].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
+  const turn = context.runPlatformCensus(until);
+  await new Promise(setImmediate);
+  t.mock.timers.tick(61_000);
+  await new Promise(setImmediate);
+  assert.equal(started, 0); assert.match(lines.join("\n"), /waiting for memory.*platform-census-runner.mts/);
+  available = 64 * 1024 * MIB;
+  t.mock.timers.tick(1_000);
+  await turn;
+  assert.equal(started, 1); assert.equal(returned, 1); assert.deepEqual(observed, [123]);
+  available = 0;
+  const expired = assert.rejects(context.runPlatformCensus(until), /WORKER_MEMORY_DEADLINE/);
+  await new Promise(setImmediate);
+  t.mock.timers.tick(until - Date.now());
+  await expired;
+  assert.equal(started, 1, "memory that never frees fails at the turn deadline without launching a child");
+});
+
 test("a lane child that stops tells the heartbeat why: the runner's kill reason, or its exit and last error lines, with secrets taken out", async () => {
-  const stopped = (result: object) => {
-    const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
-      RUNTIME_NO_PROGRESS_MS: 1, PARSER_LANE_DATABASE_BYTES: 1, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ id: "parser-lane", status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
-    runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", "runParserLane"].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
-    return (runInContext(`runParserLane(Date.now() + 60000)`, context) as Promise<void>).then(() => "", (error: Error) => error.message);
-  };
-  const lead = "The page readers stopped; the links they had remain on the work list: ";
-  assert.equal(await stopped({ status: null, errorMessage: "RESEARCH_CHILD_NO_PROGRESS: no changed output for 600000ms" }), `${lead}RESEARCH_CHILD_NO_PROGRESS: no changed output for 600000ms`);
-  process.env.SPN01_TEST_TOKEN = "s3cr3t-token";
-  try {
-    const memory = "x.mts:26\n\nError: WORKER_MEMORY_DEADLINE: memory wait deferred s3cr3t-token postgres://user:pw@db/app\n    at acquire (x.ts:1:1)\n\nNode.js v24.1.0\n";
-    assert.equal(await stopped({ stderr: memory }), `${lead}exit 1; Error: WORKER_MEMORY_DEADLINE: memory wait deferred [private] [private connection]`);
-    assert.ok((await stopped({ stderr: "Error: x".repeat(200).replaceAll("Error", "\nError") })).length <= 400, "it fits the 400 characters the heartbeat keeps");
-  } finally { delete process.env.SPN01_TEST_TOKEN; }
+  for (const run of ["runParserLane", "runPlatformCensus"]) {
+    const stopped = (result: object) => {
+      const context = createContext({ storedKeyEnvironment, provider: "postgres", canary: false, runtimeAdmissionsHeld: false, jobLaunchAllowed: () => true, process, TS_CHILD: [], CODE_ROOT: process.cwd(),
+        RUNTIME_NO_PROGRESS_MS: 1, PARSER_LANE_DATABASE_BYTES: 1, censusMemory: { acquire: async () => () => {} }, withPassDeadline, standingChildEnvironment: () => ({}), runRuntimeChildren: async () => [{ status: 1, signal: null, stderr: "", errorMessage: null, ...result }] });
+      runInContext(stripTypeScriptTypes(["runLaneChild", "privateText", run].map(runnerFunction).join("\n") + "\nconst laneChildren = new Map();"), context);
+      return (runInContext(`${run}(Date.now() + 60000)`, context) as Promise<void>).then(() => "", (error: Error) => error.message);
+    };
+    const lead = run === "runParserLane" ? "The page readers stopped; the links they had remain on the work list: " : "Platform census stopped; unvisited sources remain due: ";
+    assert.equal(await stopped({ status: null, errorMessage: "RESEARCH_CHILD_NO_PROGRESS: no changed output for 600000ms" }), `${lead}RESEARCH_CHILD_NO_PROGRESS: no changed output for 600000ms`);
+    assert.equal(await stopped({ status: null, signal: "SIGKILL" }), `${lead}exit signal SIGKILL`);
+    process.env.SPN01_TEST_TOKEN = "s3cr3t-token";
+    try {
+      const memory = "x.mts:26\n\nError: WORKER_MEMORY_DEADLINE: memory wait deferred s3cr3t-token postgres://user:pw@db/app\n    at acquire (x.ts:1:1)\n\nNode.js v24.1.0\n";
+      assert.equal(await stopped({ stderr: memory }), `${lead}exit 1; Error: WORKER_MEMORY_DEADLINE: memory wait deferred [private] [private connection]`);
+      assert.ok((await stopped({ stderr: "Error: x".repeat(200).replaceAll("Error", "\nError") })).length <= 400, "it fits the 400 characters the heartbeat keeps");
+    } finally { delete process.env.SPN01_TEST_TOKEN; }
+  }
 });

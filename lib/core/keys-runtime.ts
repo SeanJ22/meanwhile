@@ -10,7 +10,7 @@ const host = globalThis as typeof globalThis & { [RUNTIME]?: { source: Audience;
 const billing = new Set<string>(BILLING_SECRET_NAMES);
 const unavailable = "The saved keys could not be reached.";
 
-/** One direct database reader per process. A failed refresh retains its last complete snapshot. */
+/** One direct reader per process; only the runner's forced key pass records openings. A failed refresh keeps its last snapshot. */
 export function savedKeysRuntime(query: KeysQuery, master: string | undefined, source: Audience,
   clock: () => number = Date.now, warn: (message: string) => void = console.error) {
   const cache = savedKeysCache(query, master, source === "runner" ? "runner" : "website",
@@ -24,7 +24,7 @@ export function savedKeysRuntime(query: KeysQuery, master: string | undefined, s
     pending = (async () => {
       try {
         const next = await cache.refresh();
-        if (source === "runner" && next.openings?.length) await query(`UPDATE cp_keys held SET runner_read_at=opened.at
+        if (force && source === "runner" && next.openings?.length) await query(`UPDATE cp_keys held SET runner_read_at=opened.at
           FROM jsonb_to_recordset($1::jsonb) AS opened(name text,version text,at timestamptz)
           WHERE held.name=opened.name AND held.version=opened.version AND NOT held.deleted
             AND (held.runner_read_at IS NULL OR held.runner_read_at < opened.at)`, [JSON.stringify(next.openings)]);

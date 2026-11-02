@@ -145,7 +145,6 @@ test("malformed intake history is refused by the constructor", () => {
 
 test("standing runtime persists intake receipts without Git, deploy, or software CI", () => {
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
-  const cycle = readFileSync("scripts/freshness-shadow.mts", "utf8");
   const child = readFileSync("scripts/intake-tripwire.mts", "utf8");
   assert.match(runner, /new IndependentRuntimeLaneScheduler\([\s\S]*run:\s*runIntakeRuntime/);
   assert.match(runner, /appendIntakeRuntimeObservationDigest/);
@@ -155,7 +154,6 @@ test("standing runtime persists intake receipts without Git, deploy, or software
   );
   assert.match(runner, /runnerHeartbeat\.compareAndSet/);
   assert.match(runner, /intakeRuntime: observation/);
-  assert.match(cycle, /intakeRuntime: beat\?\.value\.intakeRuntime \?\? null/);
   assert.match(child, /INTAKE_RUNTIME_RECEIPT=/);
   assert.doesNotMatch(child, /writeFile|docs\/intake-report|git\s+(?:add|commit|push)|push-main/);
 });

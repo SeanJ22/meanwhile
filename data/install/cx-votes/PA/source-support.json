@@ -1,0 +1,34 @@
+[
+  {
+    "id": "pa-2026-lackawanna-home-rule-charter-amendment",
+    "sourceUrl": "https://cms8.revize.com/revize/lackawanna/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf",
+    "sourceFile": "sources/bf8d3d9ef46facd7d0ac660540fb52713d61d95fdf1731890e656467b50f7388.source",
+    "sourceHash": "bf8d3d9ef46facd7d0ac660540fb52713d61d95fdf1731890e656467b50f7388",
+    "excerptFile": "sources/d64e9f028f1ab36b1b1846e80955fa692f8f482279fd256dc0fefead80715556.txt",
+    "excerptSha256": "d64e9f028f1ab36b1b1846e80955fa692f8f482279fd256dc0fefead80715556",
+    "sourceCheckedAt": "2026-11-02T21:11:44.492138+00:00",
+    "fields": {
+      "whatItDoes": [
+        "REFERENDUM ON LACKAWANNA COUNTY\nHOME RULE CHARTER AMENDMENT\n“Shall the Lackawanna County Home Rule\nCharter be amended: (a) to require specifically\nthat the Lackawanna County Conflict of Interest\nand Code of Ethics prohibit County elected\nofficials and employees from engaging in\nindividual stock trades or prediction market bets\nbased on nonpublic information obtained in the\ncourse of their official County service; (b) and\nprovide annual reporting of ethics complaints\nand stock trades involving County, state, and\nfederal elected officials representing the\nCounty?”\nYES\nNO"
+      ],
+      "yesMeans": [
+        "REFERENDUM ON LACKAWANNA COUNTY\nHOME RULE CHARTER AMENDMENT\n“Shall the Lackawanna County Home Rule\nCharter be amended: (a) to require specifically\nthat the Lackawanna County Conflict of Interest\nand Code of Ethics prohibit County elected\nofficials and employees from engaging in\nindividual stock trades or prediction market bets\nbased on nonpublic information obtained in the\ncourse of their official County service; (b) and\nprovide annual reporting of ethics complaints\nand stock trades involving County, state, and\nfederal elected officials representing the\nCounty?”\nYES\nNO"
+      ],
+      "noMeans": [
+        "REFERENDUM ON LACKAWANNA COUNTY\nHOME RULE CHARTER AMENDMENT\n“Shall the Lackawanna County Home Rule\nCharter be amended: (a) to require specifically\nthat the Lackawanna County Conflict of Interest\nand Code of Ethics prohibit County elected\nofficials and employees from engaging in\nindividual stock trades or prediction market bets\nbased on nonpublic information obtained in the\ncourse of their official County service; (b) and\nprovide annual reporting of ethics complaints\nand stock trades involving County, state, and\nfederal elected officials representing the\nCounty?”\nYES\nNO"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.lackawannacounty.org/government/departments/elections/index.php",
+      "file": "sources/c320e5b222cdd8d4a7ecbf043f2978c74747ddefcfc33b039c94b0bb201bd9fd.html",
+      "sha256": "c320e5b222cdd8d4a7ecbf043f2978c74747ddefcfc33b039c94b0bb201bd9fd",
+      "retrievedAt": "2026-11-02T21:42:00.064572+00:00",
+      "linkingPage": {
+        "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+        "file": "sources/cdb2f24adf1cd25f6bc7b25b2694ec7b555a6d6515af244a59282e36cb6e6e49.html",
+        "sha256": "cdb2f24adf1cd25f6bc7b25b2694ec7b555a6d6515af244a59282e36cb6e6e49",
+        "retrievedAt": "2026-11-02T21:41:17.075874+00:00"
+      }
+    }
+  }
+]

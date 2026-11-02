@@ -1,0 +1,490 @@
+{
+  "ballots": {
+    "PA:pa-2026-general": {
+      "election": {
+        "id": "pa-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "PA"
+      },
+      "contests": [
+        {
+          "id": "pa-2026-lackawanna-home-rule-charter-amendment",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:pa/county:lackawanna",
+          "title": "Referendum on Lackawanna County Home Rule Charter Amendment",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "pa-2026-general",
+          "provenance": {
+            "quote": "Shall the Lackawanna County Home Rule Charter be amended: (a) to require specifically that the Lackawanna County Conflict of Interest and Code of Ethics prohibit County elected officials and employees from engaging in individual stock trades or prediction market bets based on nonpublic information obtained in the course of their official County service; (b) and provide annual reporting of ethics complaints and stock trades involving County, state, and federal elected officials representing the County?",
+            "sourceOrg": "Lackawanna County Board of Elections",
+            "sourceUrl": "https://www.lackawannacounty.org/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf?t=202609171313240",
+            "verifiedAt": "2026-10-21T00:54:29.868418+00:00",
+            "collectedAt": "2026-10-21T00:04:57.975414+00:00"
+          },
+          "measureTextUrl": "https://www.lackawannacounty.org/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf?t=202609171313240",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "pa-2026-lackawanna-home-rule-charter-amendment#question",
+          "contestId": "pa-2026-lackawanna-home-rule-charter-amendment",
+          "provenance": {
+            "quote": "Shall the Lackawanna County Home Rule Charter be amended: (a) to require specifically that the Lackawanna County Conflict of Interest and Code of Ethics prohibit County elected officials and employees from engaging in individual stock trades or prediction market bets based on nonpublic information obtained in the course of their official County service; (b) and provide annual reporting of ethics complaints and stock trades involving County, state, and federal elected officials representing the County?",
+            "sourceOrg": "Lackawanna County Board of Elections",
+            "sourceUrl": "https://www.lackawannacounty.org/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf?t=202609171313240",
+            "verifiedAt": "2026-10-21T00:54:29.868418+00:00",
+            "collectedAt": "2026-10-21T00:04:57.975414+00:00"
+          },
+          "questionText": "Shall the Lackawanna County Home Rule Charter be amended: (a) to require specifically that the Lackawanna County Conflict of Interest and Code of Ethics prohibit County elected officials and employees from engaging in individual stock trades or prediction market bets based on nonpublic information obtained in the course of their official County service; (b) and provide annual reporting of ethics complaints and stock trades involving County, state, and federal elected officials representing the County?",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "pa-2026-lackawanna-home-rule-charter-amendment",
+          "whatItDoes": "Requires Lackawanna County’s ethics rules to prohibit county elected officials and employees from using nonpublic information gained through county service to make individual stock trades or prediction-market bets. Requires annual reporting of ethics complaints and stock trades involving county, state and federal elected officials who represent the county.",
+          "yesMeans": "Amend the county charter to require these trading restrictions and annual reports.",
+          "noMeans": "Reject this proposed charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://cms8.revize.com/revize/lackawanna/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf",
+          "sourceHash": "bf8d3d9ef46facd7d0ac660540fb52713d61d95fdf1731890e656467b50f7388",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:44:23.058Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248",
+        "finalUrl": "https://vote.phila.gov/voting/candidates-for-office/",
+        "publisher": "Philadelphia City Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:34.013055Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vote.phila.gov/voting/candidates-for-office/",
+        "reviewedEvidence": "On November 03, 2026, Philadelphia voters will cast Election ballots to select candidates for the following offices: The official full candidate listing identifies all ballot choices, including independent-party candidates, for 33 named contests. Every candidate name and printed party was script-compared with the held data."
+      },
+      {
+        "rawHash": "1534e3627a0a7c54783512fccb4592e04b16c079cbf67d99fecd2425dc91d585",
+        "finalUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014/Unofficial-Candidate-Listing-8-24-26?bidId=",
+        "publisher": "York County Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:15:18.784935Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://yorkcountypa.gov/DocumentCenter/View/9014",
+        "reviewedEvidence": "2026 General Election - Unofficial Candidate Listing. Every printed candidate/party set for its 10 held district contests exactly matches the complete official 162-precinct mail-in-ballot corpus. \"Unofficial and subject to change\" is retained as the publication status; the file provides the full listed ballot choices, rather than only county-resident applicants."
+      },
+      {
+        "rawHash": "e158e7bfe437ff095d72dbc7f9a9d99e59bf7fc82092f4ca49b6786e575e51fa",
+        "finalUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+        "publisher": "Allegheny County Elections Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:15:18.793463Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.alleghenycounty.us/files/assets/county/v/4/government/elections/documents/unofficial_general_election_candidate_list_08272026.xlsx",
+        "reviewedEvidence": "The official county sample-ballot page identifies the linked candidate files as \"full candidate lists for both parties\". Every name and printed party for the 25 held district contests was script-compared with this current 2026 general-election XLSX. The file includes non-Allegheny candidates and the statewide Libertarian ticket; its unofficial label and update notice remain publication facts."
+      },
+      {
+        "rawHash": "eb838ca87e5454344bfad9b6ac78f0a5aa652b95f87a4f27962ed32ebb35cf5f",
+        "finalUrl": "https://vote.phila.gov/media/2026G_Ballot_Questions.pdf",
+        "publisher": "Philadelphia City Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:54:15.535495+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vote.phila.gov/media/2026G_Ballot_Questions.pdf",
+        "reviewedEvidence": "Both English ballot questions and their full explanatory statements replayed from the official Philadelphia Home Rule Charter question PDF. County scope only."
+      },
+      {
+        "rawHash": "0a0d0f20dd720b2c528009a2a26577767ab7a6aeff9572c5febf32631cbc1135",
+        "finalUrl": "https://www.buckscounty.gov/DocumentCenter/View/27847/2026-General-Election---Official-Candidate-Listing---UPD-09-17-2026?bidId=",
+        "publisher": "Bucks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:54.979383+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.buckscounty.gov/DocumentCenter/View/27847/2026-General-Election---Official-Candidate-Listing---UPD-09-17-2026?bidId=",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 14 district races, 28 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "74b40d8b0168e98ef71b45f0d91f00fa4752836aae4e9f9f3960bb72d6872514",
+        "finalUrl": "https://www.chesco.org/DocumentCenter/View/85852/CHESTER_2026-GENERAL_OFFICIAL-LIST-OF-CANDIDATES?bidId=",
+        "publisher": "Chester County Voter Services",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:55.000538+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.chesco.org/DocumentCenter/View/85852/CHESTER_2026-GENERAL_OFFICIAL-LIST-OF-CANDIDATES?bidId=",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 11 district races, 20 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "d6476ff7d64f7dc8154100d7bf857eb6fae8a731c6c5642995b77da02025658b",
+        "finalUrl": "https://www.delcopa.gov/sites/default/files/media/GE2026-Official-Candidate-Information.pdf",
+        "publisher": "Delaware County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:55.296940+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.delcopa.gov/sites/default/files/media/GE2026-Official-Candidate-Information.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 14 district races, 23 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "c40093b7e5429853a3c42632e9ec401621bc5b07f8cca84842c62e9c4334e7db",
+        "finalUrl": "https://www.cumberlandcountypa.gov/DocumentCenter/View/55560/Official-Candidate-Listing?bidId=",
+        "publisher": "Cumberland County Bureau of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:54.900394+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.cumberlandcountypa.gov/DocumentCenter/View/55560/Official-Candidate-Listing?bidId=",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 8 district races, 16 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "582f44051199b5624ec311cd5b39119dadcce9c5b4ac42fa65e67a40be40928e",
+        "finalUrl": "https://www.dauphincounty.gov/docs/default-source/registration-elections/offices-and-candidates-to-be-elected-for-the-november-3-2026-general-election.pdf?sfvrsn=6b07cc87_1",
+        "publisher": "Dauphin County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:58.578258+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.dauphincounty.gov/docs/default-source/registration-elections/offices-and-candidates-to-be-elected-for-the-november-3-2026-general-election.pdf?sfvrsn=6b07cc87_1",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 7 district races, 12 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "0ab3b97c7270f9fcdf40555aaaa0da8f59ee55d91b5eff82266f2467bc5403cc",
+        "finalUrl": "https://www.eriecountycouncilpa.gov/uploads/2026_general_election_unofficial_candidate_listing.pdf",
+        "publisher": "Erie County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:55.920645+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.eriecountycouncilpa.gov/uploads/2026_general_election_unofficial_candidate_listing.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 6 district races, 10 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "a3923663d581fd0b4601a6b323e530aa2b79172e4459629be67fd49010ea7774",
+        "finalUrl": "https://www.luzernecounty.org/DocumentCenter/View/48757/Sample-Ballots",
+        "publisher": "Luzerne County Bureau of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:56.856281+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.luzernecounty.org/DocumentCenter/View/48757/Sample-Ballots",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 10 district races, 19 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "bf8d3d9ef46facd7d0ac660540fb52713d61d95fdf1731890e656467b50f7388",
+        "finalUrl": "https://www.lackawannacounty.org/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf?t=202609171313240",
+        "publisher": "Lackawanna County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:57.975414+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.lackawannacounty.org/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf?t=202609171313240",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 7 district races, 14 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "a7baa54a67c2eab9fc3c81614ffaada7993ed8ac6ae9626d46e91c17053fc002",
+        "finalUrl": "https://assets.montgomerycountypa.gov/files/2026-08/2026%20GE%20Candidate%20List%208-27%20HEADER.pdf",
+        "publisher": "Montgomery County Voter Services",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:57.055452+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://assets.montgomerycountypa.gov/files/2026-08/2026%20GE%20Candidate%20List%208-27%20HEADER.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 21 district races, 39 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "63297df8d0af3d4c1189426961c47eae463a2ba65089aa2f3f15f22a22b545c3",
+        "finalUrl": "https://www.juniatacountypa.gov/DocumentCenter/View/452/2026-Election-Candidate-List-PDF",
+        "publisher": "Juniata County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:57.801549+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.juniatacountypa.gov/DocumentCenter/View/452/2026-Election-Candidate-List-PDF",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 4 district races, 7 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "f9095af56537fd398033fa0b424068f3a97fabcf0d6bb01fabe08f43ca4ec417",
+        "finalUrl": "https://www.berkspa.gov/getmedia/3632c99c-8c98-4efe-a191-e37df4971acd/2026-General-Election-Sample_1-1.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:58.482972+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/3632c99c-8c98-4efe-a191-e37df4971acd/2026-General-Election-Sample_1-1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 3 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "224574a44e2932db35683bb3db09bbe2c34f95480501f9fa7dd5ed2bfcb94646",
+        "finalUrl": "https://www.berkspa.gov/getmedia/ff837ab7-a20a-4fff-9667-79d93adb372e/2026-General-Election-Sample_12-5.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:58.605827+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/ff837ab7-a20a-4fff-9667-79d93adb372e/2026-General-Election-Sample_12-5.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "8666e9cacae3f0d78be9219d3157d64849ea797db3307dd330ed4cd14c706e43",
+        "finalUrl": "https://www.berkspa.gov/getmedia/a4159445-a46b-4801-b17b-da0a21e73d86/2026-General-Election-Sample_14-1.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:59.715436+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/a4159445-a46b-4801-b17b-da0a21e73d86/2026-General-Election-Sample_14-1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 3 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "9406be43515f18a809d60abf7ab37f6cd8b8c1b24868d29617bda8cf3e6ae601",
+        "finalUrl": "https://www.berkspa.gov/getmedia/788ebcf2-dffb-4ed6-b890-fa0cdf9de15b/2026-General-Election-Sample_21.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:59.162221+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/788ebcf2-dffb-4ed6-b890-fa0cdf9de15b/2026-General-Election-Sample_21.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 6 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "248c3b6213db295760b97d0d01c18dbf0ce868afd938ce57c452ea72be96ae12",
+        "finalUrl": "https://www.berkspa.gov/getmedia/74826871-f2de-4425-a66b-51b4b1a8a64e/2026-General-Election-Sample_22-1.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:58.932631+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/74826871-f2de-4425-a66b-51b4b1a8a64e/2026-General-Election-Sample_22-1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "e71770d7ca0f9bb96493b21b37873eeadd9ec48b1b96738b920958426f178372",
+        "finalUrl": "https://www.berkspa.gov/getmedia/ef6433f9-752e-4c57-ad29-3790f6f45fe0/2026-General-Election-Sample_24-1.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:59.199068+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/ef6433f9-752e-4c57-ad29-3790f6f45fe0/2026-General-Election-Sample_24-1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 7 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "26447e2edcfc11702b5657e66efe3de39d79a7a02a3d71ebfd3040712d27543f",
+        "finalUrl": "https://www.berkspa.gov/getmedia/da1080bb-4cc9-4ade-8c50-caa2916aa3eb/2026-General-Election-Sample_27-1.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:05:00.051460+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/da1080bb-4cc9-4ade-8c50-caa2916aa3eb/2026-General-Election-Sample_27-1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 6 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "0fd9fa2618741e0c3f00525390ab1ac42fde4dcd005a362c32b259912827a665",
+        "finalUrl": "https://www.berkspa.gov/getmedia/b62da74b-7a60-4767-bd2e-05cd9da6f672/2026-General-Election-Sample_34-1.pdf",
+        "publisher": "Berks County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:05:00.757930+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.berkspa.gov/getmedia/b62da74b-7a60-4767-bd2e-05cd9da6f672/2026-General-Election-Sample_34-1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "b854ee8a721f7d86f3714edbd1223bc092a3452ff8d8e80b65871e2af4c778f5",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/1.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.173316+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "171852629dab8f6927284a12eca9e902c002594a79786d59ba220780c9674449",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/10.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.171309+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/10.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "4c902b2d6358cf84b43b49032e07694ae461613cb7cddd1f1c29a34b548bf339",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/100.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.828841+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/100.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 3 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "19f5c99f4d36aa692648bb36d84f40b3bf62b908b17cd1c38cc93dfe7388fd35",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/112.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.164163+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/112.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "2bd5e49fc1a99bff5540ba03f579d9bcd86e0a2d0c2cf98e17fc2ea855be5ad8",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/126.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.246708+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/126.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "529f4fb70f4e3f29d87df107426f3332ec532273b18a3912327defc362445e9a",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/137.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.253346+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/137.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "e5e3fbaf72af1cd90b19ed56532288df652e168c97457825b8ec852769330d18",
+        "finalUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/246.pdf",
+        "publisher": "Westmoreland County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:23.271948+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://apps.westmorelandcountypa.gov/elections/ElectionBallots/Ballots/ElectionBallots/246.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 6 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "e7e2fbc23e0733111d21a5a0f2d21d31ed47276fadccd8190b811ca01a71ec67",
+        "finalUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14125/Adams-Twp-4-PDF",
+        "publisher": "Butler County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:25.107519+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14125/Adams-Twp-4-PDF",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "cd8e12ed5a669fa09c6bb22ed0a9e78cc9360f5f4174f297aa08a26af0a38573",
+        "finalUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14127/Allegheny-Twp-PDF",
+        "publisher": "Butler County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:24.661716+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14127/Allegheny-Twp-PDF",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 3 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "ab542a241a661e125a36f975b3c25b29b9b59e9f5924ac9b78aa38fb2c6ac9ec",
+        "finalUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14128/Brady-Twp-PDF",
+        "publisher": "Butler County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:25.206878+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14128/Brady-Twp-PDF",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "d1c3ba6d2c9d4a4723c3588a26fca86707abf3064e0b014a5d79b0cf6151a97d",
+        "finalUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14129/Buffalo-Twp-1-PDF",
+        "publisher": "Butler County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:25.240961+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.butlercountypa.gov/DocumentCenter/View/14129/Buffalo-Twp-1-PDF",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 3 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "4309c4579510f73b1da78c14e6bde7a7f59d6a6c1d1fd9aed625dee09a6d2b4b",
+        "finalUrl": "https://www.fayettecountypa.org/DocumentCenter/View/6733",
+        "publisher": "Fayette County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:26.323499+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.fayettecountypa.org/DocumentCenter/View/6733",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 5 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "133e4e0f3b1a6b3fd89a62df903407a4cb3de702c569ff3a5d3855d1477799ec",
+        "finalUrl": "https://www.fayettecountypa.org/DocumentCenter/View/6738",
+        "publisher": "Fayette County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:26.430585+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.fayettecountypa.org/DocumentCenter/View/6738",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 5 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "fa5e7b4a4c1ecd596ed6d86615ee30f91733ad8f01193fb5ba5da432117be75e",
+        "finalUrl": "https://cms.washingtoncopa.gov/uploads/2026_MIB_Specimen_Allenport_3fc6722219.pdf",
+        "publisher": "Washington County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:31:26.534180+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://cms.washingtoncopa.gov/uploads/2026_MIB_Specimen_Allenport_3fc6722219.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 6 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "eecbf0dc0967eb92011dc0338ab9b3f7bab29b7e2e53585bd3e7b49aa1e49e62",
+        "finalUrl": "https://cms.washingtoncopa.gov/uploads/2026_MIB_Specimen_Amwell_1_7c5bc240c1.pdf",
+        "publisher": "Washington County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:31:26.543332+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://cms.washingtoncopa.gov/uploads/2026_MIB_Specimen_Amwell_1_7c5bc240c1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 6 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "cb2e0636f11b27c6dc9f381ae747a158299f519e08ffa8861d7db4b1c5396cb4",
+        "finalUrl": "https://cms.washingtoncopa.gov/uploads/2026_MIB_Specimen_Blaine_8591988feb.pdf",
+        "publisher": "Washington County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:31:26.533279+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://cms.washingtoncopa.gov/uploads/2026_MIB_Specimen_Blaine_8591988feb.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 3 district races, 6 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "a2b75e8d42ac0141aae1c2e51f2f079914652fd8738489592c0fb9ba4007e55f",
+        "finalUrl": "https://centrecountypa.gov/DocumentCenter/View/44669/SAMPLE---1---Bellefonte-North-",
+        "publisher": "Centre County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:31:37.859405+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://centrecountypa.gov/DocumentCenter/View/44669/SAMPLE---1---Bellefonte-North-",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "2d59dc81c88b4bcc37abd16f40baee2729c213c56f704f62a3a0c718ae142b09",
+        "finalUrl": "https://centrecountypa.gov/DocumentCenter/View/44587/SAMPLE---7---Howard-Borough",
+        "publisher": "Centre County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:31:38.130030+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://centrecountypa.gov/DocumentCenter/View/44587/SAMPLE---7---Howard-Borough",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "rawHash": "210e28dd1c92eb16f11de210bb1bd5f0f1dc3905192e934b031f82284af8f9ef",
+        "finalUrl": "https://centrecountypa.gov/DocumentCenter/View/44590/SAMPLE---10---Philipsburg-1st-Ward",
+        "publisher": "Centre County Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:31:39.000935+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://centrecountypa.gov/DocumentCenter/View/44590/SAMPLE---10---Philipsburg-1st-Ward",
+        "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "requestedUrl": "https://cms8.revize.com/revize/lackawanna/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf",
+        "finalUrl": "https://cms8.revize.com/revize/lackawanna/Document_center/Department/Elections/SAMPLE%20-%20PA%20Lackawanna%20261103%20General.pdf",
+        "publisher": "cms8.revize.com",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:11:44.492138+00:00",
+        "httpStatus": 200,
+        "rawHash": "bf8d3d9ef46facd7d0ac660540fb52713d61d95fdf1731890e656467b50f7388",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

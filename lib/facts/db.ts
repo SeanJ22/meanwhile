@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { isVersionedSelectStatement } from "../db/versioned-query.ts";
 import { neonConfig, Pool } from "../db/client.ts";
@@ -40,7 +41,7 @@ function isQueryReadTimeout(error: unknown): boolean {
 }
 
 /** The reader database over the pooled WebSocket client, so each publish is one real transaction. */
-export function readerFactDb(url: string | undefined = process.env.DATABASE_URL): FactDb & { readonly query: Query } {
+export function readerFactDb(url: string | undefined = storedKeyValue("DATABASE_URL")): FactDb & { readonly query: Query } {
   if (!url) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
@@ -86,7 +87,7 @@ let installed: Query | null | undefined;
 /** Fact reads share the reader's version-checked, read-only connection. */
 export function factReader(): Query | null {
   if (installed !== undefined) return installed;
-  const url = process.env.DATABASE_URL?.trim();
+  const url = storedKeyValue("DATABASE_URL")?.trim();
   if (!url) return null;
   const selected = readerDatabaseQuery();
   if (!selected) return null;

@@ -23,6 +23,7 @@ export interface DispatchStateRepository {
   readOpen(input?: DispatchRead): Promise<DispatchSnapshot>;
   /** The same live selection without advancing the runner's durable cursor. */
   inspectOpen?(input?: DispatchRead): Promise<DispatchSnapshot>;
+  /** Which of these occurrences are open: the planner's saved answer plus what changed since it last asked. */ openAmong?(ids: readonly string[]): Promise<ReadonlySet<string>>;
   archiveOccurrence(id: string, now: string): Promise<void>;
   prepareLineages(ids: readonly string[]): Promise<void>;
   lineages(obligationId: string, load: () => Promise<readonly StandingLineage[]>, stamp?: string): Promise<readonly StandingLineage[]>;
@@ -181,6 +182,19 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
       const snapshot = await inspectOpen(input);
       await run("readOpen:cursor", "INSERT INTO cp_dispatch_cursors (id, through) VALUES ($1,$2) ON CONFLICT (id) DO UPDATE SET through=GREATEST(cp_dispatch_cursors.through, EXCLUDED.through)", [scopeFor(input), snapshot.through]);
       return snapshot;
+    },
+    async openAmong(ids) {
+      const held = versionedRowsFor(sql).cache.jobState(), key = state ?? "*", wanted = new Set(ids);
+      const saved = await held.readCheckpoint<{ through: string; open: string[] }>("open-occurrences:v1", key);
+      const [{ at }] = await run("openAmong:cursor", "SELECT now() AS at") as { at: string }[];
+      const open = new Set((saved?.open ?? []).filter(id => wanted.has(id)));
+      for (const row of await (saved
+        ? run("openAmong", "SELECT id, value->>'closedAt' IS NULL AS open FROM cp_occurrences_history WHERE changed_at >= $1::timestamptz AND id = ANY($2::text[])",
+          [new Date(Date.parse(saved.through) - 120_000).toISOString(), ids], true)
+        : run("openAmong", "SELECT id, true AS open FROM cp_occurrences WHERE id = ANY($1::text[]) AND value->>'closedAt' IS NULL", [ids], true)) as { id: string; open: boolean }[])
+        if (row.open) open.add(row.id); else open.delete(row.id);
+      await held.checkpoint("open-occurrences:v1", key, { through: new Date(at).toISOString(), open: [...open] });
+      return open;
     },
     async archiveOccurrence(id) { await withCallerSite(() => run("archiveOccurrence", "SELECT cp_archive_occurrences(ARRAY[$1]::text[])", [id])); },
     async prepareLineages(ids) {

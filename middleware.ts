@@ -1,3 +1,5 @@
+import { loadWebsiteSavedKeys } from "./lib/core/keys-entry.ts";
+import { storedKeyValue } from "./lib/core/keys-values.ts";
 /**
  * Host routing. The admin host (`ADMIN_ORIGIN`) is a domain alias on the same
  * Netlify site that serves readers, so this file and
@@ -68,6 +70,7 @@ function notFound(): NextResponse {
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   // One implementation of "is this the admin host", shared with both admin
   // route handlers.
   const onAdminHost = isAdminHostRequest(request.headers, ADMIN_ORIGIN);
@@ -120,7 +123,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
    * ---------------------------------------------------------------- */
   const verdict = await verifySession(
     request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
-    process.env[ADMIN_SESSION_KEY_VAR],
+    storedKeyValue(ADMIN_SESSION_KEY_VAR),
     Math.floor(Date.now() / 1000),
   );
 

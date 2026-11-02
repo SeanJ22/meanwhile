@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 import { CIVIC_DATA_STATUS_WRITE_TABLES } from "./schema.ts";
 
 export type MigrationPhase = "expand" | "contract";
@@ -28,7 +29,7 @@ export function migrationOutcomeOf(value: unknown): ProductionMigrationOutcome |
 
 /** Error output is displayed and stored only after private environment values and URLs are removed. */
 export function redactMigrationOutput(output: string, env: Record<string, string | undefined>): string {
-  for (const [name, value] of Object.entries(env)) {
+  for (const [name, value] of Object.entries(storedKeyEnvironment(env))) {
     if (value && value.length >= 5 && /TOKEN|SECRET|PASSWORD|KEY|DATABASE_URL/.test(name)) output = output.split(value).join("[private]");
   }
   return output.replace(/(?:postgres(?:ql)?|https?):\/\/[^\s"'<>]+/gi, "[private URL]");
@@ -176,8 +177,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
-  "SPN-01E_page_marks": { phase: "expand", why: "A place page carries its own rebuild mark, lease, priority and the entities it shows, so the rebuild queue and the dependency table can go once readers and writers use them.", lockFirst: ["place_page"] },
-  "SPN-01E4_slice_cards": { phase: "contract", why: "Widens the card names a slice may have to the meetings, history and agenda cards; the rule reads any change to a constraint as narrowing, though no row the live build writes is refused." },
+  "0081_spn01e_page_marks": { phase: "expand", why: "A place page carries its own rebuild mark, lease, priority and the entities it shows, so the rebuild queue and the dependency table can go once readers and writers use them.", lockFirst: ["place_page"] },
+  "0082_spn01e4_slice_cards": { phase: "contract", why: "Widens the card names a slice may have to the meetings, history and agenda cards; the rule reads any change to a constraint as narrowing, though no row the live build writes is refused." },
   "SPN-01D_place_slice": { phase: "expand", why: "Adds the table that holds one small slice per card per place; nothing reads it until readers switch." },
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",
     lockFirst: CIVIC_DATA_STATUS_WRITE_TABLES, lockFirstMode: "SHARE ROW EXCLUSIVE" },

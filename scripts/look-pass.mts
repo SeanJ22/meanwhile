@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { storedKeyValue } from "../lib/core/keys-values.ts";
 /**
  * **ONE LOOK PASS ON THE LIVE SITE AFTER A DEPLOY.**
  *
@@ -168,7 +169,7 @@ const task = [
   "A resident opens Meanwhile at their ZIP code to understand what their local government is doing. On these screens they try to:",
   ...[...new Set(tasks.tasks.filter((t) => t.start !== "ask").map((t) => t.title))].map((title) => `- ${title}`),
 ].join("\n");
-const apiKey = process.env.ANTHROPIC_API_KEY;
+const apiKey = storedKeyValue("ANTHROPIC_API_KEY");
 const reviewerOff = DRY || process.env.WTP_LOOK_REVIEW === "off";
 const outcome = await reviewLook({ screenshots: sent.map((s) => s.image!), task, standard }, reviewerOff || !apiKey || !repos ? {} : {
   callModel: lookModelCall(repos, apiKey),

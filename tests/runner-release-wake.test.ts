@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import assert from "node:assert/strict";
 import {createMemoryRepositories} from "../lib/control-plane/repository/memory.ts";
 import {readPlanningContinuation} from "../lib/control-plane/scheduler/state-planning.ts";
@@ -21,7 +22,7 @@ const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & {
 function nextWait(overrides: Record<string, unknown> = {}): (ok: boolean) => Promise<number> {
   const wait = source.match(/async function nextCycleWaitMs\(cycleOk: boolean\): Promise<number> \{[\s\S]*?\n\}/)?.[0];
   assert.ok(wait);
-  const context = createContext({ INTERVAL_MIN: 60, provider: "postgres", canary: false, POLL_MS: 60_000,
+  const context = createContext({ storedKeyEnvironment, INTERVAL_MIN: 60, provider: "postgres", canary: false, POLL_MS: 60_000,
     lifetimeHuntStalledCycles: 0, ownerRepositories: async () => ({ runnerHeartbeat: { read: async () => null } }),
     readRunnerControls: async () => ({ config: null, state: null, research: [] }),
     readIntents: () => ({ paused: false, runnerPause: { paused: false } }),
@@ -147,7 +148,7 @@ test("CURRENT uses initialized contracts with the running SHA and directory whil
       resolved = true;
       return ok;
     };
-    const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", CODE_ROOT: "/running-release", RUNNING_CODE_SHA: "a".repeat(40),
+    const context = createContext({ storedKeyEnvironment, AUTO_RELEASE_HANDOFF: true, ROOT: ".", CODE_ROOT: "/running-release", RUNNING_CODE_SHA: "a".repeat(40),
       runtimeAdmissionsHeld: true, pendingRestart: { clear: () => calls.push("restart cleared") }, resumeRuntimeReleaseInstall: () => { calls.push("install recovery"); return null; },
       inspectRuntimeRelease: async () => { calls.push("inspect"); return { state: "CURRENT" }; },
       applyRuntimeContracts,
@@ -183,7 +184,7 @@ test("CURRENT uses initialized contracts with the running SHA and directory whil
 test("recovered install exits for freshly loaded dependencies before inspecting or opening clocks", async () => {
   const fn = source.match(/async function reconcileRuntimeReleaseAtBoundary\([\s\S]*?\n\}/)?.[0];
   assert.ok(fn);
-  const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", console: { log: () => {} },
+  const context = createContext({ storedKeyEnvironment, AUTO_RELEASE_HANDOFF: true, ROOT: ".", console: { log: () => {} },
     resumeRuntimeReleaseInstall: () => ({ state: "UPDATED", detail: "installed" }),
     inspectRuntimeRelease: () => { throw new Error("must reload dependencies before inspecting"); },
   });
@@ -196,7 +197,7 @@ test("console children use the research idle guard", async () => {
     const fn = source.match(new RegExp(`async function ${name}\\([\\s\\S]*?\\n\\}`))?.[0];
     assert.ok(fn);
     let observed: number | undefined;
-    const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], TS_CHILD: [], ROOT: ".", CODE_ROOT: ".", process,
+    const context = createContext({ storedKeyEnvironment, CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], TS_CHILD: [], ROOT: ".", CODE_ROOT: ".", process,
       admitJobLaunch, JOB_SLOWED_WORDS, INTERVAL_MIN:60,
       RUNTIME_NO_PROGRESS_MS: 600_000, standingChildEnvironment: () => process.env,
       recoverExitedWindowHolder: async () => {}, console: { log: () => {}, error: () => {} },

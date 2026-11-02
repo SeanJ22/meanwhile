@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { outsideSourceAcquisition } from "../sources/acquisition-scope.ts";
 
@@ -160,7 +161,7 @@ const checkpointIO = memoryCacheIO(128 * 1024 * 1024);
 
 /** Every runtime uses the same version check. Runner children share their
  * supervisor's disposable copies; other processes use bounded local copies. */
-export function runtimeCivicReadCache(connection = process.env.DATABASE_URL ?? ""): CivicReadCache {
+export function runtimeCivicReadCache(connection = storedKeyValue("DATABASE_URL") ?? ""): CivicReadCache {
   const endpoint = process.env.WTP_CIVIC_READ_CACHE_URL;
   const token = process.env.WTP_CIVIC_READ_CACHE_TOKEN;
   const namespace = hash(connection);

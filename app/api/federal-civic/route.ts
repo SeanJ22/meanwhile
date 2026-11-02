@@ -1,7 +1,9 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readFederalMember, readFederalRules } from "@/lib/sources/congress/reader";
 
 export const GET = readerRoute("/api/federal-civic", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams, member = params.get("member");
   if (member && !/^congress:[A-Z]\d{6}$/.test(member)) return Response.json({ error: "Invalid member identifier." }, { status: 400 });
   const offsetInput = params.get("offset") ?? "0";

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 /** Rollback server adapter: the existing release credential and read-only migration reader only; no build, push or migration. */
 import { createHash } from "node:crypto";
 import { readAppliedMigrationWhen } from "../db/applied-migrations.ts";
@@ -52,8 +53,8 @@ export async function readRollbackCatalog(sha: string, fetchImpl: typeof fetch =
 export function netlifyRollbackAdapter(input: { readonly env?: Readonly<Record<string, string | undefined>>; readonly fetchImpl?: typeof fetch;
   readonly readApplied?: () => Promise<readonly AppliedRollbackMigration[] | null>;
   readonly readCatalog?: (sha: string) => Promise<readonly RollbackMigration[] | null> } = {}): RollbackAdapter {
-  const env = input.env ?? process.env, fetchImpl = input.fetchImpl ?? fetch;
-  const token = env.NETLIFY_AUTH_TOKEN || env.NETLIFY_TOKEN;
+  const env = input.env ?? storedKeyEnvironment(), fetchImpl = input.fetchImpl ?? fetch;
+  const token = storedKeyValue("NETLIFY_AUTH_TOKEN", env) || storedKeyValue("NETLIFY_TOKEN", env);
   const siteId = env.NETLIFY_SITE_ID || NETLIFY_SITE_ID_DEFAULT;
   const headers = { authorization: `Bearer ${token ?? ""}` };
   async function json(path: string): Promise<unknown> {
@@ -64,7 +65,7 @@ export function netlifyRollbackAdapter(input: { readonly env?: Readonly<Record<s
   }
   async function published() { return deploy(object(await json(`/sites/${encodeURIComponent(siteId)}`))?.published_deploy); }
   const readApplied = input.readApplied ?? (async () => {
-    const connection = env.DATABASE_URL;
+    const connection = storedKeyValue("DATABASE_URL", env);
     if (!connection) return null;
     let host = "";
     try { host = new URL(connection).hostname; } catch { return null; }

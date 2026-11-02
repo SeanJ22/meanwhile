@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 /** Each read fails alone to null, so its row says why it is not measured instead of showing a zero. */
 import { databaseReadOnlySql } from "../../reader/database.ts";
 import type { PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
@@ -12,7 +13,7 @@ async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
 }
 
 export async function readRecentPostingToLive(): Promise<readonly PostingToLiveRow[]> {
-  const url=process.env.DATABASE_URL;
+  const url=storedKeyValue("DATABASE_URL");
   if(!url) throw Error("The reader database is not configured");
   const now=new Date();
   return readPostingWindow(databaseReadOnlySql(url),new Date(now.getTime()-7*86_400_000).toISOString(),now.toISOString());

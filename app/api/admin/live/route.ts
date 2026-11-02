@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * The cheap half of a two-step loop: the page polls this pulse and asks for a fresh render only when the
@@ -38,6 +39,7 @@ function unreadPulse(at: string): LivePulse {
 }
 
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({
     headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,

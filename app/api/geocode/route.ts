@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { OUTBOUND_USER_AGENT } from "@/lib/geo/outbound-agent";
 import {
   CENSUS_BENCHMARK,
@@ -25,6 +26,7 @@ const NO_STORE = {
 } as const;
 
 export async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   let address: string;
   try {
     const body = (await request.json()) as { address?: unknown };

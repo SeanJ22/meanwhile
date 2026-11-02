@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 import { pathToFileURL } from "node:url";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
@@ -7,7 +8,7 @@ import { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
 export { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
 import { fillMissingZipLocations } from "../lib/place-map/location-import.ts";
 
-export async function prepareProductionPlacePages(env: Record<string,string|undefined> = process.env): Promise<void> {
+export async function prepareProductionPlacePages(env: Record<string,string|undefined> = storedKeyEnvironment()): Promise<void> {
   if (!productionBuildCanApply(env)) {
     console.log("place pages: identities and queue skipped outside the Netlify production main build; writes=0");
     return;

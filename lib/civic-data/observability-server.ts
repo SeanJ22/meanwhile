@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import "server-only";
 
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
@@ -9,13 +10,13 @@ import { databaseReadOnlySql } from "../reader/database.ts";
 export const ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS = 4_000;
 
 export async function readRoutinePublicationCounts(): Promise<{ readonly total: number; readonly readBack: number } | null> {
-  const connection = process.env.DATABASE_URL?.trim();
+  const connection = storedKeyValue("DATABASE_URL")?.trim();
   return connection ? readPublicationCounts(databaseReadOnlySql(connection, ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS),
     [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS]) : null;
 }
 
 export async function readRoutinePublicationStatus(): Promise<PublicationStatusRead> {
-  const connection = process.env.DATABASE_URL?.trim() ?? "";
+  const connection = storedKeyValue("DATABASE_URL")?.trim() ?? "";
   if (connection === "") {
     return { kind: "NOT_CONNECTED", detail: "This Admin runtime has no routine civic-data store connection; nothing was read." };
   }

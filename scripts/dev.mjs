@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../lib/core/keys-values.ts";
 /**
  * `pnpm dev` — `next dev`, with its pid recorded so a later step can stop it.
  *
@@ -29,7 +30,7 @@ const nextBin = require.resolve("next/dist/bin/next");
 const child = spawn(process.execPath, [nextBin, "dev"], {
   cwd: ROOT,
   stdio: "inherit",
-  env: { ...process.env, PORT: String(PORT) },
+  env: { ...storedKeyEnvironment(), PORT: String(PORT) },
 });
 
 writePid(child.pid);

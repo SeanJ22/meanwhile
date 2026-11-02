@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { withReaderRoute, withReaderSelection } from "@/lib/db/reader-route";
 import { readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
 import { readZipPlace, withPlaceMapReads } from "@/lib/place-map/reader";
@@ -34,6 +35,7 @@ function countLookup(request: Request, zip: string, districts: string[]) {
 
 /** The current map's state link is available before a reader enters an address. */
 export async function GET(request: Request): Promise<Response> {
+  await loadWebsiteSavedKeys();
   return withReaderRoute("/api/voting-sites", async () => {
     const params = new URL(request.url).searchParams;
     if ([...params.keys()].some(key => key !== "state") || params.getAll("state").length !== 1) return empty(400, false);
@@ -54,6 +56,7 @@ async function heldVotingFile(state: string, place: VotingReaderPlace, deadline:
 }
 
 export async function POST(request: Request): Promise<Response> {
+  await loadWebsiteSavedKeys();
   return withReaderRoute("/api/voting-sites", () => withPlaceMapReads(async () => {
     const started = Date.now();
     const deadline = started + 2400;

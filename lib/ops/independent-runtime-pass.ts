@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 export interface IndependentRuntimeOperation {
   readonly id: string;
   readonly run: () => Promise<void>;
@@ -112,11 +113,11 @@ const PASS_DEADLINE_ENV = "WTP_PASS_DEADLINE_AT";
 
 /** A standing child's environment with its lane deadline. */
 export function withPassDeadline(env: NodeJS.ProcessEnv, deadlineMs: number): NodeJS.ProcessEnv {
-  return { ...env, [PASS_DEADLINE_ENV]: new Date(deadlineMs).toISOString() };
+  return { ...storedKeyEnvironment(env), [PASS_DEADLINE_ENV]: new Date(deadlineMs).toISOString() };
 }
 
 /** The deadline a standing child was given; none when run by hand. */
-export function passDeadlineFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): number {
-  const at = Date.parse(env[PASS_DEADLINE_ENV] ?? "");
+export function passDeadlineFromEnv(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): number {
+  const at = Date.parse(storedKeyEnvironment(env)[PASS_DEADLINE_ENV] ?? "");
   return Number.isFinite(at) ? at : Number.POSITIVE_INFINITY;
 }

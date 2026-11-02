@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { registryJurisdictions } from "../civic-data/state-scopes.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { CIVIC_DATA_PROMOTION_OPERATION } from "../civic-data/production-write.ts";
@@ -5,7 +6,7 @@ import { neon } from "../db/client.ts";
 import type { ReaderCacheScope } from "../reader/cache.ts";
 /** Publication already committed. A measurement failure is visible and cannot withhold that fact. */
 export async function countReaderInvalidation(scope:ReaderCacheScope,purged:boolean) {
-  const url=process.env.DATABASE_URL;
+  const url=storedKeyValue("DATABASE_URL");
   if(!url)return;
   const states=scope.national||scope.nationalPeople?["US"]:(scope.states??[]).flatMap(registryJurisdictions);
   if(!states.length)states.push("US");

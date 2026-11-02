@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
@@ -428,7 +429,7 @@ async function main(){
   const control=controlPlaneUrlFromEnv();
   if(!control)throw new Error("Campaign source doors require the configured control-plane database");
   const repos=await createPgRepositories(control,new Date().toISOString(),{skipBootstrap:true});
-  const database=new URL(process.env.DATABASE_URL!);
+  const database=new URL(storedKeyValue("DATABASE_URL")!);
   const cacheKey=createHash("sha256").update(database.hostname.replace("-pooler","")+database.pathname).digest("hex").slice(0,24);
   const clocks=await readHeldFactClocks();
   const facts=readerFactDb(),held=await readCampaignMoneyStateWork(facts.query,state);

@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 import { neon } from "../db/client.ts";
 
 import { SEARCH_LOG_EVENT_TYPES, type SearchLogEventType } from "../db/search-log.ts";
@@ -157,9 +158,9 @@ export type ReaderStoreQuery = (
 
 /** The detail names the variable, never its value, and a failure reports the error's name, never its text. */
 export function openReaderStore(
-  env: Record<string, string | undefined> = process.env,
+  env: Record<string, string | undefined> = storedKeyEnvironment(),
 ): { readonly ok: true; readonly sql: ReaderStoreQuery } | { readonly ok: false; readonly detail: string } {
-  const url = (env[READER_STORE_URL_VAR] ?? "").trim();
+  const url = (storedKeyValue(READER_STORE_URL_VAR, env) ?? "").trim();
   if (url === "") {
     return {
       ok: false,

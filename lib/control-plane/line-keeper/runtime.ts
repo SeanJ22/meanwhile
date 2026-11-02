@@ -1,10 +1,11 @@
+import { storedKeyValue } from "../../core/keys-values.ts";
 import { neon } from "../../db/client.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { withStoreBudget } from "../repository/request-bounds.ts";
 import { runLineKeeper } from "./keep.ts";
 import { shareVersionedRows } from "../../db/versioned-rows.ts";
 function clients() {
-  const control=process.env.WTP_CONTROL_PLANE_DATABASE_URL,reader=process.env.DATABASE_URL;
+  const control=process.env.WTP_CONTROL_PLANE_DATABASE_URL,reader=storedKeyValue("DATABASE_URL");
   if(!control||!reader)throw Error("The line keeper needs both database connections");
   installDatabaseTransferCounter();
   const controlSql=neon(control);

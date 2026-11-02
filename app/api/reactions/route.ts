@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { validReactionTargetsFor, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { readerRoute } from "@/lib/api/reader-route";
@@ -238,5 +239,6 @@ async function postWithSettings(request: Request) {
 }
 
 export const POST = readerRoute("/api/reactions", async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   return withReaderFeatures(() => postWithSettings(request));
 });

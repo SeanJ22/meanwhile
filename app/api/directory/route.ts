@@ -1,7 +1,9 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
-import { readCardMemberOffices, readCardFederalDirectory } from "@/lib/officials/card-authorities-read";
+import { readCardFederalDirectory } from "@/lib/officials/card-authorities-read";
+import { readMemberOffices } from "@/lib/officials/member-offices-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 
@@ -14,6 +16,7 @@ const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+|(?:plural|person):(?:[a-z]{2}:)?[a-f0-9-]+|ocd-person\/[a-f0-9-]+)$/;
 
 export const GET = readerRoute("/api/directory", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams;
 
   /* A missing or malformed `member` refuses with a stated reason; the empty answer is reserved for a real member we hold no record of. */
@@ -33,7 +36,7 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
   if (!FEDERAL_ID.test(member)) {
     let offices;
     try {
-      offices = await readCardMemberOffices(member,params.get("state") ?? undefined);
+      offices = await readMemberOffices(member,params.get("state") ?? undefined);
     } catch {
       return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the office records just now." },
         { status: 503, headers: { "Cache-Control": "private, no-store" } });

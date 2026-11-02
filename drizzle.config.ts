@@ -1,3 +1,4 @@
+import { storedKeyValue } from "./lib/core/keys-values.ts";
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
@@ -5,7 +6,7 @@ export default defineConfig({
   schema: "./lib/db/schema.ts",
   out: "./lib/db/migrations",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: storedKeyValue("DATABASE_URL")!,
   },
   strict: true,
   verbose: true,

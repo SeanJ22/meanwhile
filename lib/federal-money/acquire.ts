@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createReadStream } from "node:fs";
 import { mkdir, open, readFile, readdir, rm, writeFile, truncate, rename } from "node:fs/promises";
@@ -102,7 +103,7 @@ async function fema(ctx: Context, state: string, cursor: FederalMoneyCursor): Pr
 }
 async function fac(ctx: Context, state: string, cursor: FederalMoneyCursor): Promise<FederalMoneyPage> {
   if (cursor.phase === "historic") return historicAudits(ctx, state, cursor);
-  const key = ctx.dataGovApiKey ?? process.env.DATA_GOV_API_KEY;
+  const key = ctx.dataGovApiKey ?? storedKeyValue("DATA_GOV_API_KEY");
   if (!key) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Federal Audit Clearinghouse: DATA_GOV_API_KEY is unavailable in this runtime.");
   const headers = { "X-Api-Key": key, Prefer: "count=exact" }, table = cursor.phase;
   if (table !== "general" && !(childTables as readonly string[]).includes(table)) throw new Error("Invalid Federal Audit Clearinghouse continuation.");
@@ -225,7 +226,7 @@ async function spending(ctx: Context, state: string, cursor: FederalMoneyCursor)
 async function sam(ctx: Context, state: string, cursor: FederalMoneyCursor): Promise<FederalMoneyPage> {
   const next: FederalMoneyCursor | null = cursor.registered === false ? null : { source: "sam-gov-entities", phase: "extract", registered: false, since: cursor.since };
   if (cursor.bulkId) return bulkPage(ctx, state, cursor, next);
-  const key = ctx.samGovApiKey ?? process.env.SAM_GOV_API_KEY; if (!key) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "SAM.gov: SAM_GOV_API_KEY is unavailable in this runtime.");
+  const key = ctx.samGovApiKey ?? storedKeyValue("SAM_GOV_API_KEY"); if (!key) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "SAM.gov: SAM_GOV_API_KEY is unavailable in this runtime.");
   const headers = { "X-Api-Key": key, Accept: "application/json", "Content-Type": "application/json" }, url = new URL(`${SAM}/entities`);
   url.searchParams.set("api_key", key); url.searchParams.set("physicalAddressProvinceOrStateCode", state); url.searchParams.set("samRegistered", cursor.registered === false ? "No" : "Yes"); url.searchParams.set("includeSections", "entityRegistration,coreData"); url.searchParams.set("format", "json");
   if (cursor.since) { const format = (date: Date) => `${String(date.getUTCMonth() + 1).padStart(2, "0")}/${String(date.getUTCDate()).padStart(2, "0")}/${date.getUTCFullYear()}`; url.searchParams.set("updateDate", `[${format(new Date(cursor.since))},${format(new Date(ctx.now()))}]`); }

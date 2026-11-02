@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { createHash } from "node:crypto";
 import { getStore } from "@netlify/blobs";
 import { matchTopic } from "../routing/match.ts";
@@ -60,7 +61,7 @@ export async function classifyReaderEventTopic(question: string, options: {
   const held = await cache.read(key);
   if (held) return held;
   if (ripcordPulled("ripcord.askClassifier")) return "free-form";
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = storedKeyValue("ANTHROPIC_API_KEY");
   if (!apiKey) return "free-form";
   const send = meteredAskFetch(options.fetchImpl ?? fetch, "reader-event-topic", options.recordCost);
   let topic: string;

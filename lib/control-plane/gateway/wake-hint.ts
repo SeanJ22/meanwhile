@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 /** A notification only: the receipt in Postgres is the truth, and a failed hint write changes no action's result. */
 import type { ActionReceipt } from "./contract.ts";
 
@@ -20,10 +21,10 @@ export function wakeHintOf(receipt: Pick<ActionReceipt, "receiptId" | "type">, a
 }
 
 /** The Blobs writer, or null when the host has no Blobs destination configured (nothing to wake). */
-export function wakeHintWriterFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): WakeHintWriter | null {
+export function wakeHintWriterFromEnv(env: Readonly<Record<string, string | undefined>> = storedKeyEnvironment()): WakeHintWriter | null {
   if (env.WTP_VAULT_PROVIDER !== "netlify") return null;
   const siteID = env.WTP_BLOBS_SITE_ID?.trim();
-  const token = env.WTP_BLOBS_TOKEN?.trim();
+  const token = storedKeyValue("WTP_BLOBS_TOKEN", env)?.trim();
   if (!siteID || !token) return null;
   const name = env.WTP_VAULT_STORE?.trim() || DEFAULT_WAKE_STORE;
   return async (hint) => {

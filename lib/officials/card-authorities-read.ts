@@ -7,8 +7,7 @@ import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { federalDirectoryScope, type FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
 import { placePortraitsScope } from "./federal-directory-read-model.ts";
 import { federalOfficeRecordsForMember } from "./member-offices.ts";
-import { readMemberOffices } from "./member-offices-read.ts";
-import { statePeopleScopeForId, statePeopleSourcePointers } from "./people-identity.ts";
+import { statePeopleSourcePointers } from "./people-identity.ts";
 
 /** Action identity uses the same held rosters and bridge, without unrelated state services. */
 export async function readOfficialActionIdentityAuthorities(subject: string, states: readonly string[]): Promise<void> {
@@ -32,14 +31,6 @@ export async function readOfficialActionIdentityAuthorities(subject: string, sta
     ...peopleStates.map(state => readStatePeopleProjection(`US-${state}`, {store})),
     ...federal ? [refreshFederalDirectoryFromPromoted(states, {store})] : [],
   ]);
-}
-
-/** Existing native office matching, source fallback and owner choices receive only their authorities. */
-export async function readCardMemberOffices(member: string, state?: string) {
-  const scope = statePeopleScopeForId(member, state);
-  if (currentReaderAuthorityEdge() || !scope) return readMemberOffices(member, state);
-  const people = await readCanonicalShelf(statePeopleSourcePointers(scope));
-  return readMemberOffices(member, state, {store: people});
 }
 
 function memberDirectory(value: FederalDirectoryReadModel, member: string) {

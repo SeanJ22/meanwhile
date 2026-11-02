@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../core/keys-values.ts";
 /**
  * Install a deployed release into its own checkout while the running one keeps admitting work, so the drained window
  * shrinks to the switch itself. The drain-first path stays behind WTP_RELEASE_DRAIN_FIRST=1.
@@ -51,7 +52,7 @@ export type AsyncRunCommand = (
 export const defaultAsyncRunCommand: AsyncRunCommand = (executable, args, options) =>
   new Promise(resolve => {
     if (options.signal?.aborted) { resolve({ status: null, stdout: "", stderr: "COMMAND_ABANDONED" }); return; }
-    const child = spawn(executable, [...args], { cwd: options.cwd, env: options.env ?? process.env, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(executable, [...args], { cwd: options.cwd, env: options.env ?? storedKeyEnvironment(), stdio: ["ignore", "pipe", "pipe"] });
     const stdout: Buffer[] = [];
     let stdoutBytes = 0;
     let overflow = false;
@@ -192,7 +193,7 @@ export async function stageRuntimeRelease(input: {
 
   const command = runtimePackageManagerCommand();
   if (command === null) return fail("COREPACK_ENTRY_UNAVAILABLE", "the running Node installation has no Corepack JavaScript entry");
-  const installed = await run(command.executable, command.args, { cwd: directory, timeoutMs: INSTALL_TIMEOUT_MS, env: { ...process.env, CI: "true" } });
+  const installed = await run(command.executable, command.args, { cwd: directory, timeoutMs: INSTALL_TIMEOUT_MS, env: { ...storedKeyEnvironment(), CI: "true" } });
   if (installed.status !== 0) return fail("FROZEN_INSTALL_FAILED", concise(installed));
 
   const head = await run("git", ["rev-parse", "HEAD"], { cwd: directory, timeoutMs: GIT_TIMEOUT_MS });

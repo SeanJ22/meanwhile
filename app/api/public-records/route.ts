@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { NextResponse } from "next/server";
 import { readPublicRecords } from "@/lib/civic-data/public-records";
@@ -6,6 +7,7 @@ import { governmentListingsForState } from "@/lib/registry/server";
 import { FIPS_TO_STATE } from "@/lib/ocd/fips";
 
 export const GET = readerRoute("/api/public-records", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams;
   if (params.get("kind") === "governments") {
     const state = (params.get("state") ?? "").toUpperCase();

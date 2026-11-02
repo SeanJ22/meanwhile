@@ -30,7 +30,7 @@ import { middleware } from "@/middleware.ts";
 import { GET as startGET } from "@/app/(admin)/admin/auth/google/route.ts";
 import { GET as callbackGET } from "@/app/(admin)/admin/auth/callback/route.ts";
 import { POST as breakGlassPOST } from "@/app/api/admin/session/route.ts";
-import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins.ts";
+import { ADMIN_ORIGIN } from "@/lib/ops/origins.ts";
 import {
   ADMIN_SECRET_VAR,
   ADMIN_SESSION_COOKIE,
@@ -1055,7 +1055,7 @@ test("the login page renders Continue with Google and shows the secret form ONLY
   const form = source.indexOf("<form");
   const gate = source.indexOf("{breakGlass && (");
   assert.ok(gate >= 0 && form > gate, "the form must sit inside the break-glass gate");
-  assert.match(source, /googleSignInReadiness\(process\.env\)/, "missing variables are named at render");
+  assert.match(source, /googleSignInReadiness\(storedKeyEnvironment\(\)\)/, "missing variables are named at render");
   assert.doesNotMatch(source, /OWNER_ADMIN_EMAIL/, "the enrolled address is not rendered on an unauthenticated surface");
 });
 

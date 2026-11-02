@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { askPlaybook } from "../ask/runtime-settings.ts";
 /**
  * The unsourced fallback: when no held record answers, Ask may answer from the Claude API (the tier
@@ -106,7 +107,7 @@ export async function askUnsourced(
   question: string,
   options: FallbackOptions = {},
 ): Promise<FallbackOutcome> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = storedKeyValue("ANTHROPIC_API_KEY");
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
 
   const impl = meteredAskFetch(options.fetchImpl ?? fetch, "unsourced-fallback", options.recordCost);

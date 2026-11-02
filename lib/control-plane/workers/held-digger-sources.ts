@@ -1,3 +1,4 @@
+import { storedKeyEnvironment } from "../../core/keys-values.ts";
 import { neon } from "../../db/client.ts";
 import { AGGREGATE_LIST_READ_PAGE, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { boundedQuery, type BoundableSql } from "../repository/request-bounds.ts";
@@ -74,7 +75,7 @@ export function createHeldDiggerReads(sql: BoundableSql, pageSize = AGGREGATE_LI
 }
 
 /** A production pass never falls back to scanning an in-memory or whole-table repository history. */
-export function configuredHeldDiggerReads(env: NodeJS.ProcessEnv = process.env): HeldDiggerReads {
+export function configuredHeldDiggerReads(env: NodeJS.ProcessEnv = storedKeyEnvironment()): HeldDiggerReads {
   const url = controlPlaneUrlFromEnv(env);
   if (!url) throw new Error("HELD_DIGGER_SOURCE_DATABASE_UNCONFIGURED");
   return createHeldDiggerReads(neon(url));

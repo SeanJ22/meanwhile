@@ -1,3 +1,4 @@
+import { storedKeyValue } from "../core/keys-values.ts";
 import { countReaderInvalidation } from "../counts/cache.ts";
 import { createHash } from "node:crypto";
 import { REGISTRY_STATES, registryJurisdictions } from "../civic-data/state-scopes.ts";
@@ -17,8 +18,8 @@ export type ReaderCachePurger = (tags: readonly string[]) => Promise<ReaderCache
 /** The same tag purge is used by publication jobs and deployed reader functions. */
 export async function purgeReaderCacheTags(tags: readonly string[]): Promise<ReaderCachePurgeResult> {
   const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim() || process.env.WTP_BLOBS_SITE_ID?.trim();
-  const token = process.env.NETLIFY_API_TOKEN?.trim() || process.env.NETLIFY_AUTH_TOKEN?.trim() || process.env.NETLIFY_TOKEN?.trim()
-    || process.env.WTP_BLOBS_TOKEN?.trim() || process.env.NETLIFY_BLOBS_TOKEN?.trim();
+  const token = storedKeyValue("NETLIFY_API_TOKEN")?.trim() || storedKeyValue("NETLIFY_AUTH_TOKEN")?.trim() || storedKeyValue("NETLIFY_TOKEN")?.trim()
+    || storedKeyValue("WTP_BLOBS_TOKEN")?.trim() || storedKeyValue("NETLIFY_BLOBS_TOKEN")?.trim();
   if (!siteID || !token || tags.length === 0) return { purged: false, detail: "no purge credentials or tags" };
   try {
     const response = await fetch("https://api.netlify.com/api/v1/purge", {
@@ -158,7 +159,7 @@ export function readerCacheScopeForPublication(scope: string, context: {
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
 export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags,
   query?: Query | null): Promise<ReaderCachePurgeResult> {
-  if (query !== null && (query || process.env.DATABASE_URL)) await enqueueReaderPlaces(scope, query ?? readerFactDb().query);
+  if (query !== null && (query || storedKeyValue("DATABASE_URL"))) await enqueueReaderPlaces(scope, query ?? readerFactDb().query);
   // Explicit global owner actions and outcomes without a known place still clear place answers.
   return invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
 }

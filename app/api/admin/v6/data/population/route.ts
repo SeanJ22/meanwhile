@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../../../lib/core/keys-entry.ts";
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -6,6 +7,7 @@ import { readPopulationLoadCounts } from "@/lib/reference/population-facts.ts";
 
 export const dynamic = "force-dynamic";
 async function get(request: NextRequest): Promise<NextResponse> {
+  await loadWebsiteSavedKeys();
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   const headers = { "cache-control": "private, no-store" };

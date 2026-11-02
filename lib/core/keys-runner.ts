@@ -1,12 +1,11 @@
 import { productionKeysStore, type KeysStore } from "./keys-store.ts";
+import { refreshSavedKeys } from "./keys-runtime.ts";
 import { testDueKeys } from "./keys-test.ts";
 import type { BriefProblem } from "../counts/problem-groups.ts";
 import type { KeyView } from "./keys-model.ts";
-import { importRuntimeKeys } from "./keys-import.ts";
-import { billingCollectorEnvironment } from "../control-plane/provider-billing-environment.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 
-export function savedKeysLane(run: () => Promise<void>): IndependentRuntimeLane {
+export function savedKeysLane(run: IndependentRuntimeLane["run"]): IndependentRuntimeLane {
   return { id: "saved-keys", everyMs: 60_000, budgetMs: 30_000, run };
 }
 
@@ -21,24 +20,12 @@ export function keyProblems(keys: readonly KeyView[], at: string): readonly Brie
 
 let firstPass = true;
 
-/** Uses the same control-plane connection as Admin. No Admin request or Google session is involved. */
-export async function keysRunnerPass(store: KeysStore = productionKeysStore(), at = new Date().toISOString(), dependencies: {
-  readonly env?: NodeJS.ProcessEnv; readonly github?: () => string | null;
-  readonly report?: Parameters<typeof importRuntimeKeys>[4];
-} = {}): Promise<void> {
-  if ((dependencies.env ?? process.env).WTP_RUNTIME_MODE === "production") {
-    const env = dependencies.env ?? billingCollectorEnvironment();
-    const savedGithub = (await store.list(true)).find(row => row.name === "GH_TOKEN");
-    if (!env.GH_TOKEN?.trim() && savedGithub && !savedGithub.deleted) env.GH_TOKEN = await store.read("GH_TOKEN");
-    if (!env.GH_TOKEN?.trim() && !savedGithub) {
-      delete env.GH_TOKEN; if (!env.GITHUB_TOKEN?.trim()) delete env.GITHUB_TOKEN;
-      const { runtimeGithubCredential } = await import("../ops/runtime-release-handoff.ts");
-      env.GH_TOKEN = dependencies.github ? dependencies.github() ?? undefined : runtimeGithubCredential({ root: process.cwd(), env }) ?? undefined;
-    }
-    await importRuntimeKeys(env, "runner", at, store, dependencies.report);
-    if (firstPass) { for (const key of await store.list()) if (!key.working) await store.retest(key.name, at); firstPass = false; }
-  }
+/** The standing reader refreshes directly from the control plane and opens changed versions. */
+export async function keysRunnerPass(injected?: KeysStore, at = new Date().toISOString()): Promise<void> {
+  if (!injected) await refreshSavedKeys("runner", true);
+  const store = injected ?? productionKeysStore();
+  if (!injected && firstPass) { for (const key of await store.list()) if (!key.working) await store.retest(key.name, at); firstPass = false; }
   await testDueKeys(store, at);
-  const keys = await store.list();
-  await Promise.all(keys.map(async row => { await store.read(row.name, true, at); }));
+  // Explicit fixtures exercise the same direct read contract without connecting to a live runtime.
+  if (injected) await Promise.all((await store.list()).map(async row => { await store.read(row.name, true, at); }));
 }

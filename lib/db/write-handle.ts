@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../core/keys-values.ts";
 /**
  * The one sanctioned write path to production, asked for by its own name.
  * Two refusals:
@@ -39,14 +40,15 @@ export interface WriteHandle {
  * reader can act on. `env` is injected for tests.
  */
 export function resolveProductionWriteHandle(
-  env: Record<string, string | undefined> = process.env,
+  env: Record<string, string | undefined> = storedKeyEnvironment(),
   requestedVariable: string = WRITE_VARIABLE,
 ): WriteHandle {
   if (env.WTP_RUNTIME_MODE === "staging" && requestedVariable === WRITE_VARIABLE) {
-    if (env.WTP_DB_ROLE !== "local" || !env.DATABASE_URL) throw new WriteHandleRefused("staging requires WTP_DB_ROLE=local and DATABASE_URL");
-    const u = new URL(env.DATABASE_URL);
-    if (isReadonlyUser(env.DATABASE_URL)) throw new WriteHandleRefused("staging DATABASE_URL is read-only");
-    return { connection: env.DATABASE_URL, variable: "DATABASE_URL", role: decodeURIComponent(u.username), host: u.hostname, database: u.pathname.replace(/^\//, "") };
+    const localConnection = storedKeyValue("DATABASE_URL", env);
+    if (env.WTP_DB_ROLE !== "local" || !localConnection) throw new WriteHandleRefused("staging requires WTP_DB_ROLE=local and DATABASE_URL");
+    const u = new URL(localConnection);
+    if (isReadonlyUser(localConnection)) throw new WriteHandleRefused("staging DATABASE_URL is read-only");
+    return { connection: localConnection, variable: "DATABASE_URL", role: decodeURIComponent(u.username), host: u.hostname, database: u.pathname.replace(/^\//, "") };
   }
   if (requestedVariable === REFUSED_VARIABLE) {
     throw new WriteHandleRefused(
@@ -61,7 +63,7 @@ export function resolveProductionWriteHandle(
     );
   }
 
-  const connection = env[WRITE_VARIABLE];
+  const connection = storedKeyValue(WRITE_VARIABLE, env);
   if (!connection) {
     throw new WriteHandleRefused(
       `${WRITE_VARIABLE} is not set. This is the one sanctioned write path to production; ` +

@@ -1,3 +1,4 @@
+import "../helpers/install-fixture-keys.ts";
 import { monitorEventLoopDelay, performance } from "node:perf_hooks";
 import { startCivicReadCacheHost } from "../../lib/db/civic-read-cache-host.ts";
 

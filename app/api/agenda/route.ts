@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "@/lib/meetings/edge-serving";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
@@ -12,6 +13,7 @@ import { readSelectedMeetingOutcomes } from "@/lib/outcomes/store";
 export const runtime = "nodejs";
 
 export const GET = readerRoute("/api/agenda", async function GET(request: Request) {
+  await loadWebsiteSavedKeys();
   const params = new URL(request.url).searchParams;
   const meetingId = params.get("meetingId");
   const bodyId = params.get("bodyId");

@@ -1,3 +1,4 @@
+import { loadWebsiteSavedKeys } from "../../../../lib/core/keys-entry.ts";
 import { readerRoute } from "@/lib/api/reader-route";
 import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
 import type { CivicDataReadMetadata } from "@/lib/civic-data/read-model";
@@ -49,6 +50,7 @@ function getIpLimiter() {
 }
 
 export const POST = readerRoute("/api/ask/agenda", async function POST(request: Request) {
+  await loadWebsiteSavedKeys();
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return Response.json({ error: "payload too large" }, { status: 413 });

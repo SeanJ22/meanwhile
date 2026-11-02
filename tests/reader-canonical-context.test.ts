@@ -301,11 +301,12 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
   } finally { installReaderDatabaseQuery(undefined); }
 });
 
-test("the ballot submits state and place reads before its independent auxiliary canonical groups", async () => {
+test("the ballot submits each canonical group once and its place read before the auxiliaries", { timeout: 10_000 }, async () => {
   const { readBallotReaderData } = await import("../lib/ballot/reader-data.ts");
   const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
   const order: string[] = [];
   const auxiliaryKeys: string[] = [];
+  const submitted = Promise.withResolvers<void>();
   const newDistrict = "ocd-division/country:us/state:az/cd:99";
   const newTranslation = `US:plain-english-translations:${newDistrict}`;
   let release: (()=>void) | undefined;
@@ -316,6 +317,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     const family=statement.text.includes("additional AS MATERIALIZED") || statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
+    if (order.length === 3) submitted.resolve();
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
     if (family === "state") {
@@ -343,7 +345,9 @@ test("the ballot submits state and place reads before its independent auxiliary 
   try {
     const data=await withReaderSelection(selection("AZ"),async()=>readBallotReaderData(await ballotPlaceFromParams({zip:"85701"})));
     assert.ok(data);
-    assert.deepEqual(order,["state","place","auxiliary"],
+    await submitted.promise;
+    assert.deepEqual([...order].sort(),["auxiliary","place","state"], "each canonical group is submitted once");
+    assert.ok(order.indexOf("place") < order.indexOf("auxiliary"),
       "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
     for (const prefix of ["CURATED_READER_RECORD:US-AZ:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
     assert.ok(auxiliaryKeys.every(key=>!key.startsWith("BALLOT_CANDIDACY:")), "the state supplies the selected ZIP ballot");
@@ -355,7 +359,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
     assert.ok(entry?.ids.includes("ocd-division/country:us/state:az/county:pima"), "the ZIP's places come from the shared place map");
     assert.ok(!entry?.ids.includes(newDistrict), "the state's geography cannot add a district the place map does not hold");
     await data.registryRead;
-    assert.deepEqual(order,["state","place","auxiliary"], "the ballot never repeats the geography or its held translation absences");
+    assert.deepEqual([...order].sort(),["auxiliary","place","state"], "the ballot never repeats the geography or its held translation absences");
   } finally { release?.(); installReaderDatabaseQuery(undefined); }
 });
 

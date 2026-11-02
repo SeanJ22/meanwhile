@@ -1,3 +1,4 @@
+import { loadNativeSavedKeys, type KeyFunctionContext } from "../../lib/core/keys-native.ts";
 /** The existing Ask engine, without booting the unrelated Next page server.
  * No alternative acquisition, interpretation, validation or publication path. */
 import { randomUUID } from "node:crypto";
@@ -17,12 +18,12 @@ const engine = Promise.all([
   return { POST: module.POST, prefetchReaderGeography: registry.prefetchReaderGeography };
 });
 
-const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<unknown>): void; server?: { region?: string } }): Promise<Response> => {
+const groundedAsk = async (request: Request, context: KeyFunctionContext & { waitUntil(work: Promise<unknown>): void; server?: { region?: string } }): Promise<Response> => {
   const started = performance.now();
   const startedAt = Date.now();
   const processAgeMs = Math.round(process.uptime() * 1000);
   const ordinal = ++requests;
-  const { POST, prefetchReaderGeography } = await engine;
+  const [{ POST, prefetchReaderGeography }] = await Promise.all([engine, loadNativeSavedKeys(context)]);
   const engineWaitMs = performance.now() - started;
   // Start the same file reads used by the Reader beside the first request's
   // manifest/network reads, as /api/meetings and representation already do.

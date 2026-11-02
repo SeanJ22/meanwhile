@@ -1,3 +1,4 @@
+import { storedKeyEnvironment, storedKeyValue } from "../../core/keys-values.ts";
 /**
  * Order matters: host (a public-host request 404s), then origin, then session.
  * Read routes pass `checkOrigin: false` on purpose; a cross-site GET cannot read the response.
@@ -37,7 +38,7 @@ export async function guardAdminRequest(input: {
   if (!isAdminHostRequest(input.headers, ADMIN_ORIGIN)) {
     return { ok: false, status: 404, says: "There is nothing here." };
   }
-  const env = input.env ?? process.env;
+  const env = input.env ?? storedKeyEnvironment();
   if (
     input.checkOrigin &&
     !originAllowed(input.headers.get("origin"), ADMIN_ORIGIN) &&
@@ -49,7 +50,7 @@ export async function guardAdminRequest(input: {
       says: "That came from somewhere the console does not accept requests from, so nothing was done.",
     };
   }
-  const verdict = await verifySession(input.cookie, env[ADMIN_SESSION_KEY_VAR], input.nowSeconds);
+  const verdict = await verifySession(input.cookie, storedKeyValue(ADMIN_SESSION_KEY_VAR, env), input.nowSeconds);
   if (!verdict.ok) {
     return { ok: false, status: 401, says: "You need to be signed in for this. Nothing was done." };
   }

@@ -1,0 +1,1294 @@
+{
+  "ballots": {
+    "NH:nh-2026-11-03": {
+      "election": {
+        "id": "nh-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NH"
+      },
+      "contests": [
+        {
+          "id": "ballot-nh-merrimack:cacr-13",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh",
+          "title": "Question 1: Eliminate the Office of Register of Probate (CACR 13)",
+          "voteFor": 1,
+          "scopeNote": "The Secretary of State's current 2026 Election Details page publishes Questions on the General Election Ballot. CACR 13 is the statewide question adopted by both legislative chambers.",
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "sourceOrg": "New Hampshire Secretary of State, Questions on the 2026 General Election Ballot",
+            "sourceUrl": "https://www.sos.nh.gov/2026-election-details",
+            "verifiedAt": "2026-09-07",
+            "collectedAt": "2026-09-07"
+          },
+          "divisionVintage": "TIGER_GENZ2025"
+        },
+        {
+          "id": "nh-2026-goffstown-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:goffstown_town",
+          "title": "Goffstown School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the Town of GOFFSTOWN limit property tax growth for GOFFSTOWN SCHOOL DISTRICT (SAU #19) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Goffstown Town Clerk",
+            "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+            "verifiedAt": "2026-10-20T23:57:45.049290+00:00",
+            "collectedAt": "2026-10-20T23:57:28.251906+00:00"
+          },
+          "measureTextUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-1-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:1",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 1 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:40.955551+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-2-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:2",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 2 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.089259+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-3-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:3",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 3 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.037935+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-4-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:4",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 4 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.282058+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-5-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:5",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 5 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.392582+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-6-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:6",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 6 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.615918+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-7-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:7",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 7 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.694113+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-8-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:8",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 8 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.901226+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-9-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:9",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 9 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:42.189392+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-ward-10-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:10",
+          "title": "Concord School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 10 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:42.481735+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-concord-school-dewey-property-sale",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district",
+          "title": "Concord School District Sale of Former Dewey School Property",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the Concord School District authorize the Concord School Board to market and sell the former Dewey School property, currently serving as the Concord School District’s central office located at 38 Liberty Street, Concord, NH, in such manner (whether by bid, auction or broker listing) and on such terms, conditions, and price as it deems in the best interest of the District, with said sale subject to the District’s compliance with the statutory right of first refusal provision pertaining to charter schools in RSA 194:61?",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:44.151096+00:00"
+          },
+          "measureTextUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:lebanon/ward:1",
+          "title": "Lebanon School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of LEBANON - Ward 1 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+            "sourceOrg": "Lebanon City Clerk",
+            "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+            "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
+            "collectedAt": "2026-10-21T00:33:29.218676+00:00"
+          },
+          "measureTextUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+          "divisionVintage": "2022"
+        },
+        {
+          "id": "nh-2026-lebanon-ward-2-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:lebanon/ward:2",
+          "title": "Lebanon School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of LEBANON - Ward 2 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+            "sourceOrg": "Lebanon City Clerk",
+            "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+            "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
+            "collectedAt": "2026-10-21T00:33:29.588055+00:00"
+          },
+          "measureTextUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+          "divisionVintage": "2022"
+        },
+        {
+          "id": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nh/place:lebanon/ward:3",
+          "title": "Lebanon School District Property Tax Growth Limit",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "provenance": {
+            "quote": "Shall the City of LEBANON - Ward 3 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+            "sourceOrg": "Lebanon City Clerk",
+            "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+            "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
+            "collectedAt": "2026-10-21T00:33:29.113123+00:00"
+          },
+          "measureTextUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+          "divisionVintage": "2022"
+        }
+      ],
+      "measures": [
+        {
+          "id": "ballot-nh-merrimack:cacr-13:question",
+          "contestId": "ballot-nh-merrimack:cacr-13",
+          "provenance": {
+            "sourceOrg": "New Hampshire General Court, CACR 13 version adopted by both bodies",
+            "sourceUrl": "https://www.gc.nh.gov/lsr_search/billText.aspx?id=1803&type=4",
+            "verifiedAt": "2026-09-07",
+            "collectedAt": "2026-09-07"
+          },
+          "questionText": "Are you in favor of eliminating the office of register of probate by amending articles 71 and 81 of the second part of the constitution to read as follows: [Art.] 71. [County Treasurers, County Attorneys, Sheriffs, and Registers of Deeds Elected.] The county treasurers, county attorneys, sheriffs and registers of deeds, shall be elected by the inhabitants of the several towns, in the several counties in the State, according to the method now practiced, and the laws of the state, provided nevertheless the legislature shall have authority to alter the manner of certifying the votes, and the mode of electing those officers; but not so as to deprive the people of the right they now have of electing them. [Art.] 81. [Judges Not to Act as Counsel.] No judge shall be of counsel, act as advocate, or receive any fees as advocate or counsel, in any probate business which is pending, or may be brought into any court of probate in the county of which he or she is judge.",
+          "officialStatement": "AT THE PRESENT TIME, the constitution references registers of probate while the office's duties were redistributed to circuit court clerks in 2011. IF THE AMENDMENT IS ADOPTED, the constitution will eliminate the position of register of probate."
+        },
+        {
+          "id": "nh-2026-goffstown-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-goffstown-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the Town of GOFFSTOWN limit property tax growth for GOFFSTOWN SCHOOL DISTRICT (SAU #19) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Goffstown Town Clerk",
+            "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+            "verifiedAt": "2026-10-20T23:57:45.049290+00:00",
+            "collectedAt": "2026-10-20T23:57:28.251906+00:00"
+          },
+          "questionText": "Shall the Town of GOFFSTOWN limit property tax growth for GOFFSTOWN SCHOOL DISTRICT (SAU #19) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-1-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-1-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 1 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:40.955551+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 1 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-2-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-2-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 2 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.089259+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 2 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-3-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-3-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 3 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.037935+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 3 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-4-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-4-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 4 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.282058+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 4 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-5-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-5-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 5 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.392582+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 5 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-6-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-6-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 6 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.615918+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 6 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-7-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-7-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 7 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.694113+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 7 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-8-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-8-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 8 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:41.901226+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 8 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-9-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-9-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 9 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:42.189392+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 9 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-ward-10-hb1300-property-tax-growth#question",
+          "contestId": "nh-2026-concord-ward-10-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of CONCORD - Ward 10 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:42.481735+00:00"
+          },
+          "questionText": "Shall the City of CONCORD - Ward 10 limit property tax growth for CONCORD SCHOOL DISTRICT (SAU #8) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5- i. Adoption requires a three-fifths (3/5) majority vote.",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-concord-school-dewey-property-sale#question",
+          "contestId": "nh-2026-concord-school-dewey-property-sale",
+          "provenance": {
+            "quote": "Shall the Concord School District authorize the Concord School Board to market and sell the former Dewey School property, currently serving as the Concord School District’s central office located at 38 Liberty Street, Concord, NH, in such manner (whether by bid, auction or broker listing) and on such terms, conditions, and price as it deems in the best interest of the District, with said sale subject to the District’s compliance with the statutory right of first refusal provision pertaining to charter schools in RSA 194:61?",
+            "sourceOrg": "Concord City Clerk",
+            "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+            "verifiedAt": "2026-10-21T00:16:52.218383+00:00",
+            "collectedAt": "2026-10-21T00:14:44.151096+00:00"
+          },
+          "questionText": "Shall the Concord School District authorize the Concord School Board to market and sell the former Dewey School property, currently serving as the Concord School District’s central office located at 38 Liberty Street, Concord, NH, in such manner (whether by bid, auction or broker listing) and on such terms, conditions, and price as it deems in the best interest of the District, with said sale subject to the District’s compliance with the statutory right of first refusal provision pertaining to charter schools in RSA 194:61?",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+          "name": "Lebanon School District Property Tax Growth Limit",
+          "noLabel": "No",
+          "yesLabel": "Yes",
+          "contestId": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of LEBANON - Ward 1 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+            "sourceOrg": "Lebanon City Clerk",
+            "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+            "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
+            "collectedAt": "2026-10-21T00:33:29.218676+00:00"
+          },
+          "questionText": "Shall the City of LEBANON - Ward 1 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-lebanon-ward-2-hb1300-property-tax-growth",
+          "name": "Lebanon School District Property Tax Growth Limit",
+          "noLabel": "No",
+          "yesLabel": "Yes",
+          "contestId": "nh-2026-lebanon-ward-2-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of LEBANON - Ward 2 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+            "sourceOrg": "Lebanon City Clerk",
+            "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+            "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
+            "collectedAt": "2026-10-21T00:33:29.588055+00:00"
+          },
+          "questionText": "Shall the City of LEBANON - Ward 2 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+          "officialNumber": "2",
+          "officialStatement": null
+        },
+        {
+          "id": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+          "name": "Lebanon School District Property Tax Growth Limit",
+          "noLabel": "No",
+          "yesLabel": "Yes",
+          "contestId": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+          "provenance": {
+            "quote": "Shall the City of LEBANON - Ward 3 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+            "sourceOrg": "Lebanon City Clerk",
+            "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+            "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
+            "collectedAt": "2026-10-21T00:33:29.113123+00:00"
+          },
+          "questionText": "Shall the City of LEBANON - Ward 3 limit property tax growth for LEBANON SCHOOL DISTRICT (SAU #88) under RSA 32:5-i? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in RSA 32:5-i. Adoption requires a three-fifths (3/5) majority vote.”",
+          "officialNumber": "2",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ballot-nh-merrimack:cacr-13",
+          "whatItDoes": "Eliminates the office of register of probate by changing Articles 71 and 81 of the New Hampshire Constitution.",
+          "yesMeans": "Approve the constitutional changes eliminating the office of register of probate.",
+          "noMeans": "Reject these constitutional changes and keep the office in the state Constitution.",
+          "parts": [],
+          "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+          "sourceHash": "740d817ffcffe002814ddf75f58301d107d3c9845045346eaf6cb4a454e33996",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-goffstown-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Goffstown School District (SAU 19): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+          "sourceHash": "740d817ffcffe002814ddf75f58301d107d3c9845045346eaf6cb4a454e33996",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-1-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8) and Merrimack Valley School District (SAU 46): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+          "sourceHash": "cbed8897152c94383c7c302e7a45e526e1c82b7a9a20da7dd10e7e8b27b4f2b7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-2-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8) and Merrimack Valley School District (SAU 46): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+          "sourceHash": "e917238f38df7594e6953602f908fd967e393387cf5f489a3125ccbe5ea029eb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-3-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+          "sourceHash": "8385db43403c15368f1589b1c9ea565efa934f0572d252d8f9c698898fc79e0d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-4-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+          "sourceHash": "dc931466e252a3d1840a6e1fa977e7d9f0f848320f1effd91677ef0a934f2d71",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-5-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+          "sourceHash": "852df1e1b81c39e7303528bd7d255dbef2f5ae4947be7f02106c512f515e4af2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-6-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+          "sourceHash": "f421acbea4f92de1ff8ffe5fc5c48f97c0d5f004dbb3ef7b8073638c35469390",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-7-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+          "sourceHash": "5c74676e5a69a7d991ec3430b3f9dda1b76d86567a51ef1b6972811d5787d1a6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-8-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+          "sourceHash": "1b5171a7fe22d7494ab07ca50bdd70fa4a2dfd18bdb91f1d6d628ea8b391fe29",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-9-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+          "sourceHash": "12e82eee653182c2b63fb2b820f0cc15ef48209ea6d596b00fd28faf8553c9dc",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-ward-10-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Concord School District (SAU 8): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+          "sourceHash": "730619339f58c1b8a2934ceed001ebad710f695384835640e2cd4900ad966081",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-concord-school-dewey-property-sale",
+          "whatItDoes": "Allows the Concord School Board to market and sell the former Dewey School property at 38 Liberty Street, now the district’s central office. The board may use bids, an auction or a broker listing and choose the terms, conditions and price it considers best for the district. Any sale must follow the state-law right of first refusal for charter schools.",
+          "yesMeans": "Authorize the school board to market and sell the property under these conditions.",
+          "noMeans": "Do not grant this authorization to market and sell the property.",
+          "parts": [],
+          "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+          "sourceHash": "7d79ccc720c62f7535e198e55e3297451895cd82c80fbd0e6f79fbd853769840",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Lebanon School District (SAU 88): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+          "sourceHash": "2b44b77888a8c1d6d8c361578b847d1a6e946958bd82a305b54c67ceae5f63de",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-lebanon-ward-2-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Lebanon School District (SAU 88): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+          "sourceHash": "e8c2df33216b8376a9acf9336b43e6387dc65dcfddfd6def968988c747eefad6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+          "whatItDoes": "Sets two-year limits for Lebanon School District (SAU 88): the local property-tax levy cannot exceed the prior year’s amount adjusted for inflation and new construction, and school administrative unit (SAU) central-office spending cannot exceed 6% of total school-district appropriations. Both limits apply only to central-office administration, exclude bonded capital costs, and do not affect classroom instruction, school-based services or other municipal spending. State-law overrides remain available. Adoption requires a three-fifths (60%) yes vote.",
+          "yesMeans": "Adopt the proposed two-year limits with the stated exclusions and state-law override process.",
+          "noMeans": "Reject these proposed two-year limits.",
+          "parts": [],
+          "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+          "sourceHash": "9cc4ac55938dd7a01922d4ca51ff7db7a8966fa179aa869bb262209e27f341c3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:33:41.893088Z",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:39:07.862Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "28240d710517c63d485670487b063f6905e3aa1ba1cb1cbda4289b10a15338ea",
+        "finalUrl": "https://www.gc.nh.gov/lsr_search/billText.aspx?id=1803&type=4",
+        "publisher": "www.gc.nh.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:47.667Z",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.gc.nh.gov/lsr_search/billText.aspx?id=1803&type=4",
+        "reviewedEvidence": "Codex PDC cutover acquired 17852 exact bytes as text/html; charset=utf-8; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "39baad6d58ff214bf76f9d9c2ae8efd7ee5ca41f051ddb5b1d0983ab19b1a79a",
+        "finalUrl": "https://www.sos.nh.gov/2026-election-details",
+        "publisher": "www.sos.nh.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:48.045Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nh.gov/2026-election-details",
+        "reviewedEvidence": "Codex PDC cutover acquired 2951860 exact bytes as text/html; charset=UTF-8; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "cd3d45a9db80b8247d98e3ab144e5f1b0184d395ee942786ff0f621a64a7e25d",
+        "finalUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+        "publisher": "www.sos.nh.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:48.543Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 473945 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "b9a9f0461fd12697f4f79e9c655f7b31a74804c332fa5c6f8e6b00081d344572",
+        "finalUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-county-commissioners-by-district_0.pdf",
+        "publisher": "www.sos.nh.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:49.075Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-county-commissioners-by-district_0.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 67444 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "3103689a56a4c1c9e88a3d7275459197ceb021014307f46c1251cb2a2a1ef885",
+        "finalUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-executive-council-districts.pdf",
+        "publisher": "www.sos.nh.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:49.566Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/2022-2032-executive-council-districts.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 139572 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "04dc2e3e727918700badc18814c362665f2c405c4cc207c4c82368a80c88aad8",
+        "finalUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/political-calendar-2026-2027-tops-pages-of-calendar-landscape_0.pdf",
+        "publisher": "www.sos.nh.gov",
+        "httpStatus": 200,
+        "retrievedAt": "2026-09-09T00:58:49.795Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/inline-documents/sonh/political-calendar-2026-2027-tops-pages-of-calendar-landscape_0.pdf",
+        "reviewedEvidence": "Codex PDC cutover acquired 277454 exact bytes as application/pdf; the URL is explicitly cited by the frozen ballot/identity projection and was reviewed as an official election or legislative publication. This receipt authenticates only that exact cited record set."
+      },
+      {
+        "rawHash": "ab325c554105ae420bf2faf20669981ad9fe69f7ca5701cd80ccd9eef0dc9520",
+        "finalUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+        "publisher": "New London Town Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T18:19:03.940004+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://newlondon.nh.gov/vertical/sites/%7B26F9F697-D5BE-4423-95D7-E1EECBB7F549%7D/uploads/Scanner_20261002_084954.pdf",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by New London at https://newlondon.nh.gov/voting. New London and Newbury share eleven state, congressional and Merrimack County contests held here, including House Merrimack District 7 with State Senate District 7 verified separately against Boscawen’s official ballot; the printed candidate inventory was checked in full."
+      },
+      {
+        "rawHash": "53fd910608c294cf92bc5db761ca0f3001d5aa9eb0a5c1feed354648d721f857",
+        "finalUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+        "publisher": "Boscawen Town Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-15T18:23:18.445324+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.boscawennh.gov/DocumentCenter/View/5574/2026-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot linked by Boscawen at https://www.boscawennh.gov/m/newsflash/Home/Detail/132. The complete printed State Senate District 7 candidate inventory was checked against the held primary filing records."
+      },
+      {
+        "rawHash": "740d817ffcffe002814ddf75f58301d107d3c9845045346eaf6cb4a454e33996",
+        "finalUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+        "publisher": "Goffstown Town Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:28.251906+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "1a66c7bafa1de82f52639249fa14e3032e13dc4c30bc3491b67b011460f45ece",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%201%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:22.558155+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%201%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "6b71b5cef784119f07c4d4936f0317ed784b5a7391d7939e64dfc4dfe2730f49",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%202%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:22.329053+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%202%20Sample%20Ballot.pdf?ver=2026-09-28-153540-223",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "204535619fd3a1c068a3673dfd5988043feede35d8403ab8d173ccf379a343f8",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%203%20Sample%20Ballot.pdf?ver=2026-09-28-153540-490",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:24.162039+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%203%20Sample%20Ballot.pdf?ver=2026-09-28-153540-490",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "3d8bb498d33ca84ec30390a703a36ac41a8a1a721d5226ed5e4e6d61d4c79dc7",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%204%20Sample%20Ballot.pdf?ver=2026-09-28-153540-490",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:23.923326+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%204%20Sample%20Ballot.pdf?ver=2026-09-28-153540-490",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "f4b1c5c5446ed14e10fbd4d507a0ce2f2d6f53f524517c74ed922e6558c4814d",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%205%20Sample%20Ballot.pdf?ver=2026-09-28-153540-597",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:25.426511+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%205%20Sample%20Ballot.pdf?ver=2026-09-28-153540-597",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "8ef9e3aa53fd03a55da4e01608363d1d32d7cb6497574e0f44117c4125572bc6",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%206%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:24.742215+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%206%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "21f86b4cedd5bb5aee91995c7184da8f7c9dd95584ec5b7691eba47e77ea07cf",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%207%20Sample%20Ballot.pdf?ver=2026-09-28-153540-537",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:25.744506+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%207%20Sample%20Ballot.pdf?ver=2026-09-28-153540-537",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "a93d74083b02558eb9012e82a8614330e5ca1555e5011aacc3a0a305bd9f43d1",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%208%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:26.590947+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%208%20Sample%20Ballot.pdf?ver=2026-09-28-153540-520",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "c928c8751cd58693dd2d0ea0658f3f3256f230ffff3a01810cbf74a22116e022",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%209%20Sample%20Ballot.pdf?ver=2026-09-28-153540-643",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:27.144556+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%209%20Sample%20Ballot.pdf?ver=2026-09-28-153540-643",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "d7b7879760054a5fd513654df219c77da111a3a94dcb6d38497268298ac61c38",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2010%20Sample%20Ballot.pdf?ver=2026-09-28-153540-630",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:27.442081+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2010%20Sample%20Ballot.pdf?ver=2026-09-28-153540-630",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "32a8c589c1205b45760d37b7e90889ac229b39a073e37f7ff14a0a99de2f2d7c",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2011%20Sample%20Ballot.pdf?ver=2026-09-28-153540-630",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:28.127400+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2011%20Sample%20Ballot.pdf?ver=2026-09-28-153540-630",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "c93f6f37c47fa8e8368f610626938fd9d65d8721fed0aed434017c9432ac3c39",
+        "finalUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2012%20Sample%20Ballot.pdf?ver=2026-09-28-153540-643",
+        "publisher": "Manchester City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:28.599490+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.manchesternh.gov/Portals/2/Departments/city_clerk/elections/Sample%20Ballots/2026-11-03_Ward%2012%20Sample%20Ballot.pdf?ver=2026-09-28-153540-643",
+        "reviewedEvidence": "Official November3 general sample. Full candidate rows transcribed and replayed; every Manchester House name checked against the scanned page. OCR evidence retained beside the PDF. District assignments use RSA662. Floterial House contests require their own overlapping geography; they are not statewide."
+      },
+      {
+        "rawHash": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+        "finalUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "publisher": "New Hampshire General Court",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:57:28.424694+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "reviewedEvidence": "Current statute counts203House districts,24Senate districts,5ExecutiveCouncil districts and2Congressional districts. It also names Goffstown/ManchesterCD1/Council4 and assigns Senate16/18/20 and Hillsborough commissioner1/3. It measures regular district slots, not the final certified general-election candidate count."
+      },
+      {
+        "rawHash": "cbed8897152c94383c7c302e7a45e526e1c82b7a9a20da7dd10e7e8b27b4f2b7",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:40.955551+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "7d79ccc720c62f7535e198e55e3297451895cd82c80fbd0e6f79fbd853769840",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:44.151096+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "e917238f38df7594e6953602f908fd967e393387cf5f489a3125ccbe5ea029eb",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.089259+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "8385db43403c15368f1589b1c9ea565efa934f0572d252d8f9c698898fc79e0d",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.037935+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "dc931466e252a3d1840a6e1fa977e7d9f0f848320f1effd91677ef0a934f2d71",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.282058+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "852df1e1b81c39e7303528bd7d255dbef2f5ae4947be7f02106c512f515e4af2",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.392582+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "ec169f21d11b24d536598a8ae1758d8946d51b89d7a8326211c4c48655651165",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26835/CSD---Zone-B-Wards-5-6-7",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:43.136036+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26835/CSD---Zone-B-Wards-5-6-7",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "f421acbea4f92de1ff8ffe5fc5c48f97c0d5f004dbb3ef7b8073638c35469390",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.615918+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "5c74676e5a69a7d991ec3430b3f9dda1b76d86567a51ef1b6972811d5787d1a6",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.694113+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "1b5171a7fe22d7494ab07ca50bdd70fa4a2dfd18bdb91f1d6d628ea8b391fe29",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:41.901226+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "6551aa28fc78541d609fa2ea1e63b6a4d205fde7c123ec4ea0095c33da43a126",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26836/CSD---Zone-C-Wards-8-9-10",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:43.678476+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26836/CSD---Zone-C-Wards-8-9-10",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "12e82eee653182c2b63fb2b820f0cc15ef48209ea6d596b00fd28faf8553c9dc",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:42.189392+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "730619339f58c1b8a2934ceed001ebad710f695384835640e2cd4900ad966081",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+        "publisher": "Concord City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:14:42.481735+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+        "reviewedEvidence": "Official November3 general/school sample; every imported candidate and question replayed. All scanned House candidate names and party columns checked visually and against saved OCR. School zones remain separate electorates; partial school boundaries are not widened to city wards."
+      },
+      {
+        "rawHash": "2b44b77888a8c1d6d8c361578b847d1a6e946958bd82a305b54c67ceae5f63de",
+        "finalUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+        "publisher": "Lebanon City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:33:29.218676+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lebanonnh.gov/DocumentCenter/View/24679",
+        "reviewedEvidence": "Actual official Lebanon Ward1 general-election sample: all13 candidate races/24 distinct names, both printed party columns and both ballot questions compared. Names in blank write-in spaces are not invented."
+      },
+      {
+        "rawHash": "e8c2df33216b8376a9acf9336b43e6387dc65dcfddfd6def968988c747eefad6",
+        "finalUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+        "publisher": "Lebanon City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:33:29.588055+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lebanonnh.gov/DocumentCenter/View/24678",
+        "reviewedEvidence": "Actual official Lebanon Ward2 general-election sample: all13 candidate races/24 distinct names, both printed party columns and both ballot questions compared. Names in blank write-in spaces are not invented."
+      },
+      {
+        "rawHash": "9cc4ac55938dd7a01922d4ca51ff7db7a8966fa179aa869bb262209e27f341c3",
+        "finalUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+        "publisher": "Lebanon City Clerk",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:33:29.113123+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://lebanonnh.gov/DocumentCenter/View/24680",
+        "reviewedEvidence": "Actual official Lebanon Ward3 general-election sample: all13 candidate races/24 distinct names, both printed party columns and both ballot questions compared. Names in blank write-in spaces are not invented."
+      },
+      {
+        "requestedUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+        "finalUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF",
+        "publisher": "www.goffstownnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.288249+00:00",
+        "httpStatus": 200,
+        "rawHash": "740d817ffcffe002814ddf75f58301d107d3c9845045346eaf6cb4a454e33996",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.288741+00:00",
+        "httpStatus": 200,
+        "rawHash": "cbed8897152c94383c7c302e7a45e526e1c82b7a9a20da7dd10e7e8b27b4f2b7",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.289174+00:00",
+        "httpStatus": 200,
+        "rawHash": "e917238f38df7594e6953602f908fd967e393387cf5f489a3125ccbe5ea029eb",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.289861+00:00",
+        "httpStatus": 200,
+        "rawHash": "8385db43403c15368f1589b1c9ea565efa934f0572d252d8f9c698898fc79e0d",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.294065+00:00",
+        "httpStatus": 200,
+        "rawHash": "dc931466e252a3d1840a6e1fa977e7d9f0f848320f1effd91677ef0a934f2d71",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.784473+00:00",
+        "httpStatus": 200,
+        "rawHash": "852df1e1b81c39e7303528bd7d255dbef2f5ae4947be7f02106c512f515e4af2",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.936242+00:00",
+        "httpStatus": 200,
+        "rawHash": "f421acbea4f92de1ff8ffe5fc5c48f97c0d5f004dbb3ef7b8073638c35469390",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.938203+00:00",
+        "httpStatus": 200,
+        "rawHash": "5c74676e5a69a7d991ec3430b3f9dda1b76d86567a51ef1b6972811d5787d1a6",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.949044+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b5171a7fe22d7494ab07ca50bdd70fa4a2dfd18bdb91f1d6d628ea8b391fe29",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:06.950300+00:00",
+        "httpStatus": 200,
+        "rawHash": "12e82eee653182c2b63fb2b820f0cc15ef48209ea6d596b00fd28faf8553c9dc",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.005283+00:00",
+        "httpStatus": 200,
+        "rawHash": "730619339f58c1b8a2934ceed001ebad710f695384835640e2cd4900ad966081",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+        "finalUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+        "publisher": "www.concordnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.161263+00:00",
+        "httpStatus": 200,
+        "rawHash": "7d79ccc720c62f7535e198e55e3297451895cd82c80fbd0e6f79fbd853769840",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+        "finalUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId=",
+        "publisher": "lebanonnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.183476+00:00",
+        "httpStatus": 200,
+        "rawHash": "2b44b77888a8c1d6d8c361578b847d1a6e946958bd82a305b54c67ceae5f63de",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+        "finalUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId=",
+        "publisher": "lebanonnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.233336+00:00",
+        "httpStatus": 200,
+        "rawHash": "e8c2df33216b8376a9acf9336b43e6387dc65dcfddfd6def968988c747eefad6",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      },
+      {
+        "requestedUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+        "finalUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId=",
+        "publisher": "lebanonnh.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:09:07.251365+00:00",
+        "httpStatus": 200,
+        "rawHash": "9cc4ac55938dd7a01922d4ca51ff7db7a8966fa179aa869bb262209e27f341c3",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

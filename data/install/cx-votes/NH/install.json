@@ -1,0 +1,84 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "NH",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NH",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ballot-nh-merrimack:cacr-13",
+      "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF"
+    },
+    {
+      "id": "nh-2026-goffstown-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.goffstownnh.gov/DocumentCenter/View/6157/Goffstown-SAMPLE-BALLOT---State-General-Election-110326-PDF"
+    },
+    {
+      "id": "nh-2026-concord-ward-1-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-2-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-3-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-4-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-5-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-6-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-7-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-8-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-9-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-ward-10-hb1300-property-tax-growth",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot"
+    },
+    {
+      "id": "nh-2026-concord-school-dewey-property-sale",
+      "sourceUrl": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4"
+    },
+    {
+      "id": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24679/Ward-1-General-Election-Sample-Ballot?bidId="
+    },
+    {
+      "id": "nh-2026-lebanon-ward-2-hb1300-property-tax-growth",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24678/Ward-2-General-Election-Sample-Ballot?bidId="
+    },
+    {
+      "id": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+      "sourceUrl": "https://lebanonnh.gov/DocumentCenter/View/24680/Ward-3-General-Electoin-Sample-Ballot?bidId="
+    }
+  ],
+  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "unrelatedContestsCandidatesAndExplanations": "UNCHANGED"
+  },
+  "nextOwner": "River: install as data and check every listed measure on the live ballot with its source link."
+}

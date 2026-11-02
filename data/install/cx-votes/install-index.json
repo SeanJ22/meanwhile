@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-02T23:07:15.465789+00:00",
+  "preparedAt": "2026-11-02T23:11:57.444249+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -256,14 +256,17 @@
           "kind": "CX_VOTES_VOTING_DATA_INSTALL",
           "contractId": "voting-sites:MN",
           "coverage": {
-            "preparedSites": 1,
-            "preparedBoundaries": 1,
-            "assignedPrecinctCodes": [
-              "0680"
-            ],
+            "preparedSites": 142,
+            "preparedBoundaries": 162,
+            "assignedPrecinctNames": 162,
+            "sourceRows": {
+              "wardPrecinctRows": 92,
+              "townPrecinctRows": 71,
+              "singularRowsIncludingOneDuplicateSharedRecord": 163
+            },
             "availableCountyPrecinctCount": 162,
-            "unfilledCountyPrecinctAssignments": 161,
-            "scope": "Ramsey County precinct 0680 only"
+            "unfilledCountyPrecinctAssignments": 0,
+            "scope": "All162current Ramsey County precincts;142published siteIDs retain shared-precinct assignments. Not statewideMinnesota coverage."
           }
         }
       ]
@@ -617,6 +620,11 @@
           "coverage": "These are proven missing races or candidate lists. Nationwide statewide roster completeness is still under official-source review; this packet does not certify every race.",
           "races": 14,
           "namedChoices": 28
+        },
+        {
+          "manifest": "WI/source-review/install.json",
+          "status": "SOURCE_REVIEW_NO_WRITE",
+          "kind": "CX_VOTES_SOURCE_REVIEW"
         }
       ]
     }

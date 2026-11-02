@@ -21,7 +21,7 @@ import { neonConfig } from "@neondatabase/serverless";
 import { isCensusPlaceholderDivision } from "../../lib/registry/census-placeholders.ts";
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
-import { PLACE_SLICES_SQL, SHOWN_SQL } from "../../lib/reader/place-slices.ts";
+import { PLACE_SLICES_SQL } from "../../lib/reader/place-slices.ts";
 import { BALLOT_PLACE_PAGES_SQL } from "../../lib/ballot/place-package-until-nov-4.ts";
 import { slicedAnswer } from "./place-pages-answer.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
@@ -246,7 +246,7 @@ export function activateCanonicalFixture(key: string): void {
     const registry = registries.find(value => value.registry.bodies.some(body => meetingStateOf(body.id) === state)) ?? null;
     return [{division_ids:divisions,registry,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
   };
-  const pages = new Map<string,Promise<Record<string,unknown>[]>>(), shownIds = new Map<string,string>();
+  const pages = new Map<string,Promise<Record<string,unknown>[]>>();
   const savedRows = (input: PlaceInput): Promise<Record<string,unknown>[]> => {
     const key=JSON.stringify(input);
     let saved=pages.get(key);
@@ -265,10 +265,8 @@ export function activateCanonicalFixture(key: string): void {
     if(sql===PLACE_SLICES_SQL) {
       const saved=await savedRows({state:String(params[5]),divisionIds:params[0] as string[],bodyIds:params[1] as string[],neighbors:params[2]===true,
         includeHistory:(params[4] as string[]).includes("history")});
-      for(const page of saved)for(const member of (page.row as {rosters?:{person_id:unknown;shown_id:unknown}[]}).rosters??[])shownIds.set(String(member.person_id),String(member.shown_id));
       return slicedAnswer(saved as never,params);
     }
-    if(sql===SHOWN_SQL)return (params[0] as string[]).map(id=>({id,shown:shownIds.get(id)??null}));
     if(sql===BALLOT_PLACE_PAGES_SQL) {
       return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
         namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true});

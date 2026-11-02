@@ -36,7 +36,7 @@ export function slicedAnswer(pages: readonly FixturePage[], params: readonly unk
     const place = page.page_kind === "place" || given.includes(page.page_id);
     const n = place ? (given.indexOf(page.page_id) + 1 || ++beyond) : LENT + ++lent;
     if (place) out.meta.push([n, page.page_id, null, true]);
-    const bodies = stamper(), persons = stamper(), personFacts = new Map<string, Record<string, unknown>>(), entityFacts = new Map<string, Record<string, unknown>>();
+    const bodies = stamper(), persons = stamper(), shownOf = new Map<string, string>(), personFacts = new Map<string, Record<string, unknown>>(), entityFacts = new Map<string, Record<string, unknown>>();
     const put = (id: string, key: string, value: unknown, quote: unknown, url: unknown, time: unknown, kind: unknown) => {
       const facts = entityFacts.get(id) ?? {}; entityFacts.set(id, facts);
       facts[key] = [value, bodies.stamp(url, time, kind ?? "OFFICIAL"), quote === null || quote === undefined ? null : quote];
@@ -46,7 +46,7 @@ export function slicedAnswer(pages: readonly FixturePage[], params: readonly unk
       put(String(member.body_id), `member:${member.person_id}`, member.value, member.quote, member.url, member.checked_at, member.provenance_kind);
       const facts: Record<string, unknown> = personFacts.get(String(member.person_id)) ?? {};
       for (const [field, held] of Object.entries((member.person ?? {}) as Record<string, Row>)) facts[field] = [held.value, persons.stamp(held.url, held.checked, "OFFICIAL"), held.quote ?? null];
-      personFacts.set(String(member.person_id), facts);
+      personFacts.set(String(member.person_id), facts); if (member.shown_id) shownOf.set(String(member.person_id), String(member.shown_id));
     }
     const bodyEntities = entities.map(entity => {
       const id = String(entity.id), divisions = strings(entity.divisions).length ? strings(entity.divisions) : entity.placed === true && typeof entity.division === "string" ? [entity.division] : [];
@@ -58,7 +58,7 @@ export function slicedAnswer(pages: readonly FixturePage[], params: readonly unk
       return { id, k: "body", n: String(entity.name ?? id), ...(typeof entity.parent_id === "string" ? { p: entity.parent_id } : {}), ...(divisions.length ? { d: divisions } : {}),
         ...(entity.placement_basis === "HOST_COUNTY" ? { h: 1 } : {}), f: entityFacts.get(id) ?? {} };
     });
-    const people = [...personFacts].map(([id, f]) => ({ id, k: "person", n: id, f }));
+    const people = [...personFacts].map(([id, f]) => ({ id, k: "person", n: id, ...(shownOf.has(id) ? { x: shownOf.get(id) } : {}), f }));
     out.places.push([n, "bodies", { v: 2, sources: bodies.sources, stamps: bodies.stamps, boards: [], entities: bodyEntities, reg: { governments: records(row.governments), divisions: records(row.divisions) } }]);
     if (people.length) out.places.push([n, "governs", { v: 2, sources: persons.sources, stamps: persons.stamps, boards: [], entities: people }]);
     for (const sitting of records(row.sittings)) {

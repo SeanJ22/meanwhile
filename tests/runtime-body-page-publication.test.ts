@@ -5,17 +5,18 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { registryRuntimeCandidate, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldBodyIds } from "../lib/meetings/edge-serving.ts";
 import { resolveId } from "../lib/core/resolve.ts";
-import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
+import { readPlacePackage } from "../lib/reader/place.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
+import { installReaderOn } from "./helpers/migrated-reader-db.ts";
+import { seedPlaceSlices } from "./helpers/place-pages.ts";
 
 const AT = "2026-10-25T00:00:00.000Z";
 const ROOT = "ocd-division/country:us/state:az", CITY = `${ROOT}/place:example`;
 const NEW_BODY = `${CITY}#new-parks-board`, OLD_ALIAS = `${CITY}#prior-council`, FOREIGN_ALIAS = `${CITY}#foreign-alias`;
 const SOURCE = "https://example.gov/boards";
 
-test("a later runtime publication gives its new board a queued ready page while preserving held aliases", async t => {
+test("a later runtime publication gives its new board a page of its own while preserving held aliases", async t => {
   t.mock.method(globalThis,"fetch",async()=>{throw new Error("The source fixture must stay local");});
   await withMigratedRoutineStore("registry-runtime:AZ", async (store, _vault, pg) => {
     Object.assign((store as unknown as {writeAuthority:{capability:string}}).writeAuthority,{capability:"MANUAL_CONTRACT"});
@@ -54,16 +55,15 @@ test("a later runtime publication gives its new board a queued ready page while 
     assert.ok((await readHeldBodyIds({states:["AZ"],query})).has(NEW_BODY));
     assert.ok((await query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1",[NEW_BODY])).length,
       "publication seeds the board before the same state's rebuild request is queued");
-    const result=await rebuildPlacePages({db:{transaction:run=>pg.transaction(tx=>run(async(text,params=[])=>(await tx.query<Record<string,unknown>>(text,[...params])).rows))},
-      limit:32,concurrency:1,purge:async()=>({purged:true})});
-    assert.equal(result.failed,0);
-    assert.equal(result.remaining,0);
-    let reads=0;
-    const read:Query=async(text,params)=>{reads++;assert.equal(text,PLACE_PAGES_SQL);return query(text,params);};
-    const ready=await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[NEW_BODY]},read);
-    assert.deepEqual(ready.bodies.map(body=>body.id),[NEW_BODY]);
-    assert.equal(reads,1,"an explicit body visit reads its saved page");
-    const alias=await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[OLD_ALIAS]},read);
-    assert.deepEqual(alias.bodies.map(body=>body.id),["held-council"]);
+    await pg.exec("CREATE TABLE place_slice(place_id text NOT NULL,card text NOT NULL,body jsonb,fingerprint text NOT NULL,built_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(place_id,card))");
+    const undo=await installReaderOn(pg);
+    try {
+      await seedPlaceSlices(query,{state:"AZ",divisionIds:[],bodyIds:[NEW_BODY]});
+      const ready=await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[NEW_BODY]},query);
+      assert.deepEqual(ready.bodies.map(body=>body.id),[NEW_BODY]);
+      await seedPlaceSlices(query,{state:"AZ",divisionIds:[],bodyIds:[OLD_ALIAS]});
+      const alias=await readPlacePackage({state:"AZ",divisionIds:[],bodyIds:[OLD_ALIAS]},query);
+      assert.deepEqual(alias.bodies.map(body=>body.id),["held-council"]);
+    } finally { await undo(); }
   });
 });

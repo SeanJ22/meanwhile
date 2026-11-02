@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
-import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
 import test, { type TestContext } from "node:test";
 import { readFileSync } from "node:fs";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
-import { PLACE_PAGES_SQL, PLACE_PRINT_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
+import { readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
+import { PLACE_SLICES_SQL } from "../lib/reader/place-slices.ts";
 import { buildPlacePackage } from "../lib/reader/place-builder.ts";
-import { seedPlacePages } from "./helpers/place-pages.ts";
+import { seedPlaceSlices } from "./helpers/place-pages.ts";
+import { installReaderOn } from "./helpers/migrated-reader-db.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
@@ -36,6 +37,7 @@ const unrecorded = (recordClass: RoutineRecordClass,scope: string): Extract<Civi
 });
 
 async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
+  await db.pg.exec("CREATE TABLE IF NOT EXISTS place_slice(place_id text NOT NULL,card text NOT NULL,body jsonb,fingerprint text NOT NULL,built_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(place_id,card))");
   await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,promoted_at timestamptz,current_version_id text);
     CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
@@ -48,11 +50,14 @@ async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
 }
 
 async function readReadyPackage(db: Awaited<ReturnType<typeof factDb>>,input: PlaceInput,query: Query = db.query) {
-  await seedPlacePages(db.query,input);
-  return readPlacePackage(input,async(text,params)=>{
-    assert.ok(text===PLACE_PAGES_SQL,"the reader only queries saved pages");
-    return query(text,params);
-  });
+  await seedPlaceSlices(db.query,input);
+  const undo = await installReaderOn(db.pg);
+  try {
+    return await readPlacePackage(input,async(text,params)=>{
+      assert.ok(!/place_page/.test(text),"the reader never queries a saved page");
+      return query(text,params);
+    });
+  } finally { await undo(); }
 }
 
 async function agendaRuntime(db: Awaited<ReturnType<typeof factDb>>) {
@@ -65,10 +70,10 @@ async function agendaRuntime(db: Awaited<ReturnType<typeof factDb>>) {
 
 /** The actual agenda route receives only already built rows, never the fact query. */
 async function sameAgendaAnswer(db: Awaited<ReturnType<typeof factDb>>, meetingId: string) {
-  await seedPlacePages(db.query,{state:"AZ",divisionIds:[],bodyIds:[BODY],neighbors:true});
+  await seedPlaceSlices(db.query,{state:"AZ",divisionIds:[],bodyIds:[BODY],neighbors:true});
   let placeReads=0;
   installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
-    if(statement.text===PLACE_PAGES_SQL){placeReads++;return db.query(statement.text,statement.params);}
+    if(statement.text===PLACE_SLICES_SQL){placeReads++;return db.query(statement.text,statement.params);}
     assert.match(statement.text,/WITH selected AS MATERIALIZED/);
     return [];
   })));
@@ -121,10 +126,10 @@ test("an agenda opened through a former body ID keeps its documents and the cano
       contentHash:"a".repeat(64),retrievedAt:AT,contentType:"text/html",text:"Public hearing. 1. Approve the budget.",
       extraction:"html",extractionNote:null,sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT};
     await publish([meeting],[document]);
-    await seedPlacePages(db.query,{state:"AZ",divisionIds:[],bodyIds:[alias],neighbors:true});
+    await seedPlaceSlices(db.query,{state:"AZ",divisionIds:[],bodyIds:[alias],neighbors:true});
     let pageReads = 0;
     installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
-      if(statement.text===PLACE_PAGES_SQL){
+      if(statement.text===PLACE_SLICES_SQL){
         pageReads++;
         assert.deepEqual(statement.params[2],[alias],"the saved alias in the request remains intact");
         return db.query(statement.text,statement.params);

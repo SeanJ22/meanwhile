@@ -35,6 +35,20 @@
       "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary"
     },
     {
+      "id": "wi-cx-2026-general-assembly-66",
+      "title": "Representative to the Assembly – District 66",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:66",
+      "candidates": 2,
+      "sourceUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-44",
+      "title": "Representative to the Assembly – District 44",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:44",
+      "candidates": 2,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf"
+    },
+    {
       "id": "wi-cx-2026-general-assembly-30",
       "title": "Representative to the Assembly – District 30",
       "ocdId": "ocd-division/country:us/state:wi/sldl:30",
@@ -78,6 +92,7 @@
     "BallotContestMerge": "PASS",
     "genericBallotProblems": "PASS",
     "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
     "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
     "candidateAliasesEnriched": 0
   },

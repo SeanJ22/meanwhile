@@ -38,6 +38,47 @@
     "evidence": "Official county current November 3, 2026 general election summary template enumerates complete AD22 candidate names Paul Melotik and Dana Glasstein, plus a blank write-in line. Zero of 33 precincts reported; only the candidate names are imported. The source omits party labels, which remain null. Both names and the two-candidate field independently match the WEC-authored discovery PDF. No vote totals/results are imported."
   },
   {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+      "reportedPdfPages": 6,
+      "nativeGovernmentHttpStatus": 403,
+      "sourceTextFile": "sources/f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b.source"
+    },
+    "sourceUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+    "finalUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+    "sourceCheckedAt": "2026-11-02T22:24:20.037299+00:00",
+    "sha256": "f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b",
+    "sourceFile": "sources/f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b.source",
+    "excerptFile": "sources/f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b.txt",
+    "excerptSha256": "f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b",
+    "evidence": "Complete six-page official Racine County November03,2026 General Election pre-election summary captured through a deterministic public reader because the native download returns403. This receipt fingerprints the complete exact captured source-text artifact, not PDF bytes. Full AD66 block lists Gina Cefalu Paulick REP, Greta Neubauer DEM and generic Write-in; both names/parties match the WEC-authored discovery field. Document date and complete choice block retained. Only candidate identities/party labels are imported, no result totals. Source PDF link is listed on the current county election-results page as ZERO Pre Election."
+  },
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+    "finalUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+    "sourceCheckedAt": "2026-11-02T22:21:46.322780+00:00",
+    "sha256": "ccfbf01323ce776212deeab8d1739a4bf919d8a794b3ebe22b0a41362d12604b",
+    "sourceFile": "sources/ccfbf01323ce776212deeab8d1739a4bf919d8a794b3ebe22b0a41362d12604b.source",
+    "excerptFile": "sources/b613ce5aac41c5e3b46624e28884a5b0a335177be0ef83f62214e16d2c42f1cb.txt",
+    "excerptSha256": "b613ce5aac41c5e3b46624e28884a5b0a335177be0ef83f62214e16d2c42f1cb",
+    "evidence": "The official .gov Village election page directly links this complete four-page Rock County Type B notice/sample ballot for November 3,2026. Original PDF page3, middle column, prints the complete AD44 field Ron Woodman(Republican), Ann Roe(Democratic), generic write-in. Both names and parties visually checked against the original rendered PDF. Standard Arial missing-ToUnicode ASCII map restored only in a disposable extraction copy; SymbolMT/SegoeUISymbol checkbox glyphs left untouched. Source PDF bytes unchanged. A bounded office extract and original page render are retained.",
+    "officialLinkingPage": {
+      "url": "https://footvillewi.gov/election-information/",
+      "file": "sources/55f386e413fd5e77096fc6322374931d4502abe55c0009b1d2303d057e7dc706.html",
+      "sha256": "55f386e413fd5e77096fc6322374931d4502abe55c0009b1d2303d057e7dc706",
+      "sourceCheckedAt": "2026-11-02T22:20:26.459373+00:00",
+      "originalPdfPage": 3,
+      "textExtractionMethod": "python extract-fonts.py raw.pdf decoded.txt; only standard Arial ASCII glyphs mapped, symbol fonts unchanged, raw PDF unchanged"
+    }
+  },
+  {
     "sourceUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",
     "finalUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",
     "sourceCheckedAt": "2026-11-02T21:49:52.797786+00:00",

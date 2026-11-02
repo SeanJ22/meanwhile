@@ -85,6 +85,44 @@
           }
         },
         {
+          "id": "wi-cx-2026-general-assembly-66",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:66",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly – District 66",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+            "sourceOrg": "Racine County Clerk",
+            "collectedAt": "2026-11-02T22:24:20.037299+00:00",
+            "verifiedAt": "2026-11-02T22:24:20.037299+00:00",
+            "quote": "Candidate Party Total Gina Cefalu Paulick REP 0Greta Neubauer DEM 0Write-in 0Total Votes 0Total Unresolved Write-In 0Total Times Cast 0 / 0 N/A Precincts Reported: 0 of 31 (0.00%) \n\nRep to Assembly, District 66 (Vote for 1)"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-44",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:44",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly – District 44",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+            "sourceOrg": "Rock County Clerk; Village of Footville",
+            "collectedAt": "2026-11-02T22:21:46.322780+00:00",
+            "verifiedAt": "2026-11-02T22:21:46.322780+00:00",
+            "quote": "Representative to the Assembly\nDistrict 44\nVote for 1\nRon Woodman\n(Republican)\nAnn Roe\n(Democratic)\nwrite-in:"
+          }
+        },
+        {
           "id": "wi-cx-2026-general-assembly-30",
           "electionId": "wi-2026-general",
           "ocdId": "ocd-division/country:us/state:wi/sldl:30",
@@ -318,6 +356,74 @@
           }
         },
         {
+          "id": "wi-cx-2026-general-assembly-66:gina-cefalu-paulick",
+          "contestId": "wi-cx-2026-general-assembly-66",
+          "givenName": "Gina Cefalu",
+          "familyName": "Paulick",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+            "sourceOrg": "Racine County Clerk",
+            "collectedAt": "2026-11-02T22:24:20.037299+00:00",
+            "verifiedAt": "2026-11-02T22:24:20.037299+00:00",
+            "quote": "Gina Cefalu Paulick REP"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-66:greta-neubauer",
+          "contestId": "wi-cx-2026-general-assembly-66",
+          "givenName": "Greta",
+          "familyName": "Neubauer",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+            "sourceOrg": "Racine County Clerk",
+            "collectedAt": "2026-11-02T22:24:20.037299+00:00",
+            "verifiedAt": "2026-11-02T22:24:20.037299+00:00",
+            "quote": "Greta Neubauer DEM"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-44:ron-woodman",
+          "contestId": "wi-cx-2026-general-assembly-44",
+          "givenName": "Ron",
+          "familyName": "Woodman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+            "sourceOrg": "Rock County Clerk; Village of Footville",
+            "collectedAt": "2026-11-02T22:21:46.322780+00:00",
+            "verifiedAt": "2026-11-02T22:21:46.322780+00:00",
+            "quote": "Ron Woodman\n(Republican)"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-44:ann-roe",
+          "contestId": "wi-cx-2026-general-assembly-44",
+          "givenName": "Ann",
+          "familyName": "Roe",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+            "sourceOrg": "Rock County Clerk; Village of Footville",
+            "collectedAt": "2026-11-02T22:21:46.322780+00:00",
+            "verifiedAt": "2026-11-02T22:21:46.322780+00:00",
+            "quote": "Ann Roe\n(Democratic)"
+          }
+        },
+        {
           "id": "wi-cx-2026-general-assembly-30:shannon-zimmerman",
           "contestId": "wi-cx-2026-general-assembly-30",
           "givenName": "Shannon",
@@ -494,7 +600,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T22:07:25.474Z",
+    "reviewedAt": "2026-11-02T22:33:11.200Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -1109,6 +1215,40 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "sourceUiUrl": "https://www.ozaukeecounty.gov/162/Elections",
         "reviewedEvidence": "Official county current November 3, 2026 general election summary template enumerates complete AD22 candidate names Paul Melotik and Dana Glasstein, plus a blank write-in line. Zero of 33 precincts reported; only the candidate names are imported. The source omits party labels, which remain null. Both names and the two-candidate field independently match the WEC-authored discovery PDF. No vote totals/results are imported."
+      },
+      {
+        "requestedUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+        "finalUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+        "httpStatus": 200,
+        "rawHash": "f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b",
+        "retrievedAt": "2026-11-02T22:24:20.037299+00:00",
+        "publisher": "Racine County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "originHttpStatus": null,
+          "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+          "provider": "Jina Reader deterministic full-PDF extraction",
+          "readerUrl": "https://r.jina.ai/https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+          "readerHttpStatus": 200,
+          "reportedUrlSource": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
+          "reportedPdfPages": 6,
+          "nativeGovernmentHttpStatus": 403,
+          "sourceTextFile": "sources/f0262f4ec1cbd5d22df4827d02011c27683558b320362ddeb32622ccddf4662b.source"
+        },
+        "reviewedEvidence": "Complete six-page official Racine County November03,2026 General Election pre-election summary captured through a deterministic public reader because the native download returns403. This receipt fingerprints the complete exact captured source-text artifact, not PDF bytes. Full AD66 block lists Gina Cefalu Paulick REP, Greta Neubauer DEM and generic Write-in; both names/parties match the WEC-authored discovery field. Document date and complete choice block retained. Only candidate identities/party labels are imported, no result totals. Source PDF link is listed on the current county election-results page as ZERO Pre Election."
+      },
+      {
+        "requestedUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+        "finalUrl": "https://storage.googleapis.com/juniper-media-library/477/2026/10/Type%20B%20Notice,%20Sample%20Ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "ccfbf01323ce776212deeab8d1739a4bf919d8a794b3ebe22b0a41362d12604b",
+        "retrievedAt": "2026-11-02T22:21:46.322780+00:00",
+        "publisher": "Village of Footville / Rock County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://footvillewi.gov/election-information/",
+        "reviewedEvidence": "The official .gov Village election page directly links this complete four-page Rock County Type B notice/sample ballot for November 3,2026. Original PDF page3, middle column, prints the complete AD44 field Ron Woodman(Republican), Ann Roe(Democratic), generic write-in. Both names and parties visually checked against the original rendered PDF. Standard Arial missing-ToUnicode ASCII map restored only in a disposable extraction copy; SymbolMT/SegoeUISymbol checkbox glyphs left untouched. Source PDF bytes unchanged. A bounded office extract and original page render are retained."
       },
       {
         "requestedUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",

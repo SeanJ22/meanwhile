@@ -551,16 +551,15 @@ function retractionVerdict(head: JournalEntry[], onDisk: string[], changes: Chan
   return evaluateMigrationImmutability({ changes, baseDescription: "a fixture merge base", baseJournal: base, headJournal: head, sqlTagsOnDisk: onDisk });
 }
 
-test("the two retracted PB-01 migrations, SPN-01A and 0082 are on the list with their reason, and nothing else is", () => {
-  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]), [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when],
-    [78, "SPN-01A_merge_people", 1_792_834_201_100], [82, "0082_spn01e4_slice_cards", 1_792_834_202_302]]);
+test("the two retracted PB-01 migrations and SPN-01A are on the list with their reason, and nothing else is", () => {
+  assert.deepEqual(RETRACTED_MIGRATIONS.map((r) => [r.idx, r.tag, r.when]),
+    [[35, PB_RETIRE.tag, PB_RETIRE.when], [36, PB_SEED.tag, PB_SEED.when], [78, "SPN-01A_merge_people", 1_792_834_201_100]]);
   for (const row of RETRACTED_MIGRATIONS) assert.match(row.why, /never applied/i);
   for (const row of RETRACTED_MIGRATIONS.slice(0, 2)) {
     assert.match(row.why, /ends at 0034 as of 2026-10-13/);
     assert.match(row.why, /cp_field_manual_entries/);
   }
   assert.match(RETRACTED_MIGRATIONS[2].why, /RIVER-MERGEFIX-159_merge_people/);
-  assert.match(RETRACTED_MIGRATIONS[3].why, /RIVER-174_slice_cards_validate/);
 });
 
 test("deleting exactly the two retracted files and dropping exactly their journal entries passes", () => {

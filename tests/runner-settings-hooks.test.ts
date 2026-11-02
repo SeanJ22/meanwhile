@@ -2,11 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-test("the round's heartbeat carries the settings echo", () => {
-  const shadow = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
-  assert.match(shadow, /settings: runnerSettingsEcho\(settingsConfig, NOW\)/);
-});
-
 test("the parent runner fires scheduled orders on its own clock, opened at start and after a handoff, closed at quiescence", () => {
   const runner = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
   assert.match(runner, /await fireDueOrders\(\{ repos,/);

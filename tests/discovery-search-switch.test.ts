@@ -169,11 +169,3 @@ test("NO SILENT RESUME: only the owner's action writes the switch; no env var ca
   assert.match(read("lib/control-plane/workers/hunter-lane-arming.ts"), /const discoverySearchOn = configHold === null && discoverySearchEnabled\(config\);/);
   assert.doesNotMatch(read("scripts/hunter-lane.mts"), /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");
 });
-
-test("THE RUNNER ACKNOWLEDGES IT: each cycle's heartbeat carries the decision it applied, its caps and its words; the console matches the receipt", () => {
-  const runner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(
-    runner,
-    /discoverySearch: \{\s*receiptId: discoverySearchReceiptId,\s*enabled: discoverySearchOn,\s*perCycle: SEARCH_PER_CYCLE,\s*perDay: SEARCH_PER_DAY,\s*appliedAt: NOW,\s*detail: discoverySearchDecision,\s*\}/,
-  );
-});

@@ -1,50 +1,22 @@
-> **THE MISSION (Sean, Oct 6). Read this first and work backward from it for your own part.**
-> Anyone in the United States enters a ZIP and right away understands everything their government does that touches them: complete, correct, current, fast, and a pleasure to use. The finish line for all work is a verified fact reaching a reader within minutes, at a known and falling cost, with the system proving it every hour. Start at that finish line and work backward: what must be true right before a reader sees the fact, and before that, until you reach a step already working live. Never fix a symptom alone; find the cause the finish line exposes and fix that. Work is done only when the live system's vital signs show it, never because tests pass.
-> Targets: control-plane Neon under 0.7 GB an hour; no paid job ending with nothing; cost per fact measured and falling.
-> Every change that adds database reads states its estimated Neon cost in its READY status before it ships. The measured hour on the droplet checks it. A release that makes the hour clearly worse rolls back (DB-47) and returns to its lane with the numbers. Full text: board/river decisions.md, "Oct 6, about 1:20 AM EDT".
+# Returned: registry
 
-## TOP ITEM: FAILED LIVE (River live ledger, Oct 6, 2:50 AM EDT)
+lane: registry
+owner: registry
+writer: the registry lane
+check: connection proofs
+ready: BX-08, BX-10, CA-12, MW-VS, CP-04, CA-11, CA-05, CA-14, BX-13, CP-10, VS-NOW, DP-06, CH-22, CH-23, CH-20 544e2032310cdfc572033105332f1bafc881bd9e
+river: 936ab7a6d7a7e55c618b443c00af9ba0533cfedd
+at: 2026-11-02T22:37:29Z
+state: returned
+fix_subject: fix:55d420e0
+fix: River · stream/registry — connection proofs failed for registry: READY 544e2032310c refused: its message lacks "connected end to end" and "still working on the next scheduled run". Every READY message states that the work is connected end to end and that it is still working on the next scheduled run, wit
 
-Sean, Oct 6: a step is done only when it works live. Integrated is not done. These steps were integrated, but the live check of their Done-when line failed on production a5fd753 (release 8). Fix them before any new step. After a fix, say in your READY status what a reader or Admin will now see, and River re-checks it live in that release's measured hour. Full table: board/river releases/live-ledger.md.
+## Failure
 
-- **DB-10 · The registry is seeded from today's meeting doors.** Seen: Door registry is empty in production: SELECT count(*) FROM cp_doors = 0 at 06:00 UTC (02:00 AM EDT) Oct 6, the same as in the release-1 check. The runner seeds it only at startup when WTP_DOORS_SEED=on, and reads from it only when WTP_DOORS_READ=registry (scripts/routine-civic-data-runner.mts at a5fd753), so both switches must be on in runner.env at the restart. Also, the live Doors card (app/(admin)/_mw/admin-v6/doors-panel.tsx) lists only shut and set-aside doors, at most 25, with the columns Door, State, Why, Since and Last worked. It has no kind or body column and no full list, so Admin cannot list every meeting door by name, kind and body even once the registry is seeded.
-- **DB-11 · Non-meeting feeds are doors too.** Seen: Door registry is empty in production: SELECT count(*) FROM cp_doors = 0 at 06:00 UTC (02:00 AM EDT) Oct 6, the same as in the release-1 check. The runner seeds it only at startup when WTP_DOORS_SEED=on, and reads from it only when WTP_DOORS_READ=registry (scripts/routine-civic-data-runner.mts at a5fd753), so both switches must be on in runner.env at the restart. With no rows, no non-meeting feed appears with a last read. The Doors card also omits open doors, so a working feed would not be listed even after seeding.
-- **DB-21 · Each door knows when it last worked.** Seen: Door registry is empty in production: SELECT count(*) FROM cp_doors = 0 at 06:00 UTC (02:00 AM EDT) Oct 6, the same as in the release-1 check. The runner seeds it only at startup when WTP_DOORS_SEED=on, and reads from it only when WTP_DOORS_READ=registry (scripts/routine-civic-data-runner.mts at a5fd753), so both switches must be on in runner.env at the restart. The live Doors card has only a 'Last worked' column (no last failure) and shows only non-open doors, so 'each door's last success and last failure' is not on the screen in the shipped code.
-- **DB-54 · Pages that feed live facts become doors.** Seen: Door registry is empty in production: SELECT count(*) FROM cp_doors = 0 at 06:00 UTC (02:00 AM EDT) Oct 6, the same as in the release-1 check. The runner seeds it only at startup when WTP_DOORS_SEED=on, and reads from it only when WTP_DOORS_READ=registry (scripts/routine-civic-data-runner.mts at a5fd753), so both switches must be on in runner.env at the restart. Roster and contact fact pages therefore have no doors. The live Doors card would also omit open doors and has no 'holds' or 'next due' column.
-- **FE-21 · Every deploy is looked at on the live site.** Seen: cp_log_live_audits holds 0 rows ever. It stores audit RESULT, SPEED, TASKS, LOOK and CLAIMS passes. At a5fd753 nothing calls scripts/live-audit-pass.mts, resident-tasks.mts or look-pass.mts: they are not in the runner's child list (scripts/pilot-runner.mts), deploy/runner or .github. Release 8 deployed at 1:35 AM EDT, and no LOOK pass is recorded for it.
-- **DB-16 · Allowed hosts come from each door.** Seen: The door registry is empty: cp_doors had 0 rows at 2:09 AM EDT, after the runner restarted on a5fd753 at 2:02 AM EDT. The runner seeds doors only when WTP_DOORS_SEED=on (lib/doors/seed-all.ts), so no door exists whose hosts[] could allow a new host. The release 1 check found the same 0 rows.
-- **DB-23 · Route hints become door records.** Seen: The route-hints file is not gone. In live code (a5fd753), lib/hunt/meetings-route-hints.ts is still 691 lines and is imported by 7 modules (derived-authority, worker-body-directory, meetings-discovery-executor, doors/route-hints, doors/seed-all, meetings-site-discovery, freshness-shadow). No route-hints door exists either, because cp_doors has 0 rows.
-- **DB-35 · A door is repaired by editing its record.** Seen: Production holds no doors (cp_doors had 0 rows at 2:09 AM EDT, with WTP_DOORS_SEED not on), so no door record exists to edit: neither the synthetic door nor any real moved door. The edit, publish and Undo steps are Admin actions.
-- **DP-12 · A detective's door repair is used on the very next check.** Seen: A detective's find can't become a door record because production has no doors: cp_doors had 0 rows at 2:09 AM EDT, after the release 8 restart, with WTP_DOORS_SEED not on. So no changed door can be read by plain code or labeled Testing.
-- **DB-12 · Adapters read their doors from the registry.** Seen: The door registry table on the production control plane holds 0 rows, so no adapter can be reading doors from it. Meetings still show (252 at 85701, 397 at 03255, 62 at 07866, 49 at 85201), but from the code's own list. DB-12 also ships behind WTP_DOORS_READ, off by default.
-- **DB-15 · Reader coverage and curated-body status read the registry.** Seen: With the door registry empty (0 rows), coverage and curated-body status can't be reading doors; they come from the code list. The surfaces render unchanged (85701: 65 bodies, 8 govern here), but the 'code list unused' condition doesn't hold.
-- **DB-17 · Any adapter kind can be added as a data row.** Seen: No door rows have been saved (door registry: 0 rows), so no newly added kind has doors and none shows meetings on the map.
-- **DB-18 · The Tucson board portal reader becomes a general kind.** Seen: Tucson board-portal meetings still show (145 clerksboards meetings at 85701, e.g. Tucson-Pima County Historical Commission 2026-07-08). The door registry holds 0 rows, so they're read through the code's 27 Tucson rows, not door records.
+```
+READY 544e2032310c refused: its message lacks "connected end to end" and "still working on the next scheduled run". Every READY message states that the work is connected end to end and that it is still working on the next scheduled run, with the evidence for each.
+```
 
-## 2026-10-04 07:15Z — integration repair by River (no action unless you edit this file again)
+## Repair
 
-`scripts/seed-doors-from-meetings.mts` (DB-10/DB-11) printed import counts with no denominator floor, and `tests/denominator-floor.test.ts` failed on the combined tree. River added `floored()` lines on river-next (c846a56): "meeting doors settled" and "feed doors settled", each out of the drafts handed to the import. Take it when you catch up with `river`. Any new counting output must go through `floored()` from `lib/ops/denominator-floor.ts`, and the baseline is never extended.
-
-## 2026-10-04 14:00Z — FAILED LIVE after release 1 (dcddcf5): returned
-
-River checked release 1 against each step's "Done when" on production, using read-only SQL and git on main. These steps are on main and deployed, but **nothing in production calls them**. Each READY commit left its runtime call as a hook. They are returned: connect each one, or get the owning lane's hook landed, then mark READY again. Fix these before new steps.
-
-- DB-10 / DB-11: production cp_doors has **0 rows**. seed-doors-from-meetings.mts --apply has never run against production. Seeding is a production data write: it needs an authorized path, such as the runner seeding on start or an owner-run release step. Propose one in needs_hook or needs_Sean; River cannot write production.
-- DB-23: lib/hunt/meetings-route-hints.ts is still on main (691 lines), and the route-hint doors were never seeded.
-- DB-25: probe.ts is used only by shut-doors.ts, which nothing calls; no first looks run.
-- DB-32: shut.ts recordDoorEvidence has no caller.
-- DB-33: providers/shut-doors.ts is not registered in any pass.
-
-## 2026-10-05 17:00Z: release bank (Sean's instruction)
-
-Sean handed bank back to codex-bank. Stop claiming stream/bank. Its lock is already `none` (your 16:35Z checkpoint). Keep working registry. See assignments.md, "Handback to Codex".
-
-## 2026-10-05 17:40Z: standing instruction from Sean (all lanes)
-
-Sean, to River, word for word: "Builders don't send me notifications or ask me questions. Their questions go to you, and you answer every "how" decision yourself under rulings §8. Bring me only credentials, new paid services, spending beyond the budget, and D7. Tell every lane this in its returns file."
-
-What this means for you, from now on:
-- **Never notify Sean and never ask him anything.** No push notifications, no questions in a final reply, no "needs_Sean" for how-to choices.
-- **Put every question under `needs_River:` in your status file.** River reads it each run and answers here in your returns file. Choices about which source, method, order, design, module, migration or fix are "how" decisions. River makes them under rulings §8. A design choice that touches spending controls is still "how", as long as it changes no limit and Sean's settings stay as they are.
-- **`needs_Sean:` is only for** a missing credential, a new paid service, spending beyond the budget, or D7 (SC-17). River checks each entry and takes it to Sean. You don't.
-- While you wait on an answer, keep building your other ready steps.
+Fix on stream/registry and publish a new READY commit; River folds the new READY and clears this return when it integrates.

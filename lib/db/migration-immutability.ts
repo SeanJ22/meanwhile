@@ -132,6 +132,13 @@ export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
       "60-second contract budget and rolled back: deleting 7,853 entities read all of place_boundary once each for its host-county reference, and " +
       "the fact updates read the whole table. RIVER-MERGEFIX-159_merge_people makes the same merge by index.",
   },
+  {
+    idx: 82, tag: "0082_spn01e4_slice_cards", when: 1792834202302,
+    sha256: "c24e494132e25506387599f6dc9e390afa34c2d83b22bdfbce1b4e5355ee37ab", retractedOn: "2026-11-02",
+    why: "Never applied (production reader journal ends at 0081_spn01e_page_marks as of 2026-11-02; the old card check is still in place). Its " +
+      "ADD CONSTRAINT scanned all 885,000 slices under the table lock and hit the one-second contract budget on every runner attempt. " +
+      "RIVER-174_slice_cards adds the same check NOT VALID and RIVER-174_slice_cards_validate validates it without blocking readers.",
+  },
 ];
 const retractedTag = (tag: string | null): RetractedMigration | undefined => RETRACTED_MIGRATIONS.find((r) => r.tag === tag);
 

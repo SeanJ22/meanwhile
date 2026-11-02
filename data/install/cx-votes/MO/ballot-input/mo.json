@@ -1,0 +1,99 @@
+{
+  "ballots": {
+    "MO:mo-2026-11-03": {
+      "election": {
+        "id": "mo-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "MO"
+      },
+      "contests": [
+        {
+          "id": "mo-sos-2026-amendment-6",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:mo",
+          "title": "Amendment 6",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "mo-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Missouri Secretary of State",
+            "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+            "verifiedAt": "2026-10-14T05:04:26.708Z",
+            "collectedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "measureTextUrl": "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026-106.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "measures": [
+        {
+          "id": "mo-sos-2026-amendment-6:measure",
+          "contestId": "mo-sos-2026-amendment-6",
+          "provenance": {
+            "sourceOrg": "Missouri Secretary of State",
+            "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+            "verifiedAt": "2026-10-14T05:04:26.708Z",
+            "collectedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "questionText": "Shall the Missouri Constitution be amended to:\nexpand the initiative and referendum petition process by making it a fundamental right;\nallow courts to revise ballot summaries through lawsuits;\nprohibit the legislature from weakening initiative or referendum powers;\nprohibit the legislature from changing or repealing laws enacted through the initiative process, or passing laws similar to those rejected by referendum, without approval from at least 80% of both chambers; and\npreserve existing majority vote and signature requirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs or savings.",
+          "officialNumber": "Amendment 6",
+          "officialStatement": "A “yes” vote will prohibit the people’s elected representatives from directly amending or changing any law enacted through the initiative process; require that any modifications to laws enacted through the initiative process be referred to the people by a vote of at least 80% of each chamber of the General Assembly; restrict the legislature from passing laws that limit the ability to pursue initiatives and referenda; maintain the current signature requirements of five percent of the individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a law; maintain the current signature requirement of eight percent of individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a constitutional amendment; and maintain the current requirement that a simple statewide majority of votes cast on a measure by individual legal voters is sufficient to enact any law or constitutional amendment.\nA “no” vote will not change the current constitutional provisions, which already give citizens the right to propose initiatives and referenda.\nIf passed, this measure will not increase or decrease taxes."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mo-sos-2026-amendment-6",
+          "whatItDoes": "Makes initiative and referendum powers a fundamental constitutional right and allows courts to revise ballot summaries through lawsuits. Bars the legislature from weakening those powers and requires at least 80% approval in both legislative chambers to change or repeal laws passed by initiative or pass laws similar to those rejected by referendum. Keeps existing signature and majority-vote requirements for initiative and referendum petitions.",
+          "yesMeans": "Approve these constitutional rules for petitions, ballot summaries and legislative changes.",
+          "noMeans": "Reject the proposed constitutional changes.",
+          "parts": [],
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T21:44:21.882Z",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "rawHash": "614e004d0f051d1d176cbad7cbb54cf9857a82f552869ed840fba5a3c291f9cb",
+        "finalUrl": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+        "publisher": "Missouri Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:12.714Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "rawHash": "09fb959dcb571822e4797c54b14fd3157d75d93689b2ae4eab43c618d2fb05ce",
+        "finalUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+        "publisher": "Missouri Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:26.708Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+        "finalUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+        "publisher": "jcebmo.org",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-02T21:17:22.386761+00:00",
+        "httpStatus": 200,
+        "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+      }
+    ]
+  }
+}

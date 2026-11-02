@@ -1,0 +1,182 @@
+[
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00a",
+    "name": "ocd-division/country:us/state:ak/sldu:00a",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.767Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00b",
+    "name": "ocd-division/country:us/state:ak/sldu:00b",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.772Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00c",
+    "name": "ocd-division/country:us/state:ak/sldu:00c",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.824Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00d",
+    "name": "ocd-division/country:us/state:ak/sldu:00d",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.831Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00e",
+    "name": "ocd-division/country:us/state:ak/sldu:00e",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.833Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00f",
+    "name": "ocd-division/country:us/state:ak/sldu:00f",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.834Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00g",
+    "name": "ocd-division/country:us/state:ak/sldu:00g",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.836Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00h",
+    "name": "ocd-division/country:us/state:ak/sldu:00h",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.837Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00i",
+    "name": "ocd-division/country:us/state:ak/sldu:00i",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.409Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00j",
+    "name": "ocd-division/country:us/state:ak/sldu:00j",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.410Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00k",
+    "name": "ocd-division/country:us/state:ak/sldu:00k",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.411Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00l",
+    "name": "ocd-division/country:us/state:ak/sldu:00l",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.413Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00m",
+    "name": "ocd-division/country:us/state:ak/sldu:00m",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.420Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00n",
+    "name": "ocd-division/country:us/state:ak/sldu:00n",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.428Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00o",
+    "name": "ocd-division/country:us/state:ak/sldu:00o",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.545Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00p",
+    "name": "ocd-division/country:us/state:ak/sldu:00p",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.555Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00q",
+    "name": "ocd-division/country:us/state:ak/sldu:00q",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.614Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00r",
+    "name": "ocd-division/country:us/state:ak/sldu:00r",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.646Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00s",
+    "name": "ocd-division/country:us/state:ak/sldu:00s",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.718Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:ak/sldu:00t",
+    "name": "ocd-division/country:us/state:ak/sldu:00t",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T18:59:49.758Z"
+  }
+]

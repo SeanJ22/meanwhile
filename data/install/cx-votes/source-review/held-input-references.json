@@ -1,0 +1,383 @@
+{
+  "purpose": "Historical repository provenance identifiers, not source-review install dependencies",
+  "files": [
+    {
+      "state": "AK",
+      "repositoryPath": "data/ballot/2026-general/ak.json",
+      "sha256": "81d7b368d55f44d8cb799a75ea7226d09768269de79d01bd2cd3ccd3a5edf9d3",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "AL",
+      "repositoryPath": "data/ballot/2026-general/al.json",
+      "sha256": "b2e65196f16a7f55d918387bcaf74679a06e3f7ed6441910f5ff2650a2e768c1",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "AR",
+      "repositoryPath": "data/ballot/2026-general/ar.json",
+      "sha256": "f62a6e79a85010df570d0a12a62b1806e6d9ddd75d0ad282cef604b6b338e96b",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "AS",
+      "repositoryPath": "data/ballot/2026-general/as.json",
+      "sha256": "1b5bef2be65b056c7e51c984bba345f9e338686f6c1d85d1768497eeee145629",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "AZ",
+      "repositoryPath": "data/ballot/2026-general/az.json",
+      "sha256": "0a5ab8f47098b33d0f30ad56f5670eafb4d4df8b70e58337b9a76b1f716863e7",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "CA",
+      "repositoryPath": "data/ballot/2026-general/ca.json",
+      "sha256": "69b913e5515275f07fec6428f4f6459ba58770060673d1771c89f849b49e4f7c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "CO",
+      "repositoryPath": "data/ballot/2026-general/co.json",
+      "sha256": "9130aa9d29ef7ca62cd70e703feec8aab6e3779b52f21aac86bbbb4a3f33ca1e",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "CT",
+      "repositoryPath": "data/ballot/2026-general/ct.json",
+      "sha256": "2c65d16a5f4013495d3c15a978a38c3517c4dce56d50eace96947b7b5245cf23",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "DC",
+      "repositoryPath": "data/ballot/2026-general/dc.json",
+      "sha256": "d822f9c33d4b558b6ba5f6015d82f11798fb6aa4b8fecf90b5c7a8cb9212786a",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "DE",
+      "repositoryPath": "data/ballot/2026-general/de.json",
+      "sha256": "6048d0f9b141301e29521ca7c60448860a676da7e0094e6bb3f67a9c7d9bcb43",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "FL",
+      "repositoryPath": "data/ballot/2026-general/fl.json",
+      "sha256": "02a9aa2e12926ee741dae80081e7b469d24fe560066cef23b1949c8b6a693d7c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "GA",
+      "repositoryPath": "data/ballot/2026-general/ga.json",
+      "sha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "HI",
+      "repositoryPath": "data/ballot/2026-general/hi.json",
+      "sha256": "e8ac5dd52d3bbdcfa59368b605a0e2dcabadd95c39deef7c9702e5b6c87614f9",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "IA",
+      "repositoryPath": "data/ballot/2026-general/ia.json",
+      "sha256": "094362b436668a5e0eab777a8c29eacd338744c1d00a2534a600e26afea4e4f7",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "ID",
+      "repositoryPath": "data/ballot/2026-general/id.json",
+      "sha256": "cb8a7b15ab4971b154b5b00d48f57d77b7c0ffe12a5d5624482b589a987c0d5e",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "IL",
+      "repositoryPath": "data/ballot/2026-general/il.json",
+      "sha256": "bb20c0a5d08f86b241959c94b9b065cc86c4973db8274e6f943659199c4a3aa1",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "IN",
+      "repositoryPath": "data/ballot/2026-general/in.json",
+      "sha256": "4a1e37ff3ce63aa8d8fc905113043f1083c37f130d4512c02bd404776184be82",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "KS",
+      "repositoryPath": "data/ballot/2026-general/ks.json",
+      "sha256": "813835f1c5d7f62120daeb68b689732a037c85b1b980613fa094c99359481d3f",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "KY",
+      "repositoryPath": "data/ballot/2026-general/ky.json",
+      "sha256": "cfdae89484c754b3888aa9b76e2aa80762873486e7908777575b38b10fdc3fea",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "LA",
+      "repositoryPath": "data/ballot/2026-general/la.json",
+      "sha256": "fdf4afffde21a3999b8a3d5ba1beb3de9deec2eec3a8b86f17d20e8759dd5cc3",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MA",
+      "repositoryPath": "data/ballot/2026-general/ma.json",
+      "sha256": "3e894262fd5adb2562b488ae460f012e98494afc7541da165b227f94d776826d",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MD",
+      "repositoryPath": "data/ballot/2026-general/md.json",
+      "sha256": "b3dbf262a26bbdc3a004c7e0b3a596f18c6f00a347ec9b80afd02263950f94cd",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "ME",
+      "repositoryPath": "data/ballot/2026-general/me.json",
+      "sha256": "4aadabd4af950a40c24b8b35a507973f46c89b0c9e527ef6fafa27681b826060",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MI",
+      "repositoryPath": "data/ballot/2026-general/mi.json",
+      "sha256": "a69ad43a35405da4690a43caa287b29d28c47944090c57e50982a955aada650c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MN",
+      "repositoryPath": "data/ballot/2026-general/mn.json",
+      "sha256": "5c80853fe5a982c459cf9093780280ad49a31e1db4c5e11b380ed38020661072",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MO",
+      "repositoryPath": "data/ballot/2026-general/mo.json",
+      "sha256": "2b614c0f34263c1bb427a1bb72ce2d76e0ace2a0bc71a171ecce917ff0f7d390",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MP",
+      "repositoryPath": "data/ballot/2026-general/mp.json",
+      "sha256": "82f9c31bce25d1fcb0fbf486b7e4d2430e2f5b044e82ae3297bb46e24a9598c1",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MS",
+      "repositoryPath": "data/ballot/2026-general/ms.json",
+      "sha256": "af061f078cb8d101961e4eed7a1c912e97c8b12feb0006b20b09b576a9b50f18",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "MT",
+      "repositoryPath": "data/ballot/2026-general/mt.json",
+      "sha256": "b84cd5831651db4f9cc8908cb951cfd338190937206f44f6dbaaecfa0b736539",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NC",
+      "repositoryPath": "data/ballot/2026-general/nc.json",
+      "sha256": "3a26af4257c0a52c8b556280deee96ae31db730c82b5648a1bd0f8a3c6525ec0",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "ND",
+      "repositoryPath": "data/ballot/2026-general/nd.json",
+      "sha256": "b11a6d70e6b041bb1b2d12a110ea70293598eb7c59a008758a7e136518433d1c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NE",
+      "repositoryPath": "data/ballot/2026-general/ne.json",
+      "sha256": "01fd74c2ef85a8ae7c447f9fd8de3965fb97050e8ae07f4af28bdd505168640c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NH",
+      "repositoryPath": "data/ballot/2026-general/nh.json",
+      "sha256": "0dbcf16b895fffef9ccbcf2406fc7c722cbeb4ae1f7929e3b560dae56937948c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NJ",
+      "repositoryPath": "data/ballot/2026-general/nj.json",
+      "sha256": "573d849265d7e83c2e3d638f9a8a20e776f1198adbbff8e332ba022b8371cd8a",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NM",
+      "repositoryPath": "data/ballot/2026-general/nm.json",
+      "sha256": "8d5bbbe6df561a8a5716066cffa83038426c891adbe2e2d573f8285300d44148",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NV",
+      "repositoryPath": "data/ballot/2026-general/nv.json",
+      "sha256": "8630a566be32057ad7c06513d530049a64245392e0b71003679222c4b7229f65",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "NY",
+      "repositoryPath": "data/ballot/2026-general/ny.json",
+      "sha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "OH",
+      "repositoryPath": "data/ballot/2026-general/oh.json",
+      "sha256": "9a4084f3a393fb6226baa24189995bb862011d115760213c91a7b54fb5748182",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "OK",
+      "repositoryPath": "data/ballot/2026-general/ok.json",
+      "sha256": "cdf6962adb89be5b0e09e5e2ea3a7210f2eac5b1ac2f971afb70d28520f99ecb",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "OR",
+      "repositoryPath": "data/ballot/2026-general/or.json",
+      "sha256": "fbef8d3b5c28cd1cf8542a36eb53f1d6d9810cd30adeac30358bb8ceb4e1b05c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "PA",
+      "repositoryPath": "data/ballot/2026-general/pa.json",
+      "sha256": "4a3ab6fda1ac3c0f621631c6b465691bada21a4693396c8764215fa1203c15d2",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "RI",
+      "repositoryPath": "data/ballot/2026-general/ri.json",
+      "sha256": "76367450032c0629d82862a59c91d021cf4f37482a68ed2f8f125d3d085e0355",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "SC",
+      "repositoryPath": "data/ballot/2026-general/sc.json",
+      "sha256": "64474220a4c8eb80e270d140825bec749152fafdf230a9ad7f2bbb102568b6ff",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "SD",
+      "repositoryPath": "data/ballot/2026-general/sd.json",
+      "sha256": "bb21e19d8657d2154d379f0b72ff99067d3e32182033f0d06d97417c45ef394f",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "TN",
+      "repositoryPath": "data/ballot/2026-general/tn.json",
+      "sha256": "bf3862aa0a9147810ebc7af5fc7802897fa8b303c7e62d1f3ffd1ed1d4b5b9af",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "TX",
+      "repositoryPath": "data/ballot/2026-general/tx.json",
+      "sha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "UT",
+      "repositoryPath": "data/ballot/2026-general/ut.json",
+      "sha256": "d12bb3c5b631647622593c3091dfd050eb510d0deb78cc0f7cd0ff2e5a044528",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "VA",
+      "repositoryPath": "data/ballot/2026-general/va.json",
+      "sha256": "184ad1a6bfe4ad033b8eaa1157d2629e5f9b5dcce3b555b760fad10cb362cc36",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "VI",
+      "repositoryPath": "data/ballot/2026-general/vi.json",
+      "sha256": "375216a0812f3589fdda3c55bc56c99d00eceb1a608dae868ba50736d7f29234",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "VT",
+      "repositoryPath": "data/ballot/2026-general/vt.json",
+      "sha256": "6a6247825b2f4539f0c2c38a1463a108ea58db450878ba2032da6417a0c9135c",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "WA",
+      "repositoryPath": "data/ballot/2026-general/wa.json",
+      "sha256": "2cfb248166cec8ab52c44c6f67c9ec076eef94a58b592043243ebcf4a697912b",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "WI",
+      "repositoryPath": "data/ballot/2026-general/wi.json",
+      "sha256": "595d3e9e8a447d7a62512e0e2219c1a584f43893211cc48a7664f63a11aecde7",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "WV",
+      "repositoryPath": "data/ballot/2026-general/wv.json",
+      "sha256": "d2869559459c148d062c8bdf03c3f7a1fab13f024b5f486507f26c5f61497498",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    },
+    {
+      "state": "WY",
+      "repositoryPath": "data/ballot/2026-general/wy.json",
+      "sha256": "6a926df13df622b1aabfb17cf2afc23c48b620f6e211ed20da8f26c24f06b650",
+      "availableInRepository": true,
+      "currentRepositoryBytesMatchHistoricalHash": true
+    }
+  ]
+}

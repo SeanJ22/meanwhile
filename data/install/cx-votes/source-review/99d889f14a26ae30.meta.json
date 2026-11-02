@@ -1,0 +1,395 @@
+{
+  "url": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+  "finalUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-02T22:16:58.869279+00:00",
+  "originalFile": "99d889f14a26ae30.html",
+  "originalSha256": "aee814120fd21ab433d124ab1a8742f8f8e476068e1317ea1378ca797a781fe5",
+  "bytes": 128321,
+  "relevantLinks": [
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/general-elections.html#main",
+      "label": "Skip to main content"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/emergency-requests-to-change-polling-places/2026-emergency-requests-polling-place-changes.html",
+      "label": "emergency polling place changes"
+    },
+    {
+      "href": "https://oklahoma.gov/elections.html",
+      "label": ""
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+      "label": ""
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results.html",
+      "label": "Elections &amp; Results"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/next-election.html",
+      "label": "Next Election"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/primary-and-runoff-primary-elections.html",
+      "label": "Primary and Runoff Primary Elections"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/election-results.html",
+      "label": "Election Results"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+      "label": "General Elections"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/dates-and-deadlines.html",
+      "label": "Dates and Deadlines"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/straight-party-voting.html",
+      "label": "Straight Party Voting"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+      "label": "State Questions"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/recalls.html",
+      "label": "Recalls"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration.html",
+      "label": "Voter Registration"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/register-to-vote.html",
+      "label": "Register to Vote"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/voter-registration-changes.html",
+      "label": "Update Voter Registration"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/cancel-voter-registration.html",
+      "label": "Cancel Voter Registration"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/request-voter-id-card.html",
+      "label": "Request New Voter ID Card"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/voter-registration-statistics.html",
+      "label": "Voter Registration Statistics"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/voter-registration-drives.html",
+      "label": "Voter Registration Drives"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/political-party-info.html",
+      "label": "Political Parties"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/noncitizens.html",
+      "label": "Noncitizens"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/voter-privacy-programs.html",
+      "label": "Voter Privacy Programs"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/national-voter-registration-day-2026.html",
+      "label": "National Voter Registration Day 2026"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters.html",
+      "label": "Voters"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+      "label": "OK Voter Portal"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/how-to-vote.html",
+      "label": "How to Vote"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/address-confirmation-notice.html",
+      "label": "Address Confirmation Notice"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/absentee-voting.html",
+      "label": "Absentee Voting"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/notary-services.html",
+      "label": "Notary Services"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/absentee-voting-statistics.html",
+      "label": "Absentee Voting Statistics"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/early-voting.html",
+      "label": "Early Voting"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/voting-101.html",
+      "label": "Voting 101"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/military-overseas-voters.html",
+      "label": "Military/Overseas Voters"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/accessibility-for-disabled-voters.html",
+      "label": "Accessibility for Disabled Voters"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/proof-of-identity.html",
+      "label": "Proof of Identity"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/time-off-for-voting.html",
+      "label": "Time Off for Voting"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/ballot-status.html",
+      "label": "Ballot Status"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/redistricting.html",
+      "label": "Redistricting Q &amp; A"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates.html",
+      "label": "Candidates"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates/candidate-filing.html",
+      "label": "Candidate Filing"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates/2026-candidate-filing-information.html",
+      "label": "2026 Candidate Filing Information"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates/campaign-finance.html",
+      "label": "Campaign Finance"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates/district-and-precinct-maps.html",
+      "label": "District and Precinct Maps"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates/state-and-county-officer-roster-archive.html",
+      "label": "State and County Officer Roster"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/candidates/voter-registration-list.html",
+      "label": "Voter Registration List"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity.html",
+      "label": "Security &amp; Integrity"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/letters-from-the-secretary.html",
+      "label": "Letters from the Secretary"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/election-security.html",
+      "label": "Election Security"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/voting-devices.html",
+      "label": "Voting Devices"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/post-election-audits.html",
+      "label": "Post-Election Audits"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/loft-rapid-response-evaluation.html",
+      "label": "LOFT Evaluation of Absentee Voting"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/precinct-officials-and-poll-watchers.html",
+      "label": "Precinct Officials and Poll Watchers"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/security-integrity/election-security-task-force.html",
+      "label": "Election Security Task Force"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us.html",
+      "label": "About Us"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/contact-us.html",
+      "label": "Contact Us"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/meeting-notices-agendas-and-minutes.html",
+      "label": "Meeting Notices, Agendas and Minutes"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/county-election-boards.html",
+      "label": "County Election Boards"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/election-emergency-declarations.html",
+      "label": "Election Emergency Declarations"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/emergency-requests-to-change-polling-places.html",
+      "label": "Emergency Requests to Change Polling Places"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/secretary-and-board.html",
+      "label": "Secretary and Board"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/information-and-records-requests.html",
+      "label": "Information and Records Requests"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/memberships.html",
+      "label": "Memberships"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/annual-federal-funds-disclosure.html",
+      "label": "Annual Federal Funds Disclosure"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/personally-identifiable-data-notice.html",
+      "label": "Personally Identifiable Data Notice"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/media.html",
+      "label": "Media"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/media/press-releases.html",
+      "label": "Press Releases"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/media/livestream.html",
+      "label": "Livestream"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/media/videos.html",
+      "label": "Videos"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/media/trustedinfo.html",
+      "label": "TrustedInfo"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/media/social-media.html",
+      "label": "Social Media"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/volunteer.html",
+      "label": "Volunteer"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/volunteer/poll-worker-opportunities.html",
+      "label": "Poll Worker Opportunities"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/education.html",
+      "label": "Education"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/education/vote-oklahoma.html",
+      "label": "Vote Oklahoma!"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures.html",
+      "label": "Laws and Procedures"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures/election-code.html",
+      "label": "Election Code"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures/administrative-rules.html",
+      "label": "Administrative Rules"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures/oklahoma-constitution.html",
+      "label": "Oklahoma Constitution"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures/national-voter-registration-act.html",
+      "label": "National Voter Registration Act"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures/help-america-vote-act0.html",
+      "label": "Help America Vote Act"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/laws-and-procedures/proposed-permanent-rules.html",
+      "label": "Proposed Permanent Rules"
+    },
+    {
+      "href": "https://oklahoma.gov/elections.html",
+      "label": "Election Board"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results.html",
+      "label": "Elections &amp; Results"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/primary-and-runoff-primary-elections.html",
+      "label": "Learn How Primary and Runoff Primary Elections Work in Oklahoma"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+      "label": "Back to Top"
+    },
+    {
+      "href": "https://oklahoma.gov/elections.html",
+      "label": ""
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+      "label": "Back to top"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/about-us/contact-us",
+      "label": "Contact Us"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/ovp.html",
+      "label": "OK Voter Portal"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/elections-results/next-election.html",
+      "label": "Next Election"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voters/absentee-voting.html",
+      "label": "Absentee Voting"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/voter-registration/register-to-vote.html",
+      "label": "Register to Vote"
+    },
+    {
+      "href": "https://oklahoma.gov/elections/faqs.html",
+      "label": "FAQs"
+    },
+    {
+      "href": "https://www.facebook.com/okelectionboard",
+      "label": ""
+    },
+    {
+      "href": "https://twitter.com/OKelections",
+      "label": ""
+    }
+  ]
+}

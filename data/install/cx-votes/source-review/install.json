@@ -1,0 +1,32 @@
+{
+  "kind": "CX_VOTES_SOURCE_REVIEW",
+  "step": "CX-VOTES",
+  "status": "SOURCE_REVIEW_NO_WRITE",
+  "preparedAt": "2026-11-02T22:50:25.340Z",
+  "baselineReviewedAt": "2026-11-02T22:22:12.659025+00:00",
+  "scopeCount": 56,
+  "operation": "Review evidence only. Do not pass this directory to a ballot publisher. No production data, registry, code or settings mutation is part of this package.",
+  "productionWrites": 0,
+  "modelCalls": 0,
+  "appCodeChanges": 0,
+  "baselineSummary": "baseline-summary.json",
+  "sources": "sources.json",
+  "sourceArtifacts": "verification-artifacts.json",
+  "newPAWINHILCounts": "Added separately by root in the final install index; not included in these baseline counts.",
+  "verification": {
+    "requestedManifestBytesAndHashes": "PASS",
+    "portableMetadataPaths": "PASS",
+    "56ScopeBaselineCountsUnchanged": "PASS",
+    "credentialSanitizer": "fx-cred-v1-2026-08-28",
+    "remainingConfirmedCredentials": 0
+  },
+  "limitations": [
+    "These56scope counts and statuses describe the earlier read-only baseline, not post-install reader counts. Root’s final install index separately lists later PA/WI/NH/IL additions.",
+    "This is source-backed triage and five specific legislative candidate-list comparisons, not a certification that every ballot, candidate, local race, measure, precinct or reader geography join is complete.",
+    "Only VT uses a freshly downloaded candidate workbook. MA,OK,TN,KS compare saved official source bytes with their matching historical receipts.",
+    "Geographic district counts and zero visible empty-candidate lists do not establish which seats have a2026election, acquisition completeness, or correct reader joins.",
+    "NH acquisition and PA/IL/WI recovery status fields are historical review findings, superseded where separate prepared packets supply facts. GU remains an audit source gap.",
+    "Historical held-input references and receipts are provenance identifiers; their full payloads are already repository data and are not duplicated here."
+  ],
+  "nextOwner": "River: review with the state install packets; use their live-checks and post-install counts."
+}

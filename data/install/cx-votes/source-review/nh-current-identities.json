@@ -1,0 +1,1694 @@
+[
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:1",
+    "name": "ocd-division/country:us/state:nh/sldl:1",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.740Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:101",
+    "name": "ocd-division/country:us/state:nh/sldl:101",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.353Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:102",
+    "name": "ocd-division/country:us/state:nh/sldl:102",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.758Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:103",
+    "name": "ocd-division/country:us/state:nh/sldl:103",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.752Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:104",
+    "name": "ocd-division/country:us/state:nh/sldl:104",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.767Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:105",
+    "name": "ocd-division/country:us/state:nh/sldl:105",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.775Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:106",
+    "name": "ocd-division/country:us/state:nh/sldl:106",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.810Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:2",
+    "name": "ocd-division/country:us/state:nh/sldl:2",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.728Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:201",
+    "name": "State House District Cheshire 01",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.811Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:202",
+    "name": "ocd-division/country:us/state:nh/sldl:202",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.812Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:203",
+    "name": "ocd-division/country:us/state:nh/sldl:203",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.815Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:204",
+    "name": "ocd-division/country:us/state:nh/sldl:204",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.816Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:205",
+    "name": "ocd-division/country:us/state:nh/sldl:205",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.821Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:206",
+    "name": "ocd-division/country:us/state:nh/sldl:206",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.824Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:207",
+    "name": "ocd-division/country:us/state:nh/sldl:207",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.831Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:208",
+    "name": "ocd-division/country:us/state:nh/sldl:208",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.837Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:209",
+    "name": "ocd-division/country:us/state:nh/sldl:209",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.838Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:210",
+    "name": "ocd-division/country:us/state:nh/sldl:210",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.839Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:211",
+    "name": "ocd-division/country:us/state:nh/sldl:211",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.840Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:212",
+    "name": "ocd-division/country:us/state:nh/sldl:212",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.845Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:213",
+    "name": "ocd-division/country:us/state:nh/sldl:213",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.846Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:214",
+    "name": "ocd-division/country:us/state:nh/sldl:214",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.846Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:3",
+    "name": "ocd-division/country:us/state:nh/sldl:3",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.738Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:301",
+    "name": "ocd-division/country:us/state:nh/sldl:301",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.855Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:302",
+    "name": "ocd-division/country:us/state:nh/sldl:302",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.878Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:303",
+    "name": "ocd-division/country:us/state:nh/sldl:303",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.886Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:304",
+    "name": "ocd-division/country:us/state:nh/sldl:304",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.888Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:305",
+    "name": "ocd-division/country:us/state:nh/sldl:305",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.888Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:306",
+    "name": "State House District Coos 06",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.897Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:4",
+    "name": "ocd-division/country:us/state:nh/sldl:4",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.729Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:401",
+    "name": "ocd-division/country:us/state:nh/sldl:401",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.943Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:402",
+    "name": "ocd-division/country:us/state:nh/sldl:402",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.951Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:403",
+    "name": "ocd-division/country:us/state:nh/sldl:403",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.960Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:404",
+    "name": "ocd-division/country:us/state:nh/sldl:404",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.968Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:405",
+    "name": "ocd-division/country:us/state:nh/sldl:405",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.982Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:406",
+    "name": "ocd-division/country:us/state:nh/sldl:406",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.986Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:407",
+    "name": "ocd-division/country:us/state:nh/sldl:407",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.988Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:408",
+    "name": "ocd-division/country:us/state:nh/sldl:408",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.992Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:409",
+    "name": "State House District Grafton 09",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.993Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:410",
+    "name": "ocd-division/country:us/state:nh/sldl:410",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.006Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:411",
+    "name": "ocd-division/country:us/state:nh/sldl:411",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.011Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:412",
+    "name": "ocd-division/country:us/state:nh/sldl:412",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.147Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:413",
+    "name": "ocd-division/country:us/state:nh/sldl:413",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.012Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:414",
+    "name": "ocd-division/country:us/state:nh/sldl:414",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.019Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:415",
+    "name": "ocd-division/country:us/state:nh/sldl:415",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.021Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:416",
+    "name": "ocd-division/country:us/state:nh/sldl:416",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.022Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:5",
+    "name": "ocd-division/country:us/state:nh/sldl:5",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.744Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:501",
+    "name": "ocd-division/country:us/state:nh/sldl:501",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.022Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:502",
+    "name": "ocd-division/country:us/state:nh/sldl:502",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.023Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:503",
+    "name": "ocd-division/country:us/state:nh/sldl:503",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.024Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:504",
+    "name": "ocd-division/country:us/state:nh/sldl:504",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.038Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:505",
+    "name": "ocd-division/country:us/state:nh/sldl:505",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.048Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:506",
+    "name": "ocd-division/country:us/state:nh/sldl:506",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.051Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:507",
+    "name": "ocd-division/country:us/state:nh/sldl:507",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.056Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:508",
+    "name": "ocd-division/country:us/state:nh/sldl:508",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.059Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:509",
+    "name": "ocd-division/country:us/state:nh/sldl:509",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.060Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:510",
+    "name": "ocd-division/country:us/state:nh/sldl:510",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.061Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:511",
+    "name": "ocd-division/country:us/state:nh/sldl:511",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.061Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:512",
+    "name": "ocd-division/country:us/state:nh/sldl:512",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.069Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:513",
+    "name": "ocd-division/country:us/state:nh/sldl:513",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.136Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:514",
+    "name": "ocd-division/country:us/state:nh/sldl:514",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.136Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:515",
+    "name": "ocd-division/country:us/state:nh/sldl:515",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.139Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:516",
+    "name": "ocd-division/country:us/state:nh/sldl:516",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.142Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:517",
+    "name": "ocd-division/country:us/state:nh/sldl:517",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.143Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:518",
+    "name": "ocd-division/country:us/state:nh/sldl:518",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.148Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:519",
+    "name": "ocd-division/country:us/state:nh/sldl:519",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.148Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:520",
+    "name": "ocd-division/country:us/state:nh/sldl:520",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.150Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:521",
+    "name": "ocd-division/country:us/state:nh/sldl:521",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.150Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:522",
+    "name": "ocd-division/country:us/state:nh/sldl:522",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.151Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:523",
+    "name": "ocd-division/country:us/state:nh/sldl:523",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.156Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:524",
+    "name": "ocd-division/country:us/state:nh/sldl:524",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.156Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:525",
+    "name": "ocd-division/country:us/state:nh/sldl:525",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.157Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:526",
+    "name": "ocd-division/country:us/state:nh/sldl:526",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.158Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:527",
+    "name": "ocd-division/country:us/state:nh/sldl:527",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.160Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:528",
+    "name": "ocd-division/country:us/state:nh/sldl:528",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.160Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:529",
+    "name": "ocd-division/country:us/state:nh/sldl:529",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.163Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:530",
+    "name": "ocd-division/country:us/state:nh/sldl:530",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.168Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:531",
+    "name": "ocd-division/country:us/state:nh/sldl:531",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.168Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:532",
+    "name": "ocd-division/country:us/state:nh/sldl:532",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.172Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:533",
+    "name": "ocd-division/country:us/state:nh/sldl:533",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.175Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:534",
+    "name": "ocd-division/country:us/state:nh/sldl:534",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.176Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:535",
+    "name": "ocd-division/country:us/state:nh/sldl:535",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.179Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:536",
+    "name": "ocd-division/country:us/state:nh/sldl:536",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.180Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:542",
+    "name": "ocd-division/country:us/state:nh/sldl:542",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.187Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:543",
+    "name": "ocd-division/country:us/state:nh/sldl:543",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.189Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:6",
+    "name": "ocd-division/country:us/state:nh/sldl:6",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.737Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:601",
+    "name": "ocd-division/country:us/state:nh/sldl:601",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.209Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:602",
+    "name": "ocd-division/country:us/state:nh/sldl:602",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.224Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:603",
+    "name": "ocd-division/country:us/state:nh/sldl:603",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.225Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:604",
+    "name": "ocd-division/country:us/state:nh/sldl:604",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.233Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:605",
+    "name": "ocd-division/country:us/state:nh/sldl:605",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.247Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:606",
+    "name": "ocd-division/country:us/state:nh/sldl:606",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.250Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:607",
+    "name": "ocd-division/country:us/state:nh/sldl:607",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.251Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:608",
+    "name": "ocd-division/country:us/state:nh/sldl:608",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.252Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:609",
+    "name": "ocd-division/country:us/state:nh/sldl:609",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.253Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:610",
+    "name": "ocd-division/country:us/state:nh/sldl:610",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.258Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:611",
+    "name": "ocd-division/country:us/state:nh/sldl:611",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.289Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:612",
+    "name": "ocd-division/country:us/state:nh/sldl:612",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.304Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:613",
+    "name": "ocd-division/country:us/state:nh/sldl:613",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.309Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:614",
+    "name": "ocd-division/country:us/state:nh/sldl:614",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.310Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:615",
+    "name": "ocd-division/country:us/state:nh/sldl:615",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.311Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:616",
+    "name": "ocd-division/country:us/state:nh/sldl:616",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.312Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:617",
+    "name": "ocd-division/country:us/state:nh/sldl:617",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.313Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:618",
+    "name": "ocd-division/country:us/state:nh/sldl:618",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.314Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:619",
+    "name": "ocd-division/country:us/state:nh/sldl:619",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.316Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:620",
+    "name": "ocd-division/country:us/state:nh/sldl:620",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.316Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:621",
+    "name": "ocd-division/country:us/state:nh/sldl:621",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.317Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:622",
+    "name": "ocd-division/country:us/state:nh/sldl:622",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.322Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:623",
+    "name": "ocd-division/country:us/state:nh/sldl:623",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.323Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:624",
+    "name": "ocd-division/country:us/state:nh/sldl:624",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.323Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:7",
+    "name": "ocd-division/country:us/state:nh/sldl:7",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.745Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:701",
+    "name": "ocd-division/country:us/state:nh/sldl:701",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.356Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:702",
+    "name": "ocd-division/country:us/state:nh/sldl:702",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.374Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:703",
+    "name": "ocd-division/country:us/state:nh/sldl:703",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.376Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:704",
+    "name": "ocd-division/country:us/state:nh/sldl:704",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.376Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:705",
+    "name": "ocd-division/country:us/state:nh/sldl:705",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.377Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:706",
+    "name": "ocd-division/country:us/state:nh/sldl:706",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.379Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:707",
+    "name": "ocd-division/country:us/state:nh/sldl:707",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.380Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:708",
+    "name": "ocd-division/country:us/state:nh/sldl:708",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.380Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:709",
+    "name": "ocd-division/country:us/state:nh/sldl:709",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.381Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:710",
+    "name": "ocd-division/country:us/state:nh/sldl:710",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.382Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:711",
+    "name": "ocd-division/country:us/state:nh/sldl:711",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.382Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:712",
+    "name": "ocd-division/country:us/state:nh/sldl:712",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.383Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:713",
+    "name": "ocd-division/country:us/state:nh/sldl:713",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.437Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:714",
+    "name": "ocd-division/country:us/state:nh/sldl:714",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.444Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:715",
+    "name": "ocd-division/country:us/state:nh/sldl:715",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.446Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:716",
+    "name": "ocd-division/country:us/state:nh/sldl:716",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.450Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:717",
+    "name": "ocd-division/country:us/state:nh/sldl:717",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.453Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:718",
+    "name": "ocd-division/country:us/state:nh/sldl:718",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.454Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:719",
+    "name": "ocd-division/country:us/state:nh/sldl:719",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.458Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:720",
+    "name": "ocd-division/country:us/state:nh/sldl:720",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.460Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:721",
+    "name": "ocd-division/country:us/state:nh/sldl:721",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.461Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:722",
+    "name": "State House District Rockingham 22",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.462Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:723",
+    "name": "ocd-division/country:us/state:nh/sldl:723",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.463Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:724",
+    "name": "ocd-division/country:us/state:nh/sldl:724",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.464Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:725",
+    "name": "ocd-division/country:us/state:nh/sldl:725",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.465Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:726",
+    "name": "ocd-division/country:us/state:nh/sldl:726",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.466Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:727",
+    "name": "ocd-division/country:us/state:nh/sldl:727",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.468Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:728",
+    "name": "ocd-division/country:us/state:nh/sldl:728",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.472Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:729",
+    "name": "ocd-division/country:us/state:nh/sldl:729",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.473Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:730",
+    "name": "ocd-division/country:us/state:nh/sldl:730",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.475Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:801",
+    "name": "ocd-division/country:us/state:nh/sldl:801",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.476Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:802",
+    "name": "ocd-division/country:us/state:nh/sldl:802",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.487Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:803",
+    "name": "ocd-division/country:us/state:nh/sldl:803",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.488Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:804",
+    "name": "ocd-division/country:us/state:nh/sldl:804",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.492Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:805",
+    "name": "ocd-division/country:us/state:nh/sldl:805",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.494Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:806",
+    "name": "ocd-division/country:us/state:nh/sldl:806",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.495Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:807",
+    "name": "ocd-division/country:us/state:nh/sldl:807",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.497Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:808",
+    "name": "ocd-division/country:us/state:nh/sldl:808",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.498Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:809",
+    "name": "ocd-division/country:us/state:nh/sldl:809",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.679Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:810",
+    "name": "ocd-division/country:us/state:nh/sldl:810",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.680Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:811",
+    "name": "ocd-division/country:us/state:nh/sldl:811",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.692Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:812",
+    "name": "ocd-division/country:us/state:nh/sldl:812",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.703Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:813",
+    "name": "ocd-division/country:us/state:nh/sldl:813",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.704Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:814",
+    "name": "ocd-division/country:us/state:nh/sldl:814",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.704Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:815",
+    "name": "ocd-division/country:us/state:nh/sldl:815",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.705Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:816",
+    "name": "ocd-division/country:us/state:nh/sldl:816",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.714Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:817",
+    "name": "ocd-division/country:us/state:nh/sldl:817",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.714Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:901",
+    "name": "ocd-division/country:us/state:nh/sldl:901",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:16.715Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:902",
+    "name": "ocd-division/country:us/state:nh/sldl:902",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.327Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:903",
+    "name": "ocd-division/country:us/state:nh/sldl:903",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.332Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:904",
+    "name": "ocd-division/country:us/state:nh/sldl:904",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.334Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:905",
+    "name": "ocd-division/country:us/state:nh/sldl:905",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.335Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldl:906",
+    "name": "ocd-division/country:us/state:nh/sldl:906",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:17.340Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:1",
+    "name": "ocd-division/country:us/state:nh/sldu:1",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.178Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:10",
+    "name": "ocd-division/country:us/state:nh/sldu:10",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.119Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:11",
+    "name": "ocd-division/country:us/state:nh/sldu:11",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.920Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:12",
+    "name": "ocd-division/country:us/state:nh/sldu:12",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.276Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:13",
+    "name": "ocd-division/country:us/state:nh/sldu:13",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.925Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:14",
+    "name": "ocd-division/country:us/state:nh/sldu:14",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.934Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:15",
+    "name": "ocd-division/country:us/state:nh/sldu:15",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.949Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:16",
+    "name": "ocd-division/country:us/state:nh/sldu:16",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.953Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:17",
+    "name": "ocd-division/country:us/state:nh/sldu:17",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.972Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:18",
+    "name": "ocd-division/country:us/state:nh/sldu:18",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.977Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:19",
+    "name": "ocd-division/country:us/state:nh/sldu:19",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.988Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:2",
+    "name": "ocd-division/country:us/state:nh/sldu:2",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.702Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:20",
+    "name": "ocd-division/country:us/state:nh/sldu:20",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.180Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:21",
+    "name": "ocd-division/country:us/state:nh/sldu:21",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.991Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:22",
+    "name": "ocd-division/country:us/state:nh/sldu:22",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.010Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:23",
+    "name": "ocd-division/country:us/state:nh/sldu:23",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.000Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:24",
+    "name": "ocd-division/country:us/state:nh/sldu:24",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.009Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:3",
+    "name": "ocd-division/country:us/state:nh/sldu:3",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.207Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:4",
+    "name": "ocd-division/country:us/state:nh/sldu:4",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.721Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:5",
+    "name": "ocd-division/country:us/state:nh/sldu:5",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.781Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:6",
+    "name": "ocd-division/country:us/state:nh/sldu:6",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:14.094Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:7",
+    "name": "ocd-division/country:us/state:nh/sldu:7",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.812Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:8",
+    "name": "ocd-division/country:us/state:nh/sldu:8",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.855Z"
+  },
+  {
+    "place_id": "ocd-division/country:us/state:nh/sldu:9",
+    "name": "ocd-division/country:us/state:nh/sldu:9",
+    "boundary_year": 2026,
+    "source_urls": [
+      "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_33_sldu.zip"
+    ],
+    "checked_at": "2026-10-26T19:41:13.865Z"
+  }
+]

@@ -1,0 +1,242 @@
+{
+  "checkedAt": "2026-11-02T22:25:03.474515+00:00",
+  "sourceFile": "ak-identities.json",
+  "sourceSha256": "998cdc4abada4b6bed39dfda86f680a1cf005690766e0c7cc56524cf21bab6ae",
+  "sourceKind": "Bounded read-only production boundary identity query;20rows with saved Census URLs and timestamps",
+  "rows": [
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00a",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00a",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:a",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.767Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00b",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00b",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:b",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.772Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00c",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00c",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:c",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.824Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00d",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00d",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:d",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.831Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00e",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00e",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:e",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.833Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00f",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00f",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:f",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.834Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00g",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00g",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:g",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.836Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00h",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00h",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:h",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.837Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00i",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00i",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:i",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.409Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00j",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00j",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:j",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.410Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00k",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00k",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:k",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.411Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00l",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00l",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:l",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.413Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00m",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00m",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:m",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.420Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00n",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00n",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:n",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.428Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00o",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00o",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:o",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.545Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00p",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00p",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:p",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.555Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00q",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00q",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:q",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.614Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00r",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00r",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:r",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.646Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00s",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00s",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:s",
+      "held2026Contest": true,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.718Z"
+    },
+    {
+      "censusOcdId": "ocd-division/country:us/state:ak/sldu:00t",
+      "censusLabel": "ocd-division/country:us/state:ak/sldu:00t",
+      "letterNormalizedOcdId": "ocd-division/country:us/state:ak/sldu:t",
+      "held2026Contest": false,
+      "boundaryYear": 2026,
+      "sourceUrls": [
+        "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_02_sldu.zip"
+      ],
+      "sourceCheckedAt": "2026-10-26T18:59:49.758Z"
+    }
+  ],
+  "heldSenateLetters": [
+    "a",
+    "c",
+    "e",
+    "g",
+    "i",
+    "k",
+    "m",
+    "o",
+    "q",
+    "s"
+  ],
+  "normalizationOnly": true,
+  "notElectionScheduleProof": "Identifier normalization resolves10false missing leads. The other10seats are not proved to have2026elections by geography; official current candidate routes returned502."
+}

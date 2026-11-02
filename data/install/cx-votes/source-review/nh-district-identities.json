@@ -1,0 +1,1542 @@
+{
+  "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+  "sourceRawFile": "sources/418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26.html",
+  "sourceRawSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+  "geographyFile": "sources/05593e12c6186ec9676eb9a2dfdd997eef41d8ca69d7e5f333a71b7ba9141871.geojson",
+  "geographySha256": "05593e12c6186ec9676eb9a2dfdd997eef41d8ca69d7e5f333a71b7ba9141871",
+  "geographySource": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_33_sldl_500k.zip",
+  "geographyVintage": "2025",
+  "counties": {
+    "Strafford": [
+      {
+        "county": "Strafford",
+        "district": 1,
+        "voteFor": 2,
+        "places": [
+          "Farmington"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:801",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 2,
+        "voteFor": 3,
+        "places": [
+          "Milton",
+          "Rochester Ward 5"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:802",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 3,
+        "voteFor": 1,
+        "places": [
+          "Middleton",
+          "New Durham"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:803",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 4,
+        "voteFor": 3,
+        "places": [
+          "Barrington",
+          "Strafford"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:804",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 5,
+        "voteFor": 1,
+        "places": [
+          "Rochester Ward 1"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:805",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 6,
+        "voteFor": 1,
+        "places": [
+          "Rochester Ward 2"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:806",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 7,
+        "voteFor": 1,
+        "places": [
+          "Rochester Ward 3"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:807",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 8,
+        "voteFor": 1,
+        "places": [
+          "Rochester Ward 4"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:808",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 9,
+        "voteFor": 1,
+        "places": [
+          "Rochester Ward 6"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:809",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 10,
+        "voteFor": 4,
+        "places": [
+          "Durham"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:810",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 11,
+        "voteFor": 3,
+        "places": [
+          "Dover Ward 4",
+          "Lee",
+          "Madbury"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:811",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 12,
+        "voteFor": 4,
+        "places": [
+          "Rollinsford",
+          "Somersworth Ward 1",
+          "Somersworth Ward 2",
+          "Somersworth Ward 3",
+          "Somersworth Ward 4",
+          "Somersworth Ward 5"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:812",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 13,
+        "voteFor": 1,
+        "places": [
+          "Dover Ward 6"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:813",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 14,
+        "voteFor": 1,
+        "places": [
+          "Dover Ward 1"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:814",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 15,
+        "voteFor": 1,
+        "places": [
+          "Dover Ward 2"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:815",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 16,
+        "voteFor": 1,
+        "places": [
+          "Dover Ward 3"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:816",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 17,
+        "voteFor": 1,
+        "places": [
+          "Dover Ward 5"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:817",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Strafford",
+        "district": 18,
+        "voteFor": 1,
+        "places": [
+          "Barrington",
+          "Middleton",
+          "New Durham",
+          "Strafford"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Strafford",
+        "district": 19,
+        "voteFor": 3,
+        "places": [
+          "Rochester Ward",
+          "Rochester Ward 2",
+          "Rochester Ward 3",
+          "Rochester Ward 4",
+          "Rochester Ward 6"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Strafford",
+        "district": 20,
+        "voteFor": 1,
+        "places": [
+          "Dover Ward 4",
+          "Durham",
+          "Lee",
+          "Madbury"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "Official overlapping floterial district, absent from base Census polygons. Proposed ID follows the repository’s existing county_number overlay convention; it is a new project ID, not a claimed Census code. Must include districtMemberships for reader reach.",
+        "parsingNote": "Raw statute table splits Dover Ward and4 across cells. Corrected using exact joined official text; the existing generic helper drops the ward numeral for this row.",
+        "proposedSourceConditionedOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+        "officialScopeQuote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+      },
+      {
+        "county": "Strafford",
+        "district": 21,
+        "voteFor": 3,
+        "places": [
+          "Dover Ward 1",
+          "Dover Ward 2",
+          "Dover Ward 3",
+          "Dover Ward 5",
+          "Dover Ward 6"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "Official overlapping floterial district, absent from base Census polygons. Proposed ID follows the repository’s existing county_number overlay convention; it is a new project ID, not a claimed Census code. Must include districtMemberships for reader reach.",
+        "proposedSourceConditionedOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+        "officialScopeQuote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    ],
+    "Hillsborough": [
+      {
+        "county": "Hillsborough",
+        "district": 1,
+        "voteFor": 4,
+        "places": [
+          "Pelham"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:501",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 2,
+        "voteFor": 7,
+        "places": [
+          "Bedford"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:502",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 3,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 4"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:503",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 4,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 2"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:504",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 5,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 1"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:505",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 6,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 3"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:506",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 7,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 7"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:507",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 8,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 6"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:508",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 9,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 5"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:509",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 10,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 9"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:510",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 11,
+        "voteFor": 3,
+        "places": [
+          "Nashua Ward 8"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:511",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 12,
+        "voteFor": 8,
+        "places": [
+          "Merrimack"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:512",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 13,
+        "voteFor": 6,
+        "places": [
+          "Hudson"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:513",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 14,
+        "voteFor": 2,
+        "places": [
+          "Litchfield"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:514",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 15,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 8"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:515",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:515"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 16,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 6"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:516",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:516"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 17,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 2"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:517",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:517"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 18,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 12"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:518",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:518"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 19,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 10"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:519",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:519"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 20,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 9"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:520",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:520"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 21,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 1"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:521",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:521"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 22,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 11"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:522",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:522"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 23,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 3"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:523",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:523"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 24,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 4"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:524",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:524"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 25,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 5"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:525",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:525"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 26,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 7"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:526",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:526"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 27,
+        "voteFor": 1,
+        "places": [
+          "Deering",
+          "Francestown"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:527",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 28,
+        "voteFor": 2,
+        "places": [
+          "Weare"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:528",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 29,
+        "voteFor": 4,
+        "places": [
+          "Goffstown"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:529",
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:529"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 30,
+        "voteFor": 3,
+        "places": [
+          "Antrim",
+          "Bennington",
+          "Hillsborough",
+          "Windsor"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:530",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 31,
+        "voteFor": 1,
+        "places": [
+          "Greenfield",
+          "Hancock"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:531",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 32,
+        "voteFor": 3,
+        "places": [
+          "New Ipswich",
+          "Temple",
+          "Wilton"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:532",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 33,
+        "voteFor": 2,
+        "places": [
+          "Peterborough",
+          "Sharon"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:533",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 34,
+        "voteFor": 3,
+        "places": [
+          "Amherst"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:534",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 35,
+        "voteFor": 2,
+        "places": [
+          "Hollis"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:535",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 36,
+        "voteFor": 2,
+        "places": [
+          "Brookline",
+          "Greenville",
+          "Mason"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:536",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 37,
+        "voteFor": 1,
+        "places": [
+          "Amherst",
+          "Milford"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 38,
+        "voteFor": 2,
+        "places": [
+          "Hudson",
+          "Litchfield"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 39,
+        "voteFor": 2,
+        "places": [
+          "Manchester Ward 6",
+          "Manchester Ward 8",
+          "Manchester Ward 9"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:hillsborough_39"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 40,
+        "voteFor": 4,
+        "places": [
+          "Manchester Ward 1",
+          "Manchester Ward 3",
+          "Manchester Ward 10",
+          "Manchester Ward 11",
+          "Manchester Ward 12"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:hillsborough_40"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 41,
+        "voteFor": 3,
+        "places": [
+          "Manchester Ward 2",
+          "Manchester Ward 4",
+          "Manchester Ward 5",
+          "Manchester Ward 7"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:hillsborough_41"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 42,
+        "voteFor": 3,
+        "places": [
+          "Lyndeborough",
+          "Mont Vernon",
+          "New Boston"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:542",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 43,
+        "voteFor": 4,
+        "places": [
+          "Milford"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:543",
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 44,
+        "voteFor": 2,
+        "places": [
+          "Goffstown",
+          "Weare"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [
+          "ocd-division/country:us/state:nh/sldl:hillsborough_44"
+        ],
+        "existingIdAvailable": true,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      },
+      {
+        "county": "Hillsborough",
+        "district": 45,
+        "voteFor": 1,
+        "places": [
+          "Brookline",
+          "Greenville",
+          "Hollis",
+          "Mason"
+        ],
+        "existingCensusOcdId": null,
+        "existingHeldOcdIds": [],
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon. Check statutory overlay membership; do not substitute county-wide scope."
+      }
+    ],
+    "Rockingham": [
+      {
+        "county": "Rockingham",
+        "district": 1,
+        "voteFor": 3,
+        "places": [
+          "Northwood",
+          "Nottingham"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:701",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 2,
+        "voteFor": 3,
+        "places": [
+          "Auburn",
+          "Candia",
+          "Deerfield"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:702",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 3,
+        "voteFor": 1,
+        "places": [
+          "Chester"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:703",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 4,
+        "voteFor": 3,
+        "places": [
+          "Raymond"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:704",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 5,
+        "voteFor": 2,
+        "places": [
+          "Epping"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:705",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 6,
+        "voteFor": 1,
+        "places": [
+          "Brentwood"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:706",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 7,
+        "voteFor": 1,
+        "places": [
+          "Fremont"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:707",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 8,
+        "voteFor": 1,
+        "places": [
+          "Danville"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:708",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 9,
+        "voteFor": 2,
+        "places": [
+          "Sandown"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:709",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 10,
+        "voteFor": 3,
+        "places": [
+          "Newfields",
+          "Newmarket"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:710",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 11,
+        "voteFor": 4,
+        "places": [
+          "Exeter"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:711",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 12,
+        "voteFor": 2,
+        "places": [
+          "Stratham"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:712",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 13,
+        "voteFor": 10,
+        "places": [
+          "Derry"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:713",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 14,
+        "voteFor": 2,
+        "places": [
+          "E. Kingston",
+          "Kingston"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:714",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 15,
+        "voteFor": 2,
+        "places": [
+          "Hampstead"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:715",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 16,
+        "voteFor": 7,
+        "places": [
+          "Londonderry"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:716",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 17,
+        "voteFor": 4,
+        "places": [
+          "Windham"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:717",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 18,
+        "voteFor": 2,
+        "places": [
+          "Atkinson"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:718",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 19,
+        "voteFor": 1,
+        "places": [
+          "Hampton Falls",
+          "Kensington"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:719",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 20,
+        "voteFor": 3,
+        "places": [
+          "Newton",
+          "Plaistow",
+          "S. Hampton"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:720",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 21,
+        "voteFor": 1,
+        "places": [
+          "Newington",
+          "Portsmouth Ward 1"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:721",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 22,
+        "voteFor": 1,
+        "places": [
+          "New Castle",
+          "Portsmouth Ward 5"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:722",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 23,
+        "voteFor": 1,
+        "places": [
+          "N. Hampton"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:723",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 24,
+        "voteFor": 2,
+        "places": [
+          "Greenland",
+          "Rye"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:724",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 25,
+        "voteFor": 9,
+        "places": [
+          "Salem"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:725",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 26,
+        "voteFor": 1,
+        "places": [
+          "Portsmouth Ward 3"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:726",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 27,
+        "voteFor": 1,
+        "places": [
+          "Portsmouth Ward 4"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:727",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 28,
+        "voteFor": 1,
+        "places": [
+          "Portsmouth Ward 2"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:728",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 29,
+        "voteFor": 4,
+        "places": [
+          "Hampton"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:729",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 30,
+        "voteFor": 2,
+        "places": [
+          "Seabrook"
+        ],
+        "existingCensusOcdId": "ocd-division/country:us/state:nh/sldl:730",
+        "existingIdAvailable": true,
+        "scopeNote": "Base geographic district from saved Census layer."
+      },
+      {
+        "county": "Rockingham",
+        "district": 31,
+        "voteFor": 2,
+        "places": [
+          "Auburn",
+          "Candia",
+          "Chester",
+          "Deerfield"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 32,
+        "voteFor": 1,
+        "places": [
+          "Brentwood",
+          "Danville",
+          "Fremont"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 33,
+        "voteFor": 1,
+        "places": [
+          "Exeter",
+          "Newfields",
+          "Newmarket",
+          "Stratham"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 34,
+        "voteFor": 1,
+        "places": [
+          "E. Kingston",
+          "Hampstead",
+          "Kingston"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 35,
+        "voteFor": 1,
+        "places": [
+          "Londonderry",
+          "Windham"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 36,
+        "voteFor": 1,
+        "places": [
+          "Hampton Falls",
+          "Kensington",
+          "Newton",
+          "Plaistow",
+          "S. Hampton"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 37,
+        "voteFor": 1,
+        "places": [
+          "New Castle",
+          "Newington",
+          "Portsmouth Ward 1",
+          "Portsmouth Ward 5"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "Official floterial absent from base Census polygons. New project alias follows existing county_number convention and requires districtMemberships; not a claimed Census code.",
+        "proposedSourceConditionedOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+        "officialScopeQuote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+      },
+      {
+        "county": "Rockingham",
+        "district": 38,
+        "voteFor": 1,
+        "places": [
+          "Greenland",
+          "N. Hampton",
+          "Rye"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      },
+      {
+        "county": "Rockingham",
+        "district": 39,
+        "voteFor": 1,
+        "places": [
+          "Portsmouth Ward 2",
+          "Portsmouth Ward 3",
+          "Portsmouth Ward 4"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "Official floterial absent from base Census polygons. New project alias follows existing county_number convention and requires districtMemberships; not a claimed Census code.",
+        "proposedSourceConditionedOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+        "officialScopeQuote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      },
+      {
+        "county": "Rockingham",
+        "district": 40,
+        "voteFor": 1,
+        "places": [
+          "Hampton",
+          "Seabrook"
+        ],
+        "existingCensusOcdId": null,
+        "existingIdAvailable": false,
+        "scopeNote": "No matching base Census polygon; verify statutory overlay scope."
+      }
+    ]
+  },
+  "statuteReceipt": {
+    "requestedUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "finalUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "publisher": "New Hampshire General Court",
+    "sourceClass": "ELECTION_AUTHORITY",
+    "retrievedAt": "2026-10-20T23:57:28.424694+00:00",
+    "httpStatus": 200,
+    "rawHash": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "reviewedEvidence": "Current statute counts203House districts,24Senate districts,5ExecutiveCouncil districts and2Congressional districts. It also names Goffstown/ManchesterCD1/Council4 and assigns Senate16/18/20 and Hillsborough commissioner1/3. It measures regular district slots, not the final certified general-election candidate count."
+  },
+  "proposedStraffordOverlayMemberships": [
+    {
+      "id": "nh-2026-membership:sldl:810->sldl:strafford_20",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:810",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:811->sldl:strafford_20",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:811",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:813->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:813",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:814->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:814",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:815->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:815",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:816->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:816",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:817->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:817",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    }
+  ],
+  "PortsmouthSenate": {
+    "district": 21,
+    "existingCensusOcdId": "ocd-division/country:us/state:nh/sldu:21",
+    "officialScopeQuote": "XXI. Senatorial district number 21 is constituted of Durham, Lee, Madbury, New Castle, Newfields, Newington, Newmarket, and Portsmouth.",
+    "voteFor": 1,
+    "scopeNote": "Official statute defines the entire named municipalities. Do not infer Senate membership for a House base that crosses outside them."
+  },
+  "proposedRockinghamOverlayMemberships": [
+    {
+      "id": "nh-2026-membership:sldl:721->sldl:rockingham_37",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:721",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:722->sldl:rockingham_37",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:722",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:726->sldl:rockingham_39",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:726",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:727->sldl:rockingham_39",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:727",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:728->sldl:rockingham_39",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:728",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      }
+    }
+  ]
+}

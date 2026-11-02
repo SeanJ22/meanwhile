@@ -1,0 +1,13 @@
+{
+  "freshLegislativeCandidateRows": 296,
+  "heldLegislativeCandidates": 296,
+  "missing": [],
+  "extra": [],
+  "exactKey": "office+district+normalized ballot name+party",
+  "sourceUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+  "sourceFile": "vt-2026-general-qualified-candidates.xlsx",
+  "sourceSha256": "d30d2a95abfad041f840595af3028699b2fa06b9c45fa35dbeffb6d76bbbfddc",
+  "retrievedAt": "2026-11-02T22:01:19.759261+00:00",
+  "sourceWorkbookLastUpdated": "2026-10-30",
+  "sourceDistricts": 125
+}

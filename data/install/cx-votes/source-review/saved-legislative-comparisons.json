@@ -1,0 +1,88 @@
+[
+  {
+    "state": "OK",
+    "sourceFile": "sources/4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf.html",
+    "sourceMeta": {
+      "url": "https://hosting.okelections.gov/electionlist.html",
+      "finalUrl": "https://hosting.okelections.gov/electionlist.html",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-20T23:01:28.384355+00:00",
+      "sha256": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf"
+    },
+    "officialDistricts": 70,
+    "officialCandidateRows": 143,
+    "heldDistricts": 70,
+    "heldCandidateRows": 143,
+    "missing": {},
+    "extra": {},
+    "countySections": 77,
+    "interpretation": "Compare only printed November legislative races; fresh official general-election rules explain unopposed candidates do not appear on ballots.",
+    "reviewedAt": "2026-11-02T22:20:18.449303+00:00",
+    "status": "EXACT_SAVED_OFFICIAL_LEGISLATIVE_MATCH"
+  },
+  {
+    "state": "TN",
+    "sources": [
+      {
+        "sourceFile": "sources/725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca.xlsx",
+        "metadata": {
+          "url": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+          "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-20T22:53:10.145185+00:00",
+          "sha256": "725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca"
+        }
+      },
+      {
+        "sourceFile": "sources/4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e.xlsx",
+        "metadata": {
+          "url": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+          "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-20T22:53:10.232055+00:00",
+          "sha256": "4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e"
+        }
+      }
+    ],
+    "officialDistricts": 115,
+    "officialCandidateRows": 195,
+    "heldDistricts": 115,
+    "heldCandidateRows": 195,
+    "missing": {},
+    "extra": {},
+    "officialNoQualifiedCandidate": [
+      "Tennessee House of Representatives District 93"
+    ],
+    "interpretation": "Source enumerates all listed2026 legislative races. It explicitly identifies House93 as No Candidate Qualified; geographic-only Senate leads are not added as fabricated races.",
+    "reviewedAt": "2026-11-02T22:20:18.449316+00:00",
+    "status": "EXACT_SAVED_OFFICIAL_LEGISLATIVE_MATCH"
+  },
+  {
+    "state": "KS",
+    "sourceFile": "sources/c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8.html",
+    "sourceMeta": {
+      "url": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+      "finalUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-20T23:01:41.268276+00:00",
+      "sha256": "c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8",
+      "request": {
+        "method": "POST",
+        "form": {
+          "ddlElections": "36",
+          "btnSubmit": "Submit"
+        },
+        "hiddenFields": "Retain hidden fields from the initial GET and use the same cookie session."
+      }
+    },
+    "officialDistricts": 127,
+    "officialCandidateRows": 218,
+    "heldDistricts": 127,
+    "heldCandidateRows": 218,
+    "missing": {},
+    "extra": {},
+    "interpretation": "Source-to-held comparison uses legislative rows from the complete official table. No geographic-only nonlisted Senate district is converted into a2026 race.",
+    "reviewedAt": "2026-11-02T22:20:18.449318+00:00",
+    "status": "EXACT_SAVED_OFFICIAL_LEGISLATIVE_MATCH"
+  }
+]

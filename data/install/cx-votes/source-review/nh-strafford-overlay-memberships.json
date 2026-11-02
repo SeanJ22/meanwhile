@@ -1,0 +1,100 @@
+{
+  "kind": "SOURCE_BACKED_MEMBERSHIP_ROWS_FOR_PACKET_MERGE",
+  "note": "Not a standalone publisher input. Merge these districtMemberships with the corresponding source-verified contest/candidacy additions. New source-conditioned IDs follow existing repository overlay convention.",
+  "districtMemberships": [
+    {
+      "id": "nh-2026-membership:sldl:810->sldl:strafford_20",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:810",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:811->sldl:strafford_20",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:811",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:813->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:813",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:814->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:814",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:815->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:815",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:816->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:816",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:817->sldl:strafford_21",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:817",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+      }
+    }
+  ],
+  "sourceReceipt": {
+    "requestedUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "finalUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "publisher": "New Hampshire General Court",
+    "sourceClass": "ELECTION_AUTHORITY",
+    "retrievedAt": "2026-10-20T23:57:28.424694+00:00",
+    "httpStatus": 200,
+    "rawHash": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "reviewedEvidence": "Current statute counts203House districts,24Senate districts,5ExecutiveCouncil districts and2Congressional districts. It also names Goffstown/ManchesterCD1/Council4 and assigns Senate16/18/20 and Hillsborough commissioner1/3. It measures regular district slots, not the final certified general-election candidate count."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "sourceFile": "sources/40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97.txt",
+  "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+  "sourceSha256": "40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97",
+  "sourceCaptureKind": "Saved rendered official source text; exact bytes and historical receipt matched. Fresh direct request returned a212-byte Incapsula response and is not treated as candidate evidence.",
+  "sourceReceipt": {
+    "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+    "sourceClass": "ELECTION_AUTHORITY",
+    "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+    "httpStatus": 200,
+    "rawHash": "40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97",
+    "reviewedEvidence": "Saved rendered official candidate page obtained through the web reader after the direct HTTP route returned Incapsula. Hash describes the saved rendered text. Replayed all 223 federal, statewide, legislative and Councillor office/district groups and 304 candidate names. The 8 missing Councillor districts and all 11 printed candidates are added. Addresses stay in source evidence only."
+  },
+  "sourceLegislativeCandidateRows": 261,
+  "heldLegislativeCandidates": 261,
+  "sourceDistricts": 200,
+  "missing": [],
+  "extra": [],
+  "exactKey": "office+official district heading+normalized ballot name+party",
+  "scope": "Candidate acquisition comparison only; numeric Census IDs and named election IDs are not compared as if they were identical.",
+  "parsingNote": "Candidate lines list name, address and town followed by a party when supplied. The last field is counted as party only when it matches a party label; three lines have no party label and are kept unspecified. No address fields exported."
+}

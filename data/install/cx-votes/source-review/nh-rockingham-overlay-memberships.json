@@ -1,0 +1,76 @@
+{
+  "kind": "SOURCE_BACKED_MEMBERSHIP_ROWS_FOR_PACKET_MERGE",
+  "note": "Not a standalone publisher input. Merge rows with corresponding source-verified contest/candidacy additions.",
+  "districtMemberships": [
+    {
+      "id": "nh-2026-membership:sldl:721->sldl:rockingham_37",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:721",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:722->sldl:rockingham_37",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:722",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:726->sldl:rockingham_39",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:726",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:727->sldl:rockingham_39",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:727",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      }
+    },
+    {
+      "id": "nh-2026-membership:sldl:728->sldl:rockingham_39",
+      "memberOcdId": "ocd-division/country:us/state:nh/sldl:728",
+      "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+      "provenance": {
+        "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "sourceOrg": "New Hampshire General Court",
+        "collectedAt": "2026-10-20T23:57:28.424694+00:00",
+        "verifiedAt": "2026-10-20T23:57:28.424694+00:00",
+        "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+      }
+    }
+  ],
+  "sourceReceipt": {
+    "requestedUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "finalUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "publisher": "New Hampshire General Court",
+    "sourceClass": "ELECTION_AUTHORITY",
+    "retrievedAt": "2026-10-20T23:57:28.424694+00:00",
+    "httpStatus": 200,
+    "rawHash": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "reviewedEvidence": "Current statute counts203House districts,24Senate districts,5ExecutiveCouncil districts and2Congressional districts. It also names Goffstown/ManchesterCD1/Council4 and assigns Senate16/18/20 and Hillsborough commissioner1/3. It measures regular district slots, not the final certified general-election candidate count."
+  }
+}

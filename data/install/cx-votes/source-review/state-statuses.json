@@ -1,0 +1,767 @@
+[
+  {
+    "state": "AK",
+    "status": "LETTER_ALIAS_LEAD_CORRECTED_NO_NEW_RACE_PROVED",
+    "baselineCandidateRaces": 73,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 40,
+    "baselineUpperDistricts": 10,
+    "heldLegislativeContestRecords": 50,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 20
+    },
+    "finding": "Saved Census upper-district identifiers have zero-padded letters (00a–00t); held Senate records use a,c,e,g,i,k,m,o,q,s. Normalize letter codes before comparison. Ten matched records are not zero coverage. The other ten are not proved missing by geography; fresh official candidate routes returned502."
+  },
+  {
+    "state": "AL",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 183,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 105,
+    "baselineUpperDistricts": 35,
+    "heldLegislativeContestRecords": 140,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "AR",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 166,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 18,
+    "heldLegislativeContestRecords": 119,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 17
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "AS",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 18,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 17,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 17,
+    "geographicLeadCounts": {},
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "AZ",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 138,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 30,
+    "baselineUpperDistricts": 30,
+    "heldLegislativeContestRecords": 60,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "CA",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 203,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 80,
+    "baselineUpperDistricts": 20,
+    "heldLegislativeContestRecords": 100,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 20
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "CO",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 138,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 65,
+    "baselineUpperDistricts": 21,
+    "heldLegislativeContestRecords": 86,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 14
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "CT",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 197,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 151,
+    "baselineUpperDistricts": 36,
+    "heldLegislativeContestRecords": 187,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "DC",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 15,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 0,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 0,
+    "geographicLeadCounts": {},
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "DE",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 77,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 41,
+    "baselineUpperDistricts": 11,
+    "heldLegislativeContestRecords": 52,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 10
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "FL",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 222,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 120,
+    "baselineUpperDistricts": 21,
+    "heldLegislativeContestRecords": 141,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 19
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "GA",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 273,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 180,
+    "baselineUpperDistricts": 56,
+    "heldLegislativeContestRecords": 236,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "GU",
+    "status": "OPEN_SOURCE_ACQUISITION_GAP",
+    "baselineCandidateRaces": 0,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 0,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 0,
+    "geographicLeadCounts": {},
+    "finding": "No published ballot set and no held2026-general input. Official search-indexed Guam Election Commission pages identify a2026 general election, but direct official pages currently returned503 and the web reader502/timeout. No candidate packet is authorized by unverified third-party names. Territory gap remains open."
+  },
+  {
+    "state": "HI",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 60,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 31,
+    "baselineUpperDistricts": 6,
+    "heldLegislativeContestRecords": 37,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 10
+    },
+    "finding": "Held official-source absence records identify candidates elected after the primary (20House and9Senate) and must be retained. Other geometric Senate gaps require election-schedule context; no fabricated empty contest is added."
+  },
+  {
+    "state": "IA",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 136,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 25,
+    "heldLegislativeContestRecords": 125,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 25
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "ID",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 386,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 35,
+    "baselineUpperDistricts": 35,
+    "heldLegislativeContestRecords": 105,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "IL",
+    "status": "SEPARATE_PACKET_OWNER",
+    "baselineCandidateRaces": 166,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 37,
+    "heldLegislativeContestRecords": 141,
+    "geographicLeadCounts": {
+      "sldl": 18,
+      "sldu": 22
+    },
+    "finding": "Separate source recovery/packet owner assigned by root. This artifact preserves the baseline lead counts and does not override their work."
+  },
+  {
+    "state": "IN",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 137,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 25,
+    "heldLegislativeContestRecords": 125,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 25
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "KS",
+    "status": "EXACT_OFFICIAL_LEGISLATIVE_TUPLE_MATCH",
+    "baselineCandidateRaces": 184,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 125,
+    "baselineUpperDistricts": 2,
+    "heldLegislativeContestRecords": 127,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 38
+    },
+    "finding": "The saved official all-office candidate table matches all218 legislative candidates in127 contests (125House,2Senate). The Senate geographic remainder is not proof of omitted2026races."
+  },
+  {
+    "state": "KY",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 126,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 19,
+    "heldLegislativeContestRecords": 119,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 19
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "LA",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 8,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 1,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 1,
+    "geographicLeadCounts": {
+      "sldl": 104,
+      "sldu": 39
+    },
+    "finding": "Held2026 source is the federal/legislative candidate inquiry. This state has a different regular legislative-election cycle; current special-election records must be preserved. A geographic count does not establish2026 regular races."
+  },
+  {
+    "state": "MA",
+    "status": "EXACT_OFFICIAL_LEGISLATIVE_TUPLE_MATCH",
+    "baselineCandidateRaces": 223,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 160,
+    "baselineUpperDistricts": 40,
+    "heldLegislativeContestRecords": 200,
+    "geographicLeadCounts": {
+      "sldl": 160,
+      "sldu": 40
+    },
+    "finding": "All200 official named legislative districts and261 candidate rows match the exact saved rendered official list. Numeric Census codes are different identifiers. No acquisition omission was found; reader geography joins are a separate check."
+  },
+  {
+    "state": "MD",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 283,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 71,
+    "baselineUpperDistricts": 47,
+    "heldLegislativeContestRecords": 118,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "ME",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 278,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 151,
+    "baselineUpperDistricts": 35,
+    "heldLegislativeContestRecords": 186,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "MI",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 338,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 110,
+    "baselineUpperDistricts": 38,
+    "heldLegislativeContestRecords": 148,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "MN",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 391,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 134,
+    "baselineUpperDistricts": 67,
+    "heldLegislativeContestRecords": 201,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "MO",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 189,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 163,
+    "baselineUpperDistricts": 17,
+    "heldLegislativeContestRecords": 180,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 17
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "MP",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 20,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 7,
+    "baselineUpperDistricts": 3,
+    "heldLegislativeContestRecords": 14,
+    "geographicLeadCounts": {},
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "MS",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 102,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 2,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 2,
+    "geographicLeadCounts": {
+      "sldl": 120,
+      "sldu": 52
+    },
+    "finding": "Held statewide official sample contains the existing federal and special legislative races. This state has a different regular legislative-election cycle; a geographic count does not establish2026 regular races."
+  },
+  {
+    "state": "MT",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 133,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 25,
+    "heldLegislativeContestRecords": 125,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 25
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "NC",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 555,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 120,
+    "baselineUpperDistricts": 50,
+    "heldLegislativeContestRecords": 170,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "ND",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 406,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 27,
+    "baselineUpperDistricts": 24,
+    "heldLegislativeContestRecords": 51,
+    "geographicLeadCounts": {
+      "sldl": 21,
+      "sldu": 23
+    },
+    "finding": "Held official source receipt explicitly states2026 schedule:24odd-district Senate seats,48odd-district House seats, plus single unexpired House seats in20,26and42. Raw House geography also includes subdistrict IDs04a/04b. Even-district gaps do not establish omitted regular races."
+  },
+  {
+    "state": "NE",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 42,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 0,
+    "baselineUpperDistricts": 25,
+    "heldLegislativeContestRecords": 25,
+    "geographicLeadCounts": {
+      "sldu": 24
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "NH",
+    "status": "OPEN_SOURCE_ACQUISITION_GAP",
+    "baselineCandidateRaces": 70,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 35,
+    "baselineUpperDistricts": 6,
+    "heldLegislativeContestRecords": 41,
+    "geographicLeadCounts": {
+      "sldl": 137,
+      "sldu": 18
+    },
+    "finding": "Genuine source-acquisition partial coverage: held data has35House contest IDs and6Senate districts. Statewide general candidate list returned403. Root assigned official municipal and alternative statewide recovery to nh_va_sources. Source-backed Dover/Nashua district identity support is saved separately; do not mark all NH legislative coverage complete."
+  },
+  {
+    "state": "NJ",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 109,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 0,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 0,
+    "geographicLeadCounts": {
+      "sldl": 40,
+      "sldu": 40
+    },
+    "finding": "No ordinary2026 legislative race coverage is implied by geographic district totals. This state has a different regular legislative-election cycle; any special election needs its own official source."
+  },
+  {
+    "state": "NM",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 205,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 70,
+    "baselineUpperDistricts": 1,
+    "heldLegislativeContestRecords": 71,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 41
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "NV",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 76,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 42,
+    "baselineUpperDistricts": 11,
+    "heldLegislativeContestRecords": 53,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 10
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "NY",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 263,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 150,
+    "baselineUpperDistricts": 63,
+    "heldLegislativeContestRecords": 213,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "OH",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 215,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 99,
+    "baselineUpperDistricts": 17,
+    "heldLegislativeContestRecords": 116,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 16
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "OK",
+    "status": "EXACT_OFFICIAL_LEGISLATIVE_TUPLE_MATCH",
+    "baselineCandidateRaces": 84,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 55,
+    "baselineUpperDistricts": 15,
+    "heldLegislativeContestRecords": 70,
+    "geographicLeadCounts": {
+      "sldl": 46,
+      "sldu": 33
+    },
+    "finding": "All143 printed legislative candidates in70 district contests match the saved official list across77 county sections. Fresh Oklahoma Election Board rules say unopposed candidates are elected by default and do not appear on ballots. Geographic missing districts cannot be added as races merely from boundary counts."
+  },
+  {
+    "state": "OR",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 113,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 60,
+    "baselineUpperDistricts": 15,
+    "heldLegislativeContestRecords": 75,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 15
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "PA",
+    "status": "SEPARATE_PACKET_OWNER",
+    "baselineCandidateRaces": 184,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 146,
+    "baselineUpperDistricts": 21,
+    "heldLegislativeContestRecords": 167,
+    "geographicLeadCounts": {
+      "sldl": 57,
+      "sldu": 29
+    },
+    "finding": "Separate source recovery/packet owner assigned by root. House123 omission was independently source-verified earlier; root owns additions and remaining completeness audit."
+  },
+  {
+    "state": "PR",
+    "status": "NO_GENERAL_SET_CYCLE_CONTEXT_REQUIRED",
+    "baselineCandidateRaces": 0,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 0,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 0,
+    "geographicLeadCounts": {},
+    "finding": "No published2026 general ballot set. Do not infer omitted2026 races from this alone: Puerto Rico uses a different regular-election cycle, and its current CEE events page lists a September2026 Cataño special election. NoNovember2026 legislative candidate list was verified in this audit."
+  },
+  {
+    "state": "RI",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 121,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 75,
+    "baselineUpperDistricts": 38,
+    "heldLegislativeContestRecords": 113,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "SC",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 298,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 124,
+    "baselineUpperDistricts": 1,
+    "heldLegislativeContestRecords": 125,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 45
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "SD",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 85,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 37,
+    "baselineUpperDistricts": 35,
+    "heldLegislativeContestRecords": 72,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "TN",
+    "status": "EXACT_OFFICIAL_LEGISLATIVE_TUPLE_MATCH",
+    "baselineCandidateRaces": 126,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 98,
+    "baselineUpperDistricts": 17,
+    "heldLegislativeContestRecords": 115,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 16
+    },
+    "finding": "Saved official workbooks match195 candidates in115 legislative contests. House93 is explicitly No Candidate Qualified. Other geographic Senate gaps are not missing2026 contests established by this audit."
+  },
+  {
+    "state": "TX",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 1728,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 150,
+    "baselineUpperDistricts": 16,
+    "heldLegislativeContestRecords": 168,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 15
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "UT",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 107,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 75,
+    "baselineUpperDistricts": 15,
+    "heldLegislativeContestRecords": 90,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 14
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "VA",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 363,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 1,
+    "baselineUpperDistricts": 0,
+    "heldLegislativeContestRecords": 1,
+    "geographicLeadCounts": {
+      "sldl": 99,
+      "sldu": 40
+    },
+    "finding": "Held special House contest remains. This state has a different regular legislative-election cycle; all100House/40Senate boundaries do not imply those races are on theNovember2026 ballot."
+  },
+  {
+    "state": "VI",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 10,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 0,
+    "baselineUpperDistricts": 2,
+    "heldLegislativeContestRecords": 2,
+    "geographicLeadCounts": {},
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "VT",
+    "status": "EXACT_OFFICIAL_LEGISLATIVE_TUPLE_MATCH",
+    "baselineCandidateRaces": 138,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 109,
+    "baselineUpperDistricts": 16,
+    "heldLegislativeContestRecords": 125,
+    "geographicLeadCounts": {
+      "sldl": 109,
+      "sldu": 16
+    },
+    "finding": "Fresh official workbook marked October30 matches all296 legislative candidate rows in125 office/district groups. Source district abbreviations, named election IDs and raw Census codes are different identifiers. No acquisition omission was found."
+  },
+  {
+    "state": "WA",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 152,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 49,
+    "baselineUpperDistricts": 24,
+    "heldLegislativeContestRecords": 122,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 25
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  },
+  {
+    "state": "WI",
+    "status": "SEPARATE_PACKET_OWNER",
+    "baselineCandidateRaces": 192,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 85,
+    "baselineUpperDistricts": 17,
+    "heldLegislativeContestRecords": 102,
+    "geographicLeadCounts": {
+      "sldl": 14,
+      "sldu": 16
+    },
+    "finding": "Separate source recovery/packet owner assigned by root. This artifact preserves baseline lead counts and does not override their work."
+  },
+  {
+    "state": "WV",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 193,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 100,
+    "baselineUpperDistricts": 17,
+    "heldLegislativeContestRecords": 119,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 0
+    },
+    "finding": "No unmatched geographic legislative district lead in the baseline after its existing normalization. Held source receipts are retained. Equal counts do not certify every candidate, precinct, local office or reader geography join."
+  },
+  {
+    "state": "WY",
+    "status": "SAVED_OFFICIAL_RECEIPT_REVIEW_NO_NEW_MISSING_RACE_PROVED",
+    "baselineCandidateRaces": 94,
+    "baselineEmptyCandidateRaces": 0,
+    "baselineLowerDistricts": 62,
+    "baselineUpperDistricts": 17,
+    "heldLegislativeContestRecords": 79,
+    "geographicLeadCounts": {
+      "sldl": 0,
+      "sldu": 14
+    },
+    "finding": "Remaining lead rows are geographic districts without matched election records. Held official candidate-list receipts are retained for review; staggered terms and special elections mean geography alone does not establish a missing2026race. This audit did not independently replay every source tuple for this state."
+  }
+]

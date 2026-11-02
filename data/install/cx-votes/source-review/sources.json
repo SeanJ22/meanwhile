@@ -1,0 +1,406 @@
+{
+  "kind": "CX_VOTES_SOURCE_REVIEW_FILE_INDEX",
+  "preparedAt": "2026-11-02T22:50:25.340Z",
+  "pathBase": "Paths are relative to this source-review directory; repositoryPath fields are labeled historical provenance identifiers.",
+  "status": "SOURCE_REVIEW_NO_WRITE",
+  "fileCount": 38,
+  "totalBytes": 4503206,
+  "hashMeaning": "sha256 hashes exact packaged file bytes. originalArtifactSha256/originalSourceSha256 hash the original scratch/captured bytes before portable-path rewriting or labeled credential sanitization. Sanitized representations are never claimed to be original HTTP response bytes.",
+  "credentialSanitizer": "fx-cred-v1-2026-08-28",
+  "redactedFileCount": 0,
+  "files": [
+    {
+      "file": "all-state-audit.json",
+      "sha256": "fda7b8bf10eec78a34d9edf09a1defa2f2565cead71e3ca8f77ea6e20cf3c995",
+      "bytes": 378018,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "1fcb70d794e83dacae0962fd5e309213e259fb10c2291f382e89b3007173f355",
+      "originalArtifactBytes": 370698,
+      "originalArtifactBaseName": "all-state-audit.json",
+      "requestedArtifactManifestSha256": "1fcb70d794e83dacae0962fd5e309213e259fb10c2291f382e89b3007173f355"
+    },
+    {
+      "file": "state-statuses.json",
+      "sha256": "4795451442e00a251752d9f11800c1fde16953227e934c383054c4dc0d60ca32",
+      "bytes": 34949,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "4795451442e00a251752d9f11800c1fde16953227e934c383054c4dc0d60ca32",
+      "originalArtifactBytes": 34949,
+      "originalArtifactBaseName": "state-statuses.json",
+      "requestedArtifactManifestSha256": "4795451442e00a251752d9f11800c1fde16953227e934c383054c4dc0d60ca32"
+    },
+    {
+      "file": "vt-candidate-comparison.json",
+      "sha256": "5fb20864198ab805defcd307ee1456d01c105e050c44795462031bd1e8aa1736",
+      "bytes": 601,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "e67168fdae2429d43791950c544bc6299a4b10da2bb4ff92b565993f71bcd674",
+      "originalArtifactBytes": 649,
+      "originalArtifactBaseName": "vt-candidate-comparison.json",
+      "requestedArtifactManifestSha256": "e67168fdae2429d43791950c544bc6299a4b10da2bb4ff92b565993f71bcd674"
+    },
+    {
+      "file": "vt-source-selected-fields.json",
+      "sha256": "b05e8f1ad9d28f60cbbb6fb1fe6e4f9b7a4fd248dd228f05963c2fb93e53be98",
+      "bytes": 365737,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "b05e8f1ad9d28f60cbbb6fb1fe6e4f9b7a4fd248dd228f05963c2fb93e53be98",
+      "originalArtifactBytes": 365737,
+      "originalArtifactBaseName": "vt-source-selected-fields.json",
+      "requestedArtifactManifestSha256": "b05e8f1ad9d28f60cbbb6fb1fe6e4f9b7a4fd248dd228f05963c2fb93e53be98"
+    },
+    {
+      "file": "vt-official-source-receipt.json",
+      "sha256": "538c61107889a85ca816eedb19a2d4f253227277db6c19e3f822cc598076de39",
+      "bytes": 1207,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "538c61107889a85ca816eedb19a2d4f253227277db6c19e3f822cc598076de39",
+      "originalArtifactBytes": 1207,
+      "originalArtifactBaseName": "vt-official-source-receipt.json",
+      "requestedArtifactManifestSha256": "538c61107889a85ca816eedb19a2d4f253227277db6c19e3f822cc598076de39"
+    },
+    {
+      "file": "vt-2026-general-qualified-candidates.xlsx",
+      "sha256": "d30d2a95abfad041f840595af3028699b2fa06b9c45fa35dbeffb6d76bbbfddc",
+      "bytes": 288783,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "d30d2a95abfad041f840595af3028699b2fa06b9c45fa35dbeffb6d76bbbfddc",
+      "originalArtifactBytes": 288783,
+      "originalArtifactBaseName": "vt-2026-general-qualified-candidates.xlsx",
+      "requestedArtifactManifestSha256": "d30d2a95abfad041f840595af3028699b2fa06b9c45fa35dbeffb6d76bbbfddc"
+    },
+    {
+      "file": "ma-candidate-comparison.json",
+      "sha256": "8a5362e48b5e00a9ba4baee11ec8e2910277844072231d700abf9462300d4264",
+      "bytes": 2108,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "3103caabd3dbd699ed1d6923b4f91ec95af303a1efc733ca977631e946911a5f",
+      "originalArtifactBytes": 2134,
+      "originalArtifactBaseName": "ma-candidate-comparison.json",
+      "requestedArtifactManifestSha256": "3103caabd3dbd699ed1d6923b4f91ec95af303a1efc733ca977631e946911a5f"
+    },
+    {
+      "file": "ma-source-selected-fields.json",
+      "sha256": "9484b6a95a552749c08eafce7eb07d9ad8a616b723099f7c60b3089144b33e81",
+      "bytes": 44176,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "9484b6a95a552749c08eafce7eb07d9ad8a616b723099f7c60b3089144b33e81",
+      "originalArtifactBytes": 44176,
+      "originalArtifactBaseName": "ma-source-selected-fields.json",
+      "requestedArtifactManifestSha256": "9484b6a95a552749c08eafce7eb07d9ad8a616b723099f7c60b3089144b33e81"
+    },
+    {
+      "file": "saved-legislative-comparisons.json",
+      "sha256": "efc03b40e09d5f61a0d7856173540746b99d49b134a52b16004105ff03021c05",
+      "bytes": 3775,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "c3933be72bfded2a9f169f1dd37f602efa80532975ecbd706fd88ef4bdf4652f",
+      "originalArtifactBytes": 3753,
+      "originalArtifactBaseName": "saved-legislative-comparisons.json",
+      "requestedArtifactManifestSha256": "c3933be72bfded2a9f169f1dd37f602efa80532975ecbd706fd88ef4bdf4652f"
+    },
+    {
+      "file": "nh-district-identities.json",
+      "sha256": "9a260cdf33de9a0f4dbdb85e0efb61888b623ef69f0a5ef4c22f799dfb38c724",
+      "bytes": 51650,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "2ce29e3625c96eb1cf76f6a8681959e99736a77e35c6e3ede21de282e25c830d",
+      "originalArtifactBytes": 51637,
+      "originalArtifactBaseName": "nh-district-identities.json",
+      "requestedArtifactManifestSha256": "2ce29e3625c96eb1cf76f6a8681959e99736a77e35c6e3ede21de282e25c830d"
+    },
+    {
+      "file": "nh-strafford-overlay-memberships.json",
+      "sha256": "89031bfa15b50ab5b75b151a2a0a9ae906453b6eccceca0f56ce9d750310ae13",
+      "bytes": 5190,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "89031bfa15b50ab5b75b151a2a0a9ae906453b6eccceca0f56ce9d750310ae13",
+      "originalArtifactBytes": 5190,
+      "originalArtifactBaseName": "nh-strafford-overlay-memberships.json",
+      "requestedArtifactManifestSha256": "89031bfa15b50ab5b75b151a2a0a9ae906453b6eccceca0f56ce9d750310ae13"
+    },
+    {
+      "file": "nh-rockingham-overlay-memberships.json",
+      "sha256": "fa143ceb2670d533b55c5f3d264ea3a5206b332a7a1c77bc1e1fb0e7c2a097a0",
+      "bytes": 3926,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "fa143ceb2670d533b55c5f3d264ea3a5206b332a7a1c77bc1e1fb0e7c2a097a0",
+      "originalArtifactBytes": 3926,
+      "originalArtifactBaseName": "nh-rockingham-overlay-memberships.json",
+      "requestedArtifactManifestSha256": "fa143ceb2670d533b55c5f3d264ea3a5206b332a7a1c77bc1e1fb0e7c2a097a0"
+    },
+    {
+      "file": "99d889f14a26ae30.html",
+      "sha256": "aee814120fd21ab433d124ab1a8742f8f8e476068e1317ea1378ca797a781fe5",
+      "bytes": 128321,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "aee814120fd21ab433d124ab1a8742f8f8e476068e1317ea1378ca797a781fe5",
+      "originalArtifactBytes": 128321,
+      "originalArtifactBaseName": "99d889f14a26ae30.html",
+      "requestedArtifactManifestSha256": "aee814120fd21ab433d124ab1a8742f8f8e476068e1317ea1378ca797a781fe5"
+    },
+    {
+      "file": "99d889f14a26ae30.meta.json",
+      "sha256": "b082fd9805b872f214b11638d9aa4dcc305e351b0c9f83b46320ce6f526875ae",
+      "bytes": 13282,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "960bf333c4a43df005b694083e01583658dbd0e51cdbd709ed342555b3839b4f",
+      "originalArtifactBytes": 13330,
+      "originalArtifactBaseName": "99d889f14a26ae30.meta.json",
+      "requestedArtifactManifestSha256": "960bf333c4a43df005b694083e01583658dbd0e51cdbd709ed342555b3839b4f"
+    },
+    {
+      "file": "ok-general-elections.txt",
+      "sha256": "0e755becb37963238fc410c7f5cfce30c2a364481f5d5f6bddf573be09f1842b",
+      "bytes": 6973,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "0e755becb37963238fc410c7f5cfce30c2a364481f5d5f6bddf573be09f1842b",
+      "originalArtifactBytes": 6973,
+      "originalArtifactBaseName": "ok-general-elections.txt",
+      "requestedArtifactManifestSha256": "0e755becb37963238fc410c7f5cfce30c2a364481f5d5f6bddf573be09f1842b"
+    },
+    {
+      "file": "ak-district-identifiers.json",
+      "sha256": "ab64d271ad23efe568f1f31039cb3a85edd04cc546f313c75367e170bcca4be3",
+      "bytes": 9472,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "c2e8842ab672fef83e2b2aa1a1152d7b35039c61126d0871d1f0f8b8cf346781",
+      "originalArtifactBytes": 9520,
+      "originalArtifactBaseName": "ak-district-identifiers.json",
+      "requestedArtifactManifestSha256": "c2e8842ab672fef83e2b2aa1a1152d7b35039c61126d0871d1f0f8b8cf346781"
+    },
+    {
+      "file": "ak-identities.json",
+      "sha256": "dacd40ad97ffc1be11646be510ca91ba08f80cd42253a4df932834ee39ee5113",
+      "bytes": 6083,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "998cdc4abada4b6bed39dfda86f680a1cf005690766e0c7cc56524cf21bab6ae",
+      "originalArtifactBytes": 6082,
+      "originalArtifactBaseName": "ak-identities.json",
+      "requestedArtifactManifestSha256": "998cdc4abada4b6bed39dfda86f680a1cf005690766e0c7cc56524cf21bab6ae"
+    },
+    {
+      "file": "nh-all-203-house-identities.json",
+      "sha256": "76fc49dc4eb1a0182af526e62b2aab878de6adf4ea965e93a4eb01de8e236ee5",
+      "bytes": 226984,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "14758767f837c874ec438f526556c1e1e1681cccefed4c3fd290724446efd940",
+      "originalArtifactBytes": 227236,
+      "originalArtifactBaseName": "nh-all-203-house-identities.json",
+      "requestedArtifactManifestSha256": "14758767f837c874ec438f526556c1e1e1681cccefed4c3fd290724446efd940"
+    },
+    {
+      "file": "nh-all-overlay-memberships.json",
+      "sha256": "54b5fb7bb86625b6dfc1298aa38ac0d945c06b87de27c7926e23c44d25bb094e",
+      "bytes": 85152,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "54b5fb7bb86625b6dfc1298aa38ac0d945c06b87de27c7926e23c44d25bb094e",
+      "originalArtifactBytes": 85152,
+      "originalArtifactBaseName": "nh-all-overlay-memberships.json",
+      "requestedArtifactManifestSha256": "54b5fb7bb86625b6dfc1298aa38ac0d945c06b87de27c7926e23c44d25bb094e"
+    },
+    {
+      "file": "nh-tiger-2026-sldl.zip",
+      "sha256": "57dd011dec91efc9a0b4e5782d41425e0c0e516702f986a2adefa0179360a851",
+      "bytes": 953894,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "57dd011dec91efc9a0b4e5782d41425e0c0e516702f986a2adefa0179360a851",
+      "originalArtifactBytes": 953894,
+      "originalArtifactBaseName": "nh-tiger-2026-sldl.zip",
+      "requestedArtifactManifestSha256": "57dd011dec91efc9a0b4e5782d41425e0c0e516702f986a2adefa0179360a851"
+    },
+    {
+      "file": "nh-tiger-2026-dbf-identities.json",
+      "sha256": "08d55affd1924aa849cf030dd3828d4fcd11e9758c18b570b621024998f743bf",
+      "bytes": 57891,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "08d55affd1924aa849cf030dd3828d4fcd11e9758c18b570b621024998f743bf",
+      "originalArtifactBytes": 57891,
+      "originalArtifactBaseName": "nh-tiger-2026-dbf-identities.json",
+      "requestedArtifactManifestSha256": "08d55affd1924aa849cf030dd3828d4fcd11e9758c18b570b621024998f743bf"
+    },
+    {
+      "file": "nh-census-source-receipt.json",
+      "sha256": "1b4bc8fc4d58aa08f9309e74999adc5e0a1059682703637ea542854ce14c3150",
+      "bytes": 1003,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "11af05a1e21a6e4f66ef29ab3d200086e76467fa76353f7e99fe4f6abb61bf9d",
+      "originalArtifactBytes": 1099,
+      "originalArtifactBaseName": "nh-census-source-receipt.json",
+      "requestedArtifactManifestSha256": "11af05a1e21a6e4f66ef29ab3d200086e76467fa76353f7e99fe4f6abb61bf9d"
+    },
+    {
+      "file": "nh-rsa662-normalized-source.txt",
+      "sha256": "9fc8005bbf2955b71e07ea733f501583cdcb036df0f235a65b7fa1a422fbb0bb",
+      "bytes": 26220,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "9fc8005bbf2955b71e07ea733f501583cdcb036df0f235a65b7fa1a422fbb0bb",
+      "originalArtifactBytes": 26220,
+      "originalArtifactBaseName": "nh-rsa662-normalized-source.txt",
+      "requestedArtifactManifestSha256": "9fc8005bbf2955b71e07ea733f501583cdcb036df0f235a65b7fa1a422fbb0bb"
+    },
+    {
+      "file": "nh-current-identities.json",
+      "sha256": "9ecf12429abd88cc641a9736dd46966d32c508faa39970f6c262ffca5c8418bc",
+      "bytes": 57022,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "11ee4807a5ced40bb150b16f65d7c4c9a42475b3bacb025af707427077412e26",
+      "originalArtifactBytes": 57021,
+      "originalArtifactBaseName": "nh-current-identities.json",
+      "requestedArtifactManifestSha256": "11ee4807a5ced40bb150b16f65d7c4c9a42475b3bacb025af707427077412e26"
+    },
+    {
+      "file": "nh-tiger-2026-sldl.dbf",
+      "sha256": "6a25b33540aa3bd6a03cf0e4c9188f95f36ab0a6868c7ae1511f2001a4fc71c7",
+      "bytes": 31470,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "REQUESTED_ARTIFACT",
+      "originalArtifactSha256": "6a25b33540aa3bd6a03cf0e4c9188f95f36ab0a6868c7ae1511f2001a4fc71c7",
+      "originalArtifactBytes": 31470,
+      "originalArtifactBaseName": "nh-tiger-2026-sldl.dbf",
+      "requestedArtifactManifestSha256": "6a25b33540aa3bd6a03cf0e4c9188f95f36ab0a6868c7ae1511f2001a4fc71c7"
+    },
+    {
+      "file": "baseline/production-inventory.json",
+      "sha256": "f2b8b42d830e9f6d1edaa44b3636e1e2e397f2642d50238f0958152a03b7968b",
+      "bytes": 290137,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "READ_ONLY_BASELINE",
+      "originalArtifactSha256": "d3bce20ab2387bc126db222a7f8bd6ac60b7fa38c5a6a7d4c8e879e98b05493f",
+      "originalArtifactBytes": 290136,
+      "originalArtifactBaseName": "inventory.json"
+    },
+    {
+      "file": "baseline/district-coverage-leads.json",
+      "sha256": "6c7cc34c5a8be72298ebfe41f06991de85e888c02f7303ecb8003e6fdec5ebd4",
+      "bytes": 141241,
+      "representation": "PORTABLE_METADATA_JSON",
+      "role": "READ_ONLY_BASELINE",
+      "originalArtifactSha256": "7c37d855efdda9d3214a4c89e1f3679454d6bfecc6cc126c4984d671130fe10f",
+      "originalArtifactBytes": 141240,
+      "originalArtifactBaseName": "district-coverage-leads.json"
+    },
+    {
+      "file": "sources/40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97.txt",
+      "sha256": "40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97",
+      "bytes": 34399,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97",
+      "originalArtifactBytes": 34399,
+      "originalArtifactBaseName": "ma-2026-state-election-candidates.rendered.txt"
+    },
+    {
+      "file": "sources/4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf.html",
+      "sha256": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf",
+      "bytes": 821158,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf",
+      "originalArtifactBytes": 821158,
+      "originalArtifactBaseName": "ok-list-2026.html"
+    },
+    {
+      "file": "sources/725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca.xlsx",
+      "sha256": "725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca",
+      "bytes": 9543,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca",
+      "originalArtifactBytes": 9543,
+      "originalArtifactBaseName": "tn-TNSenate-2026.xlsx"
+    },
+    {
+      "file": "sources/4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e.xlsx",
+      "sha256": "4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e",
+      "bytes": 14998,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e",
+      "originalArtifactBytes": 14998,
+      "originalArtifactBaseName": "tn-TNHouse-2026.xlsx"
+    },
+    {
+      "file": "sources/c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8.html",
+      "sha256": "c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8",
+      "bytes": 215141,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "c4eba65076edd1226f82b29c324b94a35965b3fe5918371ba69d9652a7734da8",
+      "originalArtifactBytes": 215141,
+      "originalArtifactBaseName": "ks-all-2026.html"
+    },
+    {
+      "file": "sources/418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26.html",
+      "sha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+      "bytes": 47334,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+      "originalArtifactBytes": 47334,
+      "originalArtifactBaseName": "nh-rsa662-elective-districts.html"
+    },
+    {
+      "file": "sources/05593e12c6186ec9676eb9a2dfdd997eef41d8ca69d7e5f333a71b7ba9141871.geojson",
+      "sha256": "05593e12c6186ec9676eb9a2dfdd997eef41d8ca69d7e5f333a71b7ba9141871",
+      "bytes": 80083,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "SOURCE_OR_IDENTITY_DEPENDENCY",
+      "originalArtifactSha256": "05593e12c6186ec9676eb9a2dfdd997eef41d8ca69d7e5f333a71b7ba9141871",
+      "originalArtifactBytes": 80083,
+      "originalArtifactBaseName": "sldl-33.geojson"
+    },
+    {
+      "file": "baseline-summary.json",
+      "sha256": "f467c6b8140666536cf475214a89c3d5fca496275c2aca35770bccd5c605b10e",
+      "bytes": 39287,
+      "representation": "GENERATED_REVIEW_METADATA",
+      "role": "PACKAGE_METADATA"
+    },
+    {
+      "file": "held-input-references.json",
+      "sha256": "e21a93fa80144ee48a3e1673a52c4839d42a35499568a7491f97d21383de9733",
+      "bytes": 14755,
+      "representation": "GENERATED_REVIEW_METADATA",
+      "role": "PACKAGE_METADATA"
+    },
+    {
+      "file": "verification-artifacts.json",
+      "sha256": "bec3fdaec5985792d58a4a550af0b923392da58e2d09416d38da585f04357bed",
+      "bytes": 9097,
+      "representation": "GENERATED_REVIEW_METADATA",
+      "role": "PACKAGE_METADATA"
+    },
+    {
+      "file": "install.json",
+      "sha256": "e57099f2842f4f8722b5da11a605a1f413dee31b11e42d52ec54acc16610ec79",
+      "bytes": 2146,
+      "representation": "GENERATED_REVIEW_METADATA",
+      "role": "PACKAGE_METADATA"
+    }
+  ]
+}

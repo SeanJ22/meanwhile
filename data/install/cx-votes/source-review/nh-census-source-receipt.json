@@ -1,0 +1,15 @@
+{
+  "requestedUrl": "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip",
+  "finalUrl": "https://www2.census.gov/geo/tiger/TIGER2026/SLDL/tl_2026_33_sldl.zip",
+  "httpStatus": 200,
+  "originalFile": "nh-tiger-2026-sldl.zip",
+  "rawHash": "57dd011dec91efc9a0b4e5782d41425e0c0e516702f986a2adefa0179360a851",
+  "retrievedAt": "2026-11-02T22:39:57.168981+00:00",
+  "retrievedAtBasis": "Filesystem modification time when curl completed the fresh official download.",
+  "sourceClass": "OFFICIAL_PUBLISHER",
+  "publisher": "U.S. Census Bureau",
+  "reviewedEvidence": "Fresh2026TIGER DBF contains164namedNHHousebase districts plusoneunassigned area. Everymappedbase code was independently found in the current read-only188-rowNHHouse/Senateboundary identity result. TheseCensuscodes are distinct from39statutoryfloterials.",
+  "dbfFile": "nh-tiger-2026-sldl.dbf",
+  "dbfSha256": "6a25b33540aa3bd6a03cf0e4c9188f95f36ab0a6868c7ae1511f2001a4fc71c7",
+  "archiveDbfMember": "tl_2026_33_sldl.dbf"
+}

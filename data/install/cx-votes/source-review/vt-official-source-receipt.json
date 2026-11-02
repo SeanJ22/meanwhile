@@ -1,0 +1,18 @@
+{
+  "contractVersion": 1,
+  "reviewedBy": "CX-VOTES independent all-state coverage source comparison",
+  "reviewedAt": "2026-11-02T22:17:33.855823+00:00",
+  "sources": [
+    {
+      "requestedUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+      "finalUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/election_info_resources/candidates/2026_general_election_qualified_candidates.xlsx",
+      "httpStatus": 200,
+      "rawHash": "d30d2a95abfad041f840595af3028699b2fa06b9c45fa35dbeffb6d76bbbfddc",
+      "retrievedAt": "2026-11-02T22:01:19.759261+00:00",
+      "publisher": "Vermont Secretary of State",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Fresh official workbook marked Last Updated 10/30/2026. Compared all 296 legislative candidate rows in 125 official office/district groups to held input by office, district, ballot name and party: zero missing and zero extra. Exported comparison tuples omit addresses and contact details. This verifies acquired legislative candidates, not every voter/ZIP reader mapping."
+    }
+  ]
+}

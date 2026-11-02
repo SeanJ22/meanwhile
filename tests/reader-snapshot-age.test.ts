@@ -1,36 +1,38 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { heldSnapshot, snapshotInView, wireSnapshot } from "../lib/meetings/freshness.ts";
-import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
+import { readPlacePackage } from "../lib/reader/place.ts";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
-import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
+import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
 const EPOCH = "1970-01-01T00:00:00.000Z", AT = "2026-10-21T12:00:00.000Z";
 
-const placeRow = (state: string, meetingRows: unknown[]) => placePagesAnswer([{
-  page_id: `ocd-division/country:us/state:${state.toLowerCase()}`, page_kind: "place", built_at: AT, body_ids: [],
-  row: { division_ids: [], entities: [], fields: [], rosters: [], comments: [], sittings: [], meeting_rows: meetingRows, parts: {}, governments: [], divisions: [], registration_held: false },
-}]);
+const FAMILY = (state: string) => `source:derived:family:US-${state}`;
+
+/** A state's database with the calendar it holds, read as the reader reads it. */
+async function readState(state: string, snapshot?: MeetingsSnapshot) {
+  const db = await migratedFactDb();
+  installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => (await db.pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows)));
+  try {
+    if (snapshot) await db.publish({ id: "v-1", recordClass: "MEETING", scope: FAMILY(state), sourceId: "derived", at: AT, value: snapshot });
+    return await readPlacePackage({ state, divisionIds: [] }, db.query);
+  } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
+}
 
 test("a place with no held calendar has no snapshot date, and the wire says so instead of 1970", async () => {
-  const none = await readPlacePackage({ state: "MI", divisionIds: [] }, async sql => {
-    assert.equal(sql, PLACE_PAGES_SQL);
-    return placeRow("MI", []);
-  });
+  const none = await readState("MI");
   assert.equal(none.snapshotHeldAt, null);
   assert.equal(wireSnapshot(none.snapshotHeldAt, none.snapshot.sources), null);
 });
 
 test("a place with a held calendar keeps its real snapshot date", async () => {
   const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: AT, sources: [], counts: snapshotCounts([], 0), meetings: [], agendaDocuments: [] };
-  const held = await readPlacePackage({ state: "AZ", divisionIds: [] }, async sql => {
-    assert.equal(sql, PLACE_PAGES_SQL);
-    return placeRow("AZ", [{ scope: "source:derived:family:US-AZ", payload: snapshot, current_version_id: "v-1", confirmation: null }]);
-  });
+  const held = await readState("AZ", snapshot);
   assert.equal(held.snapshotHeldAt, AT);
   assert.deepEqual(wireSnapshot(held.snapshotHeldAt, held.snapshot.sources), { version: 2, generatedAt: AT, failed: [] });
 });
-
 test("the wire snapshot lists the sources that could not be reached", () => {
   const wire = wireSnapshot(AT, [
     { source: "ok", ok: true }, { source: "down", ok: false, unreachableOcdIds: ["ocd-division/country:us/state:az"] }, { source: "quiet", ok: false },

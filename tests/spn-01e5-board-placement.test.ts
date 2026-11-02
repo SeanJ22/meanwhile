@@ -22,7 +22,7 @@ test("a board named for a place, with no parent, is filed on that place, and a b
   try {
     const unparented = `${CITY}#body:library-endowment-board`, parented = `${CITY}#body:utility-advisory-board`;
     await board(unparented, "AK", null); await board(parented, "AK", CITY);
-    assert.deepEqual((await settleBoards(db.query, "AK")).sort(), [parented, unparented].sort());
+    assert.deepEqual([...await settleBoards(db.query, "AK")].sort(), [parented, unparented].sort());
     assert.deepEqual([await placesOf(unparented), await placesOf(parented)], [[CITY], [CITY]]);
     assert.equal((await db.query("SELECT parent_id FROM entity WHERE id=$1", [unparented]))[0]!.parent_id, CITY, "the place it is named for becomes its owner");
     assert.deepEqual(await settleBoards(db.query, "AK"), [], "a board that is filed is not filed again");

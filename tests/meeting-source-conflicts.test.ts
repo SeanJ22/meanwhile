@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
-import { PLACE_PAGES_SQL, readPlacePackage } from "../lib/reader/place.ts";
+import { readPlacePackage } from "../lib/reader/place.ts";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { forgetNationalShelf } from "../lib/reader/shelf.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { PIMA } from "./helpers/meeting-body-fixtures.ts";
-import { placePagesAnswer } from "./helpers/place-pages-answer.ts";
+import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
+import { seedPlaceSlices } from "./helpers/place-pages.ts";
 import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
 import { withSittingFacts } from "../lib/facts/meeting-read.ts";
 const at = "2026-10-05T12:00:00Z";
@@ -33,13 +36,16 @@ test("CP-18: a body's composition retains both source ids and an agenda belongin
   const fresh = meeting("portal:1", { ...owned, startsAt: "2026-10-06T19:00:00Z", provenance: { ...old.provenance, collectedAt: "2026-10-05T13:00:00Z" } });
   const report = (source: string) => ({ source, ok: true, error: null, fetched: 1, normalized: 1, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } });
   const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: at, sources: [report("calendar"), report("portal")], counts: snapshotCounts([old, fresh], 0), meetings: [old, fresh], agendaDocuments: [{ id: "agenda", meetingId: old.id, ocdId: old.ocdId } as MeetingsSnapshot["agendaDocuments"][number]] };
-  const held = await readPlacePackage({state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true},async sql=>{
-    assert.equal(sql,PLACE_PAGES_SQL);
-    return placePagesAnswer([{page_id:PIMA.bodyId,page_kind:"body",built_at:at,body_ids:[PIMA.bodyId],row:{
-      division_ids:[PIMA.ocdId],entities:[{id:PIMA.bodyId,division:PIMA.ocdId}],fields:[],rosters:[],comments:[],sittings:[],
-      meeting_rows:[{scope:PIMA.scope,payload:snapshot,current_version_id:"v-1",confirmation:null}],parts:{},governments:[],divisions:[],registration_held:false,
-    }}]);
-  });
+  const db = await migratedFactDb();
+  installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => (await db.pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows)));
+  let held;
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ'),($2,'body',$2,'AZ')", [PIMA.ocdId, PIMA.bodyId]);
+    await db.query("INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis) VALUES($1,$2,0,'SERVICE_AREA')", [PIMA.bodyId, PIMA.ocdId]);
+    await db.publish({ id: "v-1", recordClass: "MEETING", scope: PIMA.scope, sourceId: "legistar", at: new Date(at).toISOString(), value: snapshot });
+    await seedPlaceSlices(db.query, {state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true});
+    held = await readPlacePackage({state:"AZ",divisionIds:[PIMA.ocdId!],bodyIds:[PIMA.bodyId],includeAgenda:true},db.query);
+  } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
   const result = held.snapshot;
   assert.equal(result.meetings.length, 1);
   assert.equal(result.meetings[0].startsAt, fresh.startsAt);

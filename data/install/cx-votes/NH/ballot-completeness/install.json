@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_BALLOT_COMPLETENESS_DATA",
+  "state": "NH",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NH",
+  "inputDirectory": "ballot-input",
+  "sourceCaptures": "sources.json",
+  "sourceSupport": "source-support.json",
+  "coverage": {
+    "newLegislativeContests": 9,
+    "stateSenateDistricts": [
+      4
+    ],
+    "houseCounty": "Strafford",
+    "houseDistricts": [
+      11,
+      13,
+      14,
+      15,
+      16,
+      17,
+      20,
+      21
+    ],
+    "printedCandidacies": 19,
+    "districtMemberships": 7,
+    "scope": "Dover ward ballots; whole corresponding legislative districts, including source-backed Strafford20/21 floterials",
+    "statewideComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "NH",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "installNotes": [
+    "Install through existing ballot-contract merge, preserving current unrelated contests, candidacies and explanations.",
+    "The7membership rows are source-backed overlay routing needed for Strafford20/21. They are data and must travel with the contests.",
+    "Check affected Dover and linked floterial places on the live ballot after River installs."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json"
+}

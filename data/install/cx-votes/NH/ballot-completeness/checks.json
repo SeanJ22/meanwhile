@@ -1,0 +1,16 @@
+{
+  "state": "NH",
+  "newContests": 9,
+  "newCandidacies": 19,
+  "membershipRows": 7,
+  "originalSourceHashes": "PASS",
+  "candidateNamesAndPartyColumns": "PASS",
+  "voteLimitsAndDistrictIdentities": "SOURCE_REVIEWED",
+  "overlayStatuteQuotes": "PASS",
+  "BallotContestMerge": "PASS",
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorRowsPreserved": 576,
+  "productionWrites": 0,
+  "modelCalls": 0
+}

@@ -1,0 +1,218 @@
+[
+  {
+    "url": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+    "file": "sources/a8b513df80c1ec2607b7493ddb3b2a52fdb6e21185949ab4927a0fd7eac52008.source",
+    "sha256": "a8b513df80c1ec2607b7493ddb3b2a52fdb6e21185949ab4927a0fd7eac52008",
+    "byteLength": 56146,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:07:26.869558+00:00",
+    "extractedText": "sources/5e0bb6add7133445e298df337dbb969b15e2cdc36b353ac2696283d67e0a79da.txt",
+    "extractedTextSha256": "5e0bb6add7133445e298df337dbb969b15e2cdc36b353ac2696283d67e0a79da",
+    "partyColumnTexts": {
+      "Democratic": {
+        "file": "sources/621684920a390f573e7f34fc99198ed2529a1258e01040eb2249bc38d5de48f0.txt",
+        "sha256": "621684920a390f573e7f34fc99198ed2529a1258e01040eb2249bc38d5de48f0",
+        "page": 1,
+        "x": 250,
+        "y": 120,
+        "width": 103,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      },
+      "Republican": {
+        "file": "sources/14f8ec20408eb336f336d7ce4b3ab3313cf21315ad1cb98dbeb8969c58d73522.txt",
+        "sha256": "14f8ec20408eb336f336d7ce4b3ab3313cf21315ad1cb98dbeb8969c58d73522",
+        "page": 1,
+        "x": 355,
+        "y": 120,
+        "width": 120,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      }
+    },
+    "extraction": "pdftotext -layout; complete two-page official ballot"
+  },
+  {
+    "url": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf",
+    "file": "sources/9dd7d0eab3c7ab51a21e13b62f163f69cebffbdf5ccfc20ab72a42e9e661ae96.source",
+    "sha256": "9dd7d0eab3c7ab51a21e13b62f163f69cebffbdf5ccfc20ab72a42e9e661ae96",
+    "byteLength": 56101,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:07:26.870333+00:00",
+    "extractedText": "sources/3ac37d0888a644ec4b13f433ff5f792a730b02b8c7b3683dc791560c05f2b48a.txt",
+    "extractedTextSha256": "3ac37d0888a644ec4b13f433ff5f792a730b02b8c7b3683dc791560c05f2b48a",
+    "partyColumnTexts": {
+      "Democratic": {
+        "file": "sources/ba76991cd529d8aa3dd44e19ce139585c9daf3435f821056516a881f6e38f458.txt",
+        "sha256": "ba76991cd529d8aa3dd44e19ce139585c9daf3435f821056516a881f6e38f458",
+        "page": 1,
+        "x": 250,
+        "y": 120,
+        "width": 103,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      },
+      "Republican": {
+        "file": "sources/14f8ec20408eb336f336d7ce4b3ab3313cf21315ad1cb98dbeb8969c58d73522.txt",
+        "sha256": "14f8ec20408eb336f336d7ce4b3ab3313cf21315ad1cb98dbeb8969c58d73522",
+        "page": 1,
+        "x": 355,
+        "y": 120,
+        "width": 120,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      }
+    },
+    "extraction": "pdftotext -layout; complete two-page official ballot"
+  },
+  {
+    "url": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf",
+    "file": "sources/77b2f8843e8f92271268b9187a6b470cc3dc420d89170d1cc5b68c863cd8ced1.source",
+    "sha256": "77b2f8843e8f92271268b9187a6b470cc3dc420d89170d1cc5b68c863cd8ced1",
+    "byteLength": 55988,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:07:26.870691+00:00",
+    "extractedText": "sources/756cd175fc4953bf05c04595244cf0a19a9f93cbe3a53e92344760841774565d.txt",
+    "extractedTextSha256": "756cd175fc4953bf05c04595244cf0a19a9f93cbe3a53e92344760841774565d",
+    "partyColumnTexts": {
+      "Democratic": {
+        "file": "sources/bd86de029f2776d36cedf080c8d5e6e8e0e3db785090335f9d63658e81deee1b.txt",
+        "sha256": "bd86de029f2776d36cedf080c8d5e6e8e0e3db785090335f9d63658e81deee1b",
+        "page": 1,
+        "x": 250,
+        "y": 120,
+        "width": 103,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      },
+      "Republican": {
+        "file": "sources/14f8ec20408eb336f336d7ce4b3ab3313cf21315ad1cb98dbeb8969c58d73522.txt",
+        "sha256": "14f8ec20408eb336f336d7ce4b3ab3313cf21315ad1cb98dbeb8969c58d73522",
+        "page": 1,
+        "x": 355,
+        "y": 120,
+        "width": 120,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      }
+    },
+    "extraction": "pdftotext -layout; complete two-page official ballot"
+  },
+  {
+    "url": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+    "file": "sources/c72349c2bb72be5740d00f3247d138a208eb8cf22dc9adc12e110df4d9f6725e.source",
+    "sha256": "c72349c2bb72be5740d00f3247d138a208eb8cf22dc9adc12e110df4d9f6725e",
+    "byteLength": 56888,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:07:26.871108+00:00",
+    "extractedText": "sources/52f5edb0250054be91589976ff957fd4156f34b1da41a788bbc8fbcfe3edaffc.txt",
+    "extractedTextSha256": "52f5edb0250054be91589976ff957fd4156f34b1da41a788bbc8fbcfe3edaffc",
+    "partyColumnTexts": {
+      "Democratic": {
+        "file": "sources/4b3fffb3f9ccc42fd70a362aa1e5b3023416d6beb058fec6dd138c49e7a5b80d.txt",
+        "sha256": "4b3fffb3f9ccc42fd70a362aa1e5b3023416d6beb058fec6dd138c49e7a5b80d",
+        "page": 1,
+        "x": 250,
+        "y": 120,
+        "width": 103,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      },
+      "Republican": {
+        "file": "sources/d29bd689c8733bcb3f7d043727288253dc65301d51312a63e4a342abde34a058.txt",
+        "sha256": "d29bd689c8733bcb3f7d043727288253dc65301d51312a63e4a342abde34a058",
+        "page": 1,
+        "x": 355,
+        "y": 120,
+        "width": 120,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      }
+    },
+    "extraction": "pdftotext -layout; complete two-page official ballot"
+  },
+  {
+    "url": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+    "file": "sources/113df93ea37b9e22ff5f9545157cb61f5099410f0f7803dcb6dc585cd024ca37.source",
+    "sha256": "113df93ea37b9e22ff5f9545157cb61f5099410f0f7803dcb6dc585cd024ca37",
+    "byteLength": 56601,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:07:26.871513+00:00",
+    "extractedText": "sources/edb9b3bf0b348216d7689d07a58c08123707fe9d2e535654e1aa2af2bfb9072c.txt",
+    "extractedTextSha256": "edb9b3bf0b348216d7689d07a58c08123707fe9d2e535654e1aa2af2bfb9072c",
+    "partyColumnTexts": {
+      "Democratic": {
+        "file": "sources/78e5d680d9c9c36d675a196420d5865da9682c8ddaf940cf57be673e32fc32fd.txt",
+        "sha256": "78e5d680d9c9c36d675a196420d5865da9682c8ddaf940cf57be673e32fc32fd",
+        "page": 1,
+        "x": 250,
+        "y": 120,
+        "width": 103,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      },
+      "Republican": {
+        "file": "sources/ac835e0b6a9f82785769bb18d35129b3b21ce259092072a13e0da7272f894458.txt",
+        "sha256": "ac835e0b6a9f82785769bb18d35129b3b21ce259092072a13e0da7272f894458",
+        "page": 1,
+        "x": 355,
+        "y": 120,
+        "width": 120,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      }
+    },
+    "extraction": "pdftotext -layout; complete two-page official ballot"
+  },
+  {
+    "url": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+    "file": "sources/d7f343b656023505216a48d97f51a2894f86dd0482227ed6018c768b8582c177.source",
+    "sha256": "d7f343b656023505216a48d97f51a2894f86dd0482227ed6018c768b8582c177",
+    "byteLength": 56433,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:07:26.871877+00:00",
+    "extractedText": "sources/58c6ce821491a9db06030aca6ebe142a7bb94021ecf7e736e7213ec6ba0f8d07.txt",
+    "extractedTextSha256": "58c6ce821491a9db06030aca6ebe142a7bb94021ecf7e736e7213ec6ba0f8d07",
+    "partyColumnTexts": {
+      "Democratic": {
+        "file": "sources/77213157bc3e58499fe2b19034616232a5f05c74d9964a8e02a0880969002aa8.txt",
+        "sha256": "77213157bc3e58499fe2b19034616232a5f05c74d9964a8e02a0880969002aa8",
+        "page": 1,
+        "x": 250,
+        "y": 120,
+        "width": 103,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      },
+      "Republican": {
+        "file": "sources/c3e6b0e57133e048bd5c8c2b0275615b9e657ef43cf22d493d22a138e2e543fd.txt",
+        "sha256": "c3e6b0e57133e048bd5c8c2b0275615b9e657ef43cf22d493d22a138e2e543fd",
+        "page": 1,
+        "x": 355,
+        "y": 120,
+        "width": 120,
+        "height": 670,
+        "method": "pdftotext physical column extraction"
+      }
+    },
+    "extraction": "pdftotext -layout; complete two-page official ballot"
+  },
+  {
+    "url": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "file": "sources/418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26.source",
+    "sha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "byteLength": 47334,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:16:21.331835+00:00",
+    "supports": "Current Senate District4; House Strafford district vote limits and floterial20/21 memberships."
+  },
+  {
+    "url": "https://www.dover.nh.gov/government/open-government/election-information/2026-general-election/",
+    "file": "sources/02f0250ab3fd52cd8847ec3d14aabe4e717d9c3daeab2d2f3bb6891414f2f09c.source",
+    "sha256": "02f0250ab3fd52cd8847ec3d14aabe4e717d9c3daeab2d2f3bb6891414f2f09c",
+    "byteLength": 185060,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:06:56.339163+00:00",
+    "supports": "Current government page directly links all six ward PDFs as2026general-election sample ballots."
+  }
+]

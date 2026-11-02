@@ -1,0 +1,165 @@
+[
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-14",
+    "title": "State Representative, Strafford County District 14",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:814",
+    "voteFor": 1,
+    "candidateCount": 1,
+    "candidateNames": [
+      "Peter B. Schmidt"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+    "sourceSha256": "a8b513df80c1ec2607b7493ddb3b2a52fdb6e21185949ab4927a0fd7eac52008",
+    "sourceTextFile": "sources/5e0bb6add7133445e298df337dbb969b15e2cdc36b353ac2696283d67e0a79da.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 1,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-15",
+    "title": "State Representative, Strafford County District 15",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:815",
+    "voteFor": 1,
+    "candidateCount": 1,
+    "candidateNames": [
+      "Samuel Chouinard"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf",
+    "sourceSha256": "9dd7d0eab3c7ab51a21e13b62f163f69cebffbdf5ccfc20ab72a42e9e661ae96",
+    "sourceTextFile": "sources/3ac37d0888a644ec4b13f433ff5f792a730b02b8c7b3683dc791560c05f2b48a.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 2,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-16",
+    "title": "State Representative, Strafford County District 16",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:816",
+    "voteFor": 1,
+    "candidateCount": 1,
+    "candidateNames": [
+      "Gary Gilmore"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf",
+    "sourceSha256": "77b2f8843e8f92271268b9187a6b470cc3dc420d89170d1cc5b68c863cd8ced1",
+    "sourceTextFile": "sources/756cd175fc4953bf05c04595244cf0a19a9f93cbe3a53e92344760841774565d.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 3,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-11",
+    "title": "State Representative, Strafford County District 11",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:811",
+    "voteFor": 3,
+    "candidateCount": 4,
+    "candidateNames": [
+      "Janet G. Wall",
+      "Erik Johnson",
+      "Thomas Southworth",
+      "Monique Meadows"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+    "sourceSha256": "c72349c2bb72be5740d00f3247d138a208eb8cf22dc9adc12e110df4d9f6725e",
+    "sourceTextFile": "sources/52f5edb0250054be91589976ff957fd4156f34b1da41a788bbc8fbcfe3edaffc.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 4,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-17",
+    "title": "State Representative, Strafford County District 17",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:817",
+    "voteFor": 1,
+    "candidateCount": 2,
+    "candidateNames": [
+      "Jessica LaMontagne",
+      "Matthew D. Albion"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+    "sourceSha256": "113df93ea37b9e22ff5f9545157cb61f5099410f0f7803dcb6dc585cd024ca37",
+    "sourceTextFile": "sources/edb9b3bf0b348216d7689d07a58c08123707fe9d2e535654e1aa2af2bfb9072c.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 5,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-13",
+    "title": "State Representative, Strafford County District 13",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:813",
+    "voteFor": 1,
+    "candidateCount": 2,
+    "candidateNames": [
+      "Peter W. Bixby",
+      "Daniel A. Furman"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+    "sourceSha256": "d7f343b656023505216a48d97f51a2894f86dd0482227ed6018c768b8582c177",
+    "sourceTextFile": "sources/58c6ce821491a9db06030aca6ebe142a7bb94021ecf7e736e7213ec6ba0f8d07.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 6,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-20",
+    "title": "State Representative, Strafford County District 20",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+    "voteFor": 1,
+    "candidateCount": 2,
+    "candidateNames": [
+      "Allan Howland",
+      "John Colford"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+    "sourceSha256": "c72349c2bb72be5740d00f3247d138a208eb8cf22dc9adc12e110df4d9f6725e",
+    "sourceTextFile": "sources/52f5edb0250054be91589976ff957fd4156f34b1da41a788bbc8fbcfe3edaffc.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 4,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-strafford-county-district-21",
+    "title": "State Representative, Strafford County District 21",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+    "voteFor": 3,
+    "candidateCount": 4,
+    "candidateNames": [
+      "Alice Wade",
+      "Seth Miller",
+      "Geoff Smith",
+      "Joseph D. Morganella"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+    "sourceSha256": "a8b513df80c1ec2607b7493ddb3b2a52fdb6e21185949ab4927a0fd7eac52008",
+    "sourceTextFile": "sources/5e0bb6add7133445e298df337dbb969b15e2cdc36b353ac2696283d67e0a79da.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 1,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  },
+  {
+    "contestId": "nh-2026-general:state-senator-district-4",
+    "title": "State Senator, District 4",
+    "ocdId": "ocd-division/country:us/state:nh/sldu:4",
+    "voteFor": 1,
+    "candidateCount": 2,
+    "candidateNames": [
+      "David H. Watters",
+      "Shawn Mickelonis"
+    ],
+    "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+    "sourceSha256": "a8b513df80c1ec2607b7493ddb3b2a52fdb6e21185949ab4927a0fd7eac52008",
+    "sourceTextFile": "sources/5e0bb6add7133445e298df337dbb969b15e2cdc36b353ac2696283d67e0a79da.txt",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "sourceWard": 1,
+    "review": "Each printed candidate name, party column, vote limit and current general-election date read against the official page-one ballot. Wrapped candidate names also verified against direct extraction of their physical party column. Senate District4 mapping separately states Barrington,Dover,Rollinsford,Somersworth in RSA662."
+  }
+]

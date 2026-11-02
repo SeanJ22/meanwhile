@@ -1,0 +1,680 @@
+{
+  "ballots": {
+    "NH:nh-2026-11-03": {
+      "election": {
+        "id": "nh-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NH"
+      },
+      "contests": [
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-14",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:814",
+          "title": "State Representative, Strafford County District 14",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 14"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-15",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:815",
+          "title": "State Representative, Strafford County District 15",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.870333+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 15"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-16",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:816",
+          "title": "State Representative, Strafford County District 16",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.870691+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 16"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-11",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:811",
+          "title": "State Representative, Strafford County District 11",
+          "voteFor": 3,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 11"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-17",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:817",
+          "title": "State Representative, Strafford County District 17",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871513+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 17"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-13",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:813",
+          "title": "State Representative, Strafford County District 13",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871877+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 13"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-20",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+          "title": "State Representative, Strafford County District 20",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "NH_RSA662_2026",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 20"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-21",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+          "title": "State Representative, Strafford County District 21",
+          "voteFor": 3,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "NH_RSA662_2026",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Strafford District 21"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-senator-district-4",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldu:4",
+          "title": "State Senator, District 4",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list from the official November 3, 2026 Dover sample ballot. District identity and seats are checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "State Senator"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-14:peter-b-schmidt",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-14",
+          "givenName": "Peter B.",
+          "familyName": "Schmidt",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Peter B. Schmidt"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-15:samuel-chouinard",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-15",
+          "givenName": "Samuel",
+          "familyName": "Chouinard",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.870333+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Samuel Chouinard"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-16:gary-gilmore",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-16",
+          "givenName": "Gary",
+          "familyName": "Gilmore",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.870691+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Gary Gilmore"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-11:janet-g-wall",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-11",
+          "givenName": "Janet G.",
+          "familyName": "Wall",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Janet G. Wall"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-11:erik-johnson",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-11",
+          "givenName": "Erik",
+          "familyName": "Johnson",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Erik Johnson"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-11:thomas-southworth",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-11",
+          "givenName": "Thomas",
+          "familyName": "Southworth",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Thomas Southworth"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-11:monique-meadows",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-11",
+          "givenName": "Monique",
+          "familyName": "Meadows",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Monique Meadows"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-17:jessica-lamontagne",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-17",
+          "givenName": "Jessica",
+          "familyName": "LaMontagne",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871513+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Jessica LaMontagne"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-17:matthew-d-albion",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-17",
+          "givenName": "Matthew D.",
+          "familyName": "Albion",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871513+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Matthew D. Albion"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-13:peter-w-bixby",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-13",
+          "givenName": "Peter W.",
+          "familyName": "Bixby",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871877+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Peter W. Bixby"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-13:daniel-a-furman",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-13",
+          "givenName": "Daniel A.",
+          "familyName": "Furman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871877+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Daniel A. Furman"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-20:allan-howland",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-20",
+          "givenName": "Allan",
+          "familyName": "Howland",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Allan Howland"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-20:john-colford",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-20",
+          "givenName": "John",
+          "familyName": "Colford",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.871108+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "John Colford"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-21:alice-wade",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-21",
+          "givenName": "Alice",
+          "familyName": "Wade",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Alice Wade"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-21:seth-miller",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-21",
+          "givenName": "Seth",
+          "familyName": "Miller",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Seth Miller"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-21:geoff-smith",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-21",
+          "givenName": "Geoff",
+          "familyName": "Smith",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Geoff Smith"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-strafford-county-district-21:joseph-d-morganella",
+          "contestId": "nh-2026-general:state-representative-strafford-county-district-21",
+          "givenName": "Joseph D.",
+          "familyName": "Morganella",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Joseph D. Morganella"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-senator-district-4:david-h-watters",
+          "contestId": "nh-2026-general:state-senator-district-4",
+          "givenName": "David H.",
+          "familyName": "Watters",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "David H. Watters"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-senator-district-4:shawn-mickelonis",
+          "contestId": "nh-2026-general:state-senator-district-4",
+          "givenName": "Shawn",
+          "familyName": "Mickelonis",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+            "sourceOrg": "Dover City Clerk",
+            "collectedAt": "2026-11-02T22:07:26.869558+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "Shawn Mickelonis"
+          }
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "nh-2026-membership:sldl:810->sldl:strafford_20",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:810",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:811->sldl:strafford_20",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:811",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_20",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 20 Dover Ward 4 Durham Lee Madbury 1"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:813->sldl:strafford_21",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:813",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:814->sldl:strafford_21",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:814",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:815->sldl:strafford_21",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:815",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:816->sldl:strafford_21",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:816",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:817->sldl:strafford_21",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:817",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:strafford_21",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:20:30.524598+00:00",
+            "quote": "District No. 21 Dover Ward 1 Dover Ward 2 Dover Ward 3 Dover Ward 5 Dover Ward 6 3"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T22:20:30.524598+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+        "finalUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf",
+        "publisher": "Dover City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:07:26.869558+00:00",
+        "httpStatus": 200,
+        "rawHash": "a8b513df80c1ec2607b7493ddb3b2a52fdb6e21185949ab4927a0fd7eac52008",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 ballot with complete candidate names, party columns and vote limits for Dover ward; all printed legislative choices verified."
+      },
+      {
+        "requestedUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf",
+        "finalUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf",
+        "publisher": "Dover City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:07:26.870333+00:00",
+        "httpStatus": 200,
+        "rawHash": "9dd7d0eab3c7ab51a21e13b62f163f69cebffbdf5ccfc20ab72a42e9e661ae96",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 ballot with complete candidate names, party columns and vote limits for Dover ward; all printed legislative choices verified."
+      },
+      {
+        "requestedUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf",
+        "finalUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf",
+        "publisher": "Dover City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:07:26.870691+00:00",
+        "httpStatus": 200,
+        "rawHash": "77b2f8843e8f92271268b9187a6b470cc3dc420d89170d1cc5b68c863cd8ced1",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 ballot with complete candidate names, party columns and vote limits for Dover ward; all printed legislative choices verified."
+      },
+      {
+        "requestedUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+        "finalUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf",
+        "publisher": "Dover City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:07:26.871108+00:00",
+        "httpStatus": 200,
+        "rawHash": "c72349c2bb72be5740d00f3247d138a208eb8cf22dc9adc12e110df4d9f6725e",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 ballot with complete candidate names, party columns and vote limits for Dover ward; all printed legislative choices verified."
+      },
+      {
+        "requestedUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+        "finalUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf",
+        "publisher": "Dover City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:07:26.871513+00:00",
+        "httpStatus": 200,
+        "rawHash": "113df93ea37b9e22ff5f9545157cb61f5099410f0f7803dcb6dc585cd024ca37",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 ballot with complete candidate names, party columns and vote limits for Dover ward; all printed legislative choices verified."
+      },
+      {
+        "requestedUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+        "finalUrl": "https://www.dover.nh.gov/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf",
+        "publisher": "Dover City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:07:26.871877+00:00",
+        "httpStatus": 200,
+        "rawHash": "d7f343b656023505216a48d97f51a2894f86dd0482227ed6018c768b8582c177",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 ballot with complete candidate names, party columns and vote limits for Dover ward; all printed legislative choices verified."
+      },
+      {
+        "requestedUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "finalUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "publisher": "New Hampshire General Court",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:16:21.331835+00:00",
+        "httpStatus": 200,
+        "rawHash": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "RSA662 defines SenateDistrict4, all203House districts and corresponding seats and current Strafford20/21 floterial memberships."
+      }
+    ]
+  }
+}

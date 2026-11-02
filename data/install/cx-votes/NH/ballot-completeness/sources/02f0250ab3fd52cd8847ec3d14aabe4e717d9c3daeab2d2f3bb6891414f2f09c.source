@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" prefix="dcterms: http://purl.org/dc/terms/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# perc: http://percussion.com/perc/elements/1.0/ og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#" >
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+<script>
+var percGlobalErrors = [];
+window.onerror=function(msg, url, linenumber){
+var jsErrorMsg = 'JavaScript error -- ' + msg;
+percGlobalErrors.push(jsErrorMsg);
+return false;
+}
+</script>
+<link rel="canonical" href="https://www.dover.nh.gov/government/open-government/election-information/2026-general-election/" />
+<script>function percCanonicalRedirect(defaultDocument){if(document.querySelector("link[rel='canonical']")){canonicalLink=document.querySelector("link[rel='canonical']").getAttribute("href");}requestUrl=window.location.href;lastUrlElement=window.location.pathname.split('/').pop();urlPartsQueryString=requestUrl.split('?');urlPartsHash=requestUrl.split('#');if(typeof(canonicalLink)!=='undefined'&&lastUrlElement===defaultDocument){if(urlPartsQueryString.length>1||urlPartsHash.length>1){if(urlPartsQueryString.length>1){redirectUrl=canonicalLink+'?'+urlPartsQueryString[1];}else if(urlPartsHash.length>1){redirectUrl=canonicalLink+'#'+urlPartsHash[1];}}else{redirectUrl=canonicalLink;}window.location.replace(redirectUrl);}}</script>
+<script>
+percCanonicalRedirect('index.html');
+</script>
+<title>2026 General Election</title>
+<link rel="stylesheet" href="/web_resources/cm/themes/smoothness/jquery-ui-1.8.9.custom.css">
+<link rel="stylesheet" href="/web_resources/themes/main/styles.css">
+<link rel="stylesheet" href="/web_resources/themes/main/perc/perc_region.css">
+    <!-- CSS Preload -->
+<style>
+div.left_content ul li:first-child {padding: 0;}
+.left_content ul li ul li a{font-size:12px; padding-left:25px;}
+
+.perc-breadcrumb{font-size:12px;padding-left:15px; margin: 1px;}
+.perc-breadcrumb-main{list-style: none; padding: 0; margin: 0;}
+.perc-breadcrumb-main li{display: inline; padding: 0; margin: 0;}
+
+li.hidden{display:none !important;}
+
+.leftNav ul li ul li ul li a{margin-left:10px !important;}
+.leftNav ul li ul li ul li {list-style-type:disc !important;}
+
+.temp:after
+{
+content: \00b0;
+}
+
+.hideThis {
+display:none;
+visibility:hidden;
+}
+</style>
+<style>
+#perc-assembly-error{
+    display:none;
+}
+</style>
+<meta property="dcterms:type" content="page"/>
+<meta property="dcterms:source" content="dover-subpage-nav"/>
+<meta property="dcterms:date" content="2026-09-01T13:05:32"/>
+<meta property="dcterms:created" content="2026-09-01T13:32:06"/>
+<meta property="dcterms:modified" content="2026-11-02T08:39:16"/>
+<meta property="dcterms:alternative" content="2026 General Election"/>
+
+
+    <script src="/web_resources/cm/jslib/jquery.js"></script>
+
+<meta name="title" content="" />  
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+<link rel="shortcut icon" href="/web_resources/themes/main/img/favicon.ico" /> 
+<link href="/web_resources/themes/main/import/fonts.googleapis.com/www.dover.nh.gov_1.css" rel="stylesheet" type="text/css" /> 
+
+
+<!--[if lt IE 9]>
+		<link rel="stylesheet" href="/web_resources/themes/main/css/ie87.css" media="screen" />
+		<script src="/web_resources/themes/main/js/respond.min.js"></script>
+	<![endif]--> 
+<!--[if IE 8]><link rel="stylesheet" href="/web_resources/themes/main/css/ie8.css" media="screen" /><![endif]--> 
+<!--[if IE 7]><link rel="stylesheet" href="/web_resources/themes/main/css/ie7.css" media="screen" /><![endif]--> 
+<!--[if IE 6]><meta http-equiv="refresh" content="0;url=http://www.google.com/chrome/"><![endif]-->
+<!--<title>City of Dover</title>-->
+<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+<!--<meta name="description" content="" />-->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50775404-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-50775404-1');
+</script>
+
+<script type="module" src="https://js.arcgis.com/5.0/embeddable-components/"></script>
+
+
+</head>
+<body>
+<input type="hidden" id="perc_linkback_id" value="26-101-46311"/>
+
+
+
+<div  class="perc-region perc-noAutoResize perc-vertical "  data-noautoresize="false" id="perc-container"> <div class=" perc-vertical "><div  class="perc-region perc-noAutoResize perc-fixed perc-vertical "  data-noautoresize="false" id="perc-content"> <div class=" perc-vertical "><div  class="perc-region perc-noAutoResize perc-vertical wrapper group "  data-noautoresize="undefined" id="temp-region-2"> <div class=" perc-vertical "><div  class="perc-region perc-region-leaf perc-noAutoResize perc-vertical group "  data-noautoresize="undefined" id="header"> <div class=" perc-vertical ">        <div class="perc-widget" >
+
+<div id="mobile_menu" style="" class=""> 
+ <div id="menu-tab"> 
+  <img width="19" height="16" alt="Mobile Menu Icon" src="/Assets/uploads/www.dover.nh.gov/import/clients.rakacreative.com/cityofdover/build2/assets/img/mobile_menu_icon.png"> 
+ </div> 
+ <div id="mnav"> 
+  <ul class="menu" id="menu-full"> 
+   <li class="has-subnav"><a href="https://www.dover.nh.gov/about-dover/">About Dover</a> 
+    <ul class="sub-menu"> 
+     <li><a href="https://www.dover.nh.gov/about-dover/dover-facts-and-history">Facts and History</a></li> 
+     <li><a href="https://www.dover.nh.gov/about-dover/visit-dover">Visit Dover</a></li> 
+    </ul> </li> 
+   <li class="has-subnav"><a href="https://www.dover.nh.gov/business-in-dover/">Business in Dover</a> 
+    <ul class="sub-menu"> 
+     <li><a href="https://www.dover.nh.gov/business-in-dover/dover-businesses-and-services">Businesses and Services</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/executive/business-development">Business Development</a></li> 
+    </ul> </li> 
+   <li class="has-subnav"><a href="https://www.dover.nh.gov/government/">City Government</a> 
+    <ul class="sub-menu"> 
+     <li><a href="https://www.dover.nh.gov/government/boards-and-commissions">Boards and Commissions</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-charter-code">City Charter and Code</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations">City Operations</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/open-government">Open Government</a></li> 
+     <li><a href="https://www.dover.k12.nh.us/">Public Education</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/public-safety">Public Safety</a></li> 
+    </ul> </li> 
+   <li class="has-subnav"><a href="https://www.dover.nh.gov/services/">City Services</a> 
+    <ul class="sub-menu"> 
+     <li><a href="https://www.dover.nh.gov/government/open-government/budget-revealed">Budget Revealed</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/planning/inspection-services/">Building Inspection Permits and Forms</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/finance/bids">Current Bids</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/open-government/election-information">Election Information</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/executive/human-resources/employment">Employment</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/finance/city-clerk-tax-collection/motor-vehicle-registration">Motor Vehicle Registration</a></li> 
+     <li><a href="https://www.dover.nh.gov/services/online-services">Online Services</a></li> 
+     <li><a href="https://ctitt-dover.cticloudhost.com/TickeTrak.WebPortal/Account/Login">Parking Violation Payment</a></li> 
+     <li><a href="https://library.dover.nh.gov">Public Library</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/public-welfare">Public Welfare</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/public-safety">Public Safety</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/recreation">Recreation</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/community-services/waste-recycling/recycling-center/index.html">Recycling Center</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/finance/tax-assessment">Tax Assessment</a></li> 
+     <li><a href="https://www.dover.nh.gov/government/city-operations/finance/city-clerk-tax-collection/vital-records">Vital Records</a></li> 
+    </ul> </li> 
+   <li class="has-subnav"><a href="https://www.dover.nh.gov/contact-us/">Contact Us</a> 
+    <ul class="sub-menu"> 
+     <li><a href="https://www.dover.nh.gov/contact-us/municipal-directory/">Municipal Directory</a></li> 
+    </ul> </li> 
+  </ul> 
+ </div> <!--END #nav--> 
+</div> <a class="logo_link" href="/"><img src="/Assets/uploads/www.dover.nh.gov/import/clients.rakacreative.com/cityofdover/build2/assets/img/logo.gif" width="142" height="33" alt="Logo"><span>City of Dover, New Hampshire</span></a> 
+<div class="header_right"> 
+ <div class="weather"> <span class="icon"><img src="" width="40" height="40" alt="Weather Icon"></span> <span class="temp"></span> <span class="weather_info"> <span class="day_date"></span> <span class="weather_description"></span> </span> 
+ </div> 
+ <div class="download"> <a href="https://www.dover.nh.gov/services/online-services/dover-download">Dover Download</a> 
+ </div> 
+ <style>
+/* Styles for Dover Download button (envelope icon) */
+.download {
+  display: block;
+  position: relative;
+  height: 25px;
+  padding: 9px 0 0 40px;
+  margin: 0 auto 10px;
+  border-left: none;
+  border-top: solid 1px #ccc;
+  text-align: left;
+  background: url(/web_resources/themes/main/import/clients.rakacreative.com/cityofdover/build2/assets/img/graphic_header_download.gif) no-repeat 17px 50%;
+  z-index: 10;
+}
+.download a {
+  color: #784b3b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.download a:hover {
+  text-decoration: underline;
+}
+/* Styles for Service Request Portal button (wrench icon) */
+.servicerequest {
+  display: none;
+  position: relative;
+  height: 25px;
+  padding: 9px 0 0 40px;
+  margin: 0 auto 10px;
+  border-left: none;
+  border-top: solid 1px #ccc;
+  text-align: left;
+  background: url(/Assets/uploads/graphic_wrench_icon.png) no-repeat 17px 50%;
+  z-index: 10;
+}
+.servicerequest a {
+  color: #784b3b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.servicerequest a:hover {
+  text-decoration: underline;
+}
+/* Show Service Request Portal on mobile */
+@media only screen and (max-width: 768px) {
+  .servicerequest {
+    display: block;
+  }
+}
+</style> 
+ <div class="servicerequest"> <a href="https://service.dover.nh.gov/RequestPortal">Service Request Portal</a> 
+ </div> 
+ <div class="mobile_search"> 
+  <fieldset> 
+   <form action="https://www.dover.nh.gov/search-results.html" method="get" id="m_search" class="sl-defaults"> <label class="sl_label" style="left: 0px; opacity: 1; position: absolute; top: 0px; z-index: 2;">What are you looking for?</label> 
+    <input name="cx" type="hidden" value="000115712370344491370:y1vdwpwabcm"> 
+    <input name="ie" type="hidden" value="UTF-8"> 
+    <input type="text" id="q" name="q" onfocus="document.getElementById('q').value=''" class="search_field sl_field" style="z-index: 1;"> 
+    <input type="image" id="searchsubmit" value="submit" src="/Assets/uploads/www.dover.nh.gov/import/clients.rakacreative.com/cityofdover/build2/assets/img/graphic_search_btn.gif" class="search-button"> 
+   </form> 
+  </fieldset> 
+ </div> 
+</div>
+
+</div>
+</div></div><div  class="perc-region perc-noAutoResize perc-fixed perc-vertical main group "  data-noautoresize="false" id="temp-region-6"> <div class=" perc-vertical "><div  class="perc-region perc-region-leaf perc-noAutoResize perc-vertical primary_nav group "  data-noautoresize="undefined" id="temp-region-8"> <div class=" perc-vertical ">        <div class="perc-widget" >
+
+<div id="nav" class="group"> 
+ <ul class=""> 
+  <li class="about"><a href="https://www.dover.nh.gov/about-dover">About Dover</a> 
+   <ul> 
+    <li><a href="https://www.dover.nh.gov/about-dover/dover-facts-and-history">Facts and History <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/about-dover/visit-dover">Visit Dover <span>»</span></a></li> 
+   </ul> </li> 
+  <li class="nav_sep"></li> 
+  <li class="business"><a href="https://www.dover.nh.gov/business-in-dover">Business in Dover</a> 
+   <ul> 
+    <li><a href="https://www.dover.nh.gov/business-in-dover/dover-businesses-and-services">Dover Businesses and Services <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/executive/business-development/">Office of Business Development <span>»</span></a></li> 
+   </ul> </li> 
+  <li class="nav_sep"></li> 
+  <li class="government"><a href="https://www.dover.nh.gov/government">City Government</a> 
+   <ul> 
+    <li><a href="https://www.dover.nh.gov/government/boards-and-commissions">Boards and Commissions <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-charter-code">City Charter and Code <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/boards-and-commissions/city-council/index.html">City Council <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations">City Operations <span>»</span></a> </li> 
+    <li><a href="https://www.dover.nh.gov/government/open-government">Open Government <span>»</span></a></li> 
+    <li><a href="http://www.dover.k12.nh.us/">Public Education <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/public-safety">Public Safety <span>»</span></a></li> 
+   </ul> </li> 
+  <li class="nav_sep"></li> 
+  <li class="services"><a href="https://www.dover.nh.gov/services">City Services</a> 
+   <ul> 
+    <li><a href="https://www.dover.nh.gov/government/open-government/budget-revealed">Budget Revealed <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/planning/inspection-services/index.html">Building Inspection Services Permits and Forms <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/finance/bids">Current Bids <span>»</span></a></li> 
+    <li><a href="https://videoplayer.telvue.com/player/qApKJJVzUoBgvQ1NP9H9TJF8dI9OzVxt/home">DNTV On Demand <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/open-government/election-information">Election Information <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/executive/human-resources/employment">Employment <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/finance/city-clerk-tax-collection/motor-vehicle-registration">Motor Vehicle Registration <span>»</span></a></li> 
+    <li><a href="https://ctitt-dover.cticloudhost.com/TickeTrak.WebPortal/Account/Login">Parking Violation Payments <span>»</span></a></li> 
+    <li><a href="https://permits.dover.nh.gov/energov_prod/selfservice#/home">Online Permits <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/planning/">Planning <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/services/online-services/payment/">Pay My Bill <span>»</span></a></li> 
+    <li><a href="https://library.dover.nh.gov">Public Library <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/public-welfare">Public Welfare <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/public-safety">Public Safety <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/recreation">Recreation <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/community-services/waste-recycling/recycling-center/index.html">Recycling Center <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/finance/tax-assessment">Tax Assessment <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/finance/city-clerk-tax-collection/vital-records">Vital Records <span>»</span></a></li> 
+    <li><a href="https://www.dover.nh.gov/government/city-operations/finance/water-and-sewer-billing">Water/Sewer Billing <span>»</span></a></li> 
+   </ul> </li> 
+  <li class="nav_sep"></li> 
+  <li class="nav_search"> 
+   <div class="nav_social"> <a href="https://x.com/CityofDoverNH"></a> <a class="facebook" href="https://www.facebook.com/pages/City-of-Dover-NH/394844970529075"></a> 
+   </div> 
+   <fieldset> 
+    <form action="https://www.dover.nh.gov/search-results.html" method="get" id="search" class="sl-defaults"> <label class="sl_label" style="left: 0px; opacity: 1; position: absolute; top: 0px; z-index: 2;">What are you looking for?</label> 
+     <input name="cx" type="hidden" value="000115712370344491370:y1vdwpwabcm"> 
+     <input name="ie" type="hidden" value="UTF-8"> 
+     <input type="text" id="q" name="q" onfocus="document.getElementById('q').value=''" class="search_field sl_field" style="z-index: 1;"> 
+     <input type="image" id="searchsubmit" name="”sa”" value="submit" src="/Assets/img/graphic_search_btn.gif" class="search-button"> 
+    </form> 
+   </fieldset> </li> 
+  <li class="sep_contact"></li> 
+  <li class="contact"><a href="https://www.dover.nh.gov/contact-us">Contact Us<span>&nbsp;</span></a> 
+   <ul> 
+    <li><a href="https://www.dover.nh.gov/contact-us/municipal-directory/index.html">Municipal Services Directory</a></li> 
+    <li><a href="https://www.dover.nh.gov/contact-us/facilities-directory/index.html">Municipal Facilities Directory</a></li> 
+    <li><a href="https://service.dover.nh.gov/RequestPortal">Service Request Portal</a></li> 
+   </ul> </li> 
+ </ul> 
+</div> <!-- END #nav -->
+
+</div>
+</div></div><div  class="perc-region perc-noAutoResize perc-fixed perc-vertical content group "  data-noautoresize="false" id="temp-region-9"> <div class=" perc-vertical "><div  class="perc-region perc-region-leaf perc-noAutoResize perc-vertical "  data-noautoresize="false" id="temp-region-3"> <div class=" perc-vertical ">        <div class="perc-widget" >
+
+        
+<div class="perc-breadcrumb">
+<nav>
+<ul class="perc-breadcrumb-main">
+<li class="perc-list-element perc-list-first perc-list-odd"><a href="/government/">City Government</a></li>
+<li class="perc-list-element perc-list-even">><a href="/government/open-government/">Open Government</a></li>
+<li class="perc-list-element perc-list-odd">><a href="/government/open-government/election-information/">Election Information</a></li>
+<li class="perc-list-element perc-list-last perc-list-even">><a href="/government/open-government/election-information/2026-general-election/">2026 General Election</a></li>
+</ul>
+</nav>
+</div>
+    
+</div>
+</div></div><div  class="perc-region perc-noAutoResize perc-horizontal ui-helper-clearfix "  data-noautoresize="undefined" id="temp-region-1"> <div class=" perc-horizontal ui-helper-clearfix "><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical left_content "  data-noautoresize="false" id="temp-region-13"> <div class=" perc-vertical ">        <div class="perc-widget" >
+
+        <div class="sideNav leftNav  perc-navbar">
+<nav>
+<ul class="perc-navbar-vertical">
+<li class="nav-level-1 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-1-nav-entry-1-list-position-1-494437673" href="/" >Home</a></li>                    
+<li class="nav-level-2 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-1-list-position-1-494437673" href="/about-dover/" >About Dover</a><ul>
+<li class="nav-level-3 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-1-list-position-1-494437673" href="/about-dover/dover-facts-and-history/" >Dover Facts and History</a></li>
+<li class="nav-level-3 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-2-list-position-2-494437673" href="/about-dover/visit-dover/" >Visit Dover</a></li>
+</ul></li><li class="nav-level-2 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-2-list-position-2-494437673" href="/business-in-dover/" >Business in Dover</a><ul>
+<li class="nav-level-3 nav-entry-3 list-position-1 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-3-list-position-1-494437673" href="/government/boards-and-commissions/dover-business-industrialdev-authority/" >Dover Business and Industrial Development Authority</a></li>
+<li class="nav-level-3 nav-entry-4 list-position-2 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-4-list-position-2-494437673" href="/business-in-dover/dover-businesses-and-services/" >Dover Businesses and Services</a></li>
+<li class="nav-level-3 nav-entry-5 list-position-3 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-5-list-position-3-494437673" href="/government/city-operations/executive/business-development/" >Office of Business Development</a></li>
+<li class="nav-level-3 nav-entry-6 list-position-4 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-6-list-position-4-494437673" href="http://www.dovernh.org/" >Greater Dover Chamber of Commerce</a></li>
+<li class="nav-level-3 nav-entry-7 list-position-5 "></li>
+<li class="nav-level-3 nav-entry-8 list-position-6 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-8-list-position-6-494437673" href="/business-in-dover/start/" >START</a></li>
+</ul></li><li class="current nav-level-2 nav-entry-3 list-position-3 test"><a id="perc-navigation-menuitem-nav-level-2-nav-entry-3-list-position-3-494437673" href="/government/"  target='_top'>City Government</a><ul>
+<li class="nav-level-3 nav-entry-9 list-position-1 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-9-list-position-1-494437673" href="/government/boards-and-commissions/" >Boards and Commissions</a><ul>
+<li class="nav-level-4 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-1-list-position-1-494437673" href="/government/boards-and-commissions/arena-commission/" >Arena Commission</a></li>
+<li class="nav-level-4 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-2-list-position-2-494437673" href="/government/boards-and-commissions/arts-commission/" >Arts Commission</a><ul>
+<li class="nav-level-5 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-1-list-position-1-494437673" href="/government/boards-and-commissions/arts-commission/city-arts-grants/" >City Arts Grants</a></li>
+<li class="nav-level-5 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-2-list-position-2-494437673" href="/government/boards-and-commissions/arts-commission/reaching-across-arch/" >Reaching Across Arch</a></li>
+</ul></li><li class="nav-level-4 nav-entry-3 list-position-3 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-3-list-position-3-494437673" href="/government/boards-and-commissions/board-of-health/" >Board of Health</a></li>
+<li class="nav-level-4 nav-entry-4 list-position-4 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-4-list-position-4-494437673" href="/government/boards-and-commissions/cemetery-board/" >Cemetery Board</a></li>
+<li class="nav-level-4 nav-entry-5 list-position-5 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-5-list-position-5-494437673" href="/government/boards-and-commissions/city-council/" >City Council &amp; Mayor</a><ul>
+<li class="nav-level-5 nav-entry-3 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-3-list-position-1-494437673" href="/government/boards-and-commissions/city-council/ad-hoc-committee-to-study-stormwater-and-flood-resilience-funding/" >Ad Hoc Committee to Study Stormwater and Flood Resilience Funding</a></li>
+<li class="nav-level-5 nav-entry-4 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-4-list-position-2-494437673" href="/government/boards-and-commissions/city-council/appointments-committee/" >Appointments Committee</a></li>
+<li class="nav-level-5 nav-entry-5 list-position-3 "></li>
+<li class="nav-level-5 nav-entry-6 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-6-list-position-4-494437673" href="/government/boards-and-commissions/city-council/tri-city-homelessness-task-force/" >Tri-City Homelessness Task Force</a></li>
+<li class="nav-level-5 nav-entry-7 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-7-list-position-5-494437673" href="/government/boards-and-commissions/city-council/proclamations-and-awards/" >Proclamations and Awards</a></li>
+<li class="nav-level-5 nav-entry-8 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-8-list-position-6-494437673" href="/government/boards-and-commissions/city-council/city-council-orientation/" >City Council Orientation</a></li>
+<li class="nav-level-5 nav-entry-9 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-9-list-position-7-494437673" href="/government/boards-and-commissions/city-council/community-housing-needs-committee/" >Ad-hoc Committee to Address Community Housing Needs</a></li>
+</ul></li><li class="nav-level-4 nav-entry-6 list-position-6 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-6-list-position-6-494437673" href="/government/boards-and-commissions/committee-for-graffiti-management/" >Committee for Graffiti Management</a></li>
+<li class="nav-level-4 nav-entry-7 list-position-7 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-7-list-position-7-494437673" href="/government/boards-and-commissions/committee-for-racial-equity-and-inclusion/" >Committee for Racial Equity and Inclusion</a></li>
+<li class="nav-level-4 nav-entry-8 list-position-8 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-8-list-position-8-494437673" href="/government/boards-and-commissions/conservation-commission/" >Conservation Commission</a><ul>
+<li class="nav-level-5 nav-entry-10 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-10-list-position-1-494437673" href="/government/boards-and-commissions/conservation-commission/open-lands-committee/" >Open Lands Committee</a></li>
+</ul></li><li class="nav-level-4 nav-entry-9 list-position-9 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-9-list-position-9-494437673" href="/government/boards-and-commissions/dover-business-industrialdev-authority/" >Dover Business and Industrial Development Authority</a></li>
+<li class="nav-level-4 nav-entry-10 list-position-10 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-10-list-position-10-494437673" href="/government/boards-and-commissions/dover-housing-authority/" >Dover Housing Authority</a><ul>
+<li class="nav-level-5 nav-entry-11 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-11-list-position-1-494437673" href="/government/boards-and-commissions/dover-housing-authority/waterfront-committee/" >Cochecho Waterfront Development Advisory Committee</a></li>
+</ul></li><li class="nav-level-4 nav-entry-11 list-position-11 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-11-list-position-11-494437673" href="/government/boards-and-commissions/dovers-400th-anniversary-committee/" >Dover&rsquo;s 400th Anniversary Committee</a></li>
+<li class="nav-level-4 nav-entry-12 list-position-12 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-12-list-position-12-494437673" href="/government/boards-and-commissions/downtown-dover-tax-increment-finance-advisory-board/" >Downtown Dover Tax Increment Finance Advisory Board</a></li>
+<li class="nav-level-4 nav-entry-13 list-position-13 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-13-list-position-13-494437673" href="/government/boards-and-commissions/energy-commission/" >Energy Commission</a></li>
+<li class="nav-level-4 nav-entry-14 list-position-14 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-14-list-position-14-494437673" href="/government/boards-and-commissions/ethics-commission/" >Ethics Commission</a></li>
+<li class="nav-level-4 nav-entry-15 list-position-15 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-15-list-position-15-494437673" href="/government/boards-and-commissions/heritage-commission/" >Heritage Commission</a></li>
+<li class="nav-level-4 nav-entry-16 list-position-16 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-16-list-position-16-494437673" href="/government/boards-and-commissions/joint-building-committee-athletic-complex/" >Joint Building Committee - Dover High School Athletic Complex</a></li>
+<li class="nav-level-4 nav-entry-17 list-position-17 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-17-list-position-17-494437673" href="/government/boards-and-commissions/joint-building-committee-garrison-elementary-school/" >Joint Building Committee - Garrison Elementary School</a></li>
+<li class="nav-level-4 nav-entry-18 list-position-18 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-18-list-position-18-494437673" href="/government/boards-and-commissions/joint-building-committee-dover-high-school-and-regional-ctc/" >Joint Building Committee - Dover High School and Regional CTC</a></li>
+<li class="nav-level-4 nav-entry-19 list-position-19 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-19-list-position-19-494437673" href="/government/boards-and-commissions/joint-fiscal-committee/" >Joint Fiscal Committee</a></li>
+<li class="nav-level-4 nav-entry-20 list-position-20 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-20-list-position-20-494437673" href="/government/boards-and-commissions/library-board-of-trustees/" >Library Board of Trustees</a></li>
+<li class="nav-level-4 nav-entry-21 list-position-21 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-21-list-position-21-494437673" href="/government/boards-and-commissions/mcconnell-center-advisory-committee/" >McConnell Center Advisory Committee</a></li>
+<li class="nav-level-4 nav-entry-22 list-position-22 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-22-list-position-22-494437673" href="/government/boards-and-commissions/parking-commission/" >Parking Commission</a></li>
+<li class="nav-level-4 nav-entry-23 list-position-23 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-23-list-position-23-494437673" href="/government/boards-and-commissions/personnel-advisory-board/" >Personnel Advisory Board</a></li>
+<li class="nav-level-4 nav-entry-24 list-position-24 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-24-list-position-24-494437673" href="/government/boards-and-commissions/planning-board/" >Planning Board</a></li>
+<li class="nav-level-4 nav-entry-25 list-position-25 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-25-list-position-25-494437673" href="/government/boards-and-commissions/pool-advisory-committee/" >Pool Advisory Committee</a></li>
+<li class="nav-level-4 nav-entry-26 list-position-26 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-26-list-position-26-494437673" href="/government/boards-and-commissions/recreation-advisory-board/" >Recreation Advisory Board</a></li>
+<li class="nav-level-4 nav-entry-27 list-position-27 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-27-list-position-27-494437673" href="/government/boards-and-commissions/school-board/" >School Board</a></li>
+<li class="nav-level-4 nav-entry-28 list-position-28 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-28-list-position-28-494437673" href="/government/boards-and-commissions/solid-waste-advisory-committee/" >Solid Waste Advisory Committee</a></li>
+<li class="nav-level-4 nav-entry-29 list-position-29 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-29-list-position-29-494437673" href="/government/boards-and-commissions/transportation-advisory-commission/" >Transportation Advisory Commission</a></li>
+<li class="nav-level-4 nav-entry-30 list-position-30 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-30-list-position-30-494437673" href="/government/boards-and-commissions/trustees-of-the-trust-fund/" >Trustees of the Trust Fund</a></li>
+<li class="nav-level-4 nav-entry-31 list-position-31 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-31-list-position-31-494437673" href="/government/boards-and-commissions/utilities-commission/" >Utilities Commission</a></li>
+<li class="nav-level-4 nav-entry-32 list-position-32 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-32-list-position-32-494437673" href="/government/boards-and-commissions/waterfront-tif-advisory-board/" >Waterfront TIF Advisory Board</a></li>
+<li class="nav-level-4 nav-entry-33 list-position-33 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-33-list-position-33-494437673" href="/government/boards-and-commissions/zoning-board/" >Zoning Board of Adjustment</a></li>
+<li class="nav-level-4 nav-entry-34 list-position-34 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-34-list-position-34-494437673" href="/government/boards-and-commissions/municipal-records-committee/" >Municipal Records Committee</a></li>
+</ul></li><li class="nav-level-3 nav-entry-10 list-position-2 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-10-list-position-2-494437673" href="/government/city-charter-code/" >City Charter and City Code</a></li>
+<li class="nav-level-3 nav-entry-11 list-position-3 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-11-list-position-3-494437673" href="/government/city-operations/" >City Operations</a><ul>
+<li class="nav-level-4 nav-entry-35 list-position-1 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-35-list-position-1-494437673" href="/government/city-operations/community-services/" >Community Services</a><ul>
+<li class="nav-level-5 nav-entry-12 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-12-list-position-1-494437673" href="/government/city-operations/community-services/contact-us/" >Contact Us</a></li>
+<li class="nav-level-5 nav-entry-13 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-13-list-position-2-494437673" href="/government/city-operations/community-services/engineering/" >Engineering</a><ul>
+<li class="nav-level-6 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-1-list-position-1-494437673" href="/government/city-operations/community-services/contact-us/" >Contact Us</a></li>
+<li class="nav-level-6 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-2-list-position-2-494437673" href="/government/city-operations/community-services/engineering/engineering-monthly-reports/" >Engineering Monthly Reports</a></li>
+<li class="nav-level-6 nav-entry-3 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-3-list-position-3-494437673" href="/government/city-operations/community-services/engineering/environmental/" >Environmental</a><ul>
+<li class="nav-level-7 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-1-list-position-1-494437673" href="/government/city-operations/community-services/contact-us/" >Contact Us</a></li>
+<li class="nav-level-7 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-2-list-position-2-494437673" href="/government/city-operations/community-services/engineering/environmental/nitrogen/" >Nitrogen and the Great Bay</a><ul>
+<li class="nav-level-8 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-1-list-position-1-494437673" href="/government/city-operations/community-services/engineering/environmental/nitrogen/municipal-allaiance-for-adaptive-management/" >Municipal Alliance for Adaptive Management</a></li>
+<li class="nav-level-8 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-2-list-position-2-494437673" href="/government/city-operations/community-services/engineering/environmental/nitrogen/draft-permit-comments-from-the-city-of-dover/" >2020 GBTN Draft Permit Comments from the City of Dover</a></li>
+</ul></li><li class="nav-level-7 nav-entry-3 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-3-list-position-3-494437673" href="/government/city-operations/community-services/engineering/environmental/stormwater-management/" >Stormwater Management</a><ul>
+<li class="nav-level-8 nav-entry-3 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-3-list-position-1-494437673" href="/government/city-operations/community-services/engineering/environmental/stormwater-management/outreach-materials/" >Outreach Materials</a><ul>
+<li class="nav-level-9 nav-entry-1 list-position-1 "><a id="perc-navigation-menuitem-nav-level-9-nav-entry-1-list-position-1-494437673" href="/government/city-operations/community-services/engineering/environmental/stormwater-management/outreach-materials/lawn-fertilizer/" >Lawn Fertilizer</a></li>
+<li class="nav-level-9 nav-entry-2 list-position-2 "><a id="perc-navigation-menuitem-nav-level-9-nav-entry-2-list-position-2-494437673" href="/government/city-operations/community-services/engineering/environmental/stormwater-management/outreach-materials/pet-waste/" >Pet Waste</a></li>
+<li class="nav-level-9 nav-entry-3 list-position-3 "></li>
+</ul></li><li class="nav-level-8 nav-entry-4 list-position-2 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-4-list-position-2-494437673" href="/government/city-operations/community-services/engineering/environmental/stormwater-management/storm-water-utility-2023/" >City Council Stormwater Utility Review 2023</a></li>
+</ul></li><li class="nav-level-7 nav-entry-4 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-4-list-position-4-494437673" href="/government/city-operations/community-services/engineering/environmental/water-quality/" >Water Quality</a><ul>
+<li class="nav-level-8 nav-entry-5 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-5-list-position-1-494437673" href="/government/city-operations/community-services/engineering/environmental/water-quality/service-line-inventory/" >Water Service Line Inventory</a><ul>
+<li class="nav-level-9 nav-entry-4 list-position-1 "><a id="perc-navigation-menuitem-nav-level-9-nav-entry-4-list-position-1-494437673" href="/government/city-operations/community-services/engineering/environmental/water-quality/service-line-inventory/service-line-materials/" >Service Line Materials</a></li>
+</ul></li></ul></li><li class="nav-level-7 nav-entry-5 list-position-5 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-5-list-position-5-494437673" href="/government/city-operations/community-services/engineering/environmental/wastewater/" >Wastewater</a></li>
+<li class="nav-level-7 nav-entry-6 list-position-6 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-6-list-position-6-494437673" href="/government/city-operations/community-services/engineering/environmental/water-source-protection/" >Water Source Protection</a></li>
+<li class="nav-level-7 nav-entry-7 list-position-7 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-7-list-position-7-494437673" href="/government/city-operations/community-services/engineering/environmental/weed-management/" >Weed Management</a></li>
+<li class="nav-level-7 nav-entry-8 list-position-8 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-8-list-position-8-494437673" href="/government/city-operations/community-services/engineering/environmental/tolend-landfill-superfund-site/" >Tolend Landfill Superfund Site</a></li>
+</ul></li><li class="nav-level-6 nav-entry-4 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-4-list-position-4-494437673" href="/government/city-operations/community-services/permitting/" >Permitting</a></li>
+<li class="nav-level-6 nav-entry-5 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-5-list-position-5-494437673" href="/government/city-operations/community-services/engineering/projects/" >Projects</a><ul>
+<li class="nav-level-7 nav-entry-9 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-9-list-position-1-494437673" href="/government/city-operations/community-services/engineering/projects/broadway-and-oak-street-water-transmission-replacement/" >Broadway and Oak Street Water Transmission Replacement</a></li>
+<li class="nav-level-7 nav-entry-10 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-10-list-position-2-494437673" href="/government/city-operations/community-services/engineering/projects/central-ave-urban-core-water-improvements/" >Central Avenue Urban Core Water Improvements</a></li>
+<li class="nav-level-7 nav-entry-11 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-11-list-position-3-494437673" href="/government/city-operations/community-services/engineering/projects/dover-point-road-roundabout/" >Dover Point Road Roundabout</a></li>
+<li class="nav-level-7 nav-entry-12 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-12-list-position-4-494437673" href="/government/city-operations/planning/special-projects/downtown-access-plan/" >Downtown Pedestrian and Vehicular Access Improvements Project</a></li>
+<li class="nav-level-7 nav-entry-13 list-position-5 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-13-list-position-5-494437673" href="/government/city-operations/community-services/engineering/projects/littleworth-road-water-and-sewer-improvements/" >Littleworth Road Water and Sewer Improvements</a></li>
+<li class="nav-level-7 nav-entry-14 list-position-6 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-14-list-position-6-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/morningside-park/" >Morningside Park</a></li>
+<li class="nav-level-7 nav-entry-15 list-position-7 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-15-list-position-7-494437673" href="/government/city-operations/community-services/engineering/projects/sidewalk-improvements/" >Sidewalk Improvements</a></li>
+<li class="nav-level-7 nav-entry-16 list-position-8 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-16-list-position-8-494437673" href="/government/city-operations/community-services/engineering/projects/sewer-inflow-infiltration/" >Sewer Inflow/Infiltration Reduction Project</a></li>
+<li class="nav-level-7 nav-entry-17 list-position-9 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-17-list-position-9-494437673" href="/government/city-operations/community-services/engineering/paving/" >Street Paving</a></li>
+<li class="nav-level-7 nav-entry-18 list-position-10 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-18-list-position-10-494437673" href="/government/city-operations/community-services/engineering/projects/street-reconstructions/" >Street Reconstruction Projects</a><ul>
+<li class="nav-level-8 nav-entry-6 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-6-list-position-1-494437673" href="/government/city-operations/community-services/engineering/projects/street-reconstructions/court-street-union-street-reconstruction-project/" >Court Street &amp; Union Street Reconstruction Project </a></li>
+<li class="nav-level-8 nav-entry-7 list-position-2 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-7-list-position-2-494437673" href="/government/city-operations/community-services/engineering/projects/street-reconstructions/henry-law-avenue-and-river-street-improvements/" >Henry Law Avenue and Payne Street Improvements</a></li>
+<li class="nav-level-8 nav-entry-8 list-position-3 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-8-list-position-3-494437673" href="/government/city-operations/community-services/engineering/projects/street-reconstructions/lower-central-avenue/" >Lower Central Avenue Reconstruction</a></li>
+</ul></li><li class="nav-level-7 nav-entry-19 list-position-11 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-19-list-position-11-494437673" href="/government/city-operations/community-services/engineering/projects/stark-avenue-and-downtown-area-sewer-rehabilitation/" >Stark Avenue and Downtown Area Sewer Rehabilitation</a></li>
+<li class="nav-level-7 nav-entry-20 list-position-12 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-20-list-position-12-494437673" href="/government/city-operations/community-services/engineering/projects/traffic-signal-upgrades/" >Traffic Signal Upgrades</a></li>
+<li class="nav-level-7 nav-entry-21 list-position-13 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-21-list-position-13-494437673" href="/government/city-operations/community-services/engineering/projects/whitter-street-sidewalk-improvements/" >Whitter Street Sidewalk Improvements</a></li>
+<li class="nav-level-7 nav-entry-22 list-position-14 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-22-list-position-14-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/" >Project Archives</a><ul>
+<li class="nav-level-8 nav-entry-9 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-9-list-position-1-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/nelson-street-reconstruction/" >Nelson Street Reconstruction Project</a></li>
+<li class="nav-level-8 nav-entry-10 list-position-2 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-10-list-position-2-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/whittier-street-bridge/" >Whittier Street Bridge Reconstruction Project</a></li>
+<li class="nav-level-8 nav-entry-11 list-position-3 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-11-list-position-3-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/smoke-testing/" >Smoke Testing</a></li>
+<li class="nav-level-8 nav-entry-12 list-position-4 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-12-list-position-4-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/water-facilities-improvements-phase-2/" >Water Facilities Improvements - Phase 2</a></li>
+<li class="nav-level-8 nav-entry-13 list-position-5 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-13-list-position-5-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/silver-street-reconstruction/" >Silver Street Reconstruction</a></li>
+<li class="nav-level-8 nav-entry-14 list-position-6 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-14-list-position-6-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/spur-road-reconstruction/" >Spur Road Reconstruction</a></li>
+<li class="nav-level-8 nav-entry-15 list-position-7 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-15-list-position-7-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/washington-and-main-water-improvements/" >Washington and Main Water Improvements</a></li>
+<li class="nav-level-8 nav-entry-16 list-position-8 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-16-list-position-8-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/broadway-ralroad-culvert/" >Broadway Railroad Culvert</a></li>
+<li class="nav-level-8 nav-entry-17 list-position-9 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-17-list-position-9-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/chestnut-street-bridge-repairs/" >Chestnut Street Bridge Repairs</a></li>
+<li class="nav-level-8 nav-entry-18 list-position-10 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-18-list-position-10-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/central-avenue-north-water-improvements/" >Central Avenue North Water Improvements</a></li>
+<li class="nav-level-8 nav-entry-19 list-position-11 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-19-list-position-11-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/court-street-/" >Court Street Emergency Sewer Replacement</a></li>
+<li class="nav-level-8 nav-entry-20 list-position-12 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-20-list-position-12-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/fifth-street-grove-street-reconstruction-project/" >Fifth Street &amp; Grove Street Reconstruction Project</a></li>
+<li class="nav-level-8 nav-entry-21 list-position-13 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-21-list-position-13-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/smith-well-road-water-tank/" >Smith Well Road Water Tank and Utility Work</a></li>
+<li class="nav-level-8 nav-entry-22 list-position-14 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-22-list-position-14-494437673" href="/government/city-operations/community-services/engineering/projects/past-projects/portland-avenue-retaining-wall-and-sidewalk-improvements-/" >Portland Avenue Retaining Wall and Sidewalk Improvements </a></li>
+</ul></li></ul></li><li class="nav-level-6 nav-entry-6 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-6-list-position-6-494437673" href="/government/city-operations/community-services/engineering/paving/" >Street Paving</a></li>
+</ul></li><li class="nav-level-5 nav-entry-14 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-14-list-position-3-494437673" href="/government/city-operations/community-services/facilities-grounds/" >Facilities, Grounds and Cemeteries</a><ul>
+<li class="nav-level-6 nav-entry-7 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-7-list-position-1-494437673" href="/government/city-operations/community-services/facilities-grounds/adopt-a-spot/" >Adopt a Spot</a></li>
+<li class="nav-level-6 nav-entry-8 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-8-list-position-2-494437673" href="/government/city-operations/community-services/facilities-grounds/commemorative-donation-program/" >Commemorative Donation Program</a></li>
+<li class="nav-level-6 nav-entry-9 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-9-list-position-3-494437673" href="/government/city-operations/community-services/facilities-grounds/pine-hill-cemetery/" >Pine Hill Cemetery</a></li>
+</ul></li><li class="nav-level-5 nav-entry-15 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-15-list-position-4-494437673" href="/government/city-operations/community-services/fleet-services/" >Fleet Services</a></li>
+<li class="nav-level-5 nav-entry-16 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-16-list-position-5-494437673" href="/government/city-operations/community-services/highway/" >Highway</a><ul>
+<li class="nav-level-6 nav-entry-10 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-10-list-position-1-494437673" href="/government/city-operations/community-services/highway/potholes/" >Potholes</a></li>
+<li class="nav-level-6 nav-entry-11 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-11-list-position-2-494437673" href="/government/city-operations/community-services/highway/winter-operations/" >Winter Operations</a></li>
+</ul></li><li class="nav-level-5 nav-entry-17 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-17-list-position-6-494437673" href="/government/city-operations/community-services/permitting/" >Permitting</a></li>
+<li class="nav-level-5 nav-entry-18 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-18-list-position-7-494437673" href="/government/city-operations/community-services/waste-recycling/" >Solid Waste and Recycling</a><ul>
+<li class="nav-level-6 nav-entry-12 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-12-list-position-1-494437673" href="/government/city-operations/community-services/waste-recycling/bag-and-tag/" >Curbside Collection (Bag and Tag)</a></li>
+<li class="nav-level-6 nav-entry-13 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-13-list-position-2-494437673" href="/government/city-operations/community-services/waste-recycling/recycling-center/" >Recycling Center</a></li>
+<li class="nav-level-6 nav-entry-14 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-14-list-position-3-494437673" href="/government/city-operations/community-services/waste-recycling/brush-and-yard-waste/" >Brush and Yard Waste</a></li>
+<li class="nav-level-6 nav-entry-15 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-15-list-position-4-494437673" href="/government/city-operations/community-services/waste-recycling/recycling-center-composting/" >Recycling Center Composting</a></li>
+<li class="nav-level-6 nav-entry-16 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-16-list-position-5-494437673" href="/government/city-operations/community-services/waste-recycling/backyard-composting/" >Backyard Composting</a></li>
+<li class="nav-level-6 nav-entry-17 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-17-list-position-6-494437673" href="/government/city-operations/community-services/waste-recycling/holiday-pickup-schedule/" >Holiday Pickup Schedule</a></li>
+<li class="nav-level-6 nav-entry-18 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-18-list-position-7-494437673" href="/government/city-operations/community-services/waste-recycling/household-hazardous-waste/" >Household Hazardous Waste</a></li>
+<li class="nav-level-6 nav-entry-19 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-19-list-position-8-494437673" href="/government/city-operations/community-services/waste-recycling/dont-trash-dover/" >Don't Trash Dover</a></li>
+</ul></li><li class="nav-level-5 nav-entry-19 list-position-8 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-19-list-position-8-494437673" href="/government/city-operations/community-services/utilities/" >Utilities</a><ul>
+<li class="nav-level-6 nav-entry-20 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-20-list-position-1-494437673" href="/government/boards-and-commissions/utilities-commission/" >Utilities Commission</a></li>
+<li class="nav-level-6 nav-entry-21 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-21-list-position-2-494437673" href="/government/city-operations/finance/water-and-sewer-billing/" >Water and Sewer Billing</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-36 list-position-2 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-36-list-position-2-494437673" href="/government/city-operations/fire-and-rescue/" >Dover Fire &amp; Rescue</a><ul>
+<li class="nav-level-5 nav-entry-20 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-20-list-position-1-494437673" href="/government/city-operations/fire-and-rescue/contact-fire-and-rescue/" >Contact Fire and Rescue</a></li>
+<li class="nav-level-5 nav-entry-21 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-21-list-position-2-494437673" href="/government/city-operations/fire-and-rescue/emergency-management/" >Emergency Management</a></li>
+<li class="nav-level-5 nav-entry-22 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-22-list-position-3-494437673" href="/government/city-operations/fire-and-rescue/medical-services/" >Emergency Medical Services</a></li>
+<li class="nav-level-5 nav-entry-23 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-23-list-position-4-494437673" href="/government/city-operations/fire-and-rescue/fire-prevention-and-safety/" >Fire Prevention and Safety</a><ul>
+<li class="nav-level-6 nav-entry-22 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-22-list-position-1-494437673" href="/government/city-operations/fire-and-rescue/fire-prevention-and-safety/fire-safety-festival/" >Fire Safety Festival</a></li>
+</ul></li><li class="nav-level-5 nav-entry-24 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-24-list-position-5-494437673" href="/government/city-operations/fire-and-rescue/fire-stations/" >Fire Stations</a></li>
+<li class="nav-level-5 nav-entry-25 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-25-list-position-6-494437673" href="/government/city-operations/fire-and-rescue/faq/" >Frequently Asked Questions</a></li>
+<li class="nav-level-5 nav-entry-26 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-26-list-position-7-494437673" href="/government/city-operations/fire-and-rescue/public-service/" >Public Service Annoucements</a></li>
+</ul></li><li class="nav-level-4 nav-entry-37 list-position-3 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-37-list-position-3-494437673" href="/government/city-operations/police/" >Dover Police Department</a><ul>
+<li class="nav-level-5 nav-entry-27 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-27-list-position-1-494437673" href="/government/city-operations/police/announcements/" >Announcements</a></li>
+<li class="nav-level-5 nav-entry-28 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-28-list-position-2-494437673" href="/government/city-operations/police/arrest-log/" >Arrest Log</a></li>
+<li class="nav-level-5 nav-entry-29 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-29-list-position-3-494437673" href="/government/city-operations/police/career-opportunities/" >Career Opportunities</a></li>
+<li class="nav-level-5 nav-entry-30 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-30-list-position-4-494437673" href="/government/city-operations/police/citizen-online-reporting/" >Citizen Online Reporting</a></li>
+<li class="nav-level-5 nav-entry-31 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-31-list-position-5-494437673" href="/government/city-operations/police/community-outreach/" >Community Outreach</a><ul>
+<li class="nav-level-6 nav-entry-23 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-23-list-position-1-494437673" href="http://www.dovernhcrimeline.org/"  target='_blank'>Crimeline</a></li>
+<li class="nav-level-6 nav-entry-24 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-24-list-position-2-494437673" href="/government/city-operations/police/community-outreach/dare-program/" >DARE Program</a></li>
+<li class="nav-level-6 nav-entry-25 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-25-list-position-3-494437673" href="https://www.dovercoalition.org/home.html"  target='_blank'>Dover Coalition for Youth</a></li>
+<li class="nav-level-6 nav-entry-26 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-26-list-position-4-494437673" href="/government/city-operations/police/community-outreach/dover-police-charities/" >Dover Police Charities</a></li>
+<li class="nav-level-6 nav-entry-27 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-27-list-position-5-494437673" href="http://dovery2y.org/"  target='_blank'>Dover Youth to Youth</a></li>
+<li class="nav-level-6 nav-entry-28 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-28-list-position-6-494437673" href="https://www.dovercoalition.org/our-programs/drug-free-id.html"  target='_blank'>Drug Free ID</a></li>
+<li class="nav-level-6 nav-entry-29 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-29-list-position-7-494437673" href="/government/city-operations/police/community-outreach/housing-authority-police-liaison-program/" >Housing Authority Police Liaison Program</a></li>
+<li class="nav-level-6 nav-entry-30 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-30-list-position-8-494437673" href="/government/city-operations/police/community-outreach/pact-program/" >PACT Program</a></li>
+<li class="nav-level-6 nav-entry-31 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-31-list-position-9-494437673" href="/government/city-operations/police/community-outreach/teen-center/" >Teen Center</a><ul>
+<li class="nav-level-7 nav-entry-23 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-23-list-position-1-494437673" href="/government/city-operations/police/community-outreach/teen-center/about-us/" >About Us</a></li>
+<li class="nav-level-7 nav-entry-24 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-24-list-position-2-494437673" href="/government/city-operations/police/community-outreach/teen-center/juvenile-court-diversion/" >Dover Juvenile Court Diversion</a></li>
+<li class="nav-level-7 nav-entry-25 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-25-list-position-3-494437673" href="/government/city-operations/police/community-outreach/teen-center/dover-mental-health-alliance/" >Dover Mental Health Alliance</a></li>
+<li class="nav-level-7 nav-entry-26 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-26-list-position-4-494437673" href="/government/city-operations/police/community-outreach/teen-center/doverpalooza-music-shows/" >DoverPalooza Music Shows</a></li>
+<li class="nav-level-7 nav-entry-27 list-position-5 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-27-list-position-5-494437673" href="/government/city-operations/police/community-outreach/teen-center/events-programs-happenings/" >Events, Programs and Happenings</a></li>
+<li class="nav-level-7 nav-entry-28 list-position-6 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-28-list-position-6-494437673" href="/government/city-operations/police/community-outreach/teen-center/internships/" >Internships</a></li>
+<li class="nav-level-7 nav-entry-29 list-position-7 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-29-list-position-7-494437673" href="/government/city-operations/police/community-outreach/teen-center/mission-and-core-values/" >Mission and Core Values</a></li>
+<li class="nav-level-7 nav-entry-30 list-position-8 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-30-list-position-8-494437673" href="/government/city-operations/police/community-outreach/teen-center/teen-center-gallery/" >Photo Gallery</a></li>
+<li class="nav-level-7 nav-entry-31 list-position-9 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-31-list-position-9-494437673" href="/government/city-operations/police/community-outreach/teen-center/resources-for-teens/" >Resources for Teens</a></li>
+<li class="nav-level-7 nav-entry-32 list-position-10 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-32-list-position-10-494437673" href="/government/city-operations/police/community-outreach/teen-center/staff/" >Staff</a></li>
+<li class="nav-level-7 nav-entry-33 list-position-11 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-33-list-position-11-494437673" href="/government/city-operations/police/community-outreach/teen-center/support-the-teen-center/" >Support the Teen Center</a></li>
+</ul></li></ul></li><li class="nav-level-5 nav-entry-32 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-32-list-position-6-494437673" href="/government/city-operations/police/community-response-and-engagement-unit-creu/" >Community Response and Engagement Unit &ndash; CREU</a><ul>
+<li class="nav-level-6 nav-entry-32 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-32-list-position-1-494437673" href="https://arcg.is/aTi4O" >Virtual Neighborhood Watch</a></li>
+</ul></li><li class="nav-level-5 nav-entry-33 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-33-list-position-7-494437673" href="/government/city-operations/police/crime-and-incident-mapping/" >Crime and Incident Mapping</a></li>
+<li class="nav-level-5 nav-entry-34 list-position-8 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-34-list-position-8-494437673" href="/government/city-operations/police/crime-prevention-sources/" >Crime Prevention Sources</a></li>
+<li class="nav-level-5 nav-entry-35 list-position-9 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-35-list-position-9-494437673" href="/government/city-operations/police/employee-of-the-quarter/" >Employee of the Quarter</a></li>
+<li class="nav-level-5 nav-entry-36 list-position-10 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-36-list-position-10-494437673" href="/government/city-operations/police/field-operations/" >Field Operations</a><ul>
+<li class="nav-level-6 nav-entry-33 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-33-list-position-1-494437673" href="/government/city-operations/police/field-operations/color-guard/" >Color Guard</a></li>
+<li class="nav-level-6 nav-entry-34 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-34-list-position-2-494437673" href="/government/city-operations/police/field-operations/commendation-complaint/" >Commendation and Complaint Procedures</a></li>
+<li class="nav-level-6 nav-entry-35 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-35-list-position-3-494437673" href="/government/city-operations/police/field-operations/communications-bureau/" >Communications Bureau</a></li>
+<li class="nav-level-6 nav-entry-36 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-36-list-position-4-494437673" href="/government/city-operations/police/field-operations/mountain-bike-patrol/" >Mountain Bike Patrol</a></li>
+<li class="nav-level-6 nav-entry-37 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-37-list-position-5-494437673" href="/government/city-operations/police/field-operations/patrol/" >Patrol</a></li>
+<li class="nav-level-6 nav-entry-38 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-38-list-position-6-494437673" href="/government/city-operations/police/field-operations/strafford-tactical-operations/" >Strafford County Regional Tactical Operations Unit</a></li>
+</ul></li><li class="nav-level-5 nav-entry-37 list-position-11 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-37-list-position-11-494437673" href="/government/city-operations/police/history/" >History</a></li>
+<li class="nav-level-5 nav-entry-38 list-position-12 hideThis"><a id="perc-navigation-menuitem-nav-level-5-nav-entry-38-list-position-12-494437673" href="/government/city-operations/police/new-police-facility/" >New Police Facility and Parking Garage</a></li>
+<li class="nav-level-5 nav-entry-39 list-position-13 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-39-list-position-13-494437673" href="/government/city-operations/police/chief-of-police/" >Office of the Chief of Police</a></li>
+<li class="nav-level-5 nav-entry-40 list-position-14 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-40-list-position-14-494437673" href="/government/city-operations/police/parking-bureau/" >Parking Bureau</a><ul>
+<li class="nav-level-6 nav-entry-39 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-39-list-position-1-494437673" href="/government/city-operations/police/parking-bureau/driving-dover/index-first.html" >Driving Dover</a></li>
+<li class="nav-level-6 nav-entry-40 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-40-list-position-2-494437673" href="https://ctitt-dover.cticloudhost.com/TickeTrak.WebPortal/Account/Login" >Citations Payment Online</a></li>
+<li class="nav-level-6 nav-entry-41 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-41-list-position-3-494437673" href="/government/city-operations/police/parking-bureau/fine-schedule/" >Fine Schedule and Payment Options</a></li>
+<li class="nav-level-6 nav-entry-42 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-42-list-position-4-494437673" href="/government/city-operations/police/parking-bureau/parking-plans/" >Parking Plans</a></li>
+<li class="nav-level-6 nav-entry-43 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-43-list-position-5-494437673" href="/government/city-operations/police/parking-bureau/parking-permit-information/" >Parking Permit Information</a></li>
+<li class="nav-level-6 nav-entry-44 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-44-list-position-6-494437673" href="/government/city-operations/police/parking-bureau/pay-by-phone/" >Pay by Phone</a></li>
+<li class="nav-level-6 nav-entry-45 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-45-list-position-7-494437673" href="/government/city-operations/police/parking-bureau/pay-by-plate/" >Pay by Plate Meters</a></li>
+<li class="nav-level-6 nav-entry-46 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-46-list-position-8-494437673" href="/government/city-operations/police/parking-bureau/public-parking-lots/" >Public Parking Lots</a></li>
+<li class="nav-level-6 nav-entry-47 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-47-list-position-9-494437673" href="/government/city-operations/police/parking-bureau/regulations/" >Regulations</a></li>
+<li class="nav-level-6 nav-entry-48 list-position-10 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-48-list-position-10-494437673" href="/government/city-operations/police/parking-bureau/transportation-center/" >Transportation Center Lot</a></li>
+<li class="nav-level-6 nav-entry-49 list-position-11 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-49-list-position-11-494437673" href="/government/city-operations/police/parking-bureau/violation-appeal/" >Violation Appeal</a></li>
+<li class="nav-level-6 nav-entry-50 list-position-12 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-50-list-position-12-494437673" href="/government/city-operations/police/parking-bureau/winter-parking-restrictions/" >Winter Parking Restrictions</a></li>
+</ul></li><li class="nav-level-5 nav-entry-41 list-position-15 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-41-list-position-15-494437673" href="/government/city-operations/police/special-services-bureau/" >Special Services Bureau</a><ul>
+<li class="nav-level-6 nav-entry-51 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-51-list-position-1-494437673" href="/government/city-operations/police/special-services-bureau/legal-unit/" >Legal Unit</a><ul>
+<li class="nav-level-7 nav-entry-34 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-34-list-position-1-494437673" href="/government/city-operations/police/special-services-bureau/legal-unit/info-crime-victims/" >Information for Crime Victims</a><ul>
+<li class="nav-level-8 nav-entry-23 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-23-list-position-1-494437673" href="/government/city-operations/police/special-services-bureau/legal-unit/info-crime-victims/domestic-violence-victims/" >Domestic Violence Victims</a></li>
+</ul></li></ul></li><li class="nav-level-6 nav-entry-52 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-52-list-position-2-494437673" href="/government/city-operations/police/special-services-bureau/special-investigations/" >Special Investigations Unit</a></li>
+</ul></li><li class="nav-level-5 nav-entry-42 list-position-16 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-42-list-position-16-494437673" href="/government/city-operations/police/strategic-planning/" >Strategic Planning</a></li>
+<li class="nav-level-5 nav-entry-43 list-position-17 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-43-list-position-17-494437673" href="/government/city-operations/police/statistics-and-reports/" >Statistics and Reports</a></li>
+<li class="nav-level-5 nav-entry-44 list-position-18 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-44-list-position-18-494437673" href="/government/city-operations/police/substance-use-response-and-resources/" >Substance use response and resources</a></li>
+<li class="nav-level-5 nav-entry-45 list-position-19 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-45-list-position-19-494437673" href="/government/city-operations/police/support-services/" >Support Services</a><ul>
+<li class="nav-level-6 nav-entry-53 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-53-list-position-1-494437673" href="/government/city-operations/police/support-services/records-unit/" >Records Unit</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-38 list-position-4 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-38-list-position-4-494437673" href="/government/city-operations/executive/" >Executive</a><ul>
+<li class="nav-level-5 nav-entry-46 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-46-list-position-1-494437673" href="/government/city-operations/executive/city-manager/" >Office of the City Manager</a><ul>
+<li class="nav-level-6 nav-entry-54 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-54-list-position-1-494437673" href="/government/city-operations/executive/city-manager/best-practices/" >Best Practices Recognition</a></li>
+<li class="nav-level-6 nav-entry-55 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-55-list-position-2-494437673" href="/government/open-government/budget-revealed/" >Budget Revealed</a></li>
+<li class="nav-level-6 nav-entry-56 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-56-list-position-3-494437673" href="/government/boards-and-commissions/city-council/" >City Council &amp; Mayor</a></li>
+<li class="nav-level-6 nav-entry-57 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-57-list-position-4-494437673" href="/government/city-operations/executive/city-manager/customer-service/" >Customer Service</a></li>
+<li class="nav-level-6 nav-entry-58 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-58-list-position-5-494437673" href="/contact-us/municipal-directory/" >Municipal Directory</a></li>
+<li class="nav-level-6 nav-entry-59 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-59-list-position-6-494437673" href="/government/city-operations/executive/city-manager/national-citizen-survey/" >National Citizen Survey</a></li>
+<li class="nav-level-6 nav-entry-60 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-60-list-position-7-494437673" href="/government/city-operations/executive/city-manager/operational-statistics/" >Operational Statistics</a></li>
+<li class="nav-level-6 nav-entry-61 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-61-list-position-8-494437673" href="/government/city-operations/executive/city-manager/strategic-management/" >Strategic Management</a><ul>
+<li class="nav-level-7 nav-entry-35 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-35-list-position-1-494437673" href="/government/city-operations/executive/city-manager/strategic-management/framework-for-excellence/" >Framework for Excellence</a></li>
+<li class="nav-level-7 nav-entry-36 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-36-list-position-2-494437673" href="/government/city-operations/executive/city-manager/strategic-management/vision-mission-core-values/" >Vision, Mission, Core Values</a></li>
+<li class="nav-level-7 nav-entry-37 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-37-list-position-3-494437673" href="/government/city-operations/executive/city-manager/strategic-management/management-attributes/" >Management Attributes</a></li>
+<li class="nav-level-7 nav-entry-38 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-38-list-position-4-494437673" href="/government/city-operations/executive/city-manager/strategic-management/intended-outcomes/" >Intended Outcomes</a></li>
+<li class="nav-level-7 nav-entry-39 list-position-5 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-39-list-position-5-494437673" href="/government/city-operations/executive/city-manager/strategic-management/ongoing-implementation/" >Ongoing Implementation</a></li>
+</ul></li><li class="nav-level-6 nav-entry-62 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-62-list-position-9-494437673" href="/government/city-operations/executive/city-manager/strategic-plan/" >Strategic Plan</a></li>
+<li class="nav-level-6 nav-entry-63 list-position-10 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-63-list-position-10-494437673" href="/government/open-government/transparent-dover/" >Transparent Dover</a></li>
+</ul></li><li class="nav-level-5 nav-entry-47 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-47-list-position-2-494437673" href="/government/city-operations/executive/business-development/" >Office of Business Development</a><ul>
+<li class="nav-level-6 nav-entry-64 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-64-list-position-1-494437673" href="/government/boards-and-commissions/dover-business-industrialdev-authority/" >Dover Business and Industrial Development Authority</a></li>
+<li class="nav-level-6 nav-entry-65 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-65-list-position-2-494437673" href="/government/city-operations/executive/business-development/economic-revitalization-zone/" >Economic Revitalization Zone</a></li>
+<li class="nav-level-6 nav-entry-66 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-66-list-position-3-494437673" href="/government/city-operations/executive/business-development/how-to-start-a-business-in-dover-business-resources/" >How to Start a Business in Dover &amp; Business Resources</a></li>
+<li class="nav-level-6 nav-entry-67 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-67-list-position-4-494437673" href="/government/city-operations/executive/business-development/down-to-business/" >Down to Business</a></li>
+</ul></li><li class="nav-level-5 nav-entry-48 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-48-list-position-3-494437673" href="/government/city-operations/executive/city-attorney/" >Office of the City Attorney</a><ul>
+<li class="nav-level-6 nav-entry-68 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-68-list-position-1-494437673" href="/government/city-operations/executive/city-attorney/ethics-policy/" >Ethics Policy</a></li>
+<li class="nav-level-6 nav-entry-69 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-69-list-position-2-494437673" href="/government/city-operations/executive/city-attorney/right-to-know-law/" >Right-to-Know Law</a></li>
+<li class="nav-level-6 nav-entry-70 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-70-list-position-3-494437673" href="/government/city-operations/executive/city-attorney/current-litigation/" >Current Litigation</a></li>
+</ul></li><li class="nav-level-5 nav-entry-49 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-49-list-position-4-494437673" href="/government/city-operations/executive/human-resources/" >Office of Human Resources</a><ul>
+<li class="nav-level-6 nav-entry-71 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-71-list-position-1-494437673" href="/government/city-operations/executive/human-resources/benefits/" >Benefits</a></li>
+<li class="nav-level-6 nav-entry-72 list-position-2 "></li>
+<li class="nav-level-6 nav-entry-73 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-73-list-position-3-494437673" href="/government/city-operations/executive/human-resources/labor-relations-and-compensation/" >Labor Relations and Compensation</a></li>
+<li class="nav-level-6 nav-entry-74 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-74-list-position-4-494437673" href="/government/city-operations/executive/human-resources/Non-Discrimination/" >Non-Discrimination</a></li>
+<li class="nav-level-6 nav-entry-75 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-75-list-position-5-494437673" href="/government/city-operations/executive/human-resources/non-union-information/" >Non-Union Information</a></li>
+<li class="nav-level-6 nav-entry-76 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-76-list-position-6-494437673" href="/government/city-operations/executive/human-resources/organizational-charts/" >Organizational Charts</a></li>
+<li class="nav-level-6 nav-entry-77 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-77-list-position-7-494437673" href="/government/city-operations/executive/human-resources/union-information/" >Union Information</a></li>
+<li class="nav-level-6 nav-entry-78 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-78-list-position-8-494437673" href="/government/city-operations/executive/human-resources/volunteer-program/" >Volunteer Program</a></li>
+</ul></li><li class="nav-level-5 nav-entry-50 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-50-list-position-5-494437673" href="/government/city-operations/executive/office-of-information-technology/" >Office of Information Technology</a></li>
+<li class="nav-level-5 nav-entry-51 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-51-list-position-6-494437673" href="/government/city-operations/executive/office-of-media-services/" >Office of Media Services</a><ul>
+<li class="nav-level-6 nav-entry-79 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-79-list-position-1-494437673" href="/government/city-operations/executive/office-of-media-services/cable-franchise-agreements/" >Cable Franchise Agreements</a><ul>
+<li class="nav-level-7 nav-entry-40 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-40-list-position-1-494437673" href="/government/city-operations/executive/office-of-media-services/cable-franchise-agreements/breezeline/" >Breezeline</a></li>
+<li class="nav-level-7 nav-entry-41 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-41-list-position-2-494437673" href="/government/city-operations/executive/office-of-media-services/cable-franchise-agreements/comcast/" >Comcast</a></li>
+</ul></li></ul></li></ul></li><li class="nav-level-4 nav-entry-39 list-position-5 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-39-list-position-5-494437673" href="/government/city-operations/finance/" >Finance and Purchasing</a><ul>
+<li class="nav-level-5 nav-entry-52 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-52-list-position-1-494437673" href="/government/city-operations/finance/annual-auction/" >Annual Auction</a></li>
+<li class="nav-level-5 nav-entry-53 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-53-list-position-2-494437673" href="/government/open-government/budget-revealed/" >Budget Revealed</a></li>
+<li class="nav-level-5 nav-entry-54 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-54-list-position-3-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/" >City Clerk and Tax Collection</a><ul>
+<li class="nav-level-6 nav-entry-80 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-80-list-position-1-494437673" href="/government/boards-and-commissions/" >Boards and Commissions</a></li>
+<li class="nav-level-6 nav-entry-81 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-81-list-position-2-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/dog-licenses/" >Dog Licenses</a></li>
+<li class="nav-level-6 nav-entry-82 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-82-list-position-3-494437673" href="/government/open-government/election-information/" >Election Information</a></li>
+<li class="nav-level-6 nav-entry-83 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-83-list-position-4-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/historic-dover-records/" >Historic Dover Records</a></li>
+<li class="nav-level-6 nav-entry-84 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-84-list-position-5-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/motor-vehicle-registration/" >Motor Vehicle Registration</a></li>
+<li class="nav-level-6 nav-entry-85 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-85-list-position-6-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/property-tax-collection/" >Property Tax Collection</a></li>
+<li class="nav-level-6 nav-entry-86 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-86-list-position-7-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/special-permits/" >Special Permits</a></li>
+<li class="nav-level-6 nav-entry-87 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-87-list-position-8-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/vital-records/" >Vital Records</a><ul>
+<li class="nav-level-7 nav-entry-42 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-42-list-position-1-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/vital-records/birth-certificates/" >Birth Certificates</a></li>
+<li class="nav-level-7 nav-entry-43 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-43-list-position-2-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/vital-records/death-certificates/" >Death Certificates</a></li>
+<li class="nav-level-7 nav-entry-44 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-44-list-position-3-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/vital-records/justice-of-the-peace-services/" >Justice of the Peace services</a></li>
+<li class="nav-level-7 nav-entry-45 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-45-list-position-4-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/vital-records/marriage-certificates/" >Marriage Certificates</a></li>
+<li class="nav-level-7 nav-entry-46 list-position-5 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-46-list-position-5-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/vital-records/marriage-licenses/" >Marriage Licenses</a></li>
+</ul></li><li class="nav-level-6 nav-entry-88 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-88-list-position-9-494437673" href="/government/city-operations/finance/water-and-sewer-billing/" >Water and Sewer Billing</a></li>
+</ul></li><li class="nav-level-5 nav-entry-55 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-55-list-position-4-494437673" href="/government/city-operations/finance/bids/" >Current Bids</a></li>
+<li class="nav-level-5 nav-entry-56 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-56-list-position-5-494437673" href="/government/city-operations/finance/financial-information/" >Financial Information</a></li>
+<li class="nav-level-5 nav-entry-57 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-57-list-position-6-494437673" href="/government/city-operations/finance/property-tax-payments/" >Property Tax Payments</a></li>
+<li class="nav-level-5 nav-entry-58 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-58-list-position-7-494437673" href="/government/city-operations/finance/tax-assessment/" >Tax Assessment</a><ul>
+<li class="nav-level-6 nav-entry-89 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-89-list-position-1-494437673" href="/government/city-operations/finance/tax-assessment/applications/" >Applications</a><ul>
+<li class="nav-level-7 nav-entry-47 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-47-list-position-1-494437673" href="/government/city-operations/finance/tax-assessment/applications/blind-exemption/" >Blind Exemption</a></li>
+<li class="nav-level-7 nav-entry-48 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-48-list-position-2-494437673" href="/government/city-operations/finance/tax-assessment/applications/deaf-exemption/" >Deaf Exemption</a></li>
+<li class="nav-level-7 nav-entry-49 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-49-list-position-3-494437673" href="/government/city-operations/finance/tax-assessment/applications/disability-exemption/" >Disability Exemption</a></li>
+<li class="nav-level-7 nav-entry-50 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-50-list-position-4-494437673" href="/government/city-operations/finance/tax-assessment/applications/elderly-exemption/" >Elderly Exemption</a></li>
+<li class="nav-level-7 nav-entry-51 list-position-5 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-51-list-position-5-494437673" href="/government/city-operations/finance/tax-assessment/applications/solar-exemption/" >Solar Exemption</a></li>
+<li class="nav-level-7 nav-entry-52 list-position-6 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-52-list-position-6-494437673" href="/government/city-operations/finance/tax-assessment/applications/timber-excavation/" >Timber &amp; Excavation</a></li>
+<li class="nav-level-7 nav-entry-53 list-position-7 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-53-list-position-7-494437673" href="/government/city-operations/finance/tax-assessment/applications/veterans-credits/" >Veterans' Credits</a></li>
+</ul></li><li class="nav-level-6 nav-entry-90 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-90-list-position-2-494437673" href="/government/city-operations/finance/tax-assessment/assessment-reports/" >Assessment Update Reports and Sales Lists</a></li>
+<li class="nav-level-6 nav-entry-91 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-91-list-position-3-494437673" href="/government/city-operations/finance/tax-assessment/frequently-asked-questions/" >Frequently Asked Questions</a></li>
+<li class="nav-level-6 nav-entry-92 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-92-list-position-4-494437673" href="/government/city-operations/finance/tax-assessment/name-address-ownership-changes/" >Name, Address &amp; Ownership Changes</a></li>
+<li class="nav-level-6 nav-entry-93 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-93-list-position-5-494437673" href="/services/online-services/maps-prcs/" >Maps and Property Record Cards</a></li>
+<li class="nav-level-6 nav-entry-94 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-94-list-position-6-494437673" href="/government/city-operations/finance/tax-assessment/property-tax-rates/" >Property tax Rates, Proration and Calendar</a></li>
+<li class="nav-level-6 nav-entry-95 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-95-list-position-7-494437673" href="/government/city-operations/finance/tax-assessment/tax-maps/" >Tax Maps</a></li>
+</ul></li><li class="nav-level-5 nav-entry-59 list-position-8 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-59-list-position-8-494437673" href="/government/city-operations/finance/water-and-sewer-billing/" >Water and Sewer Billing</a><ul>
+<li class="nav-level-6 nav-entry-96 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-96-list-position-1-494437673" href="/government/city-operations/finance/water-and-sewer-billing/pool-credit-form/" >Pool Credit Online Form</a></li>
+<li class="nav-level-6 nav-entry-97 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-97-list-position-2-494437673" href="/government/city-operations/community-services/utilities/" >Utilities</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-40 list-position-6 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-40-list-position-6-494437673" href="/government/city-operations/planning/" >Planning and Community Development</a><ul>
+<li class="nav-level-5 nav-entry-60 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-60-list-position-1-494437673" href="/government/city-operations/planning/staff/" >Staff</a></li>
+<li class="nav-level-5 nav-entry-61 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-61-list-position-2-494437673" href="/government/city-operations/community-services/permitting/" >Permitting</a></li>
+<li class="nav-level-5 nav-entry-62 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-62-list-position-3-494437673" href="/government/city-operations/planning/frequently-asked-questions/" >Frequently Asked Questions</a></li>
+<li class="nav-level-5 nav-entry-63 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-63-list-position-4-494437673" href="/government/city-operations/planning/community-development/" >Community Development</a><ul>
+<li class="nav-level-6 nav-entry-98 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-98-list-position-1-494437673" href="/government/city-operations/planning/community-development/archived-documents/" >Archived Documents</a></li>
+<li class="nav-level-6 nav-entry-99 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-99-list-position-2-494437673" href="/government/city-operations/planning/community-development/dover-economic-loan-program/" >Dover Economic Loan Program</a></li>
+</ul></li><li class="nav-level-5 nav-entry-64 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-64-list-position-5-494437673" href="/government/city-operations/planning/housing/" >Housing</a><ul>
+<li class="nav-level-6 nav-entry-100 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-100-list-position-1-494437673" href="/government/city-operations/planning/housing/accessory-dwelling-units/" >Accessory Dwelling Units</a></li>
+<li class="nav-level-6 nav-entry-101 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-101-list-position-2-494437673" href="/government/city-operations/planning/housing/attainable-housing/" >Attainable Housing</a></li>
+<li class="nav-level-6 nav-entry-102 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-102-list-position-3-494437673" href="/government/city-operations/planning/housing/housing-resources/" >Housing Resources</a></li>
+</ul></li><li class="nav-level-5 nav-entry-65 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-65-list-position-6-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/" >Cochecho Waterfront Development</a><ul>
+<li class="nav-level-6 nav-entry-103 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-103-list-position-1-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/nebi-park/" >Nebi Park</a></li>
+<li class="nav-level-6 nav-entry-104 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-104-list-position-2-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2022-2026/" >Development History 2022-2026</a></li>
+<li class="nav-level-6 nav-entry-105 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-105-list-position-3-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2015-2022/" >Development History 2015-2022</a></li>
+<li class="nav-level-6 nav-entry-106 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-106-list-position-4-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2005-2014/" >Development History 2005-2014</a><ul>
+<li class="nav-level-7 nav-entry-54 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-54-list-position-1-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2005-2014/2005-charette/" >2005 Charette</a></li>
+<li class="nav-level-7 nav-entry-55 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-55-list-position-2-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2005-2014/concept-plans-2007-2013/" >Concept plans 2007-2013</a></li>
+<li class="nav-level-7 nav-entry-56 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-56-list-position-3-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2005-2014/redevelopment-efforts/" >Redevelopment Efforts</a></li>
+<li class="nav-level-7 nav-entry-57 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-57-list-position-4-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2005-2014/presentations/" >Studies and Presentations</a><ul>
+<li class="nav-level-8 nav-entry-24 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-24-list-position-1-494437673" href="/government/city-operations/planning/cochecho-waterfront-development/development-history-2005-2014/presentations/previous-studies/" >Previous Studies</a></li>
+</ul></li></ul></li></ul></li><li class="nav-level-5 nav-entry-66 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-66-list-position-7-494437673" href="/government/city-operations/planning/community-trail/" >Community Trail</a></li>
+<li class="nav-level-5 nav-entry-67 list-position-8 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-67-list-position-8-494437673" href="/government/boards-and-commissions/conservation-commission/" >Conservation Commission</a></li>
+<li class="nav-level-5 nav-entry-68 list-position-9 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-68-list-position-9-494437673" href="/government/city-operations/planning/inspection-services/" >Inspection Services</a><ul>
+<li class="nav-level-6 nav-entry-107 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-107-list-position-1-494437673" href="/government/city-operations/planning/inspection-services/frequently-asked-questions/" >Frequently Asked Questions</a></li>
+<li class="nav-level-6 nav-entry-108 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-108-list-position-2-494437673" href="/government/city-operations/planning/inspection-services/health-inspection/" >Health Inspection</a></li>
+<li class="nav-level-6 nav-entry-109 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-109-list-position-3-494437673" href="/government/city-operations/planning/inspection-services/codes-enforced/" >Codes Enforced</a></li>
+</ul></li><li class="nav-level-5 nav-entry-69 list-position-10 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-69-list-position-10-494437673" href="/services/online-services/maps-prcs/" >Maps and Property Record Cards</a></li>
+<li class="nav-level-5 nav-entry-70 list-position-11 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-70-list-position-11-494437673" href="/government/city-operations/planning/master-plan/" >Master Plan</a><ul>
+<li class="nav-level-6 nav-entry-110 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-110-list-position-1-494437673" href="/government/city-operations/planning/master-plan/distinctly-dover/" >Distinctly Dover</a></li>
+<li class="nav-level-6 nav-entry-111 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-111-list-position-2-494437673" href="/government/city-operations/planning/master-plan/conservation-and-open-space-chapter-/" >Conservation and Open Space Chapter </a></li>
+<li class="nav-level-6 nav-entry-112 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-112-list-position-3-494437673" href="/government/city-operations/planning/master-plan/land-use-analysis-/" >Land Use Analysis Chapter </a></li>
+</ul></li><li class="nav-level-5 nav-entry-71 list-position-12 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-71-list-position-12-494437673" href="/government/boards-and-commissions/planning-board/" >Planning Board</a></li>
+<li class="nav-level-5 nav-entry-72 list-position-13 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-72-list-position-13-494437673" href="/government/city-operations/planning/planning-documents/" >Planning Department Documents and Reports</a></li>
+<li class="nav-level-5 nav-entry-73 list-position-14 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-73-list-position-14-494437673" href="/government/city-operations/planning/preparing-for-climate-change/" >Preparing for Climate Change in Dover</a></li>
+<li class="nav-level-5 nav-entry-74 list-position-15 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-74-list-position-15-494437673" href="/government/city-operations/planning/services/" >Services</a></li>
+<li class="nav-level-5 nav-entry-75 list-position-16 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-75-list-position-16-494437673" href="/government/city-operations/planning/special-projects/" >Special Projects</a><ul>
+<li class="nav-level-6 nav-entry-113 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-113-list-position-1-494437673" href="/government/city-operations/planning/special-projects/cip/" >Capital Improvements Program</a></li>
+<li class="nav-level-6 nav-entry-114 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-114-list-position-2-494437673" href="/government/city-operations/planning/special-projects/cocheco-river-dredge/" >Cocheco River Dredge</a></li>
+<li class="nav-level-6 nav-entry-115 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-115-list-position-3-494437673" href="/government/city-operations/planning/special-projects/downtown-canopy/" >Downtown Canopy</a></li>
+<li class="nav-level-6 nav-entry-116 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-116-list-position-4-494437673" href="/government/city-operations/planning/special-projects/form-based-code/" >Downtown Form Based Code</a></li>
+<li class="nav-level-6 nav-entry-117 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-117-list-position-5-494437673" href="/government/city-operations/planning/special-projects/parking-facility/" >Downtown Parking Facility Study</a></li>
+<li class="nav-level-6 nav-entry-118 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-118-list-position-6-494437673" href="/government/city-operations/planning/special-projects/downtown-access-plan/" >Downtown Pedestrian and Vehicular Access Improvements Project</a></li>
+<li class="nav-level-6 nav-entry-119 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-119-list-position-7-494437673" href="/government/city-operations/planning/special-projects/transit-loop/" >Downtown Transit Loop</a></li>
+<li class="nav-level-6 nav-entry-120 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-120-list-position-8-494437673" href="/government/city-operations/planning/special-projects/gateway-project/" >Gateway Project</a></li>
+<li class="nav-level-6 nav-entry-121 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-121-list-position-9-494437673" href="/government/city-operations/planning/special-projects/heritage-residential-district/" >Heritage Residential District</a></li>
+<li class="nav-level-6 nav-entry-122 list-position-10 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-122-list-position-10-494437673" href="/government/city-operations/planning/special-projects/impact-fee-development/" >Impact Fee Development</a></li>
+<li class="nav-level-6 nav-entry-123 list-position-11 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-123-list-position-11-494437673" href="/government/city-operations/planning/special-projects/100-education-way/" >100 Education Way</a></li>
+<li class="nav-level-6 nav-entry-124 list-position-12 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-124-list-position-12-494437673" href="/government/city-operations/planning/special-projects/space-needs-study/" >Space Needs Study</a></li>
+<li class="nav-level-6 nav-entry-125 list-position-13 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-125-list-position-13-494437673" href="/government/city-operations/planning/special-projects/transfer-of-development-rights/" >Transfer of Development Rights</a></li>
+<li class="nav-level-6 nav-entry-126 list-position-14 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-126-list-position-14-494437673" href="/government/city-operations/planning/special-projects/wayfinding/" >Wayfinding</a></li>
+<li class="nav-level-6 nav-entry-127 list-position-15 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-127-list-position-15-494437673" href="/government/city-operations/planning/special-projects/willand-pond/" >Willand Pond</a></li>
+</ul></li><li class="nav-level-5 nav-entry-76 list-position-17 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-76-list-position-17-494437673" href="/government/city-operations/community-services/engineering/environmental/stormwater-management/" >Stormwater Management</a></li>
+<li class="nav-level-5 nav-entry-77 list-position-18 "></li>
+<li class="nav-level-5 nav-entry-78 list-position-19 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-78-list-position-19-494437673" href="/government/city-operations/planning/transportation/" >Transportation</a></li>
+<li class="nav-level-5 nav-entry-79 list-position-20 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-79-list-position-20-494437673" href="/government/city-operations/planning/resilient-dover/" >Resilient Dover</a><ul>
+<li class="nav-level-6 nav-entry-128 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-128-list-position-1-494437673" href="/government/city-operations/planning/resilient-dover/climate-resources/" >Climate Resources</a></li>
+<li class="nav-level-6 nav-entry-129 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-129-list-position-2-494437673" href="/government/city-operations/planning/resilient-dover/path-to-resilience/" >Path to Resilience</a></li>
+<li class="nav-level-6 nav-entry-130 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-130-list-position-3-494437673" href="/government/city-operations/planning/resilient-dover/citywide-resilience-plan/" >Citywide Resilience Plan </a></li>
+<li class="nav-level-6 nav-entry-131 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-131-list-position-4-494437673" href="/government/city-operations/planning/resilient-dover/green-tips/" >Green Tips</a></li>
+<li class="nav-level-6 nav-entry-132 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-132-list-position-5-494437673" href="/government/city-operations/planning/resilient-dover/community-power/" >Community Power</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-41 list-position-7 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-41-list-position-7-494437673" href="/government/city-operations/public-education/" >Public Education</a><ul>
+<li class="nav-level-5 nav-entry-80 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-80-list-position-1-494437673" href="/government/city-operations/public-education/garrison-elementary-school-renovation-project/" >Garrison Elementary School Renovation Project</a></li>
+<li class="nav-level-5 nav-entry-81 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-81-list-position-2-494437673" href="/government/city-operations/public-education/high-school-project/" >High School Building Project</a><ul>
+<li class="nav-level-6 nav-entry-133 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-133-list-position-1-494437673" href="https://pcdata.egnyte.com/fl/s2Rr8ZaAE7" >Bid Documents</a></li>
+<li class="nav-level-6 nav-entry-134 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-134-list-position-2-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/" >Feasibility Study</a><ul>
+<li class="nav-level-7 nav-entry-58 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-58-list-position-1-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/existing-conditions/" >Existing Conditions Report</a></li>
+<li class="nav-level-7 nav-entry-59 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-59-list-position-2-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/" >Building Options</a><ul>
+<li class="nav-level-8 nav-entry-25 list-position-1 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-25-list-position-1-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/option-1/" >Option 1</a></li>
+<li class="nav-level-8 nav-entry-26 list-position-2 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-26-list-position-2-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/option-2/" >Option 2</a></li>
+<li class="nav-level-8 nav-entry-27 list-position-3 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-27-list-position-3-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/option-3/" >Option 3</a></li>
+<li class="nav-level-8 nav-entry-28 list-position-4 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-28-list-position-4-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/option-4/" >Option 4</a></li>
+<li class="nav-level-8 nav-entry-29 list-position-5 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-29-list-position-5-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/option-5/" >Option 5</a></li>
+<li class="nav-level-8 nav-entry-30 list-position-6 "><a id="perc-navigation-menuitem-nav-level-8-nav-entry-30-list-position-6-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/building-options/option-6/" >Option 6</a></li>
+</ul></li><li class="nav-level-7 nav-entry-60 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-60-list-position-3-494437673" href="/government/city-operations/public-education/high-school-project/feasibility-study/visioning-study/" >Visioning Study</a></li>
+</ul></li><li class="nav-level-6 nav-entry-135 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-135-list-position-3-494437673" href="/government/city-operations/public-education/high-school-project/financials/" >Financials</a></li>
+<li class="nav-level-6 nav-entry-136 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-136-list-position-4-494437673" href="/government/city-operations/public-education/high-school-project/next-steps/" >Next Steps</a></li>
+<li class="nav-level-6 nav-entry-137 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-137-list-position-5-494437673" href="/government/city-operations/public-education/high-school-project/project-archive/" >Project Archive</a></li>
+<li class="nav-level-6 nav-entry-138 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-138-list-position-6-494437673" href="/government/city-operations/public-education/high-school-project/project-history/" >Project History</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-42 list-position-8 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-42-list-position-8-494437673" href="/government/city-operations/library/" >Public Library</a><ul>
+<li class="nav-level-5 nav-entry-82 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-82-list-position-1-494437673" href="/government/city-operations/library/borrow/" >Borrow</a><ul>
+<li class="nav-level-6 nav-entry-139 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-139-list-position-1-494437673" href="https://librarycatalog.dover.nh.gov/cgi-bin/koha/opac-main.pl" >Catalog</a></li>
+<li class="nav-level-6 nav-entry-140 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-140-list-position-2-494437673" href="/government/city-operations/library/borrow/library-cards/" >Library Cards</a></li>
+<li class="nav-level-6 nav-entry-141 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-141-list-position-3-494437673" href="/government/city-operations/library/borrow/InterlibraryLoan/" >Interlibrary Loan</a></li>
+<li class="nav-level-6 nav-entry-142 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-142-list-position-4-494437673" href="/government/city-operations/library/borrow/recommend-reads/" >Recommendations</a></li>
+<li class="nav-level-6 nav-entry-143 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-143-list-position-5-494437673" href="/government/city-operations/library/borrow/stream-downloads/" >Stream &amp; Download</a></li>
+<li class="nav-level-6 nav-entry-144 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-144-list-position-6-494437673" href="/government/city-operations/library/borrow/suggest-a-purchase/" >Suggest A Purchase</a></li>
+<li class="nav-level-6 nav-entry-145 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-145-list-position-7-494437673" href="https://dovernh.assabetinteractive.com/museum-passes/by-museum/" >Museum Passes</a></li>
+<li class="nav-level-6 nav-entry-146 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-146-list-position-8-494437673" href="/government/city-operations/library/borrow/library-of-things/" >Library of Things</a></li>
+</ul></li><li class="nav-level-5 nav-entry-83 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-83-list-position-2-494437673" href="/government/city-operations/library/research-learn/" >Research &amp; Learn</a><ul>
+<li class="nav-level-6 nav-entry-147 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-147-list-position-1-494437673" href="/government/city-operations/library/research-learn/ask-a-librarian/" >Ask a Librarian</a></li>
+<li class="nav-level-6 nav-entry-148 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-148-list-position-2-494437673" href="/government/city-operations/library/research-learn/databases/" >Databases</a></li>
+<li class="nav-level-6 nav-entry-149 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-149-list-position-3-494437673" href="/government/city-operations/library/research-learn/genealogy/" >Genealogical Research</a></li>
+<li class="nav-level-6 nav-entry-150 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-150-list-position-4-494437673" href="/government/city-operations/library/research-learn/Heritage-Walking-Tours/" >Heritage Walking Tours</a></li>
+<li class="nav-level-6 nav-entry-151 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-151-list-position-5-494437673" href="/government/city-operations/library/research-learn/historical-images/" >Historical Images</a></li>
+<li class="nav-level-6 nav-entry-152 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-152-list-position-6-494437673" href="/government/city-operations/library/research-learn/history/" >Dover History</a></li>
+<li class="nav-level-6 nav-entry-153 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-153-list-position-7-494437673" href="/government/city-operations/library/research-learn/legal-reference/" >Legal Reference</a></li>
+<li class="nav-level-6 nav-entry-154 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-154-list-position-8-494437673" href="https://publicrecords.dover.nh.gov/public/1/deptnum/11/cab/Obituary_Directory?index=Obituary_Date&desc=1" >Local Obituaries</a></li>
+</ul></li><li class="nav-level-5 nav-entry-84 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-84-list-position-3-494437673" href="/government/city-operations/library/events/" >Events</a><ul>
+<li class="nav-level-6 nav-entry-155 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-155-list-position-1-494437673" href="/government/city-operations/library/events/event-calendar/" >Calendar</a></li>
+<li class="nav-level-6 nav-entry-156 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-156-list-position-2-494437673" href="/government/city-operations/library/events/book-clubs/" >Book Clubs</a></li>
+<li class="nav-level-6 nav-entry-157 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-157-list-position-3-494437673" href="/government/city-operations/library/events/reading-challenge/" >Annual Reading Challenge</a></li>
+<li class="nav-level-6 nav-entry-158 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-158-list-position-4-494437673" href="/government/city-operations/library/events/poetry-contest/" >Poetry Contest Winners</a></li>
+</ul></li><li class="nav-level-5 nav-entry-85 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-85-list-position-4-494437673" href="/government/city-operations/library/services/" >Services</a><ul>
+<li class="nav-level-6 nav-entry-159 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-159-list-position-1-494437673" href="/government/city-operations/library/services/makerspace/" >Makerspace</a></li>
+<li class="nav-level-6 nav-entry-160 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-160-list-position-2-494437673" href="/government/city-operations/library/services/technology/" >Library Technology</a></li>
+<li class="nav-level-6 nav-entry-161 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-161-list-position-3-494437673" href="/government/city-operations/library/services/notary/" >Notary Services</a></li>
+<li class="nav-level-6 nav-entry-162 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-162-list-position-4-494437673" href="/government/city-operations/library/services/homebound-delivery/" >Homebound Delivery</a></li>
+<li class="nav-level-6 nav-entry-163 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-163-list-position-5-494437673" href="/government/city-operations/library/services/meeting-rooms/" >Meeting Rooms</a></li>
+</ul></li><li class="nav-level-5 nav-entry-86 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-86-list-position-5-494437673" href="/government/city-operations/library/kids-teens/" >Kids &amp; Teens</a><ul>
+<li class="nav-level-6 nav-entry-164 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-164-list-position-1-494437673" href="/government/city-operations/library/kids-teens/kids/" >Kids</a><ul>
+<li class="nav-level-7 nav-entry-61 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-61-list-position-1-494437673" href="/government/city-operations/library/kids-teens/kids/kids-awards-and-reading-recommendations/" >Kids Awards and Reading Recommendations</a></li>
+<li class="nav-level-7 nav-entry-62 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-62-list-position-2-494437673" href="/government/city-operations/library/kids-teens/kids/resources-for-families/" >Kids Resources for Families</a></li>
+<li class="nav-level-7 nav-entry-63 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-63-list-position-3-494437673" href="/government/city-operations/library/kids-teens/kids/kids-programs/" >Kid's Programs</a></li>
+<li class="nav-level-7 nav-entry-64 list-position-4 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-64-list-position-4-494437673" href="/government/city-operations/library/kids-teens/kids/family-place/" >Kid's Family Place Library</a></li>
+</ul></li><li class="nav-level-6 nav-entry-165 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-165-list-position-2-494437673" href="/government/city-operations/library/kids-teens/teens/" >Teens</a><ul>
+<li class="nav-level-7 nav-entry-65 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-65-list-position-1-494437673" href="/government/city-operations/library/kids-teens/teens/nh-teen-book-awards/" >NH Teen Book Awards</a></li>
+<li class="nav-level-7 nav-entry-66 list-position-2 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-66-list-position-2-494437673" href="/government/city-operations/library/kids-teens/teens/homework-help/" >Teen Homework Help</a></li>
+<li class="nav-level-7 nav-entry-67 list-position-3 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-67-list-position-3-494437673" href="/government/city-operations/library/kids-teens/teens/college-info/" >Teens College Info</a></li>
+</ul></li></ul></li><li class="nav-level-5 nav-entry-87 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-87-list-position-6-494437673" href="/government/city-operations/library/about-us/" >About Us</a><ul>
+<li class="nav-level-6 nav-entry-166 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-166-list-position-1-494437673" href="/government/city-operations/library/about-us/hours-directions/" >Hours &amp; Directions</a></li>
+<li class="nav-level-6 nav-entry-167 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-167-list-position-2-494437673" href="/government/city-operations/library/about-us/newsletter-signup/" >Sign Up or Read our Newsletters</a></li>
+<li class="nav-level-6 nav-entry-168 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-168-list-position-3-494437673" href="/government/city-operations/library/about-us/library-policies/" >Library Policies</a></li>
+<li class="nav-level-6 nav-entry-169 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-169-list-position-4-494437673" href="/government/city-operations/library/about-us/memorials-tributes/" >Memorials &amp; Tributes</a></li>
+<li class="nav-level-6 nav-entry-170 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-170-list-position-5-494437673" href="https://friendsofthedoverlibrary.org/" >Friends of DPL</a></li>
+<li class="nav-level-6 nav-entry-171 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-171-list-position-6-494437673" href="/government/city-operations/library/about-us/renovation/" >Renovation</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-43 list-position-9 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-43-list-position-9-494437673" href="/government/city-operations/public-welfare/" >Public Welfare</a><ul>
+<li class="nav-level-5 nav-entry-88 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-88-list-position-1-494437673" href="/government/city-operations/public-welfare/resources/" >Local Resources</a></li>
+<li class="nav-level-5 nav-entry-89 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-89-list-position-2-494437673" href="/government/city-operations/public-welfare/staff/" >Staff</a></li>
+</ul></li><li class="nav-level-4 nav-entry-44 list-position-10 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-44-list-position-10-494437673" href="/government/city-operations/recreation/" >Recreation</a><ul>
+<li class="nav-level-5 nav-entry-90 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-90-list-position-1-494437673" href="/government/city-operations/recreation/athletic-fields/" >Athletic Fields</a></li>
+<li class="nav-level-5 nav-entry-91 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-91-list-position-2-494437673" href="/government/city-operations/recreation/butterfield-gym/" >Butterfield Gym</a><ul>
+<li class="nav-level-6 nav-entry-172 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-172-list-position-1-494437673" href="/government/city-operations/recreation/butterfield-gym/adult-basketball-leagues/" >Adult Basketball</a></li>
+<li class="nav-level-6 nav-entry-173 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-173-list-position-2-494437673" href="/government/city-operations/recreation/butterfield-gym/youth-basketball/" >Youth Basketball</a></li>
+<li class="nav-level-6 nav-entry-174 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-174-list-position-3-494437673" href="/government/city-operations/recreation/butterfield-gym/volleyball-leagues/" >Volleyball</a></li>
+</ul></li><li class="nav-level-5 nav-entry-92 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-92-list-position-3-494437673" href="/government/city-operations/recreation/community-senior-center/" >Community Senior Center</a><ul>
+<li class="nav-level-6 nav-entry-175 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-175-list-position-1-494437673" href="/government/city-operations/recreation/community-senior-center/recurring-activities/" >Recurring Weekly and Daily Activities</a></li>
+<li class="nav-level-6 nav-entry-176 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-176-list-position-2-494437673" href="/government/city-operations/recreation/community-senior-center/senior-fitness/" >Senior Fitness</a></li>
+<li class="nav-level-6 nav-entry-177 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-177-list-position-3-494437673" href="/government/city-operations/recreation/community-senior-center/travel/" >Travel</a></li>
+</ul></li><li class="nav-level-5 nav-entry-93 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-93-list-position-4-494437673" href="/government/city-operations/recreation/arena/" >Ice Arena</a><ul>
+<li class="nav-level-6 nav-entry-178 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-178-list-position-1-494437673" href="/government/city-operations/recreation/arena/arena-sponsors/" >Arena Sponsors</a></li>
+<li class="nav-level-6 nav-entry-179 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-179-list-position-2-494437673" href="/government/boards-and-commissions/arena-commission/" >Arena Commission</a></li>
+<li class="nav-level-6 nav-entry-180 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-180-list-position-3-494437673" href="/government/city-operations/recreation/arena/advertising/" >Advertising</a></li>
+<li class="nav-level-6 nav-entry-181 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-181-list-position-4-494437673" href="/government/city-operations/recreation/arena/adult-programs-leagues/" >Arena Adult Programs and Leagues</a></li>
+<li class="nav-level-6 nav-entry-182 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-182-list-position-5-494437673" href="/government/city-operations/recreation/arena/birthday-parties-and-field-trips/" >Birthday Parties and Group Rates</a></li>
+<li class="nav-level-6 nav-entry-183 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-183-list-position-6-494437673" href="/government/city-operations/recreation/arena/camp-kool/" >Camp Kool</a></li>
+<li class="nav-level-6 nav-entry-184 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-184-list-position-7-494437673" href="/government/city-operations/recreation/arena/contact-us/" >Contact Us</a></li>
+<li class="nav-level-6 nav-entry-185 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-185-list-position-8-494437673" href="/government/city-operations/recreation/arena/directions/" >Directions</a></li>
+<li class="nav-level-6 nav-entry-186 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-186-list-position-9-494437673" href="/government/city-operations/recreation/arena/hotel-lodging-options/" >Hotel and Lodging Options</a></li>
+<li class="nav-level-6 nav-entry-187 list-position-10 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-187-list-position-10-494437673" href="/government/city-operations/recreation/arena/off-ice-events/" >Off-Ice Events</a></li>
+<li class="nav-level-6 nav-entry-188 list-position-11 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-188-list-position-11-494437673" href="/government/city-operations/recreation/arena/public-skate/" >Public Skate</a></li>
+<li class="nav-level-6 nav-entry-189 list-position-12 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-189-list-position-12-494437673" href="/government/city-operations/recreation/arena/rock-night/" >Rock Night</a></li>
+<li class="nav-level-6 nav-entry-190 list-position-13 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-190-list-position-13-494437673" href="/government/city-operations/recreation/arena/stick-practice/" >Stick Practice</a></li>
+<li class="nav-level-6 nav-entry-191 list-position-14 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-191-list-position-14-494437673" href="/government/city-operations/recreation/arena/summer-hockey-camps/" >Summer Hockey Camps</a></li>
+<li class="nav-level-6 nav-entry-192 list-position-15 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-192-list-position-15-494437673" href="/government/city-operations/recreation/arena/tournaments/" >Tournaments</a></li>
+<li class="nav-level-6 nav-entry-193 list-position-16 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-193-list-position-16-494437673" href="/government/city-operations/recreation/arena/youth-programs-leagues/" >Youth Programs and Leagues</a></li>
+</ul></li><li class="nav-level-5 nav-entry-94 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-94-list-position-5-494437673" href="/government/city-operations/recreation/aquatics/" >Indoor Pool</a><ul>
+<li class="nav-level-6 nav-entry-194 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-194-list-position-1-494437673" href="/government/city-operations/recreation/aquatics/hydrofitness/" >Hydrofitness</a></li>
+<li class="nav-level-6 nav-entry-195 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-195-list-position-2-494437673" href="/government/city-operations/recreation/aquatics/lifeguard-training/" >Lifeguard Training</a></li>
+<li class="nav-level-6 nav-entry-196 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-196-list-position-3-494437673" href="/government/city-operations/recreation/aquatics/swimming-lessons/" >Swimming Lessons</a></li>
+</ul></li><li class="nav-level-5 nav-entry-95 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-95-list-position-6-494437673" href="/government/city-operations/recreation/jenny-thompson-pool/" >Jenny Thompson Outdoor Pool</a></li>
+<li class="nav-level-5 nav-entry-96 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-96-list-position-7-494437673" href="/government/city-operations/recreation/links/" >Links</a></li>
+<li class="nav-level-5 nav-entry-97 list-position-8 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-97-list-position-8-494437673" href="/government/city-operations/recreation/fitness-center/" >McConnell Center Fitness Center</a><ul>
+<li class="nav-level-6 nav-entry-197 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-197-list-position-1-494437673" href="/government/city-operations/recreation/fitness-center/adult-fitness-classes/" >Adult Fitness Classes</a></li>
+<li class="nav-level-6 nav-entry-198 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-198-list-position-2-494437673" href="/government/city-operations/recreation/fitness-center/playgrounds-program/" >Playgrounds Program</a></li>
+<li class="nav-level-6 nav-entry-199 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-199-list-position-3-494437673" href="/government/city-operations/recreation/fitness-center/music-theater-camps/" >Music Theater Camps</a></li>
+</ul></li><li class="nav-level-5 nav-entry-98 list-position-9 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-98-list-position-9-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/" >Parks and Playgrounds</a><ul>
+<li class="nav-level-6 nav-entry-200 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-200-list-position-1-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/longhill-dog-park/" >Longhill Dog Park</a></li>
+<li class="nav-level-6 nav-entry-201 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-201-list-position-2-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/nebi-park/" >Nebi Park</a></li>
+<li class="nav-level-6 nav-entry-202 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-202-list-position-3-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/morningside-park/" >Morningside Park</a></li>
+<li class="nav-level-6 nav-entry-203 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-203-list-position-4-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/playgrounds-program/" >Playgrounds Program</a></li>
+<li class="nav-level-6 nav-entry-204 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-204-list-position-5-494437673" href="/government/city-operations/recreation/parks-and-playgrounds/pickleball/" >Pickleball</a></li>
+</ul></li><li class="nav-level-5 nav-entry-99 list-position-10 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-99-list-position-10-494437673" href="/government/boards-and-commissions/recreation-advisory-board/" >Recreation Advisory Board</a></li>
+<li class="nav-level-5 nav-entry-100 list-position-11 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-100-list-position-11-494437673" href="/government/city-operations/recreation/recreation-master-plan/" >Recreation Master Plan</a></li>
+<li class="nav-level-5 nav-entry-101 list-position-12 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-101-list-position-12-494437673" href="/government/city-operations/recreation/recreation-staff/" >Recreation Staff</a></li>
+</ul></li></ul></li><li class="current nav-level-3 nav-entry-12 list-position-4 nav-hidden"><a id="perc-navigation-menuitem-nav-level-3-nav-entry-12-list-position-4-494437673" href="/government/open-government/"  target='_top'>Open Government</a><ul>
+<li class="nav-level-4 nav-entry-45 list-position-1 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-45-list-position-1-494437673" href="/government/open-government/budget-revealed/" >Budget Revealed</a><ul>
+<li class="nav-level-5 nav-entry-102 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-102-list-position-1-494437673" href="/government/open-government/budget-revealed/where-the-money-goes/" >Where the Money Goes</a><ul>
+<li class="nav-level-6 nav-entry-205 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-205-list-position-1-494437673" href="/government/open-government/budget-revealed/where-the-money-goes/purchasing-and-wage-information/" >Purchasing and Wage Information</a></li>
+</ul></li><li class="nav-level-5 nav-entry-103 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-103-list-position-2-494437673" href="/government/open-government/budget-revealed/where-the-money-comes-from/" >Where the Money Comes From</a></li>
+<li class="nav-level-5 nav-entry-104 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-104-list-position-3-494437673" href="/government/open-government/budget-revealed/how-local-government-finances-work/" >How Local Government Finances Work</a></li>
+<li class="nav-level-5 nav-entry-105 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-105-list-position-4-494437673" href="/government/open-government/budget-revealed/the-budget-process/" >The Budget Process</a></li>
+<li class="nav-level-5 nav-entry-106 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-106-list-position-5-494437673" href="/government/open-government/budget-revealed/fy2027-budget/" >FY2027 Budget</a></li>
+<li class="nav-level-5 nav-entry-107 list-position-6 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-107-list-position-6-494437673" href="/government/open-government/budget-revealed/fy2026-budget/" >FY2026 Budget</a></li>
+<li class="nav-level-5 nav-entry-108 list-position-7 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-108-list-position-7-494437673" href="/government/open-government/budget-revealed/fy2025-budget/" >FY2025 Budget</a></li>
+<li class="nav-level-5 nav-entry-109 list-position-8 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-109-list-position-8-494437673" href="/government/open-government/budget-revealed/past-budgets/" >Past Budgets</a><ul>
+<li class="nav-level-6 nav-entry-206 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-206-list-position-1-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2024-budget/" >FY2024 Budget</a></li>
+<li class="nav-level-6 nav-entry-207 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-207-list-position-2-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2023-budget/" >FY2023 Budget</a></li>
+<li class="nav-level-6 nav-entry-208 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-208-list-position-3-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2022-budget/" >FY2022 Budget</a></li>
+<li class="nav-level-6 nav-entry-209 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-209-list-position-4-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2021-budget/" >FY2021 Budget</a></li>
+<li class="nav-level-6 nav-entry-210 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-210-list-position-5-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2020-budget/" >FY2020 Budget</a></li>
+<li class="nav-level-6 nav-entry-211 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-211-list-position-6-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2019-budget/" >FY2019 Budget</a></li>
+<li class="nav-level-6 nav-entry-212 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-212-list-position-7-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2018-budget/" >FY2018 Budget</a></li>
+<li class="nav-level-6 nav-entry-213 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-213-list-position-8-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2017-budget/" >FY2017 Budget</a></li>
+<li class="nav-level-6 nav-entry-214 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-214-list-position-9-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2016-budget/" >FY2016 Budget</a></li>
+<li class="nav-level-6 nav-entry-215 list-position-10 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-215-list-position-10-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2015-budget/" >FY2015 Budget</a><ul>
+<li class="nav-level-7 nav-entry-68 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-68-list-position-1-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2015-budget/fy2015-budget-document-archive/" >FY2015 Budget Document Archive</a></li>
+</ul></li><li class="nav-level-6 nav-entry-216 list-position-11 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-216-list-position-11-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2014-budget/" >FY2014 Budget</a></li>
+<li class="nav-level-6 nav-entry-217 list-position-12 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-217-list-position-12-494437673" href="/government/open-government/budget-revealed/past-budgets/fy2013-budget/" >FY2013 Budget</a></li>
+</ul></li></ul></li><li class="current nav-level-4 nav-entry-46 list-position-2 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-46-list-position-2-494437673" href="/government/open-government/election-information/" >Election Information</a><ul>
+<li class="nav-level-5 nav-entry-110 list-position-1 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-110-list-position-1-494437673" href="/government/open-government/election-information/" >Election Information</a></li>
+<li class="nav-level-5 nav-entry-111 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-111-list-position-2-494437673" href="/government/open-government/election-information/how-to-register/" >How to Register</a><ul>
+<li class="nav-level-6 nav-entry-218 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-218-list-position-1-494437673" href="/government/open-government/election-information/" >Election Information</a></li>
+</ul></li><li class="nav-level-5 nav-entry-112 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-112-list-position-3-494437673" href="/government/open-government/election-information/2026-state-primary-election/" >2026 State Primary Election</a></li>
+<li class="current nav-level-5 nav-entry-113 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-113-list-position-4-494437673" href="/government/open-government/election-information/2026-general-election/" >2026 General Election</a></li>
+<li class="nav-level-5 nav-entry-114 list-position-5 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-114-list-position-5-494437673" href="/government/open-government/election-information/previous-elections/" >Previous Elections</a><ul>
+<li class="nav-level-6 nav-entry-219 list-position-1 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-219-list-position-1-494437673" href="/government/open-government/election-information/previous-elections/2025-municipal-election/" >2025 Municipal Election</a><ul>
+<li class="nav-level-7 nav-entry-69 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-69-list-position-1-494437673" href="/government/open-government/election-information/" >Election Information</a></li>
+</ul></li><li class="nav-level-6 nav-entry-220 list-position-2 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-220-list-position-2-494437673" href="/government/open-government/election-information/previous-elections/2024-general-election/" >2024 General Election</a></li>
+<li class="nav-level-6 nav-entry-221 list-position-3 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-221-list-position-3-494437673" href="/government/open-government/election-information/previous-elections/2024-state-primary-election/" >2024 State Primary Election</a></li>
+<li class="nav-level-6 nav-entry-222 list-position-4 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-222-list-position-4-494437673" href="/government/open-government/election-information/previous-elections/2024-presidential-primary/" >2024 Presidential Primary</a></li>
+<li class="nav-level-6 nav-entry-223 list-position-5 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-223-list-position-5-494437673" href="/government/open-government/election-information/previous-elections/2024-district-11-special-election/" >2024 District 11 Special Election</a></li>
+<li class="nav-level-6 nav-entry-224 list-position-6 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-224-list-position-6-494437673" href="/government/open-government/election-information/previous-elections/2023-municipal-election/" >2023 Municipal Election</a></li>
+<li class="nav-level-6 nav-entry-225 list-position-7 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-225-list-position-7-494437673" href="/government/open-government/election-information/previous-elections/2022-general-election/" >2022 General Election</a></li>
+<li class="nav-level-6 nav-entry-226 list-position-8 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-226-list-position-8-494437673" href="/government/open-government/election-information/previous-elections/2022-primary-election/" >2022 Primary Election</a></li>
+<li class="nav-level-6 nav-entry-227 list-position-9 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-227-list-position-9-494437673" href="/government/open-government/election-information/previous-elections/2021-municipal-election/" >2021 Municipal Election</a><ul>
+<li class="nav-level-7 nav-entry-70 list-position-1 "><a id="perc-navigation-menuitem-nav-level-7-nav-entry-70-list-position-1-494437673" href="/government/open-government/election-information/previous-elections/2021-municipal-election/proposed-charter-amendments-for-2021-municipal-election/" >Charter Amendments for 2021 Municipal Election</a></li>
+</ul></li><li class="nav-level-6 nav-entry-228 list-position-10 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-228-list-position-10-494437673" href="/government/open-government/election-information/previous-elections/2020-state-general-election/" >2020 State General Election</a></li>
+<li class="nav-level-6 nav-entry-229 list-position-11 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-229-list-position-11-494437673" href="/government/open-government/election-information/previous-elections/2020-state-primary-election/" >2020 State Primary Election</a></li>
+<li class="nav-level-6 nav-entry-230 list-position-12 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-230-list-position-12-494437673" href="/government/open-government/election-information/previous-elections/2020-presidential-primary/" >2020 Presidential Primary</a></li>
+<li class="nav-level-6 nav-entry-231 list-position-13 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-231-list-position-13-494437673" href="/government/open-government/election-information/previous-elections/2019-municipal-election/" >2019 Municipal Election</a></li>
+<li class="nav-level-6 nav-entry-232 list-position-14 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-232-list-position-14-494437673" href="/government/open-government/election-information/previous-elections/general-election-2018/" >2018 General Election</a></li>
+<li class="nav-level-6 nav-entry-233 list-position-15 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-233-list-position-15-494437673" href="/government/open-government/election-information/previous-elections/state-primary-2018/" >2018 State Primary</a></li>
+<li class="nav-level-6 nav-entry-234 list-position-16 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-234-list-position-16-494437673" href="/government/open-government/election-information/previous-elections/2017-municipal-election/" >2017 Municipal Election</a></li>
+<li class="nav-level-6 nav-entry-235 list-position-17 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-235-list-position-17-494437673" href="/government/open-government/election-information/previous-elections/2017-district-13-special-election/" >2017 District 13 Special Election</a></li>
+<li class="nav-level-6 nav-entry-236 list-position-18 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-236-list-position-18-494437673" href="/government/open-government/election-information/previous-elections/2016-general-election/" >2016 General Election</a></li>
+<li class="nav-level-6 nav-entry-237 list-position-19 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-237-list-position-19-494437673" href="/government/open-government/election-information/previous-elections/2016-state-primary/" >2016 State Primary</a></li>
+<li class="nav-level-6 nav-entry-238 list-position-20 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-238-list-position-20-494437673" href="/government/open-government/election-information/previous-elections/2016-ward-4-city-council-special-election/" >2016 Ward 4 City Council Special Election</a></li>
+<li class="nav-level-6 nav-entry-239 list-position-21 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-239-list-position-21-494437673" href="/government/open-government/election-information/previous-elections/2016-presidential-primary/" >2016 Presidential Primary</a></li>
+<li class="nav-level-6 nav-entry-240 list-position-22 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-240-list-position-22-494437673" href="/government/open-government/election-information/previous-elections/2015-municipal-election/" >2015 Municipal Election</a></li>
+<li class="nav-level-6 nav-entry-241 list-position-23 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-241-list-position-23-494437673" href="/government/open-government/election-information/previous-elections/2014-general-election.html/" >2014 General Election</a></li>
+<li class="nav-level-6 nav-entry-242 list-position-24 "><a id="perc-navigation-menuitem-nav-level-6-nav-entry-242-list-position-24-494437673" href="/government/open-government/election-information/previous-elections/prior-election-results/" >Earlier Elections Archive</a></li>
+</ul></li></ul></li><li class="nav-level-4 nav-entry-47 list-position-3 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-47-list-position-3-494437673" href="/government/open-government/find-my-representative/" >Find My Representative</a></li>
+<li class="nav-level-4 nav-entry-48 list-position-4 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-48-list-position-4-494437673" href="/government/open-government/municipal-documents/" >Municipal Documents</a><ul>
+<li class="nav-level-5 nav-entry-115 list-position-1 "></li>
+<li class="nav-level-5 nav-entry-116 list-position-2 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-116-list-position-2-494437673" href="/government/open-government/municipal-documents/municipal-reports/" >Municipal Reports</a></li>
+<li class="nav-level-5 nav-entry-117 list-position-3 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-117-list-position-3-494437673" href="/government/city-operations/planning/planning-documents/" >Planning Department Documents and Reports</a></li>
+<li class="nav-level-5 nav-entry-118 list-position-4 "><a id="perc-navigation-menuitem-nav-level-5-nav-entry-118-list-position-4-494437673" href="/government/open-government/municipal-documents/online-archives/" >Searching Online Archives</a></li>
+</ul></li><li class="nav-level-4 nav-entry-49 list-position-5 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-49-list-position-5-494437673" href="/government/open-government/public-meetings/" >Public Meetings</a></li>
+<li class="nav-level-4 nav-entry-50 list-position-6 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-50-list-position-6-494437673" href="/government/open-government/public-notices/" >Public Notices</a></li>
+<li class="nav-level-4 nav-entry-51 list-position-7 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-51-list-position-7-494437673" href="/government/open-government/raffle-tag-parade-calendar/" >Raffle, Tag, Parade Calendar</a></li>
+<li class="nav-level-4 nav-entry-52 list-position-8 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-52-list-position-8-494437673" href="/government/open-government/transparent-dover/" >Transparent Dover</a></li>
+</ul></li><li class="nav-level-3 nav-entry-13 list-position-5 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-13-list-position-5-494437673" href="http://www.dover.k12.nh.us" >Public Education</a></li>
+<li class="nav-level-3 nav-entry-14 list-position-6 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-14-list-position-6-494437673" href="/government/public-safety/" >Public Safety</a><ul>
+<li class="nav-level-4 nav-entry-53 list-position-1 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-53-list-position-1-494437673" href="/government/city-operations/community-services/" >Community Services</a></li>
+<li class="nav-level-4 nav-entry-54 list-position-2 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-54-list-position-2-494437673" href="/government/city-operations/police/" >Dover Police Department</a></li>
+<li class="nav-level-4 nav-entry-55 list-position-3 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-55-list-position-3-494437673" href="/government/city-operations/fire-and-rescue/" >Dover Fire &amp; Rescue</a></li>
+</ul></li></ul></li><li class="nav-level-2 nav-entry-4 list-position-4 test"><a id="perc-navigation-menuitem-nav-level-2-nav-entry-4-list-position-4-494437673" href="/services/"  target='_top'>City Services</a><ul>
+<li class="nav-level-3 nav-entry-15 list-position-1 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-15-list-position-1-494437673" href="/government/open-government/budget-revealed/" >Budget Revealed</a></li>
+<li class="nav-level-3 nav-entry-16 list-position-2 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-16-list-position-2-494437673" href="/government/city-operations/finance/bids/" >Current Bids</a></li>
+<li class="nav-level-3 nav-entry-17 list-position-3 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-17-list-position-3-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/dog-licenses/" >Dog Licenses</a></li>
+<li class="nav-level-3 nav-entry-18 list-position-4 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-18-list-position-4-494437673" href="/government/open-government/election-information/" >Election Information</a></li>
+<li class="nav-level-3 nav-entry-19 list-position-5 "></li>
+<li class="nav-level-3 nav-entry-20 list-position-6 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-20-list-position-6-494437673" href="/government/city-operations/library/" >Public Library</a></li>
+<li class="nav-level-3 nav-entry-21 list-position-7 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-21-list-position-7-494437673" href="/government/city-operations/finance/city-clerk-tax-collection/motor-vehicle-registration/" >Motor Vehicle Registration</a></li>
+<li class="nav-level-3 nav-entry-22 list-position-8 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-22-list-position-8-494437673" href="/services/obituary-directory/" >Obituary Directory</a></li>
+<li class="nav-level-3 nav-entry-23 list-position-9 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-23-list-position-9-494437673" href="/services/online-services/" >Online Services</a><ul>
+<li class="nav-level-4 nav-entry-56 list-position-1 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-56-list-position-1-494437673" href="/services/online-services/payment/" >Billing and Payment</a></li>
+<li class="nav-level-4 nav-entry-57 list-position-2 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-57-list-position-2-494437673" href="/services/online-services/code-red/" >Code Red</a></li>
+<li class="nav-level-4 nav-entry-58 list-position-3 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-58-list-position-3-494437673" href="/services/online-services/dover-download/" >Dover Download</a></li>
+<li class="nav-level-4 nav-entry-59 list-position-4 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-59-list-position-4-494437673" href="/services/online-services/dovernet-public-wireless/" >DoverNet Public Wireless</a></li>
+<li class="nav-level-4 nav-entry-60 list-position-5 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-60-list-position-5-494437673" href="/services/online-services/geographic-information-system/" >Geographic Information System (GIS)</a></li>
+<li class="nav-level-4 nav-entry-61 list-position-6 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-61-list-position-6-494437673" href="/services/online-services/maps-prcs/" >Maps and Property Record Cards</a></li>
+<li class="nav-level-4 nav-entry-62 list-position-7 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-62-list-position-7-494437673" href="/government/city-operations/community-services/permitting/" >Permitting</a></li>
+<li class="nav-level-4 nav-entry-63 list-position-8 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-63-list-position-8-494437673" href="/services/online-services/news-events/" >Recent News and Announcements</a></li>
+<li class="nav-level-4 nav-entry-64 list-position-9 "><a id="perc-navigation-menuitem-nav-level-4-nav-entry-64-list-position-9-494437673" href="/services/online-services/video-on-demand/" >Video on Demand and Live Streaming</a></li>
+</ul></li><li class="nav-level-3 nav-entry-24 list-position-10 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-24-list-position-10-494437673" href="https://ctitt-dover.cticloudhost.com/TickeTrak.WebPortal/Account/Login" >Parking Citation Payment Online</a></li>
+<li class="nav-level-3 nav-entry-25 list-position-11 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-25-list-position-11-494437673" href="/government/city-operations/public-welfare/" >Public Welfare</a></li>
+<li class="nav-level-3 nav-entry-26 list-position-12 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-26-list-position-12-494437673" href="/government/public-safety/" >Public Safety</a></li>
+<li class="nav-level-3 nav-entry-27 list-position-13 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-27-list-position-13-494437673" href="/government/city-operations/community-services/waste-recycling/recycling-center/" >Recycling Center</a></li>
+<li class="nav-level-3 nav-entry-28 list-position-14 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-28-list-position-14-494437673" href="/government/city-operations/community-services/waste-recycling/" >Solid Waste and Recycling</a></li>
+<li class="nav-level-3 nav-entry-29 list-position-15 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-29-list-position-15-494437673" href="/government/open-government/transparent-dover/" >Transparent Dover</a></li>
+</ul></li><li class="nav-level-2 nav-entry-5 list-position-5 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-5-list-position-5-494437673" href="/contact-us/" >Contact Us</a><ul>
+<li class="nav-level-3 nav-entry-30 list-position-1 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-30-list-position-1-494437673" href="/contact-us/facilities-directory/" >Facilities and Hours of Operation</a></li>
+<li class="nav-level-3 nav-entry-31 list-position-2 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-31-list-position-2-494437673" href="/contact-us/municipal-directory/" >Municipal Directory</a></li>
+</ul></li><li class="nav-level-2 nav-entry-6 list-position-6 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-6-list-position-6-494437673" href="/dovercares/" >dovercares</a></li>
+<li class="nav-level-2 nav-entry-7 list-position-7 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-7-list-position-7-494437673" href="/indigenous/" >Indigenous Dover</a></li>
+<li class="nav-level-2 nav-entry-8 list-position-8 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-8-list-position-8-494437673" href="/link/" >Short Links</a><ul>
+<li class="nav-level-3 nav-entry-32 list-position-1 "><a id="perc-navigation-menuitem-nav-level-3-nav-entry-32-list-position-1-494437673" href="/government/city-operations/community-services/engineering/environmental/water-quality/" >Water Quality</a></li>
+</ul></li><li class="nav-level-2 nav-entry-9 list-position-9 "><a id="perc-navigation-menuitem-nav-level-2-nav-entry-9-list-position-9-494437673" href="/waterban/" >Water Restrictions</a></li>
+</ul>
+</nav>
+<div style="clear:both"></div>
+</div>
+    
+</div>
+</div></div><div  class="perc-region perc-noAutoResize perc-fixed perc-vertical entry group "  data-noautoresize="false" id="temp-region-12"> <div class=" perc-vertical "><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical "  data-noautoresize="false" id="region-title"> <div class=" perc-vertical ">        <div class="perc-widget" >
+
+        
+<div>
+
+<h1>2026 General Election</h1>
+</div>
+    
+    
+</div>
+</div></div><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical "  data-noautoresize="false" id="region-facility"> <div class=" perc-vertical "></div></div><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical "  data-noautoresize="false" id="region-body"> <div class=" perc-vertical ">        <div class="perc-widget" >
+<div>
+
+<div class="rxbodyfield"><h2><strong>General Election is Nov. 3, 2026</strong></h2><p>The 2026 New Hampshire General Election will be held on Tuesday, Nov. 3, 2026. Polls will be open from 7 a.m. to 7 p.m. </p><h2>COAST to offer free rides to the polls on Election Day</h2><p>COAST will offer free rides to anyone on their way to vote in the Elections on Tuesday, Nov. 3. While the COAST public transit system does not provide transportation to each individual polling station directly, COAST said the goal is to encourage voters to get to the polls and participate in voting by eliminating the barrier of transportation costs.</p><p>All passengers need to do is tell their driver that they are on their way to vote, or on the way back from voting, and they will not be charged for the ride. COAST will be following an honor system.</p><p>For more information, visit <a href="https://coastbus.org/" rel="noopener noreferrer" target="_blank">coastbus.org</a></p><div class="rxbodyfield"><h2><a href="https://dovernh.mapgeo.io/datasets/properties?themes&amp;themes=%5B%22wards-and-polling-places%22%5D" rel="noopener noreferrer" target="_blank"><img alt="" data-jcrpath="//2025.03.06_wardmap.png" data-pathitem="{&quot;id&quot;:&quot;16777215-101-43455&quot;,&quot;category&quot;:&quot;ASSET&quot;,&quot;folderPaths&quot;:&quot;//Folders/$System$/Assets/government/open-government/img&quot;,&quot;name&quot;:&quot;2025.03.06_wardmap.png&quot;,&quot;revisionable&quot;:true,&quot;type&quot;:&quot;percImageAsset&quot;,&quot;leaf&quot;:true,&quot;hasItemChildren&quot;:false,&quot;hasFolderChildren&quot;:false,&quot;hasSectionChildren&quot;:false,&quot;mobilePreviewEnabled&quot;:false,&quot;accessLevel&quot;:&quot;ADMIN&quot;,&quot;columnData&quot;:&quot;&quot;,&quot;typeProperties&quot;:{&quot;entries&quot;:&quot;&quot;}}" height="328" src="/Assets/government/open-government/img/2025.03.06_wardmap.png" style="float: right;" title="Ward Map Image 2025" width="250"/></a>City of Dover polling locations</h2><p>Dover has the following six polling places:</p><p>Ward 1 - <a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.208305%2C-70.884092&amp;panel=themes&amp;previewId=36030-000000&amp;themes=%22%5B%5C%22wards-and-polling-places%5C%22%5D%22&amp;zoom=13" rel="noopener noreferrer" target="_blank">Frances G. Hopkins Elementary School, 78 Horne St.</a><br/>Ward 2 - <a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.195861%2C-70.87595&amp;panel=themes&amp;previewId=26002-000000&amp;themes=%22%5B%5C%22wards-and-polling-places%5C%22%5D%22&amp;zoom=13" rel="noopener noreferrer" target="_blank">Dover Ice Arena, 110 Portland Ave.</a><br/>Ward 3 - <a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.189983%2C-70.881764&amp;panel=themes&amp;previewId=13004-000000&amp;themes=%22%5B%5C%22wards-and-polling-places%5C%22%5D%22&amp;zoom=13" rel="noopener noreferrer" target="_blank">Woodman Park Elementary School, 11 Towle Ave.</a><br/>Ward 4 - <a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.159995%2C-70.863065&amp;panel=themes&amp;previewId=I0002-G00000&amp;themes=%22%5B%5C%22wards-and-polling-places%5C%22%5D%22&amp;zoom=13" rel="noopener noreferrer" target="_blank">Garrison School, 50 Garrison Road</a><br/>Ward 5 - <a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.168732%2C-70.844285&amp;panel=themes&amp;previewId=H0011-001000&amp;themes=%22%5B%5C%22wards-and-polling-places%5C%22%5D%22&amp;zoom=13" rel="noopener noreferrer" target="_blank">Dover Middle School, 16 Daley Drive</a><br/>Ward 6 - <a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.231048%2C-70.916202&amp;panel=themes&amp;previewId=A0018-D00000&amp;themes=%22%5B%5C%22wards-and-polling-places%5C%22%5D%22&amp;zoom=13" rel="noopener noreferrer" target="_blank">Hellenic Center, 219 Long Hill Road</a></p><p><a href="https://dovernh.mapgeo.io/datasets/properties?abuttersDistance=200&amp;latlng=43.187126%2C-70.890358&amp;panel=themes&amp;themes=%5B%22wards-and-polling-places%22%5D&amp;zoom=12"><em><strong>View an interactive Ward Map with Polling Places</strong></em></a></p><p>Voters may only vote in the ward in which they live.</p><p>Not sure of your polling location? Contact the City Clerk's Office at 603-516-6018.</p></div><h2>Absentee Ballots Now Available</h2><p>Absentee ballots are now available for Nov. 6, 2026 general election. </p><p>Per <a href="https://gc.nh.gov//rsa/html/LXIII/657/657-mrg.htm">state law</a>, any person who will be absent on the day of any state election because of a religious observance, physical disability and employment obligation (including care of children and infirm adults) may vote via absentee ballot. </p><p>A voter may also obtain an absentee ballot when the National Weather Service has issued a winter storm warning, blizzard warding, or ice storm warning for election day. </p><h3>How to obtain an absentee ballot</h3><p>A voter must complete an <a data-jcrpath="/Assets/government/open-government/election-information/absentee-ballots/Absentee Ballot Application.pdf" data-pathitem="{&quot;id&quot;:&quot;16777215-101-44565&quot;,&quot;name&quot;:&quot;Absentee Ballot Application.pdf&quot;,&quot;folderPaths&quot;:[&quot;//Folders/$System$/Assets/government/open-government/election-information/absentee-ballots&quot;],&quot;category&quot;:&quot;ASSET&quot;,&quot;revisionable&quot;:true,&quot;type&quot;:&quot;percFileAsset&quot;,&quot;leaf&quot;:true,&quot;hasItemChildren&quot;:false,&quot;hasFolderChildren&quot;:false,&quot;hasSectionChildren&quot;:false,&quot;mobilePreviewEnabled&quot;:false,&quot;path&quot;:&quot;/Assets/government/open-government/election-information/absentee-ballots/Absentee Ballot Application.pdf&quot;,&quot;accessLevel&quot;:&quot;ADMIN&quot;,&quot;typeProperties&quot;:{&quot;entries&quot;:{}},&quot;folderPath&quot;:&quot;//Folders/$System$/Assets/government/open-government/election-information/absentee-ballots/Absentee Ballot Application.pdf&quot;,&quot;columnData&quot;:{}}" href="/Assets/government/open-government/election-information/absentee-ballots/Absentee%20Ballot%20Application.pdf" title="Absentee Ballot Request Form for Sept. 8, 2026 primary and Nov. 3, 2026 general elections">Absentee Ballot Application</a>, which declares the applicant a duly qualified voter of the city and the reason the voter is entitled to vote by absentee ballot. Applications are also available at the City Clerk's Office.</p><p>Deliver the completed <a data-jcrpath="/Assets/government/open-government/election-information/absentee-ballots/Absentee Ballot Application.pdf" data-pathitem="{&quot;id&quot;:&quot;16777215-101-44565&quot;,&quot;name&quot;:&quot;Absentee Ballot Application.pdf&quot;,&quot;folderPaths&quot;:[&quot;//Folders/$System$/Assets/government/open-government/election-information/absentee-ballots&quot;],&quot;category&quot;:&quot;ASSET&quot;,&quot;revisionable&quot;:true,&quot;type&quot;:&quot;percFileAsset&quot;,&quot;leaf&quot;:true,&quot;hasItemChildren&quot;:false,&quot;hasFolderChildren&quot;:false,&quot;hasSectionChildren&quot;:false,&quot;mobilePreviewEnabled&quot;:false,&quot;path&quot;:&quot;/Assets/government/open-government/election-information/absentee-ballots/Absentee Ballot Application.pdf&quot;,&quot;accessLevel&quot;:&quot;ADMIN&quot;,&quot;typeProperties&quot;:{&quot;entries&quot;:{}},&quot;folderPath&quot;:&quot;//Folders/$System$/Assets/government/open-government/election-information/absentee-ballots/Absentee Ballot Application.pdf&quot;,&quot;columnData&quot;:{}}" href="/Assets/government/open-government/election-information/absentee-ballots/Absentee%20Ballot%20Application.pdf" title="Absentee Ballot Request Form for Sept. 8, 2026 primary and Nov. 3, 2026 general elections">Absentee Ballot Application</a> to the City Clerk's Office. It can be hand-delivered, mailed or faxed.</p><p><strong>City of Dover City Clerk's Office</strong><br/>288 Central Ave.<br/>Dover, NH 03820<br/>Phone 603-516-6018<br/>Fax: 603-516-6666<br/>Hours: Monday-Thursday, 8:30 a.m. to 5:30 p.m.; Friday, 8:30 a.m. to 4 p.m.</p><h3>Deadline to return absentee ballots</h3><p><span>The deadline for returning absentee ballots to be counted in the general election:</span></p><ul><li><span><strong>In person</strong> — 5 p.m. Monday, Nov. 2, 2026, at the City Clerk's Office.</span></li><li><span><strong>By mail</strong> — 5 p.m. on Election Day, Tuesday, Nov. 3, 2026.</span></li></ul><h3>Absentee Ballot Status</h3><p><span>After you have applied for an absentee ballot, you can use the Secretary of State's</span> <a href="https://app.sos.nh.gov/">Voter Information Lookup</a><span> to find out if your clerk has received your request, when the absentee ballot was sent to you, and when your clerk received your completed absentee ballot.</span></p><hr/></div></div>
+</div>
+        <div class="perc-widget" >
+
+        
+<div id="517177771_list"  class=" perc-list-vertical perc-file-auto-list"   data-query="{ deliveryurl : 'https://www.dover.nh.gov'}">
+</div>
+
+    
+</div>
+        <div class="perc-widget" >
+
+        
+<div id="352820359_list"  class=" perc-list-vertical perc-file-auto-list"   data-query="{ deliveryurl : 'https://www.dover.nh.gov'}">
+</div>
+
+    
+</div>
+</div></div><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical "  data-noautoresize="false" id="utility-region"> <div class=" perc-vertical ">        <div class="perc-widget" >
+<div>
+
+<div class="rxbodyfield"><h2>Election results</h2><p>Election results will appear below as they become available. </p></div></div>
+</div>
+        <div class="perc-widget" >
+
+        
+<div id="111414873_list" aria-label="File list" class=" perc-list-vertical perc-file-auto-list"   data-query="{ deliveryurl : 'https://www.dover.nh.gov'}">
+</div>
+
+    
+</div>
+        <div class="perc-widget" >
+<div>
+
+<div class="rxbodyfield"><h2>Voter turnout</h2><p>Voter turnout information will appear below once tabulated. </p></div></div>
+</div>
+        <div class="perc-widget" >
+
+        
+<div id="565386914_list" aria-label="File list" class=" perc-list-vertical perc-file-auto-list"   data-query="{ deliveryurl : 'https://www.dover.nh.gov'}">
+</div>
+
+    
+</div>
+        <div class="perc-widget" >
+<div>
+
+</div>
+</div>
+        <div class="perc-widget" >
+
+        
+<div id="307495322_list"  class=" perc-list-vertical perc-file-auto-list"   data-query="{ deliveryurl : 'https://www.dover.nh.gov'}">
+</div>
+
+    
+</div>
+        <div class="perc-widget" >
+<div>
+
+<div class="rxbodyfield"><h2>Sample Ballots</h2></div></div>
+</div>
+        <div class="perc-widget" >
+
+        
+<div id="555712805_list" aria-label="File list" class=" perc-list-vertical perc-file-auto-list"   data-query="{ deliveryurl : 'https://www.dover.nh.gov'}">
+<ul class=" perc-list-main"><li class="perc-list-odd perc-list-first   perc-list-element">
+<a href="/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard1.pdf" title="Ward 1" target="_self">Ward 1</a>
+</li>
+<li class="perc-list-even     perc-list-element">
+<a href="/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard2.pdf" title="Ward 2" target="_self">Ward 2</a>
+</li>
+<li class="perc-list-odd     perc-list-element">
+<a href="/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard3.pdf" title="Ward 3" target="_self">Ward 3</a>
+</li>
+<li class="perc-list-even     perc-list-element">
+<a href="/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard4.pdf" title="Ward 4" target="_self">Ward 4</a>
+</li>
+<li class="perc-list-odd     perc-list-element">
+<a href="/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard5.pdf" title="Ward 5" target="_self">Ward 5</a>
+</li>
+<li class="perc-list-even   perc-list-last perc-list-element">
+<a href="/Assets/government/open-government/election-information/2026-general-election/sample-ballots/DoverWard6.pdf" title="Ward 6" target="_self">Ward 6</a>
+</li>
+</ul></div>
+
+    
+</div>
+        <div class="perc-widget" >
+<div>
+
+<div class="rxbodyfield"><h2>Ballot Questions</h2><p>The Nov. 3, 2026 General Election ballot is two-sided. The first side of the ballot are the candidates for the following elected offices:</p><ul><li>Governor</li><li>United State Senator</li><li>Representative in Congress</li><li>Executive Councilor</li><li>State Senator</li><li>State Representative(s)</li><li>Sheriff</li><li>County Attorney</li><li>County Treasurer</li><li>Register of Deeds</li><li>Register of Probate</li><li>County Commissioner </li></ul><p>The second side of the ballot has two text questions:</p><h3>QUESTIONS RELATING TO CONSTITUTIONAL AMENDMENTS PROPOSED BY THE 2026 GENERAL COURT</h3><p>1. "Are you in favor of eliminating the office of register of probate by amending articles 71 and 81 of the second part of the constitution to read as follows: <a href="https://www.nh.gov/glance/state-constitution/county-treasurer-etc#page-id-2066">[Art.] 71. [County Treasurers, County Attorneys, Sheriffs, and Registers of Deeds Elected.]</a> The county treasurers, county attorneys, sheriffs and registers of deeds, shall be elected by the inhabitants of the several towns, in the several counties in the State, according to the method now practiced, and the laws of the state, provided nevertheless the legislature shall have authority to alter the manner of certifying the votes, and the mode of electing those officers; but not so as to deprive the people of the right they now have of electing them. <a href="https://www.nh.gov/glance/state-constitution/judiciary-power#page-id-2126">[Art.] 81. [Judges Not to Act as Counsel.]</a> No judge shall be of counsel, act as advocate, or receive any fees as advocate or counsel, in any probate business which is pending, or may be brought into any court of probate in the county of which he or she is judge." (Passed by the N.H. House 325 Yes 15 No; Passed by the Senate 23 Yes 1 No) CACR 13</p><ul><li><a href="https://gc.nh.gov//bill_Status/billinfo.aspx?id=1803&amp;inflect=2">Constitutional Amendment Concurrent Resolution (CACR) 13 - Legislative History</a></li></ul><h3>STATUTORY QUESTION REQUIRED BY HB 1300, CHAPTER 324, 2026</h3><p>2. "Shall the City of DOVER limit property tax growth for DOVER SCHOOL DISTRICT (SAU #11) under <a href="https://gc.nh.gov//rsa/html/III/32/32-5-i.htm">RSA 32:5-i</a>? If adopted for a two-year period: (1) the local property tax levy may not grow beyond the prior year’s amount, adjusted for inflation and new construction; (2) SAU central office spending may not exceed 6 percent of total school district appropriations; and (3) bonded capital costs are excluded from both limits. These caps apply only to administrative operations of the SAU central office and do not affect classroom instruction, school-based services, or other municipal expenditures. These limits may be overridden as provided in <a href="https://gc.nh.gov//rsa/html/III/32/32-5-i.htm">RSA 32:5-i</a>. Adoption requires a three-fifths (3/5) majority vote."</p><ul><li><a href="https://www.sos.nh.gov/hb-1300-ballot-question">HB 1300 Ballot Question - Legislative History</a></li></ul></div></div>
+</div>
+        <div class="perc-widget" >
+<div>
+
+</div>
+</div>
+
+</div></div></div></div><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical useful_links "  data-noautoresize="false" id="temp-region-11"> <div class=" perc-vertical ">        <div class="perc-widget" >
+<div>
+
+<div class="rxbodyfield"><ul><li class="title">Useful links:</li><li><a href="https://publicrecords.dover.nh.gov/public/1/deptnum/0/cab/City_of_Dover_Resolutions" rel="noopener noreferrer" target="_blank">Resolutions</a></li><li><a href="https://publicrecords.dover.nh.gov/public/1/deptnum/0/cab/City_of_Dover_Ordinances" rel="noopener noreferrer" target="_blank">City Ordinances</a></li><li><a href="https://www.dover.nh.gov/government/city-operations/finance/financial-information">Financial Information</a></li><li><a href="https://www.dover.nh.gov/government/city-operations/finance/city-clerk-tax-collection/motor-vehicle-registration">Motor Vehicle Registration</a></li><li><a href="https://www.dover.nh.gov/government/open-government/find-my-representative">Find My Representative</a></li><li><a href="https://www.dover.nh.gov/government/city-operations/executive/human-resources/employment">Employment Opportunities</a></li></ul></div></div>
+</div>
+</div></div></div></div></div></div></div></div></div></div><div  class="perc-region perc-region-leaf perc-noAutoResize perc-fixed perc-vertical "  data-noautoresize="false" id="footer"> <div class=" perc-vertical ">        <div class="perc-widget" >
+
+<div class="f_info"> <a href="https://mail.dover.nh.gov/owa/auth/logon.aspx">© City of Dover, NH</a> : 288 Central Ave., Dover, NH 03820 | 603-516-6000 | City Hall Hours: Monday-Thursday, 8:30 a.m. to 5:30 p.m.; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Friday, 8:30 a.m. to 4 p.m. 
+ <br> <span>Want to know more? Subscribe to the City's weekly newsletter, Dover Download. <a href="https://www.dover.nh.gov/services/online-services/dover-download">Click Here</a>.</span> <span><a href="https://www.dover.nh.gov/internet-privacy.html">Our Web Policy</a> &nbsp;|&nbsp; <a href="https://www.dover.nh.gov/site-map.html">Site Map</a> &nbsp;|&nbsp; <a href="mailto:webmaster@dover.nh.gov">Contact the webmaster</a></span> 
+</div> 
+<div class="nav_social"> <a class="facebook" href="https://www.facebook.com/pages/City-of-Dover-NH/394844970529075"></a> <a href="https://x.com/CityofDoverNH"></a> <span>Connect with us:</span> 
+</div>
+
+</div>
+</div></div></div></div></div></div>
+
+<script src="/web_resources/themes/main/js/jquery.superLabels.min.js" type="text/javascript" charset="utf-8"></script><script src="/web_resources/themes/main/js/jquery.flexslider-min.js" type="text/javascript" charset="utf-8"></script><script src="/web_resources/themes/main/js/site.js" type="text/javascript" charset="utf-8"></script>
+<script>
+  var subNav = $('.leftNav .current > ul:last');
+  $('.leftNav.perc-navbar').html(subNav);
+  $('.leftNav.perc-navbar > ul').addClass('sf-menu sf-vertical perc-navbar-sfvertical');
+</script> 
+<script>
+$(document).ready(function() { 
+        $('ul.sf-menu').superfish({ 
+            delay:       2000,                            // one second delay on mouseout 
+            animation:   {opacity:'show',height:'show'},  // fade-in and slide-down animation 
+            speed:       2000,                          // faster animation speed 
+speedOut: 2000,
+disableHI: false,
+            autoArrows:  true,                           // disable generation of arrow mark-up 
+            dropShadows: false                            // disable drop shadows 
+        }); 
+//This line removes display 3 levels deep on Navigation
+		$( "ul li ul li ul li" ).css('display','none');
+		$("ul li ul li a span").css('display','none');
+    }); 
+</script>
+
+<script>
+$(document).ready(function () {
+function Currentdate(){
+var dateToday = $.datepicker.formatDate('DD, M. dd, yy', new Date());
+
+$('.day_date').text(dateToday);
+}
+
+
+var url = "https://api.openweathermap.org/data/2.5/weather?zip=03820,us&units=imperial&APPID=b74f2fd3819e3774491b9434bdcccab2";
+
+$.ajax({
+                                type : "GET",
+                                dataType : "jsonp",
+                                url : url,
+                                success : function(weather){
+                                temp =   weather.main.temp.toFixed(0);     
+	                        desc = weather.weather[0].main;
+				icon = weather.weather[0].icon;
+				path = "http://openweathermap.org/img/w/" + icon + ".png";
+					          $('.temp').text(temp);
+						  $('.weather_description').text(desc);
+						  $('.icon img').attr('src', path);
+						
+					    }
+                                                
+                                  
+                                        });
+				
+		$(Currentdate);		
+});
+	
+</script>
+
+<script src="/web_resources/cm/jslib/jquery-ui.js"></script>
+<script>(function() { jQuery.getDeliveryServiceBase = function(){ return 'https://www.dover.nh.gov';};jQuery.getCMSVersion = function(){ return '8.0.3';};})();</script>
+<script src="/web_resources/cm/common/js/PercGlobalVariables.js"></script>
+<script src="/web_resources/widgets/navBar/js/hoverIntent.min.js"></script>
+<script src="/web_resources/cm/jslib/jquery.cookie.min.js"></script>
+<script src="/web_resources/widgets/navBar/js/superfish.min.js"></script>
+<script src="/web_resources/widgets/navBar/js/supersubs.min.js"></script>
+<script src="/web_resources/cm/common/js/perc_common_ui_slim.js"></script>
+<script src="/web_resources/widgets/navBar/js/navbar.min.js"></script>
+<script src="/web_resources/cm/common/js/perc_common_ui.js"></script>
+</body>
+</html>

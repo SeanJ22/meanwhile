@@ -2,9 +2,9 @@
   "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
   "state": "MA",
   "coverage": {
-    "physicalSites": 164,
+    "physicalSites": 168,
     "precinctRows": 275,
-    "preparedBoundaries": 0,
+    "preparedBoundaries": 275,
     "scope": "Boston only"
   },
   "sourceHashAndByteLength": "PASS",
@@ -16,13 +16,48 @@
     {
       "file": "sources/ebb06fd9dd075a67ab2b6de91cb6ff5cb234c1c6c5d2404618dd5b7d1f46863e.pdf",
       "httpStatus": 200
+    },
+    {
+      "file": "sources/ffcaf59abf9c92a433ffdcea9c42eca7ea84330319211f8a5495a395af828f8b.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/4374409e9e0b624104cda2faca0f0ea713ccc4f1f8b8605086cb05f1f56fe1ad.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/8edbceec4915cf6120f02656614b940e3ef4d8e5e668efedcb3be93be861faa2.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/1236c56e8aab6150518c5dfe6bffe3ff79c78df54dac0e0d7dc9c3b1ab19da9d.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/ae772305d5f38fde0ad484d0beec8743b653ab6c9049143d612fb5a61baba79b.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/b81356e95996fd66bc819f3202ed21fa2a0dab74219a186216d6787468ed0f4c.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/c9108bd6a46f3022fa643d188936491e4a0040e408a4a9324852ce64e97a0218.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/dfd1940d769c6491ab860939a63999631a2baa4f6fd1ee24e6bd70a389daafb0.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/03312c26814d6991fad38280463a18a5e3a53e0ce7612e899cfa9ed945825634.source"
     }
   ],
-  "readyDoors": 1,
+  "readyDoors": 2,
   "realInMemoryDoorRegistration": "PASS",
-  "registeredMappings": 1,
-  "registryPageRows": 1,
-  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "registeredMappings": 2,
+  "registryPageRows": 2,
+  "boundaryDoorEmptyCoversSchema": "PASS",
   "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
   "directParserFullSourceReaderAndBoundaryReader": "PASS",
   "checks": [
@@ -30,18 +65,26 @@
       "doorId": "vs04-ma-boston-polls",
       "kind": "SITES",
       "sourceRows": 275,
-      "fullSourceReader": 164,
+      "fullSourceReader": 168,
       "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-votes-ma-boston-current-precinct-boundaries",
+      "kind": "BOUNDARY",
+      "directBoundaryReader": 275,
+      "fullSourceReader": 275,
       "official": true,
       "blankCount": 0
     }
   ],
   "siteKinds": {
-    "electionDay": 164,
+    "electionDay": 168,
     "earlyVoting": 0,
     "dropBoxes": 0
   },
-  "boundaries": 0,
+  "boundaries": 275,
   "productionWrites": 0,
   "networkCalls": 0,
   "contractId": "voting-sites:MA"

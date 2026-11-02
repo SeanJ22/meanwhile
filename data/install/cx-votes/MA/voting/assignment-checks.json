@@ -1,0 +1,1947 @@
+{
+  "checkedAt": "2026-11-02T23:28:51.180Z",
+  "status": "PASS",
+  "appCodeChanges": false,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "officialSourcePolygons": 275,
+  "currentPublishedWardPrecinctRows": 275,
+  "physicalSites": 168,
+  "missingAssignment": [],
+  "missingBoundary": [],
+  "actualSourceReader": "PASS",
+  "actualMergeReader": "PASS",
+  "actualProjectorForEveryPolygon": "PASS",
+  "interiorPointChecks": 275,
+  "pointBasis": "Synthetic official-polygon interior points from GDAL ST_PointOnSurface; no residential addresses used.",
+  "deliberatelyWrongCensusInputOverriddenForAll275": true,
+  "staleCensusFallbackSuppressedWhenNoOfficialPolygonContainsPoint": true,
+  "sourceGeometryCoordinateSystem": "WGS84 EPSG4326 directly from current MassGIS production government GeoJSON service; independent interior points from official downloadable shapefile via GDAL",
+  "results": [
+    {
+      "ward": "3",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "15",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "16",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "17",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "14",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "4",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "15",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "5",
+      "precinct": "15",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "16",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "6",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "17",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "7",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "8",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "8",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "8",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "8",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "8",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "8",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "9",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "15",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "16",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "17",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "18",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "19",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "20",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "10",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "21",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "22",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "18",
+      "precinct": "23",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "11",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "19",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "12",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "13",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "15",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "16",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "17",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "18",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "19",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "20",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "20",
+      "precinct": "21",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "15",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "21",
+      "precinct": "16",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "14",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "1",
+      "precinct": "15",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "9",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "10",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "11",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "12",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "22",
+      "precinct": "13",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "2",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "3",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "4",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "5",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "6",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "7",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "2",
+      "precinct": "8",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    },
+    {
+      "ward": "3",
+      "precinct": "1",
+      "matchingPhysicalSites": 1,
+      "officialPolygonMatches": 1,
+      "exactAssignmentCorrect": true
+    }
+  ]
+}

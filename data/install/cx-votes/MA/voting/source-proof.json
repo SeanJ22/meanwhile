@@ -1,0 +1,193 @@
+{
+  "checkedAt": "2026-11-02T23:28:51.180Z",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "productionWrites": 0,
+  "appCodeChanges": false,
+  "sources": [
+    {
+      "url": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+      "finalUrl": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:16:59.023564+00:00",
+      "contentType": "text/html; charset=UTF-8",
+      "file": "sources/ffcaf59abf9c92a433ffdcea9c42eca7ea84330319211f8a5495a395af828f8b.source",
+      "sha256": "ffcaf59abf9c92a433ffdcea9c42eca7ea84330319211f8a5495a395af828f8b",
+      "bytes": 196617,
+      "purpose": "Official current ward/precinct dataset description and legal provenance"
+    },
+    {
+      "url": "https://massgis.maps.arcgis.com/sharing/rest/search?q=title%3A%22Wards%20and%20Precincts%202022%22&num=100&f=pjson",
+      "finalUrl": "https://massgis.maps.arcgis.com/sharing/rest/search?q=title%3A%22Wards%20and%20Precincts%202022%22&num=100&f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:22:43.827262+00:00",
+      "contentType": "text/plain;charset=utf-8",
+      "file": "sources/4374409e9e0b624104cda2faca0f0ea713ccc4f1f8b8605086cb05f1f56fe1ad.source",
+      "sha256": "4374409e9e0b624104cda2faca0f0ea713ccc4f1f8b8605086cb05f1f56fe1ad",
+      "bytes": 38253,
+      "purpose": "Official MassGIS item catalogue identifies production government FeatureServer"
+    },
+    {
+      "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer?f=pjson",
+      "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer?f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:23:25.114736+00:00",
+      "contentType": "text/plain; charset=UTF-8",
+      "file": "sources/8edbceec4915cf6120f02656614b940e3ef4d8e5e668efedcb3be93be861faa2.source",
+      "sha256": "8edbceec4915cf6120f02656614b940e3ef4d8e5e668efedcb3be93be861faa2",
+      "bytes": 4904,
+      "purpose": "Production government service metadata"
+    },
+    {
+      "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0?f=pjson",
+      "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0?f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:23:25.366903+00:00",
+      "contentType": "text/plain; charset=UTF-8",
+      "file": "sources/1236c56e8aab6150518c5dfe6bffe3ff79c78df54dac0e0d7dc9c3b1ab19da9d.source",
+      "sha256": "1236c56e8aab6150518c5dfe6bffe3ff79c78df54dac0e0d7dc9c3b1ab19da9d",
+      "bytes": 10509,
+      "purpose": "Production government polygon layer metadata and supported query formats"
+    },
+    {
+      "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&returnCountOnly=true&f=json",
+      "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&returnCountOnly=true&f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:23:25.390540+00:00",
+      "contentType": "application/json; charset=UTF-8",
+      "file": "sources/ae772305d5f38fde0ad484d0beec8743b653ab6c9049143d612fb5a61baba79b.source",
+      "sha256": "ae772305d5f38fde0ad484d0beec8743b653ab6c9049143d612fb5a61baba79b",
+      "bytes": 13,
+      "purpose": "Boston-filtered official count: 275"
+    },
+    {
+      "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&outFields=WARD%2CPRECINCT%2CTOWN&outSR=4326&returnGeometry=true&f=geojson",
+      "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&outFields=WARD%2CPRECINCT%2CTOWN&outSR=4326&returnGeometry=true&f=geojson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:24:53.703960+00:00",
+      "contentType": "application/geo+json; charset=UTF-8",
+      "file": "sources/b81356e95996fd66bc819f3202ed21fa2a0dab74219a186216d6787468ed0f4c.source",
+      "sha256": "b81356e95996fd66bc819f3202ed21fa2a0dab74219a186216d6787468ed0f4c",
+      "bytes": 1067954,
+      "purpose": "Boston-filtered official current GeoJSON: 275 polygons"
+    },
+    {
+      "url": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7?f=pjson",
+      "finalUrl": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7?f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:16:58.989331+00:00",
+      "contentType": "text/plain; charset=UTF-8",
+      "file": "sources/c9108bd6a46f3022fa643d188936491e4a0040e408a4a9324852ce64e97a0218.source",
+      "sha256": "c9108bd6a46f3022fa643d188936491e4a0040e408a4a9324852ce64e97a0218",
+      "bytes": 5208,
+      "purpose": "Excluded older city GIS layer metadata"
+    },
+    {
+      "url": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+      "finalUrl": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T23:17:39.759696+00:00",
+      "contentType": "application/json; charset=UTF-8",
+      "file": "sources/dfd1940d769c6491ab860939a63999631a2baa4f6fd1ee24e6bd70a389daafb0.source",
+      "sha256": "dfd1940d769c6491ab860939a63999631a2baa4f6fd1ee24e6bd70a389daafb0",
+      "bytes": 13,
+      "purpose": "Excluded older city GIS layer count: 255"
+    },
+    {
+      "url": "https://s3.us-east-1.amazonaws.com/download.massgis.digital.mass.gov/shapefiles/state/wardsprecincts2022_poly.zip",
+      "linkingPage": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+      "file": "sources/03312c26814d6991fad38280463a18a5e3a53e0ce7612e899cfa9ed945825634.source",
+      "sha256": "03312c26814d6991fad38280463a18a5e3a53e0ce7612e899cfa9ed945825634",
+      "bytes": 6412159,
+      "timestampEvidence": {
+        "filesystemModifiedAt": "2026-11-02T23:18:18.717150+00:00",
+        "basis": "Saved download file modification time; no separately recorded HTTP completion timestamp."
+      },
+      "purpose": "Independent official shapefile used by GDAL for polygon-interior test points"
+    }
+  ],
+  "officialDatasetQuotes": [
+    "MassGIS obtained ward, precinct, and sub-precinct data from the Secretary of the Commonwealth\u2019s Office in September 2022 and performed a minimal set of standardization edits on it.",
+    "New precinct and ward lines established by each municipality have been reviewed and approved by the LEDRC in accordance with the procedures set forth in state law.",
+    "This layer was updated in November 2023 to eliminate the area of Groton subprecinct 3A in precinct 3 that was merged into precinct 1, based on Chapter 45 legislation ."
+  ],
+  "boundaryDoor": {
+    "id": "cx-votes-ma-boston-current-precinct-boundaries",
+    "sourceAuthority": "Both publishing page and acquisition service are government hosts.",
+    "url": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+    "dataUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&outFields=WARD%2CPRECINCT%2CTOWN&outSR=4326&returnGeometry=true&f=geojson",
+    "currentSourcePolygons": 275,
+    "inlinePolygons": false
+  },
+  "excludedSource": {
+    "url": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7",
+    "observedCount": 255,
+    "reason": "Does not contain all275 current Boston ward/precinct assignments; never used."
+  },
+  "cost": {
+    "entireDoorConfigBytes": 4349,
+    "workerGeoJSONDownloadBytes": 1067954,
+    "explanation": "Only the official URL, field mapping and data-only HTML extraction configuration are registered as source configuration. The worker acquires Boston-filtered GeoJSON. No275polygon inline configuration is reread from Neon. Existing readers store and project the acquired voting jurisdiction; this work makes no database/cache code changes.",
+    "preparedJurisdictionBytes": 3176894
+  },
+  "validation": {
+    "results": "assignment-checks.json",
+    "allCurrentWardPrecinctAssignments": 275,
+    "siteRecords": 168,
+    "independentInteriorPointChecks": 275,
+    "result": "PASS",
+    "independentInteriorPoints": "independent-interior-points.geojson",
+    "independentInteriorPointsSha256": "5996bb5cb60a9dc9279163f4f1bf2672ba45a80f3d0e0a9818caeca6574e952b"
+  },
+  "sourceRowRepair": {
+    "sourceFile": "data/install/cx-votes/MA/voting/doors.json",
+    "sixPreviouslyUnparsedWardPrecincts": [
+      "4:6",
+      "10:4",
+      "18:15",
+      "19:10",
+      "19:13",
+      "22:3"
+    ],
+    "reason": "These official rows contain paragraph breaks,br tags,nonbreaking spaces or a separate Voter entrance line. Previous name/address patterns silently skipped them. Data-only regex configuration now reads every275row and preserves a separate notes paragraph.",
+    "before": {
+      "precinct": {
+        "pattern": "<td\\b[^>]*>\\s*(\\d+)",
+        "group": 1
+      },
+      "name": {
+        "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)(?: - |,)\\s*(?=(?:Voter Entrance )?\\d)",
+        "group": 1
+      },
+      "address": {
+        "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?(?: - |,)\\s*((?:Voter Entrance )?\\d[^<\\n]*)",
+        "group": 1
+      }
+    },
+    "after": {
+      "precinct": {
+        "pattern": "<td\\b[^>]*>\\s*(\\d+)",
+        "group": 1
+      },
+      "name": {
+        "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)(?:(?:\\s|&nbsp;)*(?:-|,)(?:\\s|&nbsp;)*(?=(?:[Vv]oter\\s+[Ee]ntrance\\s+)?\\d)|</p>\\s*<p\\b[^>]*>\\s*(?:[Vv]oter\\s+[Ee]ntrance\\s+)?(?=\\d)|(?:<br\\s*/?>\\s*)+(?=\\d))",
+        "group": 1
+      },
+      "address": {
+        "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?(?:(?:\\s|&nbsp;)*(?:-|,)(?:\\s|&nbsp;)*(?=(?:[Vv]oter\\s+[Ee]ntrance\\s+)?\\d)|</p>\\s*<p\\b[^>]*>\\s*(?:[Vv]oter\\s+[Ee]ntrance\\s+)?(?=\\d)|(?:<br\\s*/?>\\s*)+(?=\\d))((?:[Vv]oter\\s+[Ee]ntrance\\s+)?\\d[^<\\n;]*)",
+        "group": 1
+      },
+      "locationNotes": {
+        "pattern": "<p\\b[^>]*>\\s*((?:[Vv]oter\\s+[Ee]ntrance|Vote in)[\\s\\S]*?)</p>",
+        "group": 1
+      }
+    },
+    "all275NamesAndAddressesExtracted": true,
+    "inlineBoundaryJSONUsed": false
+  },
+  "installation": {
+    "manifest": "install.json",
+    "sourceDoors": "doors.json",
+    "operation": "Register the two source doors with existing saveVotingSourceDoor, then run existing voting-source refresh for MA. No new installer or app code."
+  },
+  "coverageLimit": "This verifies current official geometry and every275published ward/precinct assignment using synthetic official polygon interior points. It does not claim a live production address lookup or publication occurred."
+}

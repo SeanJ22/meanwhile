@@ -10,9 +10,9 @@
   "discoveryOnly": "discovery.json",
   "sourceCaptures": "sources.json",
   "coverage": {
-    "physicalSites": 164,
+    "physicalSites": 168,
     "precinctRows": 275,
-    "preparedBoundaries": 0,
+    "preparedBoundaries": 275,
     "scope": "Boston only"
   },
   "sourceOnlyPrepared": true,
@@ -27,7 +27,9 @@
     "outsideCoverage": false
   },
   "limitations": [
-    "Assigned precincts need current official precinct geometry to match an address without the current Google/VIP fallback; table acquisition alone does not establish address assignment."
+    "This is Boston coverage, not statewide Massachusetts coverage.",
+    "Current MassGIS 2022 ward/precinct data governs the source-backed current assignments; the older 255-precinct city GIS layer is excluded.",
+    "No polling-site coordinates are supplied by the City table. Existing acquisition can geocode published site addresses ahead of requests."
   ],
   "existingInstallOperation": {
     "register": {
@@ -46,7 +48,7 @@
         "state": "MA",
         "store": "existing PostgresRoutineDataStore",
         "context": "existing workerPublicationContext",
-        "seeds": "ready doors from doors.json"
+        "seeds": "both ready source doors in doors.json"
       },
       "existingCliAfterRegistration": "node --experimental-strip-types scripts/fetch-voting-sites.mts --state=MA --promote"
     },
@@ -58,5 +60,17 @@
     "Run the existing voting-source refresh in the existing authorized publication context; it acquires and publishes data through voting-sites:MA. Preserve unrelated held facts.",
     "Verify the listed scope on the live where-to-vote page; this preparation makes no statewide completeness or live-fix claim."
   ],
-  "validationFile": "checks.json"
+  "validationFile": "checks.json",
+  "sourceBoundaryService": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0",
+  "sourceConfigurationBytes": 4349,
+  "readerAssignmentValidation": "PASS: all 275 independent precinct interior points resolve to the one published polling site",
+  "sourceRowRepair": [
+    "4:6",
+    "10:4",
+    "18:15",
+    "19:10",
+    "19:13",
+    "22:3"
+  ],
+  "sourceProof": "source-proof.json"
 }

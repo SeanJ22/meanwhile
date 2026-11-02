@@ -1,0 +1,404 @@
+{
+ "isCoGoEnabled": false,
+ "extent": {
+  "ymin": 777634.44920000108,
+  "xmin": 33863.749499999001,
+  "ymax": 959743.01639999798,
+  "xmax": 330838.81970000302,
+  "spatialReference": {
+   "falseM": -100000,
+   "xyTolerance": 0.001,
+   "mUnits": 10000,
+   "zUnits": 1,
+   "latestWkid": 26986,
+   "zTolerance": 2,
+   "wkid": 26986,
+   "xyUnits": 122610652.811951116,
+   "mTolerance": 0.001,
+   "falseX": -36530900,
+   "falseY": -28803200,
+   "falseZ": 0
+  }
+ },
+ "isDataBranchVersioned": false,
+ "supportsApplyEditsWithGlobalIds": false,
+ "maxRecordCount": 2000,
+ "infoInEstimates": [
+  "extent",
+  "count"
+ ],
+ "datesInUnknownTimezone": false,
+ "ownershipBasedAccessControlForFeatures": null,
+ "type": "Feature Layer",
+ "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+ "relationships": [],
+ "cimVersion": "3.7.0",
+ "isDataArchived": false,
+ "id": 0,
+ "archivingInfo": {
+  "startArchivingMoment": -1,
+  "supportsQueryWithHistoricMoment": false
+ },
+ "spatialReference": {
+  "falseM": -100000,
+  "xyTolerance": 0.001,
+  "mUnits": 10000,
+  "zUnits": 1,
+  "latestWkid": 26986,
+  "zTolerance": 2,
+  "wkid": 26986,
+  "xyUnits": 122610652.811951116,
+  "mTolerance": 0.001,
+  "falseX": -36530900,
+  "falseY": -28803200,
+  "falseZ": 0
+ },
+ "supportsStatistics": true,
+ "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson,kml,excel,featureCollection",
+ "hasLastEditTime": false,
+ "standardMaxRecordCount": 4000,
+ "isDataVersioned": false,
+ "hasGeometryProperties": true,
+ "templates": [{
+  "name": "Wards and Precincts 2022",
+  "description": "",
+  "drawingTool": "esriFeatureEditToolPolygon",
+  "prototype": {"attributes": {
+   "WP_NAME": null,
+   "TOWN_ID": null,
+   "PERIMETER_MILES": null,
+   "WARD": null,
+   "WP_DISTRICT": null,
+   "TOWN": null,
+   "POP_2020": null,
+   "PRECINCT": null,
+   "AREA_MILES": null
+  }}
+ }],
+ "supportsAdvancedQueries": true,
+ "parentLayer": null,
+ "currentVersion": 12.1,
+ "canScaleSymbols": false,
+ "hasZ": false,
+ "advancedEditingCapabilities": {
+  "supportsSessionBasedAddAttachments": true,
+  "supportsAsyncApplyEdits": true,
+  "supportsApplyEditsbyUploadID": true,
+  "supportsSessionBasedUpdateFeatures": true,
+  "supportsSessionBasedDeleteAttachments": true,
+  "supportsDivideCombineGroupedObjects": true,
+  "supportsDeleteAssociations": true,
+  "supportsSessionBasedUpdateAttachments": true,
+  "supportedSqlFormatsInCalculate": ["standard"],
+  "supportedApplyEditsUploadIDFormats": "JSON,PBF",
+  "supportsSessionBasedDeleteFeatures": true,
+  "supportsSessionBasedAddFeatures": true
+ },
+ "supportsQuantizationEditMode": true,
+ "objectIdField": "OBJECTID",
+ "name": "Wards and Precincts 2022",
+ "allowTrueCurvesUpdates": true,
+ "displayField": "WP_NAME",
+ "supportsCalculate": true,
+ "fields": [
+  {
+   "modelName": "OBJECTID",
+   "nullable": false,
+   "editable": false,
+   "defaultValue": null,
+   "domain": null,
+   "name": "OBJECTID",
+   "alias": "OBJECTID",
+   "type": "esriFieldTypeOID"
+  },
+  {
+   "modelName": "WARD",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "WARD",
+   "length": 5,
+   "alias": "Ward",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "modelName": "PRECINCT",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "PRECINCT",
+   "length": 5,
+   "alias": "Precinct",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "modelName": "WP_DISTRICT",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "WP_DISTRICT",
+   "length": 12,
+   "alias": "Ward and Precinct District",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "modelName": "WP_NAME",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "WP_NAME",
+   "length": 100,
+   "alias": "Ward and Precinct name",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "modelName": "TOWN",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "TOWN",
+   "length": 30,
+   "alias": "Town",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "modelName": "TOWN_ID",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "TOWN_ID",
+   "alias": "Town ID",
+   "type": "esriFieldTypeSmallInteger"
+  },
+  {
+   "modelName": "POP_2020",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "POP_2020",
+   "alias": "Population 2020",
+   "type": "esriFieldTypeInteger"
+  },
+  {
+   "modelName": "AREA_MILES",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "AREA_MILES",
+   "alias": "Area in sq. miles",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "modelName": "PERIMETER_MILES",
+   "nullable": true,
+   "editable": true,
+   "defaultValue": null,
+   "domain": null,
+   "name": "PERIMETER_MILES",
+   "alias": "Perimeter in miles",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "modelName": "SHAPE.AREA",
+   "nullable": true,
+   "editable": false,
+   "defaultValue": null,
+   "domain": null,
+   "name": "Shape__Area",
+   "alias": "SHAPE.AREA",
+   "type": "esriFieldTypeDouble",
+   "required": true
+  },
+  {
+   "modelName": "SHAPE.LEN",
+   "nullable": true,
+   "editable": false,
+   "defaultValue": null,
+   "domain": null,
+   "name": "Shape__Length",
+   "alias": "SHAPE.LEN",
+   "type": "esriFieldTypeDouble",
+   "required": true
+  }
+ ],
+ "maxRecordCountFactor": 1,
+ "dateFieldsTimeReference": {
+  "timeZoneIANA": "Etc/UTC",
+  "respectsDaylightSaving": false,
+  "timeZone": "UTC"
+ },
+ "bigIntegerRestrictedTo53Bits": true,
+ "hasM": false,
+ "allowGeometryUpdates": false,
+ "preferredTimeReference": null,
+ "useStandardizedQueries": true,
+ "sourceSpatialReference": {
+  "falseM": 0,
+  "xyTolerance": 0.001,
+  "mUnits": 1,
+  "zUnits": 1,
+  "latestWkid": 26986,
+  "zTolerance": 0.001,
+  "wkid": 26986,
+  "xyUnits": 10000,
+  "mTolerance": 0.001,
+  "falseX": -36530900,
+  "falseY": -28803200,
+  "falseZ": 0
+ },
+ "globalIdField": "",
+ "description": "Voting precincts for the Commonwealth of Massachusetts. Established based on the 2020 Decennial Census by each municipality and approved by the Local Election Districts Review Commission (LEDRC) in accordance with state law.These data reflect the statewide change in population for the Commonwealth of Massachusetts based on the 2020 Decennial Census and the new precinct and ward lines established by each municipality and reviewed and approved by the Local Election Districts Review Commission (LEDRC) in accordance with the procedures set forth in state law. The dataset represents those precincts and wards approved by the LEDRC being passed to the State Legislature for Redistricting.",
+ "syncCanReturnChanges": false,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape__Area",
+  "shapeLengthFieldName": "Shape__Length",
+  "units": "esriMeters"
+ },
+ "supportsRollbackOnFailureParameter": true,
+ "isDataReplicaTracked": false,
+ "standardMaxRecordCountNoGeometry": 32000,
+ "indexes": [
+  {
+   "name": "R972307_SDE_ROWID_UK",
+   "isUnique": true,
+   "description": "",
+   "isAscending": true,
+   "fields": "OBJECTID"
+  },
+  {
+   "name": "A39414_IX1",
+   "isUnique": true,
+   "description": "",
+   "isAscending": true,
+   "fields": "SHAPE"
+  }
+ ],
+ "editFieldsInfo": null,
+ "supportsDatumTransformation": true,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "minScale": 0,
+ "hasAttachments": false,
+ "advancedQueryCapabilities": {
+  "supportsSqlExpression": true,
+  "supportsQueryWithResultType": true,
+  "supportsUseEstimateForExceedsLimit": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsQueryWithCacheHint": false,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsCurrentUserQueries": true,
+  "fullTextSearchCapabilities": {
+   "supportsSqlExpressionInFullText": true,
+   "supportsOperator": false,
+   "supportsSearchOperator": true
+  },
+  "supportsQueryWithLodSR": false,
+  "supportsPagination": true,
+  "supportsMaxRecordCountFactor": false,
+  "fullTextSearchableFields": [],
+  "supportsStatistics": true,
+  "supportsTrueCurve": true,
+  "supportsOrderBy": true,
+  "supportsFullTextSearch": true,
+  "supportsQueryWithDistance": true,
+  "supportsLod": false,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsReturningQueryExtent": true,
+  "supportsReturningGeometryEnvelope": true,
+  "supportedCurveTypes": [
+   "esriGeometryCircularArc",
+   "esriGeometryEllipticArc",
+   "esriGeometryBezier3Curve"
+  ],
+  "supportsDistinct": true,
+  "supportsReturningGeometryCentroid": true,
+  "supportsQueryAnalytic": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true
+ },
+ "subtypeField": "",
+ "supportsValidateSQL": true,
+ "serviceItemId": "",
+ "supportsCoordinatesQuantization": true,
+ "types": [],
+ "capabilities": "Query",
+ "maxScale": 0,
+ "supportsAppend": true,
+ "supportsExceedsLimitStatistics": true,
+ "defaultVisibility": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsAsync": true,
+  "supportsLinearRegression": true,
+  "supportsPercentileAnalytic": true
+ },
+ "supportedTrueCurvePbfFeatureEncodings": [
+  "esriCompressedShapeBuffer",
+  "esriDefault"
+ ],
+ "hasMetadata": true,
+ "supportedAppendFormats": "FILEGDB,PBF,CSV",
+ "tileMaxRecordCount": 4000,
+ "typeIdField": "",
+ "supportsASyncCalculate": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "drawingInfo": {
+  "renderer": {
+   "symbol": {
+    "outline": {
+     "color": [
+      156,
+      156,
+      156,
+      255
+     ],
+     "width": 1.75,
+     "style": "esriSLSSolid",
+     "type": "esriSLS"
+    },
+    "color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "style": "esriSFSSolid",
+    "type": "esriSFS"
+   },
+   "type": "simple"
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "geometryField": {
+  "modelName": "SHAPE",
+  "nullable": true,
+  "editable": false,
+  "defaultValue": null,
+  "domain": null,
+  "name": "SHAPE",
+  "alias": "SHAPE",
+  "type": "esriFieldTypeGeometry"
+ },
+ "copyrightText": "Office of the Secretary of the Commonwealth of Massachusetts \nMassachusetts Voting Precincts 2022\nBoston, MA\n\nma2020census@sec.state.ma.us\nhttp://www.sec.state.ma.us/",
+ "geometryType": "esriGeometryPolygon"
+}

@@ -1,0 +1,181 @@
+{
+ "supportsReturnServiceEditsOption": true,
+ "supportsApplyEditsWithGlobalIds": false,
+ "maxRecordCount": 2000,
+ "datesInUnknownTimezone": false,
+ "supportsQueryDomains": true,
+ "infoInEstimates": [
+  "extent",
+  "count"
+ ],
+ "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+ "syncEnabled": false,
+ "relationships": [],
+ "tables": [],
+ "cimVersion": "3.7.0",
+ "layers": [{
+  "subLayerIds": null,
+  "maxScale": 0,
+  "name": "Wards and Precincts 2022",
+  "defaultVisibility": true,
+  "id": 0,
+  "minScale": 0,
+  "type": "Feature Layer",
+  "parentLayerId": -1,
+  "geometryType": "esriGeometryPolygon"
+ }],
+ "spatialReference": {
+  "falseM": -100000,
+  "xyTolerance": 0.001,
+  "mUnits": 10000,
+  "zUnits": 1,
+  "latestWkid": 26986,
+  "zTolerance": 2,
+  "wkid": 26986,
+  "xyUnits": 122610652.811951116,
+  "mTolerance": 0.001,
+  "falseX": -36530900,
+  "falseY": -28803200,
+  "falseZ": 0
+ },
+ "fullExtent": {
+  "ymin": 777634.44920000108,
+  "xmin": 33863.749499999001,
+  "ymax": 959743.01639999798,
+  "xmax": 330838.81970000302,
+  "spatialReference": {
+   "falseM": -100000,
+   "xyTolerance": 0.001,
+   "mUnits": 10000,
+   "zUnits": 1,
+   "latestWkid": 26986,
+   "zTolerance": 2,
+   "wkid": 26986,
+   "xyUnits": 122610652.811951116,
+   "mTolerance": 0.001,
+   "falseX": -36530900,
+   "falseY": -28803200,
+   "falseZ": 0
+  }
+ },
+ "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson,kml,excel,featureCollection",
+ "syncCapabilities": {
+  "supportsSyncDirectionControl": true,
+  "supportsRegisterReplicaForServer": true,
+  "supportsAttachmentsSyncDirection": true,
+  "supportsDurableUrlForSyncModelNone": false,
+  "supportsPerLayerSync": true,
+  "supportsSyncModelNone": true,
+  "supportsExportDomainDescription": true,
+  "supportsPerReplicaSync": true
+ },
+ "supportsDisconnectedEditing": false,
+ "extractChangesCapabilities": {
+  "supportsFeatureReturn": false,
+  "supportsReturnHasGeometryUpdates": false,
+  "supportsLayerQueries": false,
+  "supportsReturnAttachments": false,
+  "supportsReturnIdsOnly": false,
+  "supportsServerGens": false,
+  "supportsFieldsToCompare": false,
+  "supportsGeometry": false,
+  "supportsReturnExtentOnly": false
+ },
+ "currentVersion": 12.1,
+ "hasBranchVersionedData": false,
+ "referenceScale": 0,
+ "advancedEditingCapabilities": {
+  "supportsMultipatchOptionForServiceEdits": true,
+  "supportsAsyncApplyEdits": true,
+  "supportsApplyEditsbyUploadID": true,
+  "supportsDivideCombineGroupedObjects": true,
+  "supportsSessionBasedUpdateAttachments": true,
+  "supportsSessionBasedAddAttachments": true,
+  "supportsSplit": false,
+  "supportedApplyEditsOptions": {"supportedEditingOptions": 0},
+  "supportsSessionBasedUpdateFeatures": true,
+  "supportsSessionBasedDeleteAttachments": true,
+  "supportsReturnServiceEditsInSourceSR": true,
+  "supportsDeleteAssociations": true,
+  "supportedApplyEditsUploadIDFormats": "JSON,PBF",
+  "supportsSessionBasedDeleteFeatures": true,
+  "supportsSessionBasedAddFeatures": true
+ },
+ "initialExtent": {
+  "ymin": 762083.45253090921,
+  "xmin": 18812.149855828786,
+  "ymax": 975294.01306908985,
+  "xmax": 345890.41934417322,
+  "spatialReference": {
+   "falseM": -100000,
+   "xyTolerance": 0.001,
+   "mUnits": 10000,
+   "zUnits": 1,
+   "latestWkid": 26986,
+   "zTolerance": 2,
+   "wkid": 26986,
+   "xyUnits": 122610652.811951116,
+   "mTolerance": 0.001,
+   "falseX": -36530900,
+   "falseY": -28803200,
+   "falseZ": 0
+  }
+ },
+ "allowTrueCurvesUpdates": true,
+ "supportedCurveTypes": [
+  "esriGeometryCircularArc",
+  "esriGeometryEllipticArc",
+  "esriGeometryBezier3Curve"
+ ],
+ "maxRecordCountFactor": 1,
+ "hasArchivedData": false,
+ "documentInfo": {
+  "Category": "",
+  "Keywords": "",
+  "Comments": "",
+  "Title": "WardsPrecincts2022.aprx",
+  "Author": "",
+  "Subject": ""
+ },
+ "supportsUseEstimateForExceedsLimit": true,
+ "allowGeometryUpdates": false,
+ "supportsQueryContingentValues": true,
+ "description": "",
+ "units": "esriMeters",
+ "hasVersionedData": false,
+ "supportsDatumTransformation": true,
+ "supportsQueryDataElements": true,
+ "returnServiceEditsHaveSR": true,
+ "supportsRelationshipsResource": true,
+ "supportsSharedTemplates": true,
+ "enableZDefaults": false,
+ "allowUpdateWithoutMValues": false,
+ "capabilities": "Query",
+ "supportsTrueCurve": true,
+ "supportsAppend": true,
+ "supportsSharedTemplatesRelationshipId": true,
+ "supportedTrueCurvePbfFeatureEncodings": [
+  "esriCompressedShapeBuffer",
+  "esriDefault"
+ ],
+ "supportedAppendFormats": "FILEGDB,PBF",
+ "supportsVCSProjection": true,
+ "supportedQueryFormats": "JSON",
+ "datumTransformations": [
+  {"geoTransforms": [{
+   "latestWkid": 1241,
+   "transformForward": true,
+   "wkid": 108001,
+   "name": "NAD_1927_To_NAD_1983_NADCON"
+  }]},
+  {"geoTransforms": [{
+   "latestWkid": 1241,
+   "transformForward": false,
+   "wkid": 108001,
+   "name": "NAD_1927_To_NAD_1983_NADCON"
+  }]}
+ ],
+ "serviceDescription": "",
+ "copyrightText": "",
+ "hasSharedTemplates": true
+}

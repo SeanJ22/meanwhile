@@ -35,11 +35,15 @@
             "group": 1
           },
           "name": {
-            "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)(?: - |,)\\s*(?=(?:Voter Entrance )?\\d)",
+            "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>([\\s\\S]*?)(?:(?:\\s|&nbsp;)*(?:-|,)(?:\\s|&nbsp;)*(?=(?:[Vv]oter\\s+[Ee]ntrance\\s+)?\\d)|</p>\\s*<p\\b[^>]*>\\s*(?:[Vv]oter\\s+[Ee]ntrance\\s+)?(?=\\d)|(?:<br\\s*/?>\\s*)+(?=\\d))",
             "group": 1
           },
           "address": {
-            "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?(?: - |,)\\s*((?:Voter Entrance )?\\d[^<\\n]*)",
+            "pattern": "<td\\b[^>]*>[\\s\\S]*?</td>\\s*<td\\b[^>]*>[\\s\\S]*?(?:(?:\\s|&nbsp;)*(?:-|,)(?:\\s|&nbsp;)*(?=(?:[Vv]oter\\s+[Ee]ntrance\\s+)?\\d)|</p>\\s*<p\\b[^>]*>\\s*(?:[Vv]oter\\s+[Ee]ntrance\\s+)?(?=\\d)|(?:<br\\s*/?>\\s*)+(?=\\d))((?:[Vv]oter\\s+[Ee]ntrance\\s+)?\\d[^<\\n;]*)",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "<p\\b[^>]*>\\s*((?:[Vv]oter\\s+[Ee]ntrance|Vote in)[\\s\\S]*?)</p>",
             "group": 1
           }
         }
@@ -65,5 +69,36 @@
         "documentUrl": "https://www.boston.gov/departments/elections/city-boston-polling-locations"
       }
     }
+  },
+  {
+    "id": "cx-votes-ma-boston-current-precinct-boundaries",
+    "publisher": "MassGIS / Massachusetts Secretary of the Commonwealth",
+    "url": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+    "shape": "json",
+    "covers": [],
+    "scope": {
+      "state": "MA",
+      "ocdId": "ocd-division/country:us/state:ma/county:suffolk/place:boston",
+      "name": "Boston",
+      "countyFips": "25025",
+      "countySubdivisionGeoid": "2502507000"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+    "electionAssociationVerified": true,
+    "boundaryLayer": true,
+    "extraction": {
+      "dataUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&outFields=WARD%2CPRECINCT%2CTOWN&outSR=4326&returnGeometry=true&f=geojson",
+      "columns": {
+        "ward": "WARD",
+        "precinct": "PRECINCT"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-02T23:26:02.743637+00:00",
+      "detail": "Fresh production MassGIS government GeoJSON query filtered to TOWN=BOSTON;275current ward/precinct polygons, matched to currentBoston Election Department table. Older255polygon city layer explicitly excluded."
+    },
+    "discoveredFrom": "https://massgis.maps.arcgis.com/sharing/rest/search?q=title%3A%22Wards%20and%20Precincts%202022%22&num=100&f=pjson"
   }
 ]

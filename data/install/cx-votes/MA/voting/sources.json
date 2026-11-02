@@ -36,5 +36,100 @@
       "recordedUrl": "https://www.boston.gov/sites/default/files/file/2026/10/2026-11-03-Polling-Locations-UPDATE.pdf",
       "recordedAt": "2026-11-02T21:40:15.347527+00:00"
     }
+  },
+  {
+    "url": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+    "finalUrl": "https://www.mass.gov/info-details/massgis-data-2022-wards-and-precincts",
+    "file": "sources/ffcaf59abf9c92a433ffdcea9c42eca7ea84330319211f8a5495a395af828f8b.source",
+    "sha256": "ffcaf59abf9c92a433ffdcea9c42eca7ea84330319211f8a5495a395af828f8b",
+    "byteLength": 196617,
+    "contentType": "text/html; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:16:59.023564+00:00",
+    "httpStatus": 200,
+    "use": "Official current ward/precinct dataset description and legal provenance"
+  },
+  {
+    "url": "https://massgis.maps.arcgis.com/sharing/rest/search?q=title%3A%22Wards%20and%20Precincts%202022%22&num=100&f=pjson",
+    "finalUrl": "https://massgis.maps.arcgis.com/sharing/rest/search?q=title%3A%22Wards%20and%20Precincts%202022%22&num=100&f=pjson",
+    "file": "sources/4374409e9e0b624104cda2faca0f0ea713ccc4f1f8b8605086cb05f1f56fe1ad.source",
+    "sha256": "4374409e9e0b624104cda2faca0f0ea713ccc4f1f8b8605086cb05f1f56fe1ad",
+    "byteLength": 38253,
+    "contentType": "text/plain;charset=utf-8",
+    "retrievedAt": "2026-11-02T23:22:43.827262+00:00",
+    "httpStatus": 200,
+    "use": "Official MassGIS item catalogue identifies production government FeatureServer"
+  },
+  {
+    "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer?f=pjson",
+    "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer?f=pjson",
+    "file": "sources/8edbceec4915cf6120f02656614b940e3ef4d8e5e668efedcb3be93be861faa2.source",
+    "sha256": "8edbceec4915cf6120f02656614b940e3ef4d8e5e668efedcb3be93be861faa2",
+    "byteLength": 4904,
+    "contentType": "text/plain; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:23:25.114736+00:00",
+    "httpStatus": 200,
+    "use": "Production government service metadata"
+  },
+  {
+    "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0?f=pjson",
+    "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0?f=pjson",
+    "file": "sources/1236c56e8aab6150518c5dfe6bffe3ff79c78df54dac0e0d7dc9c3b1ab19da9d.source",
+    "sha256": "1236c56e8aab6150518c5dfe6bffe3ff79c78df54dac0e0d7dc9c3b1ab19da9d",
+    "byteLength": 10509,
+    "contentType": "text/plain; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:23:25.366903+00:00",
+    "httpStatus": 200,
+    "use": "Production government polygon layer metadata and supported query formats"
+  },
+  {
+    "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&returnCountOnly=true&f=json",
+    "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&returnCountOnly=true&f=json",
+    "file": "sources/ae772305d5f38fde0ad484d0beec8743b653ab6c9049143d612fb5a61baba79b.source",
+    "sha256": "ae772305d5f38fde0ad484d0beec8743b653ab6c9049143d612fb5a61baba79b",
+    "byteLength": 13,
+    "contentType": "application/json; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:23:25.390540+00:00",
+    "httpStatus": 200,
+    "use": "Boston-filtered official count: 275"
+  },
+  {
+    "url": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&outFields=WARD%2CPRECINCT%2CTOWN&outSR=4326&returnGeometry=true&f=geojson",
+    "finalUrl": "https://arcgisserver.digital.mass.gov/arcgisserver/rest/services/AGOL/WardsPrecincts2022/FeatureServer/0/query?where=TOWN%3D%27BOSTON%27&outFields=WARD%2CPRECINCT%2CTOWN&outSR=4326&returnGeometry=true&f=geojson",
+    "file": "sources/b81356e95996fd66bc819f3202ed21fa2a0dab74219a186216d6787468ed0f4c.source",
+    "sha256": "b81356e95996fd66bc819f3202ed21fa2a0dab74219a186216d6787468ed0f4c",
+    "byteLength": 1067954,
+    "contentType": "application/geo+json; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:24:53.703960+00:00",
+    "httpStatus": 200,
+    "use": "Boston-filtered official current GeoJSON: 275 polygons"
+  },
+  {
+    "url": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7?f=pjson",
+    "finalUrl": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7?f=pjson",
+    "file": "sources/c9108bd6a46f3022fa643d188936491e4a0040e408a4a9324852ce64e97a0218.source",
+    "sha256": "c9108bd6a46f3022fa643d188936491e4a0040e408a4a9324852ce64e97a0218",
+    "byteLength": 5208,
+    "contentType": "text/plain; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:16:58.989331+00:00",
+    "httpStatus": 200,
+    "use": "Excluded older city GIS layer metadata"
+  },
+  {
+    "url": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+    "finalUrl": "https://gisportal.boston.gov/arcgis/rest/services/Planning/OpenData/MapServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+    "file": "sources/dfd1940d769c6491ab860939a63999631a2baa4f6fd1ee24e6bd70a389daafb0.source",
+    "sha256": "dfd1940d769c6491ab860939a63999631a2baa4f6fd1ee24e6bd70a389daafb0",
+    "byteLength": 13,
+    "contentType": "application/json; charset=UTF-8",
+    "retrievedAt": "2026-11-02T23:17:39.759696+00:00",
+    "httpStatus": 200,
+    "use": "Excluded older city GIS layer count: 255"
+  },
+  {
+    "url": "https://s3.us-east-1.amazonaws.com/download.massgis.digital.mass.gov/shapefiles/state/wardsprecincts2022_poly.zip",
+    "file": "sources/03312c26814d6991fad38280463a18a5e3a53e0ce7612e899cfa9ed945825634.source",
+    "sha256": "03312c26814d6991fad38280463a18a5e3a53e0ce7612e899cfa9ed945825634",
+    "byteLength": 6412159,
+    "use": "Independent official shapefile used by GDAL for polygon-interior test points"
   }
 ]

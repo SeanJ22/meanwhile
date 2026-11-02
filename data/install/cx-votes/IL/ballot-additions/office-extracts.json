@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "il-sbe-2026-state-senate-36",
+    "sourceFile": "sources/d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6.source",
+    "sourceHash": "d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6",
+    "page": 1,
+    "boundingBoxXYWH": [
+      324,
+      684,
+      324,
+      110
+    ],
+    "pageCoordinatesUnits": "points at72DPI",
+    "extraction": "pdftotext -r72 -raw with the listed page and XYWH crop",
+    "excerptFile": "sources/55809d0cec41cca588af8dfb4ce89cf4f50d25b9fa3f53170a2f4af7b84096d6.txt",
+    "excerptSha256": "55809d0cec41cca588af8dfb4ce89cf4f50d25b9fa3f53170a2f4af7b84096d6"
+  },
+  {
+    "contestId": "il-sbe-2026-state-house-71",
+    "sourceFile": "sources/d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6.source",
+    "sourceHash": "d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6",
+    "page": 2,
+    "boundingBoxXYWH": [
+      0,
+      78,
+      324,
+      107
+    ],
+    "pageCoordinatesUnits": "points at72DPI",
+    "extraction": "pdftotext -r72 -raw with the listed page and XYWH crop",
+    "excerptFile": "sources/e498c5c5b25201ff1535f6c18fe5ab80793dd6ef194f9fe6166237eaca032007.txt",
+    "excerptSha256": "e498c5c5b25201ff1535f6c18fe5ab80793dd6ef194f9fe6166237eaca032007"
+  },
+  {
+    "contestId": "il-sbe-2026-state-house-79",
+    "sourceFile": "sources/72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3.source",
+    "sourceHash": "72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3",
+    "page": 1,
+    "boundingBoxXYWH": [
+      305,
+      700,
+      307,
+      110
+    ],
+    "pageCoordinatesUnits": "points at72DPI",
+    "extraction": "pdftotext -r72 -raw with the listed page and XYWH crop",
+    "excerptFile": "sources/49d33811d0353de71e1a311ab24ae5c1ef0b91533e6795a017926064dc0b654e.txt",
+    "excerptSha256": "49d33811d0353de71e1a311ab24ae5c1ef0b91533e6795a017926064dc0b654e"
+  }
+]

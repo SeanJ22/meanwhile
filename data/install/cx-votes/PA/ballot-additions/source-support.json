@@ -2,6 +2,25 @@
   {
     "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
     "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "sourceCheckedAt": "2026-11-02T21:44:00.073170+00:00",
+    "sha256": "23dd28b3a448f3f2e60ce46190dc16aa7829bef7cd310665b9a66b5509612b02",
+    "sourceFile": "sources/23dd28b3a448f3f2e60ce46190dc16aa7829bef7cd310665b9a66b5509612b02.source",
+    "excerptFile": "sources/71145a8d27a562aa562d6a25e01ac5fbe80d4665da60c931bda0b19789eb7173.txt",
+    "excerptSha256": "71145a8d27a562aa562d6a25e01ac5fbe80d4665da60c931bda0b19789eb7173",
+    "publicSelection": {
+      "schoolDistrict": "Hempfield School District",
+      "precinctId": "1501"
+    },
+    "evidence": "Public November 03, 2026 election sample viewer; select school district Hempfield School District and precinct 1501, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session.",
+    "officialLinkingPage": {
+      "url": "https://www.lancastercountypa.gov/299/Election-Information",
+      "file": "sources/12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573.html",
+      "sha256": "12cda9bdd74586e7e2398d714ee61e6dafd6e560e62af9f0776dd7a78703a573"
+    }
+  },
+  {
+    "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+    "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
     "sourceCheckedAt": "2026-11-02T21:42:59.280801+00:00",
     "sha256": "5ade528bafa5c009ce77d370695cfc2db49cc172e0464a6e6f091f0ff87faf97",
     "sourceFile": "sources/5ade528bafa5c009ce77d370695cfc2db49cc172e0464a6e6f091f0ff87faf97.source",

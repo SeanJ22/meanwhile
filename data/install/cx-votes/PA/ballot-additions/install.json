@@ -7,6 +7,13 @@
   "inputDirectory": "ballot-input",
   "subjects": [
     {
+      "id": "pa-dos:pa-2026-general:sldl-96",
+      "title": "Representative in the General Assembly – District 96",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:96",
+      "candidates": 2,
+      "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx"
+    },
+    {
       "id": "pa-dos:pa-2026-general:sldl-37",
       "title": "Representative in the General Assembly – District 37",
       "ocdId": "ocd-division/country:us/state:pa/sldl:37",

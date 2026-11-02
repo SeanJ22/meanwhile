@@ -9,6 +9,25 @@
       },
       "contests": [
         {
+          "id": "pa-dos:pa-2026-general:sldl-96",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:96",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 96",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+            "sourceOrg": "Lancaster County Board of Elections",
+            "collectedAt": "2026-11-02T21:44:00.073170+00:00",
+            "verifiedAt": "2026-11-02T21:44:00.073170+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL \nASSEMBLY 96TH DISTRICT\nRepresentante en la Asamblea General \nDistrito 96\nVote for one\nVote por uno\nNikki Rivera\nDemocratic\nBabita Rusyn\nRepublican\nWrite-in Escribir en"
+          }
+        },
+        {
           "id": "pa-dos:pa-2026-general:sldl-37",
           "electionId": "pa-2026-general",
           "ocdId": "ocd-division/country:us/state:pa/sldl:37",
@@ -181,6 +200,40 @@
         }
       ],
       "candidacies": [
+        {
+          "id": "pa-dos:pa-2026-general:sldl-96:nikki-rivera",
+          "contestId": "pa-dos:pa-2026-general:sldl-96",
+          "givenName": "Nikki",
+          "familyName": "Rivera",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+            "sourceOrg": "Lancaster County Board of Elections",
+            "collectedAt": "2026-11-02T21:44:00.073170+00:00",
+            "verifiedAt": "2026-11-02T21:44:00.073170+00:00",
+            "quote": "Nikki Rivera\nDemocratic"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-96:babita-rusyn",
+          "contestId": "pa-dos:pa-2026-general:sldl-96",
+          "givenName": "Babita",
+          "familyName": "Rusyn",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+            "sourceOrg": "Lancaster County Board of Elections",
+            "collectedAt": "2026-11-02T21:44:00.073170+00:00",
+            "verifiedAt": "2026-11-02T21:44:00.073170+00:00",
+            "quote": "Babita Rusyn\nRepublican"
+          }
+        },
         {
           "id": "pa-dos:pa-2026-general:sldl-37:chad-gleissl",
           "contestId": "pa-dos:pa-2026-general:sldl-37",
@@ -511,7 +564,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T21:59:26.583Z",
+    "reviewedAt": "2026-11-02T22:10:22.109Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -923,6 +976,21 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "requestedUrl": "https://centrecountypa.gov/DocumentCenter/View/44590/SAMPLE---10---Philipsburg-1st-Ward",
         "reviewedEvidence": "Official November 3, 2026 general candidate list replay: 2 district races, 4 candidacies, excluding the statewide ticket already held. Blank party slots and explicitly removed or withdrawn candidates are excluded. Every printed candidate in each newly added race is retained."
+      },
+      {
+        "requestedUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+        "finalUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",
+        "httpStatus": 200,
+        "rawHash": "23dd28b3a448f3f2e60ce46190dc16aa7829bef7cd310665b9a66b5509612b02",
+        "retrievedAt": "2026-11-02T21:44:00.073170+00:00",
+        "publicSelection": {
+          "schoolDistrict": "Hempfield School District",
+          "precinctId": "1501"
+        },
+        "publisher": "Lancaster County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://vr.co.lancaster.pa.us/sampleballots/",
+        "reviewedEvidence": "Public November 03, 2026 election sample viewer; select school district Hempfield School District and precinct 1501, then View Ballot. Actual PDF response preserved; each added office block read in full and all printed named candidates retained. This session-dependent URL needs the public selections in a fresh session."
       },
       {
         "requestedUrl": "https://vr.co.lancaster.pa.us/sampleballots/ViewBallot.aspx",

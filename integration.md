@@ -428,3 +428,5 @@ One line per batch folded into river.
 - 2026-11-01T05:56:16Z · spn-01-e3 · SPN-01 · ready 793b9c66967e · river 936ab7a6d7a7 · GitHub CI passed on release 173
 - 2026-11-01T05:56:16Z · spn-01-e4 · SPN-01 · ready 218fa0e744a0 · river 936ab7a6d7a7 · GitHub CI passed on release 173
 - 2026-11-01T05:56:16Z · kb-01 · KB-01 · ready ac6f60602017 · river 936ab7a6d7a7 · GitHub CI passed on release 173
+- 2026-11-02T23:51:18Z · river-174 · RL-174 · ready 3c5a0e9755a3 · river 566628e5b5b0 · GitHub CI passed on release 177
+- 2026-11-02T23:51:18Z · river-reads-175 · RL-175 · ready 9c2d7c261d22 · river 566628e5b5b0 · GitHub CI passed on release 177

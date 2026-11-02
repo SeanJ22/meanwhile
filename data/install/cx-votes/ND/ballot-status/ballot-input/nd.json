@@ -1,0 +1,278 @@
+{
+  "ballots": {
+    "ND:nd-2026-11-03": {
+      "election": {
+        "id": "nd-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ND"
+      },
+      "contests": [],
+      "candidacies": [],
+      "measures": [],
+      "absences": [],
+      "heldContests": [
+        {
+          "id": "nd-billings-general-2026-county-commissioner-at-large-by-district-district-5",
+          "ocdId": "ocd-division/country:us/state:nd/county:billings",
+          "title": "County Commissioner At-Large By District District 5",
+          "reason": "Only a write-in option is listed for this office in the state’s current election system.",
+          "electionId": "nd-2026-11-03",
+          "provenance": {
+            "quote": "{\"contestId\":\"22189\",\"contestName\":\"County Commissioner At-Large By District  District 5\",\"contestTypeCode\":\"CW\",\"contestOrder\":876,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+            "sourceOrg": "North Dakota Secretary of State",
+            "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+            "verifiedAt": "2026-11-02T22:03:06.261Z",
+            "collectedAt": "2026-11-02T21:55:01.851276+00:00",
+            "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c"
+          }
+        },
+        {
+          "id": "nd-kidder-general-2026-county-state-s-attorney",
+          "ocdId": "ocd-division/country:us/state:nd/county:kidder",
+          "title": "County State's Attorney",
+          "reason": "Only a write-in option is listed for this office in the state’s current election system.",
+          "electionId": "nd-2026-11-03",
+          "provenance": {
+            "quote": "{\"contestId\":\"21975\",\"contestName\":\"County State's Attorney Kidder\",\"contestTypeCode\":\"CW\",\"contestOrder\":1002,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+            "sourceOrg": "North Dakota Secretary of State",
+            "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+            "verifiedAt": "2026-11-02T22:03:06.261Z",
+            "collectedAt": "2026-11-02T21:55:01.851276+00:00",
+            "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c"
+          }
+        },
+        {
+          "id": "nd-lamoure-general-2026-county-state-s-attorney",
+          "ocdId": "ocd-division/country:us/state:nd/county:lamoure",
+          "title": "County State's Attorney",
+          "reason": "Only a write-in option is listed for this office in the state’s current election system.",
+          "electionId": "nd-2026-11-03",
+          "provenance": {
+            "quote": "{\"contestId\":\"21976\",\"contestName\":\"County State's Attorney LaMoure\",\"contestTypeCode\":\"CW\",\"contestOrder\":1009,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+            "sourceOrg": "North Dakota Secretary of State",
+            "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+            "verifiedAt": "2026-11-02T22:03:06.261Z",
+            "collectedAt": "2026-11-02T21:55:01.851276+00:00",
+            "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c"
+          }
+        },
+        {
+          "id": "nd-mchenry-general-2026-director-garrison-diversion-conservancy",
+          "ocdId": "ocd-division/country:us/state:nd/county:mchenry",
+          "title": "Director, Garrison Diversion Conservancy",
+          "reason": "Only a write-in option is listed for this office in the state’s current election system.",
+          "electionId": "nd-2026-11-03",
+          "provenance": {
+            "quote": "{\"contestId\":\"22011\",\"contestName\":\"Director, Garrison Diversion Conservancy McHenry\",\"contestTypeCode\":\"CW\",\"contestOrder\":1030,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+            "sourceOrg": "North Dakota Secretary of State",
+            "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+            "verifiedAt": "2026-11-02T22:03:06.261Z",
+            "collectedAt": "2026-11-02T21:55:01.851276+00:00",
+            "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c"
+          }
+        },
+        {
+          "id": "nd-sheridan-general-2026-county-state-s-attorney",
+          "ocdId": "ocd-division/country:us/state:nd/county:sheridan",
+          "title": "County State's Attorney",
+          "reason": "Only a write-in option is listed for this office in the state’s current election system.",
+          "electionId": "nd-2026-11-03",
+          "provenance": {
+            "quote": "{\"contestId\":\"21972\",\"contestName\":\"County State's Attorney Sheridan\",\"contestTypeCode\":\"CW\",\"contestOrder\":1152,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+            "sourceOrg": "North Dakota Secretary of State",
+            "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+            "verifiedAt": "2026-11-02T22:03:06.261Z",
+            "collectedAt": "2026-11-02T21:55:01.851276+00:00",
+            "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c"
+          }
+        },
+        {
+          "id": "nd-slope-general-2026-county-auditor",
+          "ocdId": "ocd-division/country:us/state:nd/county:slope",
+          "title": "County Auditor",
+          "reason": "Only a write-in option is listed for this office in the state’s current election system.",
+          "electionId": "nd-2026-11-03",
+          "provenance": {
+            "quote": "{\"contestId\":\"21687\",\"contestName\":\"County Auditor Slope\",\"contestTypeCode\":\"CW\",\"contestOrder\":1167,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+            "sourceOrg": "North Dakota Secretary of State",
+            "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+            "verifiedAt": "2026-11-02T22:03:06.261Z",
+            "collectedAt": "2026-11-02T21:55:01.851276+00:00",
+            "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "sources": [
+      {
+        "rawHash": "53697a05de8904c220a580007c227a4bba9953f4bce1ae701bc5e10e5689c280",
+        "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+        "publisher": "North Dakota Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:04.328498+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf",
+        "reviewedEvidence": "Official November 3, 2026 ballot language for Constitutional Measure No. 1; question converted from these PDF bytes."
+      },
+      {
+        "rawHash": "00c787981f2ed372fd1ebae161920b11316b09e1b5c6837536e2203268cf667b",
+        "finalUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+        "publisher": "North Dakota Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:04.462169+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf",
+        "reviewedEvidence": "Official November 3, 2026 ballot language for Initiated Constitutional Measure No. 2; question converted from these PDF bytes."
+      },
+      {
+        "rawHash": "9abe90e9242918f692a16d53a15b6cd56baa71d93a964a0ff6f96ed22d5cb8c2",
+        "finalUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "publisher": "North Dakota Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:05:21.988741+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "reviewedEvidence": "All-filter Search returned the full nonpaged official November 3, 2026 contest/candidate table; retained all 148 congressional, statewide and legislative candidate rows, including listed websites and separate unexpired-term contests."
+      },
+      {
+        "rawHash": "ffa26db7a3b6823e8bc8fb2fdae2e73674f6f99b82dde1b1dd0c1fa131b1d862",
+        "finalUrl": "https://www.ndcourts.gov/legal-resources/rules/ndsupctadminr/6",
+        "publisher": "North Dakota Supreme Court",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:04:53.304846+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "requestedUrl": "https://www.ndcourts.gov/legal-resources/rules/ndsupctadminr/6",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "AdministrativeRule6 names the whole counties comprising every judicial district, including all six districts with general judicial races."
+      },
+      {
+        "rawHash": "5d762c00af1b62e0e3b4c788f8563571f47bf0ba2270c0efeb7214e7e339f342",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392",
+        "publisher": "North Dakota Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:03:42.620430+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official2026General public-address sample for precinct09440101:26contests/35printed choices. Every local named choice is also present in the complete general certified candidate table. Blank write-in lines are not invented candidates."
+      },
+      {
+        "rawHash": "e5917d1907915251a4815ddcc6a71033e69811d8875cd6cf91ecf2a55163f29d",
+        "finalUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "publisher": "North Dakota Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T22:58:24.511355+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official2026General list:331countywide county/Garrison contests,443named choices,6empty candidate rows across53counties; 19district judge contests/20names including6already sample-verified EastCentral races. Excluded all40district-only commissioner races/56names and55remaining soil-district rows pending exact scope. CountyCommissioner voteFor remains unknown without sample instructions. Existing Cass sample facts preserved."
+      },
+      {
+        "rawHash": "967514bcb075daf469ea2af5298aef0c49c4159a447d44794302dceca857139c",
+        "finalUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "publisher": "North Dakota Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:31:41.317Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "reviewedEvidence": "The current official portal names Representative in Congress. Corrected the internal zero district spelling to cd:at-large using the shared Census seat rule; candidate names and their original captures are retained."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:55:01.851276+00:00",
+        "httpStatus": 200,
+        "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionInfo?cId=north-dakota&electionID=348",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionInfo?cId=north-dakota&electionID=348",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:55:01.855006+00:00",
+        "httpStatus": 200,
+        "rawHash": "7396b8b00c71b7e5a7cfb3dbdddb8e4751a497f4d92043b15178f865e0042130",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionList?cId=north-dakota",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionList?cId=north-dakota",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:54:30.418145+00:00",
+        "httpStatus": 200,
+        "rawHash": "43d974183b6cf9fdf14a731473279b42c2068dd4a7bf3d38a4f8047b63a1d297",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38007",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38007",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:56:24.802331+00:00",
+        "httpStatus": 200,
+        "rawHash": "4e6ec66d21bcb1e836c6cb16d32ddd5275c6b817d041e455a4b4a916caf73cbf",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38043",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38043",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:56:24.877964+00:00",
+        "httpStatus": 200,
+        "rawHash": "3190e252083f380d462fb53705d5c5ed3bd0d44be48d367710f679f1f1386554",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38045",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38045",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:56:24.737666+00:00",
+        "httpStatus": 200,
+        "rawHash": "69a66b881b0d43414f3b85175510d9944e165bb498cd748f19b83ee863b0aa38",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38049",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38049",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:56:24.766649+00:00",
+        "httpStatus": 200,
+        "rawHash": "d81783681581fecee9dc9ca7222c0f7d7e4ec4b1912dcdcbbec0333e16a02b60",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38083",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38083",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:56:24.702304+00:00",
+        "httpStatus": 200,
+        "rawHash": "979afcbd4dae53006b06d89c96137c5345c6b2ca41856fec669491e915d07f07",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      },
+      {
+        "requestedUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38087",
+        "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38087",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T21:56:24.818625+00:00",
+        "httpStatus": 200,
+        "rawHash": "64aae04d00afcc84b5920c44d72b4fe77893bb4d6f7f1bc235cca862a2de737f",
+        "reviewedEvidence": "Current official election-system identity and complete contest/choice fields were reviewed. Only write-in option 9901 is listed for each targeted office. This does not establish whether any named write-in candidate has qualified. Election result totals are not imported."
+      }
+    ],
+    "reviewedAt": "2026-11-02T22:03:06.261Z",
+    "reviewedBy": "CX-VOTES official-source review",
+    "contractVersion": 1
+  }
+}

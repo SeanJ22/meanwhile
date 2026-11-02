@@ -1,0 +1,365 @@
+{
+  "state": "ND",
+  "productionWrites": 0,
+  "modelCalls": 0,
+  "appCodeChanges": 0,
+  "sourceDocuments": [
+    {
+      "capture": "nd-results-contests",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 375853,
+      "retrievedAt": "2026-11-02T21:55:01.851276+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-results-election",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionInfo?cId=north-dakota&electionID=348",
+      "sourceFile": "sources/7396b8b00c71b7e5a7cfb3dbdddb8e4751a497f4d92043b15178f865e0042130.source",
+      "rawHash": "7396b8b00c71b7e5a7cfb3dbdddb8e4751a497f4d92043b15178f865e0042130",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 159112,
+      "retrievedAt": "2026-11-02T21:55:01.855006+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-results-list",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionList?cId=north-dakota",
+      "sourceFile": "sources/43d974183b6cf9fdf14a731473279b42c2068dd4a7bf3d38a4f8047b63a1d297.source",
+      "rawHash": "43d974183b6cf9fdf14a731473279b42c2068dd4a7bf3d38a4f8047b63a1d297",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 230,
+      "retrievedAt": "2026-11-02T21:54:30.418145+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-billings-choices",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38007",
+      "sourceFile": "sources/4e6ec66d21bcb1e836c6cb16d32ddd5275c6b817d041e455a4b4a916caf73cbf.source",
+      "rawHash": "4e6ec66d21bcb1e836c6cb16d32ddd5275c6b817d041e455a4b4a916caf73cbf",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 11978,
+      "retrievedAt": "2026-11-02T21:56:24.802331+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-kidder-choices",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38043",
+      "sourceFile": "sources/3190e252083f380d462fb53705d5c5ed3bd0d44be48d367710f679f1f1386554.source",
+      "rawHash": "3190e252083f380d462fb53705d5c5ed3bd0d44be48d367710f679f1f1386554",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 20472,
+      "retrievedAt": "2026-11-02T21:56:24.877964+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-lamoure-choices",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38045",
+      "sourceFile": "sources/69a66b881b0d43414f3b85175510d9944e165bb498cd748f19b83ee863b0aa38.source",
+      "rawHash": "69a66b881b0d43414f3b85175510d9944e165bb498cd748f19b83ee863b0aa38",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 12763,
+      "retrievedAt": "2026-11-02T21:56:24.737666+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-mchenry-choices",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38049",
+      "sourceFile": "sources/d81783681581fecee9dc9ca7222c0f7d7e4ec4b1912dcdcbbec0333e16a02b60.source",
+      "rawHash": "d81783681581fecee9dc9ca7222c0f7d7e4ec4b1912dcdcbbec0333e16a02b60",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 27919,
+      "retrievedAt": "2026-11-02T21:56:24.766649+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-sheridan-choices",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38083",
+      "sourceFile": "sources/979afcbd4dae53006b06d89c96137c5345c6b2ca41856fec669491e915d07f07.source",
+      "rawHash": "979afcbd4dae53006b06d89c96137c5345c6b2ca41856fec669491e915d07f07",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 6590,
+      "retrievedAt": "2026-11-02T21:56:24.702304+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-slope-choices",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38087",
+      "sourceFile": "sources/64aae04d00afcc84b5920c44d72b4fe77893bb4d6f7f1bc235cca862a2de737f.source",
+      "rawHash": "64aae04d00afcc84b5920c44d72b4fe77893bb4d6f7f1bc235cca862a2de737f",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 13180,
+      "retrievedAt": "2026-11-02T21:56:24.818625+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-sos-home",
+      "role": "AUTHORITY_LINK_EVIDENCE",
+      "sourceUrl": "https://www.sos.nd.gov/",
+      "sourceFile": "sources/90bddb7accb3596764f95680abb842c22707f466684706db0297fd965328e349.source",
+      "rawHash": "90bddb7accb3596764f95680abb842c22707f466684706db0297fd965328e349",
+      "contentType": "text/html; charset=UTF-8",
+      "byteLength": 157456,
+      "retrievedAt": "2026-11-02T21:50:39.857479+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-result-home",
+      "role": "AUTHORITY_LINK_EVIDENCE",
+      "sourceUrl": "https://resultsnd.sos.nd.gov/",
+      "sourceFile": "sources/e8d7e6937789c14dd6b1f7a5c2e94cbbd6a0a38377d5c3f90db9a12dcf149346.source",
+      "rawHash": "e8d7e6937789c14dd6b1f7a5c2e94cbbd6a0a38377d5c3f90db9a12dcf149346",
+      "contentType": "text/html",
+      "byteLength": 433,
+      "retrievedAt": "2026-11-02T21:52:22.122655+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-results-config",
+      "role": "AUTHORITY_LINK_EVIDENCE",
+      "sourceUrl": "https://resultsnd.sos.nd.gov/appConfig.json",
+      "sourceFile": "sources/cc22458486df71be9e08f33d62a54186c59f591b148ca64bb0fbbe8cb76224bc.source",
+      "rawHash": "cc22458486df71be9e08f33d62a54186c59f591b148ca64bb0fbbe8cb76224bc",
+      "contentType": "application/json",
+      "byteLength": 253,
+      "retrievedAt": "2026-11-02T21:53:49.252246+00:00",
+      "httpStatus": 200
+    },
+    {
+      "capture": "nd-results-client",
+      "role": "AUTHORITY_LINK_EVIDENCE",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Client/GetClientConfig?cId=north-dakota",
+      "sourceFile": "sources/4b98817aad2765a3cbae0a3f28a858c682d5ca5710e7850c37c7904ffe464b46.source",
+      "rawHash": "4b98817aad2765a3cbae0a3f28a858c682d5ca5710e7850c37c7904ffe464b46",
+      "contentType": "application/json; charset=utf-8",
+      "byteLength": 1383,
+      "retrievedAt": "2026-11-02T21:54:30.387752+00:00",
+      "httpStatus": 200
+    }
+  ],
+  "records": [
+    {
+      "contestId": "nd-billings-general-2026-county-commissioner-at-large-by-district-district-5",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY",
+      "namedCandidatesAdded": 0,
+      "officialSystemContestId": "22189",
+      "county": "Billings",
+      "countyLocationId": "38007",
+      "electionId": "348",
+      "electionName": "2026 General Election",
+      "electionDate": "2026-11-03T00:00:00",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "quote": "{\"contestId\":\"22189\",\"contestName\":\"County Commissioner At-Large By District  District 5\",\"contestTypeCode\":\"CW\",\"contestOrder\":876,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+      "countyBinding": {
+        "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38007",
+        "sourceHash": "4e6ec66d21bcb1e836c6cb16d32ddd5275c6b817d041e455a4b4a916caf73cbf",
+        "contestId": "22189",
+        "districtId": "District 5",
+        "choiceIds": [
+          "9901"
+        ]
+      },
+      "sourceUpdatedAt": "2026-10-22T19:14:18.2013678Z",
+      "sourceFetchedAt": "2026-11-02T21:55:01.851276+00:00",
+      "sourceElectionResultsOfficial": false,
+      "limitations": [
+        "The source explicitly lists a write-in choice; this assessment does not infer a candidate absence from a blank name.",
+        "The source does not state that no write-in candidate has qualified. No such claim is made.",
+        "The election has not reported votes. The source’s isOfficial:false flag describes its result status; no vote totals or winner claims are imported.",
+        "No named candidacy can be created from a generic write-in option. The office remains held under the existing reader contract."
+      ]
+    },
+    {
+      "contestId": "nd-kidder-general-2026-county-state-s-attorney",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY",
+      "namedCandidatesAdded": 0,
+      "officialSystemContestId": "21975",
+      "county": "Kidder",
+      "countyLocationId": "38043",
+      "electionId": "348",
+      "electionName": "2026 General Election",
+      "electionDate": "2026-11-03T00:00:00",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "quote": "{\"contestId\":\"21975\",\"contestName\":\"County State's Attorney Kidder\",\"contestTypeCode\":\"CW\",\"contestOrder\":1002,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+      "countyBinding": {
+        "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38043",
+        "sourceHash": "3190e252083f380d462fb53705d5c5ed3bd0d44be48d367710f679f1f1386554",
+        "contestId": "21975",
+        "districtId": "Kidder",
+        "choiceIds": [
+          "9901"
+        ]
+      },
+      "sourceUpdatedAt": "2026-10-22T19:14:18.2013678Z",
+      "sourceFetchedAt": "2026-11-02T21:55:01.851276+00:00",
+      "sourceElectionResultsOfficial": false,
+      "limitations": [
+        "The source explicitly lists a write-in choice; this assessment does not infer a candidate absence from a blank name.",
+        "The source does not state that no write-in candidate has qualified. No such claim is made.",
+        "The election has not reported votes. The source’s isOfficial:false flag describes its result status; no vote totals or winner claims are imported.",
+        "No named candidacy can be created from a generic write-in option. The office remains held under the existing reader contract."
+      ]
+    },
+    {
+      "contestId": "nd-lamoure-general-2026-county-state-s-attorney",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY",
+      "namedCandidatesAdded": 0,
+      "officialSystemContestId": "21976",
+      "county": "LaMoure",
+      "countyLocationId": "38045",
+      "electionId": "348",
+      "electionName": "2026 General Election",
+      "electionDate": "2026-11-03T00:00:00",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "quote": "{\"contestId\":\"21976\",\"contestName\":\"County State's Attorney LaMoure\",\"contestTypeCode\":\"CW\",\"contestOrder\":1009,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+      "countyBinding": {
+        "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38045",
+        "sourceHash": "69a66b881b0d43414f3b85175510d9944e165bb498cd748f19b83ee863b0aa38",
+        "contestId": "21976",
+        "districtId": "LaMoure",
+        "choiceIds": [
+          "9901"
+        ]
+      },
+      "sourceUpdatedAt": "2026-10-22T19:14:18.2013678Z",
+      "sourceFetchedAt": "2026-11-02T21:55:01.851276+00:00",
+      "sourceElectionResultsOfficial": false,
+      "limitations": [
+        "The source explicitly lists a write-in choice; this assessment does not infer a candidate absence from a blank name.",
+        "The source does not state that no write-in candidate has qualified. No such claim is made.",
+        "The election has not reported votes. The source’s isOfficial:false flag describes its result status; no vote totals or winner claims are imported.",
+        "No named candidacy can be created from a generic write-in option. The office remains held under the existing reader contract."
+      ]
+    },
+    {
+      "contestId": "nd-mchenry-general-2026-director-garrison-diversion-conservancy",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY",
+      "namedCandidatesAdded": 0,
+      "officialSystemContestId": "22011",
+      "county": "McHenry",
+      "countyLocationId": "38049",
+      "electionId": "348",
+      "electionName": "2026 General Election",
+      "electionDate": "2026-11-03T00:00:00",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "quote": "{\"contestId\":\"22011\",\"contestName\":\"Director, Garrison Diversion Conservancy McHenry\",\"contestTypeCode\":\"CW\",\"contestOrder\":1030,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+      "countyBinding": {
+        "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38049",
+        "sourceHash": "d81783681581fecee9dc9ca7222c0f7d7e4ec4b1912dcdcbbec0333e16a02b60",
+        "contestId": "22011",
+        "districtId": "McHenry",
+        "choiceIds": [
+          "9901"
+        ]
+      },
+      "sourceUpdatedAt": "2026-10-22T19:14:18.2013678Z",
+      "sourceFetchedAt": "2026-11-02T21:55:01.851276+00:00",
+      "sourceElectionResultsOfficial": false,
+      "limitations": [
+        "The source explicitly lists a write-in choice; this assessment does not infer a candidate absence from a blank name.",
+        "The source does not state that no write-in candidate has qualified. No such claim is made.",
+        "The election has not reported votes. The source’s isOfficial:false flag describes its result status; no vote totals or winner claims are imported.",
+        "No named candidacy can be created from a generic write-in option. The office remains held under the existing reader contract."
+      ]
+    },
+    {
+      "contestId": "nd-sheridan-general-2026-county-state-s-attorney",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY",
+      "namedCandidatesAdded": 0,
+      "officialSystemContestId": "21972",
+      "county": "Sheridan",
+      "countyLocationId": "38083",
+      "electionId": "348",
+      "electionName": "2026 General Election",
+      "electionDate": "2026-11-03T00:00:00",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "quote": "{\"contestId\":\"21972\",\"contestName\":\"County State's Attorney Sheridan\",\"contestTypeCode\":\"CW\",\"contestOrder\":1152,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+      "countyBinding": {
+        "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38083",
+        "sourceHash": "979afcbd4dae53006b06d89c96137c5345c6b2ca41856fec669491e915d07f07",
+        "contestId": "21972",
+        "districtId": "Sheridan",
+        "choiceIds": [
+          "9901"
+        ]
+      },
+      "sourceUpdatedAt": "2026-10-22T19:14:18.2013678Z",
+      "sourceFetchedAt": "2026-11-02T21:55:01.851276+00:00",
+      "sourceElectionResultsOfficial": false,
+      "limitations": [
+        "The source explicitly lists a write-in choice; this assessment does not infer a candidate absence from a blank name.",
+        "The source does not state that no write-in candidate has qualified. No such claim is made.",
+        "The election has not reported votes. The source’s isOfficial:false flag describes its result status; no vote totals or winner claims are imported.",
+        "No named candidacy can be created from a generic write-in option. The office remains held under the existing reader contract."
+      ]
+    },
+    {
+      "contestId": "nd-slope-general-2026-county-auditor",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY",
+      "namedCandidatesAdded": 0,
+      "officialSystemContestId": "21687",
+      "county": "Slope",
+      "countyLocationId": "38087",
+      "electionId": "348",
+      "electionName": "2026 General Election",
+      "electionDate": "2026-11-03T00:00:00",
+      "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "sourceHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "quote": "{\"contestId\":\"21687\",\"contestName\":\"County Auditor Slope\",\"contestTypeCode\":\"CW\",\"contestOrder\":1167,\"voteFor\":1,\"locationType\":null,\"locationID\":null,\"message\":\"\",\"messageLink\":\"\",\"choices\":{\"9901\":{\"id\":\"9901\",\"name\":\"  write-in \",\"pictureFilename\":\"\",\"partyID\":\"NON\",\"color\":\"#939393\",\"order\":99,\"isWriteIn\":false,\"isWinner\":false}}}",
+      "countyBinding": {
+        "sourceUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestResults?cId=north-dakota&electionID=348&contestType=CW&locationId=38087",
+        "sourceHash": "64aae04d00afcc84b5920c44d72b4fe77893bb4d6f7f1bc235cca862a2de737f",
+        "contestId": "21687",
+        "districtId": "Slope",
+        "choiceIds": [
+          "9901"
+        ]
+      },
+      "sourceUpdatedAt": "2026-10-22T19:14:18.2013678Z",
+      "sourceFetchedAt": "2026-11-02T21:55:01.851276+00:00",
+      "sourceElectionResultsOfficial": false,
+      "limitations": [
+        "The source explicitly lists a write-in choice; this assessment does not infer a candidate absence from a blank name.",
+        "The source does not state that no write-in candidate has qualified. No such claim is made.",
+        "The election has not reported votes. The source’s isOfficial:false flag describes its result status; no vote totals or winner claims are imported.",
+        "No named candidacy can be created from a generic write-in option. The office remains held under the existing reader contract."
+      ]
+    }
+  ],
+  "authorityChain": [
+    {
+      "url": "https://www.sos.nd.gov/",
+      "role": "Official Secretary of State home links resultsnd.sos.nd.gov/#election=348"
+    },
+    {
+      "url": "https://resultsnd.sos.nd.gov/",
+      "role": "Public official results frontend; retained script loads appConfig.json"
+    },
+    {
+      "url": "https://resultsnd.sos.nd.gov/appConfig.json",
+      "role": "Public config names api.resultsnd.sos.nd.gov as totalResultsBaseUrl and north-dakota as clientId"
+    },
+    {
+      "url": "https://api.resultsnd.sos.nd.gov/Client/GetClientConfig?cId=north-dakota",
+      "role": "Public client config lists the official election/candidate resources"
+    }
+  ],
+  "authorityRouteImplementationCapture": {
+    "sourceUrl": "https://resultsnd.sos.nd.gov/assets/index-1.6.2-C70PJYyH.js",
+    "scratchCapture": "nd-results-js.html",
+    "role": "Public frontend code uses appConfig.json totalResultsBaseUrl and the saved official GetElectionInfo/GetContestSearchList/GetContestResults routes. No authentication or preview code was supplied."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "ND",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:ND",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Retain all named candidates and keep these six offices held. Only the current official-source status/reason and provenance are updated.",
+  "subjects": [
+    {
+      "id": "nd-billings-general-2026-county-commissioner-at-large-by-district-district-5",
+      "county": "Billings",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY"
+    },
+    {
+      "id": "nd-kidder-general-2026-county-state-s-attorney",
+      "county": "Kidder",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY"
+    },
+    {
+      "id": "nd-lamoure-general-2026-county-state-s-attorney",
+      "county": "LaMoure",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY"
+    },
+    {
+      "id": "nd-mchenry-general-2026-director-garrison-diversion-conservancy",
+      "county": "McHenry",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY"
+    },
+    {
+      "id": "nd-sheridan-general-2026-county-state-s-attorney",
+      "county": "Sheridan",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY"
+    },
+    {
+      "id": "nd-slope-general-2026-county-auditor",
+      "county": "Slope",
+      "status": "CURRENT_OFFICIAL_SYSTEM_LISTS_WRITE_IN_ONLY"
+    }
+  ],
+  "validation": {
+    "exactSourceBytesAndParsedChoiceObjects": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "existingRacesCandidateFactsQuestionsAndExplanations": "UNCHANGED"
+  },
+  "limitations": [
+    "The official current system names only a generic write-in choice for these offices. This does not establish whether any person qualified as a write-in candidate.",
+    "No vote totals or winner claims are imported; the election has not reported votes."
+  ],
+  "nextOwner": "River: install as data and confirm the six office status messages live."
+}

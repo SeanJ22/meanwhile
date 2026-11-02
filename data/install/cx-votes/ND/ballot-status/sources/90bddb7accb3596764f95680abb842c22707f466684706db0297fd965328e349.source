@@ -1,0 +1,3741 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# " class="h-100">
+  <head>
+    <meta charset="utf-8" />
+<noscript><style>form.antibot * :not(.antibot-message) { display: none !important; }</style>
+</noscript><link rel="canonical" href="https://www.sos.nd.gov/home" />
+<meta name="robots" content="max-image-preview:standard" />
+<link rel="image_src" href="https://www.sos.nd.gov/sites/default/files/styles/image_original/public/documents/theme/social%20share.png?itok=ZcrZMtSh&amp;cb=bcc41250" />
+<meta property="og:site_name" content="Secretary of State | North Dakota" />
+<meta property="og:title" content="Home" />
+<meta property="og:image" content="https://www.sos.nd.gov/sites/default/files/styles/image_original/public/documents/theme/social%20share.png?itok=ZcrZMtSh&amp;cb=bcc41250" />
+<meta property="og:image:url" content="https://www.sos.nd.gov/sites/default/files/styles/image_original/public/documents/theme/social%20share.png?itok=ZcrZMtSh&amp;cb=bcc41250" />
+<meta property="og:image:secure_url" content="https://www.sos.nd.gov/sites/www/files/styles/facebook_share/public/documents/theme/Capitol_Social_Share.jpg" />
+<meta property="og:image:alt" content="social share image" />
+<meta name="twitter:title" content="Home | Secretary of State | North Dakota" />
+<meta name="twitter:image" content="https://www.sos.nd.gov/sites/default/files/styles/twitter_share/public/documents/theme/social%20share.png?itok=JGkTlwIj&amp;cb=bcc41250" />
+<meta name="twitter:image:alt" content="social share image" />
+<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/sites/default/files/documents/theme/favicon.png" type="image/png" />
+
+    <title>Home | Secretary of State | North Dakota</title>
+    <link rel="stylesheet" media="all" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_kRNi88ZLrFES17XRHi8XIBXAZb4fsT5mMto0g3ii8S8.css?delta=1&amp;language=en&amp;theme=ndit_base&amp;include=eJyNUVtqxDAMvJA3_trzCD-0QUSxjCU3TU9fJ2lpKBQKRszo4ZHHMaQFTMapPv5goCTFRRFTa6E-R03xzmeWGPihtjOV-V5ZUTXMqPdckYwuLZjJpD2hcp-pQD30qGQsBpElLf5OXJKGPrdeA0-ZAst8pYq0NTB9oMN3G-rLd9MXdS9ihAOdr1B_8McJ3UuKhQ1VVvQ3PG0YD6qOwy59bNCJMzZQTEZSro0g98qUgqH_XxskHTdW-EPVleEHHM7-tlPH_OLP6HRXw_X6gDfCTf0Zp1VyZ_wEQQCwmA" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_xEKB8qt0akzdZODAvp3MmhAiWRvXtcMO-yOa1kU4Pbc.css?delta=2&amp;language=en&amp;theme=ndit_base&amp;include=eJyNUVtqxDAMvJA3_trzCD-0QUSxjCU3TU9fJ2lpKBQKRszo4ZHHMaQFTMapPv5goCTFRRFTa6E-R03xzmeWGPihtjOV-V5ZUTXMqPdckYwuLZjJpD2hcp-pQD30qGQsBpElLf5OXJKGPrdeA0-ZAst8pYq0NTB9oMN3G-rLd9MXdS9ihAOdr1B_8McJ3UuKhQ1VVvQ3PG0YD6qOwy59bNCJMzZQTEZSro0g98qUgqH_XxskHTdW-EPVleEHHM7-tlPH_OLP6HRXw_X6gDfCTf0Zp1VyZ_wEQQCwmA" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/1","currentPathIsAdmin":false,"isFront":true,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"G-ETHD21B5VG","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJyNUu1uwyAMfCESfvV5EB8udWNwhsmy7ukHabXRSpUmIbjjMBwHzvrFVG5t1e4PG_SclXsjXkU55iq12PXUFIEn_gunq0xkK0gd9UjsLE1Sb4Q5jkoCERvhaffMAZRfIGDlcjIrbRGzWbsbzAFyNY7YL3okynOBVlmSJfwGBV-1HbXoULbV0vyg6owEpqPjtqI7nw6ozpyr3UE4gR7wvIPrVFRkjq262qhj6175bK_2S5G98dY8bUgBihHwFTnfPZqwrYS-paP_t8x4EUWreWNNpeYbA-vHqHJLzPS3eQ18EFrEWfoLDZMdTUIYQC683wX42CyZC2C8VD0SJTepkO5_4BNhF330c-KwEagjr5L0Y5wDWuL4A4919yk","theme":"ndit_base","theme_token":null},"ajaxTrustedUrl":[],"back_to_top":{"back_to_top_button_trigger":100,"back_to_top_speed":1200,"back_to_top_prevent_on_mobile":false,"back_to_top_prevent_in_admin":true,"back_to_top_button_type":"image","back_to_top_button_text":"Back to top"},"monsido":{"settings":{"token":"KUJNhEmaq5N3uOI6Sn9utA"}},"nditEqualHeight":{"selectors":".featured-area, .featured-card-description, .ndit-ranking, .card-description, .compact-card"},"webform":{"dialog":{"options":{"narrow":{"title":"Narrow","width":600},"normal":{"title":"Normal","width":800},"wide":{"title":"Wide","width":1000}},"entity_type":"node","entity_id":"1"}},"data":{"extlink":{"extTarget":true,"extTargetAppendNewWindowDisplay":true,"extTargetAppendNewWindowLabel":"(opens in a new window)","extTargetNoOverride":false,"extNofollow":true,"extTitleNoOverride":false,"extNoreferrer":true,"extFollowNoOverride":false,"extClass":"ext","extLabel":"icon depicts external link","extImgClass":false,"extSubdomains":false,"extExclude":"(.nd.gov|ndlegis.gov\/*|digitalhorizonsonline.org\/*|outlook.office365.com\/book\/NorthDakotaSecretaryofState@NDGOV.onmicrosoft.com*","extInclude":"","extCssExclude":"","extCssInclude":"","extCssExplicit":".region-content, .region-header-icons, .quick-links, .btn","extAlert":true,"extAlertText":"You are off to explore new things! In other words, you are leaving the North Dakota Office of the Secretary of State website. Thanks for visiting! ","extHideIcons":false,"mailtoClass":"mailto","telClass":"0","mailtoLabel":"icon depicts mailto link","telLabel":"(link is a phone number)","extUseFontAwesome":false,"extIconPlacement":"after","extPreventOrphan":false,"extFaLinkClasses":"fa fa-external-link","extFaMailtoClasses":"fa fa-envelope-o","extAdditionalLinkClasses":"","extAdditionalMailtoClasses":"","extAdditionalTelClasses":"","extFaTelClasses":"fa fa-phone","allowedDomains":[],"extExcludeNoreferrer":""}},"user":{"uid":0,"permissionsHash":"588e2e629d03fbb56569c7022f16fbc0e83c75a1e5c446827b835d67de7de225"}}</script>
+<script src="/sites/default/files/js/js_n0tV9r5yfWbv3EOQQ2Fu40jsfDA34ItTlOMniFwOg2Q.js?scope=header&amp;delta=0&amp;language=en&amp;theme=ndit_base&amp;include=eJxdjNEOgzAIRX-olad9T0NtrSiKE4zb369uJpolhHtOLiFiOwaTOgvEi8OgLoqY2orLAy70g3pGy2ouv4xpHiGt24LcnOo64hwOCtTKrHC4_6IrIqWWhgVKXf_e4IAvN9VLSgJnujmRhYiaobBEZK_2ru_LrTjIK1PK2sv-K_JzQw59ptIb3MXtOXayTnBmkwhZygeFsWcF"></script>
+<script src="/modules/contrib/google_tag/js/gtag.js?tiy8nc"></script>
+
+    <!-- 
+    Start of global snippet: Please do not remove
+    Place this snippet between the <head> and </head> tags on every page of your site.
+    -->
+    <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=DC-8826506"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'DC-8826506');
+      </script>
+    <!-- End of global snippet: Please do not remove -->
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function() {
+            n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s)
+    }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1081195792946897');
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1081195792946897&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+
+    <!--
+    Start of global snippet: Please do not remove
+    Place this snippet between the <head> and </head> tags on every page of your site.
+    -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=DC-15412400"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'DC-15412400');
+    </script>
+    <!-- End of global snippet: Please do not remove -->
+
+    
+  </head>
+  <body class="page-route-entity-node-canonical path-frontpage page-node-type-homepage node--id-1  text-dark   d-flex flex-column h-100">
+        <div class="visually-hidden-focusable skip-link p-3 container">
+      <a href="#main-content" class="p-2">
+        Skip to main content
+      </a>
+    </div>
+    
+      <div class="dialog-off-canvas-main-canvas d-flex flex-column h-100" data-off-canvas-main-canvas>
+    
+
+
+
+<header id="site-header" role="banner" class="d-print-none">
+
+        <div class="itd-banner-top" role="banner">
+      <div class="container">
+        <div class="row">
+            <div class="region region-banner-top">
+    <section class="views-element-container settings-tray-editable block block-views block-views-blockstate-information-block-1 clearfix" id="block-ndit-base-views-block-state-information-block-1" data-drupal-settingstray="editable">
+      <div class="top-banner">
+      <div class="state-info">
+        <div class="top-banner-accordion">
+          <div class="top-banner-accordion-tab">
+            <button id="state-info-button" class="state-info-tab_button" aria-expanded="false" aria-controls="state-info-panel">
+              An official website of the State of North Dakota. <span>Here's how you know</span>
+            </button>
+            <div id="state-info-panel" class="state-info-tab_content" hidden aria-live="polite" aria-labelledby="state-info-button">
+              <div class="state-info-tab_content_container">
+                <div class="gov-means">
+                  <p><span><strong>The .gov means it's official.</strong></span> Official North Dakota websites will end in .gov. Before sharing sensitive information, make sure you're on a government site.</p>
+                </div>
+                
+                <div class="secure-means">
+                  <p><span><strong>The site is secure.</strong></span> The <strong>https://</strong> ensures that you're connecting to the official website and that any information you provide is encrypted and sent securely.</p>
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section id="block-ndit-base-gtranslate" class="settings-tray-editable block block-gtranslate block-gtranslate-block clearfix" data-drupal-settingstray="editable">
+  
+    
+
+      
+
+
+<div id="language_consent" class="gtranslate d-none"><div class="gtranslate_wrapper"></div><script>window.gtranslateSettings = {"switcher_horizontal_position":"left","switcher_vertical_position":"bottom","horizontal_position":"inline","vertical_position":"inline","float_switcher_open_direction":"top","switcher_open_direction":"bottom","default_language":"en","native_language_names":1,"detect_browser_language":0,"add_new_line":1,"select_language_label":"Select Language","flag_size":32,"flag_style":"2d","globe_size":60,"alt_flags":[],"wrapper_selector":".gtranslate_wrapper","url_structure":"none","custom_domains":null,"languages":["en","ar","zh-CN","fr","de","hi","ru","es","uk","vi","sw","eu","bs","hmn","ne","pa","ku","ps"],"custom_css":""}</script><script>(function(){var js = document.createElement('script');js.setAttribute('src', '/modules/contrib/gtranslate/js/dropdown.js');js.setAttribute('data-gt-orig-url', '/');js.setAttribute('data-gt-orig-domain', 'www.sos.nd.gov');document.body.appendChild(js);})();</script></div>
+
+<button id="consent-trigger" type="button" aria-controls="consent_modal" aria-haspopup="dialog" aria-expanded="false" class="p-0">
+    <span id="language_placeholder" aria-label="Select language">Language: English</span>
+</button>
+
+<noindex>
+  <div id="consent_modal" class="modal fade" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content consent-content">
+        <div id="modal-title" class="modal-header consent-content-header">Automatic translation disclaimer</div>
+
+        <div id="modal-description" class="modal-body consent-content-statement">
+            <p>The State of North Dakota provides automatic translation for nd.gov websites, courtesy of Google Translate. Please remember that the English language version is considered the most accurate. In the event of a disagreement or discrepancy between the translation and the original English version of this website or any notice or disclaimer, the original version will prevail.</p>
+        </div>
+
+        <div class="consent-content-footer">
+            <button id="gt_accept" class="consent-btn" type="button">Accept</button>
+            <button id="gt_decline" class="consent-btn" type="button">Decline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</noindex>
+
+  </section>
+
+
+  </div>
+
+        </div>
+      </div>
+    </div>
+  
+    <div id="site-header-region" class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-4">
+          <div class="region region-logo">
+    <section class="views-element-container settings-tray-editable block block-views block-views-blocklogo-block-block-1 clearfix" id="block-ndit-base-views-block-logo-block-block-1" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="logo block-ndit-base-views-block-logo-block-block-1"><div class="view view-logo-block view-id-logo_block view-display-id-block_1 js-view-dom-id-07b7154300ced82af1ce12c5e36de34c2a16289b91927d277ab869c62005bfb7">
+  
+    
+      
+      <div class="view-content">
+          <div><a href="https://www.sos.nd.gov/" title="Home">  <img loading="lazy" src="/sites/default/files/styles/logo/public/documents/theme/SOS%20Web%20Logo%20Color.png?itok=F_YB91UF&amp;cb=5f4e80a9" width="395" height="64" alt="North Dakota Secretary of State" typeof="Image" class="img-fluid image-style-logo" />
+
+
+</a></div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+  </div>
+
+      </div>
+
+      <div class="col-12 col-lg-8 d-flex flex-column align-items-lg-end d-none d-lg-block">
+        <div class="w-100 d-flex justify-content-lg-end">
+            <div class="region region-quick-links">
+    <section class="views-element-container settings-tray-editable block block-views block-views-blockquick-links-config-block-1 clearfix" id="block-ndit-base-views-block-quick-links-config-block-1" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="quick_links block-ndit-base-views-block-quick-links-config-block-1"><div class="view view-quick-links-config view-id-quick_links_config view-display-id-block_1 js-view-dom-id-a5a56346232fcfc3d7ce58babbb4545faac2ec3da7407735324ef741bed4d90a">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row"><div class="quick-links"></div></div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+  </div>
+
+        </div>
+
+        <div class="w-100 d-flex justify-content-lg-end align-items-center mt-1">
+          <div class="header-icons me-2">
+              <div class="region region-header-icons">
+    <section class="views-element-container social-links hidden-xs hidden-sm settings-tray-editable block block-views block-views-blocksocial-icons-config-block-1 clearfix" id="block-ndit-base-views-block-social-icons-config-block-1" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="header_icons block-ndit-base-views-block-social-icons-config-block-1"><div class="social-icons view view-social-icons-config view-id-social_icons_config view-display-id-block_1 js-view-dom-id-bc1e0756d58133d3f045e60d4f3cde3a4937b5880ca62eebca816067f42982d6">
+  
+    
+      
+      <div class="view-content">
+          <div class="social-inline"><a class="ndr-mail" href="/contact" aria-label="Contact Us">
+	<span aria-hidden="true" class="fas fa-envelope fa-2x"></span>
+</a> </div>
+    <div class="social-inline"><a class="ndr-facebook" rel="noopener noreferrer" href="https://www.facebook.com/NorthDakotaSOS" target="_blank" aria-label="Follow Us on Facebook">
+	<span aria-hidden="true" class="fab fa-facebook-square fa-2x"></span>
+</a> <a class="ndr-twitter" rel="noopener noreferrer" href="https://twitter.com/NorthDakotaSoS" target="_blank" aria-label="Follow Us on Twitter">
+	<span class="fa-brands fa-square-x-twitter fa-2x"></span>
+</a><a class="ndr-youtube" rel="noopener noreferrer" href="https://www.youtube.com/@NorthDakotaSoS" target="_blank" aria-label="Subscribe to our YouTube">
+	<span aria-hidden="true" class="fab fa-youtube-square fa-2x"></span>
+</a><a class="ndr-instagram" rel="noopener noreferrer" href="https://www.instagram.com/northdakotasos/" target="_blank" aria-label="Subscribe on Instagram">
+	<span aria-hidden="true" class="fab fa-instagram fa-2x"></span>
+</a></div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+  </div>
+
+          </div>
+          <div class="header-search">
+              <div class="region region-search-box">
+    <section id="block-ndit-base-searchbox" class="settings-tray-editable block block-block-content block-block-content6f619e1b-84c8-44eb-a198-cb10e1998c1e clearfix" data-drupal-settingstray="editable">
+  
+    
+
+    <form action="https://www.sos.nd.gov/search" id="site-search-form" class="d-flex align-items-center" role="search" aria-label="Search this website" onsubmit="createGoogleSearchCookie(window.location.href);">
+    <input type="search" id="searchbox-desk" name="query" class="form-control me-2" placeholder="Search this website" aria-label="Search this website">
+    <button type="submit" class="btn btn-search" aria-label="Submit search">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <span class="visually-hidden">Search</span>
+    </button>
+  </form>
+  </section>
+
+
+  </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+      <div id="main-nav" class="navbar site-navbar site-navbar-target nav" aria-label="Main Navigation">
+      <div id="desktop-main-menu" class="container d-none d-lg-block">
+        <div class="row">
+          <div class="col-md-12">
+            <nav role="navigation" aria-labelledby="ndit-base-mainnavigation-desktop-menu" id="ndit-base-mainnavigation-desktop" class="settings-tray-editable block block-menu navigation menu--main" data-drupal-settingstray="editable">
+            
+  <span class="visually-hidden" id="ndit-base-mainnavigation-desktop-menu">Main navigation</span>
+  
+
+        <div class="navbar navbar-expand-lg main-navigation" role="navigation" aria-label="Main navigation">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav">
+                            <li class="nav-item">
+            
+                                      <a href="/" class="nav-link active">Home</a>
+            
+                                  </li>
+                            <li class="nav-item dropdown">
+            
+                                      <a href="/business" class="nav-link ">Business</a>
+            
+                                      <ul class="dropdown-menu" id="submenu-2" role="menu" aria-label="Business">
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/business/business-services" role="menuitem" class="nav-link">Business Services</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/business/nonprofit-services" role="menuitem" class="nav-link">Nonprofit Services</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/business/licensing-registration" role="menuitem" class="nav-link">Licensing &amp; Registration</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/business/lien-filings-ucc" role="menuitem" class="nav-link">Lien Filings / UCC</a>
+                                      </li>
+                              </ul>
+                      </li>
+                            <li class="nav-item dropdown">
+            
+                                      <a href="/elections" class="nav-link ">Elections</a>
+            
+                                      <ul class="dropdown-menu" id="submenu-3" role="menu" aria-label="Elections">
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/voter" role="menuitem" class="nav-link">Voter</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/candidate" role="menuitem" class="nav-link">Candidate</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/campaign-finance-statement-interests" role="menuitem" class="nav-link">Campaign Finance &amp; Statement of Interests</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/election-official" role="menuitem" class="nav-link">Election Official</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/election-security" role="menuitem" class="nav-link">Election Security</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/election-resources" role="menuitem" class="nav-link">Election Resources</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/civic-engagement-initiative" role="menuitem" class="nav-link">Civic Engagement Initiative</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/elections/election-results" role="menuitem" class="nav-link">Election Results</a>
+                                      </li>
+                              </ul>
+                      </li>
+                            <li class="nav-item dropdown">
+            
+                                      <a href="/notary-apostille" class="nav-link ">Notary &amp; Apostille</a>
+            
+                                      <ul class="dropdown-menu" id="submenu-4" role="menu" aria-label="Notary &amp; Apostille">
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/notary-apostille/how-get-something-notarized" role="menuitem" class="nav-link">How to Get Something Notarized</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/notary-apostille/become-notary-public" role="menuitem" class="nav-link">Become a Notary Public</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/notary-apostille/maintain-notary-commission" role="menuitem" class="nav-link">Maintain Notary Commission</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/notary-apostille/performing-notarial-acts" role="menuitem" class="nav-link">Performing Notarial Acts</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/notary-apostille/apostille-and-certification" role="menuitem" class="nav-link">Apostille &amp; Certification</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/notary-apostille/notary-notes-newsletter" role="menuitem" class="nav-link">Notary Notes Newsletter</a>
+                                      </li>
+                              </ul>
+                      </li>
+                            <li class="nav-item dropdown">
+            
+                                      <a href="/services" class="nav-link ">Services</a>
+            
+                                      <ul class="dropdown-menu" id="submenu-5" role="menu" aria-label="Services">
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/official-records" role="menuitem" class="nav-link">Official Records</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/public-meeting-notices" role="menuitem" class="nav-link">Public Meeting Notices</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/emergency-commission" role="menuitem" class="nav-link">Emergency Commission</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/great-seal" role="menuitem" class="nav-link">Great Seal</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/signed-legislative-bills" role="menuitem" class="nav-link">Signed Legislative Bills</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/records-searches" role="menuitem" class="nav-link">Records Searches</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/services/data-list-requests" role="menuitem" class="nav-link">Data List Requests</a>
+                                      </li>
+                              </ul>
+                      </li>
+                            <li class="nav-item dropdown">
+            
+                                      <a href="/about-office" class="nav-link ">About</a>
+            
+                                      <ul class="dropdown-menu" id="submenu-6" role="menu" aria-label="About">
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/about-office/news" role="menuitem" class="nav-link">News</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/about-office/north-dakota-blue-book" role="menuitem" class="nav-link">Blue Book</a>
+                                      </li>
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/about-office/biennial-reports" role="menuitem" class="nav-link">Biennial Reports</a>
+                                      </li>
+                              </ul>
+                      </li>
+                            <li class="nav-item dropdown">
+            
+                                      <a href="/contact" class="nav-link ">Contact</a>
+            
+                                      <ul class="dropdown-menu" id="submenu-7" role="menu" aria-label="Contact">
+                                  <li class="dropdown-item" role="none">
+                                          <a href="/contact/request-appearance-secretary-howe" role="menuitem" class="nav-link">Request Appearance by Secretary Howe</a>
+                                      </li>
+                              </ul>
+                      </li>
+              </ul>
+    </div>
+  </div>
+</div>
+
+  </nav>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="mobile-main-menu" class="container-fluid d-lg-none" role="navigation" aria-label="Mobile navigation">
+        <div class="row align-items-center w-100 mx-auto">
+          <div class="col-8 d-flex justify-content-start">
+              <div class="region region-search-box">
+    <section id="block-ndit-base-searchbox" class="settings-tray-editable block block-block-content block-block-content6f619e1b-84c8-44eb-a198-cb10e1998c1e clearfix" data-drupal-settingstray="editable">
+  
+    
+
+    <form action="https://www.sos.nd.gov/search" id="site-search-form" class="d-flex align-items-center" role="search" aria-label="Search this website" onsubmit="createGoogleSearchCookie(window.location.href);">
+    <input type="search" id="searchbox-desk" name="query" class="form-control me-2" placeholder="Search this website" aria-label="Search this website">
+    <button type="submit" class="btn btn-search" aria-label="Submit search">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <span class="visually-hidden">Search</span>
+    </button>
+  </form>
+  </section>
+
+
+  </div>
+
+          </div>
+
+          <div class="col-4 d-flex justify-content-end">
+            <nav role="navigation" aria-labelledby="ndit-base-mainnavigation-mobile-menu" id="ndit-base-mainnavigation-mobile" class="settings-tray-editable block block-menu navigation menu--main" data-drupal-settingstray="editable">
+            
+  <span class="visually-hidden" id="ndit-base-mainnavigation-mobile-menu">Main navigation Mobile</span>
+  
+
+        
+
+<div id="ndit-mobile-menu">
+  <button class="menu-toggle" type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#mobileMainMenu"
+          aria-controls="mobileMainMenu"
+          aria-label="Open main menu">
+  </button>
+
+  <div class="offcanvas offcanvas-start offcanvas-fullscreen"
+       id="mobileMainMenu"
+       tabindex="-1"
+       aria-labelledby="mobileMainMenuLabel">
+    <div class="offcanvas-header">
+      <span id="mobileMainMenuLabel" class="h4 mb-0">Main Menu</span>
+      <button type="button" class="menu-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close main menu">
+      </button>
+    </div>
+
+    <div class="offcanvas-body p-0">
+        
+  <ul class="mobile-menu__list mobile-menu__list--level-1">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/" class="mobile-menu__link">Home</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business" class="mobile-menu__link">Business</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-main-menu-business-1-2"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-main-menu-business-1-2"
+                    aria-label="Open submenu for Business">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-main-menu-business-1-2"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Business">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-main-menu-business-1-2"
+                      aria-label="Back to Main Menu">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Business</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-2">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/business-services" class="mobile-menu__link mobile-menu__link--sub">Business Services</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-business-business-services-2-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-business-business-services-2-1"
+                    aria-label="Open submenu for Business Services">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-business-business-services-2-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Business Services">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-business-business-services-2-1"
+                      aria-label="Back to Business">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Business Services</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/start-business" class="mobile-menu__link mobile-menu__link--sub">Start a Business</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/register-business" class="mobile-menu__link mobile-menu__link--sub">Register a Business</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/maintain-registration" class="mobile-menu__link mobile-menu__link--sub">Maintain Registration</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/business-services/business-structures" class="mobile-menu__link mobile-menu__link--sub">Business Structures</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-business-services-business-structures-3-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-business-services-business-structures-3-4"
+                    aria-label="Open submenu for Business Structures">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-business-services-business-structures-3-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Business Structures">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-business-services-business-structures-3-4"
+                      aria-label="Back to Business Services">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Business Structures</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/business-structures/sole-proprietorship" class="mobile-menu__link mobile-menu__link--sub">Sole Proprietorship</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/business-structures/partnership" class="mobile-menu__link mobile-menu__link--sub">Partnership</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/business-structures/limited-liability-company-llc" class="mobile-menu__link mobile-menu__link--sub">LLC</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/business-structures/corporation" class="mobile-menu__link mobile-menu__link--sub">Corporation</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/business-structures/cooperative" class="mobile-menu__link mobile-menu__link--sub">Cooperative</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/business-structures/franchise" class="mobile-menu__link mobile-menu__link--sub">Franchise</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/business-services/registered-agents" class="mobile-menu__link mobile-menu__link--sub">Registered Agents</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/nonprofit-services" class="mobile-menu__link mobile-menu__link--sub">Nonprofit Services</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-business-nonprofit-services-2-2"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-business-nonprofit-services-2-2"
+                    aria-label="Open submenu for Nonprofit Services">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-business-nonprofit-services-2-2"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Nonprofit Services">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-business-nonprofit-services-2-2"
+                      aria-label="Back to Business">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Nonprofit Services</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/nonprofit-services/register-nonprofit" class="mobile-menu__link mobile-menu__link--sub">Register a Nonprofit</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-nonprofit-services-register-a-nonprofit-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-nonprofit-services-register-a-nonprofit-3-1"
+                    aria-label="Open submenu for Register a Nonprofit">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-nonprofit-services-register-a-nonprofit-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Register a Nonprofit">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-nonprofit-services-register-a-nonprofit-3-1"
+                      aria-label="Back to Nonprofit Services">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Register a Nonprofit</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/nonprofit-services/register-nonprofit/north-dakota-nonprofit" class="mobile-menu__link mobile-menu__link--sub">North Dakota Nonprofit</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/nonprofit-services/register-nonprofit/out-state-nonprofit" class="mobile-menu__link mobile-menu__link--sub">Out-of-State Nonprofit</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/nonprofit-services/maintain-nonprofit" class="mobile-menu__link mobile-menu__link--sub">Maintain a Nonprofit</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/nonprofit-services/charitable-organizations" class="mobile-menu__link mobile-menu__link--sub">Charitable Organizations</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/licensing-registration" class="mobile-menu__link mobile-menu__link--sub">Licensing &amp; Registration</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-business-licensing--registration-2-3"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-business-licensing--registration-2-3"
+                    aria-label="Open submenu for Licensing &amp; Registration">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-business-licensing--registration-2-3"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Licensing &amp; Registration">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-business-licensing--registration-2-3"
+                      aria-label="Back to Business">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Licensing &amp; Registration</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/licensing-registration/contractors" class="mobile-menu__link mobile-menu__link--sub">Contractors</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-licensing--registration-contractors-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-licensing--registration-contractors-3-1"
+                    aria-label="Open submenu for Contractors">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-licensing--registration-contractors-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Contractors">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-licensing--registration-contractors-3-1"
+                      aria-label="Back to Licensing &amp; Registration">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Contractors</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/contractors/file-complaint-against-contractor" class="mobile-menu__link mobile-menu__link--sub">File Complaint Against Contractor</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/lobbyists" class="mobile-menu__link mobile-menu__link--sub">Lobbyists</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/home-inspectors" class="mobile-menu__link mobile-menu__link--sub">Home Inspectors</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/athlete-agents" class="mobile-menu__link mobile-menu__link--sub">Athlete Agents</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/professional-employer-organizations-peo" class="mobile-menu__link mobile-menu__link--sub">Professional Employer Organizations (PEO)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/professional-fundraisers" class="mobile-menu__link mobile-menu__link--sub">Professional Fundraisers</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/licensing-registration/combative-sports-commission" class="mobile-menu__link mobile-menu__link--sub">Combative Sports</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-licensing--registration-combative-sports-3-7"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-licensing--registration-combative-sports-3-7"
+                    aria-label="Open submenu for Combative Sports">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-licensing--registration-combative-sports-3-7"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Combative Sports">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-licensing--registration-combative-sports-3-7"
+                      aria-label="Back to Licensing &amp; Registration">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Combative Sports</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/licensing-registration/combative-sports-commission/licensing-and-event-forms" class="mobile-menu__link mobile-menu__link--sub">Licensing &amp; Event Forms</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/lien-filings-ucc" class="mobile-menu__link mobile-menu__link--sub">Lien Filings / UCC</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-business-lien-filings---ucc-2-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-business-lien-filings---ucc-2-4"
+                    aria-label="Open submenu for Lien Filings / UCC">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-business-lien-filings---ucc-2-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Lien Filings / UCC">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-business-lien-filings---ucc-2-4"
+                      aria-label="Back to Business">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Lien Filings / UCC</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/business/lien-filings-ucc/filing-lien" class="mobile-menu__link mobile-menu__link--sub">Filing a Lien</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-lien-filings---ucc-filing-a-lien-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-lien-filings---ucc-filing-a-lien-3-1"
+                    aria-label="Open submenu for Filing a Lien">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-lien-filings---ucc-filing-a-lien-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Filing a Lien">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-lien-filings---ucc-filing-a-lien-3-1"
+                      aria-label="Back to Lien Filings / UCC">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Filing a Lien</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/lien-filings-ucc/filing-lien/lien-types-and-fees" class="mobile-menu__link mobile-menu__link--sub">Lien Types and Fees</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/lien-filings-ucc/lien-searches" class="mobile-menu__link mobile-menu__link--sub">Lien Searches</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/business/lien-filings-ucc/data-and-report-subscriptions" class="mobile-menu__link mobile-menu__link--sub">Data and Report Subscriptions</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections" class="mobile-menu__link">Elections</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-main-menu-elections-1-3"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-main-menu-elections-1-3"
+                    aria-label="Open submenu for Elections">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-main-menu-elections-1-3"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Elections">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-main-menu-elections-1-3"
+                      aria-label="Back to Main Menu">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Elections</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-2">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/voter" class="mobile-menu__link mobile-menu__link--sub">Voter</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-elections-voter-2-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-elections-voter-2-1"
+                    aria-label="Open submenu for Voter">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-elections-voter-2-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Voter">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-elections-voter-2-1"
+                      aria-label="Back to Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Voter</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/voter/voting-north-dakota" class="mobile-menu__link mobile-menu__link--sub">Voting in ND</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-voter-voting-in-nd-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-voter-voting-in-nd-3-1"
+                    aria-label="Open submenu for Voting in ND">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-voter-voting-in-nd-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Voting in ND">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-voter-voting-in-nd-3-1"
+                      aria-label="Back to Voter">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Voting in ND</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/voting-north-dakota/forms-voter-id" class="mobile-menu__link mobile-menu__link--sub">Forms of Voter ID</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/voting-north-dakota/where-do-i-vote" class="mobile-menu__link mobile-menu__link--sub">Where Do I Vote</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/voter/voting-north-dakota/how-do-i-vote" class="mobile-menu__link mobile-menu__link--sub">How Do I Vote</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-voting-in-nd-how-do-i-vote-4-3"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-voting-in-nd-how-do-i-vote-4-3"
+                    aria-label="Open submenu for How Do I Vote">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-voting-in-nd-how-do-i-vote-4-3"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="How Do I Vote">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-voting-in-nd-how-do-i-vote-4-3"
+                      aria-label="Back to Voting in ND">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">How Do I Vote</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-5">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/voting-north-dakota/how-do-i-vote/absentee-voting" class="mobile-menu__link mobile-menu__link--sub">Absentee Voting</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/voting-north-dakota/how-do-i-vote/college-students" class="mobile-menu__link mobile-menu__link--sub">College Students</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/voting-north-dakota/how-do-i-vote/military-and-overseas-us-citizens" class="mobile-menu__link mobile-menu__link--sub">Military &amp; Overseas</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/voting-north-dakota/voter-resources" class="mobile-menu__link mobile-menu__link--sub">Voter Resources</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/voter/current-officials" class="mobile-menu__link mobile-menu__link--sub">Current Officials</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-voter-current-officials-3-2"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-voter-current-officials-3-2"
+                    aria-label="Open submenu for Current Officials">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-voter-current-officials-3-2"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Current Officials">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-voter-current-officials-3-2"
+                      aria-label="Back to Voter">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Current Officials</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/current-officials/county-election-officials" class="mobile-menu__link mobile-menu__link--sub">County Election Officials</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/voter/elections-currentpast" class="mobile-menu__link mobile-menu__link--sub">Elections - Current/Past</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-voter-elections---current-past-3-3"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-voter-elections---current-past-3-3"
+                    aria-label="Open submenu for Elections - Current/Past">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-voter-elections---current-past-3-3"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Elections - Current/Past">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-voter-elections---current-past-3-3"
+                      aria-label="Back to Voter">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Elections - Current/Past</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/elections-currentpast/past-elections" class="mobile-menu__link mobile-menu__link--sub">Past Elections</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/ballot-information" class="mobile-menu__link mobile-menu__link--sub">Ballot Information</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/voter/ballot-measures" class="mobile-menu__link mobile-menu__link--sub">Ballot Measures</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-voter-ballot-measures-3-5"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-voter-ballot-measures-3-5"
+                    aria-label="Open submenu for Ballot Measures">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-voter-ballot-measures-3-5"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Ballot Measures">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-voter-ballot-measures-3-5"
+                      aria-label="Back to Voter">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Ballot Measures</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/ballot-measures/measures-ballot" class="mobile-menu__link mobile-menu__link--sub">Measures on Ballot</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/ballot-measures/types-ballot-measures" class="mobile-menu__link mobile-menu__link--sub">Types of Ballot Measures</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/ballot-measures/drafting-ballot-measures" class="mobile-menu__link mobile-menu__link--sub">Drafting Ballot Measures</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/ballot-measures/petitions-circulation" class="mobile-menu__link mobile-menu__link--sub">Petitions in Circulation</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/ballot-measures/measure-and-petition-archive" class="mobile-menu__link mobile-menu__link--sub">Measure/Petition Archive</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/voter/be-poll-worker" class="mobile-menu__link mobile-menu__link--sub">Be a Poll Worker</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/candidate" class="mobile-menu__link mobile-menu__link--sub">Candidate</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-elections-candidate-2-2"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-elections-candidate-2-2"
+                    aria-label="Open submenu for Candidate">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-elections-candidate-2-2"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Candidate">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-elections-candidate-2-2"
+                      aria-label="Back to Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Candidate</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/candidate/candidate-calendar" class="mobile-menu__link mobile-menu__link--sub">Candidate Calendar</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/candidate/become-candidate" class="mobile-menu__link mobile-menu__link--sub">Become a Candidate</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-candidate-become-a-candidate-3-2"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-candidate-become-a-candidate-3-2"
+                    aria-label="Open submenu for Become a Candidate">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-candidate-become-a-candidate-3-2"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Become a Candidate">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-candidate-become-a-candidate-3-2"
+                      aria-label="Back to Candidate">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Become a Candidate</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/candidate/become-candidate/state-legislative-judicial" class="mobile-menu__link mobile-menu__link--sub">State, Legislative, Judicial</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/candidate/become-candidate/local-government" class="mobile-menu__link mobile-menu__link--sub">Local Government</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/candidate/become-candidate/federal" class="mobile-menu__link mobile-menu__link--sub">Federal</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/candidate/election-outcomes" class="mobile-menu__link mobile-menu__link--sub">Election Outcomes</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/candidate/political-parties" class="mobile-menu__link mobile-menu__link--sub">Political Parties</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/campaign-finance-statement-interests" class="mobile-menu__link mobile-menu__link--sub">Campaign Finance &amp; Statement of Interests</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-elections-campaign-finance--statement-of-interests-2-3"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-elections-campaign-finance--statement-of-interests-2-3"
+                    aria-label="Open submenu for Campaign Finance &amp; Statement of Interests">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-elections-campaign-finance--statement-of-interests-2-3"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Campaign Finance &amp; Statement of Interests">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-elections-campaign-finance--statement-of-interests-2-3"
+                      aria-label="Back to Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Campaign Finance &amp; Statement of Interests</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/campaign-finance-statement-interests/campaign-finance" class="mobile-menu__link mobile-menu__link--sub">Campaign Finance</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-campaign-finance--statement-of-interests-campaign-finance-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-campaign-finance--statement-of-interests-campaign-finance-3-1"
+                    aria-label="Open submenu for Campaign Finance">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-campaign-finance--statement-of-interests-campaign-finance-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Campaign Finance">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-campaign-finance--statement-of-interests-campaign-finance-3-1"
+                      aria-label="Back to Campaign Finance &amp; Statement of Interests">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Campaign Finance</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/campaign-finance-statement-interests/campaign-finance/campaign-finance-faqs" class="mobile-menu__link mobile-menu__link--sub">Campaign Finance FAQs</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/campaign-finance-statement-interests/campaign-finance/independent-expenditures" class="mobile-menu__link mobile-menu__link--sub">Independent Expenditures</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/soi" class="mobile-menu__link mobile-menu__link--sub">Statement of Interests</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/campaign-finance-statement-interests/local-government-offices" class="mobile-menu__link mobile-menu__link--sub">Local Government Offices</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/campaign-finance-statement-interests/training-filers" class="mobile-menu__link mobile-menu__link--sub">Training for Filers</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/campaign-finance-statement-interests/reporting-due-dates" class="mobile-menu__link mobile-menu__link--sub">Reporting Due Dates</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/campaign-finance-statement-interests/search-reports" class="mobile-menu__link mobile-menu__link--sub">Search Reports</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/election-official" class="mobile-menu__link mobile-menu__link--sub">Election Official</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-elections-election-official-2-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-elections-election-official-2-4"
+                    aria-label="Open submenu for Election Official">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-elections-election-official-2-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Election Official">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-elections-election-official-2-4"
+                      aria-label="Back to Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Election Official</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-official/election-boards" class="mobile-menu__link mobile-menu__link--sub">Election Boards</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-official/special-elections" class="mobile-menu__link mobile-menu__link--sub">Special Elections</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/election-security" class="mobile-menu__link mobile-menu__link--sub">Election Security</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-elections-election-security-2-5"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-elections-election-security-2-5"
+                    aria-label="Open submenu for Election Security">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-elections-election-security-2-5"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Election Security">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-elections-election-security-2-5"
+                      aria-label="Back to Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Election Security</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-security/did-you-know" class="mobile-menu__link mobile-menu__link--sub">Did You Know?</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-security/post-election-audits" class="mobile-menu__link mobile-menu__link--sub">Post-Election Audits</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-security/voting-equipment" class="mobile-menu__link mobile-menu__link--sub">Voting Equipment</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/election-security/people-elections" class="mobile-menu__link mobile-menu__link--sub">People of Elections</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-election-security-people-of-elections-3-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-election-security-people-of-elections-3-4"
+                    aria-label="Open submenu for People of Elections">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-election-security-people-of-elections-3-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="People of Elections">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-election-security-people-of-elections-3-4"
+                      aria-label="Back to Election Security">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">People of Elections</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/election-security/people-elections/election-hero-award" class="mobile-menu__link mobile-menu__link--sub">Election Hero Award</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-people-of-elections-election-hero-award-4-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-people-of-elections-election-hero-award-4-1"
+                    aria-label="Open submenu for Election Hero Award">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-people-of-elections-election-hero-award-4-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Election Hero Award">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-people-of-elections-election-hero-award-4-1"
+                      aria-label="Back to People of Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Election Hero Award</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-5">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-security/people-elections/election-hero-award/election-hero-award-nomination" class="mobile-menu__link mobile-menu__link--sub">Election Hero Award Nomination Form</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-resources" class="mobile-menu__link mobile-menu__link--sub">Election Resources</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/civic-engagement-initiative" class="mobile-menu__link mobile-menu__link--sub">Civic Engagement Initiative</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-elections-civic-engagement-initiative-2-7"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-elections-civic-engagement-initiative-2-7"
+                    aria-label="Open submenu for Civic Engagement Initiative">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-elections-civic-engagement-initiative-2-7"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Civic Engagement Initiative">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-elections-civic-engagement-initiative-2-7"
+                      aria-label="Back to Elections">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Civic Engagement Initiative</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/elections/civic-engagement-initiative/civics-students" class="mobile-menu__link mobile-menu__link--sub">Civics for Students</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-civic-engagement-initiative-civics-for-students-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-civic-engagement-initiative-civics-for-students-3-1"
+                    aria-label="Open submenu for Civics for Students">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-civic-engagement-initiative-civics-for-students-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Civics for Students">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-civic-engagement-initiative-civics-for-students-3-1"
+                      aria-label="Back to Civic Engagement Initiative">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Civics for Students</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/civic-engagement-initiative/civics-students/civics-activity-book-feedback-form" class="mobile-menu__link mobile-menu__link--sub">Activity Book Feedback Form</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/civic-engagement-initiative/civics-students/civics-activity-book-request-form" class="mobile-menu__link mobile-menu__link--sub">Activity Book Request Form</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/civic-engagement-initiative/civics-students/lesson-plans-feedback-form" class="mobile-menu__link mobile-menu__link--sub">Lesson Plans Feedback Form</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/civic-engagement-initiative/i-voted-sticker-design-contest" class="mobile-menu__link mobile-menu__link--sub">I Voted Sticker Design Contest</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/civic-engagement-initiative/voter-engagement-toolkit" class="mobile-menu__link mobile-menu__link--sub">Make an Impact Voter Engagement Toolkit</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/elections/election-results" class="mobile-menu__link mobile-menu__link--sub">Election Results</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/notary-apostille" class="mobile-menu__link">Notary &amp; Apostille</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-main-menu-notary--apostille-1-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-main-menu-notary--apostille-1-4"
+                    aria-label="Open submenu for Notary &amp; Apostille">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-main-menu-notary--apostille-1-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Notary &amp; Apostille">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-main-menu-notary--apostille-1-4"
+                      aria-label="Back to Main Menu">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Notary &amp; Apostille</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-2">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/notary-apostille/how-get-something-notarized" class="mobile-menu__link mobile-menu__link--sub">How to Get Something Notarized</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-notary--apostille-how-to-get-something-notarized-2-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-notary--apostille-how-to-get-something-notarized-2-1"
+                    aria-label="Open submenu for How to Get Something Notarized">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-notary--apostille-how-to-get-something-notarized-2-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="How to Get Something Notarized">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-notary--apostille-how-to-get-something-notarized-2-1"
+                      aria-label="Back to Notary &amp; Apostille">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">How to Get Something Notarized</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/notary-apostille/how-get-something-notarized/electronic-and-remote-notarization-options" class="mobile-menu__link mobile-menu__link--sub">Electronic and Remote Notarization Options</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/notary-apostille/become-notary-public" class="mobile-menu__link mobile-menu__link--sub">Become a Notary Public</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/notary-apostille/maintain-notary-commission" class="mobile-menu__link mobile-menu__link--sub">Maintain Notary Commission</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/notary-apostille/performing-notarial-acts" class="mobile-menu__link mobile-menu__link--sub">Performing Notarial Acts</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-notary--apostille-performing-notarial-acts-2-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-notary--apostille-performing-notarial-acts-2-4"
+                    aria-label="Open submenu for Performing Notarial Acts">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-notary--apostille-performing-notarial-acts-2-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Performing Notarial Acts">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-notary--apostille-performing-notarial-acts-2-4"
+                      aria-label="Back to Notary &amp; Apostille">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Performing Notarial Acts</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/notary-apostille/performing-notarial-acts/performing-electronic-and-remote-notarizations" class="mobile-menu__link mobile-menu__link--sub">Performing Electronic and Remote Notarizations</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/notary-apostille/apostille-and-certification" class="mobile-menu__link mobile-menu__link--sub">Apostille &amp; Certification</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/notary-apostille/notary-notes-newsletter" class="mobile-menu__link mobile-menu__link--sub">Notary Notes Newsletter</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/services" class="mobile-menu__link">Services</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-main-menu-services-1-5"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-main-menu-services-1-5"
+                    aria-label="Open submenu for Services">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-main-menu-services-1-5"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Services">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-main-menu-services-1-5"
+                      aria-label="Back to Main Menu">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Services</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-2">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/official-records" class="mobile-menu__link mobile-menu__link--sub">Official Records</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/public-meeting-notices" class="mobile-menu__link mobile-menu__link--sub">Public Meeting Notices</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/emergency-commission" class="mobile-menu__link mobile-menu__link--sub">Emergency Commission</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/services/great-seal" class="mobile-menu__link mobile-menu__link--sub">Great Seal</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-services-great-seal-2-4"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-services-great-seal-2-4"
+                    aria-label="Open submenu for Great Seal">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-services-great-seal-2-4"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Great Seal">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-services-great-seal-2-4"
+                      aria-label="Back to Services">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Great Seal</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/great-seal/request-use-north-dakota-great-seal" class="mobile-menu__link mobile-menu__link--sub">Request to Use Great Seal</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/services/signed-legislative-bills" class="mobile-menu__link mobile-menu__link--sub">Signed Legislative Bills</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-services-signed-legislative-bills-2-5"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-services-signed-legislative-bills-2-5"
+                    aria-label="Open submenu for Signed Legislative Bills">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-services-signed-legislative-bills-2-5"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Signed Legislative Bills">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-services-signed-legislative-bills-2-5"
+                      aria-label="Back to Services">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Signed Legislative Bills</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-3">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/services/signed-legislative-bills/69th-legislative-assembly" class="mobile-menu__link mobile-menu__link--sub">69th Legislative Assembly</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-signed-legislative-bills-_9th-legislative-assembly-3-1"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-signed-legislative-bills-_9th-legislative-assembly-3-1"
+                    aria-label="Open submenu for 69th Legislative Assembly">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-signed-legislative-bills-_9th-legislative-assembly-3-1"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="69th Legislative Assembly">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-signed-legislative-bills-_9th-legislative-assembly-3-1"
+                      aria-label="Back to Signed Legislative Bills">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">69th Legislative Assembly</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/69th-legislative-assembly/house-bills-69th-general-session" class="mobile-menu__link mobile-menu__link--sub">House Bills (69th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/69th-legislative-assembly/house-resolutions-69th-general-session" class="mobile-menu__link mobile-menu__link--sub">House Resolutions (69th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/69th-legislative-assembly/senate-bills-69th-general-session" class="mobile-menu__link mobile-menu__link--sub">Senate Bills (69th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/69th-legislative-assembly/senate-resolutions-69th-general-session" class="mobile-menu__link mobile-menu__link--sub">Senate Resolutions (69th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/69th-legislative-assembly/bills-and-resolutions-69th-jan-2026" class="mobile-menu__link mobile-menu__link--sub">Bills &amp; Resolutions (69th Jan. 2026 Special)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/69th-legislative-assembly/bills-and-resolutions-69th-sept-2026" class="mobile-menu__link mobile-menu__link--sub">Bills &amp; Resolutions (69th Sept. 2026 Special)</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/services/signed-legislative-bills/68th-legislative-session" class="mobile-menu__link mobile-menu__link--sub">68th Legislative Session</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-signed-legislative-bills-_8th-legislative-session-3-2"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-signed-legislative-bills-_8th-legislative-session-3-2"
+                    aria-label="Open submenu for 68th Legislative Session">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-signed-legislative-bills-_8th-legislative-session-3-2"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="68th Legislative Session">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-signed-legislative-bills-_8th-legislative-session-3-2"
+                      aria-label="Back to Signed Legislative Bills">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">68th Legislative Session</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-4">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/68th-legislative-session/house-bills-68th-general-session" class="mobile-menu__link mobile-menu__link--sub">House Bills (68th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/68th-legislative-session/house-resolutions-68th-general-session" class="mobile-menu__link mobile-menu__link--sub">House Resolutions (68th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/68th-legislative-session/senate-bills-68th-general-session" class="mobile-menu__link mobile-menu__link--sub">Senate Bills (68th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/68th-legislative-session/senate-resolutions-68th-general-session" class="mobile-menu__link mobile-menu__link--sub">Senate Resolutions (68th)</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/signed-legislative-bills/68th-legislative-session/bills-and-resolutions-68th-special" class="mobile-menu__link mobile-menu__link--sub">Special Session (68th)</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/records-searches" class="mobile-menu__link mobile-menu__link--sub">Records Searches</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/services/data-list-requests" class="mobile-menu__link mobile-menu__link--sub">Data List Requests</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/about-office" class="mobile-menu__link">About</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-main-menu-about-1-6"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-main-menu-about-1-6"
+                    aria-label="Open submenu for About">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-main-menu-about-1-6"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="About">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-main-menu-about-1-6"
+                      aria-label="Back to Main Menu">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">About</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-2">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/about-office/news" class="mobile-menu__link mobile-menu__link--sub">News</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/about-office/north-dakota-blue-book" class="mobile-menu__link mobile-menu__link--sub">Blue Book</a>
+                  
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/about-office/biennial-reports" class="mobile-menu__link mobile-menu__link--sub">Biennial Reports</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                            <div class="mobile-menu__link-wrap">
+
+                          <a href="/contact" class="mobile-menu__link">Contact</a>
+            
+            <button class="mobile-menu__submenu-toggle"
+                    type="button"
+                    data-submenu="mm-panel-main-menu-contact-1-7"
+                    aria-expanded="false"
+                    aria-controls="mm-panel-main-menu-contact-1-7"
+                    aria-label="Open submenu for Contact">
+              <span aria-hidden="true" class="mobile-menu__chevron">&#x203A;</span>
+            </button>
+          </div>
+
+                    <div id="mm-panel-main-menu-contact-1-7"
+               class="mobile-menu__panel"
+               hidden
+               aria-label="Contact">
+            <div class="mobile-menu__panel-header">
+              <button class="mobile-menu__back-btn" type="button"
+                      data-submenu-back="mm-panel-main-menu-contact-1-7"
+                      aria-label="Back to Main Menu">
+                <span aria-hidden="true" class="mobile-menu__back-icon"></span>
+                Back
+              </button>
+              <span class="mobile-menu__panel-title h5 mb-0">Contact</span>
+            </div>
+              
+  <ul class="mobile-menu__list mobile-menu__list--level-2">
+                
+            
+            
+      <li class="mobile-menu__item">
+
+                                        <a href="/contact/request-appearance-secretary-howe" class="mobile-menu__link mobile-menu__link--sub">Request Appearance by Secretary Howe</a>
+                  
+      </li>
+    
+          </ul>
+
+          </div>
+
+        
+      </li>
+    
+              <li class="mobile-menu__extras">
+        <div class="mobile-quick-links">
+          <section class="views-element-container settings-tray-editable block block-views block-views-blockquick-links-config-block-1 clearfix" id="block-ndit-base-views-block-quick-links-config-block-1" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="quick_links block-ndit-base-views-block-quick-links-config-block-1"><div class="view view-quick-links-config view-id-quick_links_config view-display-id-block_1 js-view-dom-id-a5a56346232fcfc3d7ce58babbb4545faac2ec3da7407735324ef741bed4d90a">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row"><div class="quick-links"></div></div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+        </div>
+                                <div class="social-mobile">
+          <section class="views-element-container social-links hidden-xs hidden-sm settings-tray-editable block block-views block-views-blocksocial-icons-config-block-1 clearfix" id="block-ndit-base-views-block-social-icons-config-block-1" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="header_icons block-ndit-base-views-block-social-icons-config-block-1"><div class="social-icons view view-social-icons-config view-id-social_icons_config view-display-id-block_1 js-view-dom-id-bc1e0756d58133d3f045e60d4f3cde3a4937b5880ca62eebca816067f42982d6">
+  
+    
+      
+      <div class="view-content">
+          <div class="social-inline"><a class="ndr-mail" href="/contact" aria-label="Contact Us">
+	<span aria-hidden="true" class="fas fa-envelope fa-2x"></span>
+</a> </div>
+    <div class="social-inline"><a class="ndr-facebook" rel="noopener noreferrer" href="https://www.facebook.com/NorthDakotaSOS" target="_blank" aria-label="Follow Us on Facebook">
+	<span aria-hidden="true" class="fab fa-facebook-square fa-2x"></span>
+</a> <a class="ndr-twitter" rel="noopener noreferrer" href="https://twitter.com/NorthDakotaSoS" target="_blank" aria-label="Follow Us on Twitter">
+	<span class="fa-brands fa-square-x-twitter fa-2x"></span>
+</a><a class="ndr-youtube" rel="noopener noreferrer" href="https://www.youtube.com/@NorthDakotaSoS" target="_blank" aria-label="Subscribe to our YouTube">
+	<span aria-hidden="true" class="fab fa-youtube-square fa-2x"></span>
+</a><a class="ndr-instagram" rel="noopener noreferrer" href="https://www.instagram.com/northdakotasos/" target="_blank" aria-label="Subscribe on Instagram">
+	<span aria-hidden="true" class="fab fa-instagram fa-2x"></span>
+</a></div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+        </div>
+      </li>
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+  </nav>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  
+</header>
+
+<main role="main">
+  <h1 class="visually-hidden">Secretary of State | North Dakota</h1>
+
+      <div id="alerts" class="container-fluid d-print-none">
+    <div class="row g-0">
+      <div class="col-12">
+          <div class="region region-slider-area">
+    <section id="block-ndit-base-nditglobalalertsstacked" class="settings-tray-editable block block-ndit-global-alerts block-ndit-global-alerts-block clearfix" data-drupal-settingstray="editable">
+  
+    
+
+      
+  </section>
+
+
+  </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <a id="main-content" tabindex="-1"></a>
+
+    
+    
+  <div class="container-fluid">
+    <div class="row g-0">
+      <div class="col-12">
+          <div class="region region-content">
+    <section id="block-ndit-base-content" class="block block-system block-system-main-block clearfix">
+  
+    
+
+      
+<article data-history-node-id="1" about="/home" class="node node--type-homepage node--promoted node--view-mode-full">
+
+  
+    
+
+  
+  <div class="node__content ndit-content-layout">
+    
+
+                                                                                                    
+
+  <div class="ndit_base_layouts">
+    
+
+  <div class="container-fluid">
+    <div  class="layout row g-0 layout-builder__layout">
+      
+
+      
+                                          
+          <div  class="col-12 ndit-1-col ndit-section-body">
+            
+
+
+
+ 
+
+<section class="block block-layout-builder block-inline-blockndit-slideshow ndit-slideshow clearfix">
+
+    
+  
+
+  <div class="ndit-slick-slideshow">
+                                
+        
+                
+                        
+                                  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                
+                
+        
+                
+                
+        <div class="ndit-slide">
+
+                              
+                                                                      <div class="ndit-slide-image-wrapper">
+              <div class="ndit-slide-image">
+                  <picture>
+                  <source srcset="/sites/default/files/styles/ndit_2000x400/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=8lKxFrIq&amp;cb=2a617323 1x" media="(min-width: 1400px)" type="image/png" width="2000" height="400"/>
+              <source srcset="/sites/default/files/styles/ndit_1400x280/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=oBRUbse_&amp;cb=2a617323 1x" media="(min-width: 1200px)" type="image/png" width="1400" height="280"/>
+              <source srcset="/sites/default/files/styles/ndit_1200x240/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=LJqjGXeR&amp;cb=2a617323 1x" media="(min-width: 992px)" type="image/png" width="1200" height="240"/>
+              <source srcset="/sites/default/files/styles/ndit_975x195/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=0b8iMIPj&amp;cb=2a617323 1x" media="(min-width: 768px)" type="image/png" width="975" height="195"/>
+              <source srcset="/sites/default/files/styles/ndit_740x148/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=6_2szueG&amp;cb=2a617323 1x" media="(min-width: 576px)" type="image/png" width="740" height="148"/>
+              <source srcset="/sites/default/files/styles/ndit_350x70/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=R-J6yJFJ&amp;cb=2a617323 1x" type="image/png" width="350" height="70"/>
+                  <img class="slide-image img-fluid" loading="lazy" width="2500" height="530" src="/sites/default/files/styles/ndit_2500x530/public/documents/slideshow/michal-headshot-new.png?h=d17d86cb&amp;itok=EezCIIRH&amp;cb=2a617323" alt="" typeof="foaf:Image" />
+
+  </picture>
+
+              </div>
+            </div>
+                    <div class="ndit-slide-content container">
+
+                        
+          </div>
+                                      </div>
+                                                      
+        
+                
+                        
+                                  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                
+                
+        
+                
+                
+        <div class="ndit-slide">
+
+                                <a href="/elections" class="ndit-slide-link-wrapper" aria-label="Open slide link">
+                    
+                                                                      <div class="ndit-slide-image-wrapper">
+              <div class="ndit-slide-image">
+                  <picture>
+                  <source srcset="/sites/default/files/styles/ndit_2000x400/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=lVCR-JiQ&amp;cb=4801e279 1x" media="(min-width: 1400px)" type="image/png" width="2000" height="400"/>
+              <source srcset="/sites/default/files/styles/ndit_1400x280/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=5rFxGsjx&amp;cb=4801e279 1x" media="(min-width: 1200px)" type="image/png" width="1400" height="280"/>
+              <source srcset="/sites/default/files/styles/ndit_1200x240/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=BtYRmsTn&amp;cb=4801e279 1x" media="(min-width: 992px)" type="image/png" width="1200" height="240"/>
+              <source srcset="/sites/default/files/styles/ndit_975x195/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=IqXE5In7&amp;cb=4801e279 1x" media="(min-width: 768px)" type="image/png" width="975" height="195"/>
+              <source srcset="/sites/default/files/styles/ndit_740x148/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=DWwy3QBI&amp;cb=4801e279 1x" media="(min-width: 576px)" type="image/png" width="740" height="148"/>
+              <source srcset="/sites/default/files/styles/ndit_350x70/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=YIboydoK&amp;cb=4801e279 1x" type="image/png" width="350" height="70"/>
+                  <img class="slide-image img-fluid" loading="lazy" width="2500" height="530" src="/sites/default/files/styles/ndit_2500x530/public/documents/slideshow/votendgov.png?h=d17d86cb&amp;itok=mjwsNAWV&amp;cb=4801e279" alt="" typeof="foaf:Image" />
+
+  </picture>
+
+              </div>
+            </div>
+                    <div class="ndit-slide-content container">
+
+                        
+          </div>
+                                </a>
+                            </div>
+                                      
+        
+                
+                        
+                                  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                
+                
+        
+                
+                
+        <div class="ndit-slide">
+
+                                <a href="/elections/voter/voting-north-dakota/forms-voter-id" class="ndit-slide-link-wrapper" aria-label="Open slide link">
+                    
+                                                                      <div class="ndit-slide-image-wrapper">
+              <div class="ndit-slide-image">
+                  <picture>
+                  <source srcset="/sites/default/files/styles/ndit_2000x400/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=aHxO0E8q&amp;cb=730bd563 1x" media="(min-width: 1400px)" type="image/png" width="2000" height="400"/>
+              <source srcset="/sites/default/files/styles/ndit_1400x280/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=3GtKEUrq&amp;cb=730bd563 1x" media="(min-width: 1200px)" type="image/png" width="1400" height="280"/>
+              <source srcset="/sites/default/files/styles/ndit_1200x240/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=QUKXPbjv&amp;cb=730bd563 1x" media="(min-width: 992px)" type="image/png" width="1200" height="240"/>
+              <source srcset="/sites/default/files/styles/ndit_975x195/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=6QD7CHyK&amp;cb=730bd563 1x" media="(min-width: 768px)" type="image/png" width="975" height="195"/>
+              <source srcset="/sites/default/files/styles/ndit_740x148/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=2vbWpFQg&amp;cb=730bd563 1x" media="(min-width: 576px)" type="image/png" width="740" height="148"/>
+              <source srcset="/sites/default/files/styles/ndit_350x70/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=nQYPtRW1&amp;cb=730bd563 1x" type="image/png" width="350" height="70"/>
+                  <img class="slide-image img-fluid" loading="lazy" width="2500" height="530" src="/sites/default/files/styles/ndit_2500x530/public/documents/slideshow/valid-id.png?h=d17d86cb&amp;itok=EyxoLuMU&amp;cb=730bd563" alt="" typeof="foaf:Image" />
+
+  </picture>
+
+              </div>
+            </div>
+                    <div class="ndit-slide-content container">
+
+                        
+          </div>
+                                </a>
+                            </div>
+                      
+        
+                
+                        
+                                  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                
+                
+        
+                
+                
+        <div class="ndit-slide">
+
+                                <a href="https://vote.nd.gov/myvotinginfo" class="ndit-slide-link-wrapper" aria-label="Open slide link">
+                    
+                                                                      <div class="ndit-slide-image-wrapper">
+              <div class="ndit-slide-image">
+                  <picture>
+                  <source srcset="/sites/default/files/styles/ndit_2000x400/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=fCs3Odgu&amp;cb=8c23606c 1x" media="(min-width: 1400px)" type="image/png" width="2000" height="400"/>
+              <source srcset="/sites/default/files/styles/ndit_1400x280/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=MWaOWxU1&amp;cb=8c23606c 1x" media="(min-width: 1200px)" type="image/png" width="1400" height="280"/>
+              <source srcset="/sites/default/files/styles/ndit_1200x240/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=wyNVyryn&amp;cb=8c23606c 1x" media="(min-width: 992px)" type="image/png" width="1200" height="240"/>
+              <source srcset="/sites/default/files/styles/ndit_975x195/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=At422dgk&amp;cb=8c23606c 1x" media="(min-width: 768px)" type="image/png" width="975" height="195"/>
+              <source srcset="/sites/default/files/styles/ndit_740x148/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=M6tpc236&amp;cb=8c23606c 1x" media="(min-width: 576px)" type="image/png" width="740" height="148"/>
+              <source srcset="/sites/default/files/styles/ndit_350x70/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=7BNyV_u9&amp;cb=8c23606c 1x" type="image/png" width="350" height="70"/>
+                  <img class="slide-image img-fluid" loading="lazy" width="2500" height="530" src="/sites/default/files/styles/ndit_2500x530/public/documents/slideshow/where-do-i-vote.png?h=d17d86cb&amp;itok=8R7NUmYK&amp;cb=8c23606c" alt="" typeof="foaf:Image" />
+
+  </picture>
+
+              </div>
+            </div>
+                    <div class="ndit-slide-content container">
+
+                        
+          </div>
+                                </a>
+                            </div>
+                      
+        
+                
+                        
+                                  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                
+                
+        
+                
+                
+        <div class="ndit-slide">
+
+                                <a href="/elections/voter/voting-north-dakota/how-do-i-vote/absentee-voting" class="ndit-slide-link-wrapper" aria-label="Open slide link">
+                    
+                                                                      <div class="ndit-slide-image-wrapper">
+              <div class="ndit-slide-image">
+                  <picture>
+                  <source srcset="/sites/default/files/styles/ndit_2000x400/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=Gc7nt1jq&amp;cb=97fc263d 1x" media="(min-width: 1400px)" type="image/png" width="2000" height="400"/>
+              <source srcset="/sites/default/files/styles/ndit_1400x280/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=heuItjtD&amp;cb=97fc263d 1x" media="(min-width: 1200px)" type="image/png" width="1400" height="280"/>
+              <source srcset="/sites/default/files/styles/ndit_1200x240/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=1flBJHD_&amp;cb=97fc263d 1x" media="(min-width: 992px)" type="image/png" width="1200" height="240"/>
+              <source srcset="/sites/default/files/styles/ndit_975x195/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=FJqHbZPi&amp;cb=97fc263d 1x" media="(min-width: 768px)" type="image/png" width="975" height="195"/>
+              <source srcset="/sites/default/files/styles/ndit_740x148/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=t5c7CNML&amp;cb=97fc263d 1x" media="(min-width: 576px)" type="image/png" width="740" height="148"/>
+              <source srcset="/sites/default/files/styles/ndit_350x70/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=45okg7js&amp;cb=97fc263d 1x" type="image/png" width="350" height="70"/>
+                  <img class="slide-image img-fluid" loading="lazy" width="2500" height="530" src="/sites/default/files/styles/ndit_2500x530/public/documents/slideshow/absentee-deadline.png?h=d17d86cb&amp;itok=9UrrsRGi&amp;cb=97fc263d" alt="" typeof="foaf:Image" />
+
+  </picture>
+
+              </div>
+            </div>
+                    <div class="ndit-slide-content container">
+
+                        
+          </div>
+                                </a>
+                            </div>
+            </div>
+
+  <button id="slider-toggle" class="toggle-switch pause-btn" aria-label="Pause slideshow" aria-pressed="true">
+    <span class="visually-hidden">Pause</span>
+    <span class="switch-track">
+      <span class="switch-handle">
+        <i class="fa-solid fa-pause"></i>
+      </span>
+    </span>
+  </button>
+
+</section>
+
+          </div>
+                                                                                                                                                                                                                                                                
+      
+    </div>
+  </div>
+
+  </div>
+
+
+                                                                                                    
+
+  <div class="ndit_base_layouts">
+    
+
+  <div class="container">
+    <div  class="layout row layout-builder__layout">
+      
+
+      
+                                          
+          <div  class="col-12 ndit-1-col ndit-section-body">
+            
+
+  <section class="block block-layout-builder block-inline-blockndit-wysiwyg clearfix">
+    
+        
+
+          
+            <div class="clearfix text-formatted field field--name-field-wysiwyg-text field--type-text-long field--label-hidden field__item"><a href="https://resultsnd.sos.nd.gov/#election=348"><img class="align-center" src="https://www.sos.nd.gov/sites/default/files/documents/images/unofficial-general-8pm-26.png" alt="Find unofficial 2026 General Election results here after 8:00 p.m. Central Time on November 3." width="2560" height="192"></a></div>
+      
+      </section>
+
+          </div>
+                                                                                                                                                                                                                                                                
+      
+    </div>
+  </div>
+
+  </div>
+
+
+                                                                                                    
+
+  <div class="ndit_base_layouts">
+    
+
+
+  </div>
+
+
+                                                                                                    
+
+  <div class="ndit_base_layouts">
+    
+
+  <div class="container">
+    <div  class="layout row layout-builder__layout">
+      
+
+      
+                                          
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">Plan to Vote 2026</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Learn about how to vote</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="/elections/voter"
+               title="Info for Voters">
+              Info for Voters
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+
+
+
+          </div>
+                                                  
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">Election Security</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Elections are secure and accurate</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="/elections/election-security/did-you-know"
+               title="Learn About Election Security">
+              Learn About Election Security
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                  
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">Get a License</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Register as a contractor, etc.&nbsp;</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="/business/licensing-registration"
+               title="Explore Licensing">
+              Explore Licensing
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                  
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">Start a Business</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Do business here</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="/business"
+               title="Explore Business">
+              Explore Business
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                                                                                                                                                              
+      
+    </div>
+  </div>
+
+  </div>
+
+
+                                                                                                    
+
+  <div class="ndit_base_layouts">
+    
+
+  <div class="container">
+    <div  class="layout row layout-builder__layout">
+      
+
+      
+                                          
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">FirstStop</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Enter the FirstStop portal</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="https://firststop.sos.nd.gov/"
+               title="Enter FirstStop">
+              Enter FirstStop
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                  
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">NDCIS</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Go to the ND Central Indexing System</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="https://cis.sos.nd.gov/"
+               title="Central Indexing">
+              Central Indexing
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                  
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">Meetings</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Go to public meeting notices</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="https://apps.nd.gov/sos/ndpmn/mainmenu.htm"
+               title="Public Meetings">
+              Public Meetings
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                  
+          <div  class="col-lg-3 col-md-12 col-12 ndit-section-body">
+            
+
+
+<section class="block block-layout-builder block-inline-blockndit-featured-area clearfix">
+  
+  
+
+                <div class="featured-area">
+        <div class="icn-main-container">
+          <div class="icn-container">
+                                    <div class="serviceicon serviceicon-empty">
+
+                            
+                                        </div>
+          </div>
+        </div> <!-- icn-main-container -->
+
+        <div class="featured-area-title">
+          
+            <div class="field field--name-field-featured-area-title field--type-string field--label-hidden field__item">Combative Sports</div>
+      
+        </div>
+
+                  <div class="featured-area-description">
+            
+            <div class="clearfix text-formatted field field--name-field-featured-area-desc-content field--type-text-long field--label-hidden field__item"><p>Access events and licensing info for promoters and contestants</p></div>
+      
+          </div>
+        
+                  <div class="button-container">
+            <a class="btn btn-featured-area"
+               rel="noreferrer nofollow"
+               target=""
+               href="/business/licensing-registration/combative-sports-commission"
+               title="Get Event Regulation Info">
+              Get Event Regulation Info
+            </a>
+          </div>
+              </div> <!-- featured-area -->
+      </section>
+
+          </div>
+                                                                                                                                                                                              
+      
+    </div>
+  </div>
+
+  </div>
+
+  </div>
+
+</article>
+
+  </section>
+
+
+  </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+    <footer  class="py-5 px-4 mt-auto" role="contentinfo" aria-label="Website Footer Information">
+    <div class="container-fluid">
+      <h2 class="visually-hidden">Footer</h2>
+      <div class="row g-4">
+        <div id="port-footer" class="col-12 col-md-4 text-center text-md-start">
+            <div class="region region-footer-left">
+    <section class="views-element-container settings-tray-editable block block-views block-views-blockfooter-left-block-1 clearfix" id="block-ndit-base-views-block-footer-left-block-1" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="footer_left block-ndit-base-views-block-footer-left-block-1"><div class="view view-footer-left view-id-footer_left view-display-id-block_1 js-view-dom-id-465d85c05bfb3dfd34f642d5bf375d8e843c41fdc788f5d1891a1478ccc8de04">
+  
+    
+      
+      <div class="view-content">
+          <div class="views-row"><div class="config_pages config_pages--type--footer config_pages--view-mode--default config_pages--footer--default">
+  
+            <div class="clearfix text-formatted field field--name-field-footer-left field--type-text-long field--label-hidden field__item"><p class="MsoNormal">North Dakota Office of the Secretary of State<br>600 E Boulevard Avenue Dept 108 | Bismarck, ND 58505<br>Phone: 701-328-2900 | 800-352-0867 | TTY: 800-366-6888<strong><o:p></o:p></strong></p></div>
+      
+</div>
+</div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+  </div>
+
+        </div>
+
+        <div id="center-footer" class="col-12 col-md-4 text-center">
+            <div class="region region-footer-middle">
+    <nav role="navigation" id="block-ndit-base-footer-menu-menu" aria-labelledby="block-ndit-base-footer-menu-menu" id="block-ndit-base-footer-menu" class="settings-tray-editable block block-menu navigation menu--footer" data-drupal-settingstray="editable">
+            
+        
+              <ul data-block="footer_middle block-ndit-base-footer-menu" class="nav navbar-nav">
+                    <li class="nav-item">
+        <a href="/accessibility" class="nav-link" data-drupal-link-system-path="node/4921">Accessibility</a>
+              </li>
+                <li class="nav-item">
+        <a href="https://www.sos.nd.gov/sitemap.xml" class="nav-link">Sitemap</a>
+              </li>
+                <li class="nav-item">
+        <a href="/disclaimer" class="nav-link" data-drupal-link-system-path="node/4918">Disclaimer</a>
+              </li>
+                <li class="nav-item">
+        <a href="/privacy-policy" class="nav-link" data-drupal-link-system-path="node/4920">Privacy Policy</a>
+              </li>
+                <li class="nav-item">
+        <a href="/security-policy" class="nav-link" data-drupal-link-system-path="node/4919">Security Policy</a>
+              </li>
+                <li class="nav-item">
+        <a href="/contact" class="nav-link" data-drupal-link-system-path="contact">Contact</a>
+              </li>
+        </ul>
+  
+
+
+  </nav>
+<section class="views-element-container social-links hidden-xs hidden-sm settings-tray-editable block block-views block-views-blocksocial-icons-config-block-1 clearfix" id="block-ndit-base-views-block-social-icons-config-block-1-2" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="footer_middle block-ndit-base-views-block-social-icons-config-block-1-2"><div class="social-icons view view-social-icons-config view-id-social_icons_config view-display-id-block_1 js-view-dom-id-d5d33e481526fac0dbd5c516cd28ddb44b2ef42ab2bf0706b350f44bcf5b959e">
+  
+    
+      
+      <div class="view-content">
+          <div class="social-inline"><a class="ndr-mail" href="/contact" aria-label="Contact Us">
+	<span aria-hidden="true" class="fas fa-envelope fa-2x"></span>
+</a> </div>
+    <div class="social-inline"><a class="ndr-facebook" rel="noopener noreferrer" href="https://www.facebook.com/NorthDakotaSOS" target="_blank" aria-label="Follow Us on Facebook">
+	<span aria-hidden="true" class="fab fa-facebook-square fa-2x"></span>
+</a> <a class="ndr-twitter" rel="noopener noreferrer" href="https://twitter.com/NorthDakotaSoS" target="_blank" aria-label="Follow Us on Twitter">
+	<span class="fa-brands fa-square-x-twitter fa-2x"></span>
+</a><a class="ndr-youtube" rel="noopener noreferrer" href="https://www.youtube.com/@NorthDakotaSoS" target="_blank" aria-label="Subscribe to our YouTube">
+	<span aria-hidden="true" class="fab fa-youtube-square fa-2x"></span>
+</a><a class="ndr-instagram" rel="noopener noreferrer" href="https://www.instagram.com/northdakotasos/" target="_blank" aria-label="Subscribe on Instagram">
+	<span aria-hidden="true" class="fab fa-instagram fa-2x"></span>
+</a></div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+  </div>
+
+        </div>
+
+        <div id="starboard-footer" class="col-12 col-md-4 text-center text-md-end">
+            <div class="region region-footer-right">
+    <section class="views-element-container settings-tray-editable block block-views block-views-blocklogo-block-block-5 clearfix" id="block-ndit-base-views-block-logo-block-block-5" data-drupal-settingstray="editable">
+  
+    
+
+      <div data-block="footer_right block-ndit-base-views-block-logo-block-block-5"><div class="view view-logo-block view-id-logo_block view-display-id-block_5 js-view-dom-id-ad38048b8c6b8df8e7fa6efcd9a7070deac7a3f50367c368dfef79a37040a1ab">
+  
+    
+      
+      <div class="view-content">
+          <div>  <img loading="lazy" src="/sites/default/files/styles/logo/public/documents/theme/favicon-white-ndsos.png?itok=z6TYO9j_&amp;cb=bef56800" width="64" height="64" alt="Secretary of State Logo" typeof="foaf:Image" class="img-fluid image-style-logo" />
+
+
+</div>
+
+    </div>
+  
+          </div>
+</div>
+
+  </section>
+
+
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </div>
+
+    
+    <script type="text/javascript" async src="https://app-script.monsido.com/v2/monsido-script.js"></script>
+    <script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+<script src="/sites/default/files/js/js_2Fd_Xm05nL2qzvNqkEXoMDxW4RmFaemfPhr4ZjLPaH0.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=ndit_base&amp;include=eJxdjNEOgzAIRX-olad9T0NtrSiKE4zb369uJpolhHtOLiFiOwaTOgvEi8OgLoqY2orLAy70g3pGy2ouv4xpHiGt24LcnOo64hwOCtTKrHC4_6IrIqWWhgVKXf_e4IAvN9VLSgJnujmRhYiaobBEZK_2ru_LrTjIK1PK2sv-K_JzQw59ptIb3MXtOXayTnBmkwhZygeFsWcF"></script>
+
+    <!--
+    Event snippet for ND Secretary of State Remarketing on : Please do not remove.
+    Place this snippet on pages with events you’re tracking. 
+    Creation date: 05/03/2024
+    -->
+      <script>
+        gtag('event', 'conversion', {
+          'allow_custom_scripts': true,
+          'send_to': 'DC-8826506/invmedia/ndsec0+standard'
+        });
+      </script>
+      <noscript>
+      <img src="https://ad.doubleclick.net/ddm/activity/src=8826506;type=invmedia;cat=ndsec0;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=;npa=;gdpr=${GDPR};gdpr_consent=${GDPR_CONSENT_755};ord=1?" width="1" height="1" alt=""/>
+      </noscript>
+    <!-- End of event snippet: Please do not remove -->
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+	"clientId" : "north-dakota",
+	"totalResultsBaseUrl": "https://api.resultsnd.sos.nd.gov",
+	"publicResultsBaseUrl": "https://resultsnd.sos.nd.gov",
+	"gisDataUrl": "https://resultsnd.sos.nd.gov",
+	"publicFilesBaseUrl": "https://resultsnd.sos.nd.gov"
+}
+

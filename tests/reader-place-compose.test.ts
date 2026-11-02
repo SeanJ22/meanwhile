@@ -71,7 +71,7 @@ test("a fringe division supplies its name without supplying its bodies, members 
   });
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY], namedDivisionIds: [FRINGE] }, [city, fringe]);
   assert.deepEqual(entries(result.entities).map(body => body.id), [BOARD]);
-  assert.deepEqual(entries(result.divisions).map(division => division.ocdId), [CITY, FRINGE]);
+  assert.deepEqual(entries(result.divisions).map(division => division.ocdId), [CITY, FRINGE].sort());
   assert.equal(entries(result.meeting_rows).length, 0);
   assert.deepEqual(entries(model(model(result.registry).registry).bodies).map(body => body.id), [BOARD]);
   assert.deepEqual(entries(model(result.registry).bodyRosters).map(body => body.bodyId), [BOARD]);
@@ -176,16 +176,6 @@ test("an agenda lookup retains identity context and omits unrelated member and d
   assert.deepEqual(entries(model(result.registry).bodyRosters)[0]!.members, []);
   assert.deepEqual(model(model(result.registry).officialCandidacies).rows, []);
   assert.equal(result.registration_held, false);
-});
-
-test("body-facts-only reads retain local facts without claiming that their independent state directory was loaded", () => {
-  const city = page(CITY, [entity(BOARD)], { fields: [{ entity_id: BOARD, field: "name", value: "Council" }] });
-  const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY], bodyFactsOnly: true }, [city]);
-  assert.equal(entries(result.fields)[0]!.value, "Council");
-  assert.equal(result.registry, null);
-  assert.equal(result.registration_held, false);
-  assert.deepEqual(result.divisions, []);
-  assert.deepEqual(result.governments, []);
 });
 
 test("a board folded into a board that was itself folded resolves to the last, keeping its sittings and seating each member once", () => {

@@ -133,9 +133,9 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
 
   const build = (pageId: string, kind: "place" | "body", n: number | null, divisions: readonly string[], mine: readonly Board[]): Row => {
     const fields: Row[] = [], rosters: Row[] = [], comments: Row[] = [], sittings: Row[] = [], partitions: Row[] = [], archivedMeetings: Row[] = [], archivedDocuments: Row[] = [], documents: Row[] = [];
-    const familyRows = new Map<string, Map<string, Row>>(), own = new Set<string>();
+    const familyRows = new Map<string, Map<string, Row>>(), familyHeads = new Map<string, SlicePartition>(), own = new Set<string>();
     const hold = (part: SlicePartition, board?: string) => {
-      if (part.s.startsWith(FAMILY)) { const rows = familyRows.get(part.s) ?? new Map<string, Row>(); for (const meeting of part.r) rows.set(String(meeting.id), meeting); familyRows.set(part.s, rows); return; }
+      if (part.s.startsWith(FAMILY)) { if (!familyHeads.has(part.s)) familyHeads.set(part.s, part); const rows = familyRows.get(part.s) ?? new Map<string, Row>(); for (const meeting of part.r) rows.set(String(meeting.id), meeting); familyRows.set(part.s, rows); return; }
       if (board && part.s.startsWith("source:derived~US-") && !part.s.endsWith(":history")) own.add(board);
       partitions.push({ scope: part.s, current_version_id: part.v, confirmation: part.c, payload: { ...part.h, meetings: part.r, agendaDocuments: [], ...(part.m ? { derivedMembers: part.m } : {}) } });
     };
@@ -184,6 +184,9 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
       partitions.push({ scope: shelf.scope, current_version_id: shelf.version, confirmation: shelf.confirmation, payload: { ...shelf.header, meetings: [...held.values()], agendaDocuments: [],
         ...(shelf.members ? { derivedMembers: shelf.members.filter(member => { const board = aliasOf.get(String(member.bodyId)) ?? String(member.bodyId); return mine.some(entity => entity.id === board) && (rows || !own.has(board)); }) } : {}) } });
     }
+    // A family calendar the shelf does not hold (its pointer unread just now) is still the calendar the boards' slices name.
+    for (const [scope, head] of familyHeads) if (![family, familyHistory].some(shelf => shelf?.scope === scope))
+      partitions.push({ scope, current_version_id: head.v, confirmation: head.c, payload: { ...head.h, meetings: [...familyRows.get(scope)!.values()], agendaDocuments: [], ...(head.m ? { derivedMembers: head.m } : {}) } });
     const ordered = partitions.map(partition => partition.payload as { meetings: Row[]; agendaDocuments: Row[] });
     const seen = new Set<string>();
     for (const document of documents) {

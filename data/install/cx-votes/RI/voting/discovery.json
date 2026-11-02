@@ -1,0 +1,61 @@
+{
+  "install": false,
+  "routes": [
+    {
+      "id": "cx-ri-official-polling-source-2026",
+      "publisher": "Rhode Island Secretary of State",
+      "url": "https://vote.sos.ri.gov/Home/Info/PollingPlaces",
+      "shape": "list-page",
+      "covers": [
+        "ELECTION_DAY"
+      ],
+      "scope": {
+        "state": "RI",
+        "ocdId": "ocd-division/country:us/state:ri",
+        "name": "Rhode Island"
+      },
+      "electionDate": "2026-11-03",
+      "electionPageUrl": "https://vote.sos.ri.gov/Home/Info/PollingPlaces",
+      "access": {
+        "status": "unreachable",
+        "checkedAt": "2026-11-02T21:41:08.380249+00:00",
+        "detail": "Official public source returned HTTP 403. No location or input field extraction was verified."
+      },
+      "model": "ASSIGNED",
+      "matchingUnit": "PRECINCT"
+    },
+    {
+      "id": "cx-ri-providence-polling-layer-2026",
+      "publisher": "City of Providence GIS",
+      "url": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188",
+      "shape": "map-service",
+      "covers": [
+        "ELECTION_DAY"
+      ],
+      "scope": {
+        "state": "RI",
+        "ocdId": "ocd-division/country:us/state:ri/county:providence/place:providence",
+        "name": "Providence",
+        "countyFips": "44007",
+        "countySubdivisionGeoid": "4400759000"
+      },
+      "electionDate": "2026-11-03",
+      "electionPageUrl": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188",
+      "electionAssociationVerified": false,
+      "extraction": {
+        "columns": {
+          "name": "USER_POLLING_PLACE",
+          "address": "USER_ADDRESS",
+          "precinct": "USER_PRECINCT"
+        }
+      },
+      "model": "ASSIGNED",
+      "matchingUnit": "PRECINCT"
+    }
+  ],
+  "limitations": [
+    "Do not ingest HTTP error bytes as a publication or infer no polling locations from this fetch failure.",
+    "Public Providence GIS layer parses 2026-named polling rows, but an accessible saved .gov linking page is still needed for vendor authority and exact November 3 election association. No sourceCopyId has been invented.",
+    "Assigned precinct sites still require current official precinct polygons. Google/VIP already returns a working polling place for the private Providence residential test."
+  ]
+}

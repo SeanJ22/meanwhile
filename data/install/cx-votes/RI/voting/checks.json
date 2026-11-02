@@ -1,0 +1,45 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "RI",
+  "coverage": {
+    "preparedSites": 0,
+    "preparedBoundaries": 0,
+    "scope": "Read-only check in Providence; official source discovery only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c.html",
+      "httpStatus": 403
+    },
+    {
+      "file": "sources/7f0bd06b0f330d3b314b8f3793866ea3374064ab947218b53b3a6f4154a48045.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/48343d2ff2dfb387b39a9de2c7b9e26fa39558706f7e353659739f2875ec536a.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/c1415d92005fa31bf7a13b62221cef0a69f9b480d6b613fbcc287ed70f8b8c52.source",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 0,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 0,
+  "registryPageRows": 0,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "NOT_APPLICABLE_DISCOVERY_ONLY",
+  "checks": [],
+  "siteKinds": {
+    "electionDay": 0,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:RI"
+}

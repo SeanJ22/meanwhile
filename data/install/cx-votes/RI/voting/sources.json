@@ -1,0 +1,78 @@
+[
+  {
+    "url": "https://vote.sos.ri.gov/Home/Info/PollingPlaces",
+    "finalUrl": "https://vote.sos.ri.gov/Home/Info/PollingPlaces",
+    "file": "sources/2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c.html",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "byteLength": 17,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:41:08.380249+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 403,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "FAILURE_EVIDENCE_ONLY",
+    "captureMetadata": {
+      "sha256": "b3e69881aebca914a7fe186a00ecde8c5bc75c7ba5123ed135546fd19b44498f",
+      "recordedHttpStatus": 403,
+      "recordedUrl": "https://vote.sos.ri.gov/Home/Info/PollingPlaces",
+      "recordedAt": "2026-11-02T21:41:08.380249+00:00"
+    }
+  },
+  {
+    "url": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=json",
+    "finalUrl": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=json",
+    "file": "sources/7f0bd06b0f330d3b314b8f3793866ea3374064ab947218b53b3a6f4154a48045.json",
+    "sha256": "7f0bd06b0f330d3b314b8f3793866ea3374064ab947218b53b3a6f4154a48045",
+    "byteLength": 24101,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:47:05.299289+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "d56ae2a751616e24163e81e0ebcee90ab3dc2ec260e7e7da49d321cd1e766317",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=json",
+      "recordedAt": "2026-11-02T21:47:05.299289+00:00"
+    }
+  },
+  {
+    "url": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188?f=pjson",
+    "finalUrl": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188?f=pjson",
+    "file": "sources/48343d2ff2dfb387b39a9de2c7b9e26fa39558706f7e353659739f2875ec536a.json",
+    "sha256": "48343d2ff2dfb387b39a9de2c7b9e26fa39558706f7e353659739f2875ec536a",
+    "byteLength": 12354,
+    "contentType": "application/json",
+    "retrievedAt": "2026-11-02T21:47:05.299815+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "1e4c36a83543f7043f79ea8ce0d681ceaa8c0ebb59a3820888da83e04893d390",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://services6.arcgis.com/wv9mHoqblhTsnqdG/arcgis/rest/services/List_of_Polling_Places_202526_view_layer/FeatureServer/188?f=pjson",
+      "recordedAt": "2026-11-02T21:47:05.299815+00:00"
+    }
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/29a61c6b3c554b91baac3be02f8a6187?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/29a61c6b3c554b91baac3be02f8a6187?f=pjson",
+    "file": "sources/c1415d92005fa31bf7a13b62221cef0a69f9b480d6b613fbcc287ed70f8b8c52.source",
+    "sha256": "c1415d92005fa31bf7a13b62221cef0a69f9b480d6b613fbcc287ed70f8b8c52",
+    "byteLength": 2191,
+    "contentType": "text/plain;charset=utf-8",
+    "retrievedAt": "2026-11-02T22:02:42.332541+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "36c175ea9c553eebd110f58d1cf902c6925b07af101dc5cfc968217d18319d19",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.arcgis.com/sharing/rest/content/items/29a61c6b3c554b91baac3be02f8a6187?f=pjson",
+      "recordedAt": "2026-11-02T22:02:42.332541+00:00"
+    }
+  }
+]

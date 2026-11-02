@@ -1,0 +1,75 @@
+{
+  "kind": "CX_VOTES_BALLOT_SOURCE_REVIEW",
+  "step": "CX-VOTES",
+  "state": "UT",
+  "zip": "84033",
+  "status": "VERIFIED_NO_DATA_CHANGE",
+  "checkedAt": "2026-11-02T21:59:35.571418+00:00",
+  "candidateLists": {
+    "House4": {
+      "contestId": "ut-ltgov-2026-sldl-4",
+      "candidates": [
+        {
+          "name": "Tiara Auxier",
+          "party": "Republican"
+        },
+        {
+          "name": "Zane Woolstenhulme",
+          "party": "Democratic"
+        }
+      ],
+      "sourceExcerpt": "official-house4-excerpt.txt",
+      "liveStatus": "Both official candidates already present"
+    },
+    "Congress3": {
+      "contestId": "ut-ltgov-2026-cd-3",
+      "names": [
+        "ADONIS HOOSLYN",
+        "AYDEN SCOTT",
+        "CASSIE EASLEY",
+        "CELESTE MALOY",
+        "KENT S. UDELL",
+        "MICHAEL R. STODDARD"
+      ],
+      "sourceExcerpt": "official-cd3-excerpt.txt",
+      "liveStatus": "All six official candidates already present"
+    }
+  },
+  "sources": [
+    {
+      "sourceUrl": "https://www.utah.gov/pmn/files/1356657.pdf",
+      "finalUrl": "https://www.utah.gov/pmn/files/1356657.pdf",
+      "sourceFile": "sources/1d771816afbdc8b378ebb8d3a0775d466675a2ef677aa53bf8510f8ff30cef3c.source",
+      "sha256": "1d771816afbdc8b378ebb8d3a0775d466675a2ef677aa53bf8510f8ff30cef3c",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T21:57:30.283810+00:00"
+    },
+    {
+      "sourceUrl": "https://www.utah.gov/pmn/sitemap/notice/1040763.html",
+      "finalUrl": "https://www.utah.gov/pmn/sitemap/notice/1040763.html",
+      "sourceFile": "sources/00f1693f2eed4b41aae57d1494743a0079dc4e7603e984977caea61378c66436.source",
+      "sha256": "00f1693f2eed4b41aae57d1494743a0079dc4e7603e984977caea61378c66436",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T21:57:30.138117+00:00"
+    },
+    {
+      "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+      "finalUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+      "sourceFile": "sources/1d1a009e5754194c05b70666a1c7ee200c252f87f18c1fe6f1c00f65621a0956.source",
+      "sha256": "1d1a009e5754194c05b70666a1c7ee200c252f87f18c1fe6f1c00f65621a0956",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-02T21:57:29.994586+00:00"
+    }
+  ],
+  "geography": {
+    "official2026ElectionDistrict": "CD3",
+    "currentRepresentation": "CD1",
+    "finding": "The ballot page selects geography for election date 2026-11-03. The state reader API and ballot scope API use the default ZIP resolver for current representation. Established applicability keeps cd:119 for current representation through 2027-01-03 and selects cd:120 for the 2026-11-03 election.",
+    "operation": "No ballot or geography data overwrite. The election page already selects the official election district. Scope API election-selection correction requires code after Nov4 ET."
+  },
+  "limitations": [
+    "This confirms the House 4 and CD3 contests returned for ZIP 84033. It does not certify every Utah precinct or local ballot race.",
+    "The fresh live ballot HTTP fetch took6.44seconds; first-use speed under3seconds is not verified. No application code was changed."
+  ],
+  "nextOwner": "River: confirm House4 and CD3 on the live election page during data-install checks; no UT data mutation is prepared."
+}

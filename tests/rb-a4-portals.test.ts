@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {migratedReaderDb} from './helpers/migrated-reader-db.ts';
+import {installReaderOn, migratedReaderDb} from './helpers/migrated-reader-db.ts';
 import {withdrawPlatformPublication,confirmPlatformPublication} from '../lib/facts/portal-publication.ts';
 import {platformWiringDoors} from '../lib/doors/platform-census.ts';
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
@@ -11,11 +11,12 @@ import {resolveId} from '../lib/core/resolve.ts';
 import type {FactDb} from '../lib/facts/publish.ts';
 import {readPlatformGovernment} from '../lib/control-plane/discovery/platform-government.ts';
 import {platformRegistrationNeed,platformRegistrationBinding,type PlatformRegistrationPage} from '../lib/control-plane/discovery/platform-registration.ts';
-import {seedPlacePages} from './helpers/place-pages.ts';
+import {seedPlaceSlices} from './helpers/place-pages.ts';
 import {readReaderEdgeMeetings} from '../lib/meetings/edge-serving.ts';
 
 test('an unconfirmed portal keeps every verified fact, host, calendar and agenda while its CHECK retry stays open',async()=>{
   const {pg,publish}=await migratedReaderDb();
+  const undo=await installReaderOn(pg);
   const repos=createMemoryRepositories();
   const query=async(sql:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(sql,[...params])).rows;
   const division='ocd-division/country:us/state:or/county:multnomah',body='or:special:metro#governing',portal='https://metro.legistar.com/Calendar.aspx',at='2026-10-24T00:00:00.000Z';
@@ -47,8 +48,8 @@ test('an unconfirmed portal keeps every verified fact, host, calendar and agenda
     const input={state:'OR',divisionIds:[division],includeHistory:true,includeAgenda:true};
     const page=async(history=true)=>{
       const selected={...input,includeHistory:history};
-      await seedPlacePages(query,selected);
-      await seedPlacePages(query,{state:'OR',divisionIds:[],bodyIds:['old-metro-id'],neighbors:true});
+      await seedPlaceSlices(query,selected);
+      await seedPlaceSlices(query,{state:'OR',divisionIds:[],bodyIds:['old-metro-id'],neighbors:true});
       return readPlacePackage(selected,query);
     };
     const currentBefore=await page(false);
@@ -99,7 +100,7 @@ test('an unconfirmed portal keeps every verified fact, host, calendar and agenda
     assert.deepEqual(await readerRows(),savedRows);
     const restored=await page();
     assert.deepEqual(restored,before,'closing the check leaves every held source and agenda unchanged');
-  } finally {await pg.close();}
+  } finally {await undo();await pg.close();}
 });
 
 test('a transient own-site failure retains acquisition, a gone own site pauses its door, and a later observed link resumes it',async()=>{

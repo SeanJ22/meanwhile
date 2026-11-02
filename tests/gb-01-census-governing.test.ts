@@ -14,13 +14,12 @@ import { canonicalEntityId } from "../lib/facts/entities.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
-import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { queueUnbuiltPlacePages } from "../lib/reader/cache.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
+import { installReaderOn, migratedReaderDb } from "./helpers/migrated-reader-db.ts";
+import { seedPlaceSlices } from "./helpers/place-pages.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const clocks = factClocks(null);
@@ -78,6 +77,7 @@ test("Oregon comes first, and each government gets the board its Census division
 
 test("one Oregon pass makes Portland's city, county and school boards through the door, and the place shows them as governing", async () => {
   const { pg } = await migratedReaderDb();
+  const undo = await installReaderOn(pg);
   try {
     await pg.exec(BOOTSTRAP_DDL.find(ddl => ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
     const db = pgFacts(pg);
@@ -102,10 +102,8 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     assert.equal((await db.query("SELECT count(*)::int n FROM fact WHERE produced_by = 'census-governing:OR' AND quote_start IS NULL"))[0]!.n, 0, "each was checked on the saved row");
     assert.deepEqual(await db.query("SELECT field FROM blank"), []);
     // The door queued each board's places; the scheduled page worker builds their ready pages before a reader opens them.
-    const pages = await rebuildPlacePages({ db, purge, concurrency: 1 });
-    assert.equal(pages.failed, 0);
-    assert.equal(pages.remaining, 0);
     const ids = [PORTLAND, MULTNOMAH, SCHOOL];
+    await seedPlaceSlices(db.query, { state: "OR", divisionIds: [...ids] });
     const place = await readPlacePackage({ state: "OR", divisionIds: ids }, db.query);
     const ready = await readPlacePackage({ state: "OR", divisionIds: [PORTLAND], placeId: PORTLAND }, db.query);
     assert.equal(ready.bodies.find(body => body.id === "or:city:city-of-portland#governing")?.name, "City Of Portland governing board",
@@ -128,7 +126,7 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     const city = coverage.bodies.find(body => body.bodyId === "or:city:city-of-portland#governing")!;
     assert.equal(city.officeContact?.address, null, "a published mailing address alone does not establish a physical office");
     assert.deepEqual(bodyContactRows(city).filter(row => /address/i.test(row.label)).map(row => row.label), ["Mailing address"], "it shows only as the mailing address");
-  } finally { await pg.close(); }
+  } finally { await undo(); await pg.close(); }
 });
 
 test("states go one at a time, Oregon first, resuming inside a state; a finished cycle costs one cursor read; nothing touches a registry", async () => {
@@ -211,6 +209,7 @@ test("the step's module reaches the store only through the front door and the pa
 
 test("LA Metro's boards filed under Oregon move to California with their ids and facts; Oregon Metro's stay", async () => {
   const { pg } = await migratedReaderDb();
+  const undo = await installReaderOn(pg);
   try {
     await pg.exec(BOOTSTRAP_DDL.find(ddl => ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
     const db = pgFacts(pg);
@@ -243,12 +242,12 @@ test("LA Metro's boards filed under Oregon move to California with their ids and
     assert.equal(await canonicalEntityId(db.query, `${metro}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalEntityId(db.query, `${LA}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalEntityId(db.query, `${metro}#body:oregon-metro-board-1`), `${metro}#body:oregon-metro-board-1`);
-    // The deployment queues every unbuilt place after its migrations; the runner's turn builds them.
-    await queueUnbuiltPlacePages(db.query);
-    await rebuildPlacePages({ db, purge, limit: Number.MAX_SAFE_INTEGER });
+    // The slice job builds every place after its migrations.
+    await seedPlaceSlices(db.query, { state: "CA", divisionIds: [LA] });
+    await seedPlaceSlices(db.query, { state: "OR", divisionIds: [OR] });
     const county = await readPlacePackage({ state: "CA", divisionIds: [LA] }, db.query);
     assert.equal(county.bodies.filter(body => la.includes(body.id)).length, 66, "Los Angeles County shows LA Metro's boards");
     const state = await readPlacePackage({ state: "OR", divisionIds: [OR] }, db.query);
     assert.ok(!state.bodies.some(body => la.includes(body.id)), "Oregon no longer shows them");
-  } finally { await pg.close(); }
+  } finally { await undo(); await pg.close(); }
 });

@@ -46,6 +46,13 @@ const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload
   WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2 AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[]))
   ORDER BY r.promotion_key,r.ordinal`;
 
+/** A paper names its meeting, not always its board: it belongs to the board that holds the meeting. */
+const PAPERS_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),m.body_id) AS body,reader_payload_value(r.value) AS value FROM civic_data_rows r
+  LEFT JOIN civic_data_rows m ON m.promotion_key=r.promotion_key AND m.version_id=r.version_id AND m.collection='meetings' AND m.row_id=r.value->>'meetingId'
+  WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2::text
+    AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND (m.body_id=ANY($3::text[]) OR coalesce(m.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[])))
+  ORDER BY r.promotion_key,r.ordinal`;
+
 const SITTINGS_SQL = `SELECT m.parent_id AS board,m.id AS entity,f.field,f.value,CASE WHEN f.quote IS NOT DISTINCT FROM (f.value#>>'{}') THEN NULL ELSE f.quote END AS quote,
     f.quote IS NOT DISTINCT FROM (f.value#>>'{}') AS same,f.checked_at,f.status,f.source_copy_id AS copy
   FROM entity m JOIN checked_fact f ON f.entity_id=m.id
@@ -71,13 +78,13 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
   const familyKeys = states.flatMap(state => [`MEETING:${FAMILY}US-${state}`, `MEETING:${FAMILY}US-${state}${HISTORY}`]);
   const partitions = names.length || places.length ? await query(MEETING_PARTITIONS_SQL, [familyKeys, names.map(encoded)]) : [];
   const rowsOf = async (from: readonly Row[], collection: string, ocdIds: readonly string[]) =>
-    from.length ? groupedBy(await query(ROWS_SQL, [from.map(row => String(row.key)), collection, names, ocdIds, from.map(row => String(row.version))]), "key") : new Map<string, Row[]>();
+    from.length ? groupedBy(await query(collection === "agendaDocuments" ? PAPERS_SQL : ROWS_SQL, [from.map(row => String(row.key)), collection, names, ocdIds, from.map(row => String(row.version))]), "key") : new Map<string, Row[]>();
   const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY)), past = partitions.filter(row => String(row.scope).endsWith(HISTORY));
   const wantsOf = (card: MeetingCard) => cards.has(card);
   const [calendar, held, papers, sittings, oldMeetings, oldPapers] = await Promise.all([
     wantsOf("meetings") ? rowsOf(current, "meetings", places) : new Map<string, Row[]>(),
     wantsOf("history") ? rowsOf(past, "meetings", places) : new Map<string, Row[]>(),
-    wantsOf("agenda") ? rowsOf(current, "agendaDocuments", places) : new Map<string, Row[]>(),
+    wantsOf("agenda") ? rowsOf([...current, ...past], "agendaDocuments", places) : new Map<string, Row[]>(),
     wantsOf("meetings") && canonical.length ? query(SITTINGS_SQL, [names]) : [],
     wantsOf("history") && current.length ? query(ARCHIVED_MEETINGS_SQL("meetings"), [current.map(row => String(row.key)), names]) : [],
     wantsOf("agenda") && current.length ? query(ARCHIVED_MEETINGS_SQL("agendaDocuments"), [current.map(row => String(row.key)), names]) : [],
@@ -121,7 +128,7 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
       out.set("history", parts.length || archived.length ? { v: 1, s: place, parts, archived } satisfies HistoryBody : null);
     }
     if (asked.has("agenda")) {
-      const documents = current.flatMap(partition => (papers.get(String(partition.key)) ?? []).filter(row => home.has(canon(row.body) ?? "")).map(row => row.value as Row));
+      const documents = [...current, ...past].flatMap(partition => (papers.get(String(partition.key)) ?? []).filter(row => home.has(canon(row.body) ?? "")).map(row => row.value as Row));
       const archived = mineOf(oldPapers).map(row => row.value as Row);
       out.set("agenda", documents.length || archived.length ? { v: 1, s: place, documents, archived } satisfies AgendaBody : null);
     }

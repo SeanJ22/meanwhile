@@ -43,3 +43,11 @@ export async function migratedFactDb() {
   const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
   return { pg, publish, query, transaction: <T,>(work: (query: Query) => Promise<T>) => pg.transaction(tx => work(async (text, params = []) => (await tx.query<Record<string, unknown>>(text, [...params])).rows)) };
 }
+
+/** The reader's own connection (the national shelf) reads the same database a test holds. Returns what undoes it. */
+export async function installReaderOn(pg: { query: <T>(text: string, params?: unknown[]) => Promise<{ rows: T[] }> }): Promise<() => Promise<void>> {
+  const { installReaderDatabaseQuery } = await import("../../lib/reader/database.ts");
+  const { forgetNationalShelf } = await import("../../lib/reader/shelf.ts");
+  installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => (await pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows)));
+  return async () => { installReaderDatabaseQuery(undefined); forgetNationalShelf(); };
+}

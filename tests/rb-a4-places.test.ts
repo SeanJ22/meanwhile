@@ -1,16 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
+import { installReaderOn, migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
 import { fileEntityPlaces } from "../lib/facts/entity-places.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import {door} from '../lib/core/door.ts';
 import {factClocks} from '../lib/facts/clocks.ts';
-import { seedPlacePages } from "./helpers/place-pages.ts";
+import { seedPlaceSlices } from "./helpers/place-pages.ts";
 
 test("a board keeps one identity and reaches every served city in ten states, including after the next write", async () => {
   const {pg} = await migratedReaderDb();
+  const undo = await installReaderOn(pg);
   const query = async (sql: string, params: readonly unknown[] = []) => (await pg.query<Record<string,unknown>>(sql,[...params])).rows;
   try {
     const [source] = await query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
@@ -29,7 +30,7 @@ test("a board keeps one identity and reaches every served city in ten states, in
         await ensureEntity(query,{id,kind:"body",name:"Transit Board",state,parentId:government});
         for (const city of cities.slice(0,2)) {
           const input = {state,divisionIds:[city]};
-          await seedPlacePages(query,input);
+          await seedPlaceSlices(query,input);
           const answer = await readPlacePackage(input,query);
           const board = answer.bodies.find(body => body.id === id);
           assert.ok(board,`${state} run ${run}: ${city}`);
@@ -37,13 +38,13 @@ test("a board keeps one identity and reaches every served city in ten states, in
           assert.deepEqual([city,...board.fields.alsoServesOcdIds ?? []].sort(),cities.slice(0,2).sort());
         }
         const outside = {state,divisionIds:[cities[2]]};
-        await seedPlacePages(query,outside);
+        await seedPlaceSlices(query,outside);
         assert.deepEqual((await readPlacePackage(outside,query)).bodies,[]);
       }
       assert.deepEqual(await query("SELECT place_id,boundary_year FROM entity_place WHERE entity_id=$1 ORDER BY place_id",[id]),
         cities.slice(0,2).sort().map(place_id => ({place_id,boundary_year:2025})));
     }
-  } finally { await pg.close(); }
+  } finally { await undo(); await pg.close(); }
 });
 
 test('an identical saved fact can file a newly served city and refresh its reader without counting another fact',async()=>{

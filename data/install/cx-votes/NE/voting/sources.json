@@ -1,0 +1,21 @@
+[
+  {
+    "url": "https://www.votercheck.necvr.ne.gov/VoterView/",
+    "finalUrl": "https://www.votercheck.necvr.ne.gov/VoterView/",
+    "file": "sources/04bd3efd444e5d9051eaadd8d2c2ba8d447d7aa995f898c9b8424aac21cf4a7d.html",
+    "sha256": "04bd3efd444e5d9051eaadd8d2c2ba8d447d7aa995f898c9b8424aac21cf4a7d",
+    "byteLength": 287844,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-02T21:40:14.966421+00:00",
+    "retrievedAtBasis": "saved response metadata when supplied; otherwise capture-file mtime",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "7dbdac70b78c22ad8af2fe6a038f662d9320eb67d640d97680e962041a11addd",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://www.votercheck.necvr.ne.gov/VoterView/",
+      "recordedAt": "2026-11-02T21:40:14.966421+00:00"
+    }
+  }
+]

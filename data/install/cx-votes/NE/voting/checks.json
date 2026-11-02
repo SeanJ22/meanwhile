@@ -1,0 +1,33 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "NE",
+  "coverage": {
+    "preparedSites": 0,
+    "preparedBoundaries": 0,
+    "scope": "Read-only check in Lincoln; official source discovery only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/04bd3efd444e5d9051eaadd8d2c2ba8d447d7aa995f898c9b8424aac21cf4a7d.html",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 0,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 0,
+  "registryPageRows": 0,
+  "boundaryDoorEmptyCoversSchema": "NOT_APPLICABLE",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "NOT_APPLICABLE_DISCOVERY_ONLY",
+  "checks": [],
+  "siteKinds": {
+    "electionDay": 0,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 0,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:NE"
+}

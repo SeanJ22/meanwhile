@@ -1,0 +1,39 @@
+{
+  "install": false,
+  "routes": [
+    {
+      "id": "cx-ne-public-address-lookup-2026",
+      "publisher": "Nebraska Secretary of State",
+      "url": "https://www.votercheck.necvr.ne.gov/VoterView/",
+      "shape": "address-lookup",
+      "covers": [
+        "ELECTION_DAY"
+      ],
+      "scope": {
+        "state": "NE",
+        "ocdId": "ocd-division/country:us/state:ne",
+        "name": "Nebraska"
+      },
+      "electionDate": "2026-11-03",
+      "electionPageUrl": "https://www.votercheck.necvr.ne.gov/VoterView/",
+      "platform": "voterview",
+      "extraction": {
+        "format": "html",
+        "addressFields": {
+          "address": "ResidentialAddressValue"
+        }
+      },
+      "access": {
+        "status": "open",
+        "checkedAt": "2026-11-02T21:40:14.966421+00:00",
+        "detail": "Public polling-place address branch exists separately from voter identity form. HTML form posts to /VoterView/VotingPlace/GetPollingPlaceOrVoteCentersByStreetKey and requires publisher StreetKey. Current source reader does not execute address-lookups."
+      },
+      "model": "ASSIGNED",
+      "matchingUnit": "PRECINCT"
+    }
+  ],
+  "limitations": [
+    "Lancaster County county public bulk list fetch returned 403; this packet does not bypass that response.",
+    "Public lookup form bytes are evidence of the source door, not bulk polling-site records; acquire a working official current list/precinct publication for database-held coverage."
+  ]
+}

@@ -11,7 +11,7 @@
       "title": "Representative to the Assembly – District 68",
       "ocdId": "ocd-division/country:us/state:wi/sldl:68",
       "candidates": 2,
-      "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF"
+      "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf"
     },
     {
       "id": "wi-cx-2026-general-assembly-91",
@@ -28,11 +28,18 @@
       "sourceUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190"
     },
     {
+      "id": "wi-cx-2026-general-assembly-85",
+      "title": "Representative to the Assembly – District 85",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:85",
+      "candidates": 2,
+      "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000"
+    },
+    {
       "id": "wi-cx-2026-general-assembly-22",
       "title": "Representative to the Assembly – District 22",
       "ocdId": "ocd-division/country:us/state:wi/sldl:22",
       "candidates": 2,
-      "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary"
+      "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf"
     },
     {
       "id": "wi-cx-2026-general-assembly-66",
@@ -82,6 +89,20 @@
       "ocdId": "ocd-division/country:us/state:wi/sldl:98",
       "candidates": 2,
       "sourceUrl": "https://electionresults.waukeshacounty.gov/contests.aspx?contest=-1"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-26",
+      "title": "Representative to the Assembly – District 26",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:26",
+      "candidates": 2,
+      "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf"
+    },
+    {
+      "id": "wi-cx-2026-general-assembly-60",
+      "title": "Representative to the Assembly – District 60",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:60",
+      "candidates": 2,
+      "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf"
     }
   ],
   "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",

@@ -1,21 +1,26 @@
 [
   {
-    "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
-    "finalUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
-    "sourceCheckedAt": "2026-11-02T21:46:17.018259+00:00",
-    "sha256": "745bb52963534abc000e577141b5452d7da1b5dd244eede9f013bf8b3dcf38b0",
-    "sourceFile": "sources/745bb52963534abc000e577141b5452d7da1b5dd244eede9f013bf8b3dcf38b0.source",
-    "excerptFile": "sources/cb3e0ec43d9419f6613c6ac59ea6b30c798dd2cb79b01e7ac13fc3603ad6daff.txt",
-    "excerptSha256": "cb3e0ec43d9419f6613c6ac59ea6b30c798dd2cb79b01e7ac13fc3603ad6daff",
-    "evidence": "Official current county page labels this exact PDF 2026 General Election Spreadsheet (PDF). The PDF dates election November 3,2026; AD68 field lists exactly Rob Summerfield, Elisha King and generic write-in. Both named choices match the WEC-authored general-candidate discovery PDF. One stale internal subtitle says Partisan Primary – Preliminary Uncanvassed Results; the official download label, URL filename, November3 date and actual two-nominee field identify the general election. That caption discrepancy is preserved. Source omits party labels; both remain null. No result totals imported.",
-    "electionListing": {
-      "url": "https://www.chippewacountywi.gov/241/Election-Results",
-      "file": "sources/e6ecd597eb8f1a4a1e74bce3ba8547f520395f63fb3dc4555eada7ecae7429a5.html",
-      "sha256": "e6ecd597eb8f1a4a1e74bce3ba8547f520395f63fb3dc4555eada7ecae7429a5",
-      "sourceCheckedAt": "2026-11-02T21:45:20.472057+00:00",
-      "exactDocumentElectionDate": "November 3, 2026",
-      "captionLimitation": "PDF internal subtitle says Partisan Primary – Preliminary Uncanvassed Results, while official download listing/file name say 2026 General Election."
-    }
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+      "reportedPdfPages": 21,
+      "nativeGovernmentHttpStatus": 403,
+      "sourceTextFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source"
+    },
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "sourceCheckedAt": "2026-11-02T22:34:38.186321+00:00",
+    "sha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+    "sourceFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source",
+    "excerptFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.txt",
+    "excerptSha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+    "evidence": "Complete 21-page official WEC November3,2026 general-election roster printed August25,2026, captured as SOURCE_TEXT; rawHash fingerprints the whole capture, not originalPDFbytes. This update preserves existing AD22/68 contest and candidate IDs and fills four previously unasserted party labels from complete WEC office blocks, two named nominees per printed total. It also replaces those office provenance fields with this unambiguous statewide general-election source. Later write-in certifications and current/live installation remain outside the proof."
   },
   {
     "sourceUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190",
@@ -28,14 +33,50 @@
     "evidence": "Official November 3, 2026 sample notice page 3 prints separate complete AD91 and AD93 nominee blocks. Both printed named nominees retained for each district. Source linked by the official current county elections page."
   },
   {
-    "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary",
-    "finalUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary?bidId=",
-    "sourceCheckedAt": "2026-11-02T21:56:16.761597+00:00",
-    "sha256": "0469fded34b70548d016ed5b126fef2eee6dbd6d7f8b4b7b35ae52136a32a475",
-    "sourceFile": "sources/0469fded34b70548d016ed5b126fef2eee6dbd6d7f8b4b7b35ae52136a32a475.source",
-    "excerptFile": "sources/064d4342cfe6ce6e26e9f0032359ffa7dec30924635196b841d8b56b6e5d518e.txt",
-    "excerptSha256": "064d4342cfe6ce6e26e9f0032359ffa7dec30924635196b841d8b56b6e5d518e",
-    "evidence": "Official county current November 3, 2026 general election summary template enumerates complete AD22 candidate names Paul Melotik and Dana Glasstein, plus a blank write-in line. Zero of 33 precincts reported; only the candidate names are imported. The source omits party labels, which remain null. Both names and the two-candidate field independently match the WEC-authored discovery PDF. No vote totals/results are imported."
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+      "reportedPdfPages": 200,
+      "nativeGovernmentHttpStatus": 403,
+      "sourceTextFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.source"
+    },
+    "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+    "finalUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+    "sourceCheckedAt": "2026-11-02T22:31:36.491324+00:00",
+    "sha256": "8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d",
+    "sourceFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.source",
+    "excerptFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.txt",
+    "excerptSha256": "8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d",
+    "evidence": "Complete 200-page official Marathon County November 3, 2026 General Election sample-ballot compilation captured through a deterministic public reader because the native download returns403. This receipt fingerprints the complete exact captured source-text artifact, not PDF bytes. Full AD85 block lists Patrick Snyder (Republican), John Kroll (Democratic) and generic write-in; both names/parties match the WEC-authored discovery field. Document date and complete choice block retained. Only candidate identities/party labels are imported, no result totals. Source PDF link is listed on the current county Election Information page as November 2026 General Election Sample Ballots."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+      "reportedPdfPages": 21,
+      "nativeGovernmentHttpStatus": 403,
+      "sourceTextFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source"
+    },
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "sourceCheckedAt": "2026-11-02T22:34:38.186321+00:00",
+    "sha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+    "sourceFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source",
+    "excerptFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.txt",
+    "excerptSha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+    "evidence": "Complete 21-page official WEC November3,2026 general-election roster printed August25,2026, captured as SOURCE_TEXT; rawHash fingerprints the whole capture, not originalPDFbytes. This update preserves existing AD22/68 contest and candidate IDs and fills four previously unasserted party labels from complete WEC office blocks, two named nominees per printed total. It also replaces those office provenance fields with this unambiguous statewide general-election source. Later write-in certifications and current/live installation remain outside the proof."
   },
   {
     "captureFormat": "CAPTURED_SOURCE_TEXT",
@@ -97,5 +138,28 @@
     "excerptFile": "sources/d03fbf9ceff06bc526040de7c0ba3d956f41cbfc389afe03d3c2a151d36b733b.txt",
     "excerptSha256": "d03fbf9ceff06bc526040de7c0ba3d956f41cbfc389afe03d3c2a151d36b733b",
     "evidence": "Official county upcoming 2026 General Election page explicitly dates the election November 3, 2026 and enumerates complete named candidate fields plus a blank write-in placeholder for each office. AD13,24,82,98 candidate fields read in full; two named candidates each. REP/DEM expanded to Republican/Democratic. All four fields independently agree with the WEC-authored candidate PDF discovery copy. This captures candidate listings only; zero reporting/results values are never imported."
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+      "reportedPdfPages": 21,
+      "nativeGovernmentHttpStatus": 403,
+      "sourceTextFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source"
+    },
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+    "sourceCheckedAt": "2026-11-02T22:34:38.186321+00:00",
+    "sha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+    "sourceFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source",
+    "excerptFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.txt",
+    "excerptSha256": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+    "evidence": "Complete 21-page official Wisconsin Elections Commission Candidates on Ballot by Election report, 2026 General Election 11/3/2026, printed August25,2026 at4:39:33PM, captured through deterministic public reader. Native government download returned403. Whole artifact is preserved and fingerprinted as SOURCE_TEXT, not original PDF bytes. Both Assembly26 and60 complete office blocks have two named nominees and a printed total of2. The report contains128 regular statewide/congressional/legislative office fields and260 candidate tickets, ending Assembly99/TotalCandidates260. This packet adds only the final two proven missing Assembly fields; later write-in certifications, local races/measures and live delivery remain outside its proof."
   }
 ]

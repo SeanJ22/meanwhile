@@ -20,11 +20,11 @@
           "scopeNote": null,
           "candidateListComplete": true,
           "provenance": {
-            "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
-            "sourceOrg": "Chippewa County Clerk",
-            "collectedAt": "2026-11-02T21:46:17.018259+00:00",
-            "verifiedAt": "2026-11-02T21:46:17.018259+00:00",
-            "quote": "Rep to Assembly D68\nPrecincts: 20               Reported:   0\nRob Summerfield                         0\nElisha King                             0\nwrite-in                                0"
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 68 Incumbent: Rob Summerfield \n\n1 Rob Summerfield Republican 2 01072547 Elisha King Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 68 Candidates :2"
           }
         },
         {
@@ -66,6 +66,25 @@
           }
         },
         {
+          "id": "wi-cx-2026-general-assembly-85",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:85",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly – District 85",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+            "sourceOrg": "Marathon County Clerk",
+            "collectedAt": "2026-11-02T22:31:36.491324+00:00",
+            "verifiedAt": "2026-11-02T22:31:36.491324+00:00",
+            "quote": "Representative to the Assembly District 85 Vote for 1 \n\nPatrick Snyder (Republican) John Kroll (Democratic) write-in:"
+          }
+        },
+        {
           "id": "wi-cx-2026-general-assembly-22",
           "electionId": "wi-2026-general",
           "ocdId": "ocd-division/country:us/state:wi/sldl:22",
@@ -77,11 +96,11 @@
           "scopeNote": null,
           "candidateListComplete": true,
           "provenance": {
-            "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary",
-            "sourceOrg": "Ozaukee County Clerk",
-            "collectedAt": "2026-11-02T21:56:16.761597+00:00",
-            "verifiedAt": "2026-11-02T21:56:16.761597+00:00",
-            "quote": "NOVEMBER 3, 2026 GENERAL ELECTION\nOzaukee County, Wisconsin\nRep to Assembly, District 22 (Vote for 1)\nPrecincts Reported: 0 of 33 (0.00%)\n\n                                      Total\nTimes Cast                                0 / 0 N/A\n\nCandidate                             Total\nPaul Melotik                             0     N/A\nDana Glasstein                           0     N/A\nWrite-in                                 0     N/A"
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 22 Incumbent: Paul Melotik \n\n1 0104003 Paul Melotik Republican 2 0106795 Dana Glasstein Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 22 Candidates :2"
           }
         },
         {
@@ -216,6 +235,44 @@
             "verifiedAt": "2026-11-02T21:52:46.678683+00:00",
             "quote": "2026 General Election\nElection Date:  November 3, 2026\nRepresentative to the Assembly District 98\nREP Jim Piwowarczyk\nDEM Matt Philibert\nwrite-in:"
           }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-26",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:26",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly – District 26",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 26 Incumbent: Joe Sheehan \n\n1 01072934 John Belanger Republican 2 0106796 Joe Sheehan Democratic \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 26 Candidates :2"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-60",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:60",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly – District 60",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Office : REPRESENTATIVE TO THE ASSEMBLY DISTRICT 60 Incumbent: Jerry O'Connor (Filed Notification of Noncandidacy) \n\n2 01072851 Tiffany Brault Independent 1 01072853 Marty Ryan Republican \n\nTotal Number of REPRESENTATIVE TO THE ASSEMBLY DISTRICT 60 Candidates :2"
+          }
         }
       ],
       "candidacies": [
@@ -224,16 +281,16 @@
           "contestId": "wi-cx-2026-general-assembly-68",
           "givenName": "Rob",
           "familyName": "Summerfield",
-          "partyLabel": null,
+          "partyLabel": "Republican",
           "slogan": null,
           "incumbent": null,
           "websiteUrl": null,
           "provenance": {
-            "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
-            "sourceOrg": "Chippewa County Clerk",
-            "collectedAt": "2026-11-02T21:46:17.018259+00:00",
-            "verifiedAt": "2026-11-02T21:46:17.018259+00:00",
-            "quote": "Rob Summerfield"
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "1 Rob Summerfield Republican"
           }
         },
         {
@@ -241,16 +298,16 @@
           "contestId": "wi-cx-2026-general-assembly-68",
           "givenName": "Elisha",
           "familyName": "King",
-          "partyLabel": null,
+          "partyLabel": "Democratic",
           "slogan": null,
           "incumbent": null,
           "websiteUrl": null,
           "provenance": {
-            "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
-            "sourceOrg": "Chippewa County Clerk",
-            "collectedAt": "2026-11-02T21:46:17.018259+00:00",
-            "verifiedAt": "2026-11-02T21:46:17.018259+00:00",
-            "quote": "Elisha King"
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "2 01072547 Elisha King Democratic"
           }
         },
         {
@@ -322,20 +379,54 @@
           }
         },
         {
-          "id": "wi-cx-2026-general-assembly-22:paul-melotik",
-          "contestId": "wi-cx-2026-general-assembly-22",
-          "givenName": "Paul",
-          "familyName": "Melotik",
-          "partyLabel": null,
+          "id": "wi-cx-2026-general-assembly-85:patrick-snyder",
+          "contestId": "wi-cx-2026-general-assembly-85",
+          "givenName": "Patrick",
+          "familyName": "Snyder",
+          "partyLabel": "Republican",
           "slogan": null,
           "incumbent": null,
           "websiteUrl": null,
           "provenance": {
-            "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary",
-            "sourceOrg": "Ozaukee County Clerk",
-            "collectedAt": "2026-11-02T21:56:16.761597+00:00",
-            "verifiedAt": "2026-11-02T21:56:16.761597+00:00",
-            "quote": "Paul Melotik"
+            "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+            "sourceOrg": "Marathon County Clerk",
+            "collectedAt": "2026-11-02T22:31:36.491324+00:00",
+            "verifiedAt": "2026-11-02T22:31:36.491324+00:00",
+            "quote": "Patrick Snyder (Republican)"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-85:john-kroll",
+          "contestId": "wi-cx-2026-general-assembly-85",
+          "givenName": "John",
+          "familyName": "Kroll",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+            "sourceOrg": "Marathon County Clerk",
+            "collectedAt": "2026-11-02T22:31:36.491324+00:00",
+            "verifiedAt": "2026-11-02T22:31:36.491324+00:00",
+            "quote": "John Kroll (Democratic)"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-22:paul-melotik",
+          "contestId": "wi-cx-2026-general-assembly-22",
+          "givenName": "Paul",
+          "familyName": "Melotik",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "1 0104003 Paul Melotik Republican"
           }
         },
         {
@@ -343,16 +434,16 @@
           "contestId": "wi-cx-2026-general-assembly-22",
           "givenName": "Dana",
           "familyName": "Glasstein",
-          "partyLabel": null,
+          "partyLabel": "Democratic",
           "slogan": null,
           "incumbent": null,
           "websiteUrl": null,
           "provenance": {
-            "sourceUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary",
-            "sourceOrg": "Ozaukee County Clerk",
-            "collectedAt": "2026-11-02T21:56:16.761597+00:00",
-            "verifiedAt": "2026-11-02T21:56:16.761597+00:00",
-            "quote": "Dana Glasstein"
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "2 0106795 Dana Glasstein Democratic"
           }
         },
         {
@@ -592,6 +683,74 @@
             "verifiedAt": "2026-11-02T21:52:46.678683+00:00",
             "quote": "DEM Matt Philibert"
           }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-26:john-belanger",
+          "contestId": "wi-cx-2026-general-assembly-26",
+          "givenName": "John",
+          "familyName": "Belanger",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "John Belanger Republican"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-26:joe-sheehan",
+          "contestId": "wi-cx-2026-general-assembly-26",
+          "givenName": "Joe",
+          "familyName": "Sheehan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Joe Sheehan Democratic"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-60:tiffany-brault",
+          "contestId": "wi-cx-2026-general-assembly-60",
+          "givenName": "Tiffany",
+          "familyName": "Brault",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Tiffany Brault Independent"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-60:marty-ryan",
+          "contestId": "wi-cx-2026-general-assembly-60",
+          "givenName": "Marty",
+          "familyName": "Ryan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-02T22:34:38.186321+00:00",
+            "verifiedAt": "2026-11-02T22:34:38.186321+00:00",
+            "quote": "Marty Ryan Republican"
+          }
         }
       ],
       "measures": [],
@@ -600,7 +759,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T22:33:11.200Z",
+    "reviewedAt": "2026-11-02T22:41:08.434Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -1184,15 +1343,27 @@
         "reviewedEvidence": "Official Monroe County November 3, 2026 Type B notice and Town of Tomah Wards 1-3 printed sample, page6. Complete original six-page PDF preserved. Each district/county office field, including both Assembly70 candidates and printed party designations, visually verified against the original rendered page; OCR and reviewed JSON retained. The packet omits the ballot reverse and is used only for the complete candidate office fields shown, not a full municipal ballot comparison. Write-in lines are not candidates."
       },
       {
-        "requestedUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
-        "finalUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
         "httpStatus": 200,
-        "rawHash": "745bb52963534abc000e577141b5452d7da1b5dd244eede9f013bf8b3dcf38b0",
-        "retrievedAt": "2026-11-02T21:46:17.018259+00:00",
-        "publisher": "Chippewa County Clerk",
+        "rawHash": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+        "retrievedAt": "2026-11-02T22:34:38.186321+00:00",
+        "publisher": "Wisconsin Elections Commission",
         "sourceClass": "ELECTION_AUTHORITY",
-        "sourceUiUrl": "https://www.chippewacountywi.gov/241/Election-Results",
-        "reviewedEvidence": "Official current county page labels this exact PDF 2026 General Election Spreadsheet (PDF). The PDF dates election November 3,2026; AD68 field lists exactly Rob Summerfield, Elisha King and generic write-in. Both named choices match the WEC-authored general-candidate discovery PDF. One stale internal subtitle says Partisan Primary – Preliminary Uncanvassed Results; the official download label, URL filename, November3 date and actual two-nominee field identify the general election. That caption discrepancy is preserved. Source omits party labels; both remain null. No result totals imported."
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "originHttpStatus": null,
+          "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+          "provider": "Jina Reader deterministic full-PDF extraction",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+          "readerHttpStatus": 200,
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+          "reportedPdfPages": 21,
+          "nativeGovernmentHttpStatus": 403,
+          "sourceTextFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source"
+        },
+        "reviewedEvidence": "Complete 21-page official WEC November3,2026 general-election roster printed August25,2026, captured as SOURCE_TEXT; rawHash fingerprints the whole capture, not originalPDFbytes. This update preserves existing AD22/68 contest and candidate IDs and fills four previously unasserted party labels from complete WEC office blocks, two named nominees per printed total. It also replaces those office provenance fields with this unambiguous statewide general-election source. Later write-in certifications and current/live installation remain outside the proof."
       },
       {
         "requestedUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190",
@@ -1206,15 +1377,50 @@
         "sourceUiUrl": "https://www.eauclairecounty.gov/departments/county_clerk/elections/index.php"
       },
       {
-        "requestedUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary-11-2026---Summary",
-        "finalUrl": "https://www.ozaukeecounty.gov/DocumentCenter/View/27768/November-3-2026---Summary?bidId=",
+        "requestedUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+        "finalUrl": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
         "httpStatus": 200,
-        "rawHash": "0469fded34b70548d016ed5b126fef2eee6dbd6d7f8b4b7b35ae52136a32a475",
-        "retrievedAt": "2026-11-02T21:56:16.761597+00:00",
-        "publisher": "Ozaukee County Clerk",
+        "rawHash": "8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d",
+        "retrievedAt": "2026-11-02T22:31:36.491324+00:00",
+        "publisher": "Marathon County Clerk",
         "sourceClass": "ELECTION_AUTHORITY",
-        "sourceUiUrl": "https://www.ozaukeecounty.gov/162/Elections",
-        "reviewedEvidence": "Official county current November 3, 2026 general election summary template enumerates complete AD22 candidate names Paul Melotik and Dana Glasstein, plus a blank write-in line. Zero of 33 precincts reported; only the candidate names are imported. The source omits party labels, which remain null. Both names and the two-candidate field independently match the WEC-authored discovery PDF. No vote totals/results are imported."
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "originHttpStatus": null,
+          "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+          "provider": "Jina Reader deterministic full-PDF extraction",
+          "readerUrl": "https://r.jina.ai/https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+          "readerHttpStatus": 200,
+          "reportedUrlSource": "https://www.marathoncounty.gov/home/showpublisheddocument/19219/639246328067230000",
+          "reportedPdfPages": 200,
+          "nativeGovernmentHttpStatus": 403,
+          "sourceTextFile": "sources/8c58c989d9d322d37ef48931048ca2aaff777ee9c6e6909039cd111e04b28f4d.source"
+        },
+        "reviewedEvidence": "Complete 200-page official Marathon County November 3, 2026 General Election sample-ballot compilation captured through a deterministic public reader because the native download returns403. This receipt fingerprints the complete exact captured source-text artifact, not PDF bytes. Full AD85 block lists Patrick Snyder (Republican), John Kroll (Democratic) and generic write-in; both names/parties match the WEC-authored discovery field. Document date and complete choice block retained. Only candidate identities/party labels are imported, no result totals. Source PDF link is listed on the current county Election Information page as November 2026 General Election Sample Ballots."
+      },
+      {
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+        "retrievedAt": "2026-11-02T22:34:38.186321+00:00",
+        "publisher": "Wisconsin Elections Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "originHttpStatus": null,
+          "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+          "provider": "Jina Reader deterministic full-PDF extraction",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+          "readerHttpStatus": 200,
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+          "reportedPdfPages": 21,
+          "nativeGovernmentHttpStatus": 403,
+          "sourceTextFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source"
+        },
+        "reviewedEvidence": "Complete 21-page official WEC November3,2026 general-election roster printed August25,2026, captured as SOURCE_TEXT; rawHash fingerprints the whole capture, not originalPDFbytes. This update preserves existing AD22/68 contest and candidate IDs and fills four previously unasserted party labels from complete WEC office blocks, two named nominees per printed total. It also replaces those office provenance fields with this unambiguous statewide general-election source. Later write-in certifications and current/live installation remain outside the proof."
       },
       {
         "requestedUrl": "https://www.racinecounty.gov/home/showpublisheddocument/55104/639250732245670000",
@@ -1271,6 +1477,29 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "sourceUiUrl": "https://www.elmgrovewi.org/75/Elections",
         "reviewedEvidence": "Official county upcoming 2026 General Election page explicitly dates the election November 3, 2026 and enumerates complete named candidate fields plus a blank write-in placeholder for each office. AD13,24,82,98 candidate fields read in full; two named candidates each. REP/DEM expanded to Republican/Democratic. All four fields independently agree with the WEC-authored candidate PDF discovery copy. This captures candidate listings only; zero reporting/results values are never imported."
+      },
+      {
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725",
+        "retrievedAt": "2026-11-02T22:34:38.186321+00:00",
+        "publisher": "Wisconsin Elections Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+        "captureMetadata": {
+          "originHttpStatus": null,
+          "httpStatusBasis": "successful SOURCE_TEXT acquisition marker; not native-government transport",
+          "provider": "Jina Reader deterministic full-PDF extraction",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+          "readerHttpStatus": 200,
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Candidates%20on%20Ballot%20By%20Election_November%203%202026%20General%20Election.pdf",
+          "reportedPdfPages": 21,
+          "nativeGovernmentHttpStatus": 403,
+          "sourceTextFile": "sources/3539f8c77743ac6c8e7de047b6de1c5473de3c802ec81d506c4a52072c1f4725.source"
+        },
+        "reviewedEvidence": "Complete 21-page official Wisconsin Elections Commission Candidates on Ballot by Election report, 2026 General Election 11/3/2026, printed August25,2026 at4:39:33PM, captured through deterministic public reader. Native government download returned403. Whole artifact is preserved and fingerprinted as SOURCE_TEXT, not original PDF bytes. Both Assembly26 and60 complete office blocks have two named nominees and a printed total of2. The report contains128 regular statewide/congressional/legislative office fields and260 candidate tickets, ending Assembly99/TotalCandidates260. This packet adds only the final two proven missing Assembly fields; later write-in certifications, local races/measures and live delivery remain outside its proof."
       }
     ]
   }

@@ -75,6 +75,195 @@
       "ocdId": "ocd-division/country:us/state:pa/sldl:123",
       "candidates": 2,
       "sourceUrl": "https://www.schuylkillcountypa.gov/Document_Center/Departments/Election%20Bureau/2026/General/Sample%20Ballots/013%20Butler%20Township%20Lavelle.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-14",
+      "title": "Representative in the General Assembly – District 14",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:14",
+      "candidates": 2,
+      "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-16",
+      "title": "Representative in the General Assembly – District 16",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:16",
+      "candidates": 2,
+      "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-101",
+      "title": "Representative in the General Assembly – District 101",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:101",
+      "candidates": 1,
+      "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-102",
+      "title": "Representative in the General Assembly – District 102",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:102",
+      "candidates": 2,
+      "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-115",
+      "title": "Representative in the General Assembly – District 115",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:115",
+      "candidates": 2,
+      "sourceUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-176",
+      "title": "Representative in the General Assembly – District 176",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:176",
+      "candidates": 2,
+      "sourceUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-189",
+      "title": "Representative in the General Assembly – District 189",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:189",
+      "candidates": 2,
+      "sourceUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-79",
+      "title": "Representative in the General Assembly – District 79",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:79",
+      "candidates": 2,
+      "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-80",
+      "title": "Representative in the General Assembly – District 80",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:80",
+      "candidates": 2,
+      "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-84",
+      "title": "Representative in the General Assembly – District 84",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:84",
+      "candidates": 1,
+      "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-83",
+      "title": "Representative in the General Assembly – District 83",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:83",
+      "candidates": 1,
+      "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-109",
+      "title": "Representative in the General Assembly – District 109",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:109",
+      "candidates": 2,
+      "sourceUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-71",
+      "title": "Representative in the General Assembly – District 71",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:71",
+      "candidates": 1,
+      "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-73",
+      "title": "Representative in the General Assembly – District 73",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:73",
+      "candidates": 1,
+      "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-72",
+      "title": "Representative in the General Assembly – District 72",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:72",
+      "candidates": 2,
+      "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-139",
+      "title": "Representative in the General Assembly – District 139",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:139",
+      "candidates": 2,
+      "sourceUrl": "https://cms7files.revize.com/pikecountypa/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-91",
+      "title": "Representative in the General Assembly – District 91",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:91",
+      "candidates": 2,
+      "sourceUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-62",
+      "title": "Representative in the General Assembly – District 62",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:62",
+      "candidates": 2,
+      "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-66",
+      "title": "Representative in the General Assembly – District 66",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:66",
+      "candidates": 2,
+      "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-68",
+      "title": "Representative in the General Assembly – District 68",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:68",
+      "candidates": 2,
+      "sourceUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-69",
+      "title": "Representative in the General Assembly – District 69",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:69",
+      "candidates": 1,
+      "sourceUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-111",
+      "title": "Representative in the General Assembly – District 111",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:111",
+      "candidates": 2,
+      "sourceUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-9",
+      "title": "Representative in the General Assembly – District 9",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:9",
+      "candidates": 2,
+      "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-50",
+      "title": "Senator in the General Assembly – District 50",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:50",
+      "candidates": 2,
+      "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-64",
+      "title": "Representative in the General Assembly – District 64",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:64",
+      "candidates": 2,
+      "sourceUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-7",
+      "title": "Representative in the General Assembly – District 7",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:7",
+      "candidates": 2,
+      "sourceUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-63",
+      "title": "Representative in the General Assembly – District 63",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:63",
+      "candidates": 2,
+      "sourceUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf"
     }
   ],
   "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",
@@ -85,6 +274,7 @@
     "BallotContestMerge": "PASS",
     "genericBallotProblems": "PASS",
     "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
     "unrelatedContestsCandidateFactsAndExplanations": "UNCHANGED",
     "candidateAliasesEnriched": 1
   },

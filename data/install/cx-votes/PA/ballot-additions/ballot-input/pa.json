@@ -197,6 +197,519 @@
             "verifiedAt": "2026-11-02T21:22:28.178516+00:00",
             "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n123rd Legislative District\n2 Year Term\nVote for ONE\nJohn Deatrich\nDemocratic\nTim Twardzik\nRepublican\nWrite-In"
           }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-14",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:14",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+            "sourceOrg": "Beaver County Bureau of Elections",
+            "collectedAt": "2026-11-02T21:57:26.477807+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly – 14th Legislative District (Two Year Term – Vote For One)\n        Bradley Jacob Young                        Democratic              New Brighton Borough\n           Roman Kozak                             Republican               City of Beaver Falls"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-16",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:16",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 16",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+            "sourceOrg": "Beaver County Bureau of Elections",
+            "collectedAt": "2026-11-02T21:57:26.477807+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly – 16th Legislative District (Two Year Term – Vote For One)\n          Robert F Matzie                         Democratic                 Harmony Township\n           John Costanza                          Republican                  Center Township"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-101",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:101",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 101",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+            "sourceOrg": "Lebanon County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:26.357355+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE          101ST DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne          101ST DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     JOHN SCHLEGEL\n                 REPUBLICAN\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-102",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:102",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 102",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+            "sourceOrg": "Lebanon County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:26.357355+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE         102ND DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne         102ND DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     MATTHEW DUVALL\n                DEMOCRATIC\n     RUSS DIAMOND\n                 REPUBLICAN\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-115",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:115",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 115",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.812985+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 115TH\n       DISTRICT\n         (Vote for One)\n\n MAUREEN MADDEN\n  DEMOCRATIC\n\n RICH SZABO\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-176",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:176",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 176",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.628780+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 176TH\n       DISTRICT\n         (Vote for One)\n\n THOMAS KUCER\n  DEMOCRATIC\n\n  JACK RADER\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-189",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:189",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 189",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.416831+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 189TH\n       DISTRICT\n         (Vote for One)\n\n TARAH PROBST\n  DEMOCRATIC\n\n DANICA HARTENFELS\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-79",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:79",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 79",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+            "sourceOrg": "Blair County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.829028+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      79TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nCALEB MCCOY\n Democratic\n\n\nANDREA C VEROBISH\n Republican\n\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-80",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:80",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 80",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+            "sourceOrg": "Blair County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.829028+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      80TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nSARAH HOLLAND\n Democratic\n\n\nSCOTT BARGER\n Republican\n\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-84",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:84",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 84",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050",
+            "sourceOrg": "Lycoming County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.960883+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n84th District\n(Vote for ONE)\n\n\n      Joe Hamm\n      Republican\n\n\n\n       Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-83",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:83",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 83",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560",
+            "sourceOrg": "Lycoming County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:02.094987+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n83rd District\n(Vote for ONE)\n\n\n     Jamie L. Flick\n      Republican\n\n\n\n       Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-109",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:109",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 109",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+            "sourceOrg": "Columbia County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:44.117850+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n          ASSEMBLY\n          109TH DISTRICT\n\n\n                  (Vote for ONE)\n\nJUSTIN C. HUMMEL                                DEMOCRATIC\n\nROBERT LEADBETER                                REPUBLICAN\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-71",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:71",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 71",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n71st DISTRICT\nVOTE FOR ONE\nJIM RIGBY\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-73",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:73",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 73",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n73rd DISTRICT\nVOTE FOR ONE\nDALLAS KEPHART\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-72",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:72",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 72",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n72nd DISTRICT\nVOTE FOR ONE\nFRANK BURNS\nDEMOCRATIC\nPHIL RICE\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-139",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:139",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 139",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cms7files.revize.com/pikecountypa/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+            "sourceOrg": "Pike County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:10.173709+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN\nTHE GENERAL ASSEMBLY\n139th District\n2 Year Term\nVote for ONE\nDominique Azzollini\nDemocratic\nJeff Olsommer\nRepublican\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-91",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:91",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 91",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+            "sourceOrg": "Adams County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:56.177470+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n             91st District\n                 Vote for One\n\n\n0   KATHLEEN PRATT\n        Democratic\n\n\n 0  DAN MOUL\n        Republican\n\n\n 0\n        Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-62",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:62",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 62",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+            "sourceOrg": "Indiana County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:30.953390+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n62ND DISTRICT\nVote for One\nTRAJAN JONES\nDEMOCRATIC\nJIM STRUZZI\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-66",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:66",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 66",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+            "sourceOrg": "Indiana County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:30.953390+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n66TH DISTRICT\nVote for One\nLISA GOURLEY\nDEMOCRATIC\nBRIAN SMITH\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-68",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:68",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 68",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+            "sourceOrg": "Tioga County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:13.125829+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n    ASSEMBLY 68TH DISTRICT\nr\n             Vote for One\n\n\n\n\n      Quentin Gee\n      Democratic\n\n\n\n        Clint Owlett\n      Republican\n\n\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-69",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:69",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 69",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf",
+            "sourceOrg": "Somerset County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:51.139106+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n GENERAL ASSEMBLY\n         69th District\n      Vote for ONE (1)\n\n  Carl Walker Metzgar\n                          Republican"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-111",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:111",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 111",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+            "sourceOrg": "Susquehanna County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:14.380916+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n111TH DISTRICT\n(Vote for ONE)\nKYLE DEVLIN\nDEMOCRATIC\nJONATHAN FRITZ\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-9",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:9",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 9",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+            "sourceOrg": "Lawrence County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.493867+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n9TH DISTRICT\n2 YEAR TERM\nVOTE FOR ONE\nREPRESENTANTE EN LA ASAMBLEA\nTérmino de Dos años\nVote por Uno\nSHAY MICCO\nDEMOCRATIC\nMARLA GALLO BROWN\nREPUBLICAN\nWrite-in/Por Escrito"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldu-50",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldu:50",
+          "divisionVintage": "2022",
+          "title": "Senator in the General Assembly – District 50",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+            "sourceOrg": "Lawrence County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.493867+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "SENATOR IN THE GENERAL\nASSEMBLY\n50th DISTRICT\n4 YEAR TERM\nVOTE FOR ONE\nSENADOR EN LA ASAMBLEA\nTérmino de Cuatro años\nVote por Uno\nSUE MULVEY\nDEMOCRATIC\nMICHELE BROOKS\nREPUBLICAN\nWrite-in/Por Escrito"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-64",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:64",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 64",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+            "sourceOrg": "Venango County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.879501+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n64th Legislative District\n2 Year Term\nVote for One\nAMANDA SHAFFER\nDemocratic\nR LEE JAMES\nRepublican\nWrite-In; Be sure to darken the oval"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-7",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:7",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+            "sourceOrg": "Mercer County Board of Elections",
+            "collectedAt": "2026-11-02T22:06:47.604601+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n        GENERAL ASSEMBLY\n              DISTRICT 7\n         TWO YEAR TERM\n            VOTE FOR ONE\n\n\n         CHRISTOPHER A CRUMBY-FORD\n          DEMOCRATIC\n        PARKE WENTLING\n          REPUBLICAN\n\n               Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-63",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:63",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 63",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+            "sourceOrg": "Armstrong County Board of Elections",
+            "collectedAt": "2026-11-02T22:06:47.613188+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n     GENERAL ASSEMBLY\n   63TH LEGISLATIVE DISTRICT\n               (Vote for ONE)\n\nANDREW HARBAUGH\nDEMOCRATIC\n\nJOSH BASHLINE\nREPUBLICAN\n\n\nWrite-in"
+          }
         }
       ],
       "candidacies": [
@@ -556,6 +1069,822 @@
             "verifiedAt": "2026-11-02T21:22:28.178516+00:00",
             "quote": "Tim Twardzik\nRepublican"
           }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-14:bradley-jacob-young",
+          "contestId": "pa-dos:pa-2026-general:sldl-14",
+          "givenName": "Bradley Jacob",
+          "familyName": "Young",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+            "sourceOrg": "Beaver County Bureau of Elections",
+            "collectedAt": "2026-11-02T21:57:26.477807+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly – 14th Legislative District (Two Year Term – Vote For One)\n        Bradley Jacob Young                        Democratic              New Brighton Borough\n           Roman Kozak                             Republican               City of Beaver Falls"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-14:roman-kozak",
+          "contestId": "pa-dos:pa-2026-general:sldl-14",
+          "givenName": "Roman",
+          "familyName": "Kozak",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+            "sourceOrg": "Beaver County Bureau of Elections",
+            "collectedAt": "2026-11-02T21:57:26.477807+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly – 14th Legislative District (Two Year Term – Vote For One)\n        Bradley Jacob Young                        Democratic              New Brighton Borough\n           Roman Kozak                             Republican               City of Beaver Falls"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-16:robert-f-matzie",
+          "contestId": "pa-dos:pa-2026-general:sldl-16",
+          "givenName": "Robert F",
+          "familyName": "Matzie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+            "sourceOrg": "Beaver County Bureau of Elections",
+            "collectedAt": "2026-11-02T21:57:26.477807+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly – 16th Legislative District (Two Year Term – Vote For One)\n          Robert F Matzie                         Democratic                 Harmony Township\n           John Costanza                          Republican                  Center Township"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-16:john-costanza",
+          "contestId": "pa-dos:pa-2026-general:sldl-16",
+          "givenName": "John",
+          "familyName": "Costanza",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+            "sourceOrg": "Beaver County Bureau of Elections",
+            "collectedAt": "2026-11-02T21:57:26.477807+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly – 16th Legislative District (Two Year Term – Vote For One)\n          Robert F Matzie                         Democratic                 Harmony Township\n           John Costanza                          Republican                  Center Township"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-101:john-schlegel",
+          "contestId": "pa-dos:pa-2026-general:sldl-101",
+          "givenName": "JOHN",
+          "familyName": "SCHLEGEL",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+            "sourceOrg": "Lebanon County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:26.357355+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE          101ST DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne          101ST DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     JOHN SCHLEGEL\n                 REPUBLICAN\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-102:matthew-duvall",
+          "contestId": "pa-dos:pa-2026-general:sldl-102",
+          "givenName": "MATTHEW",
+          "familyName": "DUVALL",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+            "sourceOrg": "Lebanon County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:26.357355+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE         102ND DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne         102ND DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     MATTHEW DUVALL\n                DEMOCRATIC\n     RUSS DIAMOND\n                 REPUBLICAN\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-102:russ-diamond",
+          "contestId": "pa-dos:pa-2026-general:sldl-102",
+          "givenName": "RUSS",
+          "familyName": "DIAMOND",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+            "sourceOrg": "Lebanon County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:26.357355+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE         102ND DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne         102ND DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     MATTHEW DUVALL\n                DEMOCRATIC\n     RUSS DIAMOND\n                 REPUBLICAN\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-115:maureen-madden",
+          "contestId": "pa-dos:pa-2026-general:sldl-115",
+          "givenName": "MAUREEN",
+          "familyName": "MADDEN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.812985+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 115TH\n       DISTRICT\n         (Vote for One)\n\n MAUREEN MADDEN\n  DEMOCRATIC\n\n RICH SZABO\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-115:rich-szabo",
+          "contestId": "pa-dos:pa-2026-general:sldl-115",
+          "givenName": "RICH",
+          "familyName": "SZABO",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.812985+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 115TH\n       DISTRICT\n         (Vote for One)\n\n MAUREEN MADDEN\n  DEMOCRATIC\n\n RICH SZABO\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-176:thomas-kucer",
+          "contestId": "pa-dos:pa-2026-general:sldl-176",
+          "givenName": "THOMAS",
+          "familyName": "KUCER",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.628780+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 176TH\n       DISTRICT\n         (Vote for One)\n\n THOMAS KUCER\n  DEMOCRATIC\n\n  JACK RADER\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-176:jack-rader",
+          "contestId": "pa-dos:pa-2026-general:sldl-176",
+          "givenName": "JACK",
+          "familyName": "RADER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.628780+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 176TH\n       DISTRICT\n         (Vote for One)\n\n THOMAS KUCER\n  DEMOCRATIC\n\n  JACK RADER\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-189:tarah-probst",
+          "contestId": "pa-dos:pa-2026-general:sldl-189",
+          "givenName": "TARAH",
+          "familyName": "PROBST",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.416831+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 189TH\n       DISTRICT\n         (Vote for One)\n\n TARAH PROBST\n  DEMOCRATIC\n\n DANICA HARTENFELS\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-189:danica-hartenfels",
+          "contestId": "pa-dos:pa-2026-general:sldl-189",
+          "givenName": "DANICA",
+          "familyName": "HARTENFELS",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+            "sourceOrg": "Monroe County Board of Elections",
+            "collectedAt": "2026-11-02T21:57:44.416831+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 189TH\n       DISTRICT\n         (Vote for One)\n\n TARAH PROBST\n  DEMOCRATIC\n\n DANICA HARTENFELS\n  REPUBLICAN\n\n\n\n\n   Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-79:caleb-mccoy",
+          "contestId": "pa-dos:pa-2026-general:sldl-79",
+          "givenName": "CALEB",
+          "familyName": "MCCOY",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+            "sourceOrg": "Blair County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.829028+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      79TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nCALEB MCCOY\n Democratic\n\n\nANDREA C VEROBISH\n Republican\n\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-79:andrea-c-verobish",
+          "contestId": "pa-dos:pa-2026-general:sldl-79",
+          "givenName": "ANDREA C",
+          "familyName": "VEROBISH",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+            "sourceOrg": "Blair County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.829028+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      79TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nCALEB MCCOY\n Democratic\n\n\nANDREA C VEROBISH\n Republican\n\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-80:sarah-holland",
+          "contestId": "pa-dos:pa-2026-general:sldl-80",
+          "givenName": "SARAH",
+          "familyName": "HOLLAND",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+            "sourceOrg": "Blair County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.829028+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      80TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nSARAH HOLLAND\n Democratic\n\n\nSCOTT BARGER\n Republican\n\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-80:scott-barger",
+          "contestId": "pa-dos:pa-2026-general:sldl-80",
+          "givenName": "SCOTT",
+          "familyName": "BARGER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+            "sourceOrg": "Blair County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.829028+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      80TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nSARAH HOLLAND\n Democratic\n\n\nSCOTT BARGER\n Republican\n\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-84:joe-hamm",
+          "contestId": "pa-dos:pa-2026-general:sldl-84",
+          "givenName": "Joe",
+          "familyName": "Hamm",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050",
+            "sourceOrg": "Lycoming County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:01.960883+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n84th District\n(Vote for ONE)\n\n\n      Joe Hamm\n      Republican\n\n\n\n       Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-83:jamie-l-flick",
+          "contestId": "pa-dos:pa-2026-general:sldl-83",
+          "givenName": "Jamie L.",
+          "familyName": "Flick",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560",
+            "sourceOrg": "Lycoming County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:02.094987+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n83rd District\n(Vote for ONE)\n\n\n     Jamie L. Flick\n      Republican\n\n\n\n       Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-109:justin-c-hummel",
+          "contestId": "pa-dos:pa-2026-general:sldl-109",
+          "givenName": "JUSTIN C.",
+          "familyName": "HUMMEL",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+            "sourceOrg": "Columbia County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:44.117850+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n          ASSEMBLY\n          109TH DISTRICT\n\n\n                  (Vote for ONE)\n\nJUSTIN C. HUMMEL                                DEMOCRATIC\n\nROBERT LEADBETER                                REPUBLICAN\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-109:robert-leadbeter",
+          "contestId": "pa-dos:pa-2026-general:sldl-109",
+          "givenName": "ROBERT",
+          "familyName": "LEADBETER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+            "sourceOrg": "Columbia County Board of Elections",
+            "collectedAt": "2026-11-02T21:58:44.117850+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n          ASSEMBLY\n          109TH DISTRICT\n\n\n                  (Vote for ONE)\n\nJUSTIN C. HUMMEL                                DEMOCRATIC\n\nROBERT LEADBETER                                REPUBLICAN\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-71:jim-rigby",
+          "contestId": "pa-dos:pa-2026-general:sldl-71",
+          "givenName": "JIM",
+          "familyName": "RIGBY",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n71st DISTRICT\nVOTE FOR ONE\nJIM RIGBY\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-73:dallas-kephart",
+          "contestId": "pa-dos:pa-2026-general:sldl-73",
+          "givenName": "DALLAS",
+          "familyName": "KEPHART",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n73rd DISTRICT\nVOTE FOR ONE\nDALLAS KEPHART\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-72:frank-burns",
+          "contestId": "pa-dos:pa-2026-general:sldl-72",
+          "givenName": "FRANK",
+          "familyName": "BURNS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n72nd DISTRICT\nVOTE FOR ONE\nFRANK BURNS\nDEMOCRATIC\nPHIL RICE\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-72:phil-rice",
+          "contestId": "pa-dos:pa-2026-general:sldl-72",
+          "givenName": "PHIL",
+          "familyName": "RICE",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+            "sourceOrg": "Cambria County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:09.086387+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n72nd DISTRICT\nVOTE FOR ONE\nFRANK BURNS\nDEMOCRATIC\nPHIL RICE\nREPUBLICAN\nWRITE-IN"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-139:dominique-azzollini",
+          "contestId": "pa-dos:pa-2026-general:sldl-139",
+          "givenName": "Dominique",
+          "familyName": "Azzollini",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cms7files.revize.com/pikecountypa/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+            "sourceOrg": "Pike County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:10.173709+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN\nTHE GENERAL ASSEMBLY\n139th District\n2 Year Term\nVote for ONE\nDominique Azzollini\nDemocratic\nJeff Olsommer\nRepublican\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-139:jeff-olsommer",
+          "contestId": "pa-dos:pa-2026-general:sldl-139",
+          "givenName": "Jeff",
+          "familyName": "Olsommer",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cms7files.revize.com/pikecountypa/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+            "sourceOrg": "Pike County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:10.173709+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN\nTHE GENERAL ASSEMBLY\n139th District\n2 Year Term\nVote for ONE\nDominique Azzollini\nDemocratic\nJeff Olsommer\nRepublican\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-91:kathleen-pratt",
+          "contestId": "pa-dos:pa-2026-general:sldl-91",
+          "givenName": "KATHLEEN",
+          "familyName": "PRATT",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+            "sourceOrg": "Adams County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:56.177470+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n             91st District\n                 Vote for One\n\n\n0   KATHLEEN PRATT\n        Democratic\n\n\n 0  DAN MOUL\n        Republican\n\n\n 0\n        Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-91:dan-moul",
+          "contestId": "pa-dos:pa-2026-general:sldl-91",
+          "givenName": "DAN",
+          "familyName": "MOUL",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+            "sourceOrg": "Adams County Board of Elections",
+            "collectedAt": "2026-11-02T22:01:56.177470+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n             91st District\n                 Vote for One\n\n\n0   KATHLEEN PRATT\n        Democratic\n\n\n 0  DAN MOUL\n        Republican\n\n\n 0\n        Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-62:trajan-jones",
+          "contestId": "pa-dos:pa-2026-general:sldl-62",
+          "givenName": "TRAJAN",
+          "familyName": "JONES",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+            "sourceOrg": "Indiana County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:30.953390+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n62ND DISTRICT\nVote for One\nTRAJAN JONES\nDEMOCRATIC\nJIM STRUZZI\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-62:jim-struzzi",
+          "contestId": "pa-dos:pa-2026-general:sldl-62",
+          "givenName": "JIM",
+          "familyName": "STRUZZI",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+            "sourceOrg": "Indiana County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:30.953390+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n62ND DISTRICT\nVote for One\nTRAJAN JONES\nDEMOCRATIC\nJIM STRUZZI\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-66:lisa-gourley",
+          "contestId": "pa-dos:pa-2026-general:sldl-66",
+          "givenName": "LISA",
+          "familyName": "GOURLEY",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+            "sourceOrg": "Indiana County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:30.953390+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n66TH DISTRICT\nVote for One\nLISA GOURLEY\nDEMOCRATIC\nBRIAN SMITH\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-66:brian-smith",
+          "contestId": "pa-dos:pa-2026-general:sldl-66",
+          "givenName": "BRIAN",
+          "familyName": "SMITH",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+            "sourceOrg": "Indiana County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:30.953390+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n66TH DISTRICT\nVote for One\nLISA GOURLEY\nDEMOCRATIC\nBRIAN SMITH\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-68:quentin-gee",
+          "contestId": "pa-dos:pa-2026-general:sldl-68",
+          "givenName": "Quentin",
+          "familyName": "Gee",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+            "sourceOrg": "Tioga County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:13.125829+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n    ASSEMBLY 68TH DISTRICT\nr\n             Vote for One\n\n\n\n\n      Quentin Gee\n      Democratic\n\n\n\n        Clint Owlett\n      Republican\n\n\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-68:clint-owlett",
+          "contestId": "pa-dos:pa-2026-general:sldl-68",
+          "givenName": "Clint",
+          "familyName": "Owlett",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+            "sourceOrg": "Tioga County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:13.125829+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\n    ASSEMBLY 68TH DISTRICT\nr\n             Vote for One\n\n\n\n\n      Quentin Gee\n      Democratic\n\n\n\n        Clint Owlett\n      Republican\n\n\n\n\n          Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-69:carl-walker-metzgar",
+          "contestId": "pa-dos:pa-2026-general:sldl-69",
+          "givenName": "Carl Walker",
+          "familyName": "Metzgar",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf",
+            "sourceOrg": "Somerset County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:51.139106+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n GENERAL ASSEMBLY\n         69th District\n      Vote for ONE (1)\n\n  Carl Walker Metzgar\n                          Republican"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-111:kyle-devlin",
+          "contestId": "pa-dos:pa-2026-general:sldl-111",
+          "givenName": "KYLE",
+          "familyName": "DEVLIN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+            "sourceOrg": "Susquehanna County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:14.380916+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n111TH DISTRICT\n(Vote for ONE)\nKYLE DEVLIN\nDEMOCRATIC\nJONATHAN FRITZ\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-111:jonathan-fritz",
+          "contestId": "pa-dos:pa-2026-general:sldl-111",
+          "givenName": "JONATHAN",
+          "familyName": "FRITZ",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+            "sourceOrg": "Susquehanna County Board of Elections",
+            "collectedAt": "2026-11-02T22:03:14.380916+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n111TH DISTRICT\n(Vote for ONE)\nKYLE DEVLIN\nDEMOCRATIC\nJONATHAN FRITZ\nREPUBLICAN\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-9:shay-micco",
+          "contestId": "pa-dos:pa-2026-general:sldl-9",
+          "givenName": "SHAY",
+          "familyName": "MICCO",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+            "sourceOrg": "Lawrence County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.493867+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n9TH DISTRICT\n2 YEAR TERM\nVOTE FOR ONE\nREPRESENTANTE EN LA ASAMBLEA\nTérmino de Dos años\nVote por Uno\nSHAY MICCO\nDEMOCRATIC\nMARLA GALLO BROWN\nREPUBLICAN\nWrite-in/Por Escrito"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-9:marla-gallo-brown",
+          "contestId": "pa-dos:pa-2026-general:sldl-9",
+          "givenName": "MARLA GALLO",
+          "familyName": "BROWN",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+            "sourceOrg": "Lawrence County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.493867+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n9TH DISTRICT\n2 YEAR TERM\nVOTE FOR ONE\nREPRESENTANTE EN LA ASAMBLEA\nTérmino de Dos años\nVote por Uno\nSHAY MICCO\nDEMOCRATIC\nMARLA GALLO BROWN\nREPUBLICAN\nWrite-in/Por Escrito"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldu-50:sue-mulvey",
+          "contestId": "pa-dos:pa-2026-general:sldu-50",
+          "givenName": "SUE",
+          "familyName": "MULVEY",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+            "sourceOrg": "Lawrence County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.493867+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "SENATOR IN THE GENERAL\nASSEMBLY\n50th DISTRICT\n4 YEAR TERM\nVOTE FOR ONE\nSENADOR EN LA ASAMBLEA\nTérmino de Cuatro años\nVote por Uno\nSUE MULVEY\nDEMOCRATIC\nMICHELE BROOKS\nREPUBLICAN\nWrite-in/Por Escrito"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldu-50:michele-brooks",
+          "contestId": "pa-dos:pa-2026-general:sldu-50",
+          "givenName": "MICHELE",
+          "familyName": "BROOKS",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+            "sourceOrg": "Lawrence County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.493867+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "SENATOR IN THE GENERAL\nASSEMBLY\n50th DISTRICT\n4 YEAR TERM\nVOTE FOR ONE\nSENADOR EN LA ASAMBLEA\nTérmino de Cuatro años\nVote por Uno\nSUE MULVEY\nDEMOCRATIC\nMICHELE BROOKS\nREPUBLICAN\nWrite-in/Por Escrito"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-64:amanda-shaffer",
+          "contestId": "pa-dos:pa-2026-general:sldl-64",
+          "givenName": "AMANDA",
+          "familyName": "SHAFFER",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+            "sourceOrg": "Venango County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.879501+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n64th Legislative District\n2 Year Term\nVote for One\nAMANDA SHAFFER\nDemocratic\nR LEE JAMES\nRepublican\nWrite-In; Be sure to darken the oval"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-64:r-lee-james",
+          "contestId": "pa-dos:pa-2026-general:sldl-64",
+          "givenName": "R LEE",
+          "familyName": "JAMES",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+            "sourceOrg": "Venango County Board of Elections",
+            "collectedAt": "2026-11-02T22:05:56.879501+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "Representative in the General Assembly\n64th Legislative District\n2 Year Term\nVote for One\nAMANDA SHAFFER\nDemocratic\nR LEE JAMES\nRepublican\nWrite-In; Be sure to darken the oval"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-7:christopher-a-crumby-ford",
+          "contestId": "pa-dos:pa-2026-general:sldl-7",
+          "givenName": "CHRISTOPHER A",
+          "familyName": "CRUMBY-FORD",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+            "sourceOrg": "Mercer County Board of Elections",
+            "collectedAt": "2026-11-02T22:06:47.604601+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n        GENERAL ASSEMBLY\n              DISTRICT 7\n         TWO YEAR TERM\n            VOTE FOR ONE\n\n\n         CHRISTOPHER A CRUMBY-FORD\n          DEMOCRATIC\n        PARKE WENTLING\n          REPUBLICAN\n\n               Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-7:parke-wentling",
+          "contestId": "pa-dos:pa-2026-general:sldl-7",
+          "givenName": "PARKE",
+          "familyName": "WENTLING",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+            "sourceOrg": "Mercer County Board of Elections",
+            "collectedAt": "2026-11-02T22:06:47.604601+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n        GENERAL ASSEMBLY\n              DISTRICT 7\n         TWO YEAR TERM\n            VOTE FOR ONE\n\n\n         CHRISTOPHER A CRUMBY-FORD\n          DEMOCRATIC\n        PARKE WENTLING\n          REPUBLICAN\n\n               Write-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-63:andrew-harbaugh",
+          "contestId": "pa-dos:pa-2026-general:sldl-63",
+          "givenName": "ANDREW",
+          "familyName": "HARBAUGH",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+            "sourceOrg": "Armstrong County Board of Elections",
+            "collectedAt": "2026-11-02T22:06:47.613188+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n     GENERAL ASSEMBLY\n   63TH LEGISLATIVE DISTRICT\n               (Vote for ONE)\n\nANDREW HARBAUGH\nDEMOCRATIC\n\nJOSH BASHLINE\nREPUBLICAN\n\n\nWrite-in"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-63:josh-bashline",
+          "contestId": "pa-dos:pa-2026-general:sldl-63",
+          "givenName": "JOSH",
+          "familyName": "BASHLINE",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+            "sourceOrg": "Armstrong County Board of Elections",
+            "collectedAt": "2026-11-02T22:06:47.613188+00:00",
+            "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
+            "quote": "REPRESENTATIVE IN THE\n     GENERAL ASSEMBLY\n   63TH LEGISLATIVE DISTRICT\n               (Vote for ONE)\n\nANDREW HARBAUGH\nDEMOCRATIC\n\nJOSH BASHLINE\nREPUBLICAN\n\n\nWrite-in"
+          }
         }
       ],
       "measures": [],
@@ -564,7 +1893,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T22:10:22.109Z",
+    "reviewedAt": "2026-11-02T22:17:41.726Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -1107,6 +2436,206 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "The official 013 Butler Township Lavelle November 3, 2026 general-election ballot names John Deatrich (Democratic) and Tim Twardzik (Republican) as the complete printed candidate list for Representative in the General Assembly, 123rd Legislative District, vote for one, two-year term. Code confirmed the heading and both exact name/party passages in the saved PDF extraction. The ballot prints no State Senate contest."
+      },
+      {
+        "requestedUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+        "finalUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+        "httpStatus": 200,
+        "rawHash": "2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f",
+        "retrievedAt": "2026-11-02T21:57:26.477807+00:00",
+        "publisher": "Beaver County Bureau of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/beaver-candidates.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+        "finalUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+        "httpStatus": 200,
+        "rawHash": "d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f",
+        "retrievedAt": "2026-11-02T21:57:26.357355+00:00",
+        "publisher": "Lebanon County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lebanon-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+        "finalUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "2328aa5fa382ec6563bd38b0e905c6e8851fbaab32e35dd5d7202a94d3c00ec0",
+        "retrievedAt": "2026-11-02T21:57:44.812985+00:00",
+        "publisher": "Monroe County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/monroe-barrett.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+        "finalUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "a167cd00bb2fad6d50dd3c2a0ab1ffd40a27459abb5e953f7594c73f4f9ec6d3",
+        "retrievedAt": "2026-11-02T21:57:44.628780+00:00",
+        "publisher": "Monroe County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/monroe-chestnuthill.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+        "finalUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "efe9fb701c448f94896201ca8c1379022fa51686871215306d2eda688a6e642b",
+        "retrievedAt": "2026-11-02T21:57:44.416831+00:00",
+        "publisher": "Monroe County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/monroe-stroudsburg.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+        "finalUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+        "httpStatus": 200,
+        "rawHash": "56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d",
+        "retrievedAt": "2026-11-02T21:58:01.829028+00:00",
+        "publisher": "Blair County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/blair-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050",
+        "finalUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050",
+        "httpStatus": 200,
+        "rawHash": "f2cc19261a4030f94ad97c46f8a20ffa800c89b15c4b11cdc858113b80c74fd0",
+        "retrievedAt": "2026-11-02T21:58:01.960883+00:00",
+        "publisher": "Lycoming County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lycoming0100.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560",
+        "finalUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560",
+        "httpStatus": 200,
+        "rawHash": "f02822c1cd80578119984661517939e0f51d5d87875a115a0afc6c7dc302cabe",
+        "retrievedAt": "2026-11-02T21:58:02.094987+00:00",
+        "publisher": "Lycoming County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lycoming6001.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+        "finalUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+        "httpStatus": 200,
+        "rawHash": "0a22d9c247b5698b99a4d13870e580a840e989a746f59bab20ef5ae25fa48638",
+        "retrievedAt": "2026-11-02T21:58:44.117850+00:00",
+        "publisher": "Columbia County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/columbia-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+        "finalUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+        "httpStatus": 200,
+        "rawHash": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+        "retrievedAt": "2026-11-02T22:01:09.086387+00:00",
+        "publisher": "Cambria County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/cambria-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.pikepa.org/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+        "finalUrl": "https://cms7files.revize.com/pikecountypa/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+        "httpStatus": 200,
+        "rawHash": "bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723",
+        "retrievedAt": "2026-11-02T22:01:10.173709+00:00",
+        "publisher": "Pike County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/pike-blooming.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+        "finalUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+        "httpStatus": 200,
+        "rawHash": "02757e903c29e173c85552c12da24ae95088ae05c08673f643b3029073420497",
+        "retrievedAt": "2026-11-02T22:01:56.177470+00:00",
+        "publisher": "Adams County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/adams-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+        "finalUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65",
+        "retrievedAt": "2026-11-02T22:03:30.953390+00:00",
+        "publisher": "Indiana County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/indiana-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+        "finalUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+        "httpStatus": 200,
+        "rawHash": "32160202d04b8fce9ccb311a3967887e75239c7ee2b71f2bd263bf37b31ddb31",
+        "retrievedAt": "2026-11-02T22:03:13.125829+00:00",
+        "publisher": "Tioga County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/tioga-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf",
+        "finalUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf",
+        "httpStatus": 200,
+        "rawHash": "552e4254a85e92d3661204e9182b9469a0d6ff551529b1b5a5dd9b0e65f17d46",
+        "retrievedAt": "2026-11-02T22:03:51.139106+00:00",
+        "publisher": "Somerset County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/somerset-somerset.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+        "finalUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+        "httpStatus": 200,
+        "rawHash": "cf9dea66a077eb3c52cbd81f5b921e1bcd984ee23221aa7adbc3ba5a23632c10",
+        "retrievedAt": "2026-11-02T22:03:14.380916+00:00",
+        "publisher": "Susquehanna County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/susquehanna-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+        "finalUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+        "httpStatus": 200,
+        "rawHash": "567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d",
+        "retrievedAt": "2026-11-02T22:05:56.493867+00:00",
+        "publisher": "Lawrence County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lawrence-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+        "finalUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+        "httpStatus": 200,
+        "rawHash": "8d9cbd666eee58ad35b4af052a244b74f645b78bef9fef61d91182790f623bf7",
+        "retrievedAt": "2026-11-02T22:05:56.879501+00:00",
+        "publisher": "Venango County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/venango-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+        "finalUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+        "httpStatus": 200,
+        "rawHash": "39334c30c38ad73a6539d12fe4b227bf40a72af2a0431e67071957f650439746",
+        "retrievedAt": "2026-11-02T22:06:47.604601+00:00",
+        "publisher": "Mercer County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/mercer-farrell.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+        "finalUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+        "httpStatus": 200,
+        "rawHash": "a95c09e4391a418b4df7105f9820710d0cc937afec76321aeffa4f10f4f3687c",
+        "retrievedAt": "2026-11-02T22:06:47.613188+00:00",
+        "publisher": "Armstrong County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/armstrong-kittanning.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
       }
     ]
   }

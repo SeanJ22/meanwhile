@@ -160,5 +160,301 @@
     "excerptFile": "sources/c84a124eac766734aa084a2e0d14ab21845ed034a602cef3183c038ef22caacc.txt",
     "excerptSha256": "c84a124eac766734aa084a2e0d14ab21845ed034a602cef3183c038ef22caacc",
     "evidence": "The official 013 Butler Township Lavelle November 3, 2026 general-election ballot names John Deatrich (Democratic) and Tim Twardzik (Republican) as the complete printed candidate list for Representative in the General Assembly, 123rd Legislative District, vote for one, two-year term. Code confirmed the heading and both exact name/party passages in the saved PDF extraction. The ballot prints no State Senate contest."
+  },
+  {
+    "sourceUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+    "finalUrl": "https://www.beavercountypa.gov/getmedia/80703ebc-4d72-4924-ada8-3cbf64edabd3/Official-Candidates-on-Ballot-9-14-26.pdf",
+    "sourceCheckedAt": "2026-11-02T21:57:26.477807+00:00",
+    "sha256": "2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f",
+    "sourceFile": "sources/2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f.source",
+    "excerptFile": "sources/127277709514031de781db1c87e2833f47eb6ff75e321d9d1eb82e148c2b2cc0.txt",
+    "excerptSha256": "127277709514031de781db1c87e2833f47eb6ff75e321d9d1eb82e148c2b2cc0",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/beaver-candidates.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+    "finalUrl": "https://www.lebanoncountypa.gov/getmedia/15babddc-f671-48c2-af08-023e252c6e51/2026-General-Election-SAMPLE-BALLOTS.pdf",
+    "sourceCheckedAt": "2026-11-02T21:57:26.357355+00:00",
+    "sha256": "d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f",
+    "sourceFile": "sources/d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f.source",
+    "excerptFile": "sources/5feca943647da1105947798833a4b0a2046bf2842978bfe48ddabbef507b80d3.txt",
+    "excerptSha256": "5feca943647da1105947798833a4b0a2046bf2842978bfe48ddabbef507b80d3",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lebanon-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+    "finalUrl": "https://www.monroecountypa.gov/getmedia/9a67ca36-70ce-4563-b503-6eb336f45068/01-1Ballots.pdf",
+    "sourceCheckedAt": "2026-11-02T21:57:44.812985+00:00",
+    "sha256": "2328aa5fa382ec6563bd38b0e905c6e8851fbaab32e35dd5d7202a94d3c00ec0",
+    "sourceFile": "sources/2328aa5fa382ec6563bd38b0e905c6e8851fbaab32e35dd5d7202a94d3c00ec0.source",
+    "excerptFile": "sources/8340b6f54cc055b1c0623af80bbcd12f5b9e0e7f4c3d28d8658e764f8623773c.txt",
+    "excerptSha256": "8340b6f54cc055b1c0623af80bbcd12f5b9e0e7f4c3d28d8658e764f8623773c",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/monroe-barrett.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+    "finalUrl": "https://www.monroecountypa.gov/getmedia/191d6c04-3f66-44f4-8788-c5f416a75d18/02-1Ballots.pdf",
+    "sourceCheckedAt": "2026-11-02T21:57:44.628780+00:00",
+    "sha256": "a167cd00bb2fad6d50dd3c2a0ab1ffd40a27459abb5e953f7594c73f4f9ec6d3",
+    "sourceFile": "sources/a167cd00bb2fad6d50dd3c2a0ab1ffd40a27459abb5e953f7594c73f4f9ec6d3.source",
+    "excerptFile": "sources/221649fbbed4bd6deb44109239dce22f5b34b522bf652fba1b98abdbb1f64de8.txt",
+    "excerptSha256": "221649fbbed4bd6deb44109239dce22f5b34b522bf652fba1b98abdbb1f64de8",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/monroe-chestnuthill.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+    "finalUrl": "https://www.monroecountypa.gov/getmedia/8d2c3da6-731f-47a1-ad11-ac6d59bfdf59/18-1Ballots.pdf",
+    "sourceCheckedAt": "2026-11-02T21:57:44.416831+00:00",
+    "sha256": "efe9fb701c448f94896201ca8c1379022fa51686871215306d2eda688a6e642b",
+    "sourceFile": "sources/efe9fb701c448f94896201ca8c1379022fa51686871215306d2eda688a6e642b.source",
+    "excerptFile": "sources/c79a1f111e32491e85dc8950685580b7226bdcb19f708410c0487d977fca98f4.txt",
+    "excerptSha256": "c79a1f111e32491e85dc8950685580b7226bdcb19f708410c0487d977fca98f4",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/monroe-stroudsburg.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+    "finalUrl": "https://www.blaircountypa.gov/getmedia/18a37ea9-09e6-4fd6-b5c3-068ee3a0c008/PA-Blair-261103-General_03-(Sample).pdf",
+    "sourceCheckedAt": "2026-11-02T21:58:01.829028+00:00",
+    "sha256": "56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d",
+    "sourceFile": "sources/56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d.source",
+    "excerptFile": "sources/c1db35fd139ae1d1ccc5b63e21d101317dfaae326898e99d9bb1173d105fedd3.txt",
+    "excerptSha256": "c1db35fd139ae1d1ccc5b63e21d101317dfaae326898e99d9bb1173d105fedd3",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/blair-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050",
+    "finalUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/0100-0.pdf?t=202604060902050",
+    "sourceCheckedAt": "2026-11-02T21:58:01.960883+00:00",
+    "sha256": "f2cc19261a4030f94ad97c46f8a20ffa800c89b15c4b11cdc858113b80c74fd0",
+    "sourceFile": "sources/f2cc19261a4030f94ad97c46f8a20ffa800c89b15c4b11cdc858113b80c74fd0.source",
+    "excerptFile": "sources/e2ec9a39a16c11519b751f982f67bd2d01af109b51e468223596ecd67081d5c8.txt",
+    "excerptSha256": "e2ec9a39a16c11519b751f982f67bd2d01af109b51e468223596ecd67081d5c8",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lycoming0100.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560",
+    "finalUrl": "https://lycomingcountypa.gov/Documents/Government/Departments/Voter%20Services/SampleBallots/6001-0.pdf?t=202609020939560",
+    "sourceCheckedAt": "2026-11-02T21:58:02.094987+00:00",
+    "sha256": "f02822c1cd80578119984661517939e0f51d5d87875a115a0afc6c7dc302cabe",
+    "sourceFile": "sources/f02822c1cd80578119984661517939e0f51d5d87875a115a0afc6c7dc302cabe.source",
+    "excerptFile": "sources/5ac4e7abf6656bc1b91d7348ad1526dcc8c2e7714864fc4b76c2d4c4bf732271.txt",
+    "excerptSha256": "5ac4e7abf6656bc1b91d7348ad1526dcc8c2e7714864fc4b76c2d4c4bf732271",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lycoming6001.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+    "finalUrl": "https://www.columbiapa.org/voter/2026/1132026GeneralSample.pdf",
+    "sourceCheckedAt": "2026-11-02T21:58:44.117850+00:00",
+    "sha256": "0a22d9c247b5698b99a4d13870e580a840e989a746f59bab20ef5ae25fa48638",
+    "sourceFile": "sources/0a22d9c247b5698b99a4d13870e580a840e989a746f59bab20ef5ae25fa48638.source",
+    "excerptFile": "sources/51828b2576b3d370539baa075259162d9d6dbff756c7ccf914976befd9f100c3.txt",
+    "excerptSha256": "51828b2576b3d370539baa075259162d9d6dbff756c7ccf914976befd9f100c3",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/columbia-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields.",
+    "officialLinkingPage": {
+      "url": "http://www.columbiapa.org/voter/",
+      "file": "sources/c8b60333c3d4ff164851b0604235cdcd168499e2126ceae963512b19c5b5ad73.html",
+      "sha256": "c8b60333c3d4ff164851b0604235cdcd168499e2126ceae963512b19c5b5ad73",
+      "sourceCheckedAt": "2026-11-02T22:10:24.446453+00:00",
+      "linkingPage": {
+        "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+        "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+        "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574",
+        "sourceCheckedAt": "2026-11-02T22:07:44.705578+00:00"
+      }
+    }
+  },
+  {
+    "sourceUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+    "finalUrl": "https://www.cambriacountypa.gov/download/527/2026-general-election-specimen-ballots/14859/2026-cambria-general-election-9-21-26-sample-1.pdf",
+    "sourceCheckedAt": "2026-11-02T22:01:09.086387+00:00",
+    "sha256": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+    "sourceFile": "sources/e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05.source",
+    "excerptFile": "sources/46f89a60c18de2d78f85c88cc61bf8621ae2912eaa5f02fabad20ec0d5d21cd2.txt",
+    "excerptSha256": "46f89a60c18de2d78f85c88cc61bf8621ae2912eaa5f02fabad20ec0d5d21cd2",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/cambria-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.pikepa.org/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+    "finalUrl": "https://cms7files.revize.com/pikecountypa/Document%20Center/Government/Election%20Office/2026/General%20Election%20Sample%20Ballots/BLOOMING%20GROVE%20TWP.pdf?t=202609181134440",
+    "sourceCheckedAt": "2026-11-02T22:01:10.173709+00:00",
+    "sha256": "bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723",
+    "sourceFile": "sources/bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723.source",
+    "excerptFile": "sources/576047be53e098886e367cfb9f766187be6c637dbd209e409feefdfd55648270.txt",
+    "excerptSha256": "576047be53e098886e367cfb9f766187be6c637dbd209e409feefdfd55648270",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/pike-blooming.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields.",
+    "officialLinkingPage": {
+      "url": "https://www.pikepa.org/government/elections_office/2026_general_election_sample_ballots.php",
+      "file": "sources/1d1db66a9e21bdc62b7dc31e63033e3c3f1a434caa3525f04ac245ba66552429.html",
+      "sha256": "1d1db66a9e21bdc62b7dc31e63033e3c3f1a434caa3525f04ac245ba66552429",
+      "sourceCheckedAt": "2026-11-02T21:58:43.950279+00:00",
+      "linkingPage": {
+        "url": "https://www.pikepa.org/government/elections_office/index.php",
+        "file": "sources/9a6dbc332f73caa09ab378218844f93fc792bec2eea98118eace1e5d648f538e.html",
+        "sha256": "9a6dbc332f73caa09ab378218844f93fc792bec2eea98118eace1e5d648f538e",
+        "sourceCheckedAt": "2026-11-02T22:10:24.836547+00:00",
+        "linkingPage": {
+          "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+          "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+          "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574",
+          "sourceCheckedAt": "2026-11-02T22:07:44.705578+00:00"
+        }
+      }
+    }
+  },
+  {
+    "sourceUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+    "finalUrl": "https://www.adamscountypa.gov/getmedia/992a48f1-b0f6-4257-9a66-3abd2edbddcd/Sample-Ballot10-5-2026.pdf",
+    "sourceCheckedAt": "2026-11-02T22:01:56.177470+00:00",
+    "sha256": "02757e903c29e173c85552c12da24ae95088ae05c08673f643b3029073420497",
+    "sourceFile": "sources/02757e903c29e173c85552c12da24ae95088ae05c08673f643b3029073420497.source",
+    "excerptFile": "sources/1b8127f24db66c4e651fbb008ed328872638d4a9b36429942fc9748cadcf7153.txt",
+    "excerptSha256": "1b8127f24db66c4e651fbb008ed328872638d4a9b36429942fc9748cadcf7153",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/adams-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+    "finalUrl": "https://www.indianacountypa.gov/wp-content/uploads/GENERAL-2026-Specimen-Ballot.pdf",
+    "sourceCheckedAt": "2026-11-02T22:03:30.953390+00:00",
+    "sha256": "54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65",
+    "sourceFile": "sources/54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65.source",
+    "excerptFile": "sources/4e7a534d1aa41be44750f1a5f8c38f0e5a4cf5cfb69ab0182b628eef4b95c74b.txt",
+    "excerptSha256": "4e7a534d1aa41be44750f1a5f8c38f0e5a4cf5cfb69ab0182b628eef4b95c74b",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/indiana-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+    "finalUrl": "https://www.tiogacountypa.us/getmedia/7d95f569-dba3-4fa0-8b74-914bf29c8c73/Sample.pdf",
+    "sourceCheckedAt": "2026-11-02T22:03:13.125829+00:00",
+    "sha256": "32160202d04b8fce9ccb311a3967887e75239c7ee2b71f2bd263bf37b31ddb31",
+    "sourceFile": "sources/32160202d04b8fce9ccb311a3967887e75239c7ee2b71f2bd263bf37b31ddb31.source",
+    "excerptFile": "sources/d87196fac05fee6623cba846004258c113c569dfac662eba1d74b1d23194bd3d.txt",
+    "excerptSha256": "d87196fac05fee6623cba846004258c113c569dfac662eba1d74b1d23194bd3d",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/tioga-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields.",
+    "officialLinkingPage": {
+      "url": "https://www.tiogacountypa.us/departments/voter-registration",
+      "file": "sources/fd7ae86b51f1a0420113826a3b1a602482a70963b8c81464817a0ccc2db4c5b7.html",
+      "sha256": "fd7ae86b51f1a0420113826a3b1a602482a70963b8c81464817a0ccc2db4c5b7",
+      "sourceCheckedAt": "2026-11-02T22:10:24.641799+00:00",
+      "linkingPage": {
+        "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+        "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+        "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574",
+        "sourceCheckedAt": "2026-11-02T22:07:44.705578+00:00"
+      }
+    }
+  },
+  {
+    "sourceUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf",
+    "finalUrl": "https://www.co.somerset.pa.us/files/voter_files/sample%20ballots/Somerset%20Borough%20East.pdf",
+    "sourceCheckedAt": "2026-11-02T22:03:51.139106+00:00",
+    "sha256": "552e4254a85e92d3661204e9182b9469a0d6ff551529b1b5a5dd9b0e65f17d46",
+    "sourceFile": "sources/552e4254a85e92d3661204e9182b9469a0d6ff551529b1b5a5dd9b0e65f17d46.source",
+    "excerptFile": "sources/dedb277b5ac8342af2101a3e64ef265d81397dd0d1b2990b934c63c7dd8d0763.txt",
+    "excerptSha256": "dedb277b5ac8342af2101a3e64ef265d81397dd0d1b2990b934c63c7dd8d0763",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/somerset-somerset.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields.",
+    "officialLinkingPage": {
+      "url": "https://www.co.somerset.pa.us/pages/Voters/SampleBallotsBook.asp",
+      "file": "sources/125eae194eddc4fc374318ed4dc9433b62d2dbe1c9fa41e5482883f7d411d6f9.html",
+      "sha256": "125eae194eddc4fc374318ed4dc9433b62d2dbe1c9fa41e5482883f7d411d6f9",
+      "sourceCheckedAt": "2026-11-02T22:03:12.647246+00:00",
+      "linkingPage": {
+        "url": "http://www.co.somerset.pa.us/department.asp?deptnum=90",
+        "file": "sources/be1333a59602fa690de792b5debd1995bc346ad9c97f84d1fc090661bf5e91c9.html",
+        "sha256": "be1333a59602fa690de792b5debd1995bc346ad9c97f84d1fc090661bf5e91c9",
+        "sourceCheckedAt": "2026-11-02T22:10:23.899980+00:00",
+        "linkingPage": {
+          "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+          "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+          "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574",
+          "sourceCheckedAt": "2026-11-02T22:07:44.705578+00:00"
+        }
+      }
+    }
+  },
+  {
+    "sourceUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+    "finalUrl": "https://susqco.com/getmedia/3c9d5004-307b-46d8-9cbb-3d7333271846/2026-SAMPLE-NOVEMBER-GENERAL-BALLOT.pdf",
+    "sourceCheckedAt": "2026-11-02T22:03:14.380916+00:00",
+    "sha256": "cf9dea66a077eb3c52cbd81f5b921e1bcd984ee23221aa7adbc3ba5a23632c10",
+    "sourceFile": "sources/cf9dea66a077eb3c52cbd81f5b921e1bcd984ee23221aa7adbc3ba5a23632c10.source",
+    "excerptFile": "sources/70762e340bfaabd50a1bc0850af4a907005a5de569934cfaba3ec2f4bdff29a3.txt",
+    "excerptSha256": "70762e340bfaabd50a1bc0850af4a907005a5de569934cfaba3ec2f4bdff29a3",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/susquehanna-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields.",
+    "officialLinkingPage": {
+      "url": "https://www.susqco.com/departments/voter-registration",
+      "file": "sources/ab44e008f13f6ca7e4754b00e939a3b552552a9b6c3e7e2f087d70e91563e07b.html",
+      "sha256": "ab44e008f13f6ca7e4754b00e939a3b552552a9b6c3e7e2f087d70e91563e07b",
+      "sourceCheckedAt": "2026-11-02T22:15:40.442974+00:00",
+      "linkingPage": {
+        "url": "https://www.susqco.com/departments/voter-registration/election-resources",
+        "file": "sources/4c6e48b7a3ffc3145735506a043555e5acdac9363ba4039a761c2e2697f862c5.html",
+        "sha256": "4c6e48b7a3ffc3145735506a043555e5acdac9363ba4039a761c2e2697f862c5",
+        "sourceCheckedAt": "2026-11-02T22:10:23.921912+00:00",
+        "linkingPage": {
+          "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+          "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+          "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574",
+          "sourceCheckedAt": "2026-11-02T22:07:44.705578+00:00"
+        }
+      }
+    }
+  },
+  {
+    "sourceUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+    "finalUrl": "https://lawrencecountypa.gov/getmedia/801dd040-3d04-484b-8625-ba399b9d9b2a/2026-GENERAL-SAMPLE.pdf",
+    "sourceCheckedAt": "2026-11-02T22:05:56.493867+00:00",
+    "sha256": "567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d",
+    "sourceFile": "sources/567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d.source",
+    "excerptFile": "sources/01eea35083c508bf2766db47718e72d7340a1b921cea13a12b11d0520c44a8d1.txt",
+    "excerptSha256": "01eea35083c508bf2766db47718e72d7340a1b921cea13a12b11d0520c44a8d1",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/lawrence-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+    "finalUrl": "https://www.venangocountypa.gov/2026%20General%20Watermarked%20Ballots.pdf",
+    "sourceCheckedAt": "2026-11-02T22:05:56.879501+00:00",
+    "sha256": "8d9cbd666eee58ad35b4af052a244b74f645b78bef9fef61d91182790f623bf7",
+    "sourceFile": "sources/8d9cbd666eee58ad35b4af052a244b74f645b78bef9fef61d91182790f623bf7.source",
+    "excerptFile": "sources/b73020e47013a6bb648d17f4f3e844e963581170b4fc122737e7effcea5ab685.txt",
+    "excerptSha256": "b73020e47013a6bb648d17f4f3e844e963581170b4fc122737e7effcea5ab685",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/venango-packet.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+    "finalUrl": "https://www.mercercountypa.gov/election/Ballots/2026/GENERAL/1.pdf",
+    "sourceCheckedAt": "2026-11-02T22:06:47.604601+00:00",
+    "sha256": "39334c30c38ad73a6539d12fe4b227bf40a72af2a0431e67071957f650439746",
+    "sourceFile": "sources/39334c30c38ad73a6539d12fe4b227bf40a72af2a0431e67071957f650439746.source",
+    "excerptFile": "sources/66d12c5b5e6c531c898549dd3eb5488f9dbbd992b439b524aefdacf22db205a4.txt",
+    "excerptSha256": "66d12c5b5e6c531c898549dd3eb5488f9dbbd992b439b524aefdacf22db205a4",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/mercer-farrell.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+  },
+  {
+    "sourceUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+    "finalUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf",
+    "sourceCheckedAt": "2026-11-02T22:06:47.613188+00:00",
+    "sha256": "a95c09e4391a418b4df7105f9820710d0cc937afec76321aeffa4f10f4f3687c",
+    "sourceFile": "sources/a95c09e4391a418b4df7105f9820710d0cc937afec76321aeffa4f10f4f3687c.source",
+    "excerptFile": "sources/f1ac507a2ca7c5bd9d0ec1ad610dcd8b298a199ffa8a0463abd22f67a8e2c1c6.txt",
+    "excerptSha256": "f1ac507a2ca7c5bd9d0ec1ad610dcd8b298a199ffa8a0463abd22f67a8e2c1c6",
+    "evidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/armstrong-kittanning.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields.",
+    "officialLinkingPage": {
+      "url": "https://www.co.armstrong.pa.us/index.php/county-government-m/elections-voters-registration-m/general-election-sample-ballots-m",
+      "file": "sources/8f801549a4716115a34c1ea537394bd2c9e4fd19166c8849043d87e16e320a83.html",
+      "sha256": "8f801549a4716115a34c1ea537394bd2c9e4fd19166c8849043d87e16e320a83",
+      "sourceCheckedAt": "2026-11-02T22:06:14.685490+00:00",
+      "linkingPage": {
+        "url": "https://www.co.armstrong.pa.us/index.php/resourses-m/election-results-unofficial-m",
+        "file": "sources/6e2fcb98787fcca54cecfc26c4cd499dbccf1eb2ba430d3d3c8fbf085c737906.html",
+        "sha256": "6e2fcb98787fcca54cecfc26c4cd499dbccf1eb2ba430d3d3c8fbf085c737906",
+        "sourceCheckedAt": "2026-11-02T22:10:23.948916+00:00",
+        "linkingPage": {
+          "url": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+          "file": "sources/2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574.html",
+          "sha256": "2e82ade43d089cbc495cfed5d62932b6940cbb519631d29848433da116481574",
+          "sourceCheckedAt": "2026-11-02T22:07:44.705578+00:00"
+        }
+      }
+    }
   }
 ]

@@ -1,0 +1,492 @@
+[
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-14",
+    "district": "ocd-division/country:us/state:pa/sldl:14",
+    "sourceFile": "sources/2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f.source",
+    "sourceSha256": "2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f",
+    "sourcePage": 1,
+    "officeBlock": "Representative in the General Assembly – 14th Legislative District (Two Year Term – Vote For One)\n        Bradley Jacob Young                        Democratic              New Brighton Borough\n           Roman Kozak                             Republican               City of Beaver Falls",
+    "namedChoices": [
+      {
+        "name": "Bradley Jacob Young",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Roman Kozak",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-16",
+    "district": "ocd-division/country:us/state:pa/sldl:16",
+    "sourceFile": "sources/2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f.source",
+    "sourceSha256": "2bfa3ab7bf05ced863802acea7ffb49a08d4e4cd593f040ce133784ff22add4f",
+    "sourcePage": 1,
+    "officeBlock": "Representative in the General Assembly – 16th Legislative District (Two Year Term – Vote For One)\n          Robert F Matzie                         Democratic                 Harmony Township\n           John Costanza                          Republican                  Center Township",
+    "namedChoices": [
+      {
+        "name": "Robert F Matzie",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "John Costanza",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-101",
+    "district": "ocd-division/country:us/state:pa/sldl:101",
+    "sourceFile": "sources/d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f.source",
+    "sourceSha256": "d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE          101ST DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne          101ST DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     JOHN SCHLEGEL\n                 REPUBLICAN\n\n\n          Write-in",
+    "namedChoices": [
+      {
+        "name": "JOHN SCHLEGEL",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-102",
+    "district": "ocd-division/country:us/state:pa/sldl:102",
+    "sourceFile": "sources/d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f.source",
+    "sourceSha256": "d696f0b11f889fb9d30be5fbe51dcecac9f4b8dcfbc78c706754c0443020d06f",
+    "sourcePage": 16,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n           ASSEMBLY\nE         102ND DISTRICT\nn             2 Year Term\n  l              Vote for One\n  l     REPRESENTANTE EN LA ASAMBLEA\ne              GENERAL\ne         102ND DISTRITOu              Término de Dos años\n                  Vote por Uno\n\n     MATTHEW DUVALL\n                DEMOCRATIC\n     RUSS DIAMOND\n                 REPUBLICAN\n\n\n          Write-in",
+    "namedChoices": [
+      {
+        "name": "MATTHEW DUVALL",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "RUSS DIAMOND",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-115",
+    "district": "ocd-division/country:us/state:pa/sldl:115",
+    "sourceFile": "sources/2328aa5fa382ec6563bd38b0e905c6e8851fbaab32e35dd5d7202a94d3c00ec0.source",
+    "sourceSha256": "2328aa5fa382ec6563bd38b0e905c6e8851fbaab32e35dd5d7202a94d3c00ec0",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 115TH\n       DISTRICT\n         (Vote for One)\n\n MAUREEN MADDEN\n  DEMOCRATIC\n\n RICH SZABO\n  REPUBLICAN\n\n\n\n\n   Write-In",
+    "namedChoices": [
+      {
+        "name": "MAUREEN MADDEN",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "RICH SZABO",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-176",
+    "district": "ocd-division/country:us/state:pa/sldl:176",
+    "sourceFile": "sources/a167cd00bb2fad6d50dd3c2a0ab1ffd40a27459abb5e953f7594c73f4f9ec6d3.source",
+    "sourceSha256": "a167cd00bb2fad6d50dd3c2a0ab1ffd40a27459abb5e953f7594c73f4f9ec6d3",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 176TH\n       DISTRICT\n         (Vote for One)\n\n THOMAS KUCER\n  DEMOCRATIC\n\n  JACK RADER\n  REPUBLICAN\n\n\n\n\n   Write-In",
+    "namedChoices": [
+      {
+        "name": "THOMAS KUCER",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "JACK RADER",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-189",
+    "district": "ocd-division/country:us/state:pa/sldl:189",
+    "sourceFile": "sources/efe9fb701c448f94896201ca8c1379022fa51686871215306d2eda688a6e642b.source",
+    "sourceSha256": "efe9fb701c448f94896201ca8c1379022fa51686871215306d2eda688a6e642b",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY 189TH\n       DISTRICT\n         (Vote for One)\n\n TARAH PROBST\n  DEMOCRATIC\n\n DANICA HARTENFELS\n  REPUBLICAN\n\n\n\n\n   Write-In",
+    "namedChoices": [
+      {
+        "name": "TARAH PROBST",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "DANICA HARTENFELS",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-79",
+    "district": "ocd-division/country:us/state:pa/sldl:79",
+    "sourceFile": "sources/56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d.source",
+    "sourceSha256": "56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      79TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nCALEB MCCOY\n Democratic\n\n\nANDREA C VEROBISH\n Republican\n\n\n\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "CALEB MCCOY",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "ANDREA C VEROBISH",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-80",
+    "district": "ocd-division/country:us/state:pa/sldl:80",
+    "sourceFile": "sources/56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d.source",
+    "sourceSha256": "56fbd61d7da36f6fb89ece3e31e2b5e48a7917a8391046a286c176a2357ce09d",
+    "sourcePage": 38,
+    "officeBlock": "REPRESENTATIVE IN THE\n   GENERAL ASSEMBLY\n      80TH DISTRICT\n       VOTE FOR ONE (1)\n\n\nSARAH HOLLAND\n Democratic\n\n\nSCOTT BARGER\n Republican\n\n\n\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "SARAH HOLLAND",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "SCOTT BARGER",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-84",
+    "district": "ocd-division/country:us/state:pa/sldl:84",
+    "sourceFile": "sources/f2cc19261a4030f94ad97c46f8a20ffa800c89b15c4b11cdc858113b80c74fd0.source",
+    "sourceSha256": "f2cc19261a4030f94ad97c46f8a20ffa800c89b15c4b11cdc858113b80c74fd0",
+    "sourcePage": 1,
+    "officeBlock": "Representative in the General Assembly\n84th District\n(Vote for ONE)\n\n\n      Joe Hamm\n      Republican\n\n\n\n       Write-In",
+    "namedChoices": [
+      {
+        "name": "Joe Hamm",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-83",
+    "district": "ocd-division/country:us/state:pa/sldl:83",
+    "sourceFile": "sources/f02822c1cd80578119984661517939e0f51d5d87875a115a0afc6c7dc302cabe.source",
+    "sourceSha256": "f02822c1cd80578119984661517939e0f51d5d87875a115a0afc6c7dc302cabe",
+    "sourcePage": 1,
+    "officeBlock": "Representative in the General Assembly\n83rd District\n(Vote for ONE)\n\n\n     Jamie L. Flick\n      Republican\n\n\n\n       Write-In",
+    "namedChoices": [
+      {
+        "name": "Jamie L. Flick",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-109",
+    "district": "ocd-division/country:us/state:pa/sldl:109",
+    "sourceFile": "sources/0a22d9c247b5698b99a4d13870e580a840e989a746f59bab20ef5ae25fa48638.source",
+    "sourceSha256": "0a22d9c247b5698b99a4d13870e580a840e989a746f59bab20ef5ae25fa48638",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n          ASSEMBLY\n          109TH DISTRICT\n\n\n                  (Vote for ONE)\n\nJUSTIN C. HUMMEL                                DEMOCRATIC\n\nROBERT LEADBETER                                REPUBLICAN\n\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "JUSTIN C. HUMMEL",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "ROBERT LEADBETER",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-71",
+    "district": "ocd-division/country:us/state:pa/sldl:71",
+    "sourceFile": "sources/e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05.source",
+    "sourceSha256": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n71st DISTRICT\nVOTE FOR ONE\nJIM RIGBY\nREPUBLICAN\nWRITE-IN",
+    "namedChoices": [
+      {
+        "name": "JIM RIGBY",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-73",
+    "district": "ocd-division/country:us/state:pa/sldl:73",
+    "sourceFile": "sources/e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05.source",
+    "sourceSha256": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+    "sourcePage": 8,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n73rd DISTRICT\nVOTE FOR ONE\nDALLAS KEPHART\nREPUBLICAN\nWRITE-IN",
+    "namedChoices": [
+      {
+        "name": "DALLAS KEPHART",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-72",
+    "district": "ocd-division/country:us/state:pa/sldl:72",
+    "sourceFile": "sources/e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05.source",
+    "sourceSha256": "e7fa75849d1f4363db7fc04a51d76461217769beb5526c70af1934888f924e05",
+    "sourcePage": 9,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n72nd DISTRICT\nVOTE FOR ONE\nFRANK BURNS\nDEMOCRATIC\nPHIL RICE\nREPUBLICAN\nWRITE-IN",
+    "namedChoices": [
+      {
+        "name": "FRANK BURNS",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "PHIL RICE",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-139",
+    "district": "ocd-division/country:us/state:pa/sldl:139",
+    "sourceFile": "sources/bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723.source",
+    "sourceSha256": "bba738992128fbcc20595f4b607f17267b18f27295751e9298d9fcbf7f990723",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN\nTHE GENERAL ASSEMBLY\n139th District\n2 Year Term\nVote for ONE\nDominique Azzollini\nDemocratic\nJeff Olsommer\nRepublican\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "Dominique Azzollini",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Jeff Olsommer",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-91",
+    "district": "ocd-division/country:us/state:pa/sldl:91",
+    "sourceFile": "sources/02757e903c29e173c85552c12da24ae95088ae05c08673f643b3029073420497.source",
+    "sourceSha256": "02757e903c29e173c85552c12da24ae95088ae05c08673f643b3029073420497",
+    "sourcePage": 9,
+    "officeBlock": "Representative in the General Assembly\n             91st District\n                 Vote for One\n\n\n0   KATHLEEN PRATT\n        Democratic\n\n\n 0  DAN MOUL\n        Republican\n\n\n 0\n        Write-in",
+    "namedChoices": [
+      {
+        "name": "KATHLEEN PRATT",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "DAN MOUL",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-62",
+    "district": "ocd-division/country:us/state:pa/sldl:62",
+    "sourceFile": "sources/54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65.source",
+    "sourceSha256": "54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n62ND DISTRICT\nVote for One\nTRAJAN JONES\nDEMOCRATIC\nJIM STRUZZI\nREPUBLICAN\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "TRAJAN JONES",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "JIM STRUZZI",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-66",
+    "district": "ocd-division/country:us/state:pa/sldl:66",
+    "sourceFile": "sources/54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65.source",
+    "sourceSha256": "54697c3d9d9960515894a277b1a84eaa5048cbd530e2d08b168a48d36a860b65",
+    "sourcePage": 4,
+    "officeBlock": "REPRESENTATIVE IN THE\nGENERAL ASSEMBLY\n66TH DISTRICT\nVote for One\nLISA GOURLEY\nDEMOCRATIC\nBRIAN SMITH\nREPUBLICAN\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "LISA GOURLEY",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "BRIAN SMITH",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-68",
+    "district": "ocd-division/country:us/state:pa/sldl:68",
+    "sourceFile": "sources/32160202d04b8fce9ccb311a3967887e75239c7ee2b71f2bd263bf37b31ddb31.source",
+    "sourceSha256": "32160202d04b8fce9ccb311a3967887e75239c7ee2b71f2bd263bf37b31ddb31",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\n    ASSEMBLY 68TH DISTRICT\nr\n             Vote for One\n\n\n\n\n      Quentin Gee\n      Democratic\n\n\n\n        Clint Owlett\n      Republican\n\n\n\n\n          Write-in",
+    "namedChoices": [
+      {
+        "name": "Quentin Gee",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Clint Owlett",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-69",
+    "district": "ocd-division/country:us/state:pa/sldl:69",
+    "sourceFile": "sources/552e4254a85e92d3661204e9182b9469a0d6ff551529b1b5a5dd9b0e65f17d46.source",
+    "sourceSha256": "552e4254a85e92d3661204e9182b9469a0d6ff551529b1b5a5dd9b0e65f17d46",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\n GENERAL ASSEMBLY\n         69th District\n      Vote for ONE (1)\n\n  Carl Walker Metzgar\n                          Republican",
+    "namedChoices": [
+      {
+        "name": "Carl Walker Metzgar",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-111",
+    "district": "ocd-division/country:us/state:pa/sldl:111",
+    "sourceFile": "sources/cf9dea66a077eb3c52cbd81f5b921e1bcd984ee23221aa7adbc3ba5a23632c10.source",
+    "sourceSha256": "cf9dea66a077eb3c52cbd81f5b921e1bcd984ee23221aa7adbc3ba5a23632c10",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n111TH DISTRICT\n(Vote for ONE)\nKYLE DEVLIN\nDEMOCRATIC\nJONATHAN FRITZ\nREPUBLICAN\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "KYLE DEVLIN",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "JONATHAN FRITZ",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee.",
+    "extractionMethod": "Visual transcription of page1 image; full candidate block and electiondate checked against rendered source. LocalOCR is retained as discovery support and is not authoritative for name spelling."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-9",
+    "district": "ocd-division/country:us/state:pa/sldl:9",
+    "sourceFile": "sources/567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d.source",
+    "sourceSha256": "567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE GENERAL\nASSEMBLY\n9TH DISTRICT\n2 YEAR TERM\nVOTE FOR ONE\nREPRESENTANTE EN LA ASAMBLEA\nTérmino de Dos años\nVote por Uno\nSHAY MICCO\nDEMOCRATIC\nMARLA GALLO BROWN\nREPUBLICAN\nWrite-in/Por Escrito",
+    "namedChoices": [
+      {
+        "name": "SHAY MICCO",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "MARLA GALLO BROWN",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldu-50",
+    "district": "ocd-division/country:us/state:pa/sldu:50",
+    "sourceFile": "sources/567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d.source",
+    "sourceSha256": "567447c34512304bff786b2808e01a72550b5d716c98a1b8ea0fe6e81a62a01d",
+    "sourcePage": 1,
+    "officeBlock": "SENATOR IN THE GENERAL\nASSEMBLY\n50th DISTRICT\n4 YEAR TERM\nVOTE FOR ONE\nSENADOR EN LA ASAMBLEA\nTérmino de Cuatro años\nVote por Uno\nSUE MULVEY\nDEMOCRATIC\nMICHELE BROOKS\nREPUBLICAN\nWrite-in/Por Escrito",
+    "namedChoices": [
+      {
+        "name": "SUE MULVEY",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "MICHELE BROOKS",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-64",
+    "district": "ocd-division/country:us/state:pa/sldl:64",
+    "sourceFile": "sources/8d9cbd666eee58ad35b4af052a244b74f645b78bef9fef61d91182790f623bf7.source",
+    "sourceSha256": "8d9cbd666eee58ad35b4af052a244b74f645b78bef9fef61d91182790f623bf7",
+    "sourcePage": 1,
+    "officeBlock": "Representative in the General Assembly\n64th Legislative District\n2 Year Term\nVote for One\nAMANDA SHAFFER\nDemocratic\nR LEE JAMES\nRepublican\nWrite-In; Be sure to darken the oval",
+    "namedChoices": [
+      {
+        "name": "AMANDA SHAFFER",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "R LEE JAMES",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-7",
+    "district": "ocd-division/country:us/state:pa/sldl:7",
+    "sourceFile": "sources/39334c30c38ad73a6539d12fe4b227bf40a72af2a0431e67071957f650439746.source",
+    "sourceSha256": "39334c30c38ad73a6539d12fe4b227bf40a72af2a0431e67071957f650439746",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\n        GENERAL ASSEMBLY\n              DISTRICT 7\n         TWO YEAR TERM\n            VOTE FOR ONE\n\n\n         CHRISTOPHER A CRUMBY-FORD\n          DEMOCRATIC\n        PARKE WENTLING\n          REPUBLICAN\n\n               Write-in",
+    "namedChoices": [
+      {
+        "name": "CHRISTOPHER A CRUMBY-FORD",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "PARKE WENTLING",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-63",
+    "district": "ocd-division/country:us/state:pa/sldl:63",
+    "sourceFile": "sources/a95c09e4391a418b4df7105f9820710d0cc937afec76321aeffa4f10f4f3687c.source",
+    "sourceSha256": "a95c09e4391a418b4df7105f9820710d0cc937afec76321aeffa4f10f4f3687c",
+    "sourcePage": 1,
+    "officeBlock": "REPRESENTATIVE IN THE\n     GENERAL ASSEMBLY\n   63TH LEGISLATIVE DISTRICT\n               (Vote for ONE)\n\nANDREW HARBAUGH\nDEMOCRATIC\n\nJOSH BASHLINE\nREPUBLICAN\n\n\nWrite-in",
+    "namedChoices": [
+      {
+        "name": "ANDREW HARBAUGH",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "JOSH BASHLINE",
+        "partyLabel": "Republican"
+      }
+    ],
+    "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  }
+]

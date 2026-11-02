@@ -37,12 +37,12 @@ test("meeting hash comparison includes independently changing agendas before any
     rawHash: candidate.retrieval.rawHash, rawHashBasis: "SOURCE_CONTENT_V1", normalizedHash: candidate.normalization.normalizedHash,
     parserVersion: "meetings-composite/2", promotedAt: now, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false };
   await first.clear();
-  const probe = async () => {
+  let owed = 0; const probe = async () => {
     const session = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl, publicationPending:async()=>false });
-    const result = await probeMeetingSource({ store, partition, session, normalizationInputHash: "normalization:one", now, workRemains: async () => false });
+    const result = await probeMeetingSource({ store, partition, session, normalizationInputHash: "normalization:one", now, continueFacts: async () => { owed++; return true; } });
     await session.clear(); return result;
   };
-  assert.ok(await probe()); assert.equal(calls, 4); assert.equal(confirmations, 1);
+  assert.ok(await probe(), "owed facts continue on the confirmed version"); assert.equal(calls, 4); assert.equal(confirmations, 1); assert.equal(owed, 1);
   agendaBody = "Agenda two";
   assert.equal(await probe(), null, "an unchanged calendar cannot hide a changed agenda");
   assert.equal(confirmations, 1);
@@ -134,7 +134,7 @@ test("an ephemeral calendar session compares acquired hashes before held output 
     parserVersion: "meetings-composite/2", promotedAt: now, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false };
   await first.clear();
   const next = await acquire();
-  assert.ok(await confirmAcquiredMeetingSource({ store, partition, session: next, normalizationInputHash: "session-input", now, workRemains: async () => false }));
+  assert.ok(await confirmAcquiredMeetingSource({ store, partition, session: next, normalizationInputHash: "session-input", now, continueFacts: async () => true }), "owed facts do not republish an unchanged source");
   assert.equal(confirmations, 1); assert.equal(calls, 4, "each pass acquires its own session before comparing source content");
 });
 

@@ -1,0 +1,27 @@
+[
+  {
+    "url": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "file": "sources/380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1.source",
+    "sha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "byteLength": 907654,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:20:31.839248+00:00"
+  },
+  {
+    "url": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "file": "sources/418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26.source",
+    "sha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "byteLength": 47334,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:16:21.331835+00:00"
+  },
+  {
+    "url": "https://www.portsmouthnh.gov/cityclerk/voting-information",
+    "file": "sources/bab521e6b4fd588fa384cb1c252a4feca82a369248a8655235f1e60ffc9b85c9.source",
+    "sha256": "bab521e6b4fd588fa384cb1c252a4feca82a369248a8655235f1e60ffc9b85c9",
+    "byteLength": 58630,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-02T22:10:00.842145+00:00",
+    "supports": "Current government page directly links this all-ward2026general-election PDF."
+  }
+]

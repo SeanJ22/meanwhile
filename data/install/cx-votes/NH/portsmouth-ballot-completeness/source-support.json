@@ -1,0 +1,188 @@
+[
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-21",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:721",
+    "title": "State Representative, Rockingham County District 21",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Anna Howard",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 1
+      }
+    ],
+    "sourcePages": [
+      1
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-28",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:728",
+    "title": "State Representative, Rockingham County District 28",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Carrie Sorensen",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 3
+      }
+    ],
+    "sourcePages": [
+      3
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-26",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:726",
+    "title": "State Representative, Rockingham County District 26",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Buzz Scherr",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 5
+      }
+    ],
+    "sourcePages": [
+      5
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-27",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:727",
+    "title": "State Representative, Rockingham County District 27",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Gerald W. R. Ward",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 7
+      }
+    ],
+    "sourcePages": [
+      7
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-22",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:722",
+    "title": "State Representative, Rockingham County District 22",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Rebecca Audet",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 9
+      }
+    ],
+    "sourcePages": [
+      9
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-37",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+    "title": "State Representative, Rockingham County District 37",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Kate Cook",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 1
+      }
+    ],
+    "sourcePages": [
+      1
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-representative-rockingham-county-district-39",
+    "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+    "title": "State Representative, Rockingham County District 39",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Barbara M. Ward",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 3
+      },
+      {
+        "printedName": "Sue Polidura",
+        "partyColumn": "Republican Candidates",
+        "sourcePage": 3
+      }
+    ],
+    "sourcePages": [
+      3
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  },
+  {
+    "contestId": "nh-2026-general:state-senator-district-21",
+    "ocdId": "ocd-division/country:us/state:nh/sldu:21",
+    "title": "State Senator, District 21",
+    "voteFor": 1,
+    "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+    "sourceSha256": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+    "candidateCells": [
+      {
+        "printedName": "Rebecca Perkins Kwoka",
+        "partyColumn": "Democratic Candidates",
+        "sourcePage": 1
+      },
+      {
+        "printedName": "Jeffrey Berlin",
+        "partyColumn": "Republican Candidates",
+        "sourcePage": 1
+      }
+    ],
+    "sourcePages": [
+      1
+    ],
+    "reviewMethod": "Original scanned pages 1,3,5,7,9 rendered at180dpi and visually read. OCR assistance had errors; candidate spellings, party columns and vote limits were checked against page images. Kate Cook is visibly printed in Democratic column on pages1and9; the OCR omission was not treated as an empty race.",
+    "officialDistrictSource": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+    "officialDistrictSourceSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+    "verifiedCellTranscription": "sources/f348bdd912f886bb8f7e6c838531823967e207b559c9ab07fb7c66ce6019e2c1.txt"
+  }
+]

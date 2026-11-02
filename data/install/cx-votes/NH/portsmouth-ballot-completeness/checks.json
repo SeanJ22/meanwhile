@@ -1,0 +1,16 @@
+{
+  "state": "NH",
+  "newContests": 8,
+  "newCandidacies": 10,
+  "newMemberships": 5,
+  "sourceCaptureHashes": "PASS",
+  "manualScanReview": "Candidate spellings, party columns, vote limits and current election date visually verified on original scanned pages1,3,5,7,9; OCR errors corrected by reading pixels, not assumptions",
+  "sourceCellCoverage": "PASS",
+  "statutoryOverlayQuotes": "PASS",
+  "BallotContestMerge": "PASS",
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorRowsIncludingDoverPreserved": 611,
+  "productionWrites": 0,
+  "modelCalls": 0
+}

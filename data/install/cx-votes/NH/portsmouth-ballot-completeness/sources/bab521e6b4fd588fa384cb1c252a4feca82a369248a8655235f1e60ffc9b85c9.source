@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html  lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="2026 Election" />
+<meta property="og:site_name" content="City of Portsmouth" />
+<meta property="og:type" content="Basic page" />
+<meta property="og:url" content="https://www.portsmouthnh.gov/cityclerk/voting-information" />
+<meta property="og:title" content="Voting Information" />
+<meta property="og:description" content="2026 Election" />
+<meta name="twitter:card" content="summary" />
+<meta name="google-site-verification" content="BRl7eSsjDmPE0fjERtUP3f8PlOimHsSLyFLhsBSsMzQ" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/themes/custom/cityofportsmouth/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="canonical" href="https://www.portsmouthnh.gov/cityclerk/voting-information" />
+<link rel="shortlink" href="https://www.portsmouthnh.gov/node/5251" />
+<script src="/sites/default/files/google_tag/city/google_tag.data_layer.js?tnvy4b" defer></script>
+<script src="/sites/default/files/google_tag/city/google_tag.script.js?tnvy4b" defer></script>
+
+    <title>Voting Information | City of Portsmouth</title>
+    <link rel="stylesheet" media="all" href="/core/modules/system/css/components/align.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/fieldgroup.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/container-inline.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/clearfix.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/details.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/hidden.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/item-list.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/js.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/nowrap.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/position-container.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/reset-appearance.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/resize.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/system-status-counter.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/system-status-report-counters.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/system-status-report-general-info.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/tablesort.module.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/modules/contrib/webform/modules/webform_bootstrap/css/webform_bootstrap.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="https://cdn.jsdelivr.net/npm/entreprise7pro-bootstrap@3.4.10/dist/css/bootstrap.css" integrity="sha256-3p/H8uQndDeQADwalAGPYNGwk6732TJRjYcY05O81og=" crossorigin="anonymous" />
+<link rel="stylesheet" media="all" href="https://cdn.jsdelivr.net/npm/@unicorn-fail/drupal-bootstrap-styles@0.0.2/dist/3.4.0/8.x-3.x/drupal-bootstrap.css" integrity="sha512-j4mdyNbQqqp+6Q/HtootpbGoc2ZX0C/ktbXnauPFEz7A457PB6le79qasOBVcrSrOBtGAm0aVU2SOKFzBl6RhA==" crossorigin="anonymous" />
+<link rel="stylesheet" media="all" href="/themes/custom/cityofportsmouth/public/css/globals.css?tnvy4b" />
+<link rel="stylesheet" media="all" href="/themes/custom/cityofportsmouth/public/css/color-themes.css?tnvy4b" />
+
+    
+  </head>
+  <body class="role-anonymous path-node page-node-type-page has-glyphicons">
+    <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PV8FG7V" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+</style>
+  <div class="theme department-theme-teal">
+      <header id="header" role="banner">
+
+        <div class="region region-utility">
+    <section id="block-departmentnotificationsblock" class="block block-city-departments block-department-notifications-block clearfix">
+  
+    
+
+      
+
+						
+	<div class="notifications">
+		<div class="noto-carousel">
+
+			<div class="noto-item noto-announcement">
+			<div class="container">
+				<div class="actions">
+														</div>
+				<a class="message " href="/node/3256">
+					<strong>Announcement<span class="hidden-xs">:&nbsp;&nbsp;</span></strong>
+					<span class="title">
+						For the November 3, 2026 General Election: Ward 4 Voters will vote at the Portsmouth High School, 50 Andrew Jarvis Drive. The Clerk&#039;s Office will be closed on Election Day to regular business.
+					</span>
+				</a>
+			</div>
+		</div>
+	
+		</div>
+	</div>
+
+  </section>
+
+<section id="block-departmentutilitybarblock" class="block block-city-departments block-department-utility-bar-block clearfix">
+  
+    
+
+      <div class="utility-bar">
+	<div class="container">
+
+		<nav class="department-links">
+			<ul>
+
+                					<li>
+						<a class="hide-on-mobile" href="/">City of <span>PORTSMOUTH</span> NH</a>
+						<a class="show-on-mobile" href="/"><i class="fas fa-house" aria-hidden="true"></i></a>
+					</li>
+										<li class="goto-department">
+						<a href="/cityclerk">City Clerk</a>
+					</li>
+							</ul>
+		</nav>
+
+		<div class="pull-right">
+			<div class="page-text-size hidden-xs">
+				<a href="#" id="font-scale-sm">A</a>
+				<a href="#" id="font-scale-default">A</a>
+				<a href="#" id="font-scale-lg">A</a>
+			</div>
+
+			<nav class="social is-department hidden-xs">
+				<ul>
+					                                                                                                    						<li><a aria-label="Email" href="mailto:cityclerk@portsmouthnh.gov/"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
+                    				</ul>
+			</nav>
+			 <div class="gtranslate-desktop">
+				<section id="block-cityofportsmouth-gtranslate" class="block block-gtranslate block-gtranslate-block clearfix">
+  
+    
+
+      
+<div class="gtranslate_wrapper"></div><script>window.gtranslateSettings = {"switcher_horizontal_position":"left","switcher_vertical_position":"bottom","horizontal_position":"inline","vertical_position":"inline","float_switcher_open_direction":"top","switcher_open_direction":"bottom","default_language":"en","native_language_names":1,"detect_browser_language":0,"add_new_line":1,"select_language_label":"Select Language","flag_size":32,"flag_style":"2d","globe_size":60,"alt_flags":[],"wrapper_selector":".gtranslate_wrapper","url_structure":"none","custom_domains":null,"languages":["en","ar","zh-CN","zh-TW","fr","de","hi","it","ko","pt","ru","es","id","tr","ur","bn","pa"],"custom_css":""};</script><script>(function(){var js = document.createElement('script');js.setAttribute('src', 'https://cdn.gtranslate.net/widgets/latest/dropdown.js');js.setAttribute('data-gt-orig-url', '/cityclerk/voting-information');js.setAttribute('data-gt-orig-domain', 'www.portsmouthnh.gov');document.body.appendChild(js);})();</script>
+  </section>
+
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+  </section>
+
+
+  </div>
+
+
+            <div class="navbar navbar-default">
+        <div class="header-main">
+              <div class="region region-header">
+    <section id="block-departmentheaderblock" class="block block-city-departments block-department-header-block clearfix">
+  
+    
+
+      <div class="container">
+	<div class="row">
+		<div class="col-md-4 col-sm-6"> 
+            			<a class="logo navbar-btn pull-left " href="/cityclerk" title="Home" rel="home">
+                					<span>City Clerk</span>
+                			</a>
+		</div>
+													<div class="col-md-8 col-sm-6 right-content">
+		
+			<div class="pull-right">
+
+											<nav class="social">
+							<ul>
+                                                                                                                                                                                                									<li><a aria-label="Email" href="mailto:cityclerk@portsmouthnh.gov/"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
+			                    							</ul>
+						</nav>
+					
+                				<div class="pull-left">
+					<div class="search-form">
+						<form class="search hidden-sm hidden-xs" action="/site/search" method="get">
+							<div class="form-group">
+
+								
+								<input aria-label="Search" type="search" class="form-conrol" placeholder="Search" name="q" />
+								<button aria-label="Submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+															</div>
+
+						</form>
+						                                                												<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">
+							<i class="fa fa-bars" aria-hidden="true"></i>
+							<span>Menu</span>
+						</button>
+					</div>
+				</div>
+			</div>		</div>	</div>
+</div>
+
+
+
+  </section>
+
+
+  </div>
+
+        </div>
+
+                <div class="collapse navbar-collapse no-spacing" id="main-nav">
+          <div class="container">
+                          <div class="region region-mainnav">
+    <section id="block-departmentmainmenublock" class="block block-city-departments block-department-main-menu-block clearfix">
+  
+    
+
+      
+              <ul class="menu nav">
+                            <li class="expanded dropdown">
+        <a href="">
+          <span>Boards</span>
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+          
+          <svg class="desktop-caret-large" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="20px" viewBox="0 0 150 20" version="1.1" preserveAspectRatio="none">
+            <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+            <title>Back Copy</title>
+            <desc>Created with Sketch.</desc>
+            <defs/>
+            <g id="Design-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Design-4-(1280px)---Nav-[Departments]" transform="translate(-281.000000, -160.000000)" fill="#14143D">
+                    <g id="Group-2" transform="translate(0.000000, 131.000000)">
+                        <polygon id="Back-Copy" points="431 29 356 49 281 29"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+
+        </a>
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                           
+            <ul class="menu dropdown-menu">
+
+                            <li>
+        <a href="/cityclerk/elected-city-officials" data-drupal-link-system-path="node/5261">Elected City Officials</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/boards-commissions-information">Boards, Commissions &amp; Committees</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/vacancies" target="" data-drupal-link-system-path="node/5256">Vacancies</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/apply-board-committee-or-commisson" target="" data-drupal-link-system-path="node/5546">Volunteer Information &amp; Application</a>
+                  </li>
+                        <li>
+        <a href="/city-municipal-meetings-calendar" target="" data-drupal-link-system-path="node/6651">Meeting Calendar</a>
+                  </li>
+        </ul>
+  
+            </li>
+                        <li class="expanded dropdown active">
+        <a href="">
+          <span>Elections</span>
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+          
+          <svg class="desktop-caret-large" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="20px" viewBox="0 0 150 20" version="1.1" preserveAspectRatio="none">
+            <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+            <title>Back Copy</title>
+            <desc>Created with Sketch.</desc>
+            <defs/>
+            <g id="Design-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Design-4-(1280px)---Nav-[Departments]" transform="translate(-281.000000, -160.000000)" fill="#14143D">
+                    <g id="Group-2" transform="translate(0.000000, 131.000000)">
+                        <polygon id="Back-Copy" points="431 29 356 49 281 29"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+
+        </a>
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                           
+            <ul class="menu dropdown-menu">
+
+                            <li>
+        <a href="/cityclerk/elected-city-officials" target="" data-drupal-link-system-path="node/5261">Elected City Officials</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/election-results" target="" data-drupal-link-system-path="node/5246">Election Results</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/state-national-officials" target="" data-drupal-link-system-path="node/5266">State &amp; National Officials</a>
+                  </li>
+                        <li class="active">
+        <a href="/cityclerk/voting-information" target="" data-drupal-link-system-path="node/5251" class="is-active" aria-current="page">Voting Information</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/municipal-election" data-drupal-link-system-path="node/337321">Municipal Election Information</a>
+                  </li>
+        </ul>
+  
+            </li>
+                        <li class="expanded dropdown">
+        <a href="">
+          <span>Ordinances</span>
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+          
+          <svg class="desktop-caret-large" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="20px" viewBox="0 0 150 20" version="1.1" preserveAspectRatio="none">
+            <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+            <title>Back Copy</title>
+            <desc>Created with Sketch.</desc>
+            <defs/>
+            <g id="Design-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Design-4-(1280px)---Nav-[Departments]" transform="translate(-281.000000, -160.000000)" fill="#14143D">
+                    <g id="Group-2" transform="translate(0.000000, 131.000000)">
+                        <polygon id="Back-Copy" points="431 29 356 49 281 29"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+
+        </a>
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                           
+            <ul class="menu dropdown-menu">
+
+                            <li>
+        <a href="/cityclerk/city-ordinances" target="" data-drupal-link-system-path="node/9221">City Ordinances</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/noise-control-ordinance" target="" data-drupal-link-system-path="node/5271">Noise Control Ordinance</a>
+                  </li>
+                        <li>
+        <a href="/city-clerks-office/city-ordinances#chapter6" target="">Amusement Games Ordinance</a>
+                  </li>
+                        <li>
+        <a href="/city-clerks-office/city-ordinances#chapter6" target="">Bowling Billiards Ordinance</a>
+                  </li>
+                        <li>
+        <a href="/city-clerks-office/city-ordinances#chapter6" target="">Dog License Ordinance</a>
+                  </li>
+                        <li>
+        <a href="/city-clerks-office/city-ordinances#chapter5" target="">Petroleum Products Ordinance</a>
+                  </li>
+        </ul>
+  
+            </li>
+                        <li class="expanded dropdown">
+        <a href="">
+          <span>Licenses &amp; Permits</span>
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+          
+          <svg class="desktop-caret-large" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="20px" viewBox="0 0 150 20" version="1.1" preserveAspectRatio="none">
+            <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+            <title>Back Copy</title>
+            <desc>Created with Sketch.</desc>
+            <defs/>
+            <g id="Design-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Design-4-(1280px)---Nav-[Departments]" transform="translate(-281.000000, -160.000000)" fill="#14143D">
+                    <g id="Group-2" transform="translate(0.000000, 131.000000)">
+                        <polygon id="Back-Copy" points="431 29 356 49 281 29"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+
+        </a>
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                           
+            <ul class="menu dropdown-menu">
+
+                            <li>
+        <a href="/cityclerk/licenses-permits" data-drupal-link-system-path="node/9196">List of all Licenses and Permits</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/birth-marriage-death-certificates" target="" data-drupal-link-system-path="node/7161">Birth, Marriage, Divorce &amp; Death</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/dog-license" target="" data-drupal-link-system-path="node/5281">Dog License</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/taxi-business-licenses" target="" data-drupal-link-system-path="node/5291">Taxi Licenses </a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/vendors-license" target="" data-drupal-link-system-path="node/5296">Vendor’s License</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/eventsparades" target="" data-drupal-link-system-path="node/5301">Events/Parades</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/sidewalk-performer-guidelines" target="" data-drupal-link-system-path="node/7741">Sidewalk Performers</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/amusement-games-application" target="" data-drupal-link-system-path="node/5551">Amusement Application</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/bowling-billiards-application" target="" data-drupal-link-system-path="node/5556">Bowling/Billiards Application</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/business-license" target="" data-drupal-link-system-path="node/5561">Business License</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/licenses-permits" target="" data-drupal-link-system-path="node/9196">Employment Agencies</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/licenses-permits" target="" data-drupal-link-system-path="node/9196">Pawn Brokers</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/licenses-permits" target="" data-drupal-link-system-path="node/9196">Raffle/Tag Day</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/sidewalk-obstruction-license" target="" data-drupal-link-system-path="node/5306">Sidewalk Obstruction</a>
+                  </li>
+        </ul>
+  
+            </li>
+                        <li class="expanded dropdown">
+        <a href="">
+          <span>Resources</span>
+                      <i class="fa fa-angle-down" aria-hidden="true"></i>
+          
+          <svg class="desktop-caret-large" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="20px" viewBox="0 0 150 20" version="1.1" preserveAspectRatio="none">
+            <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+            <title>Back Copy</title>
+            <desc>Created with Sketch.</desc>
+            <defs/>
+            <g id="Design-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Design-4-(1280px)---Nav-[Departments]" transform="translate(-281.000000, -160.000000)" fill="#14143D">
+                    <g id="Group-2" transform="translate(0.000000, 131.000000)">
+                        <polygon id="Back-Copy" points="431 29 356 49 281 29"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+
+        </a>
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                           
+            <ul class="menu dropdown-menu">
+
+                            <li>
+        <a href="/cityclerk/city-charter" target="" data-drupal-link-system-path="node/5581">City Charter</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/driving-directions-city-hall" target="" data-drupal-link-system-path="node/5321">Directions to City Hall </a>
+                  </li>
+                        <li>
+        <a href="/city-municipal-meetings-calendar" target="" data-drupal-link-system-path="node/6651">Municipal Meetings</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/reserving-city-rooms-meetings" data-drupal-link-system-path="node/215626">Reserving City Rooms for Meetings</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/taxi-business-licenses" target="" data-drupal-link-system-path="node/5291">Taxi Business Information</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/eventsparades" target="" data-drupal-link-system-path="node/5301">Event Organization</a>
+                  </li>
+                        <li>
+        <a href="/citycouncil/revised-rules-orders-portsmouth-city-council-adopted-city-council-01162024" target="" data-drupal-link-system-path="node/1906">City Council Revised Orders</a>
+                  </li>
+                        <li>
+        <a href="/citycouncil/city-council-polices" data-drupal-link-system-path="node/223578">City Council Policies</a>
+                  </li>
+        </ul>
+  
+            </li>
+        </ul>
+  
+
+
+  </section>
+
+
+  </div>
+
+                        <nav class="social-mobile visible-xs-block">
+              <ul>
+                                                                                                                  <li><a aria-label="Email" href="mailto:cityclerk@portsmouthnh.gov/"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
+                              </ul>
+            </nav>
+                        <form class="search visible-sm-block visible-xs-block" action="/site/search" method="get">
+              <div class="form-group">
+              
+                <input aria-label="Search" type="search" class="form-conrol" placeholder="Search" name="q"  />
+                <button aria-label="Submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </div>
+            </form>
+          </div>
+        </div>
+
+        </div>
+    </header>
+
+
+        <main id="main-content" role="main">
+          <div class="region region-admin">
+    <div data-drupal-messages-fallback class="hidden"></div>
+
+  </div>
+
+          <div class="region region-content">
+        <div class="breadcrumb hidden-xs">
+    <div class="container">
+      <ul>
+        <li><a href="/">City of Portsmouth</a></li>
+                  <li >
+                          <a href="/cityclerk">City Clerk&#039;s Office</a>
+                      </li>
+                  <li  class="active">
+                          Voting Information
+                      </li>
+              </ul>
+    </div>
+  </div>
+
+  <article data-history-node-id="5251" about="/cityclerk/voting-information" typeof="schema:WebPage" class="page full clearfix">
+  <div class="content">
+
+    
+
+          <div class="no-featured-links">
+        <h1 class="page-header">
+<span property="schema:name">Voting Information</span>
+</h1>
+        
+            <div property="schema:text" class="field field--name-body field--type-text-with-summary field--label-hidden field--item"><div class="cop-embed-voting-info" style="color:#222;line-height:1.6;"><!-- Election date callout --><div style="background-color:#fdfcfb;border-bottom-color:#e3ddd5;border-bottom-width:1px;border-left-color:#632944;border-left-width:5px;border-right-color:#e3ddd5;border-right-width:1px;border-style:solid;border-top-color:#e3ddd5;border-top-width:1px;margin:0 0 20px;padding:18px 20px;"><h2 style="color:#000033;font-size:20px;margin:0 0 12px;">2026 Election</h2><div style="display:flex;flex-wrap:wrap;gap:16px;"><div style="flex:1 1 220px;"><div style="color:#632944;font-size:12px;letter-spacing:0.04em;margin:0 0 2px;text-transform:uppercase;"><strong>Primary</strong></div><div style="color:#000033;font-size:17px;"><p><strong>Tuesday, September 8</strong></p><p style="color:#555;font-size:13px;margin:0 0 14px;">Polling Hours: 8 am-7 pm</p><p style="color:#555;font-size:13px;margin:0 0 14px;">&nbsp;</p><h2 style="color:#000033;font-size:20px;margin:0 0 12px;">Notices</h2><ul><li data-list-item-id="eed1ae851c5d03d3d33cbb5df0b0154b6"><p style="color:#555;font-size:14px;margin:0 0 14px;"><a href="https://files.portsmouthnh.gov/cityclerk/voting/2026-Primary-Counting-of-Ballots-Notice.pdf">Counting of Ballots</a></p></li><li data-list-item-id="e37973146069957c2d5d65f8cc7d33b45"><p style="color:#555;font-size:14px;margin:0 0 14px;"><a href="https://files.portsmouthnh.gov/cityclerk/voting/2026-Primary-Testing-of-Ballot-Notice.pdf">Testing of Ballot Machines</a></p></li></ul></div></div><div style="flex:1 1 220px;"><div style="color:#632944;font-size:12px;letter-spacing:0.04em;margin:0 0 2px;text-transform:uppercase;"><strong>General Election</strong></div><div style="color:#000033;font-size:17px;"><p><strong>Tuesday, November 3</strong></p><p style="color:#555;font-size:13px;margin:0 0 14px;">Polling Hours: 8 am-7 pm</p><p style="color:#555;font-size:13px;margin:0 0 14px;">&nbsp;</p><h2 style="color:#000033;font-size:20px;margin:0 0 12px;">Notices</h2><ul style="color:#555;font-size:14px;margin:0 0 14px;"><li data-list-item-id="e0c847ad76c08d8eb98c359a88a5ad6de">Absentee ballot processing starts in each ward at 10:00 am</li><li data-list-item-id="e0030a23c952e0845abe6512c4e81bba0"><a href="https://files.portsmouthnh.gov/cityclerk/voting/2026NoticeforBallotCounting-10.26.26.pdf">Counting of Ballots</a> - Tuesday, October 27 at 4:30 pm in Conference Room A at City Hall.</li><li data-list-item-id="ebdd8b40c90bcc2c116ea9cf8235fab5c"><a href="https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Testing-of-Ballot-Notice.pdf">Testing of Ballot Machines</a> - Saturday, October 24 at 2:30 pm Council Chambers at City Hall.&nbsp;</li></ul></div></div></div></div><!-- Jump navigation --><nav style="background-color:#f4ece6;border-radius:6px;margin:0 0 28px;padding:14px 16px;" aria-label="Section navigation"><div style="color:#632944;font-size:12px;letter-spacing:0.04em;margin:0 0 8px;text-transform:uppercase;"><strong>Jump to</strong></div><p><a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#sample-ballots">Sample Ballots</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#election-forms">Election Forms</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#same-day">Same-Day Registration</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#how-to-register">How to Register</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#which-ward">Which Ward Am I In?</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#locations">Voting Locations</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#registrars">Board of Registrars</a> <a style="background-color:#fff;border-radius:20px;border:1px solid #632944;color:#632944;display:inline-block;font-size:13px;margin:0 6px 6px 0;padding:5px 14px;text-decoration:none;" href="#districts">State Districts</a></p></nav><!-- Sample Ballots --><div style="margin:0 0 32px;scroll-margin-top:100px;" id="sample-ballots"><h2 style="color:#000033;font-size:20px;margin:0 0 4px;">Sample Ballots</h2><p style="color:#555;font-size:13px;margin:0 0 14px;">(All wards are in each file)</p><div style="display:flex;flex-wrap:wrap;gap:14px;"><a style="align-items:center;background-color:#fff;border-radius:0;border:1px solid #e3ddd5;display:flex;flex:1 1 220px;gap:12px;min-width:220px;padding:16px;text-decoration:none;" href="https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf"><span style="align-items:center;background-color:#CD7028;border-radius:6px;color:#fff;display:inline-flex;font-size:11px;height:38px;justify-content:center;letter-spacing:0.03em;min-width:38px;width:38px;"><strong>PDF</strong></span> <span style="color:#632944;font-size:15px;"><strong>2026 General Election Sample Ballots</strong></span>&nbsp;</a></div></div><!-- Other Election Forms --><div style="margin:0 0 32px;scroll-margin-top:100px;" id="election-forms"><h2 style="color:#000033;font-size:20px;margin:0 0 14px;">Election Forms</h2><div style="display:flex;flex-wrap:wrap;gap:14px;"><a style="align-items:center;background-color:#fff;border-radius:0;border:1px solid #e3ddd5;display:flex;flex:1 1 260px;gap:12px;min-width:220px;padding:16px;text-decoration:none;" href="https://files.portsmouthnh.gov/cityclerk/2026-Absentee-Ballot-Request-Form.pdf"><span style="align-items:center;background-color:#CD7028;border-radius:6px;color:#fff;display:inline-flex;font-size:11px;height:38px;justify-content:center;letter-spacing:0.03em;min-width:38px;width:38px;"><strong>PDF</strong></span> <span style="color:#632944;font-size:15px;"><strong>2026 Absentee Ballot Application</strong></span> </a><a style="align-items:center;background-color:#fff;border-radius:0;border:1px solid #e3ddd5;display:flex;flex:1 1 260px;gap:12px;min-width:220px;padding:16px;text-decoration:none;" href="https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Worker-Interest-Form_web_fillable.pdf"><span style="align-items:center;background-color:#CD7028;border-radius:6px;color:#fff;display:inline-flex;font-size:11px;height:38px;justify-content:center;letter-spacing:0.03em;min-width:38px;width:38px;"><strong>PDF</strong></span> <span style="color:#632944;font-size:15px;"><strong>Election Worker Interest Form</strong></span>&nbsp;</a></div></div><!-- Same Day Voter Registration --><div style="background-color:#fdfcfb;border-bottom-color:#e3ddd5;border-bottom-width:1px;border-left-color:#B3CCE6;border-left-width:5px;border-right-color:#e3ddd5;border-right-width:1px;border-style:solid;border-top-color:#e3ddd5;border-top-width:1px;margin:0 0 32px;padding:16px 18px;scroll-margin-top:100px;" id="same-day"><h2 style="color:#000033;font-size:20px;margin:0 0 8px;">Same Day Voter Registration</h2><p style="color:#333;font-size:15px;margin:0;">New voters may register to vote on Election Day at their designated polling location.</p></div><!-- How and Where to Register to Vote --><div style="margin:0 0 32px;scroll-margin-top:100px;" id="how-to-register"><h2 style="color:#000033;font-size:20px;margin:0 0 12px;">How and Where to Register to Vote</h2><p style="color:#333;font-size:15px;margin:0 0 10px;"><strong>October 22, 2026 was the last day for Portsmouth residents to register to vote prior to the general election.</strong>&nbsp;</p><p style="color:#333;font-size:15px;margin:0 0 10px;">You can register to vote in local, state, and federal elections in New Hampshire if you are:</p><ul style="color:#333;font-size:15px;margin:0 0 14px;padding-left:22px;"><li style="margin-bottom:8px;" data-list-item-id="e3ba2c7456bf5ea62a3ac42f5a9f75305">A United States citizen</li><li style="margin-bottom:8px;" data-list-item-id="e02f1577363213a6d53b4e5057ea242fd">At least 18 years old on election day</li><li style="margin-bottom:8px;" data-list-item-id="e57a1209d7dda8b71e32160609a228dc9">A resident in the town/city ward you seek to register in. There is no minimum period you are required to have lived in your community before registering</li></ul><p style="color:#333;font-size:15px;">To register to vote, you will be required to complete a Voter Registration Form provided by the Clerk's office or supervisor of the checklist. You will also need to provide proof of your identity, age, U.S. citizenship and domicile (primary residence address). For information on requirements and acceptable documents, see the NH Secretary of State's <a style="color:#632944;" href="https://www.sos.nh.gov/elections/voters">voter webpage</a>.</p></div><!-- Am I Registered? --><h2 style="color:#000033;font-size:20px;margin:0 0 12px;">Am I Registered?</h2><p style="color:#333;font-size:15px;margin:0 0 14px;">Visit the Secretary of State's <a href="https://app.sos.nh.gov/viphome">Voter Information Lookup</a> page.</p><!-- Which Ward Do I Live In? --><div style="margin:0 0 32px;scroll-margin-top:100px;" id="which-ward"><h2 style="color:#000033;font-size:20px;margin:0 0 12px;">Which Ward Do I Live In?</h2><p style="color:#333;font-size:15px;margin:0 0 14px;">Please be sure that your address is accurately listed on the checklist to avoid any issues on Election Day. Remember, you must vote in the ward where you reside.</p><div style="display:flex;flex-wrap:wrap;gap:14px;margin:0 0 18px;"><a style="align-items:center;background-color:#fff;border-radius:0;border:1px solid #e3ddd5;display:flex;flex:1 1 220px;gap:12px;min-width:220px;padding:16px;text-decoration:none;" href="https://files.portsmouthnh.gov/cityclerk/voting/Ward-by-Street-List-10.06.2026.pdf"><span style="align-items:center;background-color:#CD7028;border-radius:6px;color:#fff;display:inline-flex;font-size:11px;height:38px;justify-content:center;letter-spacing:0.03em;min-width:38px;width:38px;"><strong>PDF</strong></span> <span style="color:#632944;font-size:15px;"><strong>Street List by Ward</strong></span> </a><a style="align-items:center;background-color:#fff;border-radius:0;border:1px solid #e3ddd5;display:flex;flex:1 1 220px;gap:12px;min-width:220px;padding:16px;text-decoration:none;" href="https://files.portsmouthnh.gov/cityclerk/voting/2026+VotingWards_34x44.pdf"><span style="align-items:center;background-color:#CD7028;border-radius:6px;color:#fff;display:inline-flex;font-size:11px;height:38px;justify-content:center;letter-spacing:0.03em;min-width:38px;width:38px;"><strong>PDF</strong></span> <span style="color:#632944;font-size:15px;"><strong>Voting Ward Map</strong></span> </a><a style="align-items:center;background-color:#fff;border-radius:0;border:1px solid #e3ddd5;display:flex;flex:1 1 220px;gap:12px;min-width:220px;padding:16px;text-decoration:none;" href="https://files.portsmouthnh.gov/cityclerk/voting/2026_List_of_Ward_Officials.pdf"><span style="align-items:center;background-color:#CD7028;border-radius:6px;color:#fff;display:inline-flex;font-size:11px;height:38px;justify-content:center;letter-spacing:0.03em;min-width:38px;width:38px;"><strong>PDF</strong></span> <span style="color:#632944;font-size:15px;"><strong>List of Elected Ward Officials</strong></span>&nbsp;</a></div><div style="background-color:#fdfcfb;border-bottom-color:#e3ddd5;border-bottom-width:1px;border-left-color:#632944;border-left-width:5px;border-right-color:#e3ddd5;border-right-width:1px;border-style:solid;border-top-color:#e3ddd5;border-top-width:1px;padding:14px 18px;"><p style="color:#333;font-size:15px;margin:0;"><strong>Questions?</strong> Please contact the City Clerk's Office at <a style="color:#632944;" href="tel:(603) 610-7245">(603) 610-7245</a> or via e-mail at <a style="color:#632944;" href="mailto:cityclerk@portsmouthnh.gov">cityclerk@portsmouthnh.gov</a>.</p></div></div><!-- Voting Locations --><div style="margin:0 0 32px;scroll-margin-top:100px;" id="locations"><h2 style="color:#000033;font-size:20px;margin:0 0 14px;">Voting Locations by Ward</h2><div style="display:flex;flex-wrap:wrap;gap:14px;"><div style="background-color:#fff;border:1px solid #e3ddd5;flex:1 1 260px;min-width:240px;padding:16px 18px;"><div style="align-items:center;display:flex;gap:12px;margin-bottom:8px;"><span style="align-items:center;background-color:#632944;border-radius:50%;color:#fff;display:inline-flex;font-size:14px;height:32px;justify-content:center;min-width:32px;width:32px;"><strong>1</strong></span> <span style="color:#000033;font-size:16px;"><strong>New Franklin School</strong></span></div><p style="color:#333;font-size:14px;margin:0 0 4px;">1 Franklin Drive</p><p style="color:#666;font-size:13px;margin:0;"><em>Off Woodbury Avenue, between Anchorage Inn and Howard Johnson Hotel</em></p></div><div style="background-color:#fff;border:1px solid #e3ddd5;flex:1 1 260px;min-width:240px;padding:16px 18px;"><div style="align-items:center;display:flex;gap:12px;margin-bottom:8px;"><span style="align-items:center;background-color:#632944;border-radius:50%;color:#fff;display:inline-flex;font-size:14px;height:32px;justify-content:center;min-width:32px;width:32px;"><strong>2</strong></span> <span style="color:#000033;font-size:16px;"><strong>Portsmouth Middle School</strong></span></div><p style="color:#333;font-size:14px;margin:0 0 4px;">155 Parrott Avenue</p><p style="color:#666;font-size:13px;margin:0;">Connie Bean Gymnasium Entrance&nbsp;</p></div><div style="background-color:#fff;border:1px solid #e3ddd5;flex:1 1 260px;min-width:240px;padding:16px 18px;"><div style="align-items:center;display:flex;gap:12px;margin-bottom:8px;"><span style="align-items:center;background-color:#632944;border-radius:50%;color:#fff;display:inline-flex;font-size:14px;height:32px;justify-content:center;min-width:32px;width:32px;"><strong>3</strong></span> <span style="color:#000033;font-size:16px;"><strong>Portsmouth Senior Activity Center</strong></span></div><p style="color:#333;font-size:14px;margin:0;">125 Cottage Street</p></div><div style="background-color:#fff;border:1px solid #e3ddd5;flex:1 1 260px;min-width:240px;padding:16px 18px;"><div style="align-items:center;display:flex;gap:12px;margin-bottom:8px;"><span style="align-items:center;background-color:#632944;border-radius:50%;color:#fff;display:inline-flex;font-size:14px;height:32px;justify-content:center;min-width:32px;width:32px;"><strong>4</strong></span> <span style="color:#000033;font-size:16px;"><strong>Portsmouth High School</strong></span></div><p style="color:#333;font-size:14px;margin:0;">50 Andrew Jarvis Drive</p></div><div style="background-color:#fff;border:1px solid #e3ddd5;flex:1 1 260px;min-width:240px;padding:16px 18px;"><div style="align-items:center;display:flex;gap:12px;margin-bottom:8px;"><span style="align-items:center;background-color:#632944;border-radius:50%;color:#fff;display:inline-flex;font-size:14px;height:32px;justify-content:center;min-width:32px;width:32px;"><strong>5</strong></span> <span style="color:#000033;font-size:16px;"><strong>Little Harbour School</strong></span></div><p style="color:#333;font-size:14px;margin:0 0 4px;">50 Clough Drive</p><p style="color:#666;font-size:13px;margin:0;"><em>Off of South Street</em></p></div></div></div><!-- Board of Registrars --><div style="margin:0 0 32px;scroll-margin-top:100px;" id="registrars"><h2 style="color:#000033;font-size:20px;margin:0 0 14px;">Board of Registrars</h2><div style="border:1px solid #e3ddd5;overflow-x:auto;"><table class="table" style="border-collapse:collapse;font-size:14px;min-width:520px;width:100%;"><thead><tr style="background-color:#632944;"><th style="color:#fff;padding:10px 14px;"><strong>Role</strong></th><th style="color:#fff;padding:10px 14px;">Ward</th><th style="color:#fff;padding:10px 14px;"><strong>Name</strong></th><th style="color:#fff;padding:10px 14px;"><strong>Email</strong></th></tr></thead><tbody><tr style="background-color:#fdfcfb;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Registrar - Chair</td><td>At-Large</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Barbara Ward</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">16bward1224@gmail.com</td></tr><tr style="background-color:#fff;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Registrar</td><td>1</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Penny Reynolds</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">preynolds21@comcast.net</td></tr><tr style="background-color:#fdfcfb;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Ward Two</td><td>2</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Candace Thayer</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">cshawt@hotmail.com</td></tr><tr style="background-color:#fff;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Ward Three</td><td>3</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Angelynne Hinson</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">e.hinson@comcast.net</td></tr><tr style="background-color:#fdfcfb;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Ward Four</td><td>4</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Marcia Main</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">marciamain0924@gmail.com</td></tr><tr style="background-color:#fff;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Ward Five</td><td>5</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Kathleen Boduch</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">kmboduch@portsmouthnh.gov</td></tr><tr style="background-color:#fdfcfb;"><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Registrar Assistant</td><td>4</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">Arthur Parrott</td><td style="border-top:1px solid #e3ddd5;color:#333;padding:10px 14px;">akparrott@comcast.net</td></tr></tbody></table><p>&nbsp;Registrars Office Number 603-610-7208<br>&nbsp;See a list of all <a href="/cityclerk/elected-city-officials#election-officials">Election Officials</a></p></div></div><!-- State Senate and State Representative Districts --><div style="margin:0;scroll-margin-top:100px;" id="districts"><h2 style="color:#000033;font-size:20px;margin:0 0 14px;">State Senate and State Representative Districts</h2><div style="background-color:#fdfcfb;border:1px solid #e3ddd5;margin:0 0 14px;padding:16px 18px;"><h3 style="color:#632944;font-size:16px;margin:0 0 10px;">State Senate District — effective June 1, 2022</h3><ul style="color:#333;font-size:14px;margin:0;padding-left:22px;"><li data-list-item-id="e7b420627f9b61b317dc47102e42ef2ca">District 21: New Castle, Newfields, Newington, Newmarket, and Portsmouth</li></ul></div><div style="background-color:#fdfcfb;border:1px solid #e3ddd5;margin:0 0 14px;padding:16px 18px;"><h3 style="color:#632944;font-size:16px;margin:0 0 10px;">State Representative Districts — effective June 1, 2022</h3><ul style="color:#333;font-size:14px;margin:0;padding-left:22px;"><li style="margin-bottom:6px;" data-list-item-id="eda9deb6a385ebdcaeea4a8e9f7567147">District 21 - Consists of Portsmouth Ward 1 and Newington only</li><li style="margin-bottom:6px;" data-list-item-id="e0934a98ab2bf3579ffd5665fdb382e11">District 22 - Consists of Portsmouth Ward 5 and New Castle only</li><li style="margin-bottom:6px;" data-list-item-id="e2566f1535b9d14ab36c6cc7dfbf61306">District 26 - Consists of Portsmouth Ward 3 only</li><li style="margin-bottom:6px;" data-list-item-id="e948271995675620e0e37bc54dc49aaf6">District 27 - Consists of Portsmouth Ward 4 only</li><li style="margin-bottom:6px;" data-list-item-id="e448c1ce78ea97a14cce6d030f102c7ac">District 28 - Consists of Portsmouth Ward 2 only</li><li style="margin-bottom:6px;" data-list-item-id="e9bfa16d90fa62c3f248caf61ab3f9de6">District 37 - Consists of Portsmouth Wards 1 and 5, New Castle and Newington</li><li data-list-item-id="e653e2b1f115386dd8e9995727e870c59">District 39 - Floterial with Portsmouth Wards 2, 3 and 4</li></ul></div><!-- 
+                                                                                                                                                        
+                                                                                                                                                
+                                                                                                                                        
+                                                                                                                                
+                                                                                                                        
+                                                                                                                
+                                                                                                        
+                                                                                                
+                                                                                        
+                                                                                
+                                                                        
+                                                                
+                                                        
+                                                
+                                        
+                                
+                        
+                
+        <p style="color:#333;font-size:14px;margin:0;">
+                                                                                                                                                                                                                                                <a style="color:#632944;" href="https://files.cityofportsmouth.com/cityclerk/NH-USGovtList2023-2024.pdf">View NH State Representatives listing</a> <em>(representing former districts)</em>
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                
+                                                                                                                                                                                                                    
+                                                                                                                                                                                                        
+                                                                                                                                                                                            
+                                                                                                                                                                                
+                                                                                                                                                                    
+                                                                                                                                                        
+                                                                                                                                            
+                                                                                                                                
+                                                                                                                    
+                                                                                                        
+                                                                                            
+                                                                                
+                                                                    
+                                                        
+                                            
+                                
+                    
+        </p>
+                                                                                                                                                         --></div></div></div>
+      
+      </div>
+    
+  </div>
+</article>
+
+
+  </div>
+
+    </main>
+  
+
+            <div class="region region-footer">
+    <section id="block-departmentfooterblock" class="block block-city-departments block-department-footer-block clearfix">
+  
+    
+
+      <footer id="footer" role="contentinfo">
+			<div class="footer-dept-mobile visible-xs">
+			<ul>
+				
+					<li>
+						<a href="/" class="">
+							City of
+							<strong>PORTSMOUTH</strong>
+							Home &gt;
+						</a>
+					</li>
+
+												</ul>
+		</div>
+	
+	<div class="footer-inner">
+		<div class="container padding-sm-vert">
+			<div
+				class="row">
+								<div class="col-sm-12 seal-mobile visible-xs-block">
+					<a href="/cityclerk">
+						
+            <div class="field field--name-field-seal-image field--type-image field--label-hidden field--item">  <img loading="lazy" src="/sites/default/files/deparment-seals/seal_3.png" width="229" height="229" alt="City of Portsmouth Seal" typeof="foaf:Image" class="img-responsive" />
+
+</div>
+      
+					</a>
+				</div>
+			</div>
+			<div
+				class="row">
+								<div class="col-md-6 col-sm-9 footer-content">
+					<h2>
+						<a href="/cityclerk">
+															City Clerk
+													</a>
+					</h2>
+					<dl>
+						<dt>
+							
+            <div class="field field--name-field-primary-location field--type-string field--label-hidden field--item">Office</div>
+      
+						</dt>
+						<dd>
+							
+            <div class="field field--name-field-address field--type-string field--label-hidden field--item">1 Junkins Avenue, Portsmouth, NH 03801</div>
+      
+						</dd>
+						<dt>
+							Hours
+						</dt>
+						<dd>
+							
+            <div class="field field--name-field-hours field--type-text-long field--label-hidden field--item"><p>Monday 8 AM – 6 PM</p><p>Tuesday 8 AM – 4:30 PM</p><p>Wednesday 9 AM – 4:30 PM</p><p>Thursday 8 AM – 4:30 PM</p><p>Friday 8 AM – 1 PM</p></div>
+      
+						</dd>
+						<dt>
+							Phone
+						</dt>
+						<dd>
+							
+            <div class="field field--name-field-phone-number field--type-string field--label-hidden field--item">(603) 610-7245</div>
+      
+						</dd>
+													<dt>
+								Fax
+							</dt>
+							<dd>
+								
+            <div class="field field--name-field-fax field--type-string field--label-hidden field--item">(603) 610-4158</div>
+      
+							</dd>
+											</dl>
+				</div>
+								<div class="col-sm-3 footer-nav hidden-xs">
+					<h3>Resources</h3>
+					
+              <ul class="menu nav">
+                            <li>
+        <a href="/city-clerks-office/dog-license" target="">Dog Licenses</a>
+                  </li>
+                        <li>
+        <a href="/cityclerk/birth-marriage-death-certificates" target="" data-drupal-link-system-path="node/7161">Vital Records</a>
+                  </li>
+                        <li class="active">
+        <a href="/cityclerk/voting-information" target="" data-drupal-link-system-path="node/5251" class="is-active" aria-current="page">Voting Information</a>
+                  </li>
+        </ul>
+  
+
+
+				</div>
+								<div class="col-sm-3 seal-desktop hidden-sm hidden-xs">
+					<a href="/cityclerk">
+						
+            <div class="field field--name-field-seal-image field--type-image field--label-hidden field--item">  <img loading="lazy" src="/sites/default/files/deparment-seals/seal_3.png" width="229" height="229" alt="City of Portsmouth Seal" typeof="foaf:Image" class="img-responsive" />
+
+</div>
+      
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 bottom-footer">
+					<p class="copyright">
+						&copy; 2026 - City of Portsmouth. All Rights Reserved. 
+            
+                          | 
+              			                  <a href="/city/terms-use-disclaimer" class="nav-link">Terms of Use | Disclaimer</a>                          					</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</footer>
+
+  </section>
+
+
+  </div>
+
+  </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+   
+});
+ function adjustBodyPadding() {
+        const header = document.querySelector("header"); // Select the header element
+        if (header) {
+            const headerHeight = header.offsetHeight; // Get header height
+            document.body.style.paddingTop = `${headerHeight}px`; // Set padding-top for body
+        }
+    }
+
+    // Run on page load
+    window.addEventListener("load", adjustBodyPadding);
+
+    // Run on window resize (in case header height changes dynamically)
+    window.addEventListener("resize", adjustBodyPadding);
+</script>
+  </div>
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/5251","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"bootstrap":{"forms_has_error_value_toggle":1,"modal_animation":1,"modal_backdrop":"true","modal_focus_input":1,"modal_keyboard":1,"modal_select_text":1,"modal_show":1,"modal_size":"","popover_enabled":1,"popover_animation":1,"popover_auto_close":1,"popover_container":"body","popover_content":"","popover_delay":"0","popover_html":0,"popover_placement":"right","popover_selector":"","popover_title":"","popover_trigger":"click","tooltip_enabled":1,"tooltip_animation":1,"tooltip_container":"body","tooltip_delay":"0","tooltip_html":0,"tooltip_placement":"auto left","tooltip_selector":"","tooltip_trigger":"hover"},"user":{"uid":0,"permissionsHash":"9f558de376ccf544b6f378556c0f7749e69ec1f9ab67d609bb3b3de7286dd8a2"}}</script>
+<script src="/core/assets/vendor/jquery/jquery.min.js?v=3.7.1"></script>
+<script src="/core/assets/vendor/underscore/underscore-min.js?v=1.13.8"></script>
+<script src="/core/assets/vendor/once/once.min.js?v=1.0.1"></script>
+<script src="/core/misc/drupalSettingsLoader.js?v=10.6.20"></script>
+<script src="/core/misc/drupal.js?v=10.6.20"></script>
+<script src="/core/misc/drupal.init.js?v=10.6.20"></script>
+<script src="/themes/contrib/bootstrap/js/bootstrap-pre-init.js?tnvy4b"></script>
+<script src="https://cdn.jsdelivr.net/npm/entreprise7pro-bootstrap@3.4.10/dist/js/bootstrap.js" integrity="sha256-0lm7pmJV7HzK8lzX6KL4QiDw/U1ST3mac7hOa2r66sY=" crossorigin="anonymous"></script>
+<script src="/themes/contrib/bootstrap/js/drupal.bootstrap.js?tnvy4b"></script>
+<script src="/themes/contrib/bootstrap/js/attributes.js?tnvy4b"></script>
+<script src="/themes/contrib/bootstrap/js/theme.js?tnvy4b"></script>
+<script src="/themes/contrib/bootstrap/js/popover.js?tnvy4b"></script>
+<script src="/themes/contrib/bootstrap/js/tooltip.js?tnvy4b"></script>
+<script src="/themes/custom/cityofportsmouth/public/js/vendor.js?v=1.x"></script>
+<script src="/themes/custom/cityofportsmouth/public/js/scripts.js?v=1.x"></script>
+<script src="/themes/custom/cityofportsmouth/public/js/custom.js?v=1.x"></script>
+<script src="https://kit.fontawesome.com/133fc1ae0b.js"></script>
+<script src="/modules/contrib/webform/js/webform.behaviors.js?tnvy4b"></script>
+<script src="/core/misc/states.js?v=10.6.20"></script>
+<script src="/themes/contrib/bootstrap/js/misc/states.js?tnvy4b"></script>
+<script src="/modules/contrib/webform/js/webform.states.js?tnvy4b"></script>
+<script src="/modules/contrib/webform/modules/webform_bootstrap/js/webform_bootstrap.states.js?tnvy4b"></script>
+
+  </body>
+</html>

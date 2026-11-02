@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_BALLOT_COMPLETENESS_DATA",
+  "state": "NH",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NH",
+  "inputDirectory": "ballot-input",
+  "sourceCaptures": "sources.json",
+  "sourceSupport": "source-support.json",
+  "coverage": {
+    "newLegislativeContests": 8,
+    "stateSenateDistricts": [
+      21
+    ],
+    "houseCounty": "Rockingham",
+    "houseDistricts": [
+      21,
+      22,
+      26,
+      27,
+      28,
+      37,
+      39
+    ],
+    "printedCandidacies": 10,
+    "districtMemberships": 5,
+    "scope": "Portsmouth wards and corresponding whole legislative districts, including statutory floterials37and39",
+    "statewideComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "NH",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "installNotes": [
+    "Merge through the existing ballot-contests contract, preserving unrelated held facts and previously prepared Dover additions.",
+    "Install the5source-backed districtMemberships with floterial contests37/39.",
+    "River checks affected live ballots and source links after data installation."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json"
+}

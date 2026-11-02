@@ -1,0 +1,429 @@
+{
+  "ballots": {
+    "NH:nh-2026-11-03": {
+      "election": {
+        "id": "nh-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NH"
+      },
+      "contests": [
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-21",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:721",
+          "title": "State Representative, Rockingham County District 21",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 21"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-28",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:728",
+          "title": "State Representative, Rockingham County District 28",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 28"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-26",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:726",
+          "title": "State Representative, Rockingham County District 26",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 26"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-27",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:727",
+          "title": "State Representative, Rockingham County District 27",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 27"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-22",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:722",
+          "title": "State Representative, Rockingham County District 22",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 22"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-37",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+          "title": "State Representative, Rockingham County District 37",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "NH_RSA662_2026",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 37"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-39",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+          "title": "State Representative, Rockingham County District 39",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "NH_RSA662_2026",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Representative Rockingham District 39"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-senator-district-21",
+          "type": "CANDIDACY",
+          "ocdId": "ocd-division/country:us/state:nh/sldu:21",
+          "title": "State Senator, District 21",
+          "voteFor": 1,
+          "termYears": null,
+          "electionId": "nh-2026-11-03",
+          "candidateListComplete": true,
+          "divisionVintage": "TIGER_GENZ2025",
+          "scopeNote": "Complete printed candidate list verified visually against the official November 3, 2026 Portsmouth scanned sample ballot. District identity is checked against current RSA 662.",
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "State Senator"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-21:anna-howard",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-21",
+          "givenName": "Anna",
+          "familyName": "Howard",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Anna Howard"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-28:carrie-sorensen",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-28",
+          "givenName": "Carrie",
+          "familyName": "Sorensen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Carrie Sorensen"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-26:buzz-scherr",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-26",
+          "givenName": "Buzz",
+          "familyName": "Scherr",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Buzz Scherr"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-27:gerald-w-r-ward",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-27",
+          "givenName": "Gerald W. R.",
+          "familyName": "Ward",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Gerald W. R. Ward"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-22:rebecca-audet",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-22",
+          "givenName": "Rebecca",
+          "familyName": "Audet",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Rebecca Audet"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-37:kate-cook",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-37",
+          "givenName": "Kate",
+          "familyName": "Cook",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Kate Cook"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-39:barbara-m-ward",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-39",
+          "givenName": "Barbara M.",
+          "familyName": "Ward",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Barbara M. Ward"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-representative-rockingham-county-district-39:sue-polidura",
+          "contestId": "nh-2026-general:state-representative-rockingham-county-district-39",
+          "givenName": "Sue",
+          "familyName": "Polidura",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Sue Polidura"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-senator-district-21:rebecca-perkins-kwoka",
+          "contestId": "nh-2026-general:state-senator-district-21",
+          "givenName": "Rebecca Perkins",
+          "familyName": "Kwoka",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Rebecca Perkins Kwoka"
+          }
+        },
+        {
+          "id": "nh-2026-general:state-senator-district-21:jeffrey-berlin",
+          "contestId": "nh-2026-general:state-senator-district-21",
+          "givenName": "Jeffrey",
+          "familyName": "Berlin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+            "sourceOrg": "Portsmouth City Clerk",
+            "collectedAt": "2026-11-02T22:20:31.839248+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "Jeffrey Berlin"
+          }
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "nh-2026-membership:sldl:721->sldl:rockingham_37",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:721",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:722->sldl:rockingham_37",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:722",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_37",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "District No. 37 New Castle Newington Portsmouth Ward 1 Portsmouth Ward 5 1"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:726->sldl:rockingham_39",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:726",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:727->sldl:rockingham_39",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:727",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+          }
+        },
+        {
+          "id": "nh-2026-membership:sldl:728->sldl:rockingham_39",
+          "memberOcdId": "ocd-division/country:us/state:nh/sldl:728",
+          "districtOcdId": "ocd-division/country:us/state:nh/sldl:rockingham_39",
+          "provenance": {
+            "sourceUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+            "sourceOrg": "New Hampshire General Court",
+            "collectedAt": "2026-11-02T22:16:21.331835+00:00",
+            "verifiedAt": "2026-11-02T22:27:27.146585+00:00",
+            "quote": "District No. 39 Portsmouth Ward 2 Portsmouth Ward 3 Portsmouth Ward 4 1"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-02T22:27:27.146585+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+        "finalUrl": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+        "publisher": "Portsmouth City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:20:31.839248+00:00",
+        "httpStatus": 200,
+        "rawHash": "380a6581e5ea53d405f7a475de46acf0fa71174c51901de8679ee31b12d3a3d1",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official current general-election candidate names and party columns with one-vote limit, or current statutory legislative district definitions and floterial memberships, checked directly."
+      },
+      {
+        "requestedUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "finalUrl": "https://www.gc.nh.gov/rsa/html/LXIII/662/662-mrg.htm",
+        "publisher": "New Hampshire General Court",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-02T22:16:21.331835+00:00",
+        "httpStatus": 200,
+        "rawHash": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official current general-election candidate names and party columns with one-vote limit, or current statutory legislative district definitions and floterial memberships, checked directly."
+      }
+    ]
+  }
+}

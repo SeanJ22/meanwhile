@@ -1,0 +1,64 @@
+{
+  "kind": "SAVED_SOURCE_PREPARATION_CHECKS",
+  "state": "MN",
+  "coverage": {
+    "preparedSites": 1,
+    "preparedBoundaries": 1,
+    "assignedPrecinctCodes": [
+      "0680"
+    ],
+    "availableCountyPrecinctCount": 162,
+    "unfilledCountyPrecinctAssignments": 161,
+    "scope": "Ramsey County precinct 0680 only"
+  },
+  "sourceHashAndByteLength": "PASS",
+  "recordedHttpStatuses": [
+    {
+      "file": "sources/6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514.source",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/061ef5254f1858d6dbc408903f77e53939b2d19b7a61399ebed7a8a0caceb108.json",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/d7c4e903fbd6a2e999e2e1c6f2277d34ddaba15224f5f5d790e2ad1769e842eb.pdf",
+      "httpStatus": 200
+    }
+  ],
+  "readyDoors": 2,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 2,
+  "registryPageRows": 2,
+  "boundaryDoorEmptyCoversSchema": "PASS",
+  "workerRefreshSelection": "registeredVotingSourceDoors preserves boundary doors even with covers:[]",
+  "directParserFullSourceReaderAndBoundaryReader": "PASS",
+  "checks": [
+    {
+      "doorId": "cx-mn-ramsey-precinct-0680-poll-2026",
+      "kind": "SITES",
+      "sourceRows": 1,
+      "fullSourceReader": 1,
+      "allCurrentElectionAssociated": true,
+      "official": true,
+      "blankCount": 0
+    },
+    {
+      "doorId": "cx-mn-ramsey-precinct-0680-boundary-2026",
+      "kind": "BOUNDARY",
+      "directBoundaryReader": 1,
+      "fullSourceReader": 1,
+      "official": true,
+      "blankCount": 0
+    }
+  ],
+  "siteKinds": {
+    "electionDay": 1,
+    "earlyVoting": 0,
+    "dropBoxes": 0
+  },
+  "boundaries": 1,
+  "productionWrites": 0,
+  "networkCalls": 0,
+  "contractId": "voting-sites:MN"
+}

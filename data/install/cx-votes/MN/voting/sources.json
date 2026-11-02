@@ -1,0 +1,59 @@
+[
+  {
+    "url": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+    "finalUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+    "file": "sources/6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514.source",
+    "sha256": "6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514",
+    "byteLength": 25451,
+    "contentType": "text/plain; charset=utf-8",
+    "retrievedAt": "2026-11-02T21:56:33.213716+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "7f7cff0646d65b1f8d35ca8213d7283b84d3be88b64b6d977dc9f7855ecd89a0",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+      "recordedAt": "2026-11-02T21:56:33.213716+00:00"
+    }
+  },
+  {
+    "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+    "file": "sources/061ef5254f1858d6dbc408903f77e53939b2d19b7a61399ebed7a8a0caceb108.json",
+    "sha256": "061ef5254f1858d6dbc408903f77e53939b2d19b7a61399ebed7a8a0caceb108",
+    "byteLength": 6445,
+    "contentType": "application/geo+json;charset=UTF-8",
+    "retrievedAt": "2026-11-02T21:55:50.886324+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "07c41deb8ccb4eb69bcbd6ed5fe5565bb76c14092b06266b96c81f3747f81cfd",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+      "recordedAt": "2026-11-02T21:55:50.886324+00:00"
+    }
+  },
+  {
+    "url": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf",
+    "finalUrl": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf",
+    "file": "sources/d7c4e903fbd6a2e999e2e1c6f2277d34ddaba15224f5f5d790e2ad1769e842eb.pdf",
+    "sha256": "d7c4e903fbd6a2e999e2e1c6f2277d34ddaba15224f5f5d790e2ad1769e842eb",
+    "byteLength": 120173,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-02T21:49:27.549358+00:00",
+    "retrievedAtBasis": "native response metadata",
+    "httpStatus": 200,
+    "httpStatusBasis": "Exact matching saved capture metadata",
+    "use": "PUBLIC_SOURCE_EVIDENCE",
+    "captureMetadata": {
+      "sha256": "d69c3f9752dbd9fa372748049c216b663ce922f608253cb5e81af4abb27727ef",
+      "recordedHttpStatus": 200,
+      "recordedUrl": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf",
+      "recordedAt": "2026-11-02T21:49:27.549358+00:00"
+    }
+  }
+]

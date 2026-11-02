@@ -1,0 +1,109 @@
+[
+  {
+    "id": "cx-mn-ramsey-precinct-0680-poll-2026",
+    "publisher": "Office of the Minnesota Secretary of State",
+    "url": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+    "shape": "json",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MN",
+      "ocdId": "ocd-division/country:us/state:mn/county:ramsey",
+      "name": "Ramsey County",
+      "countyFips": "27123"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "title": "Current 2026 Election Day polling assignment for Ramsey precinct 0680 only",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-02T21:56:33.213716+00:00",
+      "detail": "Public official response for the polling facility own published address500CedarSt returns current2026 assignment for precinct0680. No residential test address or sample assignment override is persisted."
+    },
+    "publication": {
+      "status": "PUBLISHED",
+      "text": "11/03/2026 STATE GENERAL ELECTION",
+      "source": {
+        "publisher": "Office of the Minnesota Secretary of State",
+        "url": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926",
+        "official": true,
+        "checkedAt": "2026-11-02T21:56:33.213716+00:00",
+        "documentHash": "6bd09b64e11b39f7454fb4da25f30db09dda9742f3bb1adab38a1e8b1115f514",
+        "documentUrl": "https://pollfinder.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245926"
+      }
+    },
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\"PollingResult\"\\s*:\\s*\\{[\\s\\S]*?\\}",
+        "fields": {
+          "name": {
+            "pattern": "\"PollingPlaceName\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "siteStreet": {
+            "pattern": "\"PollingPlaceAddress1\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "siteCityStateZip": {
+            "pattern": "\"PollingPlaceCityStateZip\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "precinct": {
+            "pattern": "\"PrecinctCode\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          },
+          "election": {
+            "pattern": "\"FullElectionDescription\"\\s*:\\s*\"([^\"\\r\\n]*)\"",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "name": "name",
+        "address": [
+          "siteStreet",
+          "siteCityStateZip"
+        ],
+        "precinct": "precinct",
+        "election": "election"
+      },
+      "filters": {
+        "precinct": "0680"
+      },
+      "kind": "ELECTION_DAY"
+    }
+  },
+  {
+    "id": "cx-mn-ramsey-precinct-0680-boundary-2026",
+    "publisher": "Office of the Minnesota Secretary of State / Minnesota Geospatial Information Office",
+    "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer",
+    "shape": "map-service",
+    "covers": [],
+    "scope": {
+      "state": "MN",
+      "ocdId": "ocd-division/country:us/state:mn/county:ramsey",
+      "name": "Ramsey County",
+      "countyFips": "27123"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.mn.gov/elections-voting/election-day-voting/",
+    "electionAssociationVerified": true,
+    "boundaryLayer": true,
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "title": "Ramsey precinct0680 boundary only, official2026 statewide source",
+    "extraction": {
+      "format": "json",
+      "dataUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname+%3D+%27Ramsey%27+AND+pctcode+%3D+%270680%27&outFields=objectid%2Cpctcode%2Cpctname%2Cmcdname%2Ccountyname%2Cward&returnGeometry=true&outSR=4326&f=geojson",
+      "columns": {
+        "precinct": "pctcode",
+        "ward": "ward"
+      }
+    },
+    "discoveredFrom": "https://operations.gis.data.mn.gov/api/publicdownload/download/936/metadata.pdf"
+  }
+]

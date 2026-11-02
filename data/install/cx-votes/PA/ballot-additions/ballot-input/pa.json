@@ -710,6 +710,25 @@
             "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
             "quote": "REPRESENTATIVE IN THE\n     GENERAL ASSEMBLY\n   63TH LEGISLATIVE DISTRICT\n               (Vote for ONE)\n\nANDREW HARBAUGH\nDEMOCRATIC\n\nJOSH BASHLINE\nREPUBLICAN\n\n\nWrite-in"
           }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-122",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/sldl:122",
+          "divisionVintage": "2022",
+          "title": "Representative in the General Assembly – District 122",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+            "sourceOrg": "Carbon County Board of Elections",
+            "collectedAt": "2026-11-02T22:18:51.175922+00:00",
+            "verifiedAt": "2026-11-02T22:20:56.316441+00:00",
+            "quote": "Representative in the\nGeneral Assembly\n122nd District\n(Vote for ONE)\nChristian Bartulovich\nDemocratic\nDoyle Heffley\nRepublican\n  Write-In"
+          }
         }
       ],
       "candidacies": [
@@ -1885,6 +1904,40 @@
             "verifiedAt": "2026-11-02T22:07:44.957020+00:00",
             "quote": "REPRESENTATIVE IN THE\n     GENERAL ASSEMBLY\n   63TH LEGISLATIVE DISTRICT\n               (Vote for ONE)\n\nANDREW HARBAUGH\nDEMOCRATIC\n\nJOSH BASHLINE\nREPUBLICAN\n\n\nWrite-in"
           }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-122:christian-bartulovich",
+          "contestId": "pa-dos:pa-2026-general:sldl-122",
+          "givenName": "Christian",
+          "familyName": "Bartulovich",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+            "sourceOrg": "Carbon County Board of Elections",
+            "collectedAt": "2026-11-02T22:18:51.175922+00:00",
+            "verifiedAt": "2026-11-02T22:20:56.316441+00:00",
+            "quote": "Representative in the\nGeneral Assembly\n122nd District\n(Vote for ONE)\nChristian Bartulovich\nDemocratic\nDoyle Heffley\nRepublican\n  Write-In"
+          }
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-122:doyle-heffley",
+          "contestId": "pa-dos:pa-2026-general:sldl-122",
+          "givenName": "Doyle",
+          "familyName": "Heffley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+            "sourceOrg": "Carbon County Board of Elections",
+            "collectedAt": "2026-11-02T22:18:51.175922+00:00",
+            "verifiedAt": "2026-11-02T22:20:56.316441+00:00",
+            "quote": "Representative in the\nGeneral Assembly\n122nd District\n(Vote for ONE)\nChristian Bartulovich\nDemocratic\nDoyle Heffley\nRepublican\n  Write-In"
+          }
         }
       ],
       "measures": [],
@@ -1893,7 +1946,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T22:17:41.726Z",
+    "reviewedAt": "2026-11-02T22:23:40.877Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -2636,6 +2689,16 @@
         "publisher": "Armstrong County Board of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Fresh official2026 general-election source preserved at work/election-day/pa-more/armstrong-kittanning.pdf; SHA256 identifies original PDF bytes. Complete office blocks read from the preserved PDF (native text or explicit visual transcription identified in proof), preserving every printed named candidate and party. Evidence pages/quotes are in pa-more-proof.json; this packet adds only previously missing district fields."
+      },
+      {
+        "requestedUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+        "finalUrl": "https://cms5.revize.com/revize/carboncounty/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+        "httpStatus": 200,
+        "rawHash": "42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a",
+        "retrievedAt": "2026-11-02T22:18:51.175922+00:00",
+        "publisher": "Carbon County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh officialBanksTownship November3,2026 election-day sample PDF. Both printed House122 nominee choices retained, with complete office block through the generic write-in line. Original PDF bytes and native text preserved in pa-east. The county .gov sampleindex links the exact requestedURL, which redirects to its Revize hosting service; authority-index.json preserves this chain."
       }
     ]
   }

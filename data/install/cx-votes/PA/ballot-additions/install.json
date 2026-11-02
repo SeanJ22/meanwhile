@@ -264,6 +264,13 @@
       "ocdId": "ocd-division/country:us/state:pa/sldl:63",
       "candidates": 2,
       "sourceUrl": "https://www.co.armstrong.pa.us/images/departments/votersregistration/sampleballots/general/Kittanning%20Borough-1st%20Ward.pdf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-122",
+      "title": "Representative in the General Assembly – District 122",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:122",
+      "candidates": 2,
+      "sourceUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250"
     }
   ],
   "operation": "Merge through existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. The partial data merges with the latest published state, including separately installed explainers. Existing merge removes only held-contest rows resolved by these exact complete official contests. No code release.",

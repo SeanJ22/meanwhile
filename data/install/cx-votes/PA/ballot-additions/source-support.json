@@ -456,5 +456,25 @@
         }
       }
     }
+  },
+  {
+    "sourceUrl": "https://www.carboncountypa.gov/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+    "finalUrl": "https://cms5.revize.com/revize/carboncounty/Document%20Center/Service/Elections%20Voter%20Registration/2026/2026%20November%20Election/Banks%20Township%20ELECTION%20DAY.pdf?t=202610191604250",
+    "sourceCheckedAt": "2026-11-02T22:18:51.175922+00:00",
+    "sha256": "42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a",
+    "sourceFile": "sources/42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a.source",
+    "excerptFile": "sources/c80c80d72d943a76449b6286f0e1e0dd5fb12a90afc0284f51baced0beac584e.txt",
+    "excerptSha256": "c80c80d72d943a76449b6286f0e1e0dd5fb12a90afc0284f51baced0beac584e",
+    "evidence": "Fresh officialBanksTownship November3,2026 election-day sample PDF. Both printed House122 nominee choices retained, with complete office block through the generic write-in line. Original PDF bytes and native text preserved in pa-east. The county .gov sampleindex links the exact requestedURL, which redirects to its Revize hosting service; authority-index.json preserves this chain.",
+    "officialLinkingPage": {
+      "url": "https://www.carboncountypa.gov/services/elections_voter_registration/voter/sample_ballots.php",
+      "file": "sources/f5cf1d8b0efb5c347dc744479914b97ccaae7311c5a67ebfc3eecab85515d8b8.html",
+      "sha256": "f5cf1d8b0efb5c347dc744479914b97ccaae7311c5a67ebfc3eecab85515d8b8",
+      "linkingPage": {
+        "url": "https://www.carboncountypa.gov/services/elections_voter_registration/index.php",
+        "file": "sources/2b3798238492c6e087c61dc4b89ac38983590d61ecb823684a8a6fd9f561235b.html",
+        "sha256": "2b3798238492c6e087c61dc4b89ac38983590d61ecb823684a8a6fd9f561235b"
+      }
+    }
   }
 ]

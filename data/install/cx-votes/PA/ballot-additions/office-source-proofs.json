@@ -488,5 +488,23 @@
       }
     ],
     "candidateListCompleteBasis": "Every printed named nominee in the bounded official November3,2026 general-election office block is retained; the printed write-in line is not a named nominee."
+  },
+  {
+    "contestId": "pa-dos:pa-2026-general:sldl-122",
+    "sourcePage": 1,
+    "sourceFile": "sources/42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a.source",
+    "sourceSha256": "42c6c746c6fb7bb33c125218344ac609c139a58cb6b539bf4c442e2c5f3e473a",
+    "officeBlock": "Representative in the\nGeneral Assembly\n122nd District\n(Vote for ONE)\nChristian Bartulovich\nDemocratic\nDoyle Heffley\nRepublican\n  Write-In",
+    "namedChoices": [
+      {
+        "name": "Christian Bartulovich",
+        "partyLabel": "Democratic"
+      },
+      {
+        "name": "Doyle Heffley",
+        "partyLabel": "Republican"
+      }
+    ],
+    "proofScope": "All printed named choices in the complete currentHouse122 office block; no statewide/local-ballot completeness claim."
   }
 ]

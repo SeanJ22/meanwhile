@@ -9,6 +9,25 @@
       },
       "contests": [
         {
+          "id": "wi-cx-2026-general-assembly-68",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/sldl:68",
+          "divisionVintage": "2026",
+          "title": "Representative to the Assembly – District 68",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+            "sourceOrg": "Chippewa County Clerk",
+            "collectedAt": "2026-11-02T21:46:17.018259+00:00",
+            "verifiedAt": "2026-11-02T21:46:17.018259+00:00",
+            "quote": "Rep to Assembly D68\nPrecincts: 20               Reported:   0\nRob Summerfield                         0\nElisha King                             0\nwrite-in                                0"
+          }
+        },
+        {
           "id": "wi-cx-2026-general-assembly-91",
           "electionId": "wi-2026-general",
           "ocdId": "ocd-division/country:us/state:wi/sldl:91",
@@ -162,6 +181,40 @@
         }
       ],
       "candidacies": [
+        {
+          "id": "wi-cx-2026-general-assembly-68:rob-summerfield",
+          "contestId": "wi-cx-2026-general-assembly-68",
+          "givenName": "Rob",
+          "familyName": "Summerfield",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+            "sourceOrg": "Chippewa County Clerk",
+            "collectedAt": "2026-11-02T21:46:17.018259+00:00",
+            "verifiedAt": "2026-11-02T21:46:17.018259+00:00",
+            "quote": "Rob Summerfield"
+          }
+        },
+        {
+          "id": "wi-cx-2026-general-assembly-68:elisha-king",
+          "contestId": "wi-cx-2026-general-assembly-68",
+          "givenName": "Elisha",
+          "familyName": "King",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+            "sourceOrg": "Chippewa County Clerk",
+            "collectedAt": "2026-11-02T21:46:17.018259+00:00",
+            "verifiedAt": "2026-11-02T21:46:17.018259+00:00",
+            "quote": "Elisha King"
+          }
+        },
         {
           "id": "wi-cx-2026-general-assembly-91:bruce-stabenow",
           "contestId": "wi-cx-2026-general-assembly-91",
@@ -441,7 +494,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T21:58:53.384Z",
+    "reviewedAt": "2026-11-02T22:07:25.474Z",
     "reviewedBy": "CX-VOTES",
     "sources": [
       {
@@ -1023,6 +1076,17 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "requestedUrl": "https://img1.wsimg.com/blobby/go/4192b007-d27c-4592-beb5-7f6a28d2006f/downloads/d7f76949-7f94-4870-8c17-292db23e2350/Notice%20of%20General%20Election%20and%20Sample%20Ballot%20N.pdf?ver=1792523749051",
         "reviewedEvidence": "Official Monroe County November 3, 2026 Type B notice and Town of Tomah Wards 1-3 printed sample, page6. Complete original six-page PDF preserved. Each district/county office field, including both Assembly70 candidates and printed party designations, visually verified against the original rendered page; OCR and reviewed JSON retained. The packet omits the ballot reverse and is used only for the complete candidate office fields shown, not a full municipal ballot comparison. Write-in lines are not candidates."
+      },
+      {
+        "requestedUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+        "finalUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+        "httpStatus": 200,
+        "rawHash": "745bb52963534abc000e577141b5452d7da1b5dd244eede9f013bf8b3dcf38b0",
+        "retrievedAt": "2026-11-02T21:46:17.018259+00:00",
+        "publisher": "Chippewa County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.chippewacountywi.gov/241/Election-Results",
+        "reviewedEvidence": "Official current county page labels this exact PDF 2026 General Election Spreadsheet (PDF). The PDF dates election November 3,2026; AD68 field lists exactly Rob Summerfield, Elisha King and generic write-in. Both named choices match the WEC-authored general-candidate discovery PDF. One stale internal subtitle says Partisan Primary – Preliminary Uncanvassed Results; the official download label, URL filename, November3 date and actual two-nominee field identify the general election. That caption discrepancy is preserved. Source omits party labels; both remain null. No result totals imported."
       },
       {
         "requestedUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190",

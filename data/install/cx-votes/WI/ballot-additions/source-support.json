@@ -1,5 +1,23 @@
 [
   {
+    "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+    "finalUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF",
+    "sourceCheckedAt": "2026-11-02T21:46:17.018259+00:00",
+    "sha256": "745bb52963534abc000e577141b5452d7da1b5dd244eede9f013bf8b3dcf38b0",
+    "sourceFile": "sources/745bb52963534abc000e577141b5452d7da1b5dd244eede9f013bf8b3dcf38b0.source",
+    "excerptFile": "sources/cb3e0ec43d9419f6613c6ac59ea6b30c798dd2cb79b01e7ac13fc3603ad6daff.txt",
+    "excerptSha256": "cb3e0ec43d9419f6613c6ac59ea6b30c798dd2cb79b01e7ac13fc3603ad6daff",
+    "evidence": "Official current county page labels this exact PDF 2026 General Election Spreadsheet (PDF). The PDF dates election November 3,2026; AD68 field lists exactly Rob Summerfield, Elisha King and generic write-in. Both named choices match the WEC-authored general-candidate discovery PDF. One stale internal subtitle says Partisan Primary – Preliminary Uncanvassed Results; the official download label, URL filename, November3 date and actual two-nominee field identify the general election. That caption discrepancy is preserved. Source omits party labels; both remain null. No result totals imported.",
+    "electionListing": {
+      "url": "https://www.chippewacountywi.gov/241/Election-Results",
+      "file": "sources/e6ecd597eb8f1a4a1e74bce3ba8547f520395f63fb3dc4555eada7ecae7429a5.html",
+      "sha256": "e6ecd597eb8f1a4a1e74bce3ba8547f520395f63fb3dc4555eada7ecae7429a5",
+      "sourceCheckedAt": "2026-11-02T21:45:20.472057+00:00",
+      "exactDocumentElectionDate": "November 3, 2026",
+      "captionLimitation": "PDF internal subtitle says Partisan Primary – Preliminary Uncanvassed Results, while official download listing/file name say 2026 General Election."
+    }
+  },
+  {
     "sourceUrl": "https://www.eauclairecounty.gov/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190",
     "finalUrl": "https://cms2.revize.com/revize/eauclairecountywi/Documents/Departments/Elected%20Offices/County%20Clerk/Elections/FINAL%20ECCountyClerkElection_2026-11-02_ROP_2ndProof_20261019.pdf?t=202610281029190&t=202610281029190",
     "sourceCheckedAt": "2026-11-02T21:43:26.073260+00:00",

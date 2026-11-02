@@ -7,6 +7,13 @@
   "inputDirectory": "ballot-input",
   "subjects": [
     {
+      "id": "wi-cx-2026-general-assembly-68",
+      "title": "Representative to the Assembly – District 68",
+      "ocdId": "ocd-division/country:us/state:wi/sldl:68",
+      "candidates": 2,
+      "sourceUrl": "https://www.chippewacountywi.gov/DocumentCenter/View/4944/2026-General-Election-Spreadsheet-PDF"
+    },
+    {
       "id": "wi-cx-2026-general-assembly-91",
       "title": "Representative to the Assembly – District 91",
       "ocdId": "ocd-division/country:us/state:wi/sldl:91",

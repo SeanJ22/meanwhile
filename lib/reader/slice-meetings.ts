@@ -156,6 +156,7 @@ export async function confirmedMeetings(query: Query, boards: readonly string[])
 
 /** What each card of these boards and places is built from, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back. Rows read the same, whatever version carries them, leave a card as it was. */
 export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
+  if (!subjects.length) return new Map();
   const { canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
   const past = new Set(partitions.filter(row => String(row.scope).endsWith(HISTORY)).map(row => String(row.key))), now = partitions.map(row => String(row.key)).filter(key => !past.has(key));
   const [rows, sittings, oldMeetings, oldPapers] = partitions.length ? await Promise.all([query(DIGEST_ROWS_SQL, [partitions.map(row => String(row.key)), names, places, partitions.map(row => String(row.version))]),

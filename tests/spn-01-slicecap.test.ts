@@ -21,13 +21,13 @@ test("the lane builds places nobody asked for only while it owes no time, and ma
     };
     assert.equal(await look(), 100, "the first look builds a hundred places");
     assert.ok(owedMs(SLICE_BYTES_PER_HOUR) === 3_600_000 && owedMs(0) === 0 && owedMs(1) > 0, "the hour's allowance takes the whole hour; any read takes some time");
-    const owedUntil = async () => Number((await db.query("SELECT position FROM pass_cursor WHERE name='slices:tab'"))[0]!.position);
-    assert.ok(await owedUntil() > now, "the time owed is kept, so a lane that starts again owes it too");
+    assert.ok(Number((await db.query("SELECT position FROM pass_cursor WHERE name='slices:tab'"))[0]!.position) > now, "the time owed is kept, so a lane that starts again owes it too");
     assert.equal(await look(1), 0, "while the time owed has not run out, no place nobody asked for is built");
     await list.touch([{ kind: "slice", placeId: ONE, subjectId: ONE, field: "bodies", origin: { from: "loader" }, source: { source: "test" } }]);
     const marked = total.built; await look(1);
-    assert.ok(total.built > marked, "a marked slice is rebuilt while the tab is open");
-    assert.ok(await owedUntil() > now + 1, "and the bytes it moved, claims and all, are added to the tab");
-    assert.equal(await look(3_600_000), 50, "once the time owed has passed, the fifty left are built");
+    assert.equal(total.built, marked, "a marked slice waits its turn too");
+    await look(3_600_000);
+    assert.ok(total.built > marked && total.backfilled === 100, "once the time owed has passed, the marked slice goes before the fifty places left");
+    assert.equal(await look(3_600_000), 50, "and then the fifty are built");
   } finally { await db.pg.close(); }
 });

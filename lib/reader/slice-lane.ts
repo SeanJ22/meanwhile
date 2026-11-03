@@ -55,12 +55,14 @@ let recoveredAt = 0;
 
 /** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from; a calendar only confirmed again is brought up to date in the card held, with no rows read. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
 async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, confirmed: ReadonlySet<string>, purge?: ReaderCachePurger): Promise<number> {
-  const held = new Map((await facts("SELECT place_id||E'\\t'||card AS k,inputs FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[]) AND inputs IS NOT NULL", [[...wanted.keys()], MEETING_CARDS])).map(row => [String(row.k), row.inputs]));
-  const now = held.size ? await cardInputs(facts, [...wanted.keys()].filter(board => MEETING_CARDS.some(card => held.has(`${board}\t${card}`)))) : new Map<string, string>(), inputs = new Map<string, string>();
-  for (const [board, cards] of wanted) for (const card of MEETING_CARDS) if (cards.has(card) && now.has(`${board}\t${card}`)) {
-    const key = `${board}\t${card}`;
-    if (held.get(key) === now.get(key)) cards.delete(card); else inputs.set(key, now.get(key)!);
-    if (!cards.size) wanted.delete(board);
+  const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
+  const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,inputs FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
+  const same = new Map(held.map(row => [String(row.k), row.inputs]));
+  for (const subject of subjects) for (const card of MEETING_CARDS) {
+    const key = `${subject}\t${card}`;
+    if (!wanted.get(subject)!.has(card)) continue;
+    if (same.get(key) === now.get(key)) wanted.get(subject)!.delete(card); else inputs.set(key, now.get(key)!);
+    if (!wanted.get(subject)!.size) wanted.delete(subject);
   }
   const built = await buildSlices(facts, wanted);
   for (const [board, cards] of await confirmedMeetings(facts, [...confirmed].filter(board => !wanted.get(board)?.has("meetings")))) built.set(board, new Map([...built.get(board) ?? [], ...cards]));

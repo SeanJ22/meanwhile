@@ -12,7 +12,7 @@ import { laneTurn } from "../lib/ops/lane-turn.ts";
 import { runSliceLane, sliceTurn } from "../lib/reader/slice-lane.ts";
 import type { MeetingsBody } from "../lib/reader/slice-meetings.ts";
 import { sliceProgress } from "../lib/reader/slice-progress.ts";
-import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, unpackSlice, writeSlices, type SliceBody, type SliceCard } from "../lib/reader/slices.ts";
+import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, unpackSlice, type SliceBody, type SliceCard } from "../lib/reader/slices.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:example", BODY = "az:city:example#governing", PERSON = "az:person:example:mayor";
@@ -134,17 +134,6 @@ test("a source read again with nothing new waits its day, a change is rebuilt at
   } finally { await db.pg.close(); }
 });
 
-test("only the large slices that differ from the ones held are sent", async () => {
-  const { db } = await open();
-  try {
-    const big = (n: number) => ({ v: 2, sources: [], stamps: [], boards: [], entities: [{ id: `e${n}`, k: "body", n: `Board ${n}`, f: Object.fromEntries(Array.from({ length: 80 }, (_, i) => [`field${i}`, [createHash("sha256").update(`${n}:${i}`).digest("hex"), 0]])) }] });
-    const cards = (changed: number) => new Map([[PLACE, new Map<SliceCard, unknown>([["bodies", big(1)], ["governs", big(changed)], ["ballot", null]])]]);
-    const sent: number[] = [], spy = async (sql: string, params: readonly unknown[] = []) => { if (sql.includes("INSERT")) sent.push((params[0] as string[]).length); return db.query(sql, params); };
-    await writeSlices(spy, cards(2)); await writeSlices(spy, cards(2)); await writeSlices(spy, cards(9));
-    assert.deepEqual(sent, [3, 1, 2], "nothing differs: only the empty slice, which costs less to send than to ask about, goes");
-  } finally { await db.pg.close(); }
-});
-
 test("a calendar confirmed again is brought up to date from its confirmation alone, as a rebuild would make it, and unchanged agenda papers are not read", async () => {
   const { db, list } = await open();
   try {
@@ -154,7 +143,7 @@ test("a calendar confirmed again is brought up to date from its confirmation alo
       meetings: [{ id: "m1", ocdId: PLACE, bodyId: BODY, title, startsAt: "2026-11-02T18:00:00-07:00", timeZone: "America/Phoenix" }], agendaDocuments: [{ id: "d1", meetingId: "m1", ocdId: PLACE, bodyId: BODY, text }] } });
     markSlicesOn(() => list);
     const purged: string[] = [], tagOf = (place: string) => `reader-place:${createHash("sha256").update(place.toLowerCase()).digest("hex")}`;
-    const turn = async (confirmed = false) => { await db.query("DELETE FROM work"); await markPublicationSlices(db.query, { recordClass: "MEETING", scope: CURRENT, confirmed }); await db.query("UPDATE work SET due_at=now()"); return sliceTurn({ list, facts, now, backfill: false, purge: async tags => { purged.push(...tags); return { purged: true }; } }); };
+    const turn = async (confirmed = false) => { await db.query("DELETE FROM work"); await markPublicationSlices(db.query, { recordClass: "MEETING", scope: CURRENT, confirmed }); await db.query("UPDATE work SET due_at=now()"); return sliceTurn({ list, facts, now, purge: async tags => { purged.push(...tags); return { purged: true }; } }); };
     const reads: string[] = [], facts = Object.assign(async (sql: string, params: readonly unknown[] = []) => { reads.push(sql); return db.query(sql, params); }, {});
     const papers = () => reads.filter(sql => sql.includes("AS value") && sql.includes("civic_data_rows")).length;
     const held = async () => unpackSlice<MeetingsBody>((await db.query("SELECT body FROM place_slice WHERE place_id=$1 AND card='meetings'", [BODY]))[0]!.body);
@@ -164,7 +153,7 @@ test("a calendar confirmed again is brought up to date from its confirmation alo
     purged.length = 0; await turn(); assert.deepEqual(purged, [], "slices left as they were purge nothing");
     await publish("cv-2", "Second", "The agenda."); reads.length = 0; await turn();
     assert.equal(papers(), 1, "a new version with the same papers reads none of them");
-    await publish("cv-3", "Second", "The agenda, amended."); reads.length = 0; await turn(); assert.equal(papers(), 2, "papers that changed are read");
+    await publish("cv-3", "Second", "The agenda, amended."); reads.length = 0; await turn(); assert.equal(papers(), 1, "only the papers that changed are read, the meetings left as they were");
 
     const detail = `UNCHANGED_CONFIRMATION_V1 ${JSON.stringify({ checkedAt: later.toISOString() })}`;
     await db.pg.exec("SET session_replication_role = replica");

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <link rel="shortcut icon" id="favicon" href="/icon.png" />
+    <style type="text/css" media="print">
+      @page {
+        size: landscape;
+      }
+    </style>
+
+    <style type="text/css">
+      html {
+        min-height: 100vh;
+        height: auto;
+      }
+      body {
+        min-height: 100vh;
+        height: auto;
+      }
+      .ie-notification-wrapper {
+        display: none;
+        position: fixed;
+        z-index: 99;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+      }
+      .ie-notification-wrapper > div {
+        position: absolute;
+        left: calc(50% - 350px);
+        top: calc(50% - 150px);
+        width: 700px;
+      }
+      .ie-notification {
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .ie-link-wrapper {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-around;
+      }
+      .ie-link {
+        text-align: center;
+        padding: 24px 23px 23px 24px;
+        border-radius: 50px;
+        background-color: #fece3d;
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+        width: 280px;
+      }
+      .ie-link:hover {
+        color: black;
+        text-decoration: none;
+      }
+    </style>
+    <script src="/public/js/iframe-resizer.child.js"></script>
+    <!-- Webpack injects styles here -->
+  <title>Public Portal</title><script defer src="/static/js/lib-react.94f102e6.js"></script><script defer src="/static/js/lib-router.06465891.js"></script><script defer src="/static/js/431.fd55f99d.js"></script><script defer src="/static/js/index.35c0d8f9.js"></script><link href="/static/css/431.ab2f9099.css" rel="stylesheet"><link href="/static/css/index.b7045f53.css" rel="stylesheet"></head>
+  <body>
+    <!-- <div id="ie-root" class="ie-notification-wrapper">
+      <div>
+        <div class="ie-notification">
+          Our website is optimized for Chromium browsers like Google Chrome and Microsoft Edge.<br/>
+          If you’re experiencing any issues with our site, please consider visiting with a Chromium browser.
+        </div>
+        <div class="ie-link-wrapper">
+          <a class="ie-link" href="https://www.google.com/chrome/" target="_blank">Link to Download Google Chrome</a>
+          <a class="ie-link" href="https://www.microsoft.com/en-us/edge" target="_blank">Link to Download MS Edge</a>
+        </div>  
+      </div>
+    </div> -->
+    <div id="root"></div>
+    <!-- Webpack injects scripts here -->
+    <!-- <script>
+      if (navigator.userAgent.indexOf('MSIE ') > -1 || navigator.userAgent.indexOf('Trident/7.0') > -1) {
+        document.getElementById("ie-root").style.display = "block";
+        document.getElementById("root").style.display = "none";
+      }
+    </script> -->
+  </body>
+</html>

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:48:16.764477+00:00",
+  "preparedAt": "2026-11-03T05:48:21.180888+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1120,6 +1120,28 @@
         "heldInputSha256": "b3dbf262a26bbdc3a004c7e0b3a596f18c6f00a347ec9b80afd02263950f94cd",
         "readerVisibility": "PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN"
       }
+    },
+    {
+      "state": "TX",
+      "county": "Denton",
+      "populationRank": 46,
+      "manifest": "TX/denton/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 32,
+      "measureContests": 0,
+      "candidacies": 46,
+      "newContests": 19,
+      "refreshedContests": 13,
+      "sourceInputSha256": "a6635582f3e44c631ba70d14ef988ef97c97d3ecff43690a3c578b273e5d9719",
+      "coverage": [
+        "Partial Denton County coverage:32complete local candidate fields/46names are verified. Two shared Second Court of Appeals fields have actual current official Tarrant sample evidence plus exact12-county jurisdiction proof; the other30fields are distinctly labeled official-list supplements with actual sample acquisition pending (29current-linked SOS certification fields and CityofDenton District1special-election four-name current official ballot-order list). No acquired actual Denton November sample is claimed.",
+        "The13held Denton court/county contest IDs and16held candidates/core fields are reused. AllTexaslaneinputs, including complete Tarrant/Collin/Dallas, were compared before minting. Noheld Second Appeals office/candidate identity existed; one county-independent pair serves the exact entire regional electorate. Existing statewide/legislative records and measures/explanations remain unchanged.",
+        "VoteDenton.gov county pages, personal lookup and exact1126-Active-Contest-List.pdf linked by official DallasCityHall all return403. No voter identity was submitted. Current official CityofCorinth confirms personal lookup requests full name/birthdate. A PilotPoint government-hosted sample was acquired but dates May2,2026 and is excluded from November candidate evidence. Every acquired route/time/status/hash is preserved separately.",
+        "Coverage remains open for DentonCentralAppraisalDistrict elected places1\u20133, TheColony single-member districts3\u20136 and any other city/school/special fields absent from the acquired primary inventory. TheColony current election page links an August10filinglist for9applicants; it predates filing close and proves no final November qualification. No ordinary candidate is installed from that old list.",
+        "District/precinct electorates are exact. Regionalcourt2, six held judicial districts, commissioner precincts2/4, justice precincts1\u20136, constable precinct1 and CityofDenton council district1 require reader geography matching; no entire county/city is substituted for a subdistrict. Data-ready candidate facts do not establish reader visibility.",
+        "Declaredwriteins are separate from printed ordinary candidates. The current statewide/district certification contains no entry for either Second Appeals seat or the six Denton judicial districts; county/municipal/special named write-in inventories remain pending. No generic blank Write-in is treated as a person.",
+        "The official SecondCourt county list supports12whole-county districtMemberships, one each for Archer,Clay,Cooke,Denton,Hood,Jack,Montague,Parker,Tarrant,Wichita,Wise,Young. The same two regional offices can therefore serve every included county; no per-county duplicate contest is minted. Actual reader delivery remains for parent/River to verify."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -1145,17 +1167,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 43,
-    "packetsPrepared": 44,
-    "candidateAndRetentionContests": 2501,
+    "countiesPrepared": 44,
+    "packetsPrepared": 45,
+    "candidateAndRetentionContests": 2533,
     "measureContests": 110,
-    "candidacyEntries": 5643,
-    "newContestEntriesAgainstCheckedInBaseline": 2025,
-    "distinctPreparedContestIds": 2590,
-    "distinctPreparedCandidateIds": 5582,
-    "distinctNewContestsAgainstCheckedInBaseline": 2014,
+    "candidacyEntries": 5689,
+    "newContestEntriesAgainstCheckedInBaseline": 2044,
+    "distinctPreparedContestIds": 2622,
+    "distinctPreparedCandidateIds": 5628,
+    "distinctNewContestsAgainstCheckedInBaseline": 2033,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 44
+    "distinctCountyHandoffs": 45
   },
   "remainingWork": [
     {

@@ -1,0 +1,23 @@
+{
+  "electionId": "tx-2026-11-03-general",
+  "county": "Denton",
+  "status": "STATE_DISTRICT_CERTIFICATION_CHECKED;COUNTY_MUNICIPAL_SPECIAL_INVENTORIES_PENDING",
+  "candidates": [],
+  "stateDistrictScope": {
+    "officeIds": [
+      "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-2",
+      "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-7",
+      "tx-ba01-2026-district-judge-158",
+      "tx-ba01-2026-district-judge-211",
+      "tx-ba01-2026-district-judge-367",
+      "tx-ba01-2026-district-judge-467",
+      "tx-ba01-2026-district-judge-477",
+      "tx-ba01-2026-district-judge-481"
+    ],
+    "finding": "No matching row in separate current statewide/district declared-write-in certification.",
+    "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "sourceCheckedAt": "2026-11-03T05:28:45.863654+00:00"
+  },
+  "countyMunicipalSpecialStatus": "NO_NAMED_CERTIFICATION_INVENTORY_ACQUIRED;NO_ABSENCE_INFERENCE",
+  "genericBlankPolicy": "Blank Write-in is not a person. No ordinary candidate record minted from a generic slot."
+}

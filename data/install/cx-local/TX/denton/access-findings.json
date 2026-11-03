@@ -1,0 +1,342 @@
+{
+  "status": "PARTIAL_COUNTY;COUNTY_CURRENT_SOURCE403;ACTUAL_DENTON_NOVEMBER_SAMPLES_UNACQUIRED",
+  "routes": [
+    {
+      "label": "city-dallas-nov",
+      "url": "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx",
+      "finalUrl": "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:24:59.524243+00:00",
+      "sha256": "affb7d8f97494357d703d1ad43c26bc5adf041e7662deb705bbe2f4460e7b751",
+      "sourceFile": "sources/affb7d8f97494357d703d1ad43c26bc5adf041e7662deb705bbe2f4460e7b751.source"
+    },
+    {
+      "label": "city-denton",
+      "url": "https://www.cityofdenton.com/421/Elections",
+      "finalUrl": "https://www.cityofdenton.com/421/Elections",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:24:24.026655+00:00",
+      "sha256": "f44a99eb2fbc2de31463c2e41dceeb6e4389a1dd8d8457d5b9e6a36d396caf8d",
+      "sourceFile": "sources/f44a99eb2fbc2de31463c2e41dceeb6e4389a1dd8d8457d5b9e6a36d396caf8d.source"
+    },
+    {
+      "label": "corinth-current",
+      "url": "https://www.corinthtx.gov/m/newsflash/home/detail/29",
+      "finalUrl": "https://www.corinthtx.gov/m/newsflash/home/detail/29",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:31:08.697667+00:00",
+      "sha256": "71327b48b79fc9c5bc629ff43794cd476a8fbc6aaffe61a55fada67c42761c08",
+      "sourceFile": "sources/71327b48b79fc9c5bc629ff43794cd476a8fbc6aaffe61a55fada67c42761c08.source"
+    },
+    {
+      "label": "county-403-copy",
+      "url": "https://www.votedenton.gov/wp-json/wp/v2/media?search=1126-Active-Contest-List",
+      "finalUrl": "https://www.votedenton.gov/wp-json/wp/v2/media?search=1126-Active-Contest-List",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:31:08.676828+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-active-contests",
+      "url": "https://www.votedenton.gov/wp-content/uploads/2026/09/1126-Active-Contest-List.pdf",
+      "finalUrl": "https://www.votedenton.gov/wp-content/uploads/2026/09/1126-Active-Contest-List.pdf",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:25:17.273517+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-agenda",
+      "url": "https://dentoncounty.granicus.com/GeneratedAgendaViewer.php?event_id=980&view_id=26",
+      "finalUrl": "https://dentoncounty.granicus.com/GeneratedAgendaViewer.php?event_id=980&view_id=26",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:01.657086+00:00",
+      "sha256": "f6592c95aae3cc5772a7566b1d296c26c17d6bc90705b9802c001602b1c549ad",
+      "sourceFile": "sources/f6592c95aae3cc5772a7566b1d296c26c17d6bc90705b9802c001602b1c549ad.source"
+    },
+    {
+      "label": "county-bare",
+      "url": "https://votedenton.gov/",
+      "finalUrl": "https://www.votedenton.gov/",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:24:59.432667+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-candidates-page",
+      "url": "https://www.dentoncounty.gov/1678/Elections",
+      "finalUrl": "https://www.dentoncounty.gov/1678/Elections",
+      "status": 404,
+      "checkedAt": "2026-11-03T05:25:17.616299+00:00",
+      "sha256": "b8584511b14117d9503f77422b4e1e49175b941a2dd40412f13793ec90ccff6d",
+      "sourceFile": "sources/b8584511b14117d9503f77422b4e1e49175b941a2dd40412f13793ec90ccff6d.source"
+    },
+    {
+      "label": "county-current",
+      "url": "https://www.votedenton.gov/election-information/current-and-upcoming-election-information/",
+      "finalUrl": "https://www.votedenton.gov/election-information/current-and-upcoming-election-information/",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:24:23.510888+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-home",
+      "url": "https://www.votedenton.gov/",
+      "finalUrl": "https://www.votedenton.gov/",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:24:23.702190+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-legacy",
+      "url": "https://www.votedenton.com/",
+      "finalUrl": "https://www.votedenton.com/",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:24:59.179656+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-lookup",
+      "url": "https://www.votedenton.gov/voter-information/voter-lookup/#VoterEligibilitySearch",
+      "finalUrl": "https://www.votedenton.gov/voter-information/voter-lookup/#VoterEligibilitySearch",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:27:27.910863+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "county-notice",
+      "url": "https://dentoncounty.granicus.com/MetaViewer.php?view_id=26&event_id=980&meta_id=314316",
+      "finalUrl": "https://legistar1.granicus.com/daystar.legistar6.sdk.ws/View.ashx?M=F&GovernmentGUID=DENT&LogicalFileName=369df98b-7203-457a-9950-542d8b515183.pdf&From=Granicus&Format=pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:31.156153+00:00",
+      "sha256": "47191adc0e4c67b0453af558aabb071e13646c3f5c05a154f5421b835207e43d",
+      "sourceFile": "sources/47191adc0e4c67b0453af558aabb071e13646c3f5c05a154f5421b835207e43d.source"
+    },
+    {
+      "label": "county-pdf-browserheaders",
+      "url": "https://www.votedenton.gov/wp-content/uploads/2026/09/1126-Active-Contest-List.pdf",
+      "finalUrl": "https://www.votedenton.gov/wp-content/uploads/2026/09/1126-Active-Contest-List.pdf",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:27:04.170435+00:00",
+      "sha256": "8b73b6ccd7091d6d9d23adaab2baae3c4abf6de06df8efdd03215ee9376fa035",
+      "sourceFile": "sources/8b73b6ccd7091d6d9d23adaab2baae3c4abf6de06df8efdd03215ee9376fa035.source"
+    },
+    {
+      "label": "county-real-current",
+      "url": "https://www.votedenton.gov/election-day-information/current-and-upcoming-election-information/",
+      "finalUrl": "https://www.votedenton.gov/election-day-information/current-and-upcoming-election-information/",
+      "status": 403,
+      "checkedAt": "2026-11-03T05:25:17.313280+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "label": "court2-home",
+      "url": "https://www.txcourts.gov/2ndcoa/",
+      "finalUrl": "https://www.txcourts.gov/2ndcoa/",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:31:09.489037+00:00",
+      "sha256": "4be3c1a5d5bd1303f94def00a5df8b4060a4b5c7c60c64a7114c5c1fc98a7743",
+      "sourceFile": "sources/4be3c1a5d5bd1303f94def00a5df8b4060a4b5c7c60c64a7114c5c1fc98a7743.source"
+    },
+    {
+      "label": "court2-juris",
+      "url": "https://www.txcourts.gov/2ndcoa/about-the-court/jurisdiction/",
+      "finalUrl": "https://www.txcourts.gov/2ndcoa/about-the-court/jurisdiction/",
+      "status": 404,
+      "checkedAt": "2026-11-03T05:31:09.383743+00:00",
+      "sha256": "723bf4498621da2cf811af9c5c8bad25f1204751e82521e687d7fdf9b7ec246c",
+      "sourceFile": "sources/723bf4498621da2cf811af9c5c8bad25f1204751e82521e687d7fdf9b7ec246c.source"
+    },
+    {
+      "label": "dcad-home",
+      "url": "https://www.dentoncad.com/",
+      "finalUrl": "https://www.dentoncad.com/",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:29.553343+00:00",
+      "sha256": "e70b3c745cc02bbf2f94d05172cff27c555b06e8b5d3c78de9f949a70d7031d8",
+      "sourceFile": "sources/e70b3c745cc02bbf2f94d05172cff27c555b06e8b5d3c78de9f949a70d7031d8.source"
+    },
+    {
+      "label": "dcad-prodigy",
+      "url": "https://denton.prodigycad.com/",
+      "finalUrl": "https://denton.prodigycad.com/",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:27:28.491684+00:00",
+      "sha256": "e70b3c745cc02bbf2f94d05172cff27c555b06e8b5d3c78de9f949a70d7031d8",
+      "sourceFile": "sources/e70b3c745cc02bbf2f94d05172cff27c555b06e8b5d3c78de9f949a70d7031d8.source"
+    },
+    {
+      "label": "dcad-real",
+      "url": "https://www.dentoncad.com/Appraisal/",
+      "finalUrl": "https://www.dentoncad.com/Appraisal/",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:27:28.725382+00:00",
+      "sha256": "e70b3c745cc02bbf2f94d05172cff27c555b06e8b5d3c78de9f949a70d7031d8",
+      "sourceFile": "sources/e70b3c745cc02bbf2f94d05172cff27c555b06e8b5d3c78de9f949a70d7031d8.source"
+    },
+    {
+      "label": "fox-denton",
+      "url": "https://www.fox4news.com/election/denton-county-voting-locations-wait-times-sample-ballots",
+      "finalUrl": "https://www.fox4news.com/election/denton-county-voting-locations-wait-times-sample-ballots",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:27:28.777465+00:00",
+      "sha256": "1044f07d01b346ee34e452f8dcbebe8dc75701993e36cc5a39e08e2d5120ad9b",
+      "sourceFile": "sources/1044f07d01b346ee34e452f8dcbebe8dc75701993e36cc5a39e08e2d5120ad9b.source"
+    },
+    {
+      "label": "pilotpoint-info",
+      "url": "https://pilotpointisd.com/election-information-2026",
+      "finalUrl": "https://pilotpointisd.com/election-information-2026",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:01.490446+00:00",
+      "sha256": "7ee5f4b4fb08d2cba14700b78529605c83f815d42ab5c0d391903950dcff035c",
+      "sourceFile": "sources/7ee5f4b4fb08d2cba14700b78529605c83f815d42ab5c0d391903950dcff035c.source"
+    },
+    {
+      "label": "pilotpoint-sample",
+      "url": "https://files.smartsites.parentsquare.com/13663/sample_ballot_-_denton_county_1008-59gpdf.pdf",
+      "finalUrl": "https://files.smartsites.parentsquare.com/13663/sample_ballot_-_denton_county_1008-59gpdf.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:29.895989+00:00",
+      "sha256": "fc97d1b26fddd2b1939f6670715dbc384ffa6ab1c5ea4edba2877447e1b29c8c",
+      "sourceFile": "sources/fc97d1b26fddd2b1939f6670715dbc384ffa6ab1c5ea4edba2877447e1b29c8c.source"
+    },
+    {
+      "label": "sanger-bond",
+      "url": "https://www.sangerisd.net/community/bond-2026/election-and-voting-information",
+      "finalUrl": "https://www.sangerisd.net/community/bond-2026/election-and-voting-information",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:25:00.214607+00:00",
+      "sha256": "f7b8e8d8d76d143ece77b76cbf8829ffbd033c5ebc6ef6e770a1d8dc9689ebcc",
+      "sourceFile": "sources/f7b8e8d8d76d143ece77b76cbf8829ffbd033c5ebc6ef6e770a1d8dc9689ebcc.source"
+    },
+    {
+      "label": "state-cert",
+      "url": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+      "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:28:48.924432+00:00",
+      "sha256": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+      "sourceFile": "sources/c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c.source"
+    },
+    {
+      "label": "state-courts",
+      "url": "https://www.txcourts.gov/2ndcoa/about-the-court/",
+      "finalUrl": "https://www.txcourts.gov/2ndcoa/about-the-court/",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:28:45.092305+00:00",
+      "sha256": "50584284cdc01be838c5defa4d869010bde7d9e327c3fbb6225184ac5678fcfc",
+      "sourceFile": "sources/50584284cdc01be838c5defa4d869010bde7d9e327c3fbb6225184ac5678fcfc.source"
+    },
+    {
+      "label": "state-index",
+      "url": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+      "finalUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:28:45.420451+00:00",
+      "sha256": "6500cbf612952f04d1d15004e208dae42067d094baf40d9328dbc27666314022",
+      "sourceFile": "sources/6500cbf612952f04d1d15004e208dae42067d094baf40d9328dbc27666314022.source"
+    },
+    {
+      "label": "state-writeins",
+      "url": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+      "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:28:45.863654+00:00",
+      "sha256": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+      "sourceFile": "sources/eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24.source"
+    },
+    {
+      "label": "tarrant-shared-sample",
+      "url": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+      "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:07:52.153225+00:00",
+      "sha256": "5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524",
+      "sourceFile": "sources/5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524.source"
+    },
+    {
+      "label": "thecolony-current",
+      "url": "https://www.thecolonytx.gov/1451/Election-2026",
+      "finalUrl": "https://www.thecolonytx.gov/1451/Election-2026",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:00.890920+00:00",
+      "sha256": "dac52c0d59bdb055ae929198ab8ed8fec63afb57789302d869f70eb468560a6e",
+      "sourceFile": "sources/dac52c0d59bdb055ae929198ab8ed8fec63afb57789302d869f70eb468560a6e.source"
+    },
+    {
+      "label": "thecolony-elections",
+      "url": "https://www.thecolonytx.gov/148/Election-Information",
+      "finalUrl": "https://www.thecolonytx.gov/148/Election-Information",
+      "status": 404,
+      "checkedAt": "2026-11-03T05:25:17.616367+00:00",
+      "sha256": "5f4b7eade4da3fafca2f602521c0fe38e541bd4abca46c9051dcc97c4f9ba15f",
+      "sourceFile": "sources/5f4b7eade4da3fafca2f602521c0fe38e541bd4abca46c9051dcc97c4f9ba15f.source"
+    },
+    {
+      "label": "thecolony-info",
+      "url": "https://www.thecolonytx.gov/518/Election-Information",
+      "finalUrl": "https://www.thecolonytx.gov/518/Election-Information",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:00.915684+00:00",
+      "sha256": "6a4b213ee7d85f39b24a02066c2b31932e6de2b897dbd8dc7f04ba03688f1f16",
+      "sourceFile": "sources/6a4b213ee7d85f39b24a02066c2b31932e6de2b897dbd8dc7f04ba03688f1f16.source"
+    },
+    {
+      "label": "thecolony-list",
+      "url": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+      "finalUrl": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+      "status": 200,
+      "checkedAt": "2026-11-03T05:26:29.031354+00:00",
+      "sha256": "79b33739ec6084ae48a8598a31ae25a62f1f021fa7dda95887f65f67b288a6fa",
+      "sourceFile": "sources/79b33739ec6084ae48a8598a31ae25a62f1f021fa7dda95887f65f67b288a6fa.source"
+    }
+  ],
+  "rejectedSample": {
+    "sourceUrl": "https://files.smartsites.parentsquare.com/13663/sample_ballot_-_denton_county_1008-59gpdf.pdf",
+    "reason": "Native sample dates May2,2026; November3eligibility cannot be inferred."
+  },
+  "oldTheColonyFilings": {
+    "status": "FINAL_NOVEMBER_ELIGIBILITY_UNVERIFIED;NO_ORDINARY_CANDIDACIES",
+    "sourceUrl": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+    "lastUpdated": "2026-08-10",
+    "fields": [
+      {
+        "district": 3,
+        "names": [
+          "Brian R. Wade",
+          "Eldon J. Pipes"
+        ]
+      },
+      {
+        "district": 4,
+        "names": [
+          "Tim Costello",
+          "Dan McNew",
+          "Dan Rainey"
+        ]
+      },
+      {
+        "district": 5,
+        "names": [
+          "Matthew Michaelson",
+          "Perry Schrag"
+        ]
+      },
+      {
+        "district": 6,
+        "names": [
+          "Matthew Wheeler",
+          "Joel Marks"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1801 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "TX:tx-2026-11-03-general": {
+      "election": {
+        "id": "tx-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 November General Election",
+        "state": "TX"
+      },
+      "contests": [
+        {
+          "id": "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "divisionVintage": "2026",
+          "title": "Justice, 2nd Court Of Appeals District, Place 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "One entire Second Court of Appeals12-county electorate, including Denton and Tarrant. Current Denton SOS certification corroborates the shared office; not a Denton precinct sample. Ordinary active individual voting field with its own voting square; sample instruction: Please use a black or blue ink pen to mark your ballot. To vote for your choice in each contest, completely fill in the box next to your choice.",
+          "provenance": {
+            "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+            "sourceOrg": "Tarrant County Elections Administration",
+            "collectedAt": "2026-11-03T04:07:52.153225+00:00",
+            "verifiedAt": "2026-11-03T04:07:52.153225+00:00",
+            "quote": "Justice, 2nd Court of Appeals District, Place 2\nJuez, Corte de Apelaciones del 2 Distrito, Lugar Núm. 2\nChris Taylor REP\nREP"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+              "sourceOrg": "Texas Judicial Branch",
+              "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+              "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+              "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+            },
+            {
+              "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+              "sourceOrg": "Texas Secretary of State",
+              "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+              "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+              "quote": "JUSTICE, 2ND COURT OF APPEALS DISTRICT, PLACE 2\nCHRIS TAYLOR REP"
+            },
+            {
+              "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+              "sourceOrg": "Tarrant County Elections Administration",
+              "collectedAt": "2026-11-03T04:07:52.153225+00:00",
+              "verifiedAt": "2026-11-03T04:07:52.153225+00:00",
+              "quote": "Please use a black or blue ink pen to mark your\nballot. To vote for your choice in each contest,\ncompletely fill in the box next to your choice."
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-7",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "divisionVintage": "2026",
+          "title": "Justice, 2nd Court Of Appeals District, Place 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "One entire Second Court of Appeals12-county electorate, including Denton and Tarrant. Current Denton SOS certification corroborates the shared office; not a Denton precinct sample. Ordinary active individual voting field with its own voting square; sample instruction: Please use a black or blue ink pen to mark your ballot. To vote for your choice in each contest, completely fill in the box next to your choice.",
+          "provenance": {
+            "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+            "sourceOrg": "Tarrant County Elections Administration",
+            "collectedAt": "2026-11-03T04:07:52.153225+00:00",
+            "verifiedAt": "2026-11-03T04:07:52.153225+00:00",
+            "quote": "Justice, 2nd Court of Appeals District, Place 7\nJuez, Corte de Apelaciones del 2 Distrito, Lugar Núm. 7\nBrian Walker REP\nREP"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+              "sourceOrg": "Texas Judicial Branch",
+              "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+              "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+              "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+            },
+            {
+              "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+              "sourceOrg": "Texas Secretary of State",
+              "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+              "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+              "quote": "JUSTICE, 2ND COURT OF APPEALS DISTRICT, PLACE 7\nBRIAN WALKER REP"
+            },
+            {
+              "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+              "sourceOrg": "Tarrant County Elections Administration",
+              "collectedAt": "2026-11-03T04:07:52.153225+00:00",
+              "verifiedAt": "2026-11-03T04:07:52.153225+00:00",
+              "quote": "Please use a black or blue ink pen to mark your\nballot. To vote for your choice in each contest,\ncompletely fill in the box next to your choice."
+            }
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-158",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:158",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 158TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 158TH JUDICIAL DISTRICT\nSTEVE BURGESS REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-211",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:211",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 211TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 211TH JUDICIAL DISTRICT\nBRODY SHANKLIN REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-367",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:367",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 367TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 367TH JUDICIAL DISTRICT\nBRENT HILL REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-467",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:467",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 467TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 467TH JUDICIAL DISTRICT\nDERBHA JONES REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-477",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:477",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 477TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 477TH JUDICIAL DISTRICT\nMICHAEL DICKENS REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-481",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:481",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 481ST JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 481ST JUDICIAL DISTRICT\nCRYSTAL EDMONSON LEVONIUS REP\nSETH FULLER DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-criminal_district_attorney_denton_county",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "CRIMINAL DISTRICT ATTORNEY DENTON COUNTY",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "CRIMINAL DISTRICT ATTORNEY DENTON COUNTY\nPAUL JOHNSON REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_judge",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "COUNTY JUDGE",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY JUDGE\nANDY EADS REP\nNICK PAPPAS DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-judge_county_court_at_law_no_1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY COURT AT LAW NO. 1\nKIMBERLY MCCARY REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-judge_county_court_at_law_no_2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY COURT AT LAW NO. 2\nROBERT RAMIREZ REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 1\nLAURI RAGLAND REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 2\nSUSAN PIEL REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 3\nFORREST C. BEADLE REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 4\nCHANCE OLIVER REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-5",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 5\nCOBY WADDILL REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-probate-court-at-law-no-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY PROBATE COURT AT LAW NO. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY PROBATE COURT AT LAW NO. 1\nDAVID JAHN REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-probate-court-at-law-no-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY PROBATE COURT AT LAW NO. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY PROBATE COURT AT LAW NO. 2\nCHRISTOPHER J. EVERETT REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-district_clerk",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "DISTRICT CLERK",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT CLERK\nDAVID TRANTHAM REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_clerk",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "COUNTY CLERK",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY CLERK\nJULI LUKE REP\nDALE FREY DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_treasurer",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton",
+          "divisionVintage": "2026",
+          "title": "COUNTY TREASURER",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY TREASURER\nCINDY YEATTS BROWN REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-commissioner-precinct-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/commissioner_precinct:2",
+          "divisionVintage": "2026",
+          "title": "COUNTY COMMISSIONER PRECINCT 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY COMMISSIONER PRECINCT 2\nKEVIN FALCONER REP\nCANDACE VALENZUELA DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-commissioner-precinct-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/commissioner_precinct:4",
+          "divisionVintage": "2026",
+          "title": "COUNTY COMMISSIONER PRECINCT 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY COMMISSIONER PRECINCT 4\nDAVID WYLIE REP\nSTEPHANIE DRAPER DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/justice_precinct:1",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE PRECINCT 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 1\nALAN WHEELER REP\nBRANDON MCGEE DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/justice_precinct:2",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE PRECINCT 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 2\nCHRIS POCHYLA REP\nKATRINA D. MOORE DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/justice_precinct:3",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE PRECINCT 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 3\nJAMES KERBOW REP\nTRISTA WILLEFORD DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/justice_precinct:4",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE PRECINCT 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 4\nHARRIS HUGHEY REP\nWILL ROBERTSON DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-5",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/justice_precinct:5",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE PRECINCT 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 5\nVINCE HANDLER REP\nPATRECE PERRY DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-6",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/justice_precinct:6",
+          "divisionVintage": "2026",
+          "title": "JUSTICE OF THE PEACE PRECINCT 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 6\nBLANCA OLIVER REP\nMICHELLE BUTLER DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-constable-precinct-1-unexpired-term",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:denton/constable_precinct:1",
+          "divisionVintage": "2026",
+          "title": "COUNTY CONSTABLE PRECINCT 1 (UNEXPIRED TERM)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official SOS certification field; actual county sample acquisition pending. Preserve the exact judicial district or county precinct electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY CONSTABLE PRECINCT 1 (UNEXPIRED TERM)\nTREVOR KRUEGER REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:denton/council_district:1",
+          "divisionVintage": "2026",
+          "title": "City of Denton — Councilmember, District 1 (Special Election)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Complete current official November3District1special-election ballot-order list. Electorate is CityofDenton council district1; actual November sample acquisition pending.",
+          "provenance": {
+            "sourceUrl": "https://www.cityofdenton.com/421/Elections",
+            "sourceOrg": "City of Denton City Secretary",
+            "collectedAt": "2026-11-03T05:24:24.026655+00:00",
+            "verifiedAt": "2026-11-03T05:24:24.026655+00:00",
+            "quote": "District 1 Candidate(s) - November 3, 2026 Special Election (Names are listed in the order they will appear on the ballot.) Candidate Ward Franz Accepted Application (PDF) Candidate Sunny Busby Accepted Application (PDF) Candidate Michael Herron Accepted Application (PDF) Candidate Kris Cox Accepted Application (PDF)"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-2:chris-taylor",
+          "contestId": "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-2",
+          "givenName": "",
+          "familyName": "Chris Taylor",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+            "sourceOrg": "Tarrant County Elections Administration",
+            "collectedAt": "2026-11-03T04:07:52.153225+00:00",
+            "verifiedAt": "2026-11-03T04:07:52.153225+00:00",
+            "quote": "Justice, 2nd Court of Appeals District, Place 2\nJuez, Corte de Apelaciones del 2 Distrito, Lugar Núm. 2\nChris Taylor REP\nREP"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+              "sourceOrg": "Texas Secretary of State",
+              "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+              "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+              "quote": "JUSTICE, 2ND COURT OF APPEALS DISTRICT, PLACE 2\nCHRIS TAYLOR REP"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-7:brian-walker",
+          "contestId": "tx-cx-local-2026-justice-2nd-court-of-appeals-district-place-7",
+          "givenName": "",
+          "familyName": "Brian Walker",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+            "sourceOrg": "Tarrant County Elections Administration",
+            "collectedAt": "2026-11-03T04:07:52.153225+00:00",
+            "verifiedAt": "2026-11-03T04:07:52.153225+00:00",
+            "quote": "Justice, 2nd Court of Appeals District, Place 7\nJuez, Corte de Apelaciones del 2 Distrito, Lugar Núm. 7\nBrian Walker REP\nREP"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+              "sourceOrg": "Texas Secretary of State",
+              "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+              "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+              "quote": "JUSTICE, 2ND COURT OF APPEALS DISTRICT, PLACE 7\nBRIAN WALKER REP"
+            }
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-158:steve_burgess",
+          "contestId": "tx-ba01-2026-district-judge-158",
+          "familyName": "STEVE BURGESS",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 158TH JUDICIAL DISTRICT\nSTEVE BURGESS REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-211:brody_shanklin",
+          "contestId": "tx-ba01-2026-district-judge-211",
+          "familyName": "BRODY SHANKLIN",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 211TH JUDICIAL DISTRICT\nBRODY SHANKLIN REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-367:brent_hill",
+          "contestId": "tx-ba01-2026-district-judge-367",
+          "familyName": "BRENT HILL",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 367TH JUDICIAL DISTRICT\nBRENT HILL REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-467:derbha_jones",
+          "contestId": "tx-ba01-2026-district-judge-467",
+          "familyName": "DERBHA JONES",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 467TH JUDICIAL DISTRICT\nDERBHA JONES REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-477:michael_dickens",
+          "contestId": "tx-ba01-2026-district-judge-477",
+          "familyName": "MICHAEL DICKENS",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 477TH JUDICIAL DISTRICT\nMICHAEL DICKENS REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-481:crystal_edmonson_levonius",
+          "contestId": "tx-ba01-2026-district-judge-481",
+          "familyName": "CRYSTAL EDMONSON LEVONIUS",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 481ST JUDICIAL DISTRICT\nCRYSTAL EDMONSON LEVONIUS REP\nSETH FULLER DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-481:seth_fuller",
+          "contestId": "tx-ba01-2026-district-judge-481",
+          "familyName": "SETH FULLER",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT JUDGE, 481ST JUDICIAL DISTRICT\nCRYSTAL EDMONSON LEVONIUS REP\nSETH FULLER DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-criminal_district_attorney_denton_county:paul_johnson",
+          "contestId": "tx-ba01-2026-county-48121-criminal_district_attorney_denton_county",
+          "familyName": "PAUL JOHNSON",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "CRIMINAL DISTRICT ATTORNEY DENTON COUNTY\nPAUL JOHNSON REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_judge:andy_eads",
+          "contestId": "tx-ba01-2026-county-48121-county_judge",
+          "familyName": "ANDY EADS",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY JUDGE\nANDY EADS REP\nNICK PAPPAS DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_judge:nick_pappas",
+          "contestId": "tx-ba01-2026-county-48121-county_judge",
+          "familyName": "NICK PAPPAS",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY JUDGE\nANDY EADS REP\nNICK PAPPAS DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-judge_county_court_at_law_no_1:kimberly_mccary",
+          "contestId": "tx-ba01-2026-county-48121-judge_county_court_at_law_no_1",
+          "familyName": "KIMBERLY MCCARY",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY COURT AT LAW NO. 1\nKIMBERLY MCCARY REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-judge_county_court_at_law_no_2:robert_ramirez",
+          "contestId": "tx-ba01-2026-county-48121-judge_county_court_at_law_no_2",
+          "familyName": "ROBERT RAMIREZ",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY COURT AT LAW NO. 2\nROBERT RAMIREZ REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-1:lauri-ragland",
+          "contestId": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-1",
+          "givenName": "",
+          "familyName": "LAURI RAGLAND",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 1\nLAURI RAGLAND REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-2:susan-piel",
+          "contestId": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-2",
+          "givenName": "",
+          "familyName": "SUSAN PIEL",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 2\nSUSAN PIEL REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-3:forrest-c-beadle",
+          "contestId": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-3",
+          "givenName": "",
+          "familyName": "FORREST C. BEADLE",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 3\nFORREST C. BEADLE REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-4:chance-oliver",
+          "contestId": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-4",
+          "givenName": "",
+          "familyName": "CHANCE OLIVER",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 4\nCHANCE OLIVER REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-5:coby-waddill",
+          "contestId": "tx-cx-local-2026-denton-judge-county-criminal-court-at-law-no-5",
+          "givenName": "",
+          "familyName": "COBY WADDILL",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 5\nCOBY WADDILL REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-probate-court-at-law-no-1:david-jahn",
+          "contestId": "tx-cx-local-2026-denton-judge-county-probate-court-at-law-no-1",
+          "givenName": "",
+          "familyName": "DAVID JAHN",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY PROBATE COURT AT LAW NO. 1\nDAVID JAHN REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-judge-county-probate-court-at-law-no-2:christopher-j-everett",
+          "contestId": "tx-cx-local-2026-denton-judge-county-probate-court-at-law-no-2",
+          "givenName": "",
+          "familyName": "CHRISTOPHER J. EVERETT",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUDGE, COUNTY PROBATE COURT AT LAW NO. 2\nCHRISTOPHER J. EVERETT REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-district_clerk:david_trantham",
+          "contestId": "tx-ba01-2026-county-48121-district_clerk",
+          "familyName": "DAVID TRANTHAM",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "DISTRICT CLERK\nDAVID TRANTHAM REP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_clerk:juli_luke",
+          "contestId": "tx-ba01-2026-county-48121-county_clerk",
+          "familyName": "JULI LUKE",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY CLERK\nJULI LUKE REP\nDALE FREY DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_clerk:dale_frey",
+          "contestId": "tx-ba01-2026-county-48121-county_clerk",
+          "familyName": "DALE FREY",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY CLERK\nJULI LUKE REP\nDALE FREY DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48121-county_treasurer:cindy_yeatts_brown",
+          "contestId": "tx-ba01-2026-county-48121-county_treasurer",
+          "familyName": "CINDY YEATTS BROWN",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY TREASURER\nCINDY YEATTS BROWN REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-commissioner-precinct-2:kevin-falconer",
+          "contestId": "tx-cx-local-2026-denton-county-commissioner-precinct-2",
+          "givenName": "",
+          "familyName": "KEVIN FALCONER",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY COMMISSIONER PRECINCT 2\nKEVIN FALCONER REP\nCANDACE VALENZUELA DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-commissioner-precinct-2:candace-valenzuela",
+          "contestId": "tx-cx-local-2026-denton-county-commissioner-precinct-2",
+          "givenName": "",
+          "familyName": "CANDACE VALENZUELA",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY COMMISSIONER PRECINCT 2\nKEVIN FALCONER REP\nCANDACE VALENZUELA DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-commissioner-precinct-4:david-wylie",
+          "contestId": "tx-cx-local-2026-denton-county-commissioner-precinct-4",
+          "givenName": "",
+          "familyName": "DAVID WYLIE",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY COMMISSIONER PRECINCT 4\nDAVID WYLIE REP\nSTEPHANIE DRAPER DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-commissioner-precinct-4:stephanie-draper",
+          "contestId": "tx-cx-local-2026-denton-county-commissioner-precinct-4",
+          "givenName": "",
+          "familyName": "STEPHANIE DRAPER",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY COMMISSIONER PRECINCT 4\nDAVID WYLIE REP\nSTEPHANIE DRAPER DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-1:alan-wheeler",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-1",
+          "givenName": "",
+          "familyName": "ALAN WHEELER",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 1\nALAN WHEELER REP\nBRANDON MCGEE DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-1:brandon-mcgee",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-1",
+          "givenName": "",
+          "familyName": "BRANDON MCGEE",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 1\nALAN WHEELER REP\nBRANDON MCGEE DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-2:chris-pochyla",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-2",
+          "givenName": "",
+          "familyName": "CHRIS POCHYLA",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 2\nCHRIS POCHYLA REP\nKATRINA D. MOORE DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-2:katrina-d-moore",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-2",
+          "givenName": "",
+          "familyName": "KATRINA D. MOORE",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 2\nCHRIS POCHYLA REP\nKATRINA D. MOORE DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-3:james-kerbow",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-3",
+          "givenName": "",
+          "familyName": "JAMES KERBOW",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 3\nJAMES KERBOW REP\nTRISTA WILLEFORD DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-3:trista-willeford",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-3",
+          "givenName": "",
+          "familyName": "TRISTA WILLEFORD",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 3\nJAMES KERBOW REP\nTRISTA WILLEFORD DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-4:harris-hughey",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-4",
+          "givenName": "",
+          "familyName": "HARRIS HUGHEY",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 4\nHARRIS HUGHEY REP\nWILL ROBERTSON DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-4:will-robertson",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-4",
+          "givenName": "",
+          "familyName": "WILL ROBERTSON",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 4\nHARRIS HUGHEY REP\nWILL ROBERTSON DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-5:vince-handler",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-5",
+          "givenName": "",
+          "familyName": "VINCE HANDLER",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 5\nVINCE HANDLER REP\nPATRECE PERRY DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-5:patrece-perry",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-5",
+          "givenName": "",
+          "familyName": "PATRECE PERRY",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 5\nVINCE HANDLER REP\nPATRECE PERRY DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-6:blanca-oliver",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-6",
+          "givenName": "",
+          "familyName": "BLANCA OLIVER",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 6\nBLANCA OLIVER REP\nMICHELLE BUTLER DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-6:michelle-butler",
+          "contestId": "tx-cx-local-2026-denton-justice-of-the-peace-precinct-6",
+          "givenName": "",
+          "familyName": "MICHELLE BUTLER",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "JUSTICE OF THE PEACE PRECINCT 6\nBLANCA OLIVER REP\nMICHELLE BUTLER DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-county-constable-precinct-1-unexpired-term:trevor-krueger",
+          "contestId": "tx-cx-local-2026-denton-county-constable-precinct-1-unexpired-term",
+          "givenName": "",
+          "familyName": "TREVOR KRUEGER",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+            "sourceOrg": "Texas Secretary of State",
+            "collectedAt": "2026-11-03T05:28:48.924432+00:00",
+            "verifiedAt": "2026-11-03T05:28:48.924432+00:00",
+            "quote": "COUNTY CONSTABLE PRECINCT 1 (UNEXPIRED TERM)\nTREVOR KRUEGER REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election:ward-franz",
+          "contestId": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election",
+          "givenName": "",
+          "familyName": "Ward Franz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cityofdenton.com/421/Elections",
+            "sourceOrg": "City of Denton City Secretary",
+            "collectedAt": "2026-11-03T05:24:24.026655+00:00",
+            "verifiedAt": "2026-11-03T05:24:24.026655+00:00",
+            "quote": "District 1 Candidate(s) - November 3, 2026 Special Election (Names are listed in the order they will appear on the ballot.) Candidate Ward Franz Accepted Application (PDF) Candidate Sunny Busby Accepted Application (PDF) Candidate Michael Herron Accepted Application (PDF) Candidate Kris Cox Accepted Application (PDF)"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election:sunny-busby",
+          "contestId": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election",
+          "givenName": "",
+          "familyName": "Sunny Busby",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cityofdenton.com/421/Elections",
+            "sourceOrg": "City of Denton City Secretary",
+            "collectedAt": "2026-11-03T05:24:24.026655+00:00",
+            "verifiedAt": "2026-11-03T05:24:24.026655+00:00",
+            "quote": "District 1 Candidate(s) - November 3, 2026 Special Election (Names are listed in the order they will appear on the ballot.) Candidate Ward Franz Accepted Application (PDF) Candidate Sunny Busby Accepted Application (PDF) Candidate Michael Herron Accepted Application (PDF) Candidate Kris Cox Accepted Application (PDF)"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election:michael-herron",
+          "contestId": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election",
+          "givenName": "",
+          "familyName": "Michael Herron",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cityofdenton.com/421/Elections",
+            "sourceOrg": "City of Denton City Secretary",
+            "collectedAt": "2026-11-03T05:24:24.026655+00:00",
+            "verifiedAt": "2026-11-03T05:24:24.026655+00:00",
+            "quote": "District 1 Candidate(s) - November 3, 2026 Special Election (Names are listed in the order they will appear on the ballot.) Candidate Ward Franz Accepted Application (PDF) Candidate Sunny Busby Accepted Application (PDF) Candidate Michael Herron Accepted Application (PDF) Candidate Kris Cox Accepted Application (PDF)"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election:kris-cox",
+          "contestId": "tx-cx-local-2026-denton-city-of-denton-councilmember-district-1-special-election",
+          "givenName": "",
+          "familyName": "Kris Cox",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.cityofdenton.com/421/Elections",
+            "sourceOrg": "City of Denton City Secretary",
+            "collectedAt": "2026-11-03T05:24:24.026655+00:00",
+            "verifiedAt": "2026-11-03T05:24:24.026655+00:00",
+            "quote": "District 1 Candidate(s) - November 3, 2026 Special Election (Names are listed in the order they will appear on the ballot.) Candidate Ward Franz Accepted Application (PDF) Candidate Sunny Busby Accepted Application (PDF) Candidate Michael Herron Accepted Application (PDF) Candidate Kris Cox Accepted Application (PDF)"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-archer",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:archer",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-clay",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:clay",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-cooke",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:cooke",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-denton",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:denton",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-hood",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:hood",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-jack",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jack",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-montague",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montague",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-parker",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:parker",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-tarrant",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:tarrant",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-wichita",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:wichita",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-wise",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:wise",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-2-membership-young",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:young",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+            "sourceOrg": "Texas Judicial Branch",
+            "collectedAt": "2026-11-03T05:31:09.489037+00:00",
+            "verifiedAt": "2026-11-03T05:31:09.489037+00:00",
+            "quote": "Counties Served Archer Clay Cooke Denton Hood Jack Montague Parker Tarrant Wichita Wise Young"
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "Partial Denton County coverage:32complete local candidate fields/46names are verified. Two shared Second Court of Appeals fields have actual current official Tarrant sample evidence plus exact12-county jurisdiction proof; the other30fields are distinctly labeled official-list supplements with actual sample acquisition pending (29current-linked SOS certification fields and CityofDenton District1special-election four-name current official ballot-order list). No acquired actual Denton November sample is claimed.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        },
+        {
+          "text": "The13held Denton court/county contest IDs and16held candidates/core fields are reused. AllTexaslaneinputs, including complete Tarrant/Collin/Dallas, were compared before minting. Noheld Second Appeals office/candidate identity existed; one county-independent pair serves the exact entire regional electorate. Existing statewide/legislative records and measures/explanations remain unchanged.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        },
+        {
+          "text": "VoteDenton.gov county pages, personal lookup and exact1126-Active-Contest-List.pdf linked by official DallasCityHall all return403. No voter identity was submitted. Current official CityofCorinth confirms personal lookup requests full name/birthdate. A PilotPoint government-hosted sample was acquired but dates May2,2026 and is excluded from November candidate evidence. Every acquired route/time/status/hash is preserved separately.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        },
+        {
+          "text": "Coverage remains open for DentonCentralAppraisalDistrict elected places1–3, TheColony single-member districts3–6 and any other city/school/special fields absent from the acquired primary inventory. TheColony current election page links an August10filinglist for9applicants; it predates filing close and proves no final November qualification. No ordinary candidate is installed from that old list.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        },
+        {
+          "text": "District/precinct electorates are exact. Regionalcourt2, six held judicial districts, commissioner precincts2/4, justice precincts1–6, constable precinct1 and CityofDenton council district1 require reader geography matching; no entire county/city is substituted for a subdistrict. Data-ready candidate facts do not establish reader visibility.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        },
+        {
+          "text": "Declaredwriteins are separate from printed ordinary candidates. The current statewide/district certification contains no entry for either Second Appeals seat or the six Denton judicial districts; county/municipal/special named write-in inventories remain pending. No generic blank Write-in is treated as a person.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        },
+        {
+          "text": "The official SecondCourt county list supports12whole-county districtMemberships, one each for Archer,Clay,Cooke,Denton,Hood,Jack,Montague,Parker,Tarrant,Wichita,Wise,Young. The same two regional offices can therefore serve every included county; no per-county duplicate contest is minted. Actual reader delivery remains for parent/River to verify.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:denton"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:36:51.256437+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+        "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+        "httpStatus": 200,
+        "rawHash": "5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524",
+        "retrievedAt": "2026-11-03T04:07:52.153225+00:00",
+        "publisher": "Tarrant County Elections Administration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete printed Second Court of Appeals District fields, places2 and7, in current native Tarrant County November3,2026 sample. Exact same12-county regional electorate includes Denton and Tarrant, confirmed independently by official court jurisdiction page and native SOS certification in Denton block. Reused native source already acquired in prepared Tarrant evidence, without new network request. Not a Denton precinct sample. Both fields have individual voting squares under the ordinary page1 mark-one-choice instruction; no unopposed-declared-elected or VoteAll/None section exists anywhere in the three-page sample."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+        "retrievedAt": "2026-11-03T05:28:48.924432+00:00",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native Texas SOS ballot certification linked on its current November2026 election page, report datedAugust28. Complete Denton local court/county/precinct blocks on native pages341–344 provide31 complete fields/42names; two regional fields independently have actual sample evidence. Remaining29 state-certified fields are explicitly official-list supplements with actual sample acquisition pending. Entire source hash unchanged from original held certification; all13 held contest and16 held person identities/core fields are reused."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+        "finalUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+        "httpStatus": 200,
+        "rawHash": "6500cbf612952f04d1d15004e208dae42067d094baf40d9328dbc27666314022",
+        "retrievedAt": "2026-11-03T05:28:45.420451+00:00",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 state election page links native current general certification and separate declared-write-in certification. Candidate-list source remains a certification, never a sample."
+      },
+      {
+        "requestedUrl": "https://www.txcourts.gov/2ndcoa/",
+        "finalUrl": "https://www.txcourts.gov/2ndcoa/",
+        "httpStatus": 200,
+        "rawHash": "4be3c1a5d5bd1303f94def00a5df8b4060a4b5c7c60c64a7114c5c1fc98a7743",
+        "retrievedAt": "2026-11-03T05:31:09.489037+00:00",
+        "publisher": "Texas Judicial Branch",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Texas Judicial Branch jurisdiction page confirms Second Court of Appeals serves12counties including Denton/Tarrant. One region-wide office identity/electorate retained; no countywide substitution and no per-county duplicate regional race."
+      },
+      {
+        "requestedUrl": "https://www.cityofdenton.com/421/Elections",
+        "finalUrl": "https://www.cityofdenton.com/421/Elections",
+        "httpStatus": 200,
+        "rawHash": "f44a99eb2fbc2de31463c2e41dceeb6e4389a1dd8d8457d5b9e6a36d396caf8d",
+        "retrievedAt": "2026-11-03T05:24:24.026655+00:00",
+        "publisher": "City of Denton City Secretary",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current CityofDenton official election page expressly labels the complete November3,2026 District1 special-election candidates in ballot order: four names. Other tabs/May election blocks are excluded. Exact city council district1 retained. This is an official-list supplement; actual November city sample remains pending. Contact/address/application fields omitted from quotations."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+        "retrievedAt": "2026-11-03T05:28:45.863654+00:00",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Separate native certified write-in list covers statewide/district offices. No certified row for Second Appeals or six Denton judicial districts appears. County/municipal/special local write-in certification inventory remains unacquired. Statewide and other county names are outside this local packet and remain unchanged."
+      },
+      {
+        "requestedUrl": "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx",
+        "finalUrl": "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx",
+        "httpStatus": 200,
+        "rawHash": "affb7d8f97494357d703d1ad43c26bc5adf041e7662deb705bbe2f4460e7b751",
+        "retrievedAt": "2026-11-03T05:24:59.524243+00:00",
+        "publisher": "City of Dallas City Secretary",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "CityofDallas official November election page links Denton1126-Active-Contest-List.pdf under its SampleBallot section. Native download returns403. Link label alone is not an acquired sample."
+      },
+      {
+        "requestedUrl": "https://dentoncounty.granicus.com/MetaViewer.php?view_id=26&event_id=980&meta_id=314316",
+        "finalUrl": "https://legistar1.granicus.com/daystar.legistar6.sdk.ws/View.ashx?M=F&GovernmentGUID=DENT&LogicalFileName=369df98b-7203-457a-9950-542d8b515183.pdf&From=Granicus&Format=pdf",
+        "httpStatus": 200,
+        "rawHash": "47191adc0e4c67b0453af558aabb071e13646c3f5c05a154f5421b835207e43d",
+        "retrievedAt": "2026-11-03T05:26:31.156153+00:00",
+        "publisher": "Denton County Elections Administration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County current general-election notice in official Granicus agenda, native11pagePDF, confirms November3state/district/county/precinct election and public voting precinct inventory. Contains no named candidate fields and is not a sample."
+      },
+      {
+        "requestedUrl": "https://www.corinthtx.gov/m/newsflash/home/detail/29",
+        "finalUrl": "https://www.corinthtx.gov/m/newsflash/home/detail/29",
+        "httpStatus": 200,
+        "rawHash": "71327b48b79fc9c5bc629ff43794cd476a8fbc6aaffe61a55fada67c42761c08",
+        "retrievedAt": "2026-11-03T05:31:08.697667+00:00",
+        "publisher": "City of Corinth",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official CityofCorinth page describes county personal sample lookup requiring full name/birthdate. No voter identity submitted. Direct county routes currently return403; no invented public-precinct route or sample acquisition claim."
+      },
+      {
+        "requestedUrl": "https://www.thecolonytx.gov/1451/Election-2026",
+        "finalUrl": "https://www.thecolonytx.gov/1451/Election-2026",
+        "httpStatus": 200,
+        "rawHash": "dac52c0d59bdb055ae929198ab8ed8fec63afb57789302d869f70eb468560a6e",
+        "retrievedAt": "2026-11-03T05:26:00.890920+00:00",
+        "publisher": "City of The Colony",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official city election page identifies November3 single-member council districts and links an August10filinglist. That list predates filing close and does not establish final November eligibility. No ordinary candidate is installed from it."
+      },
+      {
+        "requestedUrl": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+        "finalUrl": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+        "httpStatus": 200,
+        "rawHash": "79b33739ec6084ae48a8598a31ae25a62f1f021fa7dda95887f65f67b288a6fa",
+        "retrievedAt": "2026-11-03T05:26:29.031354+00:00",
+        "publisher": "City of The Colony",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official three-page August10filing list for four single-member districts, nine applicant names, predates filing close. Research-only pending final qualification and complete November samples. No applicant is converted to ordinary candidacy."
+      }
+    ]
+  }
+}

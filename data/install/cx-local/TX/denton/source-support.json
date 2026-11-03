@@ -1,0 +1,191 @@
+[
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:52.153225+00:00",
+    "sha256": "5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524",
+    "sourceFile": "sources/5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524.source",
+    "role": "ACTUAL_OFFICIAL_SHARED_REGIONAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Complete printed Second Court of Appeals District fields, places2 and7, in current native Tarrant County November3,2026 sample. Exact same12-county regional electorate includes Denton and Tarrant, confirmed independently by official court jurisdiction page and native SOS certification in Denton block. Reused native source already acquired in prepared Tarrant evidence, without new network request. Not a Denton precinct sample. Both fields have individual voting squares under the ordinary page1 mark-one-choice instruction; no unopposed-declared-elected or VoteAll/None section exists anywhere in the three-page sample.",
+    "excerptFile": "sources/361f709e7b0dc5a4cb9d2ed4bc73e7ff622c567042fe48e02d985f5ffb3cccf9.txt",
+    "excerptSha256": "361f709e7b0dc5a4cb9d2ed4bc73e7ff622c567042fe48e02d985f5ffb3cccf9",
+    "fullTextFile": "sources/78d2f7bd8945c36a481029076a39311fc68dd7de558a8d0dfbe16a459e90a5f1.native.txt",
+    "fullTextSha256": "78d2f7bd8945c36a481029076a39311fc68dd7de558a8d0dfbe16a459e90a5f1",
+    "visualReview": {
+      "status": "ORDINARY_INDIVIDUAL_VOTING_FIELDS_AND_METHOD_VISUALLY_VERIFIED",
+      "pages": [
+        1,
+        2
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/a3869ac5018eb2a80b2e3cd551b6d5b207b3c769424e0c9e046997d127e913f4.png",
+        "sha256": "a3869ac5018eb2a80b2e3cd551b6d5b207b3c769424e0c9e046997d127e913f4"
+      },
+      {
+        "file": "sources/664d080d8e2767d60c57970a5b8ec1ca438dd115cc9544a48ce8f519cdc89cb9.png",
+        "sha256": "664d080d8e2767d60c57970a5b8ec1ca438dd115cc9544a48ce8f519cdc89cb9"
+      }
+    ],
+    "votingMethodQuote": "Please use a black or blue ink pen to mark your\nballot. To vote for your choice in each contest,\ncompletely fill in the box next to your choice."
+  },
+  {
+    "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "sourceCheckedAt": "2026-11-03T05:28:48.924432+00:00",
+    "sha256": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+    "sourceFile": "sources/c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c.source",
+    "role": "CURRENT_LINKED_OFFICIAL_CERTIFICATION;NOT_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Current native Texas SOS ballot certification linked on its current November2026 election page, report datedAugust28. Complete Denton local court/county/precinct blocks on native pages341–344 provide31 complete fields/42names; two regional fields independently have actual sample evidence. Remaining29 state-certified fields are explicitly official-list supplements with actual sample acquisition pending. Entire source hash unchanged from original held certification; all13 held contest and16 held person identities/core fields are reused.",
+    "excerptFile": "sources/7f494fe474305f4b54d52f5776b901c9970f523f4312417e3a14ada2ff4f8eed.txt",
+    "excerptSha256": "7f494fe474305f4b54d52f5776b901c9970f523f4312417e3a14ada2ff4f8eed",
+    "fullTextFile": "sources/419f64106c1266ea66dca6c74bc8d4500e446b45a726c2f7a4509f6a49d3cb64.native.txt",
+    "fullTextSha256": "419f64106c1266ea66dca6c74bc8d4500e446b45a726c2f7a4509f6a49d3cb64",
+    "quoteExtraction": "PyMuPDF native text sorted by on-page coordinates for pages341–344; fullTextFile holds separate complete native extraction in original stream order. No OCR or recreated ballot.",
+    "visualReview": {
+      "status": "ALL_31_COMPLETE_LOCAL_CERTIFICATION_FIELDS_VISUALLY_VERIFIED;NOT_SAMPLE",
+      "pages": [
+        341,
+        342,
+        343,
+        344
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/f160fef03d766b8a923ce8a6635e6ccd42c7fde0847415e3ae2620a2773ada07.png",
+        "sha256": "f160fef03d766b8a923ce8a6635e6ccd42c7fde0847415e3ae2620a2773ada07"
+      },
+      {
+        "file": "sources/80b5538a705f4134f2a879a5f9d948b97c3d426d043b4ff8cee2262353847b61.png",
+        "sha256": "80b5538a705f4134f2a879a5f9d948b97c3d426d043b4ff8cee2262353847b61"
+      },
+      {
+        "file": "sources/2ef6d5f92c75cdb381632c372557803b2cd8703b47c8e4261a78fdf6af9139f4.png",
+        "sha256": "2ef6d5f92c75cdb381632c372557803b2cd8703b47c8e4261a78fdf6af9139f4"
+      },
+      {
+        "file": "sources/6286b4d2121e20a3054341a3448a1b1201cf832eeaa7f1a0b49c7347f5baa440.png",
+        "sha256": "6286b4d2121e20a3054341a3448a1b1201cf832eeaa7f1a0b49c7347f5baa440"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+    "finalUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+    "sourceCheckedAt": "2026-11-03T05:28:45.420451+00:00",
+    "sha256": "6500cbf612952f04d1d15004e208dae42067d094baf40d9328dbc27666314022",
+    "sourceFile": "sources/6500cbf612952f04d1d15004e208dae42067d094baf40d9328dbc27666314022.source",
+    "role": "CURRENT_OFFICIAL_SOURCE_LINKING_PAGE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Current November3,2026 state election page links native current general certification and separate declared-write-in certification. Candidate-list source remains a certification, never a sample."
+  },
+  {
+    "sourceUrl": "https://www.txcourts.gov/2ndcoa/",
+    "finalUrl": "https://www.txcourts.gov/2ndcoa/",
+    "sourceCheckedAt": "2026-11-03T05:31:09.489037+00:00",
+    "sha256": "4be3c1a5d5bd1303f94def00a5df8b4060a4b5c7c60c64a7114c5c1fc98a7743",
+    "sourceFile": "sources/4be3c1a5d5bd1303f94def00a5df8b4060a4b5c7c60c64a7114c5c1fc98a7743.source",
+    "role": "EXACT_REGIONAL_ELECTORATE_AUTHORITY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Official Texas Judicial Branch jurisdiction page confirms Second Court of Appeals serves12counties including Denton/Tarrant. One region-wide office identity/electorate retained; no countywide substitution and no per-county duplicate regional race.",
+    "excerptFile": "sources/6dd98400707b484fcddce44b060ac2490784f6b88bd77042f7829c97f4146d02.txt",
+    "excerptSha256": "6dd98400707b484fcddce44b060ac2490784f6b88bd77042f7829c97f4146d02"
+  },
+  {
+    "sourceUrl": "https://www.cityofdenton.com/421/Elections",
+    "finalUrl": "https://www.cityofdenton.com/421/Elections",
+    "sourceCheckedAt": "2026-11-03T05:24:24.026655+00:00",
+    "sha256": "f44a99eb2fbc2de31463c2e41dceeb6e4389a1dd8d8457d5b9e6a36d396caf8d",
+    "sourceFile": "sources/f44a99eb2fbc2de31463c2e41dceeb6e4389a1dd8d8457d5b9e6a36d396caf8d.source",
+    "role": "CURRENT_OFFICIAL_FINAL_BALLOT_ORDER_LIST;NOT_SAMPLE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Current CityofDenton official election page expressly labels the complete November3,2026 District1 special-election candidates in ballot order: four names. Other tabs/May election blocks are excluded. Exact city council district1 retained. This is an official-list supplement; actual November city sample remains pending. Contact/address/application fields omitted from quotations.",
+    "excerptFile": "sources/5ced41517b41a2d28d060544f7da193566506c1425eeed8cb821cdff19eda00a.txt",
+    "excerptSha256": "5ced41517b41a2d28d060544f7da193566506c1425eeed8cb821cdff19eda00a"
+  },
+  {
+    "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "sourceCheckedAt": "2026-11-03T05:28:45.863654+00:00",
+    "sha256": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+    "sourceFile": "sources/eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24.source",
+    "role": "SEPARATE_CURRENT_STATE_AND_DISTRICT_WRITE_IN_CERTIFICATION",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Separate native certified write-in list covers statewide/district offices. No certified row for Second Appeals or six Denton judicial districts appears. County/municipal/special local write-in certification inventory remains unacquired. Statewide and other county names are outside this local packet and remain unchanged.",
+    "excerptFile": "sources/7e90690fd40e8e5ff47bf88a218266ee46b4ccdcd27b2a1954ba23c333d2ea6b.txt",
+    "excerptSha256": "7e90690fd40e8e5ff47bf88a218266ee46b4ccdcd27b2a1954ba23c333d2ea6b",
+    "fullTextFile": "sources/7e90690fd40e8e5ff47bf88a218266ee46b4ccdcd27b2a1954ba23c333d2ea6b.native.txt",
+    "fullTextSha256": "7e90690fd40e8e5ff47bf88a218266ee46b4ccdcd27b2a1954ba23c333d2ea6b"
+  },
+  {
+    "sourceUrl": "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx",
+    "finalUrl": "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx",
+    "sourceCheckedAt": "2026-11-03T05:24:59.524243+00:00",
+    "sha256": "affb7d8f97494357d703d1ad43c26bc5adf041e7662deb705bbe2f4460e7b751",
+    "sourceFile": "sources/affb7d8f97494357d703d1ad43c26bc5adf041e7662deb705bbe2f4460e7b751.source",
+    "role": "OFFICIAL_SOURCE_DISCOVERY_ONLY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "CityofDallas official November election page links Denton1126-Active-Contest-List.pdf under its SampleBallot section. Native download returns403. Link label alone is not an acquired sample."
+  },
+  {
+    "sourceUrl": "https://dentoncounty.granicus.com/MetaViewer.php?view_id=26&event_id=980&meta_id=314316",
+    "finalUrl": "https://legistar1.granicus.com/daystar.legistar6.sdk.ws/View.ashx?M=F&GovernmentGUID=DENT&LogicalFileName=369df98b-7203-457a-9950-542d8b515183.pdf&From=Granicus&Format=pdf",
+    "sourceCheckedAt": "2026-11-03T05:26:31.156153+00:00",
+    "sha256": "47191adc0e4c67b0453af558aabb071e13646c3f5c05a154f5421b835207e43d",
+    "sourceFile": "sources/47191adc0e4c67b0453af558aabb071e13646c3f5c05a154f5421b835207e43d.source",
+    "role": "OFFICIAL_ELECTION_DATE_AND_SCOPE_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "County current general-election notice in official Granicus agenda, native11pagePDF, confirms November3state/district/county/precinct election and public voting precinct inventory. Contains no named candidate fields and is not a sample.",
+    "fullTextFile": "sources/e7b8abcbfaa0d10f7c2be834aeb5e5d061e7dafc90a2572593bd0bd49d1d66ae.native.txt",
+    "fullTextSha256": "e7b8abcbfaa0d10f7c2be834aeb5e5d061e7dafc90a2572593bd0bd49d1d66ae"
+  },
+  {
+    "sourceUrl": "https://www.corinthtx.gov/m/newsflash/home/detail/29",
+    "finalUrl": "https://www.corinthtx.gov/m/newsflash/home/detail/29",
+    "sourceCheckedAt": "2026-11-03T05:31:08.697667+00:00",
+    "sha256": "71327b48b79fc9c5bc629ff43794cd476a8fbc6aaffe61a55fada67c42761c08",
+    "sourceFile": "sources/71327b48b79fc9c5bc629ff43794cd476a8fbc6aaffe61a55fada67c42761c08.source",
+    "role": "OFFICIAL_SAMPLE_ACCESS_CONTEXT_ONLY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Current official CityofCorinth page describes county personal sample lookup requiring full name/birthdate. No voter identity submitted. Direct county routes currently return403; no invented public-precinct route or sample acquisition claim."
+  },
+  {
+    "sourceUrl": "https://www.thecolonytx.gov/1451/Election-2026",
+    "finalUrl": "https://www.thecolonytx.gov/1451/Election-2026",
+    "sourceCheckedAt": "2026-11-03T05:26:00.890920+00:00",
+    "sha256": "dac52c0d59bdb055ae929198ab8ed8fec63afb57789302d869f70eb468560a6e",
+    "sourceFile": "sources/dac52c0d59bdb055ae929198ab8ed8fec63afb57789302d869f70eb468560a6e.source",
+    "role": "UNRESOLVED_FINAL_ELIGIBILITY_CONTEXT",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Current official city election page identifies November3 single-member council districts and links an August10filinglist. That list predates filing close and does not establish final November eligibility. No ordinary candidate is installed from it."
+  },
+  {
+    "sourceUrl": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+    "finalUrl": "https://www.thecolonytx.gov/DocumentCenter/View/17783/Candidate-Filing-List-November-3-2026-General-Election-081026",
+    "sourceCheckedAt": "2026-11-03T05:26:29.031354+00:00",
+    "sha256": "79b33739ec6084ae48a8598a31ae25a62f1f021fa7dda95887f65f67b288a6fa",
+    "sourceFile": "sources/79b33739ec6084ae48a8598a31ae25a62f1f021fa7dda95887f65f67b288a6fa.source",
+    "role": "OLD_FILINGS_ONLY_FINAL_QUALIFICATION_UNVERIFIED",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified file bytes, with separate hashes for selected exact native excerpts and full extraction.",
+    "evidence": "Native official three-page August10filing list for four single-member districts, nine applicant names, predates filing close. Research-only pending final qualification and complete November samples. No applicant is converted to ordinary candidacy.",
+    "excerptFile": "sources/b047bb6e0bb6d02d478eca723499f0c2a690b74898768c32348c3ba389aaf19e.txt",
+    "excerptSha256": "b047bb6e0bb6d02d478eca723499f0c2a690b74898768c32348c3ba389aaf19e"
+  }
+]

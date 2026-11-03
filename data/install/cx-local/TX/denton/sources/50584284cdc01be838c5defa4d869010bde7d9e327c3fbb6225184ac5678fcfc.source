@@ -1,0 +1,420 @@
+
+	<!DOCTYPE html>
+	<html xmlns:umbraco="http://umbraco.org" lang="en">
+	<head>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <link rel="shortcut icon" href="/ico/favicon.ico" >
+        <title>TJB | 2nd COA | About the Court | Justices</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="" />
+		<meta property="og:image" content="" />
+		<meta property="og:description" content="" />
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" integrity="sha512-dhpxh4AzF050JM736FF+lLVybu28koEYRrSJtTKfA4Z7jKXJNQ5LcxKmHEwruFN2DuOAi9xeKROJ4Z+sttMjqw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" integrity="sha512-S6hLYzz2hVBjcFOZkAOO+qEkytvbg2k9yZ1oO+zwXNYnQU71syCWhWtIk3UYDvUW2FCIwkzsTcwkEE58EZPnIQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" integrity="sha512-77kidyGDJGWWmJ0MVO0CRp+6nRgZRK67frUVBRvnL1zCcmcw9FkCQxpDHq52SebW+KWTAnnuX0Qk2/MQWogWoQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/content.css" type="text/css">
+		<link rel="stylesheet" href="/css/main-changes-beta.css" type="text/css">
+        <link rel="stylesheet" href="/css/tjb-alerts-and-announcements.css" type="text/css">
+		<link rel="stylesheet" href="/css/not-case-search.css" type="text/css">
+		<link rel="stylesheet" href="/css/list.css" type="text/css">
+		<link rel="stylesheet" href="/css/bios.css" type="text/css">
+		<link rel="stylesheet" href="/css/fluid-table.css" type="text/css">
+		<link rel="stylesheet" href="/css/accordian.css" type="text/css">
+		<link rel="stylesheet" href="/css/tjb-table.css" type="text/css">
+		<link rel="stylesheet" href="/css/figures.css" type="text/css">
+		<link rel="stylesheet" href="/css/sidebar-nav.css" type="text/css">
+		<link rel="stylesheet" href="/css/media-icons.css" type="text/css">
+		<link rel="stylesheet" href="/css/video.css" type="text/css">
+        <link rel="stylesheet" href="/css/custom.css" type="text/css">
+        <link rel="stylesheet" href="/css/accessibility-remediation.css" type="text/css">
+
+		<script type="text/javascript">
+			(function(c,l,a,r,i,t,y){
+				c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+				t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+				y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+			})(window, document, "clarity", "script", "sc8p7y17nb");
+		</script>
+		
+
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>  -->
+		<script>window.jQuery || document.write('<script src="/Scripts/jquery.min.js"><\/script>')</script>
+        <script src="/Scripts/jquery.min.js"></script>
+				
+		<!-- Sortable Table -->
+		<script src="/scripts/sorttable.js"></script>
+		
+		<!-- Enable CSS browser-specific selectors, e.g., to fix problems in IE without causing problems in Chrome -->
+		<script src="/scripts/css_browser_selector.js" type="text/javascript"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js" integrity="sha512-28e47INXBDaAH0F91T8tup57lcH+iIqq9Fefp6/p+6cgF7RKnqIMSmZqZKceq7WWo9upYMBLMYyMsFq7zHGlug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <!-- Umbraco Forms Dependencies -->
+        <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
+        <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+
+		<link rel="stylesheet" href="/css/print.css" type="text/css" media="print">
+        <script src="/Scripts/modernizr.custom.26633.js"></script>
+
+		
+
+
+    </head>
+    <body>
+		<!--[if lt IE 7]>
+			<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+		<header class="header-main no-print">
+			<div class="mainnav">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="brand span6">
+							<a class="brand" href="/">
+								<div class="brand-block">Texas Judicial</div>
+								<p class="brandp">Branch</p>
+							</a>
+						</div>
+						<div class="span3 text-right no-print">
+							<ul class="inline">
+								<li>
+									<a href="#MainContent"><span class="sr-only">Skip to main content</span></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<nav class="navbar tcomenu no-print">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<button type="button" class="btn btn-navbar btn-small" data-toggle="collapse" data-target="#nav1">Menu</button>
+					<div class="nav-collapse collapse" id="nav1">
+						<ul class="nav">
+  <li class="menuborder"><a href="/">Home</a></li>
+  <li class="menuborder dropdown active"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Courts<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li>
+        <div class="tcomenu-content">
+          <ul class="span3 unstyled">
+            <li><a href="/about-texas-courts/" target="_self">About Texas Courts</a></li>
+            <li><a href="/supreme/" target="_self">Supreme Court</a></li>
+            <li><a href="/cca/" target="_self">Court of Criminal Appeals</a></li>
+            <li><a href="/1stcoa/" target="_self">1<sup>st</sup> Court of Appeals</a></li>
+            <li><a href="/2ndcoa/" target="_self">2<sup>nd</sup> Court of Appeals</a></li>
+            <li><a href="/3rdcoa/" target="_self">3<sup>rd</sup> Court of Appeals</a></li>
+            <li><a href="/4thcoa/" target="_self">4<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/5thcoa/" target="_self">5<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/6thcoa/" target="_self">6<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/7thcoa/" target="_self">7<sup>th</sup> Court of Appeals</a></li></ul><ul class=" span3 unstyled "><li><a href="/8thcoa/" target="_self">8<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/9thcoa/" target="_self">9<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/10thcoa/" target="_self">10<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/11thcoa/" target="_self">11<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/12thcoa/" target="_self">12<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/13thcoa/" target="_self">13<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/14thcoa/" target="_self">14<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/15thcoa/" target="_self">15<sup>th</sup> Court of Appeals</a></li>
+            <li><a href="/courts/non-appellate-courts/multi-district-litigation-panel/" target="_self">Multi-District Litigation Panel</a></li>
+            <li><a href="/businesscourt/" target="_self">Business Court</a></li>
+            <li><a href="/courts/non-appellate-courts/childrens-courts/" target="_self">Children's Courts</a></li>
+            <li><a href="/courts/non-appellate-courts/specialty-courts/" target="_self">Specialty Courts</a></li>
+            <li><a href="/courts/non-appellate-courts/trial-courts/" target="_self">Trial Courts</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li class="menuborder dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Rules &amp; Forms<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li><a href="/forms/" target="_self">Forms</a></li>
+      <li><a href="/rules-forms/rules-standards/" target="_self">Rules & Standards</a></li>
+      <li><a href="/rules-forms/local-rules-forms-and-standing-orders/" target="_self">Local Rules, Forms and Standing Orders</a></li>
+    </ul>
+  </li>
+  <li class="menuborder dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Organizations<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li>
+        <div class="tcomenu-content">
+          <ul class="unstyled border-rt pull-left">
+            <li class="header">Policy &amp; Funding</li>
+            <li><a href="/organizations/policy-funding/administrative-judicial-regions/" target="_self">Administrative Judicial Regions</a></li>
+            <li><a href="https://www.texaschildrenscommission.gov/" target="_blank">Children's Commission</a></li>
+            <li><a href="/jcit/" target="_self">Judicial  Committee on Information Technology</a></li>
+            <li><a href="/jbcc/" target="_self">Judicial Branch Certification Commission</a></li>
+            <li><a href="https://www.texasjcmh.gov/" target="_blank">Judicial Commission on Mental Health</a></li>
+            <li><a href="/jcc/" target="_self">Judicial Compensation Commission</a></li>
+            <li><a href="/jdb/" target="_self">Judicial Districts Board</a></li>
+            <li><a href="/scac/" target="_self">Supreme Court Advisory Committee</a></li>
+            <li><a href="/organizations/policy-funding/task-force-on-judicial-emergency-preparedness/" target="_self">Task Force on Judicial Emergency Preparedness</a></li>
+            <li><a href="https://www.texasatj.org/" target="_blank">Texas Access to Justice Commission</a></li>
+            <li><a href="https://www.teajf.org/" target="_blank">Texas Access to Justice Foundation</a></li>
+            <li><a href="/tcjs/" target="_self">Texas Commission on Judicial Selection</a></li>
+            <li><a href="/organizations/policy-funding/texas-commission-to-expand-civil-legal-services/" target="_self">Texas Commission to Expand Civil Legal Services</a></li>
+            <li><a href="/fsc/" target="_self">Texas Forensic Science Commission</a></li>
+            <li><a href="https://www.tidc.texas.gov/" target="_blank">Texas Indigent Defense Commission</a></li>
+            <li><a href="/tjc/" target="_self">Texas Judicial Council</a></li>
+            <li><a href="/organizations/policy-funding/timothy-cole-exoneration-review-commission/" target="_self">Timothy Cole Exoneration Review Commission</a></li>
+          </ul>
+          <ul class="unstyled pull-left">
+            <li class="header">Agencies</li>
+            <li><a href="https://ocfw.texas.gov/" target="_blank">Office of Capital and Forensic Writs</a></li>
+            <li><a href="/oca/" target="_self">Office of Court Administration</a></li>
+            <li><a href="https://www.scjc.texas.gov/" target="_blank">State Commission on Judicial Conduct</a></li>
+            <li><a href="https://www.sll.texas.gov/" target="_blank">State Law Library</a></li>
+            <li><a href="https://www.spa.texas.gov/" target="_blank">State Prosecuting Attorney</a></li>
+          </ul>
+          <ul class="unstyled border-lt pull-left">
+            <li class="header">Bar &amp; Education</li>
+            <li><a href="https://ble.texas.gov/home" target="_blank">Board of Law Examiners</a></li>
+            <li><a href="/organizations/bar-education/judicial-education/" target="_self">Judicial Education</a></li>
+            <li><a href="/organizations/bar-education/ombudsman-for-attorney-discipline/" target="_self">Ombudsman for Attorney Discipline</a></li>
+            <li><a href="https://www.texasbar.com/" target="_blank">State Bar of Texas</a></li>
+            <li><a href="https://www.tbls.org/" target="_blank">Texas Board of Legal Specialization</a></li>
+            <li><a href="https://www.legalethicstexas.com/" target="_blank">Texas Center for Legal Ethics</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li class="menuborder dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Publications &amp; Training<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li><a href="/publications-training/clerk-resources/" target="_self">Clerk Resources</a></li>
+      <li><a href="/publications-training/judicial-ethics-bench-books/" target="_self">Judicial Ethics & Bench Books</a></li>
+      <li><a href="/publications-training/legislative-information/" target="_self">Legislative Information</a></li>
+      <li><a href="/publications-training/publications/" target="_self">Publications</a></li>
+      <li><a href="/publications-training/training-materials/" target="_self">Training Materials</a></li>
+      <li><a href="/publications-training/webinars/" target="_self">Webinars</a></li>
+    </ul>
+  </li>
+  <li class="menuborder dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Programs &amp; Services<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li><a href="/bail/" target="_self">Bail & Pretrial</a></li>
+      <li><a href="/programs-services/certification-registration-licensing/" target="_self">Certification, Registration & Licensing</a></li>
+      <li><a href="/programs-services/centers-of-excellence/" target="_self">Centers of Excellence</a></li>
+      <li><a href="/ccs/" target="_self">Court Consultant Services</a></li>
+      <li><a href="/programs-services/court-reminder-program/" target="_self">Court Reminder Program</a></li>
+      <li><a href="/programs-services/court-security/" target="_self">Court Security</a></li>
+      <li><a href="/programs-services/digital-evidence-sharing/" target="_self">Digital Evidence Sharing</a></li>
+      <li><a href="/dvrp/" target="_self">Domestic Violence Resource Program</a></li>
+      <li><a href="/programs-services/electronic-filing/" target="_self">Electronic Filing</a></li>
+      <li><a href="/programs-services/electronic-hearings-zoom/" target="_self">Electronic Hearings (Zoom)</a></li>
+      <li><a href="/programs-services/guardianship-abuse-fraud-and-exploitation-deterrence-program-gafedp/" target="_self">Guardianship Abuse, Fraud, and Exploitation Deterrence Program (GAFEDP)</a></li>
+      <li><a href="https://www.tidc.texas.gov/" target="_blank">Indigent Defense</a></li>
+      <li><a href="/programs-services/interpretation-translation/" target="_self">Interpretation & Translation</a></li>
+      <li><a href="/programs-services/legal-aid/" target="_self">Legal Aid</a></li>
+      <li><a href="/programs-services/remote-marriage-licenses/" target="_self">Remote Marriage Licenses</a></li>
+      <li><a href="/programs-services/self-help/" target="_self">Self-Help</a></li>
+      <li><a href="/programs-services/uniform-case-management-system/" target="_self">Uniform Case Management System</a></li>
+      <li><a href="https://streams.txcourts.gov" target="_blank">YouTube Channel Directory</a></li>
+      <li><a href="/programs-services/archived-programs-services/" target="_self">Archived Programs & Services</a></li>
+    </ul>
+  </li>
+  <li class="menuborder dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Judicial Data<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li><a href="/judicial-data/citation-by-publication/" target="_self">Citation by Publication</a></li>
+      <li><a href="https://card.txcourts.gov/" target="_blank">Court Activity Database</a></li>
+      <li><a href="/judicial-data/cps-reporting/" target="_self">CPS Reporting</a></li>
+      <li><a href="/judicial-data/data-quality-assistance-program/" target="_self">Data Quality & Assistance Program</a></li>
+      <li><a href="/judicial-directory/" target="_self">Judicial Directory</a></li>
+      <li><a href="/open-records-policy/" target="_self">Open Records Policy</a></li>
+      <li><a href="/judicial-data/protective-order-registry/" target="_self">Protective Order Registry</a></li>
+      <li><a href="/reporting-to-oca/" target="_self">Reporting to OCA</a></li>
+      <li><a href="/judicial-data/settlement-database/" target="_self">Settlement Database</a></li>
+      <li><a href="/statistics/" target="_self">Statistics & Other Data</a></li>
+      <li><a href="/judicial-data/vexatious-litigants/" target="_self">Vexatious Litigants</a></li>
+    </ul>
+  </li>
+  <li class="menuborder"><a href="https://www.efiletexas.gov/" target="_blank">eFile Texas</a></li>
+  <li class="menuborder dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="#">Media<span class="sr-only">Click to expand submenu</span><b class="caret"></b></a><ul class="dropdown-menu">
+      <li><a href="/media/public-affairs/" target="_self">Public Affairs</a></li>
+      <li><a href="/media/how-to-report-scam-text-messages/" target="_self">How to Report Scam Text Messages</a></li>
+    </ul>
+  </li>
+</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		
+
+
+		
+	<div class="container-fluid" id="content">
+		<div class="row-fluid tcopage-header">
+			<div class="span4">
+				<div id="pageName" class="subsite-name">
+					Second Court of Appeals
+				</div>
+			</div>
+			<div class="span4 search no-print">
+				<form class="form-inline text-center" action="https://search.txcourts.gov/CaseSearch.aspx?coa=cossall&ext=1" method="post" target="_blank">
+					<div class="input-append input-push-top">
+						<label for="FindCase"><span class="sr-only">Find My Case</span></label>
+						<input type="hidden" name="__EVENTTARGET" value="" />
+						<input type="hidden" name="__EVENTARGUMENT" value="" />
+						<input type="hidden" name="__LASTFOCUS" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$SearchType" value="rbSearchByCase" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$chkAllCourts" value="on" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtCaseNumber" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$olCaseType" value="0" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtDateFiledStart" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtDateFiledStart$dateInput" value="" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledStart_dateInput_ClientState" value="" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledStart_calendar_SD" value="[]" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledStart_calendar_AD" value="[[1980,1,1],[2099,12,30],[2013,8,20]]" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledStart_ClientState" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtDateFiledEnd" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtDateFiledEnd$dateInput" value="" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledEnd_dateInput_ClientState" value="" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledEnd_calendar_SD" value="[]" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledEnd_calendar_AD" value="[[1980,1,1],[2099,12,30],[2013,8,20]]" />
+						<input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFiledEnd_ClientState" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtStyle1" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtStyle2" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtAttorneyNameOrBarNumber" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$txtTrialCourtCaseNumber" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$ddlOriginateCOA" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$ddlCounty" value="" />
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$ddlTrialCourt" value="" />		
+						<input type="hidden" name="ctl00$ContentPlaceHolder1$btnSearch" value="Search" />
+						<input class="span6" name="ctl00$ContentPlaceHolder1$txtPartialCaseNumber" required="required" id="FindCase" placeholder="Appellate Case #" type="text" />
+						<button type="submit" class="btn btn-primary">Find my case</button>
+					</div>
+				</form>
+			</div>
+			<div class="span4 search no-print">
+				<form id="search-form" class="form-inline pull-right" method="get" action="/search-result-page.aspx"><div class="input-append input-push-top"><input id="group" name="group" type="hidden" /><label for="searchInput"><span class="sr-only">Site Search</span></label><input id="searchInput" name="q" placeholder="Site Search" type="text" required="required" /><button type="submit" class="btn btn-primary" title="Search"><i class="fa fa-search"><span style="font-size: 0;"> </span></i></button></div></form><div id="search-facet" class="tabbable pull-right" style="display: none;"><ul class="nav nav-pills"><li class=""><a data-toggle="pill" href="#" name="tjb">Texas Judicial Branch</a></li><li class="active"><a data-toggle="pill" href="#" name="2ndcoa">Second Court of Appeals</a></li><li><a href="#" data-toggle="pill" name="web">Web</a></li></ul></div><script type="text/javascript">
+			(function() {
+				
+				$('#group').val($('#search-facet li.active a').attr('name'));
+
+				
+			})();
+		</script>
+			</div>
+		</div>
+		<div class="row-fluid no-print">
+            <div class="span12">
+                <nav><span class="hidden">You are here: </span><ul class="breadcrumb breadcrumbsBackColor"><li><a href="/">Home</a><span class="divider">/</span></li><li><span class="disabled">Courts</span><span class="divider">/</span></li><li /><li><a href="/2ndcoa/">2<sup>nd</sup> Court of Appeals</a><span class="divider">/</span></li><li><a href="/2ndcoa/about-the-court/">About the Court</a><span class="divider">/</span></li><li class="active">Justices</li></ul></nav>
+            </div>
+        </div>
+        <div class="row-fluid no-print">
+			<div class="span12 tjb-alerts-and-announcements-box">
+				
+        	</div>
+        </div>
+		<div class="row-fluid">
+			<div class="span3">
+				
+				<nav class="panel panel-phone no-print"><div class="panel-heading-no-collapse"><a href="/2ndcoa/">2<sup>nd</sup> COA
+						Home
+					</a></div><ul class="nav nav-list lv1">
+  <li><a href="/2ndcoa/contact-us/" target="_self">Contact Us</a></li>
+  <li><a href="/2ndcoa/self-help-resources/" target="_self">Self-Help Resources</a></li>
+  <li><a href="/2ndcoa/important-announcements/" target="_self">Important Announcements</a></li>
+  <li class="hasChildren"><a href="/2ndcoa/practice-before-the-court/" target="_self">Practice Before the Court</a></li>
+  <li><a href="/2ndcoa/attorney-portal/" target="_self">Attorney Portal</a></li>
+  <li class="panelHeading hasChildren"><a href="/2ndcoa/about-the-court/" target="_self">About the Court</a><ul class="lv2">
+      <li class="active panelHeading"><a href="/2ndcoa/about-the-court/justices/" target="_self">Justices</a><ul class="lv3"></ul>
+      </li>
+      <li class="hasChildren"><a href="/2ndcoa/about-the-court/court-history/" target="_self">Court History</a></li>
+      <li class="hasChildren"><a href="/2ndcoa/about-the-court/historical-opinions/" target="_self">Historical Opinions</a></li>
+      <li class="hasChildren"><a href="/2ndcoa/about-the-court/docket-statistics/" target="_self">Docket Statistics</a></li>
+      <li><a href="/2ndcoa/about-the-court/case-summaries/" target="_self">Case Summaries</a></li>
+      <li class="hasChildren"><a href="/2ndcoa/about-the-court/appointments-fees-reports/" target="_self">Appointments & Fees Reports</a></li>
+    </ul>
+  </li>
+  <li><a href="/2ndcoa/careers/" target="_self">Careers</a></li>
+  <li><a href="/2ndcoa/faq/" target="_self">Frequently Asked Questions</a></li>
+</ul></nav>
+				<nav class="panel panel-phone no-print"><div class="panel-heading-no-collapse">Case Information</div>
+  <ul class="nav nav-list">
+    <li><a href="https://search.txcourts.gov/CaseSearch.aspx?coa=coa02">Case Search</a></li>
+    <li><a href="https://search.txcourts.gov/CaseSearch.aspx?coa=coa02&amp;s=d&amp;d=1">Document Search</a></li>
+    <li><a href="https://search.txcourts.gov/Events/default.aspx?coa=coa02&amp;s=c">Event Reports</a></li>
+    <li><a href="https://search.txcourts.gov/DocketSrch.aspx?coa=coa02">Released Orders &amp; Opinions</a></li>
+    <li><a href="https://search.txcourts.gov/Submission.aspx?coa=coa02&amp;s=c">Case Submissions</a></li>
+    <li><a href="https://casemail.txcourts.gov/?coa=coa02">Case Mail</a></li>
+    <li><a href="/2ndcoa/practice-before-the-court/oral-arguments/">Oral Arguments Audio</a></li>
+  </ul></nav>
+				
+				
+			</div>
+			<div class="span9" id="MainContent">
+				<div class="panel">
+					<h1 class="page-title-h1">Justices</h1>
+					<div class="panel-content">
+						<div class="row-fluid">
+						    
+                                
+		                    
+							<div class="fluid-container bioSummaries"><div class="row-fluid bioSummary"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/chief-justice-bonnie-sudderth/" title="Chief Justice Bonnie Sudderth"><img src="/media/1452052/chief-sudderth-2021.jpg" alt="Photo of Chief Justice Bonnie Sudderth" class="bioImage" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/chief-justice-bonnie-sudderth/">Chief Justice Bonnie Sudderth</a></h2><p>Prior to her appointment to the Second Court of Appeals in 2015, Chief Justice Bonnie Sudderth served as a trial court judge for 25 years – six years as a judge and chief judge of the Fort Worth Municipal Courts and almost 19 years as a state district judge in Tarrant County.
+For over 20 years, Chief Justice Sudderth has also... <a href="/2ndcoa/about-the-court/justices/chief-justice-bonnie-sudderth/">Read more</a></p></div></div><div class="row-fluid bioSummary"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/justice-elizabeth-kerr/" title="Justice Elizabeth Kerr"><img src="/media/1463439/esk-headshot-10-2026.png" alt="Photo of Justice Elizabeth Kerr" class="bioImage imageFrame" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/justice-elizabeth-kerr/">Justice Elizabeth Kerr</a></h2><p class="bioPosition">Place 3</p><p>Justice Kerr grew up in Memphis, Tennessee, graduating from White Station High School in 1974. She became a Texan when she matriculated at Rice University in Houston, obtaining a B.A. in English and Art History in 1978, followed by a J.D. from the University of Texas in 1982. Immediately following law school, Justice Kerr spent two years as a briefing... <a href="/2ndcoa/about-the-court/justices/justice-elizabeth-kerr/">Read more</a></p></div></div><div class="row-fluid bioSummary"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/justice-j-wade-birdwell/" title="Justice J. Wade Birdwell"><img src="/media/1452050/judge-birdwell-2021.jpg" alt="Photo of Justice J. Wade Birdwell" class="bioImage" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/justice-j-wade-birdwell/">Justice J. Wade Birdwell</a></h2><p class="bioPosition">Place 4</p><p>J. Wade Birdwell of Arlington was appointed by Governor Greg Abbott to serve on the Second Court of Appeals on November 10, 2017.  Previously, Justice Birdwell served as judge of the 342nd Judicial District Court in Tarrant County.  He is a member of the State Bar of Texas, Tarrant County Bar Association, Texas Bar Foundation, and the Tarrant County Bar... <a href="/2ndcoa/about-the-court/justices/justice-j-wade-birdwell/">Read more</a></p></div></div><div class="row-fluid bioSummary" style="page-break-before: always;"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/justice-dabney-bassel/" title="Justice Dabney Bassel"><img src="/media/1442744/bassel-picture.jpg" alt="Photo of Justice Dabney Bassel" class="bioImage" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/justice-dabney-bassel/">Justice Dabney Bassel</a></h2><p class="bioPosition">Place 5</p><p>Justice Bassel grew up in San Antonio.  He graduated from Texas Military Institute, Trinity University, and Baylor University School of Law.  
+After graduating from Baylor, Justice Bassel began his career by serving as the briefing attorney for Justice Ted Akin of the Fifth Court of Appeals. In 1984, he joined the Fort Worth firm of Law, Snakard, and Gambill, where he... <a href="/2ndcoa/about-the-court/justices/justice-dabney-bassel/">Read more</a></p></div></div><div class="row-fluid bioSummary"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/justice-dana-womack/" title="Justice Dana Womack"><img src="/media/1443374/judge_womack_2.png" alt="Photo of Justice Dana Womack" class="bioImage" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/justice-dana-womack/">Justice Dana Womack</a></h2><p class="bioPosition">Place 2</p><p>Prior to her appointment to the Second Court of Appeals, Justice Womack served as Judge of the 348th District Court for 20 years and as a Tarrant County Assistant District Attorney for almost 12 years.  She graduated from Baylor University and Baylor University School of Law, and she is Board Certified in Civil Appellate Law and Civil Trial Law.
+ 
+ 
+ 
+ </p></div></div><div class="row-fluid bioSummary"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/justice-mike-wallach/" title="Justice Mike Wallach"><img src="/media/1452030/judge-wallach-2021.jpg" alt="Photo of Justice Mike Wallach" class="bioImage" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/justice-mike-wallach/">Justice Mike Wallach</a></h2><p class="bioPosition">Place 6</p><p>Justice Wallach is a Fort Worth native. He graduated from Fort Worth Eastern Hills High School as Top Male Graduate in 1973. He then graduated from Texas Christian University in 1975, magna cum laude, with a Bachelor of Arts in Political Science and History. He proceeded to earn his Doctor of Jurisprudence from the University of Houston Law School, cum... <a href="/2ndcoa/about-the-court/justices/justice-mike-wallach/">Read more</a></p></div></div><div class="row-fluid bioSummary" style="page-break-before: always;"><div class="span2 bioImageSpan"><a href="/2ndcoa/about-the-court/justices/justice-brian-walker/" title="Justice Brian Walker"><img src="/media/1452051/judge-brian-walker.jpg" alt="Photo of Justice Brian Walker" class="bioImage" /></a></div><div class="span9 offset1"><h2><a href="/2ndcoa/about-the-court/justices/justice-brian-walker/">Justice Brian Walker</a></h2><p class="bioPosition">Place 7</p><p>Justice Brian Walker received his Bachelor of Science from Texas State University, a Master of Arts in International Relations from the University of Oklahoma, a Master of Biblical and Theological Studies from Dallas Theological Seminary, and his Doctor of Jurisprudence from the University of Houston.  Prior to law school, Justice Walker served as an intern on a presidential political campaign,... <a href="/2ndcoa/about-the-court/justices/justice-brian-walker/">Read more</a></p></div></div></div>
+						    
+                                
+		                    
+						</div>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+	</div>
+
+
+		<div class="container-fluid" id="newsArea">
+			
+			
+		</div>
+
+		
+	
+
+
+		<div class="no-print">
+			<footer class="footer no-print"><div class="page"><div class="container-fluid"><div class="row-fluid"><div class="headpad"><div class="span1 footer-branding full-footer-branding"><a href="/"><img src="/img/brand/tjb-seal-144.png" alt="Texas Judicial Branch home page" /></a><a href="https://www.texasamerica250.com/" target="_blank"><img src="/img/brand/texasamerica250-logo.jpg" class="texasamerica250-logo" alt="Texas America250 website" /></a></div><div class="span2 contact-info"><dl> <dt class="goldText">Physical  Address </dt> <dd>Tim Curry Criminal Justice Center </dd> <dd>401 West Belknap, Suite 9000 </dd> <dd>Fort Worth, Texas 76196 -0211</dd> </dl>
+										 
+									</div><div class="span2 contact-info"><dl> <dt class="goldText">Mailing  Address </dt> <dd>Tim Curry Criminal Justice Center </dd> <dd>401 West Belknap, Suite 9000 </dd> <dd>Fort Worth, Texas 76196-0211</dd> </dl>
+										 
+									</div><div class="span2 contact-info"><dl><dt class="goldText">Phone</dt><dd><dl class="phoneNumber"><dt>Main:</dt><dd>(817) 884-1900</dd></dl></dd></dl>
+			 
+		
+										 
+									</div><div class="span3"><dl><dt>Finance</dt><dd><a href="https://comptroller.texas.gov/transparency/open-data/dashboards.php" target="_blank">Where the Money Goes</a></dd><dd><a href="https://sao.fraud.texas.gov/" target="_blank">Report Fraud, Waste and Abuse</a></dd><dd><a href="/media/1463335/2ndcoa_lar_fy28-29.pdf" target="_blank">Legislative Appropriations Request</a></dd><dd><a href="/media/1461693/fy2026-2nd-coa-operating-budget-agy-222.pdf" target="_blank">Operating Budget</a></dd></dl><dl><dt>Administrative</dt><dd><a href="/media/1461178/leave-policy-updated-20250901.pdf" target="_blank">Time & Leave Policy</a></dd></dl></div><div class="span2"><dl><dt>Resources</dt><dd><a href="/careers/">Careers</a></dd> <dd><a href="/site-policies/">Site Policies</a></dd> <dd><a href="https://gov.texas.gov/organization/hsgd">Texas Homeland Security</a></dd> <dd><a href="https://veterans.portal.texas.gov/">Texas Veterans Portal</a></dd> <dd><a href="https://www.texas.gov/">Texas.gov</a></dd> <dd><a href="https://www.tsl.texas.gov/trail/index.html">Texas Records and Information Locator (TRAIL)</a></dd> <dd><a href="/contact-us/">Contact the Webmaster</a></dd></dl></div></div></div></div></div></footer>
+		</div>
+
+		
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#my-error").bind('closed', function () {
+				var date=new Date();
+				var expireDays=1;
+				date.setTime(date.getTime()+expireDays*24*3600*1000);
+				document.cookie="tco_error=true;expires="+date.toGMTString()+";path=/";
+			});
+			if(document.cookie.indexOf("tco_error=true")>=0){
+				$("#my-error").remove();
+			}
+		});
+	</script>
+
+		
+		<!-- Add textInline class to any p element that contains a span with class textInline (GEN-251) -->
+		<script>
+			$( "p:has(span.textInline)" ).addClass( "textInline" );
+		</script>
+
+		
+
+	</body>
+</html>

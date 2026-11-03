@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "sources": 11,
+  "exactQuotes": 98,
+  "accessCaptureHashes": 33,
+  "contests": 32,
+  "candidates": 46,
+  "actualSharedRegionalSampleFields": 2,
+  "officialListSupplementFields": 30,
+  "actualDentonNovemberSampleFiles": 0,
+  "reusedContestCoreFieldsPreserved": 13,
+  "reusedCandidateCoreFieldsPreserved": 16,
+  "wholeCountyMemberships": 12,
+  "missingReaderRegistryKeys": 17,
+  "partialCounty": true,
+  "sharedOfflineCheck": "PENDING_PARENT",
+  "productionWrites": "NONE"
+}

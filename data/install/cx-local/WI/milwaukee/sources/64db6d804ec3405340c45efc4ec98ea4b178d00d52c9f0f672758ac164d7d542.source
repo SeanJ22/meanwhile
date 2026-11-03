@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html id="htmlTag" xmlns="http://www.w3.org/1999/xhtml" class="Firefox 59_0 Firefox59 WinNT titanDisplay">
+	<head>
+		<meta content="initial-scale=1,maximum-scale=4.0,minimum-scale=1.0,user-scalable=0,width=device-width" name="viewport"/>
+		<title>MyMilwaukeeHome</title>
+	<!-- 	from jquery ui head -->
+		<meta http-equiv='X-UA-Compatible' content='IE=edge'><meta name='viewport' content='width=device-width, initial-scale=1'>
+		<link rel='stylesheet' href='/ItmdScripts/css/jquery-ui-1.11/jquery-ui.min.css' type='text/css' />
+		<script src='/ItmdScripts/js/jquery.min.js'></script>
+		<script src='/ItmdScripts/js/jquery-ui.min-1.11.js'></script>
+		<script src='/ItmdScripts/js/message.js'></script>
+		<script src='/ItmdScripts/js/mil-default.js'></script>
+	<!-- 	end from jquery ui head -->
+		<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<link rel='stylesheet' type='text/css' href='/KWATClient/v8/css/reset.css'>
+<link rel='stylesheet' type='text/css' href='/ItmdScripts/css/font-awesome/css/font-awesome.min.css'/>
+<link rel='stylesheet' type='text/css' href='/ItmdScripts/css/dropZone.css'/>
+<link rel='stylesheet' type='text/css' href='/ItmdScripts/bootstrap-4.1.1-dist/css/bootstrap.min.css'/>
+<link rel='stylesheet' type='text/css' href='/KWATClient/v8/css/tablesort.css'/>
+<link rel='stylesheet' type='text/css' href='/KWATClient/v8/css/breadcrumbs.css'/>
+<script src='/ItmdScripts/js/popper.min.js'></script>
+<script src='/ItmdScripts/bootstrap-4.1.1-dist/js/bootstrap.min.js'></script>
+<script src='/ItmdScripts/js/addrValidator.js'></script>
+<script src='/ItmdScripts/js/AddressParser.js'></script>
+<link rel='stylesheet' type='text/css' href='/KWATClient/v8/css/reset.css'>
+<link rel='stylesheet' type='text/css' href='/KWATClient/v8/css/core.css'/>
+<link rel='stylesheet' type='text/css' href='/KWATClient/v8/css/formControls.css'/>
+<script src='/KWATClient/v8/widgets/core/GlobalFunctions.js'></script>
+<script src='/KWATClient/v8/widgets/core/FileDragDrop.js'></script>
+<script src='/KWATClient/v8/widgets/core/FileDragDropMultiple.js'></script>
+<script src='/KWATClient/v8/widgets/core/Component.js'></script>
+<script src='/KWATClient/v8/widgets/core/Record.js'></script>
+<script src='/KWATClient/v8/widgets/core/Container.js'></script>
+<script src='/KWATClient/v8/widgets/core/Attacher.js'></script>
+<script src='/KWATClient/v8/widgets/containers/FormContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TableContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TablePlusContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TableCompactPopupContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TableCompactInlineContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TableCompactPopup2Container.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TableCompactInline2Container.js'></script>
+<script src='/KWATClient/v8/widgets/containers/TableCompactInline3Container.js'></script>
+<script src='/KWATClient/v8/widgets/containers/ReportContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/DirectedGraphContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/CalendarContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/CalendarEventSourceContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/bundle/BundleContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/bundle/TableForBundleContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/bundle/TableOneToManyContainer.js'></script>
+<script src='/KWATClient/v8/widgets/containers/bundle/TableOneToManyPopupContainer.js'></script>
+<script src='/KWATClient/v8/widgets/navigation/Sidebar.js'></script>
+<script src='/KWATClient/v8/widgets/navigation/Sidebar2.js'></script>
+<script src='/KWATClient/v8/widgets/attachers/ColumnSelector.js'></script>
+<script src='/KWATClient/v8/widgets/attachers/RowSelector.js'></script>
+<script src='/KWATClient/v8/widgets/attachers/AdvancedRowSelector.js'></script>
+<script src='/KWATClient/v8/widgets/attachers/BatchUpdate.js'></script>
+<script src='/KWATClient/v8/widgets/attachers/ReSequence.js'></script>
+<script src='/KWATClient/v8/widgets/attachers/ReportSelector.js'></script>
+<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700'>
+<script src='/KWATClient/v8/util/jquery.menu-aim.js'></script>
+<script src='/KWATClient/v8/util/sidebar.js'></script>
+<script src='/KWATClient/v8/util/filter.js'></script>
+<script src='/KWATClient/v8/util/modernizr.js'></script>
+<script src='/KWATClient/v8/util/tablesort.js'></script>
+<script src='/KWATClient/v8/util/tablesort.number.js'></script>
+<script src='/KWATClient/v8/widgets/core/Cache.js'></script>
+<link rel='stylesheet' type='text/css' href='/ItmdScripts/css/breadcrumbs.css'/>
+<script src='/KWATClient/v8/util/tablesort.date.js'></script>
+
+		<link href='/KWATClient/fullcalendar/core/main.css' rel='stylesheet' type='text/css' />
+		<link href='/KWATClient/fullcalendar/daygrid/main.css' rel='stylesheet' type='text/css' />
+		<link href='/KWATClient/fullcalendar/core/main.css' rel='stylesheet' />
+		<link href='/KWATClient/fullcalendar/daygrid/main.css' rel='stylesheet' />
+		<script src='/KWATClient/fullcalendar/core/main.js'></script>
+		<script src='/KWATClient/fullcalendar/interaction/main.js'></script>
+		<script src='/KWATClient/fullcalendar/daygrid/main.js'></script>		
+		<script src='/KWATClient/fullcalendar/timegrid/main.js'></script>		
+		<script src='/KWATClient/fullcalendar/list/main.js'></script>		
+		<script src='/KWATClient/v8/util/filter.js'></script> 
+		<link href="https://fonts.googleapis.com/css?family=Lato:400,400italic,700|Oswald:400,300,700" rel="stylesheet" type="text/css">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+		<link type="text/css" rel="stylesheet" href="/KWATClient/v8/css/mke-application.css" />
+		<link type="text/css" rel="stylesheet" href="/KWATClient/v8/css/mke-application_styles.css" />
+		<link type="text/css" rel="stylesheet" href="/KWATClient/v8/css/mke-application-left-nav.css" />
+		<link rel="shortcut icon" href="/KWATClient/v8/css/images/favicon-mke.png" type="image/x-icon" />
+		<link rel="icon" href="/KWATClient/v8/css/images/favicon-mke.png" type="image/x-icon" />
+		<style>
+		#featureImage {
+				background-image: url("/KWATClient/v8/css/images/imgSkylineFromPier.jpg");
+		}
+		</style>
+		<script src="/KWATClient/v8/scripts/NWS.js"></script> 
+		<script src="/KWATClient/v8/scripts/mke-application.js"></script>
+		<!--  Google Translate Scripts -->
+		<script type="text/javascript">
+			function googleTranslateElementInit() {
+				new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, includedLanguages: 'af,ar,de,en,es,fr,hi,hmn,hr,it,iw,ja,ko,lo,pl,pt,ru,sr,tl,vi,zh-CN'}, 'google_translate_element');
+			}
+		</script> 
+		<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> 
+		<script type="text/javascript" id="">
+			(function(){function c(a){a=a.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]");a=new RegExp("[\\?\x26]"+a+"\x3d([^\x26#]*)");a=a.exec(location.search);return null===a?"":decodeURIComponent(a[1].replace(/\+/g," "))}if(window.MutationObserver){var f=new MutationObserver(function(a){a.forEach(function(b){var d=b.oldValue,e=b.target.className;-1===d.indexOf("translated-")&&-1<e.indexOf("translated-")&&(trace(b),window.dataLayer.push({event:"pageTranslated",translationLanguage:b.target.lang||document.getElementsByTagName("html")[0].getAttribute("xml:lang"),translationService:"on-page google translate"}))})}),g=document.querySelector("html");f.observe(g,{attributes:!0,attributeOldValue:!0,attributeFilter:["class"]})}-1<window.location.href.indexOf("translate.googleusercontent.com")&&window.dataLayer.push({event:"pageTranslated",translationLanguage:c("tl"),translationService:"google translate website"});-1<window.location.href.indexOf("translatoruser-int.com")&&window.dataLayer.push({event:"pageTranslated",translationLanguage:c("to"),translationService:"bing translator website"})})();
+		</script>
+	</head>
+	<body id="bodyTag" class="mkeAppBody">
+		<div id="headerWrapper">
+			<div id="headerWrapperInside">
+				<div id='topNavWrapper' ></div>
+				<div id="logoContainer">
+					<div id="nameTag">
+						<div>
+							<p> <a href="#">MyMilwaukeeHome</a> </p>
+						</div>
+					</div>
+				</div>
+				<div id="mobileMenuButton"><a title="Open Menu"><i class="fa fa-bars" aria-hidden="true"></i></a></div>
+				<div id="scrollTop" style="display: none;"><a href="#bodyTag" id="scrollTopButton"><i class="fa fa-chevron-up fa-2x"></i></a></div>
+				<div id="departmentTopNavWrapper">
+					<div id="departmentTopControls">
+						<div id='main-topbar' class="siteBounds"> 
+							<!--BeginNoIndex-->
+							<ul class="menu">
+							</ul>
+							<!--EndNoIndex-->
+							<!--Begin User Account And AppFilter-->
+							<ul class='cd-top-nav menu' style='display:inline-block;'>
+								<!-- Include filters Here -->
+<script async='true' defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyB0zdyraDCM0nIQKOuwOjMyIidndhie4JU'></script>
+								<li class='has-children account cd-med-text ie-up' tabindex="0">
+									<a class='cd-med-text' href='#0'><span class='fa fa-user'></span>&nbsp;Account</a>
+									<ul><li><a class='cd-med-text' href='/LoginMKE/loginCitizen.jsp?from=/MyMilwaukeeHome'>Login</a></li></ul>
+								</li>
+							</ul>
+							<!--End User Account And AppFilter-->
+						</div>
+					</div>
+				</div>
+				<div id="WhiteLine"></div>
+			</div>
+		</div>
+		<div id="MobileSearchBarWrapper" style="display: none;">
+			<div class="siteBounds">
+				<div class="searchOuterWrapper">
+					<div class="searchInnerWrapper">
+						<input type="text" id="mobileSearchBar_searchTerms" name="mobileSearchBar_searchTerms" maxlength="200" value="" autocomplete="off" onkeypress="if(event.keyCode==13 || event.which==13) return false;" placeholder="Search Milwaukee City..." aria-label="Search by Keyword" onkeyup="DefaultButton(event, document.getElementById('mobileSearchBar_searchGo'));NWS.SearchSegmentSupport.GetSuggestions(event, 75, 3, 2000, '/EN/City/Search', 'mobileSearchBar_', 5, true);">
+						&nbsp;
+						<input type="button" value="Search" id="mobileSearchBar_searchGo" name="mobileSearchBar_searchGo" class="search" aria-label="Search" onclick="SearchSubmit('', document.getElementById('mobileSearchBar_searchTerms'))">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="MenuOpacity"></div>
+		<div id="featureWrapper" style="display:none;">
+			<div id="featureText">
+				<div class="siteBounds">
+					<div>
+						<h1>MyMilwaukeeHome</h1>
+					</div>
+				</div>
+			</div>
+			<div id="featureImage"></div>
+		</div>
+		<div id="mainBody" class="cd-main-content" style="margin-top:75px">
+			<main>
+				<div id='main-main' class='content-wrapper'>
+				</div>
+			</main>
+		</div>
+		<div id="departmentFooter"> </div>
+		<div id="footer">
+			<div class="siteBounds">
+				<p style="text-align:center"><a href="https://city.milwaukee.gov" rel="noopener noreferrer" target="_blank"><img alt="City of Milwaukee" src="/KWATClient/v8/css/images/LogoAndMark_White.png"></a></p>
+			</div>
+		</div>
+		<div id="poweredBy">
+			<div class="siteBounds"> <a> &copy; 2019 City of Milwaukee </a> </div>
+		</div>
+			<div id="MobileMenuOpacity"></div>
+		<div id="MobileSearchOpacity"></div>
+		<div id="departmentMobileNavWrapper">
+			<div class="topMobile">
+				<h4>Menu</h4>
+				<span class="closeMenu">X</span> </div>
+			<div id="departmentMobileNavContainer">
+				<div id="departmentMobileNav"> 
+					<!--BeginNoIndex-->
+					<ul class="menu">
+					</ul>
+					<!--EndNoIndex--> 
+					<!--Begin User Account And AppFilter-->
+					<ul class='cd-top-nav menu' style='display:inline-block;'>
+						<!-- Include filters Here -->
+<script async='true' defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyB0zdyraDCM0nIQKOuwOjMyIidndhie4JU'></script>
+						<li class='has-children account cd-med-text ie-up' tabindex="0">
+							<a class='cd-med-text' href='#0'><span class='fa fa-user'></span>&nbsp;Account</a>
+							<ul><li><a class='cd-med-text' href='/LoginMKE/loginCitizen.jsp?from=/MyMilwaukeeHome'>Login</a></li></ul>
+						</li>
+					</ul>
+					<!--End User Account And AppFilter-->
+				</div>
+				<div id="ActionLinksMobile">
+					<h4><a href="tel:+1-414-286-2489" target="_self"><em class="fa fa-lg fa-mobile-phone">&nbsp;</em>CALL for Action: 414-286-CITY</a></h4>
+					<h4><a href="https://milwaukee.gov/action" rel="noopener noreferrer" target="_blank"><em class="fa fa-medium fa-mouse-pointer">&nbsp;</em>CLICK for Action</a></h4>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>$("#topNavWrapper").load("/KWATClient/staticContent/topNavWrapper.jsp");</script>
+	<script src='js/customToApp.js'></script>
+	<script type='text/javascript'>
+		var appFilterField = $("#appFilterField");
+		var response = jsonRpcSync("Services","getGlobalColumnFilters",{});
+		if(response.success){
+			appFilterField.val(response.value);
+		}
+		appFilterField.keyup(function(e){if(e.keyCode == 13){applyAppfilter();}});
+		function applyAppfilter(){
+			var result = jsonRpcSync("Services","setGlobalColumnFilter",{column:'APP_NAME',value:appFilterField.val()});
+			var selectors = $(".row-selector.inited");
+			for(var i = 0; i < selectors.length; i++){
+				$(selectors[i]).data("attacher").search();
+			}
+		}
+	</script>
+	<script>$("#main-main").load("justVoting.jsp?page=justVoting.jsp");</script>
+</html>

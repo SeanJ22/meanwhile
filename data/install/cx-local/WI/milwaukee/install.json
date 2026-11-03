@@ -1,0 +1,72 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "WI",
+  "county": "Milwaukee",
+  "countyFips": "55079",
+  "populationRank": 63,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "operation": "Refresh only the two exact held Milwaukee County contest/candidate IDs with current actual-sample evidence. Preserve all other WI records, legislative IDs, measures and reader explanations. No new candidate or contest ID is minted; no production publication performed.",
+  "subjects": [
+    {
+      "id": "ba01-pacific-wi-milwaukee-county-sheriff",
+      "title": "Milwaukee County Sheriff",
+      "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf"
+    },
+    {
+      "id": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court",
+      "title": "Milwaukee County Clerk of Circuit Court",
+      "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf"
+    }
+  ],
+  "coverage": {
+    "preparedContests": 2,
+    "preparedCandidacies": 2,
+    "newContests": 0,
+    "newCandidacies": 0,
+    "refreshedHeldContests": 2,
+    "refreshedHeldCandidacies": 2,
+    "actualOfficialSampleFiles": 5,
+    "actualSamplePages": 9,
+    "completePublishedTwoPageSamples": 4,
+    "publishedFrontOnlySamples": 1,
+    "completeCountyContestInventoryFields": 40,
+    "countyInventoryNamedOfficeFields": 31,
+    "countyInventoryLocalCandidateFields": 2,
+    "countyInventoryLocalCandidateNames": 2,
+    "countyInventoryReferenda": 9,
+    "ancillaryLocalSchoolQuestions": 6,
+    "sourceCaptures": 16,
+    "allMunicipalSampleStyleCensus": false,
+    "readerDistrictsMissing": 0,
+    "measuresPrepared": 0,
+    "absencesCreated": 0
+  },
+  "summary": "Two held county fields/two Democratic candidates confirmed on current official samples and complete county inventory: Sheriff Denita R. Ball and Clerk of Circuit Court Anna Maria Hodges. No new local named candidate field appears in the complete current official county inventory. Six school referendum questions remain ancillary.",
+  "reusedContestIds": [
+    "ba01-pacific-wi-milwaukee-county-sheriff",
+    "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court"
+  ],
+  "reusedCandidacyIds": [
+    "ba01-pacific-wi-milwaukee-county-sheriff:6c2df89148b726dd",
+    "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court:29853fa001e1ea6e"
+  ],
+  "newContestIds": [],
+  "newCandidacyIds": [],
+  "nextOwner": "River: merge exact held evidence refresh against latest state; preserve every unrelated WI record and all measure/explanation attachments. Separate measure and sample-style followups remain explicit.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 16 captured sources and 4 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

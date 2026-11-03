@@ -1,0 +1,78 @@
+{
+  "status": "ANCILLARY_MEASURE_REVIEW_NOT_INSTALLABLE",
+  "questions": [
+    {
+      "title": "School District of Brown Deer Referendum Question I School District of Brown Deer",
+      "status": "ANCILLARY_NOT_PREPARED",
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Brown Deer Referendum Question I School District of Brown Deer Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      },
+      "readerDistrictMapping": "NOT_ASSIGNED_WITHOUT_PRECISE_MEASURE_SCOPE_REVIEW"
+    },
+    {
+      "title": "School District of Brown Deer Referendum Question II School District of Brown Deer",
+      "status": "ANCILLARY_NOT_PREPARED",
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Brown Deer Referendum Question II School District of Brown Deer Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      },
+      "readerDistrictMapping": "NOT_ASSIGNED_WITHOUT_PRECISE_MEASURE_SCOPE_REVIEW"
+    },
+    {
+      "title": "Fox Point - Bayside School District Referendum Fox Point-Bayside School District",
+      "status": "ANCILLARY_NOT_PREPARED",
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Fox Point - Bayside School District Referendum Fox Point-Bayside School District Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      },
+      "readerDistrictMapping": "NOT_ASSIGNED_WITHOUT_PRECISE_MEASURE_SCOPE_REVIEW"
+    },
+    {
+      "title": "School District of Greenfield Referendum Question I School District of Greenfield",
+      "status": "ANCILLARY_NOT_PREPARED",
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Greenfield Referendum Question I School District of Greenfield Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      },
+      "readerDistrictMapping": "NOT_ASSIGNED_WITHOUT_PRECISE_MEASURE_SCOPE_REVIEW"
+    },
+    {
+      "title": "School District of Greenfield Referendum Question II School District of Greenfield",
+      "status": "ANCILLARY_NOT_PREPARED",
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Greenfield Referendum Question II School District of Greenfield Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      },
+      "readerDistrictMapping": "NOT_ASSIGNED_WITHOUT_PRECISE_MEASURE_SCOPE_REVIEW"
+    },
+    {
+      "title": "School District of Whitefish Bay Referendum School District of Whitefish Bay",
+      "status": "ANCILLARY_NOT_PREPARED",
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Whitefish Bay Referendum School District of Whitefish Bay Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      },
+      "readerDistrictMapping": "NOT_ASSIGNED_WITHOUT_PRECISE_MEASURE_SCOPE_REVIEW"
+    }
+  ],
+  "limit": "Question titles and official yes/no inventory are preserved. Full exact question text, precise electorate and explanation attachment review must precede any separate measure install. Existing WI measures remain outside this incoming change."
+}

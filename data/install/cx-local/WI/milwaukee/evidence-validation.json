@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-03T06:37:56.423797+00:00",
+  "result": "PASS",
+  "sourceCaptures": 16,
+  "allSourceAndTextHashes": "PASS",
+  "allJsonSourceQuotes": 62,
+  "preparedHeldContests": 2,
+  "preparedHeldCandidates": 2,
+  "allHeldCoreFieldsAndIdsPreserved": true,
+  "completeCurrentTwoPageSampleWitnesses": 4,
+  "partialPublishedFrontSampleWitnesses": 1,
+  "publishedSamplePages": 9,
+  "completeOfficialCountyContestInventory": 40,
+  "countyNamedCandidateFields": 2,
+  "countyNames": 2,
+  "ancillaryLocalSchoolQuestions": 6,
+  "allMunicipalitySampleCensus": false,
+  "blankWriteInSlotsNotPeople": true,
+  "incomingMeasures": 0,
+  "absencesCreated": 0,
+  "heldStateFileUnchanged": true,
+  "productionWrites": false
+}

@@ -1,0 +1,17 @@
+{
+  "items": [
+    {
+      "status": "SAMPLE_STYLE_CENSUS_NOT_COMPLETE",
+      "issue": "Five official sample files acquired, four complete two-page PDFs and one Hales front-only PDF. Every municipality/ward style has not been fetched; full county field inventory is independently captured."
+    },
+    {
+      "status": "LOCAL_SCHOOL_MEASURES_ANCILLARY",
+      "questions": 6,
+      "file": "pending-measures.json"
+    },
+    {
+      "status": "NAMED_WRITE_IN_REGISTRY_NOT_ACQUIRED",
+      "file": "declared-write-ins.json"
+    }
+  ]
+}

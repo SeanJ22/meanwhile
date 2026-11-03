@@ -1,0 +1,263 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-sheriff",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+          "divisionVintage": "2026",
+          "title": "Milwaukee County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "Milwaukee County Election Commission",
+            "collectedAt": "2026-11-03T06:29:13.596897+00:00",
+            "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+            "quote": "Sheriff \nVote for 1 \nDenita R. Ball \n(Democratic) \nwrite-in:"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/county:milwaukee",
+          "divisionVintage": "2026",
+          "title": "Milwaukee County Clerk of Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "Milwaukee County Election Commission",
+            "collectedAt": "2026-11-03T06:29:13.596897+00:00",
+            "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+            "quote": "Clerk of Circuit Court \nVote for 1 \nAnna Maria Hodges\n(Democratic) \nwrite-in:"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-sheriff:6c2df89148b726dd",
+          "contestId": "ba01-pacific-wi-milwaukee-county-sheriff",
+          "familyName": "Denita R. Ball",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "Milwaukee County Election Commission",
+            "collectedAt": "2026-11-03T06:29:13.596897+00:00",
+            "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+            "quote": "Sheriff \nVote for 1 \nDenita R. Ball \n(Democratic) \nwrite-in:"
+          }
+        },
+        {
+          "id": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court:29853fa001e1ea6e",
+          "contestId": "ba01-pacific-wi-milwaukee-county-clerk-of-circuit-court",
+          "familyName": "Anna Maria Hodges",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+            "sourceOrg": "Milwaukee County Election Commission",
+            "collectedAt": "2026-11-03T06:29:13.596897+00:00",
+            "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+            "quote": "Clerk of Circuit Court \nVote for 1 \nAnna Maria Hodges\n(Democratic) \nwrite-in:"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:36:45.085736+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+        "finalUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+        "rawHash": "dd159ef4a40b295c05251e540f265f80e7af5f69bfd7e7cbf7ed02dc238c7be2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:29:13.596897+00:00",
+        "publisher": "City of Franklin Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual official current complete two-page November3,2026 Franklin AD1 Wards1-3 sample; both complete county candidate fields contain one printed name each.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+        "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+        "rawHash": "9a3ffcd4e04a9c7242b23d3e6126319541856b11206f725f61a1149863ce0f03",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:29:13.637255+00:00",
+        "publisher": "City of Milwaukee Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual official current complete bilingual two-page November3,2026 City of Milwaukee Ward1 ballot, publicly retrieved by published ward parameter without voter identity. Both complete county candidate fields agree with held identities.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+        "finalUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+        "rawHash": "ae5631b72d5334cc0dfc07ec788a1d1fa9a13f6c5c2b0205a3a6423076619c34",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:30:41.773341+00:00",
+        "publisher": "Village of Whitefish Bay Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual official current complete two-page November3,2026 Whitefish Bay sample; both county candidates match held identities; local school question remains ancillary.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.greendale.org/Greendale%20Sample%20Ballot.pdf?t=202609141426520",
+        "finalUrl": "https://cms4files1.revize.com/villageofGreendalewi/Greendale%20Sample%20Ballot.pdf?t=202609141426520",
+        "rawHash": "85a0b0e03d204169e2eafa3e73dd818d71a309774f76efd835c6cfffb207438d",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:32:06.076564+00:00",
+        "publisher": "Village of Greendale Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual official current complete two-page November3,2026 Greendale sample. Official referring page expressly says all village wards have the same contests. Both complete county candidate fields match held identities.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://county.milwaukee.gov/files/county/county-clerk/Election-Commission/Upcoming-Elections/ElectionCandidates",
+        "finalUrl": "https://county.milwaukee.gov/files/county/county-clerk/Election-Commission/Upcoming-Elections/ElectionCandidates",
+        "rawHash": "4184e68921d9ab71b777b3a23732684075980cdcf635a9f74e7598ae5ffa5fae",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:29:37.405293+00:00",
+        "publisher": "Milwaukee County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county fall candidate roster datedJune18,2026, explicitly for November3general/August11primary. Exactly Sheriff and Clerk of Circuit Court, one certified Democratic candidate each. Names on actual final sample govern Ball middle initial. Reader quotes exclude mailing addresses.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "finalUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "rawHash": "3da09aedefd655c544c706e8c20ab7dbe528d5f3a632fa187a5a82d687f399ff",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:31:28.859353+00:00",
+        "publisher": "Milwaukee County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county November3general election-night contest inventory captured pre-polls with zero votes; used solely as an office/choice inventory, not results or a sample ballot. Complete40summaryfields cover521wards/19municipalities and contain exactly two local named candidate fields.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://county.milwaukee.gov/EN/County-Clerk/Election-Commission/Election-Results",
+        "finalUrl": "https://county.milwaukee.gov/EN/County-Clerk/Election-Commission/Election-Results",
+        "rawHash": "b3a7b986ca4cd389e484599fa2ad359e21f6b81ae9792a9b8f2a49795e728fc9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:30:41.781286+00:00",
+        "publisher": "Milwaukee County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county results index links the current November3general contest inventory.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://city.milwaukee.gov/election/ElectionInformation/UpcomingElection",
+        "finalUrl": "https://city.milwaukee.gov/election/ElectionInformation/UpcomingElection",
+        "rawHash": "61f938b130ce3f11e0dea421fc0f99b393e7b341ab6eab69220f4ea035a57cb0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:29:37.430250+00:00",
+        "publisher": "City of Milwaukee Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official city page expressly says no municipal elected offices are up for election November3,2026. This current-source fact creates no absence record.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://city.milwaukee.gov/election/ElectionInformation/ElectionNotices",
+        "finalUrl": "https://city.milwaukee.gov/election/ElectionInformation/ElectionNotices",
+        "rawHash": "bec809994ea0649fac3399b64ce34c1c59fc3910c46f15f292bec7eeead9853b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:29:37.437281+00:00",
+        "publisher": "City of Milwaukee Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official city notice index and official sample-selector link; external notice folder is not treated as independently enumerated.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/singleEmbed.jsp?page=justVoting.jsp",
+        "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/singleEmbed.jsp?page=justVoting.jsp",
+        "rawHash": "64db6d804ec3405340c45efc4ec98ea4b178d00d52c9f0f672758ac164d7d542",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:31:28.860347+00:00",
+        "publisher": "City of Milwaukee Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official public sample selector source. The actual Ward1 PDF was fetched directly with a published ward parameter, without a voter name or address.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.wfbvillage.gov/270/Election-Information",
+        "finalUrl": "https://www.wfbvillage.gov/270/Election-Information",
+        "rawHash": "1dd09a819d65614c57e9c42f249a41771f5c57739183f486aba042379d24f885",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:29:37.449212+00:00",
+        "publisher": "Village of Whitefish Bay Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official village page links the actual November3sample.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.greendale.org/departments/clerk/elections.php",
+        "finalUrl": "https://www.greendale.org/departments/clerk/elections.php",
+        "rawHash": "41a53c5250d9d3bc7647deb25dd944acabd472f3b59f6f851024f8bba7b55a56",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:31:04.959310+00:00",
+        "publisher": "Village of Greendale Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official village page links the actual sample and expressly says every ward has the same contests.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://halescornerswi.gov/elections/",
+        "finalUrl": "https://halescornerswi.gov/elections/",
+        "rawHash": "fa485ee7f6f5715d080535e61237777402a233e0994df91871a589649bc34f83",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:31:04.957399+00:00",
+        "publisher": "Village of Hales Corners Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official village page links the raster sample hosted by its authorized storage publisher. Published PDF has only one front page, so complete backside/style coverage is not claimed.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.ci.greenfield.wi.us/675/Elections",
+        "finalUrl": "https://www.ci.greenfield.wi.us/675/Elections",
+        "rawHash": "63e278fcc4d553d52c0ac01c08efbb3abc69e08478ecfeaecd2596966ac20b3c",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:31:04.958544+00:00",
+        "publisher": "City of Greenfield Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official city page links MyVote for sample access and two school referendum explanations; no address-based selector was submitted. This is election information, not an actual city sample.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.wauwatosa.net/government/departments/city-clerk/elections-voting",
+        "finalUrl": "https://wauwatosa.gov/departments/city-clerk/elections-voting/",
+        "rawHash": "e88955dac2d5463a9ae95b52b7ad9e06fb3881d6250e46bb8de49651231c9b89",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:31:04.959714+00:00",
+        "publisher": "City of Wauwatosa Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official city election information lists the November3 offices and links MyVote; no voter address was submitted. Actual countywide candidate proof comes from independently acquired current samples.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

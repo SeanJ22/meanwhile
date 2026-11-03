@@ -1,0 +1,3241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<!-- Google Tag Manager for GA4 -->
+				<script>(function(w,d,s,l,i){w.GAMeasurementID='G-EBKC3MP420';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');</script>
+				<!-- End Google Tag Manager for GA4 -->
+				<script type='text/javascript'>
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				</script>
+	<script>
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	</script>
+			
+
+	<script type="text/javascript">
+		window.departmentHeader = {};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= false;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 40em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script async src="https://docaccess.com/docbox.js"></script>
+	
+	<meta name="category0" content="Home" />
+<meta name="category1" content="Departments" />
+<meta name="category2" content="Village Clerk" />
+<meta name="category3" content="Election Information" />
+
+	
+	<meta name="theme-color" content="rgb(63, 104, 170)">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+		<title>Election Information | Whitefish Bay, WI</title>
+
+		<meta name="description" content="Election information and resources.">
+			<script src="/Assets/Scripts/jQuery/jquery-3.7.1.min.js"></script>
+	<script src="/Assets/Scripts/jQuery/jquery-migrate-3.6.0.min.js" type="text/javascript"></script>
+	
+
+	<!--[if IE 6]><script language="JavaScript" type="text/javascript"> var isie6 = true; </script><![endif]-->
+	<!--[if IE 7]><script language="JavaScript" type="text/javascript"> var isie7 = true; </script><![endif]-->
+	<!--[if IE 8]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<!--[if IE 9]><script language="JavaScript" type="text/javascript"> var isie8 = true; </script><![endif]-->
+	<script type="text/javascript"><!--
+	var intCountryCode = 840;
+	var order = '';
+//--></script>
+	
+	<link href="/-2140275272.css" rel="stylesheet" type="text/css" />	<link href="/1446145047.css" rel="stylesheet" type="text/css" />
+
+	<link rel="stylesheet" type="text/css" href="/Assets/Styles/Print.css" media="print">
+	<script type="text/javascript">
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	</script>
+	<!--CPHeadContent-->
+	<script src="/739942322.js" type="text/javascript"></script>
+	
+	
+	
+	
+
+
+
+
+	<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="/App_Themes/ie8.css"><![endif]-->
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/App_Themes/ie7.css"><![endif]-->
+	<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/App_Themes/ie6.css"><![endif]-->
+	<!--[if lt IE 9]><script type="text/javascript" src="/Scripts/html5.js"></script><![endif]-->
+
+	<script type="text/javascript">
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	</script>
+	<script src="/Assets/Scripts/AlpineJS/3.14.1/alpine.min.js" type="text/javascript" defer="defer"></script>
+</head>
+<body class="wide " >
+
+    <script>jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});</script>
+	<div id="popoverModal" class="cp-PopOver cp-PopOver--modal cp-AdminWrap" style="position: fixed; display: none;">
+	<div class="cp-PopOver-header">
+		<h3 class="cp-PopOver-title"></h3>
+		<button class="cp-Btn cp-PopOver-close" onclick="closePopOverModal(event)">
+			<svg class="cp-Icon--close" alt="close" title="close">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconClose"></use>
+			</svg>
+		</button>
+	</div>
+	<div id="cpPopOverBody" class="cp-PopOver-body">
+		<form id="cpPopOverForm" name="cpPopOverForm" novalidate></form>
+	</div>
+	<div id="cpPopOverFooter" class="cp-PopOver-footer">
+		<div class="cp-BtnGroup" id="actionButtons">
+			<!-- Action buttons will be dynamically added here -->
+		</div>
+	</div>
+</div>
+    <div id="fb-root"></div>
+<div id=skipToContentLinks>
+<a href="#cc3507358e-fa36-4abe-8906-b884155329bc" target="_self" class="skipToContentLink">Skip to Main Content</a>
+</div>
+    <form id="frmReferenceFormForTelerikEditorDialogs"></form>
+
+        <input type="hidden" id="GoogleMapsKey" value="AIzaSyDWUuE-ifkbhxblF920N8MjpBdTg1Wt784" />
+
+
+
+    <input type="hidden" id="cpcDomain" value="https://cp-civicplusuniversity2.civicplus.com">
+    <input type="hidden" id="hdnStructureID" value="10" />
+    <input type="hidden" id="hdnContentCollectionID" value="f95185bb-f198-4952-b694-81c31f71e27d" />
+    <input type="hidden" id="hdnWorkingCopyID" value="00000000-0000-0000-0000-000000000000" />
+    <input type="hidden" id="hdnThemeID" value="23" />
+    <input type="hidden" id="pageIsFrontEnd" value="true" />
+    <input type="hidden" id="pageModuleID" />
+    <input type="hidden" id="pagePageID" value="270" />
+
+            <img id="imgLogoPrintPreview" src="/ImageRepository/Document?documentID=2084" alt="Whitefish Bay, WI" />
+<div id="stickyPlaceholder"></div>
+    <div id="outer-wrap" class="outer-wrap">
+        <div id="inner-wrap" class="inner-wrap">
+                <div id="divToolbars" class="cpToolbars newCP mui-fixed" style="">
+                    
+
+
+
+<!-- Begin Signed Out Bar -->
+<div class="cpToolbar user public">
+    <div class="inner selfClear">
+        <p class="dropdown"><a href="/MyAccount/ProfileCreate" class="myConnections" id="signedOutToolbarCreateProfileButton">Create a Website Account</a> <span class="welcomeMessage">- Manage notification subscriptions, save form progress and more. &nbsp;&nbsp;</span></p>
+        <ul class="nav secondary">
+	        <li><a href="/MyAccount" class="button" id="loggedOutToolbarSignInButton">Website Sign In</a></li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#signedOutToolbarCreateProfileButton').click(function (event) {
+            event.preventDefault();
+            window.location.href = '/MyAccount/ProfileCreate?from=url&url=/&dn=' + window.location.origin;
+        });
+
+			
+				$('#loggedOutToolbarSignInButton').click(function (event) {
+					event.preventDefault();
+					window.location.href = '/MyAccount/?from=url&url=' + encodeURIComponent(window.location.href.replace(window.location.origin, '')) + '&dn=' + window.location.host;
+				});
+			
+
+		if ('False' == 'True') {
+            $('#loggedOutToolbarSignInButton').hide();
+		}
+    })
+</script>
+<!-- End Signed Out Bar -->
+
+                </div>
+            <div id="bodyWrapper">
+                <div id="mainNavHolderMobile" class="mainNavHolderMobile"></div>
+                
+<div data-cpRole="structuralContainer" id="bodyContainerTS">
+<!-- Header Container --><header data-cpRole="structuralContainer" id="headerContainerTS" class="fixedTopTS">
+<div class="siteWrap"><div data-cpRole="structuralContainer" id="flexHeaderTS">
+<div data-cpRole="banner" id="bannerLogoTS" class="bannerLogoTS empty">
+
+
+
+
+				<a id="bannerLogoTS-67" style="			display: block; text-align: center;
+" class="bannerObject" href="/" target="_self"><img alt="Whitefish Bay WI Homepage" class="bannerObject" height="262" src="/ImageRepository/Document?documentID=2080" width="772" /></a>
+</div><nav data-cpRole="nav" id="mainNav" class="siteNav mainNav" role="navigation">
+<ol id="mainNavMenu" data-parent="1" class="rootNavMenu" role="menu"><!--
+--><li id="MainItem27" class="topMenuItem" role="none" data-pageid="27" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu27" id = "mainNavVillageGovernment" class="navMainItem mainNavItem mainNavItem1 " href="/27/Village-Government" target = "_self" >   Village Government  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem101" class="topMenuItem" role="none" data-pageid="101" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu101" id = "mainNavServices" class="navMainItem mainNavItem mainNavItem2 " href="/101/Services" target = "_self" >   Services  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem35" class="topMenuItem" role="none" data-pageid="35" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu35" id = "mainNavDepartments" class="navMainItem mainNavItem mainNavItem3 " href="/35/Departments" target = "_self" >   Departments  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem31" class="topMenuItem" role="none" data-pageid="31" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu31" id = "mainNavCommunity" class="navMainItem mainNavItem mainNavItem4 " href="/31/Community" target = "_self" >   Community  </a>			<!--
+			--><!--
+			--></li><!----><li id="MainItem9" class="topMenuItem" role="none" data-pageid="9" data-displaymegamenu="True"><!--
+			--><!--
+			--> <a role = "menuitem"  aria-haspopup=true aria-expanded='false' aria-controls="mainNavMegaMenu9" id = "mainNavIWantTo" class="navMainItem mainNavItem mainNavItem5 " href="/9/I-Want-To" target = "_self" >   I Want To...  </a>			<!--
+			--><!--
+			--></li><!---->
+</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=23&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = true;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	</script>
+
+
+<aside data-cpRole="megaMenu" id="megaMenu" class="megaMenu" style="display: none;"><input type="hidden" id="megaMenuPopupDirection" value="0"><input type="hidden" id="megaMenuWidthReference" value="1"><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu27" class="contentTop mainNavMegaMenu megaMenuContainer pageID_27 hidden" data-orientation="horizontal">	<div id="cc92a7a396-3ac6-4ca9-8a56-c84509c97458" data-containerid="92a7a396-3ac6-4ca9-8a56-c84509c97458" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu101" class="contentTop mainNavMegaMenu megaMenuContainer pageID_101 hidden" data-orientation="horizontal">	<div id="cc00d4603f-1152-48af-a037-3e0b805811e6" data-containerid="00d4603f-1152-48af-a037-3e0b805811e6" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu35" class="contentTop mainNavMegaMenu megaMenuContainer pageID_35 hidden" data-orientation="horizontal">	<div id="cc3e58b322-325d-4eed-b313-e344f3bd8474" data-containerid="3e58b322-325d-4eed-b313-e344f3bd8474" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu31" class="contentTop mainNavMegaMenu megaMenuContainer pageID_31 hidden" data-orientation="horizontal">	<div id="ccc569bb53-0078-4f07-9cfa-cf107c67fc91" data-containerid="c569bb53-0078-4f07-9cfa-cf107c67fc91" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside><aside role="menu" data-cpRole="contentContainer" id="mainNavMegaMenu9" class="contentTop mainNavMegaMenu megaMenuContainer pageID_9 hidden" data-orientation="horizontal">	<div id="cc6808c487-b361-4291-b6fc-ab92af4b20d7" data-containerid="6808c487-b361-4291-b6fc-ab92af4b20d7" class="pageContent cpGrid cpGrid24">
+				                
+
+
+
+	</div>
+</aside></aside></nav><div data-cpRole="contentContainer" id="searchTS">	<div id="cc890d269c-4e44-470d-b09a-87c295ffcfe8" data-containerid="890d269c-4e44-470d-b09a-87c295ffcfe8" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="cb48e839-cb0d-4f20-8fa2-030943941129">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last ide13cac37-c699-4dfe-9d0d-8b8a432b45cf" style="" data-widgetcontainerid="e13cac37-c699-4dfe-9d0d-8b8a432b45cf">	
+<div data-widget-id="b5d6020a-9099-48da-9cba-17d9fd21e9ca" data-widget-controller-path="/Layout/WidgetSearch">
+	
+	<script defer type="text/javascript" src="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.js"></script>
+	<script defer src="/Areas/Layout/Assets/Scripts/Search.js" type="text/javascript"></script>
+	<script defer type="text/javascript">
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + 'b5d6020a-9099-48da-9cba-17d9fd21e9ca';
+				var checkboxSelector = "#ysnSearchOnlyDept" + 'b5d6020a-9099-48da-9cba-17d9fd21e9ca';
+				var buttonSelector = ".widgetSearchButton" + 'b5d6020a-9099-48da-9cba-17d9fd21e9ca';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	</script>
+
+	<section id="widgetPreviewSearch" class="widget widgetSearch skin70 widgetOptionSet51" style="display: block;" aria-label="Search">
+				<!-- For the button right and inside -->
+		<div class="widgetBody buttonRightInside">
+			<input class="widgetSearchBox widgetSearchBoxb5d6020a-9099-48da-9cba-17d9fd21e9ca" cp5ph="true" id="searchFieldb5d6020a-9099-48da-9cba-17d9fd21e9ca" name="searchField" onchange="searchBtnApplyQuery();" placeholder="Search…" type="text" value="" />
+						<a href="/Search/Results" id="btnSearchIcon" class="widgetSearchButton widgetSearchButtonb5d6020a-9099-48da-9cba-17d9fd21e9ca" role="button"><img alt="Go to Site Search" class="imageHover" data-hover="/ImageRepository/Document?documentID=2087" data-image="/ImageRepository/Document?documentID=2086" src="/ImageRepository/Document?documentID=2086" /></a>
+
+			<label class="searchLabel" aria-hidden="true" for="searchFieldb5d6020a-9099-48da-9cba-17d9fd21e9ca">Search</label>
+		</div>
+
+	</section>
+
+
+<style scoped>
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: rgba(65, 65, 66, 1);
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: rgba(65, 65, 66, 1);
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: rgba(65, 65, 66, 1);
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: rgba(65, 65, 66, 1);
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBoxb5d6020a-9099-48da-9cba-17d9fd21e9ca
+	{
+		color: rgba(65, 65, 66, 1);
+		background: none;
+border: 0;
+border-left: 2px solid rgba(8, 57, 103, 1);
+height: 60px;
+font-family: Montserrat;
+font-size: 1.1em;
+padding: 0 80px 0 20px;
+	}
+	.widgetSearch .widgetBody .widgetSearchButtonb5d6020a-9099-48da-9cba-17d9fd21e9ca
+	{
+		margin: 0;
+	}
+	.widgetSearch .widgetSearch-onlyDeptb5d6020a-9099-48da-9cba-17d9fd21e9ca
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDeptb5d6020a-9099-48da-9cba-17d9fd21e9ca
+	{
+		position: relative;
+		top: .125em;
+	}
+
+</style>
+
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.min.css">
+<link rel="stylesheet" href="/Common/Controls/jquery-ui-1.14.2/jquery-ui.theme.min.css">
+
+
+
+<script type="text/javascript">
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchFieldb5d6020a-9099-48da-9cba-17d9fd21e9ca").value;
+	}
+</script>
+
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div>
+</div></div>
+</header><!-- Banner --><div data-cpRole="structuralContainer" id="bannerContainerTS" class="noOverflowTS">
+<div data-cpRole="banner" id="banner1"><div data-cpRole="structuralContainer" id="bannerSizingTS">
+<div data-cpRole="structuralContainer" id="bannerSearchTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="welcomeTS">	<div id="cc48e82da4-80c8-470c-9b34-adf181a7f2ac" data-containerid="48e82da4-80c8-470c-9b34-adf181a7f2ac" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</div></div>
+</div>
+</div>
+
+
+
+
+		<div id="bannerImagesJSON66" class="hidden"></div>
+		<div id="bannerSlideshowControls_banner1" class="bannerSlideshowControlsNew none " style="display:none">
+			<a id="arrowPrev_banner1" tabindex="0" class="arrowNew prev" aria-label="Banner Arrow Previous"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowLeft"></use></svg></a>
+			<a id="arrowNext_banner1" tabindex="0" class="arrowNew next" aria-label="Banner Arrow Next"><svg style=" " class=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#iconSlideshowArrowRight"></use></svg></a>
+		</div>
+			<script type="text/javascript">
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":66,"ThemeID":23,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":true,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":false,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":133,"BannerOptionID":66,"FileName":"/ImageRepository/Document?documentID=2085","Height":450,"Width":1832,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","AltText":""}],"BannerVideos":[{"BannerVideoID":9,"BannerOptionID":66,"VideoFileName":"","ImageFileName":"EmptyBannerBkg202407081347576560.png","IsLink":false,"LinkAddress":null,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/","VideoFileID":"00000000-0000-0000-0000-000000000000","ImageFileID":"00000000-0000-0000-0000-000000000000","VideoWidth":0,"VideoHeight":0,"ImageWidth":0,"ImageHeight":0,"LinkedVideoUrl":"","RecordStatus":0,"AltText":null}],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135575200000)\/"},
+								'/App_Themes/Interior/Images/',
+								'Rotating');
+						});
+				});
+			</script>
+
+</div>
+</div><div data-cpRole="structuralContainer" id="mainContainerWrapTS">
+<!-- Content container --><div data-cpRole="structuralContainer" id="mainContainerTS">
+<div class="siteWrap2"><div data-cpRole="structuralContainer" id="mainWrapTS" class="mainWrap" role="main">
+<div data-cpRole="structuralContainer" id="siteSidebarTS" class="siteSidebar">
+<aside data-cpRole="contentContainer" id="sidebarContainer1TS">	<div id="cc9af650bf-20e2-4b84-8101-23cef0514096" data-containerid="9af650bf-20e2-4b84-8101-23cef0514096" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside><nav data-cpRole="nav" id="secondaryNav" class="siteNav secondaryNav">
+
+
+
+
+
+	<ol role="menu" id="secondaryMenusecondaryNav" data-parent="261" class="rootNavMenu accordionNav">
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="0" id="SideItem270" data-pageid="270">
+		<div class="accordionNavItem">
+			<a href="/270/Election-Information" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Election Information</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem427" data-pageid="427">
+		<div class="accordionNavItem">
+			<a href="/427/Election-Inspectors" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Election Inspectors</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem321" data-pageid="321">
+		<div class="accordionNavItem">
+			<a href="http://www.wfbvillage.org/198/Clerk-Treasurer-Permits-Applications" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Permits &amp; Applications</a>
+		</div>
+			</li>
+	<li class="topMenuItem sideNavLi hasAccordionChildren" role="menuitem" tabindex="-1" id="SideItem414" data-pageid="414">
+		<div class="accordionNavItem">
+			<a href="https://www.wfbvillage.org/FormCenter/Contact-Us-4/Request-for-Records-61" target="_self" class="navMainItem secondaryNavItem cpComponent" data-type="SecondaryMainItem">Village Request For Records</a>
+		</div>
+			</li>
+
+	</ol>
+
+
+	<script type="text/javascript">
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	</script>
+
+	<script type="text/javascript">
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	</script>
+
+
+
+</nav><aside data-cpRole="contentContainer" id="sidebarContainer2TS">	<div id="ccbe2f8a0e-dd49-42cb-877a-39083346e92f" data-containerid="be2f8a0e-dd49-42cb-877a-39083346e92f" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+
+
+	</div>
+</aside>
+</div><div data-cpRole="structuralContainer" id="outerContentWrapTS" class="outerContentWrap">
+<div data-cpRole="structuralContainer" id="contentWrapTS" class="contentWrap">
+<div data-cpRole="breadCrumbs" id="breadCrumbs" class="breadCrumbContainer">		<ol class="semanticList breadCrumbs">
+			<li><a class="breadCrumb" href="/">Home</a></li><li><a class="breadCrumb" href="/35/Departments">Departments</a></li><li><a class="breadCrumb" href="/261/Village-Clerk">Village Clerk</a></li><li id="currentBCPage" data-pageid="270"><a href class="breadCrumb" aria-current="page">Election Information</a></li>
+		</ol>
+
+	   
+    
+</div><div data-cpRole="mainContentContainer" id="moduleContent">
+	
+	<div id="page" class="moduleContentNew">
+		
+
+	<input id="hdnPageID" name="hdnPageID" type="hidden" value="270" />
+	<input id="hdnParentID" name="hdnParentID" type="hidden" value="261" />
+	<input id="hdnVersionID" name="hdnVersionID" type="hidden" value="4577" />
+	<input id="pageMenuTitle" name="pageMenuTitle" type="hidden" value="Election Information" />
+	<input id="pageShowFeatureColumn" name="pageShowFeatureColumn" type="hidden" value="True" />
+	<input id="hdnIsLayoutPage" name="hdnIsLayoutPage" type="hidden" value="False" />
+	<input id="hdnPageStatus" name="hdnPageStatus" type="hidden" value="Published" />
+
+				<h1 id="versionHeadLine" class="headline">
+
+Election Information		</h1>
+	
+		<div id="cc3507358e-fa36-4abe-8906-b884155329bc" data-containerid="3507358e-fa36-4abe-8906-b884155329bc" class="pageContent cpGrid cpGrid24"  data-contentcontainerbreakpoint="30" >
+			
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="d2e6ce22-fe2b-42ab-a35e-a5a1c238eaef">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id88002e5d-69a5-4684-9a8a-f1ab85baa96e" style="" data-widgetcontainerid="88002e5d-69a5-4684-9a8a-f1ab85baa96e">	
+
+	<div id="divTabbed37d34a21-5fbf-43cc-9f0b-0e4aa4334694" class="widget widgetTabbed narrow skin70 accordionTabs" data-widgetid="37d34a21-5fbf-43cc-9f0b-0e4aa4334694">
+
+		<div class="cpTabPanels">
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_0" class="tabButton" id="tabBtnNarrow37d34a21-5fbf-43cc-9f0b-0e4aa4334694_0" role="button" aria-controls="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_0" aria-expanded="false" ><span class="tabName editable" data-sequence="0" data-tabname="Election Day" contenteditable="false">Election Day</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_0" role="region" aria-labelledby="tabBtn37d34a21-5fbf-43cc-9f0b-0e4aa4334694_0" >
+
+
+
+
+<div data-widget-id="6fff3f01-8ae7-43db-b456-b8534afd633d" data-moduleName="list" id="widgetText6fff3f01-8ae7-43db-b456-b8534afd633d" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="div6fff3f01-8ae7-43db-b456-b8534afd633d">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" ><h2 style="text-align: center;"><span style="font-size: 1.4em;"><br></span></h2><h2 style="text-align: center;"><strong style="font-size: 0.99em;">2026 Elections</strong></h2><h2 style="text-align: center;"><br></h2><h2 style="text-align: center;">General Election - November 3, 2026</h2><div style="text-align: center;"><strong><em>Governor</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Lieutenant Governor</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Attorney General</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Secretary of State</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>State Treasurer</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Representative in Congress District 4</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Representative to the Assembly District 23</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Milwaukee County Sheriff</em></strong></div><div style="text-align: center;"><strong><em><br></em></strong></div><div style="text-align: center;"><strong><em>Milwaukee County Clerk of Circuit Court</em></strong></div><h2 style="text-align: center;"><br></h2><h2 style="text-align: center;"><span style="font-family: &quot;Open Sans&quot;; font-size: 0.99em; font-style: normal; font-weight: 400; text-align: center; color: rgb(56, 56, 56);">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span></h2><p style="text-align: center;">Polling places are open for all Elections from 7:00 am - 8:00 pm on Election Day.</p><p style="text-align: center;" class="">Please use the <a href="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" data-url-hash="606e12644bbb0ba2eddd9da97df996d474b81fe31e4b8fc725e1d7ef66f841fd" data-url-status="disabled"></a><a href="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" data-url-hash="46ecfd8af694dd68e72af79a8f4b7a4132b3a75a0c5ed4882211fe5aa915e453" data-url-status="disabled">Ward Map</a> (PDF) or <a href="https://myvote.wi.gov/en-us/">MyVote.wi.gov</a> to see where your polling place is.</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;"><strong>Election Day Registration</strong></p><p style="text-align: center;" class="">Voters who need to register on Election Day should go to their polling place (<a href="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" data-url-hash="606e12644bbb0ba2eddd9da97df996d474b81fe31e4b8fc725e1d7ef66f841fd" data-url-status="disabled"></a><a href="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" data-url-hash="46ecfd8af694dd68e72af79a8f4b7a4132b3a75a0c5ed4882211fe5aa915e453" data-url-status="disabled">find your polling location</a>).</p><p style="text-align: center;">Voters must be 18 years or older, a US Citizen and reside at their current residence for 28 consecutive days immediately proceeding the Election to be eligible elector.</p><p style="text-align: center;">Proof of residence is required for all registrations.</p><p style="text-align: center;">Registration will be completed on Badger Books therefore no paper form is required.</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;"><strong>&nbsp;Sample Ballot</strong></p><p style="text-align: center;"><em class="startContainer endContainer"><a href="https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026">Sample Ballot - November 3, 2026</a></em></p><p style="text-align: center;">****Ballots for all Whitefish Bay wards are the same.***</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;">****Wisconsin Requires a Photo ID to Vote****</p><p style="text-align: center;">For more information about the voter identification law, visit the State of Wisconsin site.</p><p style="text-align: center;"><a href="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" class="docaccess-activated" data-docaccess-source-url="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" data-url-hash="481a85bc9e631638458ef64427ca5f8357411d4aa8ac9aef23a0c085a233c80b" data-url-status="disabled">Wisconsin Election Commission Photo ID &amp; Voting Guide</a></p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;"><strong>Ward Map</strong></p><p style="text-align: center;" class="">Please use the <a href="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" data-url-hash="46ecfd8af694dd68e72af79a8f4b7a4132b3a75a0c5ed4882211fe5aa915e453" data-url-status="disabled">Ward Map</a> (PDF) or <a href="https://myvote.wi.gov/en-us/">MyVote.wi.gov</a> to see where your polling place is. Polling places are open from 7:00am - 8:00pm on Election Day.</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p><strong>Voting Questions</strong></p><p class="">For voting questions or to request an absentee ballot, send an email to <a href="mailto: elections@whitefishbaywi.gov">elections@whitefishbaywi.gov</a>, contact the Village Clerk’s office at 414-962-6690, or visit the <a href="https://elections.wi.gov/">Wisconsin Elections Commission website</a>.</p></div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_1" class="tabButton" id="tabBtnNarrow37d34a21-5fbf-43cc-9f0b-0e4aa4334694_1" role="button" aria-controls="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_1" aria-expanded="false" ><span class="tabName editable" data-sequence="1" data-tabname="Registration" contenteditable="false">Registration</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_1" role="region" aria-labelledby="tabBtn37d34a21-5fbf-43cc-9f0b-0e4aa4334694_1" >
+
+
+
+
+<div data-widget-id="3192e6c9-5cf6-4ac9-ac7a-25750718b101" data-moduleName="list" id="widgetText3192e6c9-5cf6-4ac9-ac7a-25750718b101" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="div3192e6c9-5cf6-4ac9-ac7a-25750718b101">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" ><p style="text-align: center;"><strong>Voter Registration</strong></p><p style="text-align: center;">New voters, voters who have moved or had a name change are required to register. Registration can be completed in one of the following ways:</p><p style="text-align: center;">Online at: <a href="https://myvote.wi.gov/en-us/">https://myvote.wi.gov/en-us/</a></p><p class="" style="text-align: center;">Complete a <a href="https://www.wfbvillage.gov/DocumentCenter/View/243/Wisconsin-Voter-Registration-Application-PDF" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/243/Wisconsin-Voter-Registration-Application-PDF" data-url-hash="b84103756afd74d410b48e2ae24eb075e56b7f0a27f6db7433d3c3029acb84a7" data-url-status="disabled"></a><a href="https://elections.wi.gov/sites/default/files/legacy/2020-06/El-131%2520Voter%2520Registration%2520App_Fillable-%2520%2528REV%25202020-06%2529_0.pdf" class="docaccess-activated" data-docaccess-source-url="https://elections.wi.gov/sites/default/files/legacy/2020-06/El-131%2520Voter%2520Registration%2520App_Fillable-%2520%2528REV%25202020-06%2529_0.pdf" data-url-hash="b84103756afd74d410b48e2ae24eb075e56b7f0a27f6db7433d3c3029acb84a7" data-url-status="disabled">Wisconsin Voter Registration Application form  (EL-131)</a>.</p><p style="text-align: center;"><em>Voters must be 18 years or older, a US Citizen and reside at their current residence for 28 consecutive days immediately proceeding the Election to be eligible elector.</em></p><p style="text-align: center;"><em class="">Proof of residence is required for all registrations. <a href="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" class="docaccess-activated" data-docaccess-source-url="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" data-url-hash="481a85bc9e631638458ef64427ca5f8357411d4aa8ac9aef23a0c085a233c80b" data-url-status="disabled">Wisconsin Election Commission Photo ID &amp; Voting Guide</a></em></p><p style="text-align: center;">Applications can be accepted by online or mail through the 20th day prior to an Election</p><p style="text-align: center;">Within 20 days of an Election applications are required to be submitted in person at the Municipal Clerk's Office through the Friday prior to the Election.</p><p style="text-align: center;">There is no registering on the Monday before any Election.</p><p style="text-align: center;"><br></p><p style="text-align: center;"><strong>&nbsp;Election Day Registration&nbsp;</strong></p><p style="text-align: center;" class="">Voters who need to register on Election Day should go to their polling place (<a href="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/3014/Voting-Location-Map-" data-url-hash="46ecfd8af694dd68e72af79a8f4b7a4132b3a75a0c5ed4882211fe5aa915e453" data-url-status="disabled">find your polling location</a>).</p><p style="text-align: center;">Voters must be 18 years or older, a US Citizen and reside at their current residence for 28 consecutive days immediately proceeding the Election to be eligible elector.</p><p class="" style="text-align: center;"><a href="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" class="docaccess-activated startContainer" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/2201/November-5-2024-Sample-Ballot" data-url-hash="47f9e8878c0343b580e0c435784d0cb2c49a7ecae0847014d0615e3ef20f7034" data-url-status="disabled">Proof of residence is required for all registrations. </a><a href="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" class="docaccess-activated endContainer" data-docaccess-source-url="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" data-url-hash="481a85bc9e631638458ef64427ca5f8357411d4aa8ac9aef23a0c085a233c80b" data-url-status="disabled">Wisconsin Election Commission Photo ID &amp; Voting Guide</a></p><p style="text-align: center;">Registration will be completed on Badger Books therefore no paper form is required.</p><p style="text-align: center;"><br></p><p style="text-align: center;"><strong>Voting Questions</strong></p><p class="" style="text-align: center;">For voting questions or to request an absentee ballot, send an email to <a href="mailto: elections@whitefishbaywi.gov">elections@whitefishbaywi.gov</a>, contact the Village Clerk’s office at 414-962-6690, or visit the <a href="https://elections.wi.gov/photoid" class=""></a><a href="https://elections.wi.gov/">Wisconsin Elections Commission website</a>.</p><p><br></p></div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_2" class="tabButton" id="tabBtnNarrow37d34a21-5fbf-43cc-9f0b-0e4aa4334694_2" role="button" aria-controls="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_2" aria-expanded="false" ><span class="tabName editable" data-sequence="2" data-tabname="Mailed Absentee Ballots" contenteditable="false">Mailed Absentee Ballots</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_2" role="region" aria-labelledby="tabBtn37d34a21-5fbf-43cc-9f0b-0e4aa4334694_2" >
+
+
+
+
+<div data-widget-id="46a9a55b-281e-4979-8171-91a6c07f6a7e" data-moduleName="list" id="widgetText46a9a55b-281e-4979-8171-91a6c07f6a7e" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="div46a9a55b-281e-4979-8171-91a6c07f6a7e">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" ><p style="text-align: center;"><strong>Absentee Ballot Requests</strong></p><p style="text-align: center;">Voting by mail is easy and secure. Absentee ballots can be requested in one of the following ways:</p><p style="text-align: center;"><strong>Online</strong> at: <a href="https://myvote.wi.gov/en-us/">https://myvote.wi.gov/en-us/</a> (preferred method)</p><p style="text-align: center;">Send a request via <strong>email</strong> to elections@whitefishbaywi.gov (please include a copy of WI photo ID)</p><p style="text-align: center;" class="">Submit an Absentee Ballot Application by <strong>mail</strong>. Application is available online at: <a href="https://www.wfbvillage.gov/DocumentCenter/View/2375/Absentee-Ballot-Request---EL-121">Absentee Ballot Request (EL-121)</a></p><p style="text-align: center;">Voters who have not previously submitted a copy of their photo ID to vote by mail will need to include a copy of their ID with their request. If you are not sure whether you need to do so, please include a copy to avoid any delay in processing.</p><p style="text-align: center;" class=""><a href="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" data-url-hash="606e12644bbb0ba2eddd9da97df996d474b81fe31e4b8fc725e1d7ef66f841fd" data-url-status="disabled"></a><a href="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/508/Ward-map" data-url-hash="606e12644bbb0ba2eddd9da97df996d474b81fe31e4b8fc725e1d7ef66f841fd" data-url-status="disabled"></a><strong>Track Absentee Ballot online:</strong> Click <a href="https://www.wfbvillage.gov/DocumentCenter/View/1701/Tracking-your-absentee-ballot---MyVote" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/1701/Tracking-your-absentee-ballot---MyVote" data-url-hash="d42a81eaec6e557dfa89738c3c340a3e126316f05a0b43df62ad48f7448432e8" data-url-status="disabled">HERE</a> to see instructions on how to track your absentee ballot.</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;">&nbsp;<strong>Sample Ballot</strong></p><p style="text-align: center;"><span style="font-size: 15.6816px;" class="startContainer endContainer"><a href="https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026">Sample Ballot - November 3, 2026</a></span></p><p style="text-align: center;"><span style="font-family: &quot;Open Sans&quot;; font-size: 0.99em; font-style: normal; font-weight: 400;">****Ballots for all Whitefish Bay wards are the same.***</span></p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;">****Wisconsin Requires a Photo ID to Vote****</p><p style="text-align: center;">For more information about the voter identification law, visit the State of Wisconsin site. <a href="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" class="docaccess-activated" data-docaccess-source-url="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" data-url-hash="481a85bc9e631638458ef64427ca5f8357411d4aa8ac9aef23a0c085a233c80b" data-url-status="disabled">Wisconsin Election Commission Photo ID &amp; Voting Guide&nbsp;</a></p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><h3 style="text-align: center;"><strong>&nbsp;Returning An Absentee Ballot</strong></h3><p style="text-align: center;"><span style="font-weight: normal; text-align: center;">Absentee Ballots may be returned to the Village Clerk's in one of the following ways:</span></p><p style="text-align: center;"><span style="font-weight: normal; text-align: center;">1. </span><span style="text-align: center;"><strong>Mail </strong></span><span style="font-weight: normal; text-align: center;">Absentee Ballot with USPS (postage is provided)</span></p><p style="text-align: center;"><span style="font-weight: normal; text-align: center;">2. </span><span style="text-align: center;"><strong>Drop off in person</strong></span><span style="font-weight: normal; text-align: center;"> at the Administration Counter at Village Hall</span></p><p style="text-align: center;"><span style="font-weight: normal; text-align: center;">3. </span><span style="text-align: center;"><strong>Use the drop box</strong></span><span style="font-weight: normal; text-align: center;"> located between the front doors at Village Hall labeled for Ballots</span></p><p style="text-align: center;"><span style="font-weight: normal; text-align: center;"><br></span></p><p style="text-align: center;"><span style="font-weight: normal; text-align: center;"><em>Per WI Court Ruling each voter is required to return their own ballot unless the voter self-identifies as being disabled and appoints someone to submit the ballot for them.</em></span></p><p style="text-align: center;"><span style="text-align: center;" class=""><strong>Track Your Ballot Online: </strong>Voter may track their ballot on <a href="https://myvote.wi.gov/en-us/">MyVote.wi.gov</a>&nbsp;</span></p><p style="text-align: center;"><span style="text-align: center;" class="">Click <a href="https://myvote.wi.gov/en-us/">HERE</a> for instruction on how to Track Your Ballot.</span></p><p><strong><br></strong></p><p><strong>Voting Questions</strong></p><p class="">For voting questions or to request an absentee ballot, send an email to <a href="mailto: elections@whitefishbaywi.gov">elections@whitefishbaywi.gov</a>, contact the Village Clerk’s office at 414-962-6690, or visit the <a href="https://elections.wi.gov/">Wisconsin Elections Commission website</a>.</p><p><br></p><p><br></p><p><br></p></div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_3" class="tabButton" id="tabBtnNarrow37d34a21-5fbf-43cc-9f0b-0e4aa4334694_3" role="button" aria-controls="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_3" aria-expanded="false" ><span class="tabName editable" data-sequence="3" data-tabname="In-Person Absentee Voting" contenteditable="false">In-Person Absentee Voting</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_3" role="region" aria-labelledby="tabBtn37d34a21-5fbf-43cc-9f0b-0e4aa4334694_3" >
+
+
+
+
+<div data-widget-id="c2f0e2d4-f3f9-49e9-abd1-8fd362ca7d24" data-moduleName="list" id="widgetTextc2f0e2d4-f3f9-49e9-abd1-8fd362ca7d24" class="widget widgetText">
+	<div class="widgetBody pageStyles" id="divc2f0e2d4-f3f9-49e9-abd1-8fd362ca7d24">
+
+		<div style="min-height: 18px;">
+			<div class="textContent" ><p>In- Person Absentee Voting for all wards occurs at Village Hall (5300 N Marlborough Drive) starting the Tuesday 2 weeks prior to an Election through the Friday immediately preceding the Election, Monday through Friday 8:00 am to 4:30 pm (open until 5:00 pm on the Thursday and Friday immediately preceding an Election).</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;">&nbsp;<strong>Sample Ballot</strong></p><p class="startContainer endContainer" style="text-align: center;"><a href="https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026">Sample Ballot&nbsp;- November 3, 2026</a></p><p style="text-align: center;">****Ballots for all Whitefish Bay wards are the same.***</p><p style="text-align: center;">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p><p style="text-align: center;"><strong>****Wisconsin Requires a Photo ID to Vote****</strong></p><p style="text-align: center;">For more information about the voter identification law, visit the State of Wisconsin site. <a href="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" class="docaccess-activated" data-docaccess-source-url="https://elections.wi.gov/sites/default/files/documents/Photo%20ID%20%26%20Voting%20Guide.pdf" data-url-hash="481a85bc9e631638458ef64427ca5f8357411d4aa8ac9aef23a0c085a233c80b" data-url-status="disabled"></a>Wisconsin Election Commission Photo ID &amp; Voting Guide</p><p style="text-align: center;"><br></p><p><strong>Voting Questions</strong></p><p class="">For voting questions or to request an absentee ballot, send an email to <a href="mailto: elections@whitefishbaywi.gov">elections@whitefishwi.gov</a>, contact the Village Clerk’s office at 414-962-6690, or visit the <a href="https://elections.wi.gov/">Wisconsin Elections Commission website</a>.</p></div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.widget .textContent p:first-child {
+		padding-top: 0px;
+		margin-top: 0px;
+	}
+
+</style>
+
+
+				</div>
+					<ol class="tabbedWidgetNarrow cpTabs  accordion"  aria-hidden="False.ToString().ToLowerInvariant()" >
+						<li class="" role="presentation">	<a href="#tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_4" class="tabButton" id="tabBtnNarrow37d34a21-5fbf-43cc-9f0b-0e4aa4334694_4" role="button" aria-controls="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_4" aria-expanded="false" ><span class="tabName editable" data-sequence="4" data-tabname="Voter Turnout" contenteditable="false">Voter Turnout</span></a>
+</li>
+					</ol>
+				<div class="tabbedWidget cpTabPanel " style="display: none;" id="tab37d34a21-5fbf-43cc-9f0b-0e4aa4334694_4" role="region" aria-labelledby="tabBtn37d34a21-5fbf-43cc-9f0b-0e4aa4334694_4" >
+
+
+<div data-widget-id="d0b5e04e-83d6-4b85-b0a5-b05bf583ec77" data-widget-controller-path="/Layout/WidgetTable">
+	
+
+	<section id="tableWidgetd0b5e04e-83d6-4b85-b0a5-b05bf583ec77" class="widget widgetTable pageStyles narrow" style="display: block;" data-elementqueryclasses='{"narrow-wide":"max-width:25em"}' aria-labelledby="headerd0b5e04e-83d6-4b85-b0a5-b05bf583ec77">
+				<header class="widgetHeader" id="headerd0b5e04e-83d6-4b85-b0a5-b05bf583ec77">
+			<h2 class="subhead1" >Voter Turnout - For the Curious</h2>
+		</header>
+	<div class="widgetBody">
+			<table >
+									<thead>
+						<tr>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1"><div style="text-align: center;">&nbsp; &nbsp;Date&nbsp;</div></th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2"><div style="text-align: center;">Election</div></th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3"><div style="text-align: center;">&nbsp;Registered</div><div style="text-align: center;">Voters</div></th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4"><div style="text-align: center;">Ballots Cast</div></th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5"><div style="text-align: center;">Voter Turnout&nbsp;</div></th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6">&nbsp;</th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7">&nbsp;</th>
+								<th scope="col" id="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8">&nbsp;</th>
+						</tr>
+					</thead>
+									<tbody>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/03/2018</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">9,263</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,330</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>46.75%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">08/14/2018</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Fall Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">9,448</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,309</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>45.42%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/02/2019</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,186</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,410</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>43.29%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">02/18/2020</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">9,892</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">3,243</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>32.78%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/07/2020</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,003</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">6,746</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>67.43%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">08/11/2020</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Fall Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,390</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">3,922</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>37.74%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">11/03/2020</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Presidential</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">11,069</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">10,127</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>91.49%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">02/16/2021</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">11,131</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">1,430</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>12.84%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/06/2021</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">11,111</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">3,849</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>34.63%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">02/15/2022</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,148</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">1,699</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>16.74%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/05/2022</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,040</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">3,097</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>30.85%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">08/09/2022</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Fall&nbsp;</div><div style="text-align: center;">Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,096</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,313</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>42.72%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">11/08/2022</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Gubernatorial</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,414</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">8,704</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>83.58%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">02/21/2023</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,420</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,386</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>42.09%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/04/2023</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,357</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">7,005</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>67.64%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/02/2024</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">9,886</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">3,969</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><strong><div style="text-align: center;">40.15%</div></strong></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">08/13/2024</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Fall Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,001</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,970</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>49.70%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">11/05/2024</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Presidential</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,553</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">9,915</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><strong><div style="text-align: center;">93.95%</div></strong></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">02/18/2025</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,645</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">1,900</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><strong><div style="text-align: center;">17.85%</div></strong></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date"><div style="text-align: center;">04/01/2025</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,625</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">7,974</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><div style="text-align: center;"><strong>75.05%</strong></div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date">04/07/2026</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">Spring Election</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,203</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">7,265</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><strong>71.20%</strong></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+							<tr class="alt textContent">
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c1" data-th="Date">08/11/2026</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c2" data-th="Election"><div style="text-align: center;">&nbsp;Partisan&nbsp;</div><div style="text-align: center;">Primary</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c3" data-th="Registered  Voters"><div style="text-align: center;">10,301</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c4" data-th="Ballots Cast"><div style="text-align: center;">4,612</div></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c5" data-th="Voter Turnout"><strong>44.77%</strong></td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c6" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c7" data-th="">&nbsp;</td>
+										<td  headers="td0b5e04e-83d6-4b85-b0a5-b05bf583ec77c8" data-th="">&nbsp;</td>
+							</tr>
+					</tbody>
+			</table>
+	</div>
+
+	</section>
+
+
+</div>
+				</div>
+					</div>
+	</div>
+	<script type="text/javascript">
+
+		//If responsive not enabled, execute this after a timeout
+		if(!isResponsiveEnabled)
+		{
+			window.setTimeout(function(){
+				var tabbedWidgetID = 'divTabbed37d34a21-5fbf-43cc-9f0b-0e4aa4334694';
+				typeof setTabbedWidgetsTabHeight === "function" && setTabbedWidgetsTabHeight(tabbedWidgetID);
+			}, 1500);
+		}
+
+		function reinitCarousels() {
+			if (window.carouselsToInit) {
+				for (var i = 0; i < window.carouselsToInit.length; i++) {
+					carouselsToInit[i]();
+				}
+			}
+		}
+		function sizeTabbedContent(element){
+			if(window.Pages){
+				if(window.Pages.onResizeHandlers){
+					var setTabbedInterval = setInterval(function () {
+						window.Pages.onResizeHandlers.forEach(function(car){car();});
+					}, 25)
+
+
+					setTimeout(function () {
+						clearInterval(setTabbedInterval);
+						if ($.cookie("enableLiveEdit") === "true") {
+							setInterval(function () {
+								window.Pages.onResizeHandlers.forEach(function(car){car();});
+							}, 2000);
+						}
+					}, 2500);
+					element.onclick="window.setTimeout(function(){reinitCarousels();},2);"
+				}
+			}
+		}
+
+		function adjustTab(e) {
+			e.preventDefault();
+			window.setTimeout(function(){
+				reinitCarousels();
+			}, 2);
+			sizeTabbedContent(this);
+		}
+
+		var tabButtons = document.querySelectorAll("#divTabbed37d34a21-5fbf-43cc-9f0b-0e4aa4334694 .tabButton");
+
+		tabButtons.forEach(function (tabButton) {
+			tabButton.addEventListener("click", adjustTab);
+		});
+
+	</script>
+
+
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="853e33b3-e88c-4d45-beed-69b49cbac7b5">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id1c9ca513-fbc8-4a66-98b1-bfa9ca042443" style="" data-widgetcontainerid="1c9ca513-fbc8-4a66-98b1-bfa9ca042443">	
+
+
+
+	<section class="widget widgetRelatedDocuments skin70 narrow" id="widgetRelDoc20968f53-7ca1-4ac9-90b9-4ef262092b73" data-widgetid="20968f53-7ca1-4ac9-90b9-4ef262092b73" data-sections="[{&quot;Title&quot;:&quot;Election Results&quot;,&quot;DocumentIDs&quot;:&quot;661,1574,1602,1664,1727,1801,1839,1998,2000,2149,2247,2366,2427,3124,3344,&quot;,&quot;FolderIds&quot;:&quot;,&quot;,&quot;SortedDocumentIds&quot;:&quot;3344,3124,2427,2366,2247,2149,2000,1839,1801,1727,1664,1602,1574,&quot;}]" data-columncount="1" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Related Documents">
+			<div id="divRelatedDocuments_20968f53-7ca1-4ac9-90b9-4ef262092b73" class="relatedDocuments">
+		<div class="widgetBody cpGrid cpGrid1">
+			
+<div class="row narrow sortableWidgetTitle">
+        <div class="relatedDocumentsSection selfClear" data-documentids="661,1574,1602,1664,1727,1801,1839,1998,2000,2149,2247,2366,2427,3124,3344," data-folderids="," data-sorteddocumentids="3344,3124,2427,2366,2247,2149,2000,1839,1801,1727,1664,1602,1574,">
+                    <h3 class="widgetTitle" style="clear:left;">Election Results</h3>
+
+	<div class=" first last">
+		<ol class="semanticList bullets" style="min-height:8px;">
+					<li class="widgetItem" data-documentid="3344"><a target="_blank" href="/DocumentCenter/View/3344/Whitefish-Bay---Election-Summary---August-11-2026" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - August 11, 2026 pdf file">Whitefish Bay - Election Summary - August 11, 2026</a>
+					</li>
+					<li class="widgetItem" data-documentid="3124"><a target="_blank" href="/DocumentCenter/View/3124/Whitefish-Bay---Election-Summary---April-7-2026" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - April 7, 2026 pdf file">Whitefish Bay - Election Summary - April 7, 2026</a>
+					</li>
+					<li class="widgetItem" data-documentid="2427"><a target="_blank" href="/DocumentCenter/View/2427/Whitefish-Bay---Election-Summary---April-1-2025" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - April 1, 2025 pdf file">Whitefish Bay - Election Summary - April 1, 2025</a>
+					</li>
+					<li class="widgetItem" data-documentid="2366"><a target="_blank" href="/DocumentCenter/View/2366/Whitefish-Bay---Election-Summary---February-18-2025" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - February 18, 2025 pdf file">Whitefish Bay - Election Summary - February 18, 2025</a>
+					</li>
+					<li class="widgetItem" data-documentid="2247"><a target="_blank" href="/DocumentCenter/View/2247/Whitefish-Bay---Election-Summary---November-5-2024" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - November 5 2024 pdf file">Whitefish Bay - Election Summary - November 5 2024</a>
+					</li>
+					<li class="widgetItem" data-documentid="2149"><a target="_blank" href="/DocumentCenter/View/2149/Whitefish-Bay---Election-Summary---August-13-2024" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - August 13 2024 pdf file">Whitefish Bay - Election Summary - August 13 2024</a>
+					</li>
+					<li class="widgetItem" data-documentid="2000"><a target="_blank" href="/DocumentCenter/View/2000/Whitefish-Bay---Election-Summary---April-2-2024" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - April 2 2024 pdf file">Whitefish Bay - Election Summary - April 2 2024</a>
+					</li>
+					<li class="widgetItem" data-documentid="1839"><a target="_blank" href="/DocumentCenter/View/1839/Whiteifsh-Bay---Election-Summary---April-4-2023" class="fileType pdf" aria-label="Whiteifsh Bay - Election Summary - April 4 2023 pdf file">Whiteifsh Bay - Election Summary - April 4 2023</a>
+					</li>
+					<li class="widgetItem" data-documentid="1801"><a target="_blank" href="/DocumentCenter/View/1801/Whitefish-Bay---Election-Summary---Feb-21-2023" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - Feb 21 2023 pdf file">Whitefish Bay - Election Summary - Feb 21 2023</a>
+					</li>
+					<li class="widgetItem" data-documentid="1727"><a target="_blank" href="/DocumentCenter/View/1727/Whitefish-Bay---Election-Summary---Nov-8-2022" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - Nov 8 2022 pdf file">Whitefish Bay - Election Summary - Nov 8 2022</a>
+					</li>
+					<li class="widgetItem" data-documentid="1664"><a target="_blank" href="/DocumentCenter/View/1664/Whitefish-Bay---Election-Summary---Aug-9-2022" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - Aug 9 2022 pdf file">Whitefish Bay - Election Summary - Aug 9 2022</a>
+					</li>
+					<li class="widgetItem" data-documentid="1602"><a target="_blank" href="/DocumentCenter/View/1602/Whitefish-Bay---Election-Summary---April-5-2022" class="fileType jpg" aria-label="Whitefish Bay - Election Summary - April 5 2022 jpg file">Whitefish Bay - Election Summary - April 5 2022</a>
+					</li>
+					<li class="widgetItem" data-documentid="1574"><a target="_blank" href="/DocumentCenter/View/1574/Whitefish-Bay---Election-Summary---Feb-15-2022" class="fileType pdf" aria-label="Whitefish Bay - Election Summary - Feb 15 2022 pdf file">Whitefish Bay - Election Summary - Feb 15 2022</a>
+					</li>
+
+		</ol>
+	</div>
+                    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Remove section heading when it is empty and live edit is off.
+        if ('false' === 'false') {
+            var jqh3Selector = $('#widgetRelDoc' + '20968f53-7ca1-4ac9-90b9-4ef262092b73').find('div.widgetBody div.row div.relatedDocumentsSection h3.widgetTitle');
+    		if (jqh3Selector.val() == "") {
+    			jqh3Selector
+                    .filter(function () {
+                        return $.trim($(this).text()) === ''
+                    })
+                    .remove();
+            }
+        }
+    });
+</script>
+		</div>
+
+</div>
+
+	</section>
+
+
+<script type="text/javascript">
+    var documentsToInsert = [];
+    var foldersToInsert = [];
+
+    $(document).ready(function () {
+        var hasEditRights = false;        
+        if (window.File && window.FileList && window.FileReader && hasEditRights) {
+            var RelatedDocumentsWidget = 5;
+            makeWidgetAreaDroppable('20968f53-7ca1-4ac9-90b9-4ef262092b73', $('#widgetRelDoc' + '20968f53-7ca1-4ac9-90b9-4ef262092b73'), RelatedDocumentsWidget, true, RelatedDocumentsCallback);
+        }
+
+		if(hasEditRights)
+    		browserVersionNotCompatibleWithDragDropTextUpdate($('#addFile' + '20968f53-7ca1-4ac9-90b9-4ef262092b73'), 'Add a new file');
+    });
+
+    function RelatedDocumentsCallback(widgetID, response)
+    {
+        if (window.ContentCollectionInstance.IsWorkingCopy) {
+        	$('#widgetRelDoc' + widgetID).replaceWith(response);            
+            contentUpdated();
+            attachRelatedDocumentsHandlers();            
+        }
+        else {
+            ContentCollectionInstance.reloadContent();
+        }      
+    }
+</script>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+		</div>
+
+	</div>
+
+	
+	<div class="newCP">
+
+	</div>
+</div>
+</div><aside data-cpRole="contentContainer" id="featureColumn" class="secondaryContent">	<div id="ccb547541e-d947-43e5-9cee-9e3c1cde4ff0" data-containerid="b547541e-d947-43e5-9cee-9e3c1cde4ff0" class="pageContent cpGrid cpGrid24 showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="f3a6e6bc-0380-4ab0-9c10-9645e0974f21">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last iddff1c0e6-e7ba-42fd-8101-feac9135f540" style="" data-widgetcontainerid="dff1c0e6-e7ba-42fd-8101-feac9135f540">	
+
+
+
+
+
+
+
+
+<div data-widget-id="9ce316d5-2d97-491b-beb8-7851bd7dfd31" data-moduleWidgetType="cityDirectory" data-widget-controller-path="/CityDirectory/Widget">
+	<div id="cityDirectoryWidget9ce316d5-2d97-491b-beb8-7851bd7dfd31" class="widget widgetStaffDirectory skin71 narrow" >
+			<div class="widgetHeader">
+					<h3><a style="" href= /m/directory>Contact Us</a></h3>
+							</div>
+						<ol class="semanticList">
+			<li class="widgetItem h-card">
+
+
+				<h4 class="widgetTitle field p-name">
+					Erin Granstrom
+					
+				</h4>
+				<div class="field p-job-title">Deputy Clerk</div>
+						<div class="field u-email"><a href="mailto:egranstrom@whitefishbaywi.gov">Email </a></div>
+
+
+
+
+
+				<br />
+			</li>
+			<li class="widgetItem h-card">
+
+
+				<h4 class="widgetTitle field p-name">
+					Whitefish Bay Elections
+					
+				</h4>
+				<div class="field p-job-title"></div>
+						<div class="field u-email"><a href="mailto:elections@whitefishbaywi.gov">Email </a></div>
+
+
+
+
+
+				<br />
+			</li>
+		<li class="widgetItem h-card">
+
+
+
+
+				<div class="field h-adr">
+					<strong>Physical Address</strong>
+					<br />
+					<span class="p-street-address">5300 N. Marlborough Dr.</span><br />
+					<span class="locality">Whitefish Bay</span>, <span class="p-region">WI</span> <span class="p-postal-code">53217</span>
+
+				</div>
+				<br />
+
+
+				<div class="field h-adr">
+					<strong>Mailing Address</strong><br>
+					<span class="p-post-office-box">5300 N. Marlborough Dr.</span><br />
+					<span class="locality">Whitefish Bay</span>, <span class="p-region">WI</span> <span class="p-postal-code">53217</span>
+				</div>
+				<br />
+
+				<div class="field p-tel">Phone: <a href="tel:4149626690">414-962-6690</a></div>
+							<div class="field">Fax: 414-962-5651</div>
+										<br />
+
+				<div class="field p-note">
+
+					<p><strong><span style="color: rgb(255, 255, 255);">Hours</span></strong><br>
+<span style="color: rgb(255, 255, 255);">Monday - Friday</span><br>
+<span style="color: rgb(255, 255, 255);">8 a.m. - 4:30 p.m.</span><br>
+<br>
+</p>
+				</div>
+				<br />
+
+
+		</li>
+									</ol>
+	</div>
+</div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="e44689a5-1618-41ca-83c2-422c4543c858">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last idf86756ac-2656-41ac-ad31-b2ce07493007" style="" data-widgetcontainerid="f86756ac-2656-41ac-ad31-b2ce07493007">	
+<div class="widget editor pageStyles narrow" id="divEditora0affd4c-502b-4fdd-aa45-963ff6746bc7" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}'>
+	    <div class="fr-view">
+
+
+        <h3 class="subhead2 "><span style="color: rgb(255, 255, 255);">Area Representatives</span></h3><p><span style="color: rgb(255, 255, 255);">President of the United States: <a href="https://www.whitehouse.gov/contact" target="_self">Donald Trump</a></span></p><p><span style="color: rgb(255, 255, 255);">United States Senator: <a href="https://www.baldwin.senate.gov/" target="_self">Tammy Baldwin</a></span></p><p><span style="color: rgb(255, 255, 255);">United States Senator: <a href="https://www.ronjohnson.senate.gov/public/index.cfm/email-the-senator" target="_self">Ron Johnson</a></span></p><p><span style="color: rgb(255, 255, 255);">United States Congresswoman: <a href="https://gwenmoore.house.gov/district/interactivemap.htm">Gwen Moore</a></span></p><p><span style="color: rgb(255, 255, 255);">State Senator: <a href="http://docs.legis.wisconsin.gov/2015/legislators/Senate" target="_self">Alberta Darling</a></span></p><p><span style="color: rgb(255, 255, 255);">State Assembly Representative: <a href="http://docs.legis.wisconsin.gov/2015/legislators/Assembly" target="_self">Jim Ott</a></span></p><p><span style="color: rgb(255, 255, 255);">Milwaukee County Supervisor District 13: <a href="http://county.milwaukee.gov/Johnson" target="_self">Willie Johnson, Jr.</a></span></p><p><span style="color: rgb(255, 255, 255);">Milwaukee County Supervisor District 3: <a href="http://county.milwaukee.gov/wasserman" target="_self">Sheldon Wasserman</a></span></p><p><span style="color: rgb(255, 255, 255);"><a aria-label="Milwaukee County Supervisory District Map (PDF) Opens in new window" href="http://www.wfbvillage.org/DocumentCenter/View/235" target="_blank" class="docaccess-activated" data-docaccess-source-url="https://www.wfbvillage.gov/DocumentCenter/View/235" data-url-hash="e299e95b747d7fe5077b714596c80e2fae3492c2c4ab6fb331093e394cae1dd5" data-url-status="disabled">Milwaukee County Supervisory District Map (PDF)</a></span></p><p><span style="color: rgb(255, 255, 255);">Please note that Whitefish Bay is split between two Supervisory Districts, 3 and 13.&nbsp;</span></p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + 'a0affd4c-502b-4fdd-aa45-963ff6746bc7'));
+	});
+</script>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</aside>
+</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbsContainerTS">
+<div class="siteWrap3"><div data-cpRole="contentContainer" id="gbsTS">	<div id="cc01706356-bd9c-44d4-a276-838855d59433" data-containerid="01706356-bd9c-44d4-a276-838855d59433" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="33">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col8 first" style="" data-widgetcontainerid="fccbabf8-d27b-4046-b034-2a82239acf37">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id9c3bd65e-3847-44a3-920f-bd543506a54c" style="" data-widgetcontainerid="9c3bd65e-3847-44a3-920f-bd543506a54c">	
+<div data-widget-id="fd2c56fd-5ab7-4383-ab5a-39e69dc39afe" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidgetfd2c56fd-5ab7-4383-ab5a-39e69dc39afe" class="widget widgetGraphicLinks skin72 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:22em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/318/Online-Payments" target="_self" class="fancyButton fancyButton195 " >
+		<span>
+			<span><span class="text">Online Payments</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton195.fancyButton:link,.fancyButton195.fancyButton:visited, .fancyButton195div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=2102');
+	background-repeat: no-repeat;
+	background-position: center 8px ;
+transition: all .2s ease-in-out;}
+.fancyButton195.fancyButton:hover,.fancyButton195.fancyButton:focus,.fancyButton195.fancyButton:active,.fancyButton195.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center 0px ;
+}
+.fancyButton195.fancyButton:link > span,.fancyButton195.fancyButton:visited > span, .fancyButton195div.fancyButton > span{
+}
+.fancyButton195.fancyButton:hover > span,.fancyButton195.fancyButton:focus > span,.fancyButton195.fancyButton:active > span,.fancyButton195.fancyButton.hover > span{
+}
+.fancyButton195.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2106');
+	background-repeat: no-repeat;
+	background-position: center 50px ;
+transition: all .2s ease-in-out;
+line-height: 1.2;
+}
+.fancyButton195.fancyButton:hover .text,.fancyButton195.fancyButton:focus .text,.fancyButton195.fancyButton:active .text,.fancyButton195.fancyButton.hover .text{
+	text-decoration: underline;
+	background-position: center 42px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/263/Budget-Documents" target="_self" class="fancyButton fancyButton197 " >
+		<span>
+			<span><span class="text">Annual Budget</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton197.fancyButton:link,.fancyButton197.fancyButton:visited, .fancyButton197div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=2100');
+	background-repeat: no-repeat;
+	background-position: center 8px ;
+transition: all .2s ease-in-out;}
+.fancyButton197.fancyButton:hover,.fancyButton197.fancyButton:focus,.fancyButton197.fancyButton:active,.fancyButton197.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center 0px ;
+}
+.fancyButton197.fancyButton:link > span,.fancyButton197.fancyButton:visited > span, .fancyButton197div.fancyButton > span{
+}
+.fancyButton197.fancyButton:hover > span,.fancyButton197.fancyButton:focus > span,.fancyButton197.fancyButton:active > span,.fancyButton197.fancyButton.hover > span{
+}
+.fancyButton197.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2103');
+	background-repeat: no-repeat;
+	background-position: center 50px ;
+transition: all .2s ease-in-out;
+line-height: 1.2;
+}
+.fancyButton197.fancyButton:hover .text,.fancyButton197.fancyButton:focus .text,.fancyButton197.fancyButton:active .text,.fancyButton197.fancyButton.hover .text{
+	text-decoration: underline;
+	background-position: center 42px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8" style="" data-widgetcontainerid="8faa5e23-09f8-4963-aed7-0dc910d0c050">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id44da60ca-3df0-4785-b44c-3b8a73671fba" style="" data-widgetcontainerid="44da60ca-3df0-4785-b44c-3b8a73671fba">	
+<div data-widget-id="9126a675-aaba-4cda-aa39-505e9b74b547" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget9126a675-aaba-4cda-aa39-505e9b74b547" class="widget widgetGraphicLinks skin72 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:22em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://main.govpilot.com/web/public/56f15841-73e_Overnight-Parking-Permit-WHITEFISH-BAY-VILLAGE?uid=45689&amp;ust=WI&amp;pu=1&amp;id=0" target="_self" class="fancyButton fancyButton201 " >
+		<span>
+			<span><span class="text">Parking Permits</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton201.fancyButton:link,.fancyButton201.fancyButton:visited, .fancyButton201div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=2101');
+	background-repeat: no-repeat;
+	background-position: center 8px ;
+transition: all .2s ease-in-out;}
+.fancyButton201.fancyButton:hover,.fancyButton201.fancyButton:focus,.fancyButton201.fancyButton:active,.fancyButton201.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center 0px ;
+}
+.fancyButton201.fancyButton:link > span,.fancyButton201.fancyButton:visited > span, .fancyButton201div.fancyButton > span{
+}
+.fancyButton201.fancyButton:hover > span,.fancyButton201.fancyButton:focus > span,.fancyButton201.fancyButton:active > span,.fancyButton201.fancyButton.hover > span{
+}
+.fancyButton201.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2107');
+	background-repeat: no-repeat;
+	background-position: center 50px ;
+transition: all .2s ease-in-out;
+line-height: 1.2;
+}
+.fancyButton201.fancyButton:hover .text,.fancyButton201.fancyButton:focus .text,.fancyButton201.fancyButton:active .text,.fancyButton201.fancyButton.hover .text{
+	text-decoration: underline;
+	background-position: center 42px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/370/Refuse-Recycling-Collection" target="_self" class="fancyButton fancyButton198 " >
+		<span>
+			<span><span class="text">Refuse &amp; Recycling</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton198.fancyButton:link,.fancyButton198.fancyButton:visited, .fancyButton198div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=2102');
+	background-repeat: no-repeat;
+	background-position: center 8px ;
+transition: all .2s ease-in-out;}
+.fancyButton198.fancyButton:hover,.fancyButton198.fancyButton:focus,.fancyButton198.fancyButton:active,.fancyButton198.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center 0px ;
+}
+.fancyButton198.fancyButton:link > span,.fancyButton198.fancyButton:visited > span, .fancyButton198div.fancyButton > span{
+}
+.fancyButton198.fancyButton:hover > span,.fancyButton198.fancyButton:focus > span,.fancyButton198.fancyButton:active > span,.fancyButton198.fancyButton.hover > span{
+}
+.fancyButton198.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2108');
+	background-repeat: no-repeat;
+	background-position: center 50px ;
+transition: all .2s ease-in-out;
+line-height: 1.2;
+}
+.fancyButton198.fancyButton:hover .text,.fancyButton198.fancyButton:focus .text,.fancyButton198.fancyButton:active .text,.fancyButton198.fancyButton.hover .text{
+	text-decoration: underline;
+	background-position: center 42px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8 last" style="" data-widgetcontainerid="c524aef5-23d8-4db1-83fa-c7041c82c600">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id52275642-cd15-4b18-af4a-a1dddad86b4a" style="" data-widgetcontainerid="52275642-cd15-4b18-af4a-a1dddad86b4a">	
+<div data-widget-id="22d1f2a1-050c-4cb8-9de7-89c786455130" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget22d1f2a1-050c-4cb8-9de7-89c786455130" class="widget widgetGraphicLinks skin72 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:22em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid2 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://lp.constantcontactpages.com/sl/YR0lFnb" target="_self" class="fancyButton fancyButton199 " >
+		<span>
+			<span><span class="text">Newsletter Signup</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton199.fancyButton:link,.fancyButton199.fancyButton:visited, .fancyButton199div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=2100');
+	background-repeat: no-repeat;
+	background-position: center 8px ;
+transition: all .2s ease-in-out;}
+.fancyButton199.fancyButton:hover,.fancyButton199.fancyButton:focus,.fancyButton199.fancyButton:active,.fancyButton199.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center 0px ;
+}
+.fancyButton199.fancyButton:link > span,.fancyButton199.fancyButton:visited > span, .fancyButton199div.fancyButton > span{
+}
+.fancyButton199.fancyButton:hover > span,.fancyButton199.fancyButton:focus > span,.fancyButton199.fancyButton:active > span,.fancyButton199.fancyButton.hover > span{
+}
+.fancyButton199.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2105');
+	background-repeat: no-repeat;
+	background-position: center 50px ;
+transition: all .2s ease-in-out;
+line-height: 1.2;
+}
+.fancyButton199.fancyButton:hover .text,.fancyButton199.fancyButton:focus .text,.fancyButton199.fancyButton:active .text,.fancyButton199.fancyButton.hover .text{
+	text-decoration: underline;
+	background-position: center 42px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="https://www.governmentjobs.com/careers/wfbvillage" target="_self" class="fancyButton fancyButton200 " >
+		<span>
+			<span><span class="text">Employment</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton200.fancyButton:link,.fancyButton200.fancyButton:visited, .fancyButton200div.fancyButton{
+	background-image: url('/ImageRepository/Document?documentID=2101');
+	background-repeat: no-repeat;
+	background-position: center 8px ;
+transition: all .2s ease-in-out;}
+.fancyButton200.fancyButton:hover,.fancyButton200.fancyButton:focus,.fancyButton200.fancyButton:active,.fancyButton200.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: center 0px ;
+}
+.fancyButton200.fancyButton:link > span,.fancyButton200.fancyButton:visited > span, .fancyButton200div.fancyButton > span{
+}
+.fancyButton200.fancyButton:hover > span,.fancyButton200.fancyButton:focus > span,.fancyButton200.fancyButton:active > span,.fancyButton200.fancyButton.hover > span{
+}
+.fancyButton200.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.1em;
+	font-family: "Montserrat";
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 160px;
+	padding-bottom: 15px;
+	padding-right: 5px;
+	padding-left: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2104');
+	background-repeat: no-repeat;
+	background-position: center 50px ;
+transition: all .2s ease-in-out;
+line-height: 1.2;
+}
+.fancyButton200.fancyButton:hover .text,.fancyButton200.fancyButton:focus .text,.fancyButton200.fancyButton:active .text,.fancyButton200.fancyButton.hover .text{
+	text-decoration: underline;
+	background-position: center 42px ;
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- GBs --><div data-cpRole="structuralContainer" id="gbs2ContainerTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="gbs2TS">	<div id="cc2d2d1f27-64b3-4dc2-8837-95d100bfa5b5" data-containerid="2d2d1f27-64b3-4dc2-8837-95d100bfa5b5" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="1">
+				                
+
+		<div class="row outer autoWidths center wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="ffddbe47-9eb3-4d74-81e8-3bd391f91111">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id5346e79e-6aef-4cba-bba9-a32238b07956" style="" data-widgetcontainerid="5346e79e-6aef-4cba-bba9-a32238b07956">	
+<div data-widget-id="1d910e3c-3a86-4a1d-a6f4-cc9f96db5764" data-widget-controller-path="/GraphicLinks/Widget">
+
+
+
+
+<div id="graphicLinkWidget1d910e3c-3a86-4a1d-a6f4-cc9f96db5764" class="widget widgetGraphicLinks skin73 widgetOptionSet4 wide" data-elementqueryclasses='{"wide-narrow":"min-width:70em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' data-modulewidgettype="graphicLinks">
+	<div class="widgetHeader">
+		<div class="">
+				</div>
+	</div>
+	<div class="widgetBody cpGrid cpGrid5 ">
+		<nav class="widgetGraphicLinksNav" aria-labelledby="GraphicLinkHeaderText">
+				<div class="row   wide">
+					<!--
+--><div class="col col1 first "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/instagram" target="_self" class="fancyButton fancyButton191 " >
+		<span>
+			<span><span class="text">Instagram</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton191.fancyButton:link,.fancyButton191.fancyButton:visited, .fancyButton191div.fancyButton{
+	background-color: rgb(255, 255, 255);
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2090');
+	background-repeat: no-repeat;
+	background-position: 20px  center;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+max-width: 300px;
+margin: 0 auto;
+background-size: 35px;
+overflow: hidden;}
+.fancyButton191.fancyButton:hover,.fancyButton191.fancyButton:focus,.fancyButton191.fancyButton:active,.fancyButton191.fancyButton.hover{
+}
+.fancyButton191.fancyButton:link > span,.fancyButton191.fancyButton:visited > span, .fancyButton191div.fancyButton > span{
+}
+.fancyButton191.fancyButton:hover > span,.fancyButton191.fancyButton:focus > span,.fancyButton191.fancyButton:active > span,.fancyButton191.fancyButton.hover > span{
+}
+.fancyButton191.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.2em;
+	font-family: "Montserrat";
+	text-align: left;
+	padding-right: 20px;
+	padding-left: 70px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-right: 20px;
+	padding-left: 70px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	border-top: 5px solid rgba(255, 255, 255, 0);
+	border-left: 5px solid rgba(255, 255, 255, 0);
+	border-right: 5px solid rgba(255, 255, 255, 0);
+	border-bottom: 5px solid rgba(255, 255, 255, 0);
+line-height: 1.2;
+text-transform: uppercase;
+height: 100px;
+transition: all .2s ease-in-out;
+
+}
+.fancyButton191.fancyButton:hover .text,.fancyButton191.fancyButton:focus .text,.fancyButton191.fancyButton:active .text,.fancyButton191.fancyButton.hover .text{
+	text-decoration: underline;
+	border-top: 5px solid rgb(175, 189, 203);
+	border-left: 5px solid rgb(175, 189, 203);
+	border-right: 5px solid rgb(175, 189, 203);
+	border-bottom: 5px solid rgb(175, 189, 203);
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/linkedin" target="_self" class="fancyButton fancyButton186 " >
+		<span>
+			<span><span class="text">LinkedIn</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton186.fancyButton:link,.fancyButton186.fancyButton:visited, .fancyButton186div.fancyButton{
+	background-color: rgb(255, 255, 255);
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2091');
+	background-repeat: no-repeat;
+	background-position: 20px  center;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+max-width: 300px;
+margin: 0 auto;
+background-size: 35px;
+overflow: hidden;}
+.fancyButton186.fancyButton:hover,.fancyButton186.fancyButton:focus,.fancyButton186.fancyButton:active,.fancyButton186.fancyButton.hover{
+}
+.fancyButton186.fancyButton:link > span,.fancyButton186.fancyButton:visited > span, .fancyButton186div.fancyButton > span{
+}
+.fancyButton186.fancyButton:hover > span,.fancyButton186.fancyButton:focus > span,.fancyButton186.fancyButton:active > span,.fancyButton186.fancyButton.hover > span{
+}
+.fancyButton186.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.2em;
+	font-family: "Montserrat";
+	text-align: left;
+	padding-right: 20px;
+	padding-left: 70px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-right: 20px;
+	padding-left: 70px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	border-top: 5px solid rgba(255, 255, 255, 0);
+	border-left: 5px solid rgba(255, 255, 255, 0);
+	border-right: 5px solid rgba(255, 255, 255, 0);
+	border-bottom: 5px solid rgba(255, 255, 255, 0);
+line-height: 1.2;
+text-transform: uppercase;
+height: 100px;
+transition: all .2s ease-in-out;
+
+}
+.fancyButton186.fancyButton:hover .text,.fancyButton186.fancyButton:focus .text,.fancyButton186.fancyButton:active .text,.fancyButton186.fancyButton.hover .text{
+	text-decoration: underline;
+	border-top: 5px solid rgb(175, 189, 203);
+	border-left: 5px solid rgb(175, 189, 203);
+	border-right: 5px solid rgb(175, 189, 203);
+	border-bottom: 5px solid rgb(175, 189, 203);
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/facebook" target="_self" class="fancyButton fancyButton192 " >
+		<span>
+			<span><span class="text">Facebook</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton192.fancyButton:link,.fancyButton192.fancyButton:visited, .fancyButton192div.fancyButton{
+	background-color: rgb(255, 255, 255);
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url(/ImageRepository/Document?documentID=2089);
+	background-repeat: no-repeat;
+	background-position: 20px  center;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+max-width: 300px;
+margin: 0 auto;
+background-size: 35px;
+overflow: hidden;}
+.fancyButton192.fancyButton:hover,.fancyButton192.fancyButton:focus,.fancyButton192.fancyButton:active,.fancyButton192.fancyButton.hover{
+}
+.fancyButton192.fancyButton:link > span,.fancyButton192.fancyButton:visited > span, .fancyButton192div.fancyButton > span{
+}
+.fancyButton192.fancyButton:hover > span,.fancyButton192.fancyButton:focus > span,.fancyButton192.fancyButton:active > span,.fancyButton192.fancyButton.hover > span{
+}
+.fancyButton192.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.2em;
+	font-family: "Montserrat";
+	text-align: left;
+	padding-right: 20px;
+	padding-left: 70px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-right: 20px;
+	padding-left: 70px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	border-top: 5px solid rgba(255, 255, 255, 0);
+	border-left: 5px solid rgba(255, 255, 255, 0);
+	border-right: 5px solid rgba(255, 255, 255, 0);
+	border-bottom: 5px solid rgba(255, 255, 255, 0);
+line-height: 1.2;
+text-transform: uppercase;
+height: 100px;
+transition: all .2s ease-in-out;
+
+}
+.fancyButton192.fancyButton:hover .text,.fancyButton192.fancyButton:focus .text,.fancyButton192.fancyButton:active .text,.fancyButton192.fancyButton.hover .text{
+	text-decoration: underline;
+	border-top: 5px solid rgb(175, 189, 203);
+	border-left: 5px solid rgb(175, 189, 203);
+	border-right: 5px solid rgb(175, 189, 203);
+	border-bottom: 5px solid rgb(175, 189, 203);
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  "><ul class="semanticList"><!--
+	    --><li class="widgetItem GraphicLinks">
+
+<div>
+	<a href="/x" target="_self" class="fancyButton fancyButton193 " >
+		<span>
+			<span><span class="text">X</span></span>
+		</span>
+	</a>
+</div>
+		<style scoped="scoped">.fancyButton193.fancyButton:link,.fancyButton193.fancyButton:visited, .fancyButton193div.fancyButton{
+	background-color: rgb(255, 255, 255);
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-image: url('/ImageRepository/Document?documentID=2098');
+	background-repeat: no-repeat;
+	background-position: 20px  center;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+max-width: 300px;
+margin: 0 auto;
+background-size: 35px;
+overflow: hidden;}
+.fancyButton193.fancyButton:hover,.fancyButton193.fancyButton:focus,.fancyButton193.fancyButton:active,.fancyButton193.fancyButton.hover{
+}
+.fancyButton193.fancyButton:link > span,.fancyButton193.fancyButton:visited > span, .fancyButton193div.fancyButton > span{
+}
+.fancyButton193.fancyButton:hover > span,.fancyButton193.fancyButton:focus > span,.fancyButton193.fancyButton:active > span,.fancyButton193.fancyButton.hover > span{
+}
+.fancyButton193.fancyButton .text{
+	color: rgb(8, 57, 103);
+	font-size: 1.2em;
+	font-family: "Montserrat";
+	text-align: left;
+	padding-right: 20px;
+	padding-left: 70px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-right: 20px;
+	padding-left: 70px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-khtml-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-top-right-radius: 5px;
+	-khtml-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-bottom-left-radius: 5px;
+	-khtml-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-bottom-right-radius: 5px;
+	-khtml-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-repeat: no-repeat;
+	background-position: left top;
+	border-top: 5px solid rgba(255, 255, 255, 0);
+	border-left: 5px solid rgba(255, 255, 255, 0);
+	border-right: 5px solid rgba(255, 255, 255, 0);
+	border-bottom: 5px solid rgba(255, 255, 255, 0);
+line-height: 1.2;
+text-transform: uppercase;
+height: 100px;
+transition: all .2s ease-in-out;
+
+}
+.fancyButton193.fancyButton:hover .text,.fancyButton193.fancyButton:focus .text,.fancyButton193.fancyButton:active .text,.fancyButton193.fancyButton.hover .text{
+	text-decoration: underline;
+	border-top: 5px solid rgb(175, 189, 203);
+	border-left: 5px solid rgb(175, 189, 203);
+	border-right: 5px solid rgb(175, 189, 203);
+	border-bottom: 5px solid rgb(175, 189, 203);
+
+
+}
+</style>
+
+ </li><!--
+--></ul></div><!----><div class="col col1  last"><ul class="semanticList"><!--
+--></ul></div><!--				-->
+				</div>
+			</nav>
+		</div>
+	<div class="widgetFooter">
+			</div>
+</div>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div><!-- Footer --><footer data-cpRole="structuralContainer" id="footerContainerTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="footerTS">	<div id="cc718b1870-5070-4858-94d8-fb4536fea5b9" data-containerid="718b1870-5070-4858-94d8-fb4536fea5b9" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile" data-contentcontainerbreakpoint="60">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col4 first" style="" data-widgetcontainerid="16f23b45-ebbe-4d84-8b26-62836ecc8a37">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last id48bd1702-6c49-4471-9ff9-7570b38553b4" style="" data-widgetcontainerid="48bd1702-6c49-4471-9ff9-7570b38553b4">	
+    <div data-widget-id="f972b10b-6dd4-4ffd-9283-175877dfb5d3" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdvf972b10b-6dd4-4ffd-9283-175877dfb5d3" class="widget widgetInfoAdvanced skin70 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-label="Info Advanced">
+			<header class="widgetHeader" id="headerf972b10b-6dd4-4ffd-9283-175877dfb5d3">
+		<div class="">
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid1 ">
+		<div class="row  wide">
+					<div class="col col1 first last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p><a href="/"><img src="/ImageRepository/Document?documentId=2088" class="fr-dib" alt="Whitefish Bay Wisconsin Homepage"></a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdvf972b10b-6dd4-4ffd-9283-175877dfb5d3 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="d817d044-0102-4cf1-95f6-21938fa3f818">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id2d6f16a6-c2e3-4a20-acfd-32699a5befd0" style="" data-widgetcontainerid="2d6f16a6-c2e3-4a20-acfd-32699a5befd0">	
+
+<div class="widget widgetSpacer" id="747c4703-ad1e-4e1f-81ed-8a87b4eb61ef"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col8" style="" data-widgetcontainerid="6a27bba4-8990-4f82-8d15-1ea93ef362b9">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col8 first last id11b38424-5819-498b-be16-931be647bbd9" style="" data-widgetcontainerid="11b38424-5819-498b-be16-931be647bbd9">	
+    <div data-widget-id="35b35046-cce8-4c90-ba00-db175df84188" data-widget-controller-path="/InfoAdvanced/Widget">
+
+
+
+
+
+	<section id="divInfoAdv35b35046-cce8-4c90-ba00-db175df84188" class="widget widgetInfoAdvanced skin75 widgetOptionSet5 wide" data-modulewidgettype="infoAdv" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="header35b35046-cce8-4c90-ba00-db175df84188">
+			<header class="widgetHeader" id="header35b35046-cce8-4c90-ba00-db175df84188">
+		<div class="">
+					<h3 >Contact Us</h3>
+								</div>
+	</header>
+	<div class="widgetBody  cpGrid cpGrid2 ">
+		<div class="row  wide">
+					<div class="col col1 first ">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Village of Whitefish Bay<br>5300 N. Marlborough Drive&nbsp;<br>Whitefish Bay, WI 53217-5399&nbsp;<br>Phone: <a href="tel:414-962-6690">414-962-6690</a></p>
+</li>						</ol>
+					</div>
+					<div class="col col1  last">
+						<ol class="pageStyles semanticList">
+
+<li class="InfoAdvanced widgetItem fr-view">
+	<p>Fax: 414-962-5651<br>Hours: Monday - Friday<br>8 a.m. - 4:30 p.m.<br><a href="/FormCenter/Contact-Us-4/Contact-Us-43">Submit a General Inquiry</a></p>
+</li>						</ol>
+					</div>
+		</div>
+	</div>
+	<div class="widgetFooter">
+
+	</div>
+
+	</section>
+
+
+
+<script type="text/javascript">
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv35b35046-cce8-4c90-ba00-db175df84188 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+</script></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="e201a7a4-331d-4111-ad81-bbb8f5a6f8ed">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last id785086e2-3502-4db3-bb11-0a5af9f6dab1" style="" data-widgetcontainerid="785086e2-3502-4db3-bb11-0a5af9f6dab1">	
+
+<div class="widget widgetSpacer" id="c1456b87-ae26-48a7-a4cb-39788f789f12"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col5" style="" data-widgetcontainerid="3cd2119b-a011-437c-ad03-84d63bb3b37b">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col5 first last id97b2cc3d-cca7-4594-a549-aa3f4d30c49b" style="" data-widgetcontainerid="97b2cc3d-cca7-4594-a549-aa3f4d30c49b">	
+	<div data-widget-id="277f6196-87c1-483a-afb5-acc254c39c24" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink277f6196-87c1-483a-afb5-acc254c39c24" class="widget widgetQuickLinks skin75 widgetOptionSet26 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader277f6196-87c1-483a-afb5-acc254c39c24">
+			<header class="widgetHeader" id="quickLinksHeader277f6196-87c1-483a-afb5-acc254c39c24">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=26" >Quick Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://pp-milwaukee-co-wi-fb.app.landnav.com/Search/RealEstate/Search" target="_self" aria-label="Property Tax Bill Search - Helpful Links" rel="">Property Tax Bill Search</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://pp-milwaukee-co-wi-fb.app.landnav.com/Search/RealEstate/Search" target="_self" aria-label="Make a Property Tax Payment - Helpful Links" rel="">Make a Property Tax Payment</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/DocumentCenter/View/1757/Public-Portal---How-to-Make-a-Tax-Payment-v11" target="_self" aria-label="How To Pay Your Property Tax Bill Online - Helpful Links" rel="">How To Pay Your Property Tax Bill Online</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/DocumentCenter/View/1758/Public-Portal---How-to-Print-a-Tax-Year-Report---v11" target="_self" aria-label="How To View Your Tax Receipt - Helpful Links" rel="">How To View Your Tax Receipt </a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="https://bsaonline.com/OnlinePayment/OnlinePaymentSearch?PaymentApplicationType=10&amp;uid=2322&amp;sitetransition=true" target="_self" aria-label="Pay Utility Bill Online - Helpful Links" rel="">Pay Utility Bill Online</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="http://www.wfbvillage.org/263/Budget-Documents" target="_self" aria-label="Adopted Village Budgets - Helpful Links" rel="">Adopted Village Budgets</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col1" style="" data-widgetcontainerid="5ded33ff-3155-406e-bbcc-d07581f59aef">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col1 first last idc54930c9-4401-4852-8252-677a7f06b95c" style="" data-widgetcontainerid="c54930c9-4401-4852-8252-677a7f06b95c">	
+
+<div class="widget widgetSpacer" id="8326117a-1aed-4dd5-847d-f8cf36bced40"></div>
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!----><div class="outer col col4 last" style="" data-widgetcontainerid="e9b470ec-2987-4a49-b3b7-9d4a32d2425c">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col4 first last idf4925ea1-c0e4-4f7a-82ec-baad8cb48cf9" style="" data-widgetcontainerid="f4925ea1-c0e4-4f7a-82ec-baad8cb48cf9">	
+	<div data-widget-id="355d7765-d6a4-472c-a078-6d2693511238" data-widget-controller-path="/QuickLinks/Widget">
+
+
+
+
+
+
+
+
+	<section id="widgetQuicklink355d7765-d6a4-472c-a078-6d2693511238" class="widget widgetQuickLinks skin75 widgetOptionSet26 narrow" data-modulewidgettype="quickLinks" data-elementqueryclasses='{"wide-narrow":"min-width:25em"}' data-elementquerymatch='matchMultiColumn' data-elementqueryunmatch='unmatchMultiColumn' aria-labelledby="quickLinksHeader355d7765-d6a4-472c-a078-6d2693511238">
+			<header class="widgetHeader" id="quickLinksHeader355d7765-d6a4-472c-a078-6d2693511238">
+		<div class="">
+					<h3><a  style="" href="/QuickLinks.aspx?CID=27" >Site Links</a></h3>
+						</div>
+	</header>
+	<div class="widgetBody cpGrid cpGrid1 ">
+        <div class="row  narrow">
+				<div class="col col1 first last">
+					<ol class="semanticList">
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/" target="_self" aria-label="Home - Using This Site" rel="">Home</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/sitemap" target="_self" aria-label="Site Map - Using This Site" rel="">Site Map</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/accessibility" target="_self" aria-label="Accessibility - Using This Site" rel="">Accessibility</a>
+        <div class="widgetMeta"></div>
+    </li>
+
+
+
+
+    <li style="position:relative" class="widgetItem QuickLinks">
+        <a class="widgetDesc widgetQuickLinksLink" href="/site/copyright" target="_self" aria-label="Copyright Notices - Using This Site" rel="">Copyright Notices</a>
+        <div class="widgetMeta"></div>
+    </li>
+					</ol>
+				</div>
+		</div>
+        
+	</div>
+	<div class="widgetFooter">
+	</div>
+	<div class="addItemModal hidden">
+		<div class="url hidden">/QuickLinks.aspx</div>
+	</div>
+
+	</section>
+</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</footer><!-- Powered By --><div data-cpRole="structuralContainer" id="poweredByContainerTS">
+<div class="siteWrap2"><div data-cpRole="contentContainer" id="poweredByTS">	<div id="cc0b836a8c-c7f3-4917-b93d-7e11adbe2a9b" data-containerid="0b836a8c-c7f3-4917-b93d-7e11adbe2a9b" class="pageContent cpGrid cpGrid24 isLockedContainer showInMobile">
+				                
+
+		<div class="row outer wide"><!--
+--><div class="outer col col24 first last" style="" data-widgetcontainerid="75a2d361-567d-4a7a-ac1a-861c57a469fe">				
+	<div class="row nest first last wide">
+	
+	<div class="inner col col24 first last id3af9556c-40a2-4913-9d59-b5b724492da8" style="" data-widgetcontainerid="3af9556c-40a2-4913-9d59-b5b724492da8">	
+ 
+	<div data-widget-id='078813a9-02a7-4b52-b6aa-3dff80841f06' data-moduleName="customHtml" id='widgetCustomHtml078813a9-02a7-4b52-b6aa-3dff80841f06' class="widget widgetCustomHtml skin76 narrow" >
+	<div class="widgetBody pageStyles" id="widgetBody078813a9-02a7-4b52-b6aa-3dff80841f06">
+		<div id="customHtml078813a9-02a7-4b52-b6aa-3dff80841f06"><div><style>
+  /* CP icon */
+  .cpBylineIconTS {
+    color: #fff;
+  }
+  /* CP Text */
+  .cpBylineTextTS,
+  .cpBylineTextTS a:link {
+    color: #fff;
+  }
+
+  .cpBylineTS {
+    text-align: center;
+  }
+  
+  .cpBylineIconTS {
+    fill: currentColor;
+    width: 39px;
+    height: 26px;
+    display: inline;
+    vertical-align: middle;
+  }
+</style>
+
+<div class="widgetItem cpBylineTS">
+  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 100 100" class="cpBylineIconTS">
+    <path class="c" d="M73.4,23.2h-19v16.7h19c2.8,0,5,2.2,5,5c0,2.8-2.2,5-5,5h-19v28.4h5.5l11.3-11.7h2.2c11.9,0,21.6-9.7,21.6-21.6C95,33,85.3,23.2,73.4,23.2"></path>
+    <path class="p" d="M45.8,66.5H26.6C14.7,66.5,5,56.8,5,44.9C5,33,14.7,23.2,26.6,23.2h19.1v16.7H26.6c-2.8,0-5,2.2-5,5c0,2.8,2.2,5,5,5h19.1V66.5z"></path>
+  </svg>
+  <span class="cpBylineTextTS">Government Websites by <a href="https://connect.civicplus.com/referral">CivicPlus&reg;</a></span>
+</div>
+</div></div>
+	</div>
+
+	</div>
+
+	</div> <!-- inner column -->
+
+	</div> <!-- inner row -->
+
+			</div><!-- outer column --><!--		--></div> <!-- outer row -->
+
+
+	</div>
+</div></div>
+</div>
+</div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+<link href="/745732998.css" rel="stylesheet" type="text/css" />
+
+<div id="SplashMessageWrapper" class="cp-Splash-wrapper">
+	<div role="dialog" aria-labelledby="cp-Splash-title" aria-describedby="editorContentDesc" aria-modal="true" tabindex="-1" id="SplashMessage" class="hidden cp-Splash cp-Splash--modal is-open">
+		<div class="cp-Splash-header">
+			<h2 class="cp-Splash-title" id="cp-Splash-title">Loading</h2>
+			<button class="cp-Splash-Btn cp-Splash-close" aria-label="Close this modal" title="Close this window">
+				<svg id="iconClose" viewBox="0 0 25 25">
+					<polygon style="fill:currentcolor"
+							 points="18.806,6.98 18.075,6.248 12.532,11.792 6.989,6.248 6.257,6.98 11.786,12.508 6.212,18.084 6.943,18.815 12.532,13.224 18.12,18.815 18.851,18.084 13.277,12.508"></polygon>
+				</svg>
+			</button>
+		</div>
+		<div class="cp-Splash-body">
+			<div class="cp-Splash-Prose editorContent fr-view" id="editorContentDesc">
+				<!-- Content from the Froala Editor will go here. -->
+				Loading
+			</div>
+		</div>
+		<div class="cp-Splash-footer">
+			<button class="cp-Splash-Btn cp-Splash-Btn--NoShow">Do Not Show Again</button>
+			<button class="cp-Splash-Btn cp-Splash-Btn--Close">Close</button>
+		</div>
+	</div>
+</div>
+
+<script src="/Assets/Scripts/APIClient.js"></script>
+<script src="/Assets/Mystique/Shared/Scripts/Moment/Moment.min.js"></script>
+<script src="/Assets/Scripts/SplashModal/SplashModalRender.js"></script>
+<script>
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '270',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+</script>
+
+
+	
+	
+	
+	
+
+
+
+	
+
+
+
+
+
+
+    <script src="/-1442400649.js" type="text/javascript"></script>
+    <!-- Fixed Nav Adjustment -->
+<script>
+  function getValueTS(elem, attr) {
+    const val = elem.css(attr);
+    if (val === undefined) return undefined;
+    const num = parseInt(val, 10);
+    if (num === NaN) return undefined;
+    return num;
+  }
+
+  function clampTS(number, min, max) {
+    return Math.min(Math.max(number, min), max);
+  }
+
+  function isPageEditingTS() {
+    return (
+      $("#doneEditing").length > 0 || // In live edit
+      typeof DesignCenter !== "undefined" // In theme manager
+    );
+  }
+
+  const bgColorRegexTS = /rgba\((\d+), (\d+), (\d+), (\d*\.?\d*)\)/;
+  function isTransparentTS(elem) {
+    const bg = elem.css('background-color');
+    if (typeof bg !== "string" || !bg.startsWith('rgba(')) return false;
+    const matchState = bg.match(bgColorRegexTS);
+    if (!matchState || matchState.length !== 5) return false;
+    const alpha = parseFloat(matchState[4], 10);
+    if (!(alpha >= 0 && alpha < 1)) return false;
+    return true;
+  }
+
+  function iterateLeftpads(cb) {
+    const containersTS = $("[class^='siteWrap'],[class*=' siteWrap']");
+    for (let i = 0; i < containersTS.length; i++) {
+      const containerTS = containersTS[i];
+      // Skip the body container and anything with data-skip-leftpad
+      if (
+        containerTS.id !== "bodyContainerTS" &&
+        containerTS.getAttribute('data-skip-leftpad') === null
+      ) {
+        cb(containerTS);
+      }
+    }
+  }
+
+  const anchor = $("#divToolbars");
+
+  // Outer banner padding (push banner down)
+  const outerSizingTS = $("#bannerContainerTS");
+  // Inner banner padding (push banner content down) - Transparent header OR on attaching headers
+  const innerSizingTS = $("#bannerSizingTS");
+  const bodyContainerTS = $("#bodyContainerTS");
+
+  const forceUnfixClassTS = "forceUnfixTS";
+
+  const fixedTopTS = $(".fixedTopTS");
+  const fixedBottomTS = $(".fixedBottomTS");
+  const fixedLeftTS = $(".fixedLeftTS");
+
+  var initialTopTS;
+  var topAttachTS;
+  if (fixedTopTS && fixedTopTS.length === 1) {
+    initialTopTS = getValueTS(fixedTopTS, 'top');
+    const attachment = fixedTopTS.attr('data-attach');
+    if (attachment) topAttachTS = $("#" + attachment);
+    if (!topAttachTS || topAttachTS.length !== 1) topAttachTS = undefined;
+  }
+
+  function resizeAdjustmentTS() {
+    const editing = isPageEditingTS();
+
+    // Fixed top script
+    (function () {
+      if (!fixedTopTS || fixedTopTS.length !== 1 || initialTopTS === undefined) return;
+
+      if (editing) {
+        fixedTopTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedTopTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      const topPosition = fixedTopTS.css('position');
+      if (topPosition === 'fixed') {
+        if (topAttachTS) {
+          scrollAdjustmentTS();
+        } else {
+          const anchorHeight = anchor.outerHeight() - 1;
+          fixedTopTS.css('top', anchorHeight + initialTopTS);
+        }
+      } else {
+        fixedTopTS.css('top', initialTopTS);
+      }
+
+      if (topPosition === 'fixed' || topPosition === 'absolute') {
+        // Bump the banner content down
+        if (isTransparentTS(fixedTopTS)) {
+          innerSizingTS.css('padding-top', initialTopTS + fixedTopTS.outerHeight() - 1);
+          outerSizingTS.css('padding-top', '');
+
+          try {
+            window.Pages.onResizeHandlersExecute();
+          } catch (e) { }
+        } else {
+          outerSizingTS.css('padding-top', fixedTopTS.outerHeight() - 1);
+          innerSizingTS.css('padding-top', '');
+        }
+      } else {
+        innerSizingTS.css('padding-top', '');
+        outerSizingTS.css('padding-top', '');
+      }
+    })();
+
+    // Fixed bottom script
+    (function () {
+      if (!fixedBottomTS || fixedBottomTS.length === 0) return;
+
+      // If the widget has gone narrow, force unfix
+      if (editing || fixedBottomTS.outerHeight() > 200) {
+        fixedBottomTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedBottomTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedBottomTS.css('position') === 'fixed') {
+        bodyContainerTS.css('padding-bottom', fixedBottomTS.outerHeight());
+      } else {
+        bodyContainerTS.css('padding-bottom', '');
+      }
+    })();
+
+    // Fixed left script
+    (function () {
+      if (!fixedLeftTS || fixedLeftTS.length === 0) return;
+
+      if (editing) {
+        fixedLeftTS[0].classList.add(forceUnfixClassTS);
+      } else {
+        fixedLeftTS[0].classList.remove(forceUnfixClassTS);
+      }
+
+      if (fixedLeftTS.css('position') === 'fixed') {
+        const anchorHeight = anchor.outerHeight() - 1;
+        fixedLeftTS.css('top', anchorHeight);
+        const leftBoundingTS = fixedLeftTS[0].getBoundingClientRect();
+        iterateLeftpads(function (containerTS) {
+          const containerBoundingTS = containerTS.getBoundingClientRect();
+          if (containerBoundingTS.left <= leftBoundingTS.right) {
+            $(containerTS).css('padding-left', leftBoundingTS.width + 16);
+          }
+        });
+      } else {
+        fixedLeftTS.css('top', '');
+        iterateLeftpads(function (containerTS) {
+          $(containerTS).css('padding-left', '');
+        });
+      }
+    })();
+  }
+
+  function scrollAdjustmentTS() {
+    if (!fixedTopTS || fixedTopTS.length !== 1 || !topAttachTS || topAttachTS.length !== 1) return;
+    const topPosition = fixedTopTS.css('position');
+    if (topPosition === 'fixed' || topPosition === 'absolute') {
+      const anchorBounding = anchor[0].getBoundingClientRect();
+      const attachBounding = topAttachTS[0].getBoundingClientRect();
+      const scrollTop = $(window).scrollTop();
+
+      fixedTopTS.css('top', Math.max(anchorBounding.bottom - 1, attachBounding.bottom));
+    } else {
+      fixedTopTS.css('top', initialTopTS);
+    }
+  }
+
+  $(window).load(function () {
+    setTimeout(function () {
+      resizeAdjustmentTS();
+    }, 350);
+
+    $(window).scroll(function () {
+      scrollAdjustmentTS();
+    });
+
+    var adjustTimeoutTS;
+    $(window).resize(function () {
+      clearTimeout(adjustTimeoutTS);
+      adjustTimeoutTS = setTimeout(function () {
+        resizeAdjustmentTS();
+      }, 350);
+    });
+
+    $.when(window.Pages.angularToolbarComplete).done(function () {
+      resizeAdjustmentTS();
+    });
+  });
+</script>
+<!-- End Fixed Nav Adjustment -->
+
+
+    <script type="text/javascript">
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    </script>
+
+    <noscript>
+        <style>
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+
+        
+<div style="display: none;">
+	<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+
+		<symbol id="iconArrow--left" viewbox="0 0 25 25">
+			<title>Arrow Left</title>
+			<polygon style="fill:currentcolor" points="18.044,25 19.498,23.545 8.409,12.454 19.408,1.455 17.954,0 5.502,12.452"></polygon>
+		</symbol>
+
+		<symbol id="iconArrow--right" viewbox="0 0 25 25">
+			<title>Arrow Right</title>
+			<polygon style="fill:currentcolor" points="6.957,0 5.502,1.455 16.591,12.546 5.592,23.545 7.047,25 19.498,12.548"></polygon>
+		</symbol>
+
+	</svg>
+</div>
+    <script type="text/javascript">loadCSS('//fonts.googleapis.com/css?family=Fira+Sans:500,700,italic,regular|Montserrat:500,500italic,600,600italic,700,700italic,800,800italic,900,900italic,italic,regular|Open+Sans:500,500italic,600,600italic,700,700italic,italic,regular|Roboto:500,500italic,700,700italic,italic,regular|');</script>
+    
+
+    <div class="hidden activeWidgetSkinComponentsOnPageJson">[]</div>
+        <div style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                <symbol id="iconSlideshowArrowLeft" viewBox="0 0 22.68 40">
+                    <title>Slideshow Left Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M20,40a2.67,2.67,0,0,1-1.9-.79L.79,21.9a2.68,2.68,0,0,1,0-3.79L18.1.79a2.68,2.68,0,1,1,3.79,3.79L6.47,20,21.89,35.42A2.68,2.68,0,0,1,20,40Z"></path>
+                    </g>
+                </symbol>
+                <symbol id="iconSlideshowArrowRight" viewBox="0 0 22.68 40">
+                    <title>Slideshow Right Arrow</title>
+                    <g>
+                        <path style="fill:currentcolor;" d="M2.68,0a2.67,2.67,0,0,1,1.9.79L21.89,18.1a2.68,2.68,0,0,1,0,3.79L4.58,39.21A2.68,2.68,0,0,1,.79,35.42L16.21,20,.79,4.58A2.68,2.68,0,0,1,2.68,0Z"></path>
+                    </g>
+                </symbol>
+            </svg>
+        </div>
+    
+	
+	
+
+    <div id="root-picker-outlet"></div>
+</body>
+</html>

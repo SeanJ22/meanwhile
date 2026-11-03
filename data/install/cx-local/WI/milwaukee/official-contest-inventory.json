@@ -1,0 +1,1420 @@
+{
+  "sourceKind": "OFFICIAL_ELECTION_RESULTS_CONTEST_INVENTORY_NOT_SAMPLE_BALLOT",
+  "snapshotContext": "Official November2pre-polls inventory with zero votes, used only for fields/choices. All521wards/19municipalities; no result inference.",
+  "fields": [
+    {
+      "category": "Federal",
+      "title": "Representative in Congress, District 1",
+      "rows": [
+        [
+          "Representative in Congress, District 1",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Bryan Steil (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Mitchell Berman (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative in Congress, District 1 Vote For 1 Votes REP Bryan Steil (Republican) 0.00% 0 DEM Mitchell Berman (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Federal",
+      "title": "Representative in Congress, District 4",
+      "rows": [
+        [
+          "Representative in Congress, District 4",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Tim Rogers (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Gwen Moore (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "IND Arthur Burks (Independent)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative in Congress, District 4 Vote For 1 Votes REP Tim Rogers (Republican) 0.00% 0 DEM Gwen Moore (Democratic) 0.00% 0 IND Arthur Burks (Independent) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Federal",
+      "title": "Representative in Congress, District 5",
+      "rows": [
+        [
+          "Representative in Congress, District 5",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Scott Fitzgerald (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Andrew Beck (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative in Congress, District 5 Vote For 1 Votes REP Scott Fitzgerald (Republican) 0.00% 0 DEM Andrew Beck (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Governor / Lieutenant Governor",
+      "rows": [
+        [
+          "Governor / Lieutenant Governor",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Tom Tiffany / David Varnam (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM David Crowley / Sarah Godlewski (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Governor / Lieutenant Governor Vote For 1 Votes REP Tom Tiffany / David Varnam (Republican) 0.00% 0 DEM David Crowley / Sarah Godlewski (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Attorney General",
+      "rows": [
+        [
+          "Attorney General",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Eric Toney (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Josh Kaul (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Attorney General Vote For 1 Votes REP Eric Toney (Republican) 0.00% 0 DEM Josh Kaul (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Secretary of State",
+      "rows": [
+        [
+          "Secretary of State",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Jay Schroeder (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM JoCasta Zamarripa (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "WGN Pete Karas (Wisconsin Green)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Secretary of State Vote For 1 Votes REP Jay Schroeder (Republican) 0.00% 0 DEM JoCasta Zamarripa (Democratic) 0.00% 0 WGN Pete Karas (Wisconsin Green) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "State Treasurer",
+      "rows": [
+        [
+          "State Treasurer",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP John S. Leiber (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Yee Leng Xiong (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Treasurer Vote For 1 Votes REP John S. Leiber (Republican) 0.00% 0 DEM Yee Leng Xiong (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "State Senator, District 3",
+      "rows": [
+        [
+          "State Senator, District 3",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "DEM Tim Carpenter (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Senator, District 3 Vote For 1 Votes DEM Tim Carpenter (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "State Senator, District 5",
+      "rows": [
+        [
+          "State Senator, District 5",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Mike Roberts (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Robyn Vining (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Senator, District 5 Vote For 1 Votes REP Mike Roberts (Republican) 0.00% 0 DEM Robyn Vining (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "State Senator, District 7",
+      "rows": [
+        [
+          "State Senator, District 7",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Mike Moeller (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Chris J. Larson (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Senator, District 7 Vote For 1 Votes REP Mike Moeller (Republican) 0.00% 0 DEM Chris J. Larson (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "State Senator, District 21",
+      "rows": [
+        [
+          "State Senator, District 21",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Jim Croft (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Trevor Jung (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Senator, District 21 Vote For 1 Votes REP Jim Croft (Republican) 0.00% 0 DEM Trevor Jung (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 7",
+      "rows": [
+        [
+          "Representative to the Assembly, District 7",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Lee Whiting (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Karen Kirsch (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 7 Vote For 1 Votes REP Lee Whiting (Republican) 0.00% 0 DEM Karen Kirsch (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 8",
+      "rows": [
+        [
+          "Representative to the Assembly, District 8",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Angel Sanchez (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Ismael Luna (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 8 Vote For 1 Votes REP Angel Sanchez (Republican) 0.00% 0 DEM Ismael Luna (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 9",
+      "rows": [
+        [
+          "Representative to the Assembly, District 9",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Sam Guerrero (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Priscilla A. Prado (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 9 Vote For 1 Votes REP Sam Guerrero (Republican) 0.00% 0 DEM Priscilla A. Prado (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 10",
+      "rows": [
+        [
+          "Representative to the Assembly, District 10",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "DEM Darrin Madison (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "WGN Robert Longwell-Grice (Wisconsin Green)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 10 Vote For 1 Votes DEM Darrin Madison (Democratic) 0.00% 0 WGN Robert Longwell-Grice (Wisconsin Green) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 11",
+      "rows": [
+        [
+          "Representative to the Assembly, District 11",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Shandowlyon Reaves (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Sequanna Taylor (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 11 Vote For 1 Votes REP Shandowlyon Reaves (Republican) 0.00% 0 DEM Sequanna Taylor (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 12",
+      "rows": [
+        [
+          "Representative to the Assembly, District 12",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "DEM Russell Antonio Goodwin, Sr. (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 12 Vote For 1 Votes DEM Russell Antonio Goodwin, Sr. (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 13",
+      "rows": [
+        [
+          "Representative to the Assembly, District 13",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Mike Morgan (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Amy Zimmerman (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 13 Vote For 1 Votes REP Mike Morgan (Republican) 0.00% 0 DEM Amy Zimmerman (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 14",
+      "rows": [
+        [
+          "Representative to the Assembly, District 14",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP AmyRose Murphy (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Angelito Tenorio (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 14 Vote For 1 Votes REP AmyRose Murphy (Republican) 0.00% 0 DEM Angelito Tenorio (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 16",
+      "rows": [
+        [
+          "Representative to the Assembly, District 16",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Alciro Deacon (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Kalan Haywood (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 16 Vote For 1 Votes REP Alciro Deacon (Republican) 0.00% 0 DEM Kalan Haywood (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 17",
+      "rows": [
+        [
+          "Representative to the Assembly, District 17",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Charlene Abughrin (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Supreme Moore Omokunde (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 17 Vote For 1 Votes REP Charlene Abughrin (Republican) 0.00% 0 DEM Supreme Moore Omokunde (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 18",
+      "rows": [
+        [
+          "Representative to the Assembly, District 18",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Joel Richmond (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Margaret Arney (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 18 Vote For 1 Votes REP Joel Richmond (Republican) 0.00% 0 DEM Margaret Arney (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 19",
+      "rows": [
+        [
+          "Representative to the Assembly, District 19",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Yasmine B. Outlaw (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Ryan Clancy (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 19 Vote For 1 Votes REP Yasmine B. Outlaw (Republican) 0.00% 0 DEM Ryan Clancy (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 20",
+      "rows": [
+        [
+          "Representative to the Assembly, District 20",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Kyle Cleary (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Christine M. Sinicki (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 20 Vote For 1 Votes REP Kyle Cleary (Republican) 0.00% 0 DEM Christine M. Sinicki (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 21",
+      "rows": [
+        [
+          "Representative to the Assembly, District 21",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Dylan Pfaffenbach (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Daniel J. Bukiewicz (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 21 Vote For 1 Votes REP Dylan Pfaffenbach (Republican) 0.00% 0 DEM Daniel J. Bukiewicz (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 23",
+      "rows": [
+        [
+          "Representative to the Assembly, District 23",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Aleaner Pabonnie (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Deb Andraca (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 23 Vote For 1 Votes REP Aleaner Pabonnie (Republican) 0.00% 0 DEM Deb Andraca (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 24",
+      "rows": [
+        [
+          "Representative to the Assembly, District 24",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Dan Knodl (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Matt Brown (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 24 Vote For 1 Votes REP Dan Knodl (Republican) 0.00% 0 DEM Matt Brown (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 61",
+      "rows": [
+        [
+          "Representative to the Assembly, District 61",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Bob Donovan (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Ben Brist (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 61 Vote For 1 Votes REP Bob Donovan (Republican) 0.00% 0 DEM Ben Brist (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "State",
+      "title": "Representative to the Assembly, District 63",
+      "rows": [
+        [
+          "Representative to the Assembly, District 63",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "REP Robert Wittke (Republican)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "DEM Eddie Phanichkul (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Representative to the Assembly, District 63 Vote For 1 Votes REP Robert Wittke (Republican) 0.00% 0 DEM Eddie Phanichkul (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "County",
+      "title": "Sheriff",
+      "rows": [
+        [
+          "Sheriff",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "DEM Denita R. Ball (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Sheriff Vote For 1 Votes DEM Denita R. Ball (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "County",
+      "title": "Clerk of Circuit Court",
+      "rows": [
+        [
+          "Clerk of Circuit Court",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "DEM Anna Maria Hodges (Democratic)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "write-in: (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Clerk of Circuit Court Vote For 1 Votes DEM Anna Maria Hodges (Democratic) 0.00% 0 write-in: (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "State Question 1 - Partial Veto",
+      "rows": [
+        [
+          "State Question 1 - Partial Veto",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Question 1 - Partial Veto Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "State Question 2 - Freedom to Gather",
+      "rows": [
+        [
+          "State Question 2 - Freedom to Gather",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Question 2 - Freedom to Gather Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "State Question 3 - Governmental Entity Discrimination Prohibited",
+      "rows": [
+        [
+          "State Question 3 - Governmental Entity Discrimination Prohibited",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "State Question 3 - Governmental Entity Discrimination Prohibited Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "School District of Brown Deer Referendum Question I School District of Brown Deer",
+      "rows": [
+        [
+          "School District of Brown Deer Referendum Question I School District of Brown Deer",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Brown Deer Referendum Question I School District of Brown Deer Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "School District of Brown Deer Referendum Question II School District of Brown Deer",
+      "rows": [
+        [
+          "School District of Brown Deer Referendum Question II School District of Brown Deer",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Brown Deer Referendum Question II School District of Brown Deer Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "Fox Point - Bayside School District Referendum Fox Point-Bayside School District",
+      "rows": [
+        [
+          "Fox Point - Bayside School District Referendum Fox Point-Bayside School District",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "Fox Point - Bayside School District Referendum Fox Point-Bayside School District Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "School District of Greenfield Referendum Question I School District of Greenfield",
+      "rows": [
+        [
+          "School District of Greenfield Referendum Question I School District of Greenfield",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Greenfield Referendum Question I School District of Greenfield Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "School District of Greenfield Referendum Question II School District of Greenfield",
+      "rows": [
+        [
+          "School District of Greenfield Referendum Question II School District of Greenfield",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Greenfield Referendum Question II School District of Greenfield Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    },
+    {
+      "category": "Referendum",
+      "title": "School District of Whitefish Bay Referendum School District of Whitefish Bay",
+      "rows": [
+        [
+          "School District of Whitefish Bay Referendum School District of Whitefish Bay",
+          "Vote For 1",
+          "",
+          "Votes"
+        ],
+        [
+          "Yes (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ],
+        [
+          "No (Nonpartisan)",
+          "",
+          "0.00%",
+          "0"
+        ]
+      ],
+      "provenance": {
+        "sourceUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+        "sourceOrg": "Milwaukee County Election Commission",
+        "collectedAt": "2026-11-03T06:31:28.859353+00:00",
+        "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+        "quote": "School District of Whitefish Bay Referendum School District of Whitefish Bay Vote For 1 Votes Yes (Nonpartisan) 0.00% 0 No (Nonpartisan) 0.00% 0"
+      }
+    }
+  ]
+}

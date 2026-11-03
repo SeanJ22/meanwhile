@@ -1,0 +1,55 @@
+{
+  "reviewedAt": "2026-11-03T06:36:45.085736+00:00",
+  "scope": "Two actual local county candidate fields and their complete named candidate blocks; full official county contest inventory independently reviewed. Four complete two-page sample styles plus Hales published front page; not a complete nineteen-municipality sample-style census.",
+  "coverage": {
+    "preparedContests": 2,
+    "preparedCandidacies": 2,
+    "newContests": 0,
+    "newCandidacies": 0,
+    "refreshedHeldContests": 2,
+    "refreshedHeldCandidacies": 2,
+    "actualOfficialSampleFiles": 5,
+    "actualSamplePages": 9,
+    "completePublishedTwoPageSamples": 4,
+    "publishedFrontOnlySamples": 1,
+    "completeCountyContestInventoryFields": 40,
+    "countyInventoryNamedOfficeFields": 31,
+    "countyInventoryLocalCandidateFields": 2,
+    "countyInventoryLocalCandidateNames": 2,
+    "countyInventoryReferenda": 9,
+    "ancillaryLocalSchoolQuestions": 6,
+    "sourceCaptures": 16,
+    "allMunicipalSampleStyleCensus": false,
+    "readerDistrictsMissing": 0,
+    "measuresPrepared": 0,
+    "absencesCreated": 0
+  },
+  "municipalCityRule": {
+    "sourceUrl": "https://city.milwaukee.gov/election/ElectionInformation/UpcomingElection",
+    "sourceOrg": "City of Milwaukee Election Commission",
+    "collectedAt": "2026-11-03T06:29:37.430250+00:00",
+    "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+    "quote": "There are no municipal elected offices up for election in the November 3, 2026 General Election."
+  },
+  "greendaleWholeVillageSampleRule": {
+    "sourceUrl": "https://www.greendale.org/departments/clerk/elections.php",
+    "sourceOrg": "Village of Greendale Clerk",
+    "collectedAt": "2026-11-03T06:31:04.959310+00:00",
+    "verifiedAt": "2026-11-03T06:36:45.085736+00:00",
+    "quote": "Sample Ballot - All wards have the same contests on their ballots as shown on the sample ballot."
+  },
+  "heldInput": {
+    "path": "data/ballot/2026-general/wi.json",
+    "sha256": "595d3e9e8a447d7a62512e0e2219c1a584f43893211cc48a7664f63a11aecde7",
+    "contests": 195,
+    "candidacies": 322,
+    "measures": 3
+  },
+  "result": "Every named candidate in the only two local candidate fields in the current official county inventory is already held. Refresh exact held contest and candidate identities only. All legislative/federal/state fields and all measures/explanations remain outside changed IDs.",
+  "limits": [
+    "No all-municipality sample-style census; current county inventory corroborates the only two local candidate fields.",
+    "Hales Corners native published PDF contains one front page despite a two-sided-ballot caption; no unseen backside content inferred.",
+    "Six local school referendum questions remain ancillary and are not silently converted into candidate races or destructive measure refreshes.",
+    "No independently enumerated named write-in registry."
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "status": "SEPARATE_NAMED_WRITE_IN_REGISTRY_NOT_ACQUIRED",
+  "ordinaryCandidateSlotsExcluded": true,
+  "countyBlankSlotsPerSample": 2,
+  "namedWriteIns": [],
+  "limit": "Blank write-in choices in actual samples and generic inventory rows name no person. This is not a claim that no separately registered write-in candidate exists."
+}

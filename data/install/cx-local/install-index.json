@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:35:52.673676+00:00",
+  "preparedAt": "2026-11-03T06:45:45.687582+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1529,6 +1529,42 @@
           "Questionsareoutside thiscandidateinstall;CX-VOTESlegislativeandmeasureworkisuntouched."
         ]
       }
+    },
+    {
+      "state": "WI",
+      "county": "Milwaukee",
+      "populationRank": 63,
+      "manifest": "WI/milwaukee/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 2,
+      "measureContests": 0,
+      "candidacies": 2,
+      "newContests": 0,
+      "refreshedContests": 2,
+      "sourceInputSha256": "82fa5b59d76d86c37e4ccbc35b179c8ebd959f46a2420d9faeb66a64bd733f0b",
+      "coverage": {
+        "preparedContests": 2,
+        "preparedCandidacies": 2,
+        "newContests": 0,
+        "newCandidacies": 0,
+        "refreshedHeldContests": 2,
+        "refreshedHeldCandidacies": 2,
+        "actualOfficialSampleFiles": 5,
+        "actualSamplePages": 9,
+        "completePublishedTwoPageSamples": 4,
+        "publishedFrontOnlySamples": 1,
+        "completeCountyContestInventoryFields": 40,
+        "countyInventoryNamedOfficeFields": 31,
+        "countyInventoryLocalCandidateFields": 2,
+        "countyInventoryLocalCandidateNames": 2,
+        "countyInventoryReferenda": 9,
+        "ancillaryLocalSchoolQuestions": 6,
+        "sourceCaptures": 16,
+        "allMunicipalSampleStyleCensus": false,
+        "readerDistrictsMissing": 0,
+        "measuresPrepared": 0,
+        "absencesCreated": 0
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1554,17 +1590,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 59,
-    "packetsPrepared": 60,
-    "candidateAndRetentionContests": 3221,
+    "countiesPrepared": 60,
+    "packetsPrepared": 61,
+    "candidateAndRetentionContests": 3223,
     "measureContests": 113,
-    "candidacyEntries": 7182,
+    "candidacyEntries": 7184,
     "newContestEntriesAgainstCheckedInBaseline": 2692,
-    "distinctPreparedContestIds": 3293,
-    "distinctPreparedCandidateIds": 7095,
+    "distinctPreparedContestIds": 3295,
+    "distinctPreparedCandidateIds": 7097,
     "distinctNewContestsAgainstCheckedInBaseline": 2672,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 60
+    "distinctCountyHandoffs": 61
   },
   "remainingWork": [
     {

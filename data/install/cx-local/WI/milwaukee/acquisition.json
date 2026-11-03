@@ -1,0 +1,188 @@
+{
+  "checkedAt": "2026-11-03T06:36:45.085736+00:00",
+  "method": "Public official pages, county field inventory and actual municipal samples. No voter identity or address supplied. Raw bytes unchanged; native text or explicitly derivative OCR retained. Helpers remain scratch-only.",
+  "sources": [
+    {
+      "name": "franklin-sample",
+      "url": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+      "retrievedAt": "2026-11-03T06:29:13.596897+00:00",
+      "finalUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+      "status": 200,
+      "rawHash": "dd159ef4a40b295c05251e540f265f80e7af5f69bfd7e7cbf7ed02dc238c7be2",
+      "file": "franklin-sample.pdf",
+      "bytes": 208854,
+      "textFile": "franklin-sample.txt",
+      "textHash": "a2ed37c30daf110ff4a382aadd2a7a0e1e229ec6d11a55ee08a3b10b89e8005b"
+    },
+    {
+      "name": "milwaukee-ward1",
+      "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+      "retrievedAt": "2026-11-03T06:29:13.637255+00:00",
+      "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+      "status": 200,
+      "rawHash": "9a3ffcd4e04a9c7242b23d3e6126319541856b11206f725f61a1149863ce0f03",
+      "file": "milwaukee-ward1.pdf",
+      "bytes": 106212,
+      "textFile": "milwaukee-ward1.txt",
+      "textHash": "78b63f59a2e5de5ae75dc3e854d38f772c7481412d45ba181bc6cf7805e93a5a"
+    },
+    {
+      "name": "whitefish-sample",
+      "url": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+      "retrievedAt": "2026-11-03T06:30:41.773341+00:00",
+      "finalUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+      "status": 200,
+      "rawHash": "ae5631b72d5334cc0dfc07ec788a1d1fa9a13f6c5c2b0205a3a6423076619c34",
+      "file": "whitefish-sample.pdf",
+      "bytes": 97156,
+      "textFile": "whitefish-sample.txt",
+      "textHash": "0303022ac0e2d4ae7096bbe3df991b703c8e7f1d370fa907bbe0b390f9804623"
+    },
+    {
+      "name": "greendale-sample",
+      "url": "https://www.greendale.org/Greendale%20Sample%20Ballot.pdf?t=202609141426520",
+      "retrievedAt": "2026-11-03T06:32:06.076564+00:00",
+      "finalUrl": "https://cms4files1.revize.com/villageofGreendalewi/Greendale%20Sample%20Ballot.pdf?t=202609141426520",
+      "status": 200,
+      "rawHash": "85a0b0e03d204169e2eafa3e73dd818d71a309774f76efd835c6cfffb207438d",
+      "file": "greendale-sample.pdf",
+      "bytes": 95474,
+      "textFile": "greendale-sample.txt",
+      "textHash": "4707c6974879a12dc55817b4cfe8768837414ffa74a66f1553d05fab8d2d447f"
+    },
+    {
+      "name": "county-candidates",
+      "url": "https://county.milwaukee.gov/files/county/county-clerk/Election-Commission/Upcoming-Elections/ElectionCandidates",
+      "retrievedAt": "2026-11-03T06:29:37.405293+00:00",
+      "finalUrl": "https://county.milwaukee.gov/files/county/county-clerk/Election-Commission/Upcoming-Elections/ElectionCandidates",
+      "status": 200,
+      "rawHash": "4184e68921d9ab71b777b3a23732684075980cdcf635a9f74e7598ae5ffa5fae",
+      "file": "county-candidates.pdf",
+      "bytes": 88416,
+      "textFile": "county-candidates.txt",
+      "textHash": "64256fb45a635a43d0a80d5f499fd93bf23b45ee366fa7d59d41f1f538f6411f"
+    },
+    {
+      "name": "county-general-contest-inventory",
+      "url": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+      "retrievedAt": "2026-11-03T06:31:28.859353+00:00",
+      "finalUrl": "https://county.milwaukee.gov/EN/County-Clerk/Off-Nav/Election-Results/11-3-26-General-Election--Unofficial-Results-Election-Night-Website",
+      "status": 200,
+      "rawHash": "3da09aedefd655c544c706e8c20ab7dbe528d5f3a632fa187a5a82d687f399ff",
+      "file": "county-general-contest-inventory.html",
+      "bytes": 1121661
+    },
+    {
+      "name": "county-election-results",
+      "url": "https://county.milwaukee.gov/EN/County-Clerk/Election-Commission/Election-Results",
+      "retrievedAt": "2026-11-03T06:30:41.781286+00:00",
+      "finalUrl": "https://county.milwaukee.gov/EN/County-Clerk/Election-Commission/Election-Results",
+      "status": 200,
+      "rawHash": "b3a7b986ca4cd389e484599fa2ad359e21f6b81ae9792a9b8f2a49795e728fc9",
+      "file": "county-election-results.html",
+      "bytes": 53360
+    },
+    {
+      "name": "milwaukee-upcoming",
+      "url": "https://city.milwaukee.gov/election/ElectionInformation/UpcomingElection",
+      "retrievedAt": "2026-11-03T06:29:37.430250+00:00",
+      "finalUrl": "https://city.milwaukee.gov/election/ElectionInformation/UpcomingElection",
+      "status": 200,
+      "rawHash": "61f938b130ce3f11e0dea421fc0f99b393e7b341ab6eab69220f4ea035a57cb0",
+      "file": "milwaukee-upcoming.html",
+      "bytes": 36513
+    },
+    {
+      "name": "milwaukee-notices",
+      "url": "https://city.milwaukee.gov/election/ElectionInformation/ElectionNotices",
+      "retrievedAt": "2026-11-03T06:29:37.437281+00:00",
+      "finalUrl": "https://city.milwaukee.gov/election/ElectionInformation/ElectionNotices",
+      "status": 200,
+      "rawHash": "bec809994ea0649fac3399b64ce34c1c59fc3910c46f15f292bec7eeead9853b",
+      "file": "milwaukee-notices.html",
+      "bytes": 35978
+    },
+    {
+      "name": "milwaukee-sample-selector",
+      "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/singleEmbed.jsp?page=justVoting.jsp",
+      "retrievedAt": "2026-11-03T06:31:28.860347+00:00",
+      "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/singleEmbed.jsp?page=justVoting.jsp",
+      "status": 200,
+      "rawHash": "64db6d804ec3405340c45efc4ec98ea4b178d00d52c9f0f672758ac164d7d542",
+      "file": "milwaukee-sample-selector.html",
+      "bytes": 13940
+    },
+    {
+      "name": "whitefish-election",
+      "url": "https://www.wfbvillage.gov/270/Election-Information",
+      "retrievedAt": "2026-11-03T06:29:37.449212+00:00",
+      "finalUrl": "https://www.wfbvillage.gov/270/Election-Information",
+      "status": 200,
+      "rawHash": "1dd09a819d65614c57e9c42f249a41771f5c57739183f486aba042379d24f885",
+      "file": "whitefish-election.html",
+      "bytes": 163488
+    },
+    {
+      "name": "greendale-election",
+      "url": "https://www.greendale.org/departments/clerk/elections.php",
+      "retrievedAt": "2026-11-03T06:31:04.959310+00:00",
+      "finalUrl": "https://www.greendale.org/departments/clerk/elections.php",
+      "status": 200,
+      "rawHash": "41a53c5250d9d3bc7647deb25dd944acabd472f3b59f6f851024f8bba7b55a56",
+      "file": "greendale-election.html",
+      "bytes": 65384
+    },
+    {
+      "name": "hales-election",
+      "url": "https://halescornerswi.gov/elections/",
+      "retrievedAt": "2026-11-03T06:31:04.957399+00:00",
+      "finalUrl": "https://halescornerswi.gov/elections/",
+      "status": 200,
+      "rawHash": "fa485ee7f6f5715d080535e61237777402a233e0994df91871a589649bc34f83",
+      "file": "hales-election.html",
+      "bytes": 43333
+    },
+    {
+      "name": "greenfield-election",
+      "url": "https://www.ci.greenfield.wi.us/675/Elections",
+      "retrievedAt": "2026-11-03T06:31:04.958544+00:00",
+      "finalUrl": "https://www.ci.greenfield.wi.us/675/Elections",
+      "status": 200,
+      "rawHash": "63e278fcc4d553d52c0ac01c08efbb3abc69e08478ecfeaecd2596966ac20b3c",
+      "file": "greenfield-election.html",
+      "bytes": 109177
+    },
+    {
+      "name": "wauwatosa-election",
+      "url": "https://www.wauwatosa.net/government/departments/city-clerk/elections-voting",
+      "retrievedAt": "2026-11-03T06:31:04.959714+00:00",
+      "finalUrl": "https://wauwatosa.gov/departments/city-clerk/elections-voting/",
+      "status": 200,
+      "rawHash": "e88955dac2d5463a9ae95b52b7ad9e06fb3881d6250e46bb8de49651231c9b89",
+      "file": "wauwatosa-election.html",
+      "bytes": 227995
+    },
+    {
+      "name": "hales-sample",
+      "url": "https://storage.googleapis.com/juniper-media-library/23/2026/10/SAMPLE%20BALLOT%20110326.pdf",
+      "retrievedAt": "2026-11-03T06:31:42.640185+00:00",
+      "finalUrl": "https://storage.googleapis.com/juniper-media-library/23/2026/10/SAMPLE%20BALLOT%20110326.pdf",
+      "status": 200,
+      "rawHash": "5130c211ad1187dd95a74bc03063581ce801059b6e4e9620d51035845917b609",
+      "file": "hales-sample.pdf",
+      "bytes": 736447,
+      "textFile": "hales-sample.txt",
+      "textHash": "ef6cbd2161eaea7943ce8693b9824d23d1793ffb1c0fca05b600d3899b44c977"
+    }
+  ],
+  "rasterOcr": {
+    "sourceName": "hales-sample",
+    "nativePages": 1,
+    "renderDpi": 200,
+    "renderSha256": "610461f1ff662d029045e9b880a67f41e83154922f2ea0c7fbc133eca19bdbff",
+    "engine": "Tesseract",
+    "configuration": "OMP_THREAD_LIMIT=1 --psm3",
+    "ocrSha256": "d7f3e7cd1633d8da07902a3bde30f6c6fca6aabe9ead12624b37b5c75d80cdf1",
+    "visualReview": "Whole published front page inspected; both county fields verified. Source watermark causes OCR artifacts. Install provenance uses four native-text samples."
+  }
+}

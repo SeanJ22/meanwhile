@@ -1,0 +1,14 @@
+{
+  "actualSamplePdfs": 58,
+  "privateVoterOrAddressLookupSubmitted": false,
+  "staticSampleDiscovery": "A public link revealed /CountyClerk/elections/voterservices/elecinfo/Gstyles/0527.pdf. Other public static styles were acquired and independently date/signature checked. Native county pages link the public sample service and official list. Static style625 succeeds,650404; neither fact establishes a total style census.",
+  "nativeStatusCautions": [
+    "NSWRD native page and map images returned202 challenge bytes, not maps; captured official text is labeled accurately.",
+    "ILGA native statutes returned503; carrier bytes remain labeled captured official statute text.",
+    "County general-election page includes other-cycle municipal/consolidated-office blurbs. Actual November sample blocks govern imported candidates."
+  ],
+  "board9": "Complete source-only disposition in board-district-9-source-only.json; official signed order/notice remains open.",
+  "geography": "Exact county board district polygons acquired separately in scratch board-geography-lead.json through official county linked map app; River installation/live applicability still required. NSWRD wards require precise geography, not a whole-district/city/county fallback.",
+  "standingCoverage": "No full county sample parity, independent municipal/special absence, or complete cancelled/declared-elected roster claimed. Generic No Candidate and write-in lines excluded from people.",
+  "ancillaryQuestions": "Official county referenda list retained for later question work only; ballot input measures remain empty."
+}

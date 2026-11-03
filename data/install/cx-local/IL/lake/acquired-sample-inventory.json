@@ -1,0 +1,5076 @@
+[
+  {
+    "style": "0001",
+    "precinctAsPrinted": "Antioch 1 Ballot Style 1 / Boleta Estilo 1",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:10.165735+00:00",
+    "sha256": "c8f19bcaa7e012eba8832ddf503cdf5eb8443041f934e4b34481b426d8b8dc7d",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0005",
+    "precinctAsPrinted": "Antioch 4 Ballot Style 5 / Boleta Estilo 5",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.359103+00:00",
+    "sha256": "979340b781b3c5c84ccd9d8e82d2cf872c948e520a768b0dfa2f481da67ac951",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-1",
+        "printedCandidates": [
+          {
+            "name": "John Muellner",
+            "party": "Republican"
+          },
+          {
+            "name": "Jose S. Martinez",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0010",
+    "precinctAsPrinted": "Antioch 9 Ballot Style 10 / Boleta Estilo 10",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0010.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.425044+00:00",
+    "sha256": "4eebff84d9b198abfd379b8101e2c7135b48b6873037bb7042cc1ec5f4caa4c8",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-1",
+        "printedCandidates": [
+          {
+            "name": "John Muellner",
+            "party": "Republican"
+          },
+          {
+            "name": "Jose S. Martinez",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0015",
+    "precinctAsPrinted": "Antioch 13 Ballot Style 15 / Boleta Estilo 15",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0015.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.370477+00:00",
+    "sha256": "1b8993e29d94c7e0a45061defe1a275fec1c1ccd241959c40d78baa63da9c988",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-1",
+        "printedCandidates": [
+          {
+            "name": "John Muellner",
+            "party": "Republican"
+          },
+          {
+            "name": "Jose S. Martinez",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0020",
+    "precinctAsPrinted": "Antioch 15 Ballot Style 20 / Boleta Estilo 20",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0020.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.620277+00:00",
+    "sha256": "b8db16f73a1c8618b0b2a9e6baf6ce4c60d940c3f7430f93ecc1e8d3627ec073",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0025",
+    "precinctAsPrinted": "Antioch 19 Ballot Style 25 / Boleta Estilo 25",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0025.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:37.133514+00:00",
+    "sha256": "db7f899b2f396e2d3fb0b5c20c46684d94d1dfefde696e1cea9fe5a3c6dbf713",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0030",
+    "precinctAsPrinted": "Avon 24 Ballot Style 30 / Boleta Estilo 30",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.731731+00:00",
+    "sha256": "4f440ad47250ac6a09b03a50547d36c8dde9cfb0fb1202ec017e83f2e25a359b",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-16",
+        "printedCandidates": [
+          {
+            "name": "Katherine Rodriguez",
+            "party": "Republican"
+          },
+          {
+            "name": "Esiah A. Campos",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0035",
+    "precinctAsPrinted": "Avon 28 Ballot Style 35 / Boleta Estilo 35",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0035.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.740627+00:00",
+    "sha256": "a1c7ab3369879549e345fc2c5a23c8ab2cf0f22b98518514c4b54f9d5803a8a2",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-16",
+        "printedCandidates": [
+          {
+            "name": "Katherine Rodriguez",
+            "party": "Republican"
+          },
+          {
+            "name": "Esiah A. Campos",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0040",
+    "precinctAsPrinted": "Avon 32 Ballot Style 40 / Boleta Estilo 40",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0040.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:17.853955+00:00",
+    "sha256": "b023675cac0276e8f058c1ae4bbc05ee40e6e75b63d5c98251dc8b3757a8e352",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0045",
+    "precinctAsPrinted": "Avon 34 Ballot Style 45 / Boleta Estilo 45",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0045.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.109848+00:00",
+    "sha256": "38927ec2085fd03a46f4bfc71c1a9044e80179776f28bf091c01849475c47e12",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-16",
+        "printedCandidates": [
+          {
+            "name": "Katherine Rodriguez",
+            "party": "Republican"
+          },
+          {
+            "name": "Esiah A. Campos",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0050",
+    "precinctAsPrinted": "Avon 38 Ballot Style 50 / Boleta Estilo 50",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0050.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:10.710966+00:00",
+    "sha256": "35f6a81138212afe3ff0a0fa4154c445656a6a9dd91315dcceb3d0da38e9b0fb",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0055",
+    "precinctAsPrinted": "Avon 40 Ballot Style 55 / Boleta Estilo 55",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.050667+00:00",
+    "sha256": "7ea4e4cf69cb69e29e705856b356def4d481214d9f84a2e6ef2aad2dff337f1a",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-6",
+        "printedCandidates": [
+          {
+            "name": "John Wasik",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0060",
+    "precinctAsPrinted": "Avon 43 Ballot Style 60 / Boleta Estilo 60",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0060.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.088205+00:00",
+    "sha256": "d68edac4d3d86a67b3cd40eec3ad2aaf0848008776d4a8aa98f62ddc1bf5fdad",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-6",
+        "printedCandidates": [
+          {
+            "name": "John Wasik",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0065",
+    "precinctAsPrinted": "Avon 48 Ballot Style 65 / Boleta Estilo 65",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0065.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.348822+00:00",
+    "sha256": "0856990c90f0a6344be256495947daa5f38b756109d3a4bc07ba5a77d90ccb0f",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-6",
+        "printedCandidates": [
+          {
+            "name": "John Wasik",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0070",
+    "precinctAsPrinted": "Benton 53 Ballot Style 70 / Boleta Estilo 70",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.455619+00:00",
+    "sha256": "1aa63077a89e71400c6e0eed462dd11e344a557c458d4abf5932d64c32eab615",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-4",
+        "printedCandidates": [
+          {
+            "name": "Gina Roberts",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0075",
+    "precinctAsPrinted": "Benton 58 Ballot Style 75 / Boleta Estilo 75",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0075.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.187249+00:00",
+    "sha256": "af26809f53f73017865cce1fa8144dbf7bc425159f3b342fe1dbe6b7668a73a0",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-4",
+        "printedCandidates": [
+          {
+            "name": "Gina Roberts",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0100",
+    "precinctAsPrinted": "Cuba 78 Ballot Style 100 / Boleta Estilo 100",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:10.175223+00:00",
+    "sha256": "eb14921e692cb7350c319e9cc91b07b82b5f5375f7c566882709c55623cd8fed",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-17",
+        "printedCandidates": [
+          {
+            "name": "Joe Salvi",
+            "party": "Republican"
+          },
+          {
+            "name": "Mary Mesa",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0125",
+    "precinctAsPrinted": "Ela 87 Ballot Style 125 / Boleta Estilo 125",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0125.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:37.693696+00:00",
+    "sha256": "620327610c65de56c9e225d6573bfb67fdf759a0e254ea669cde0604d9162bfa",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0140",
+    "precinctAsPrinted": "Ela 94 Ballot Style 140 / Boleta Estilo 140",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:15.716310+00:00",
+    "sha256": "af7bf0204d5a066ba41a8e85b6a15cb6f3e3ae59f2d7e79d5ccd090df395feb3",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-19",
+        "printedCandidates": [
+          {
+            "name": "Nicole Ziomek",
+            "party": "Republican"
+          },
+          {
+            "name": "Marah Altenberg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0150",
+    "precinctAsPrinted": "Ela 100 Ballot Style 150 / Boleta Estilo 150",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0150.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:10.630810+00:00",
+    "sha256": "e13980f18d8464d953102dd9867504926c0ab5ffd9000f7360cac8452ff94a53",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0160",
+    "precinctAsPrinted": "Ela 104 Ballot Style 160 / Boleta Estilo 160",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0160.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:16.093393+00:00",
+    "sha256": "e53045de217e926131b21fdd080e168d6245e4d3eb1c7bb181fea2be43aa2bf9",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-19",
+        "printedCandidates": [
+          {
+            "name": "Nicole Ziomek",
+            "party": "Republican"
+          },
+          {
+            "name": "Marah Altenberg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0170",
+    "precinctAsPrinted": "Fremont 109 Ballot Style 170 / Boleta Estilo 170",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0170.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:15.733336+00:00",
+    "sha256": "07c2e98c2600ab65b3e1c3e9370a6b2354e0d0fc96eae1a72462880d9ed296b1",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0175",
+    "precinctAsPrinted": "Fremont 113 Ballot Style 175 / Boleta Estilo 175",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0175.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:37.386481+00:00",
+    "sha256": "aa53dedb66dc4623de8f9bbd9825c561e479cace53bc9a454df4d2f42c473fda",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0180",
+    "precinctAsPrinted": "Fremont 115 Ballot Style 180 / Boleta Estilo 180",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0180.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:16.092799+00:00",
+    "sha256": "a2f7166743574a65ce750a3baff573fd14a3bd546a851ff78a679046c74be3b7",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0190",
+    "precinctAsPrinted": "Fremont 122 Ballot Style 190 / Boleta Estilo 190",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:16.095377+00:00",
+    "sha256": "fbf91a0f5158c4ab47b0e7ff3405cdd1e81b6d402ac67853b760b7f673b1c31f",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-10",
+        "printedCandidates": [
+          {
+            "name": "Jeffrey C. Issel",
+            "party": "Republican"
+          },
+          {
+            "name": "Nicki Sullivan",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0200",
+    "precinctAsPrinted": "Grant 131 Ballot Style 200 / Boleta Estilo 200",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0200.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:10.931377+00:00",
+    "sha256": "4969b3c61746b644ceeecd68a30f05406543299534b7622ffe4c9c87c71a99e0",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0225",
+    "precinctAsPrinted": "Lake Villa 149 Ballot Style 225 / Boleta Estilo 225",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0225.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:37.626093+00:00",
+    "sha256": "c8243d7e41c6201e025c5a8bc59fb04bb48de6e66f56f6e18a0a5d21deb7ee59",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0250",
+    "precinctAsPrinted": "Lake Villa 169 Ballot Style 250 / Boleta Estilo 250",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0250.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.320789+00:00",
+    "sha256": "71be6b9a849480da6844a47de6a9c900344ac16262b0de96d8ce1a7d1d1279a2",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-16",
+        "printedCandidates": [
+          {
+            "name": "Katherine Rodriguez",
+            "party": "Republican"
+          },
+          {
+            "name": "Esiah A. Campos",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0275",
+    "precinctAsPrinted": "Libertyville 185 Ballot Style 275 / Boleta Estilo 275",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.050969+00:00",
+    "sha256": "9dd374c6bb261f83efe33eb377bd681dcfb3e66fdb2cbc80b6ff55146eae0659",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-3",
+        "printedCandidates": [
+          {
+            "name": "Wendy S. Meister",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0300",
+    "precinctAsPrinted": "Libertyville 206 Ballot Style 300 / Boleta Estilo 300",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.235227+00:00",
+    "sha256": "554ff9bca1e2f2ad6850e414de1ce3d3f01d69b036554f8bdaade004aafd1919",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-15",
+        "printedCandidates": [
+          {
+            "name": "Jennifer Clark",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0325",
+    "precinctAsPrinted": "Moraine 228 Ballot Style 325 / Boleta Estilo 325",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:37.962624+00:00",
+    "sha256": "b386144ce2cd7fa0daaaef9ccb555e481f14e17fcc3be1739b92c5104db51489",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-11",
+        "printedCandidates": [
+          {
+            "name": "Paul Frank",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0350",
+    "precinctAsPrinted": "Shields 242 Ballot Style 350 / Boleta Estilo 350",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.342557+00:00",
+    "sha256": "b50ab4242ade84eae9d31bf307e6d64f7a0c52d3368369c9960672edff23ebef",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0375",
+    "precinctAsPrinted": "Vernon 260 Ballot Style 375 / Boleta Estilo 375",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0375.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.198914+00:00",
+    "sha256": "10a8003d7586d259c25302b50cf99ee85925926884f3810ec8a7bd28425995b2",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-3",
+        "printedCandidates": [
+          {
+            "name": "Wendy S. Meister",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0390",
+    "precinctAsPrinted": "Vernon 266 Ballot Style 390 / Boleta Estilo 390",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0390.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:16.473029+00:00",
+    "sha256": "0f990ea452114c77af9c38913c6c46ffbd6a4fc0abf1cf1c282a1439cabaa8cc",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-10",
+        "printedCandidates": [
+          {
+            "name": "Jeffrey C. Issel",
+            "party": "Republican"
+          },
+          {
+            "name": "Nicki Sullivan",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0400",
+    "precinctAsPrinted": "Vernon 273 Ballot Style 400 / Boleta Estilo 400",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0400.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.561275+00:00",
+    "sha256": "e973058bc59cf0645cc07f6ac65b52baa5a7d3c73d7b645a3366432906799198",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-3",
+        "printedCandidates": [
+          {
+            "name": "Wendy S. Meister",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0410",
+    "precinctAsPrinted": "Vernon 281 Ballot Style 410 / Boleta Estilo 410",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0410.pdf",
+    "sourceCheckedAt": "2026-11-03T09:46:16.477718+00:00",
+    "sha256": "884816bfc52a2d8189b7c296a4dd322a229eb91ae722c825224e980fba578565",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-3",
+        "printedCandidates": [
+          {
+            "name": "Wendy S. Meister",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0425",
+    "precinctAsPrinted": "Vernon 291 Ballot Style 425 / Boleta Estilo 425",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0425.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.419011+00:00",
+    "sha256": "db06716027d05c7deb0e2ab5f4800886fc0729d687e0c5e805a5af7b6d8a13df",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-19",
+        "printedCandidates": [
+          {
+            "name": "Nicole Ziomek",
+            "party": "Republican"
+          },
+          {
+            "name": "Marah Altenberg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0450",
+    "precinctAsPrinted": "Warren 307 Ballot Style 450 / Boleta Estilo 450",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.716857+00:00",
+    "sha256": "84cd7ec109c1e1a3ffd6286d5f05eb2786729afe8f48008f5ead9c14dd6520be",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-2",
+        "printedCandidates": [
+          {
+            "name": "Steve Drew",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-7",
+        "printedCandidates": [
+          {
+            "name": "Carissa Casbon",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0475",
+    "precinctAsPrinted": "Warren 321 Ballot Style 475 / Boleta Estilo 475",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0475.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.575375+00:00",
+    "sha256": "e6600d833c95909a890db9f6111dfca346b181fc8c39aeb3069508ac23d2ac7a",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-6",
+        "printedCandidates": [
+          {
+            "name": "John Wasik",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0500",
+    "precinctAsPrinted": "Warren 337 Ballot Style 500 / Boleta Estilo 500",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0500.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.736095+00:00",
+    "sha256": "be301939cb063624afc8c4b6aab8ec932664287a1e0686f5dcd763dae98cf8a5",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0525",
+    "precinctAsPrinted": "Wauconda 353 Ballot Style 525 / Boleta Estilo 525",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0525.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.564174+00:00",
+    "sha256": "3dc072c0ada117862d546ddba598dbcc2d1bd0b1f0eb044e1153cdd529ab2dec",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0527",
+    "precinctAsPrinted": "Wauconda 354 Ballot Style 527 / Boleta Estilo 527",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0527.pdf",
+    "sourceCheckedAt": "2026-11-03T09:42:06.144235+00:00",
+    "sha256": "a68e7eab34f28e69db73ced3ce52bdee7e8baac37400d851f63347bf22524d0c",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0535",
+    "precinctAsPrinted": "Waukegan 360 Ballot Style 535 / Boleta Estilo 535",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0535.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.477832+00:00",
+    "sha256": "c2905f3065b9ce5880e8c0e882f4cfebad721f10281f38c1e64118d012ef4f77",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-2",
+        "printedCandidates": [
+          {
+            "name": "Steve Drew",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0540",
+    "precinctAsPrinted": "Waukegan 364 Ballot Style 540 / Boleta Estilo 540",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0540.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.656231+00:00",
+    "sha256": "67c73e5104dcac08447dd72a5b12ee33773b5f37d330d2b56d79f7b7290b010e",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-2",
+        "printedCandidates": [
+          {
+            "name": "Steve Drew",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0545",
+    "precinctAsPrinted": "Waukegan 368 Ballot Style 545 / Boleta Estilo 545",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0545.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.833316+00:00",
+    "sha256": "1dd31adb2b2fac82ea895223ed6fda3923ceb9518c9f7e4addb74f9226c7a34a",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-2",
+        "printedCandidates": [
+          {
+            "name": "Steve Drew",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0550",
+    "precinctAsPrinted": "Waukegan 371 Ballot Style 550 / Boleta Estilo 550",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0550.pdf",
+    "sourceCheckedAt": "2026-11-03T09:43:11.881998+00:00",
+    "sha256": "5dee9d4200adee01560f2b343784800c0d7ad48f552c234efd385b20adc963f5",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-2",
+        "printedCandidates": [
+          {
+            "name": "Steve Drew",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0555",
+    "precinctAsPrinted": "Waukegan 376 Ballot Style 555 / Boleta Estilo 555",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.830252+00:00",
+    "sha256": "0b1930bee6d62a5fb0e7747ff1cf0aa1722659fc5c46179aa15b16f2a4ff6aec",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-3",
+        "printedCandidates": [
+          {
+            "name": "Beverly Sugar Young",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0560",
+    "precinctAsPrinted": "Waukegan 378 Ballot Style 560 / Boleta Estilo 560",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0560.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:18.966432+00:00",
+    "sha256": "607402292a1f491708ac2972adca7e0ad2de3c9c9fe9ad8a2b0f874544729d1a",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-3",
+        "printedCandidates": [
+          {
+            "name": "Beverly Sugar Young",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0565",
+    "precinctAsPrinted": "Waukegan 381 Ballot Style 565 / Boleta Estilo 565",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0565.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.200777+00:00",
+    "sha256": "adc6b9be6b21f080f53349c61165497ba83f40785950e649c3a2f5ae5cd2e41b",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-2",
+        "printedCandidates": [
+          {
+            "name": "Steve Drew",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-9",
+        "printedCandidates": [
+          {
+            "name": "Jorge E. Sanchez",
+            "party": "Republican"
+          },
+          {
+            "name": "Brandon X. Ewing",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": true
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0570",
+    "precinctAsPrinted": "Waukegan 384 Ballot Style 570 / Boleta Estilo 570",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0570.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.186180+00:00",
+    "sha256": "3a88155389f27da70cab29c3c246b77569c0f012c7ee075c2e1d1bb3c75698a6",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-3",
+        "printedCandidates": [
+          {
+            "name": "Beverly Sugar Young",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0575",
+    "precinctAsPrinted": "Waukegan 386 Ballot Style 575 / Boleta Estilo 575",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0575.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:39.031958+00:00",
+    "sha256": "79debf12da4c3b912d88745b573a776cf318e3618220ee353d651e5318d8b0fb",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-3",
+        "printedCandidates": [
+          {
+            "name": "Beverly Sugar Young",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0580",
+    "precinctAsPrinted": "Waukegan 389 Ballot Style 580 / Boleta Estilo 580",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0580.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.338582+00:00",
+    "sha256": "bf1c57d3c195767aa1546ea145b31691eb4a4c23a7f4e1c0dfdac5526619035a",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-3",
+        "printedCandidates": [
+          {
+            "name": "Beverly Sugar Young",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-9",
+        "printedCandidates": [
+          {
+            "name": "Jorge E. Sanchez",
+            "party": "Republican"
+          },
+          {
+            "name": "Brandon X. Ewing",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": true
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0585",
+    "precinctAsPrinted": "Waukegan 393 Ballot Style 585 / Boleta Estilo 585",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0585.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.428436+00:00",
+    "sha256": "d03ae6c99e28066cf4a50d516556700111c615111b0222de7bb1cb66bdd32b47",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "water-3",
+        "printedCandidates": [
+          {
+            "name": "Beverly Sugar Young",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-14",
+        "printedCandidates": [
+          {
+            "name": "Vance D. Wyatt",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0590",
+    "precinctAsPrinted": "West Deerfield 397 Ballot Style 590 / Boleta Estilo 590",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0590.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.688050+00:00",
+    "sha256": "b53c5e1dda51174cf3ffd1712f41389013c8ca51aebe20a4d4ebe247a6d5cb20",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-11",
+        "printedCandidates": [
+          {
+            "name": "Paul Frank",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0595",
+    "precinctAsPrinted": "West Deerfield 400 Ballot Style 595 / Boleta Estilo 595",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0595.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.701587+00:00",
+    "sha256": "f5bb3143d756c4e008abad7afbae4fbaa6c39b5b521d4d317371a8206c756c1b",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0600",
+    "precinctAsPrinted": "West Deerfield 405 Ballot Style 600 / Boleta Estilo 600",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0600.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:39.396601+00:00",
+    "sha256": "42dffcab1870513d09d5bd25d40b8b185582a5595e9f8a87e5b20184545acf5f",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0605",
+    "precinctAsPrinted": "West Deerfield 408 Ballot Style 605 / Boleta Estilo 605",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0605.pdf",
+    "sourceCheckedAt": "2026-11-03T09:45:19.790774+00:00",
+    "sha256": "79438c1df662bb72b255741220dcf9074f2c35a6b48390fb352bb2dbe014ed76",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  },
+  {
+    "style": "0625",
+    "precinctAsPrinted": "Zion 428 Ballot Style 625 / Boleta Estilo 625",
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0625.pdf",
+    "sourceCheckedAt": "2026-11-03T09:44:38.920679+00:00",
+    "sha256": "615d4b4104acf401032efbcf0b64086b132ec29b9a3373bd82dfc5ced4af8f3b",
+    "pages": 2,
+    "localOfficeBlocks": [
+      {
+        "code": "clerk",
+        "printedCandidates": [
+          {
+            "name": "Anthony Vega",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "treasurer",
+        "printedCandidates": [
+          {
+            "name": "David Penaherrera",
+            "party": "Republican"
+          },
+          {
+            "name": "Sandy Hart",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "sheriff",
+        "printedCandidates": [
+          {
+            "name": "Roman Buchberger",
+            "party": "Republican"
+          },
+          {
+            "name": "John D. Idleburg",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "roe34",
+        "printedCandidates": [
+          {
+            "name": "Michael L. Karner",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "board-4",
+        "printedCandidates": [
+          {
+            "name": "Gina Roberts",
+            "party": "Democratic"
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-james-k-booras",
+        "printedCandidates": [
+          {
+            "name": "James K. Booras",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      },
+      {
+        "code": "retention-marnie-m-slavin",
+        "printedCandidates": [
+          {
+            "name": "Marnie M. Slavin",
+            "party": null
+          }
+        ],
+        "sourceOnly": false
+      }
+    ]
+  }
+]

@@ -1,0 +1,1613 @@
+{
+  "ballots": {
+    "IL:il-2026-11-03": {
+      "election": {
+        "id": "il-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IL"
+      },
+      "contests": [
+        {
+          "id": "il-cx-local-2026-lake-county-clerk",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake",
+          "divisionVintage": "2026",
+          "title": "Lake County — County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY CLERK\nPARA SECRETARIO DEL CONDADO\nDE LAKE\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nAnthony Vega\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-treasurer",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake",
+          "divisionVintage": "2026",
+          "title": "Lake County — County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY TREASURER\nPARA TESORERO DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nDavid Penaherrera\nRepublican Republicano\nSandy Hart\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-sheriff",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake",
+          "divisionVintage": "2026",
+          "title": "Lake County — County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY SHERIFF\nPARA ALGUACIL DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nRoman Buchberger\nRepublican Republicano\nJohn D. Idleburg\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe34",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:34",
+          "divisionVintage": "2026",
+          "title": "Lake Regional Superintendent of Schools — ROE 34",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR REGIONAL SUPERINTENDENT\nOF SCHOOLS\nPARA SUPERINTENDENTE\nREGIONAL DE ESCUELAS\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nMichael L. Karner\nDemocratic Demócrata"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://irc.isbe.net/ListROEs.aspx?type=region",
+              "sourceOrg": "Illinois State Board of Education — Illinois Report Card ROE table, County column",
+              "collectedAt": "2026-11-03T09:50:46.654809+00:00",
+              "verifiedAt": "2026-11-03T09:50:46.654809+00:00",
+              "quote": "ROE\nCounty\nROE\nCounty\n01\nAdams/Pike/Brown/Cass/Morgan/Scott\n30\nJackson/Perry\n03\nChristian/Montgomery/Bond/Effingham/Fayette\n31\nKane\n04\nBoone/Winnebago\n32\nIroquois/Kankakee\n05\nREGION 05 NORTH COOK ISC 1\n33\nKnox/Henderson/Mercer/Warren\n06\nREGION 06 WEST COOK ISC 2\n34\nLake"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-lake-circuit19-retention-james-k-booras",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — James K. Booras — Nineteenth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "Shall each of the persons listed be\nretained in office as Judge of the\nCircuit Court, 19th Judicial Circuit?"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50",
+              "sourceOrg": "Illinois General Assembly — 705ILCS35/1, captured official text",
+              "collectedAt": "2026-11-03T09:49:19.004851+00:00",
+              "verifiedAt": "2026-11-03T09:49:19.004851+00:00",
+              "quote": "Nineteenth Circuit--The county of Lake."
+            }
+          ],
+          "scopeNote": "Vote Yes or No on whether this judge should be retained in office."
+        },
+        {
+          "id": "il-cx-local-2026-lake-circuit19-retention-marnie-m-slavin",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Marnie M. Slavin — Nineteenth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "Shall each of the persons listed be\nretained in office as Judge of the\nCircuit Court, 19th Judicial Circuit?"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50",
+              "sourceOrg": "Illinois General Assembly — 705ILCS35/1, captured official text",
+              "collectedAt": "2026-11-03T09:49:19.004851+00:00",
+              "verifiedAt": "2026-11-03T09:49:19.004851+00:00",
+              "quote": "Nineteenth Circuit--The county of Lake."
+            }
+          ],
+          "scopeNote": "Vote Yes or No on whether this judge should be retained in office."
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-1",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:1",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:17.359103+00:00",
+            "verifiedAt": "2026-11-03T09:45:17.359103+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 1\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 1\nVOTE FOR ONE VOTE POR UNO\nJohn Muellner\nRepublican Republicano\nJose S. Martinez\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-16",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:16",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 16",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:17.731731+00:00",
+            "verifiedAt": "2026-11-03T09:45:17.731731+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 16\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 16\nVOTE FOR ONE VOTE POR UNO\nKatherine Rodriguez\nRepublican Republicano\nEsiah A. Campos\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-6",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:6",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:18.050667+00:00",
+            "verifiedAt": "2026-11-03T09:45:18.050667+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 6\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 6\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nJohn Wasik\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-4",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:4",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:18.455619+00:00",
+            "verifiedAt": "2026-11-03T09:45:18.455619+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 4\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 4\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nGina Roberts\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-17",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:17",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 17",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.175223+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.175223+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 17\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 17\nVOTE FOR ONE VOTE POR UNO\nJoe Salvi\nRepublican Republicano\nMary Mesa\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-19",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:19",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 19",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:46:15.716310+00:00",
+            "verifiedAt": "2026-11-03T09:46:15.716310+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 19\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 19\nVOTE FOR ONE VOTE POR UNO\nNicole Ziomek\nRepublican Republicano\nMarah Altenberg\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-10",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:10",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 10",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:46:16.095377+00:00",
+            "verifiedAt": "2026-11-03T09:46:16.095377+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 10\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 10\nVOTE FOR ONE VOTE POR UNO\nJeffrey C. Issel\nRepublican Republicano\nNicki Sullivan\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-3",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:3",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:44:38.050969+00:00",
+            "verifiedAt": "2026-11-03T09:44:38.050969+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 3\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 3\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nWendy S. Meister\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-15",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:15",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 15",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.235227+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.235227+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 15\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 15\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nJennifer Clark\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-11",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:11",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 11",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:44:37.962624+00:00",
+            "verifiedAt": "2026-11-03T09:44:37.962624+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 11\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 11\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nPaul Frank\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-14",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:14",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.342557+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.342557+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 14\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 14\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nVance D. Wyatt\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-north-shore-water-reclamation-ward-2",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:2",
+          "divisionVintage": "2026",
+          "title": "North Shore Water Reclamation District — Trustee — Ward 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.716857+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.716857+00:00",
+            "quote": "FOR NORTH SHORE WATER\nRECLAMATION DISTRICT - TRUSTEE\n- WARD 2\nPARA DISTRITO DE RECUPERACIÓN\nDE AGUAS RESIDUALES DE NORTH\nSHORE - SÍNDICO - ÁREA 2\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nSteve Drew\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-7",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:7",
+          "divisionVintage": "2026",
+          "title": "Lake County Board — District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.716857+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.716857+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 7\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 7\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nCarissa Casbon\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-north-shore-water-reclamation-ward-3",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:3",
+          "divisionVintage": "2026",
+          "title": "North Shore Water Reclamation District — Trustee — Ward 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:18.830252+00:00",
+            "verifiedAt": "2026-11-03T09:45:18.830252+00:00",
+            "quote": "FOR NORTH SHORE WATER\nRECLAMATION DISTRICT - TRUSTEE\n- WARD 3\nPARA DISTRITO DE RECUPERACIÓN\nDE AGUAS RESIDUALES DE NORTH\nSHORE - SÍNDICO - ÁREA 3\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nBeverly Sugar Young\nDemocratic Demócrata"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "il-cx-local-2026-lake-county-clerk:anthony-vega",
+          "contestId": "il-cx-local-2026-lake-county-clerk",
+          "givenName": "",
+          "familyName": "Anthony Vega",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY CLERK\nPARA SECRETARIO DEL CONDADO\nDE LAKE\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nAnthony Vega\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-treasurer:david-penaherrera",
+          "contestId": "il-cx-local-2026-lake-county-treasurer",
+          "givenName": "",
+          "familyName": "David Penaherrera",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY TREASURER\nPARA TESORERO DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nDavid Penaherrera\nRepublican Republicano\nSandy Hart\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-treasurer:sandy-hart",
+          "contestId": "il-cx-local-2026-lake-county-treasurer",
+          "givenName": "",
+          "familyName": "Sandy Hart",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY TREASURER\nPARA TESORERO DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nDavid Penaherrera\nRepublican Republicano\nSandy Hart\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-sheriff:roman-buchberger",
+          "contestId": "il-cx-local-2026-lake-county-sheriff",
+          "givenName": "",
+          "familyName": "Roman Buchberger",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY SHERIFF\nPARA ALGUACIL DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nRoman Buchberger\nRepublican Republicano\nJohn D. Idleburg\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-sheriff:john-d-idleburg",
+          "contestId": "il-cx-local-2026-lake-county-sheriff",
+          "givenName": "",
+          "familyName": "John D. Idleburg",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR LAKE COUNTY SHERIFF\nPARA ALGUACIL DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nRoman Buchberger\nRepublican Republicano\nJohn D. Idleburg\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe34:michael-l-karner",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe34",
+          "givenName": "",
+          "familyName": "Michael L. Karner",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "FOR REGIONAL SUPERINTENDENT\nOF SCHOOLS\nPARA SUPERINTENDENTE\nREGIONAL DE ESCUELAS\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nMichael L. Karner\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-circuit19-retention-james-k-booras:james-k-booras",
+          "contestId": "il-cx-local-2026-lake-circuit19-retention-james-k-booras",
+          "givenName": "",
+          "familyName": "James K. Booras",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "James K. Booras\nYES/SÍ\nNO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-circuit19-retention-marnie-m-slavin:marnie-m-slavin",
+          "contestId": "il-cx-local-2026-lake-circuit19-retention-marnie-m-slavin",
+          "givenName": "",
+          "familyName": "Marnie M. Slavin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+            "quote": "Marnie M. Slavin\nYES/SÍ\nNO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-1:john-muellner",
+          "contestId": "il-cx-local-2026-lake-county-board-district-1",
+          "givenName": "",
+          "familyName": "John Muellner",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:17.359103+00:00",
+            "verifiedAt": "2026-11-03T09:45:17.359103+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 1\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 1\nVOTE FOR ONE VOTE POR UNO\nJohn Muellner\nRepublican Republicano\nJose S. Martinez\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-1:jose-s-martinez",
+          "contestId": "il-cx-local-2026-lake-county-board-district-1",
+          "givenName": "",
+          "familyName": "Jose S. Martinez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:17.359103+00:00",
+            "verifiedAt": "2026-11-03T09:45:17.359103+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 1\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 1\nVOTE FOR ONE VOTE POR UNO\nJohn Muellner\nRepublican Republicano\nJose S. Martinez\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-16:katherine-rodriguez",
+          "contestId": "il-cx-local-2026-lake-county-board-district-16",
+          "givenName": "",
+          "familyName": "Katherine Rodriguez",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:17.731731+00:00",
+            "verifiedAt": "2026-11-03T09:45:17.731731+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 16\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 16\nVOTE FOR ONE VOTE POR UNO\nKatherine Rodriguez\nRepublican Republicano\nEsiah A. Campos\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-16:esiah-a-campos",
+          "contestId": "il-cx-local-2026-lake-county-board-district-16",
+          "givenName": "",
+          "familyName": "Esiah A. Campos",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:17.731731+00:00",
+            "verifiedAt": "2026-11-03T09:45:17.731731+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 16\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 16\nVOTE FOR ONE VOTE POR UNO\nKatherine Rodriguez\nRepublican Republicano\nEsiah A. Campos\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-6:john-wasik",
+          "contestId": "il-cx-local-2026-lake-county-board-district-6",
+          "givenName": "",
+          "familyName": "John Wasik",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:18.050667+00:00",
+            "verifiedAt": "2026-11-03T09:45:18.050667+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 6\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 6\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nJohn Wasik\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-4:gina-roberts",
+          "contestId": "il-cx-local-2026-lake-county-board-district-4",
+          "givenName": "",
+          "familyName": "Gina Roberts",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:18.455619+00:00",
+            "verifiedAt": "2026-11-03T09:45:18.455619+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 4\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 4\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nGina Roberts\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-17:joe-salvi",
+          "contestId": "il-cx-local-2026-lake-county-board-district-17",
+          "givenName": "",
+          "familyName": "Joe Salvi",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.175223+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.175223+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 17\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 17\nVOTE FOR ONE VOTE POR UNO\nJoe Salvi\nRepublican Republicano\nMary Mesa\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-17:mary-mesa",
+          "contestId": "il-cx-local-2026-lake-county-board-district-17",
+          "givenName": "",
+          "familyName": "Mary Mesa",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:10.175223+00:00",
+            "verifiedAt": "2026-11-03T09:43:10.175223+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 17\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 17\nVOTE FOR ONE VOTE POR UNO\nJoe Salvi\nRepublican Republicano\nMary Mesa\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-19:nicole-ziomek",
+          "contestId": "il-cx-local-2026-lake-county-board-district-19",
+          "givenName": "",
+          "familyName": "Nicole Ziomek",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:46:15.716310+00:00",
+            "verifiedAt": "2026-11-03T09:46:15.716310+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 19\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 19\nVOTE FOR ONE VOTE POR UNO\nNicole Ziomek\nRepublican Republicano\nMarah Altenberg\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-19:marah-altenberg",
+          "contestId": "il-cx-local-2026-lake-county-board-district-19",
+          "givenName": "",
+          "familyName": "Marah Altenberg",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:46:15.716310+00:00",
+            "verifiedAt": "2026-11-03T09:46:15.716310+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 19\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 19\nVOTE FOR ONE VOTE POR UNO\nNicole Ziomek\nRepublican Republicano\nMarah Altenberg\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-10:jeffrey-c-issel",
+          "contestId": "il-cx-local-2026-lake-county-board-district-10",
+          "givenName": "",
+          "familyName": "Jeffrey C. Issel",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:46:16.095377+00:00",
+            "verifiedAt": "2026-11-03T09:46:16.095377+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 10\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 10\nVOTE FOR ONE VOTE POR UNO\nJeffrey C. Issel\nRepublican Republicano\nNicki Sullivan\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-10:nicki-sullivan",
+          "contestId": "il-cx-local-2026-lake-county-board-district-10",
+          "givenName": "",
+          "familyName": "Nicki Sullivan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:46:16.095377+00:00",
+            "verifiedAt": "2026-11-03T09:46:16.095377+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 10\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 10\nVOTE FOR ONE VOTE POR UNO\nJeffrey C. Issel\nRepublican Republicano\nNicki Sullivan\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-3:wendy-s-meister",
+          "contestId": "il-cx-local-2026-lake-county-board-district-3",
+          "givenName": "",
+          "familyName": "Wendy S. Meister",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:44:38.050969+00:00",
+            "verifiedAt": "2026-11-03T09:44:38.050969+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 3\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 3\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nWendy S. Meister\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-15:jennifer-clark",
+          "contestId": "il-cx-local-2026-lake-county-board-district-15",
+          "givenName": "",
+          "familyName": "Jennifer Clark",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.235227+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.235227+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 15\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 15\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nJennifer Clark\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-11:paul-frank",
+          "contestId": "il-cx-local-2026-lake-county-board-district-11",
+          "givenName": "",
+          "familyName": "Paul Frank",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:44:37.962624+00:00",
+            "verifiedAt": "2026-11-03T09:44:37.962624+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 11\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 11\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nPaul Frank\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-14:vance-d-wyatt",
+          "contestId": "il-cx-local-2026-lake-county-board-district-14",
+          "givenName": "",
+          "familyName": "Vance D. Wyatt",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.342557+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.342557+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 14\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 14\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nVance D. Wyatt\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-north-shore-water-reclamation-ward-2:steve-drew",
+          "contestId": "il-cx-local-2026-north-shore-water-reclamation-ward-2",
+          "givenName": "",
+          "familyName": "Steve Drew",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.716857+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.716857+00:00",
+            "quote": "FOR NORTH SHORE WATER\nRECLAMATION DISTRICT - TRUSTEE\n- WARD 2\nPARA DISTRITO DE RECUPERACIÓN\nDE AGUAS RESIDUALES DE NORTH\nSHORE - SÍNDICO - ÁREA 2\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nSteve Drew\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-lake-county-board-district-7:carissa-casbon",
+          "contestId": "il-cx-local-2026-lake-county-board-district-7",
+          "givenName": "",
+          "familyName": "Carissa Casbon",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:43:11.716857+00:00",
+            "verifiedAt": "2026-11-03T09:43:11.716857+00:00",
+            "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 7\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 7\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nCarissa Casbon\nDemocratic Demócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-north-shore-water-reclamation-ward-3:beverly-sugar-young",
+          "contestId": "il-cx-local-2026-north-shore-water-reclamation-ward-3",
+          "givenName": "",
+          "familyName": "Beverly Sugar Young",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf",
+            "sourceOrg": "Lake County Clerk Election Department",
+            "collectedAt": "2026-11-03T09:45:18.830252+00:00",
+            "verifiedAt": "2026-11-03T09:45:18.830252+00:00",
+            "quote": "FOR NORTH SHORE WATER\nRECLAMATION DISTRICT - TRUSTEE\n- WARD 3\nPARA DISTRITO DE RECUPERACIÓN\nDE AGUAS RESIDUALES DE NORTH\nSHORE - SÍNDICO - ÁREA 3\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nBeverly Sugar Young\nDemocratic Demócrata"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "il-cx-local-2026-roe34-whole-lake-county",
+          "memberOcdId": "ocd-division/country:us/state:il/county:lake",
+          "districtOcdId": "ocd-division/country:us/state:il/regional_office_of_education:34",
+          "provenance": {
+            "sourceUrl": "https://irc.isbe.net/ListROEs.aspx?type=region",
+            "sourceOrg": "Illinois State Board of Education — Illinois Report Card ROE table, County column",
+            "collectedAt": "2026-11-03T09:50:46.654809+00:00",
+            "verifiedAt": "2026-11-03T09:50:46.654809+00:00",
+            "quote": "ROE\nCounty\nROE\nCounty\n01\nAdams/Pike/Brown/Cass/Morgan/Scott\n30\nJackson/Perry\n03\nChristian/Montgomery/Bond/Effingham/Fayette\n31\nKane\n04\nBoone/Winnebago\n32\nIroquois/Kankakee\n05\nREGION 05 NORTH COOK ISC 1\n33\nKnox/Henderson/Mercer/Warren\n06\nREGION 06 WEST COOK ISC 2\n34\nLake"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:50:46.654809+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:10.165735+00:00",
+        "rawHash": "c8f19bcaa7e012eba8832ddf503cdf5eb8443041f934e4b34481b426d8b8dc7d",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.359103+00:00",
+        "rawHash": "979340b781b3c5c84ccd9d8e82d2cf872c948e520a768b0dfa2f481da67ac951",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0010.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0010.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.425044+00:00",
+        "rawHash": "4eebff84d9b198abfd379b8101e2c7135b48b6873037bb7042cc1ec5f4caa4c8",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0015.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0015.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.370477+00:00",
+        "rawHash": "1b8993e29d94c7e0a45061defe1a275fec1c1ccd241959c40d78baa63da9c988",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0020.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0020.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.620277+00:00",
+        "rawHash": "b8db16f73a1c8618b0b2a9e6baf6ce4c60d940c3f7430f93ecc1e8d3627ec073",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0025.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0025.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:37.133514+00:00",
+        "rawHash": "db7f899b2f396e2d3fb0b5c20c46684d94d1dfefde696e1cea9fe5a3c6dbf713",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.731731+00:00",
+        "rawHash": "4f440ad47250ac6a09b03a50547d36c8dde9cfb0fb1202ec017e83f2e25a359b",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0035.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0035.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.740627+00:00",
+        "rawHash": "a1c7ab3369879549e345fc2c5a23c8ab2cf0f22b98518514c4b54f9d5803a8a2",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0040.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0040.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:17.853955+00:00",
+        "rawHash": "b023675cac0276e8f058c1ae4bbc05ee40e6e75b63d5c98251dc8b3757a8e352",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0045.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0045.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.109848+00:00",
+        "rawHash": "38927ec2085fd03a46f4bfc71c1a9044e80179776f28bf091c01849475c47e12",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0050.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0050.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:10.710966+00:00",
+        "rawHash": "35f6a81138212afe3ff0a0fa4154c445656a6a9dd91315dcceb3d0da38e9b0fb",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.050667+00:00",
+        "rawHash": "7ea4e4cf69cb69e29e705856b356def4d481214d9f84a2e6ef2aad2dff337f1a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0060.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0060.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.088205+00:00",
+        "rawHash": "d68edac4d3d86a67b3cd40eec3ad2aaf0848008776d4a8aa98f62ddc1bf5fdad",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0065.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0065.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.348822+00:00",
+        "rawHash": "0856990c90f0a6344be256495947daa5f38b756109d3a4bc07ba5a77d90ccb0f",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.455619+00:00",
+        "rawHash": "1aa63077a89e71400c6e0eed462dd11e344a557c458d4abf5932d64c32eab615",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0075.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0075.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.187249+00:00",
+        "rawHash": "af26809f53f73017865cce1fa8144dbf7bc425159f3b342fe1dbe6b7668a73a0",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:10.175223+00:00",
+        "rawHash": "eb14921e692cb7350c319e9cc91b07b82b5f5375f7c566882709c55623cd8fed",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0125.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0125.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:37.693696+00:00",
+        "rawHash": "620327610c65de56c9e225d6573bfb67fdf759a0e254ea669cde0604d9162bfa",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:15.716310+00:00",
+        "rawHash": "af7bf0204d5a066ba41a8e85b6a15cb6f3e3ae59f2d7e79d5ccd090df395feb3",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0150.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0150.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:10.630810+00:00",
+        "rawHash": "e13980f18d8464d953102dd9867504926c0ab5ffd9000f7360cac8452ff94a53",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0160.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0160.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:16.093393+00:00",
+        "rawHash": "e53045de217e926131b21fdd080e168d6245e4d3eb1c7bb181fea2be43aa2bf9",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0170.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0170.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:15.733336+00:00",
+        "rawHash": "07c2e98c2600ab65b3e1c3e9370a6b2354e0d0fc96eae1a72462880d9ed296b1",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0175.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0175.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:37.386481+00:00",
+        "rawHash": "aa53dedb66dc4623de8f9bbd9825c561e479cace53bc9a454df4d2f42c473fda",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0180.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0180.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:16.092799+00:00",
+        "rawHash": "a2f7166743574a65ce750a3baff573fd14a3bd546a851ff78a679046c74be3b7",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:16.095377+00:00",
+        "rawHash": "fbf91a0f5158c4ab47b0e7ff3405cdd1e81b6d402ac67853b760b7f673b1c31f",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0200.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0200.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:10.931377+00:00",
+        "rawHash": "4969b3c61746b644ceeecd68a30f05406543299534b7622ffe4c9c87c71a99e0",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0225.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0225.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:37.626093+00:00",
+        "rawHash": "c8243d7e41c6201e025c5a8bc59fb04bb48de6e66f56f6e18a0a5d21deb7ee59",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0250.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0250.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.320789+00:00",
+        "rawHash": "71be6b9a849480da6844a47de6a9c900344ac16262b0de96d8ce1a7d1d1279a2",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.050969+00:00",
+        "rawHash": "9dd374c6bb261f83efe33eb377bd681dcfb3e66fdb2cbc80b6ff55146eae0659",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.235227+00:00",
+        "rawHash": "554ff9bca1e2f2ad6850e414de1ce3d3f01d69b036554f8bdaade004aafd1919",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:37.962624+00:00",
+        "rawHash": "b386144ce2cd7fa0daaaef9ccb555e481f14e17fcc3be1739b92c5104db51489",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.342557+00:00",
+        "rawHash": "b50ab4242ade84eae9d31bf307e6d64f7a0c52d3368369c9960672edff23ebef",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0375.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0375.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.198914+00:00",
+        "rawHash": "10a8003d7586d259c25302b50cf99ee85925926884f3810ec8a7bd28425995b2",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0390.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0390.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:16.473029+00:00",
+        "rawHash": "0f990ea452114c77af9c38913c6c46ffbd6a4fc0abf1cf1c282a1439cabaa8cc",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0400.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0400.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.561275+00:00",
+        "rawHash": "e973058bc59cf0645cc07f6ac65b52baa5a7d3c73d7b645a3366432906799198",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0410.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0410.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:16.477718+00:00",
+        "rawHash": "884816bfc52a2d8189b7c296a4dd322a229eb91ae722c825224e980fba578565",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0425.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0425.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.419011+00:00",
+        "rawHash": "db06716027d05c7deb0e2ab5f4800886fc0729d687e0c5e805a5af7b6d8a13df",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.716857+00:00",
+        "rawHash": "84cd7ec109c1e1a3ffd6286d5f05eb2786729afe8f48008f5ead9c14dd6520be",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0475.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0475.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.575375+00:00",
+        "rawHash": "e6600d833c95909a890db9f6111dfca346b181fc8c39aeb3069508ac23d2ac7a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0500.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0500.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.736095+00:00",
+        "rawHash": "be301939cb063624afc8c4b6aab8ec932664287a1e0686f5dcd763dae98cf8a5",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0525.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0525.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.564174+00:00",
+        "rawHash": "3dc072c0ada117862d546ddba598dbcc2d1bd0b1f0eb044e1153cdd529ab2dec",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0527.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0527.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:42:06.144235+00:00",
+        "rawHash": "a68e7eab34f28e69db73ced3ce52bdee7e8baac37400d851f63347bf22524d0c",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0535.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0535.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.477832+00:00",
+        "rawHash": "c2905f3065b9ce5880e8c0e882f4cfebad721f10281f38c1e64118d012ef4f77",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0540.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0540.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.656231+00:00",
+        "rawHash": "67c73e5104dcac08447dd72a5b12ee33773b5f37d330d2b56d79f7b7290b010e",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0545.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0545.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.833316+00:00",
+        "rawHash": "1dd31adb2b2fac82ea895223ed6fda3923ceb9518c9f7e4addb74f9226c7a34a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0550.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0550.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:43:11.881998+00:00",
+        "rawHash": "5dee9d4200adee01560f2b343784800c0d7ad48f552c234efd385b20adc963f5",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.830252+00:00",
+        "rawHash": "0b1930bee6d62a5fb0e7747ff1cf0aa1722659fc5c46179aa15b16f2a4ff6aec",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0560.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0560.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:18.966432+00:00",
+        "rawHash": "607402292a1f491708ac2972adca7e0ad2de3c9c9fe9ad8a2b0f874544729d1a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0565.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0565.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.200777+00:00",
+        "rawHash": "adc6b9be6b21f080f53349c61165497ba83f40785950e649c3a2f5ae5cd2e41b",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0570.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0570.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.186180+00:00",
+        "rawHash": "3a88155389f27da70cab29c3c246b77569c0f012c7ee075c2e1d1bb3c75698a6",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0575.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0575.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:39.031958+00:00",
+        "rawHash": "79debf12da4c3b912d88745b573a776cf318e3618220ee353d651e5318d8b0fb",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0580.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0580.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.338582+00:00",
+        "rawHash": "bf1c57d3c195767aa1546ea145b31691eb4a4c23a7f4e1c0dfdac5526619035a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0585.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0585.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.428436+00:00",
+        "rawHash": "d03ae6c99e28066cf4a50d516556700111c615111b0222de7bb1cb66bdd32b47",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0590.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0590.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.688050+00:00",
+        "rawHash": "b53c5e1dda51174cf3ffd1712f41389013c8ca51aebe20a4d4ebe247a6d5cb20",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0595.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0595.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.701587+00:00",
+        "rawHash": "f5bb3143d756c4e008abad7afbae4fbaa6c39b5b521d4d317371a8206c756c1b",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0600.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0600.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:39.396601+00:00",
+        "rawHash": "42dffcab1870513d09d5bd25d40b8b185582a5595e9f8a87e5b20184545acf5f",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0605.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0605.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:19.790774+00:00",
+        "rawHash": "79438c1df662bb72b255741220dcf9074f2c35a6b48390fb352bb2dbe014ed76",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0625.pdf",
+        "finalUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0625.pdf",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.920679+00:00",
+        "rawHash": "615d4b4104acf401032efbcf0b64086b132ec29b9a3373bd82dfc5ced4af8f3b",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual native signed November 3, 2026 Lake County Clerk specimen PDF, acquired at public static Gstyles URL without a personal voter lookup or address submission. Exact county, board, ROE, NSWRD ward and Circuit19 retention blocks are independently parsed. Blank write-in and No Candidate spaces are not people. All 58 acquired styles are current, but an exhaustive county style census is not claimed."
+      },
+      {
+        "requestedUrl": "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List",
+        "finalUrl": "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:48:41.434021+00:00",
+        "rawHash": "03ebff7dc73981fe0ab20684712bc273d887db6522159f3c21d0164c51bbf420",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native official All Contests candidate list for General Election 11/3/2026, three pages, printed September 9 at 08:40:13, 85 listed candidates including federal/state and qualified write-ins. Page2 visually marks Jorge E Sanchez Withdrawn by Objection. This list is supplemental evidence, not a sample. The complete printed District9 sample field remains source-only while official vote-count/order representation is unresolved. Embedded font mapping loses several letters/ligatures; native sample text governs projected names."
+      },
+      {
+        "requestedUrl": "https://www.lakecountyil.gov/4138/November-3-2026-General-Election",
+        "finalUrl": "https://www.lakecountyil.gov/4138/November-3-2026-General-Election",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:40:56.003236+00:00",
+        "rawHash": "2c81fe49fe8dc9e622942b6a8f7bfe60c5230b60f7afe1be5eaa5b79a716bac1",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county election publication links the November2026 candidate list and sample service. The general-election page contains other-cycle municipal blurbs; those are not used to invent November candidacies or absences. No private voter/candidate login or address lookup was submitted."
+      },
+      {
+        "requestedUrl": "https://www.lakecountyil.gov/335/Election-Details",
+        "finalUrl": "https://www.lakecountyil.gov/335/Election-Details",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:40:56.148176+00:00",
+        "rawHash": "0f4f783f9584a387d187f670a09244b0d377a36c23cc56679b0a4e3ef2570dad",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county election publication links the November2026 candidate list and sample service. The general-election page contains other-cycle municipal blurbs; those are not used to invent November candidacies or absences. No private voter/candidate login or address lookup was submitted."
+      },
+      {
+        "requestedUrl": "https://www.lakecountyil.gov/301/Candidate-Power",
+        "finalUrl": "https://www.lakecountyil.gov/301/Candidate-Power",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:41:10.000054+00:00",
+        "rawHash": "3e5d74cdaa6a33ec1d9b81953d22c6cfc50911ee4661c716853d91ad7e7cfb5e",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county election publication links the November2026 candidate list and sample service. The general-election page contains other-cycle municipal blurbs; those are not used to invent November candidacies or absences. No private voter/candidate login or address lookup was submitted."
+      },
+      {
+        "requestedUrl": "https://irc.isbe.net/ListROEs.aspx?type=region",
+        "finalUrl": "https://irc.isbe.net/ListROEs.aspx?type=region",
+        "publisher": "Illinois State Board of Education",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:50:46.654809+00:00",
+        "rawHash": "088e2e140ec4a7d6339b7dd03a66f00708642c75499ce700aa84f644bdef8334",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current native Illinois State Board of Education Illinois Report Card regional-office table, whose County column identifies region34 as Lake. Combined with county election samples, establishes Lake County as the complete electing member of ROE34; no split-school service boundary is substituted for this county electorate."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50",
+        "finalUrl": "https://r.jina.ai/https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50",
+        "publisher": "Illinois General Assembly — captured official statute text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:19.004851+00:00",
+        "rawHash": "6f895e5f06c2e2c08408f3192048eaf3d822254024de0a52b7eee83aee235228",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Captured current official Illinois General Assembly Circuit Courts Act, 705ILCS35 section1, explicitly Nineteenth Circuit--The county of Lake. Native ILGA endpoint returned503; saved bytes here are the public text carrier, not native ILGA HTML. This is an electorate statute, not a sample. Actual judge names and retention form come from native county samples."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://northshorewrd.org/trustees/",
+        "finalUrl": "https://r.jina.ai/https://northshorewrd.org/trustees/",
+        "publisher": "North Shore Water Reclamation District — captured official source text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:47:56.103684+00:00",
+        "rawHash": "2c9014a75c37aea492cc4a4d5edb08a65cd4632519f31dad8d18bd4923be5566",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Captured official NSWRD trustee/ward page independently identifies Wards2/3 and links current ward map images. Native page/map requests returned202 challenge bytes; those are not counted as maps. Actual sampled name Steve Drew governs, while the current-office roster uses Stephen Drew. Ward polygons remain a reader-install dependency; no whole-city/county substitute is supplied."
+      },
+      {
+        "requestedUrl": "https://www.lakecountyil.gov/DocumentCenter/View/21161/Referenda",
+        "finalUrl": "https://www.lakecountyil.gov/DocumentCenter/View/21161/Referenda",
+        "publisher": "Lake County Clerk Election Department",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:47:55.857652+00:00",
+        "rawHash": "43d874343304d1bffd35009d5293e376b27c83f1d3631ab2e42312501bfc8455",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Ancillary native county November3,2026 referenda list, as of August27. Saved for later question work only. No question is added or overwritten by this candidate install."
+      }
+    ]
+  }
+}

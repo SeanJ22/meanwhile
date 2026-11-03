@@ -1,0 +1,285 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "IL",
+  "county": "Lake County",
+  "countyFips": "17097",
+  "populationRank": 98,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "il-cx-local-2026-lake-county-clerk",
+      "title": "Lake County \u2014 County Clerk",
+      "ocdId": "ocd-division/country:us/state:il/county:lake",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0001",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-treasurer",
+      "title": "Lake County \u2014 County Treasurer",
+      "ocdId": "ocd-division/country:us/state:il/county:lake",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0001",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-sheriff",
+      "title": "Lake County \u2014 County Sheriff",
+      "ocdId": "ocd-division/country:us/state:il/county:lake",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0001",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-regional-superintendent-roe34",
+      "title": "Lake Regional Superintendent of Schools \u2014 ROE 34",
+      "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:34",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0001",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-circuit19-retention-james-k-booras",
+      "title": "Judicial Retention \u2014 James K. Booras \u2014 Nineteenth Judicial Circuit",
+      "ocdId": "ocd-division/country:us/state:il/county:lake",
+      "type": "RETENTION",
+      "candidates": 1,
+      "primaryStyle": "0001",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-circuit19-retention-marnie-m-slavin",
+      "title": "Judicial Retention \u2014 Marnie M. Slavin \u2014 Nineteenth Judicial Circuit",
+      "ocdId": "ocd-division/country:us/state:il/county:lake",
+      "type": "RETENTION",
+      "candidates": 1,
+      "primaryStyle": "0001",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-1",
+      "title": "Lake County Board \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0005",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-16",
+      "title": "Lake County Board \u2014 District 16",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:16",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0030",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-6",
+      "title": "Lake County Board \u2014 District 6",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:6",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0055",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-4",
+      "title": "Lake County Board \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0070",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-17",
+      "title": "Lake County Board \u2014 District 17",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:17",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0100",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-19",
+      "title": "Lake County Board \u2014 District 19",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:19",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0140",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-10",
+      "title": "Lake County Board \u2014 District 10",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:10",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "primaryStyle": "0190",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-3",
+      "title": "Lake County Board \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0275",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-15",
+      "title": "Lake County Board \u2014 District 15",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:15",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0300",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-11",
+      "title": "Lake County Board \u2014 District 11",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:11",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0325",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-14",
+      "title": "Lake County Board \u2014 District 14",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:14",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0350",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-north-shore-water-reclamation-ward-2",
+      "title": "North Shore Water Reclamation District \u2014 Trustee \u2014 Ward 2",
+      "ocdId": "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0450",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-7",
+      "title": "Lake County Board \u2014 District 7",
+      "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:7",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0450",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf"
+    },
+    {
+      "id": "il-cx-local-2026-north-shore-water-reclamation-ward-3",
+      "title": "North Shore Water Reclamation District \u2014 Trustee \u2014 Ward 3",
+      "ocdId": "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primaryStyle": "0555",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf"
+    }
+  ],
+  "sourceKind": "ACTUAL_OFFICIAL_COUNTY_SPECIMEN_BALLOTS_PLUS_OFFICIAL_ELECTORATE_SOURCES",
+  "operation": "Data only:20 installable complete specimen-backed fields/27 printed names. District9 is wholly source-only pending official vote-count/disqualification evidence; its two printed names, qualified Phifer write-in and exact official status label are preserved, without installing a disqualified ordinary choice. No git, app or production writes.",
+  "counts": {
+    "contests": 20,
+    "candidacies": 27,
+    "newContests": 20,
+    "refreshedContests": 0,
+    "candidacyOffices": 18,
+    "candidacyPrintedNames": 25,
+    "retentionQuestions": 2,
+    "retentionJudges": 2,
+    "portableNativeSamplePdfs": 58,
+    "nativeSamplePages": 116,
+    "sourceFiles": 67,
+    "newWholeMemberLinks": 1,
+    "sourceOnlyOffices": 1,
+    "sourceOnlyPrintedNames": 2,
+    "sourceOnlyQualifiedWriteIns": 1,
+    "measures": 0
+  },
+  "coverage": {
+    "individuallyCompleteInstallableFields": 20,
+    "completeObservedSampleFields": 21,
+    "completeObservedPrintedNames": 29,
+    "allNamedChoicesInImportedOfficeBlocks": true,
+    "allCurrentCountyListLocalOfficeGroupsObservedInSamples": true,
+    "fullCountyBallotParity": false,
+    "publishedStyleAcquisitionExhaustive": false,
+    "actualSampleScope": "58 native signed November3,2026 county specimen PDFs. All21 local field groups on the native county all-contests list are found:4 county/ROE offices,13 board districts,2 NSWRD wards,2 Circuit19 retentions.20 groups install;Board9 source-only.",
+    "electorate": "County Clerk/Treasurer/Sheriff are Lake County;Circuit19 exactly Lake by705ILCS35/1;ROE34 County column says Lake with one whole-county membership. Twelve installable Board districts use precise district IDs;NSWRD trustees use exact Ward2/Ward3 IDs. No courthouse, whole-city or county substitute for district offices.",
+    "remaining": [
+      "District9 official signed September28 court order or polling notice remains unacquired. Source-only includes every printed name and qualified write-in without ordinary/held input or fabricated removal/date.",
+      "Full published-style census and independently administered municipal/special-election sample audit remain open.",
+      "Exact county board and NSWRD ward boundaries plus ROE34 membership require River installation and reader live checks.",
+      "Generic No Candidate and write-in spaces are not people; no unsupported cancelled or declared-elected status is inferred.",
+      "Held federal/state/legislative facts and fresh CX-VOTES IL question inputs remain unchanged; ancillary current local questions are not installed here."
+    ]
+  },
+  "unmatchedDivisions": [
+    "ocd-division/country:us/state:il/county:lake/board_district:1",
+    "ocd-division/country:us/state:il/county:lake/board_district:10",
+    "ocd-division/country:us/state:il/county:lake/board_district:11",
+    "ocd-division/country:us/state:il/county:lake/board_district:14",
+    "ocd-division/country:us/state:il/county:lake/board_district:15",
+    "ocd-division/country:us/state:il/county:lake/board_district:16",
+    "ocd-division/country:us/state:il/county:lake/board_district:17",
+    "ocd-division/country:us/state:il/county:lake/board_district:19",
+    "ocd-division/country:us/state:il/county:lake/board_district:3",
+    "ocd-division/country:us/state:il/county:lake/board_district:4",
+    "ocd-division/country:us/state:il/county:lake/board_district:6",
+    "ocd-division/country:us/state:il/county:lake/board_district:7",
+    "ocd-division/country:us/state:il/regional_office_of_education:34",
+    "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:2",
+    "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:3"
+  ],
+  "readerApplicability": {
+    "status": "RIVER_PRECISE_DISTRICT_MEMBERSHIP_AND_BOUNDARY_INSTALL_AND_LIVE_CHECK_REQUIRED",
+    "unmatchedDivisions": [
+      "ocd-division/country:us/state:il/county:lake/board_district:1",
+      "ocd-division/country:us/state:il/county:lake/board_district:10",
+      "ocd-division/country:us/state:il/county:lake/board_district:11",
+      "ocd-division/country:us/state:il/county:lake/board_district:14",
+      "ocd-division/country:us/state:il/county:lake/board_district:15",
+      "ocd-division/country:us/state:il/county:lake/board_district:16",
+      "ocd-division/country:us/state:il/county:lake/board_district:17",
+      "ocd-division/country:us/state:il/county:lake/board_district:19",
+      "ocd-division/country:us/state:il/county:lake/board_district:3",
+      "ocd-division/country:us/state:il/county:lake/board_district:4",
+      "ocd-division/country:us/state:il/county:lake/board_district:6",
+      "ocd-division/country:us/state:il/county:lake/board_district:7",
+      "ocd-division/country:us/state:il/regional_office_of_education:34",
+      "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:2",
+      "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:3"
+    ],
+    "newWholeMembers": 1,
+    "noCountyFallbackForBoardOrNSWRD": true,
+    "countyBoardGeometryLead": "/workspace/cx-local-work/lake-il/board-geography-lead.json",
+    "nswrdWardGeometryLead": "/workspace/cx-local-work/lake-il/nswrd-ward-geography-lead.json"
+  },
+  "validation": {
+    "focusedChecker": "/workspace/cx-local-work/validate.mts",
+    "productionWrites": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndPrimaryQuotes": "PASS: 67 portable sources and 48 primary saved-source quotes",
+    "allPrimaryAndSupplementalQuotes": "PASS: 77 exact saved-source quotes; every portable hash independently verified including secondary lead",
+    "independentNativeSampleRecovery": "PASS: 397 local office occurrences and 528 printed-name occurrences, zero unassigned local names",
+    "unrelatedContestsPreserved": 170,
+    "unrelatedCandidateCoreFieldsPreserved": 263,
+    "sourceHashesAndQuotes": "PASS: 67 captured sources and 48 exact saved-source quotes"
+  }
+}

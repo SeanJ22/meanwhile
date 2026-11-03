@@ -1,0 +1,492 @@
+[
+  {
+    "code": "clerk",
+    "contestId": "il-cx-local-2026-lake-county-clerk",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+      "quote": "FOR LAKE COUNTY CLERK\nPARA SECRETARIO DEL CONDADO\nDE LAKE\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nAnthony Vega\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Anthony Vega",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "treasurer",
+    "contestId": "il-cx-local-2026-lake-county-treasurer",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+      "quote": "FOR LAKE COUNTY TREASURER\nPARA TESORERO DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nDavid Penaherrera\nRepublican Republicano\nSandy Hart\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "David Penaherrera",
+        "party": "Republican"
+      },
+      {
+        "name": "Sandy Hart",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "sheriff",
+    "contestId": "il-cx-local-2026-lake-county-sheriff",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+      "quote": "FOR LAKE COUNTY SHERIFF\nPARA ALGUACIL DEL CONDADO DE\nLAKE\nVOTE FOR ONE VOTE POR UNO\nRoman Buchberger\nRepublican Republicano\nJohn D. Idleburg\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Roman Buchberger",
+        "party": "Republican"
+      },
+      {
+        "name": "John D. Idleburg",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "roe34",
+    "contestId": "il-cx-local-2026-regional-superintendent-roe34",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+      "quote": "FOR REGIONAL SUPERINTENDENT\nOF SCHOOLS\nPARA SUPERINTENDENTE\nREGIONAL DE ESCUELAS\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nMichael L. Karner\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Michael L. Karner",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "retention-james-k-booras",
+    "contestId": "il-cx-local-2026-lake-circuit19-retention-james-k-booras",
+    "type": "RETENTION",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+      "quote": "Shall each of the persons listed be\nretained in office as Judge of the\nCircuit Court, 19th Judicial Circuit?"
+    },
+    "printedCandidates": [
+      {
+        "name": "James K. Booras",
+        "party": null
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "retention-marnie-m-slavin",
+    "contestId": "il-cx-local-2026-lake-circuit19-retention-marnie-m-slavin",
+    "type": "RETENTION",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0001.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.165735+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.165735+00:00",
+      "quote": "Shall each of the persons listed be\nretained in office as Judge of the\nCircuit Court, 19th Judicial Circuit?"
+    },
+    "printedCandidates": [
+      {
+        "name": "Marnie M. Slavin",
+        "party": null
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-1",
+    "contestId": "il-cx-local-2026-lake-county-board-district-1",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0005.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:45:17.359103+00:00",
+      "verifiedAt": "2026-11-03T09:45:17.359103+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 1\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 1\nVOTE FOR ONE VOTE POR UNO\nJohn Muellner\nRepublican Republicano\nJose S. Martinez\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "John Muellner",
+        "party": "Republican"
+      },
+      {
+        "name": "Jose S. Martinez",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-16",
+    "contestId": "il-cx-local-2026-lake-county-board-district-16",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0030.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:45:17.731731+00:00",
+      "verifiedAt": "2026-11-03T09:45:17.731731+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 16\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 16\nVOTE FOR ONE VOTE POR UNO\nKatherine Rodriguez\nRepublican Republicano\nEsiah A. Campos\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Katherine Rodriguez",
+        "party": "Republican"
+      },
+      {
+        "name": "Esiah A. Campos",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-6",
+    "contestId": "il-cx-local-2026-lake-county-board-district-6",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0055.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:45:18.050667+00:00",
+      "verifiedAt": "2026-11-03T09:45:18.050667+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 6\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 6\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nJohn Wasik\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "John Wasik",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-4",
+    "contestId": "il-cx-local-2026-lake-county-board-district-4",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0070.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:45:18.455619+00:00",
+      "verifiedAt": "2026-11-03T09:45:18.455619+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 4\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 4\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nGina Roberts\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Gina Roberts",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-17",
+    "contestId": "il-cx-local-2026-lake-county-board-district-17",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0100.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:10.175223+00:00",
+      "verifiedAt": "2026-11-03T09:43:10.175223+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 17\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 17\nVOTE FOR ONE VOTE POR UNO\nJoe Salvi\nRepublican Republicano\nMary Mesa\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Joe Salvi",
+        "party": "Republican"
+      },
+      {
+        "name": "Mary Mesa",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-19",
+    "contestId": "il-cx-local-2026-lake-county-board-district-19",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0140.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:46:15.716310+00:00",
+      "verifiedAt": "2026-11-03T09:46:15.716310+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 19\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 19\nVOTE FOR ONE VOTE POR UNO\nNicole Ziomek\nRepublican Republicano\nMarah Altenberg\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Nicole Ziomek",
+        "party": "Republican"
+      },
+      {
+        "name": "Marah Altenberg",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-10",
+    "contestId": "il-cx-local-2026-lake-county-board-district-10",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0190.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:46:16.095377+00:00",
+      "verifiedAt": "2026-11-03T09:46:16.095377+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 10\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 10\nVOTE FOR ONE VOTE POR UNO\nJeffrey C. Issel\nRepublican Republicano\nNicki Sullivan\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Jeffrey C. Issel",
+        "party": "Republican"
+      },
+      {
+        "name": "Nicki Sullivan",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 2,
+    "emptyPartyPlaceholders": [],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-3",
+    "contestId": "il-cx-local-2026-lake-county-board-district-3",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0275.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:44:38.050969+00:00",
+      "verifiedAt": "2026-11-03T09:44:38.050969+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 3\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 3\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nWendy S. Meister\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Wendy S. Meister",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-15",
+    "contestId": "il-cx-local-2026-lake-county-board-district-15",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0300.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:11.235227+00:00",
+      "verifiedAt": "2026-11-03T09:43:11.235227+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 15\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 15\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nJennifer Clark\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Jennifer Clark",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-11",
+    "contestId": "il-cx-local-2026-lake-county-board-district-11",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0325.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:44:37.962624+00:00",
+      "verifiedAt": "2026-11-03T09:44:37.962624+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 11\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 11\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nPaul Frank\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Paul Frank",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-14",
+    "contestId": "il-cx-local-2026-lake-county-board-district-14",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0350.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:11.342557+00:00",
+      "verifiedAt": "2026-11-03T09:43:11.342557+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 14\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 14\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nVance D. Wyatt\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Vance D. Wyatt",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "water-2",
+    "contestId": "il-cx-local-2026-north-shore-water-reclamation-ward-2",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:11.716857+00:00",
+      "verifiedAt": "2026-11-03T09:43:11.716857+00:00",
+      "quote": "FOR NORTH SHORE WATER\nRECLAMATION DISTRICT - TRUSTEE\n- WARD 2\nPARA DISTRITO DE RECUPERACIÓN\nDE AGUAS RESIDUALES DE NORTH\nSHORE - SÍNDICO - ÁREA 2\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nSteve Drew\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Steve Drew",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "board-7",
+    "contestId": "il-cx-local-2026-lake-county-board-district-7",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0450.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:43:11.716857+00:00",
+      "verifiedAt": "2026-11-03T09:43:11.716857+00:00",
+      "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 7\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 7\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nCarissa Casbon\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Carissa Casbon",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  },
+  {
+    "code": "water-3",
+    "contestId": "il-cx-local-2026-north-shore-water-reclamation-ward-3",
+    "type": "CANDIDACY",
+    "source": {
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0555.pdf",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:45:18.830252+00:00",
+      "verifiedAt": "2026-11-03T09:45:18.830252+00:00",
+      "quote": "FOR NORTH SHORE WATER\nRECLAMATION DISTRICT - TRUSTEE\n- WARD 3\nPARA DISTRITO DE RECUPERACIÓN\nDE AGUAS RESIDUALES DE NORTH\nSHORE - SÍNDICO - ÁREA 3\nVOTE FOR ONE VOTE POR UNO\nNo Candidate / No Candidato\nRepublican Republicano\nBeverly Sugar Young\nDemocratic Demócrata"
+    },
+    "printedCandidates": [
+      {
+        "name": "Beverly Sugar Young",
+        "party": "Democratic"
+      }
+    ],
+    "completePrintedCandidateCount": 1,
+    "emptyPartyPlaceholders": [
+      "Republican"
+    ],
+    "genericWriteInPrinted": false,
+    "candidateListComplete": true
+  }
+]

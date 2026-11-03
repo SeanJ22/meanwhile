@@ -1,0 +1,29 @@
+{
+  "projectedNamesGovernedByActualNativeSamples": true,
+  "records": [
+    {
+      "name": "Jose S. Martinez",
+      "sample": "style0005 prints unaccented Martinez",
+      "officialRosterVisual": "Page2 native rendering prints Jose S. Martínez; embedded text loses letters.",
+      "disposition": "Exact actual sample name preserved; no held identity to overwrite."
+    },
+    {
+      "name": "Steve Drew",
+      "sample": "style0450 prints Steve Drew",
+      "officialIncumbentRoster": "Captured NSWRD current-office page says Stephen Drew",
+      "disposition": "Exact sampled candidate name Steve Drew governs; current-office roster is electorate corroboration only."
+    },
+    {
+      "name": "Jorge E. Sanchez",
+      "sample": "style0565 prints Jorge E. Sanchez",
+      "officialCandidateRoster": "Jorge E Sanchez, red Withdrawn by Objection",
+      "disposition": "Entire District9 source-only; no ordinary/held input, no invented status date."
+    }
+  ],
+  "embeddedRosterFontIssues": [
+    "Democra c -> native visual Democratic",
+    "Jeﬀrey C. Issel -> sample Jeffrey C. Issel",
+    "Vance D. Wya -> sample Vance D. Wyatt",
+    "Jose S. Mar nez -> sample Jose S. Martinez"
+  ]
+}

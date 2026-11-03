@@ -1,0 +1,50 @@
+{
+  "circuit19IsExactlyLakeCounty": {
+    "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50",
+    "sourceOrg": "Illinois General Assembly — 705ILCS35/1, captured official text",
+    "collectedAt": "2026-11-03T09:49:19.004851+00:00",
+    "verifiedAt": "2026-11-03T09:49:19.004851+00:00",
+    "quote": "Nineteenth Circuit--The county of Lake."
+  },
+  "noJudicialSubcircuitOrAppellateFallback": true,
+  "regionalOffice34CountyColumn": {
+    "sourceUrl": "https://irc.isbe.net/ListROEs.aspx?type=region",
+    "sourceOrg": "Illinois State Board of Education — Illinois Report Card ROE table, County column",
+    "collectedAt": "2026-11-03T09:50:46.654809+00:00",
+    "verifiedAt": "2026-11-03T09:50:46.654809+00:00",
+    "quote": "ROE\nCounty\nROE\nCounty\n01\nAdams/Pike/Brown/Cass/Morgan/Scott\n30\nJackson/Perry\n03\nChristian/Montgomery/Bond/Effingham/Fayette\n31\nKane\n04\nBoone/Winnebago\n32\nIroquois/Kankakee\n05\nREGION 05 NORTH COOK ISC 1\n33\nKnox/Henderson/Mercer/Warren\n06\nREGION 06 WEST COOK ISC 2\n34\nLake"
+  },
+  "districtMemberships": [
+    {
+      "id": "il-cx-local-2026-roe34-whole-lake-county",
+      "memberOcdId": "ocd-division/country:us/state:il/county:lake",
+      "districtOcdId": "ocd-division/country:us/state:il/regional_office_of_education:34",
+      "provenance": {
+        "sourceUrl": "https://irc.isbe.net/ListROEs.aspx?type=region",
+        "sourceOrg": "Illinois State Board of Education — Illinois Report Card ROE table, County column",
+        "collectedAt": "2026-11-03T09:50:46.654809+00:00",
+        "verifiedAt": "2026-11-03T09:50:46.654809+00:00",
+        "quote": "ROE\nCounty\nROE\nCounty\n01\nAdams/Pike/Brown/Cass/Morgan/Scott\n30\nJackson/Perry\n03\nChristian/Montgomery/Bond/Effingham/Fayette\n31\nKane\n04\nBoone/Winnebago\n32\nIroquois/Kankakee\n05\nREGION 05 NORTH COOK ISC 1\n33\nKnox/Henderson/Mercer/Warren\n06\nREGION 06 WEST COOK ISC 2\n34\nLake"
+      }
+    }
+  ],
+  "boardDistrictsArePrecise": [
+    "ocd-division/country:us/state:il/county:lake/board_district:1",
+    "ocd-division/country:us/state:il/county:lake/board_district:16",
+    "ocd-division/country:us/state:il/county:lake/board_district:6",
+    "ocd-division/country:us/state:il/county:lake/board_district:4",
+    "ocd-division/country:us/state:il/county:lake/board_district:17",
+    "ocd-division/country:us/state:il/county:lake/board_district:19",
+    "ocd-division/country:us/state:il/county:lake/board_district:10",
+    "ocd-division/country:us/state:il/county:lake/board_district:3",
+    "ocd-division/country:us/state:il/county:lake/board_district:15",
+    "ocd-division/country:us/state:il/county:lake/board_district:11",
+    "ocd-division/country:us/state:il/county:lake/board_district:14",
+    "ocd-division/country:us/state:il/county:lake/board_district:7"
+  ],
+  "nswrdWardsArePrecise": [
+    "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:2",
+    "ocd-division/country:us/state:il/special_district:north_shore_water_reclamation_district/ward:3"
+  ],
+  "noWholeMunicipalityOrCountyFallbackForBoardOrNSWRD": true
+}

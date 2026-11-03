@@ -3,17 +3,17 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T10:13:40.457189+00:00",
+  "preparedAt": "2026-11-03T10:13:48.905338+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 98,
+    "rank": 99,
     "stateName": "Illinois",
-    "county": "Lake County",
-    "fips": "17097",
-    "population": 719339,
+    "county": "Will County",
+    "fips": "17197",
+    "population": 712253,
     "populationYear": 2025,
     "state": "IL"
   },
@@ -2654,6 +2654,39 @@
       },
       "censusCounty": "Jackson County",
       "countyFips": "29095"
+    },
+    {
+      "state": "IL",
+      "county": "Lake County",
+      "populationRank": 98,
+      "manifest": "IL/lake/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 20,
+      "measureContests": 0,
+      "candidacies": 27,
+      "newContests": 20,
+      "refreshedContests": 0,
+      "sourceInputSha256": "ae9266f6441e4cbcc0d8e80762b8766dfdcce26a1acefa8473a4d8e61e3ff53b",
+      "coverage": {
+        "individuallyCompleteInstallableFields": 20,
+        "completeObservedSampleFields": 21,
+        "completeObservedPrintedNames": 29,
+        "allNamedChoicesInImportedOfficeBlocks": true,
+        "allCurrentCountyListLocalOfficeGroupsObservedInSamples": true,
+        "fullCountyBallotParity": false,
+        "publishedStyleAcquisitionExhaustive": false,
+        "actualSampleScope": "58 native signed November3,2026 county specimen PDFs. All21 local field groups on the native county all-contests list are found:4 county/ROE offices,13 board districts,2 NSWRD wards,2 Circuit19 retentions.20 groups install;Board9 source-only.",
+        "electorate": "County Clerk/Treasurer/Sheriff are Lake County;Circuit19 exactly Lake by705ILCS35/1;ROE34 County column says Lake with one whole-county membership. Twelve installable Board districts use precise district IDs;NSWRD trustees use exact Ward2/Ward3 IDs. No courthouse, whole-city or county substitute for district offices.",
+        "remaining": [
+          "District9 official signed September28 court order or polling notice remains unacquired. Source-only includes every printed name and qualified write-in without ordinary/held input or fabricated removal/date.",
+          "Full published-style census and independently administered municipal/special-election sample audit remain open.",
+          "Exact county board and NSWRD ward boundaries plus ROE34 membership require River installation and reader live checks.",
+          "Generic No Candidate and write-in spaces are not people; no unsupported cancelled or declared-elected status is inferred.",
+          "Held federal/state/legislative facts and fresh CX-VOTES IL question inputs remain unchanged; ancillary current local questions are not installed here."
+        ]
+      },
+      "censusCounty": "Lake County",
+      "countyFips": "17097"
     }
   ],
   "sourceReviewCounties": [
@@ -2712,17 +2745,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 95,
-    "packetsPrepared": 96,
-    "candidateAndRetentionContests": 4536,
+    "countiesPrepared": 96,
+    "packetsPrepared": 97,
+    "candidateAndRetentionContests": 4556,
     "measureContests": 114,
-    "candidacyEntries": 10091,
-    "newContestEntriesAgainstCheckedInBaseline": 3787,
-    "distinctPreparedContestIds": 4503,
-    "distinctPreparedCandidateIds": 9822,
-    "distinctNewContestsAgainstCheckedInBaseline": 3710,
+    "candidacyEntries": 10118,
+    "newContestEntriesAgainstCheckedInBaseline": 3807,
+    "distinctPreparedContestIds": 4523,
+    "distinctPreparedCandidateIds": 9849,
+    "distinctNewContestsAgainstCheckedInBaseline": 3730,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 97
+    "distinctCountyHandoffs": 98
   },
   "remainingWork": [
     {

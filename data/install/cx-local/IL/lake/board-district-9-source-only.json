@@ -1,0 +1,94 @@
+{
+  "status": "SOURCE_ONLY_OUTSIDE_ORDINARY_AND_HELD_INSTALLABLE_INPUT",
+  "reason": "Current native sample still prints Sanchez, while current official county list marks him Withdrawn by Objection. A secondary October1 report describes a September28 order barring vote counting while name remains printed. Official signed order or polling notice has not been acquired; do not project a disqualified candidate as eligible or silently omit a printed name.",
+  "proposedContestId": "il-cx-local-2026-lake-county-board-district-9",
+  "electionId": "il-2026-11-03",
+  "ocdId": "ocd-division/country:us/state:il/county:lake/board_district:9",
+  "title": "Lake County Board — District 9 — Unexpired 2-Year Term",
+  "termYears": 2,
+  "completePrintedSampleBlock": {
+    "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0565.pdf",
+    "sourceOrg": "Lake County Clerk Election Department",
+    "collectedAt": "2026-11-03T09:45:19.200777+00:00",
+    "verifiedAt": "2026-11-03T09:45:19.200777+00:00",
+    "quote": "FOR LAKE COUNTY BOARD\nMEMBER - DISTRICT 9\nTO SERVE AN UNEXPIRED 2-YEAR TERM\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DE LAKE - DISTRITO 9\nPARA SERVIR UN TÉRMINO DE 2-AÑOS\nQUE NO HA EXPIRADO\nVOTE FOR ONE VOTE POR UNO\nJorge E. Sanchez\nRepublican Republicano\nBrandon X. Ewing\nDemocratic Demócrata\nWrite-in Voto por escrito"
+  },
+  "completePrintedCandidates": [
+    {
+      "name": "Jorge E. Sanchez",
+      "party": "Republican"
+    },
+    {
+      "name": "Brandon X. Ewing",
+      "party": "Democratic"
+    }
+  ],
+  "printedNameCount": 2,
+  "officialCandidateStatusBlock": {
+    "sourceUrl": "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List",
+    "sourceOrg": "Lake County Clerk Election Department",
+    "collectedAt": "2026-11-03T09:48:41.434021+00:00",
+    "verifiedAt": "2026-11-03T09:48:41.434021+00:00",
+    "quote": "Lake County Board Member, Dist 9\nDashawna O. Phifer (Write-in) 7/27/2026 8:36:00 AM\nBrandon X. Ewing Democra c 7/27/2026 2:31:33 PM\nJorge E Sanchez Republican 8/24/2026 9:48:00 AM\nWithdrawn by Objection\nVote for 1"
+  },
+  "officialExactStatusLabel": "Withdrawn by Objection",
+  "qualifiedWriteIn": {
+    "publishedName": "Dashawna O. Phifer",
+    "sourceLabel": "(Write-in)",
+    "dateTimeQualifiedAsPrinted": "7/27/2026 8:36:00 AM",
+    "provenance": {
+      "sourceUrl": "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List",
+      "sourceOrg": "Lake County Clerk Election Department",
+      "collectedAt": "2026-11-03T09:48:41.434021+00:00",
+      "verifiedAt": "2026-11-03T09:48:41.434021+00:00",
+      "quote": "Lake County Board Member, Dist 9\nDashawna O. Phifer (Write-in) 7/27/2026 8:36:00 AM\nBrandon X. Ewing Democra c 7/27/2026 2:31:33 PM\nJorge E Sanchez Republican 8/24/2026 9:48:00 AM\nWithdrawn by Objection\nVote for 1"
+    },
+    "notPrintedOnSample": true,
+    "notOrdinaryChoice": true,
+    "notInstalledWhileContestSourceOnly": true
+  },
+  "stableIdentityProposals": [
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-9:jorge-e-sanchez",
+      "publishedName": "Jorge E. Sanchez",
+      "status": "PRINTED_SAMPLE_NAME_OFFICIAL_LIST_WITHDRAWN_BY_OBJECTION_SOURCE_ONLY"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-9:brandon-x-ewing",
+      "publishedName": "Brandon X. Ewing",
+      "status": "PRINTED_SAMPLE_NAME_SOURCE_ONLY_WITH_CONTEST"
+    },
+    {
+      "id": "il-cx-local-2026-lake-county-board-district-9:dashawna-o-phifer",
+      "publishedName": "Dashawna O. Phifer",
+      "status": "QUALIFIED_WRITE_IN_SOURCE_ONLY"
+    }
+  ],
+  "noRemovalOrAbsenceOrInventedWithdrawalDate": true,
+  "pdfMetadata": {
+    "sample0565": {
+      "sha256": "adc6b9be6b21f080f53349c61165497ba83f40785950e649c3a2f5ae5cd2e41b",
+      "sourceUrl": "https://apps03.lakecountyil.gov/countyclerk/elections/voterservices/elecinfo/Gstyles/0565.pdf",
+      "exactPdfInfo": "Title:           SPECIMEN no watermark.PDF\nProducer:        Amyuni PDF Converter version 5.5.2.7\nCreationDate:    Thu Sep 17 15:02:33 2026 UTC\nModDate:         Thu Sep 17 17:11:32 2026 UTC\nCustom Metadata: no\nMetadata Stream: yes\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            AcroForm\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage size:       612 x 1008 pts\nPage rot:        0\nFile size:       275440 bytes\nOptimized:       no\nPDF version:     1.6\n",
+      "creationDate": "Thu Sep 17 15:02:33 2026 UTC"
+    },
+    "officialCandidateList": {
+      "sha256": "03ebff7dc73981fe0ab20684712bc273d887db6522159f3c21d0164c51bbf420",
+      "sourceUrl": "https://www.lakecountyil.gov/DocumentCenter/View/13059/Candidate-List",
+      "exactPdfInfo": "Title:           Crystal Reports - cfmCFMR011_CandidateList\nAuthor:          RV23932\nProducer:        Microsoft: Print To PDF\nCreationDate:    Wed Sep  9 13:40:49 2026 UTC\nModDate:         Wed Sep  9 13:40:49 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       796398 bytes\nOptimized:       no\nPDF version:     1.7\n",
+      "creationDate": "Wed Sep  9 13:40:49 2026 UTC"
+    }
+  },
+  "secondaryLeadOnly": {
+    "sourceUrl": "https://thechicagolandjournal.com/vasselli-law-wins-lake-county-election-challenge-court-orders-sanchez-votes-not-counted/",
+    "publisher": "The Chicagoland Journal",
+    "articlePublicationDate": "2026-10-01",
+    "reportedOrderDate": "2026-09-28",
+    "sha256": "ec374073ad74a0f2ea4da33624b2a5e73cdeb4fd2a4ff9170c698349908de49b",
+    "sourceFile": "sources/ec374073ad74a0f2ea4da33624b2a5e73cdeb4fd2a4ff9170c698349908de49b.source",
+    "excerptFile": "sources/09130f5a1c63fd08d69c80829910753e1306d9890f80a7d59d1cf254d2ed583d.txt",
+    "notOfficialOrder": true,
+    "notUsedForProjectedEligibility": true
+  },
+  "sourceDateCaution": "The native candidate list prints September9 and its PDF metadata matches that date; no date for the red status annotation is inferred. Sample PDF metadata is September17. News-reported decision dates remain acquisition leads only."
+}

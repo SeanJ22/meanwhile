@@ -1,0 +1,659 @@
+
+
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><meta content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0" name="viewport" />  
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" 
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" 
+        crossorigin="anonymous"></script>
+    <script src="/js/ScriptLibrary.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ScriptLibrary = $(this).ScriptLibrary({ RootFolder: '/' });
+        });
+        siteconfig = {
+  "type": "production",
+  "google-analytics-account": "G-TR6JVCNKX1",
+  "google-analytics-domain": "illinoisreportcard.com",
+  "google-map-key": "AIzaSyA3l38T7SATMgS7wX6w-olRiYc1JaJLcxE",
+  "location-iq-key": "7b46a94c395f13",
+  "recaptcha-key": "6LcR8gkUAAAAAHugZAyMM9nZOpnP7ytrGN06_Rn5",
+  "contact-us-email-to": "reportcard@isbe.net, iirc@niu.edu",
+  "contact-us-email-from": "iirc@niu.edu"
+};
+    </script>
+    <link href="images/irc-favicon.png" rel="shortcut icon" type="image/x-icon" /><link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed&amp;display=swap" rel="stylesheet" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" /><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css" rel="stylesheet" /><link href="css/ircstyles_v1.0.css?d=09252026" rel="stylesheet" type="text/css" /><link href="css/load-animation.css?d=11212024" rel="stylesheet" type="text/css" /><link href="css/internal.css?d=06252024" rel="stylesheet" type="text/css" /><link href="css/printstyles.css?d=10272020" rel="stylesheet" type="text/css" media="print" /><meta name="og:description" content="Illinois&#39; new online school report card goes beyond test scores to present a complete view of your schools. The information here will help you to work with your child&#39;s school" /><meta name="og:title" content="Illinois Report Card" /><meta name="og:image" content="CSS/theme_img/irc-logo.png" />  
+    <style type="text/css">
+        a[rel=popover]
+        {
+            background-color: rgb(255, 204, 0);
+            border-radius: 20px 20px 20px 20px;
+            color: rgb(0, 0, 0);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0 .35em;
+        }
+        
+        .breadcrumb
+        {
+            padding: 8px 15px;
+            margin: 0px 0px 20px;
+            list-style: none outside none;
+            background-color: #ffffff;
+            border-radius: 0px 0px 0px 0px;
+            font-size: .75em;
+        }
+        
+        .mainContent ul.likep
+        {
+            color: #666666;
+            font-family: Arial,Helvetica,sans-serif,sanserif;
+            font-size: 0.9em;
+            line-height: 1.5em;
+        }
+        .modal-body
+        {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+    <title>
+	IRC : REGION
+</title>
+</head>
+<body> 
+    <script type="text/javascript">
+        function resizeIFramePipe(e, _pipedata) {
+            var url = ScriptLibrary.GetParam("helperUrl"),
+                view = "";
+           
+            if (_pipedata && _pipedata.view)
+                view = _pipedata.view;
+            else
+                view = ScriptLibrary.GetParam("view");
+
+            var pipe = $("#helpframe-1"),
+                urlwparams = url + "?height=" + ScriptLibrary.DocumentHeight() + (view ? "&view=" + view : "") + "&cacheb=" + Math.random();
+            
+            pipe.attr("src", urlwparams);
+        }
+
+        function analytics(event) {
+            capturepageview();
+        }
+
+        (function pullnotifications() {
+            var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+            var eventer = window[eventMethod];
+            var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+            // Listen to message from child window
+            eventer(messageEvent, function (e) {
+                var key = e.message ? "message" : "data";
+                var data = e[key]; 
+                if (data && data.type) {
+                    if (/event.analytics/i.test(data.type)) {
+                        analytics(data.payload);
+                    }
+                } 
+            }, false);
+        })();
+
+        $(document).ready(function () {
+            ScriptLibrary = $(this).ScriptLibrary({ RootFolder: '/' });
+
+            // Remove the Print to pdf icon if the current page does not contain the 'div#iframe-container' element
+            if (ScriptLibrary.GetParam("helperUrl").length) {
+                $(this).find("body").append($("<iframe></iframe>").height(0)
+                                                                  .width(0)
+                                                                  .attr("frameBorder", "0")
+                                                                  .attr("id", "helpframe-1")
+                                                                  .attr("src", ""));
+
+                $(document).on("afterContentChange", resizeIFramePipe);
+            }
+
+              geocoder.init({ provider: { name: 'location-iq', options: {apikey: siteconfig['location-iq-key']}}});
+            //End of removal of print to pdf icon for non -iframe content
+        }).on("iframe.loaded", function () {
+
+        });
+    </script>
+       <div class="irc-page">
+       <form method="POST" action="./ListROEs.aspx?type=region" id="formdrop" onsubmit="get_action(this);">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="B6B5134E" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="zwOBab3lgFZh2vr/n503ORrE+orggWPgV0EjsJxMgvyQm7enSjnIZQ2X6Ahurfixate1/Q3WKFm44kjQ4PD9zdEFNa5jbl0d80+7rMvdR+NL4Eqm" />
+</div>    
+    <input name="ctl00$MainNavigationControl$_languagePrefdropDown" type="hidden" id="MainNavigationControl__languagePrefdropDown" class="_languagePrefdropDown" value="en" />  
+</form>
+<header class="navbar navbar-expand-lg navbar-dark bg-dark text-white box-shadow">
+    <div class="container d-flex justify-content-between px-0">
+        <a class="navbar-brand text-uppercase" href="/">
+            <span class="h3 text-wrap">Illinois Report Card</span>
+            <span class="d-block small">
+                2025-2026
+            </span>
+        </a>
+        <button class="d-block d-lg-none float-right navbar-toggler collapsed" type="button" data-toggle="collapse"
+                data-target="#irc-topnav" aria-label="Toggle Top Navigation Menu for small screen size">
+            <span  aria-hidden="true" class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="irc-topnav">
+            <div class="container d-flex justify-content-between">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" >
+                        <a class="nav-link" aria-label="ISBE Data Library" href="https://www.isbe.net/pages/illinois-state-report-card-data.aspx" target="_blank" rel="noopener noreferrer">ISBE Data Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-label="Take the Survey" data-toggle="modal" href="#survey-modal">Take the Survey</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link languagePrefdropDown" aria-label="Español" href="javascript:void(0);" lang="es">Español</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-label="Help/FAQ" href="Help">Help/FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-label="Login" href="https://iirc.niu.edu/myirc.app">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header> 
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var langpref = 'languagePrefdropDown',
+            formdrop = $("form[id='formdrop']"),
+            forminputhidden = $(document).find("[id*='_" + langpref + "']:first"),
+            lnklanguagePref = $(document).find("a[class*='" + langpref + "']");
+
+        if (forminputhidden) {
+            
+            if (forminputhidden.val() == 'es')
+                lnklanguagePref.html("English").attr("lang", "en");
+            else
+                lnklanguagePref.html("Español").attr("lang", "es");
+ 
+
+            $(this).on("click", "a[class*='" + langpref + "']", function (e) {
+                e.preventDefault();
+                var label = $(this).html()
+                    , lang = label == 'English' ? 'en' : 'es'
+                    ;
+                forminputhidden.val(lang);
+                lnklanguagePref.attr("lang", lang); 
+                formdrop.submit();
+                return false;
+            });
+        }
+
+        //load survey in modal
+        let env =  'production'
+        , senv = /qa|localhost/i.test(env) ? 'development' : env
+        ;
+        $('#survey-modal').on('show.bs.modal', function () {
+            $('#survey-content').attr('src', '/html/en/survey.{0}.html?d=10282016'.replace(/\{0\}/, senv));
+        });
+    });
+    function get_action(form) {
+        form.action = window.location.href;
+    }
+</script>
+<div id="survey-modal" class="modal fade" aria-hidden="true" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <iframe id="survey-content" src="about:blank" class="iframe-default">Loading...</iframe>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" aria-hidden="true" data-dismiss="modal">
+                    Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+      
+        <div class="body mb-5">        
+                 <section class="main-content">
+                    
+    <div class="container mainContent" id="searchresults">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a aria-label="Home" href="Default.aspx">Home</a></li>
+            <li class="breadcrumb-item active">Search By Category</li>
+        </ol>
+        
+<div style="text-align: center;">
+    <div id="listAllHeader"><p><a href="/ListSchools.aspx">Schools</a><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListDistricts.aspx">Districts</a><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListCharterSchools.aspx">Charter School</a><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListCities.aspx">Cities</a><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListCounties.aspx">Counties</a></p><p><span><strong>Regional Offices Of Education</strong></span><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListCMOs.aspx">Charter Management Organizations</a><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListAreas.aspx">Areas</a><span>&nbsp;&nbsp;&#8226;&nbsp;&nbsp;</span><a href="/ListLegislativeDistricts.aspx">Legislative Districts</a></p><p><a href="/searchMain.aspx">Keyword Search</a></p></div>
+    
+</div>
+
+        <div class="row list-header" style="font-weight:bold;font-size:1.1em;">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft" style="padding-left:5px;">
+				
+					  
+            ROE
+          
+				
+			</div>
+      <div class="col-xs-8 col-sm-8 cellLeft">
+				
+					  
+            County
+          
+				
+			</div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft" style="padding-left:5px;">
+				
+					  
+            ROE
+          
+				
+			</div>
+      <div class="col-xs-4 col-sm-4 cellLeft">
+				
+					  
+            County
+          
+				
+			</div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Adams/Pike/Brown/Cass/Morgan/Scott">01</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Adams/Pike/Brown/Cass/Morgan/Scott">Adams/Pike/Brown/Cass/Morgan/Scott</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Jackson/Perry">30</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Jackson/Perry">Jackson/Perry</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Christian/Montgomery/Bond/Effingham/Fayette">03</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Christian/Montgomery/Bond/Effingham/Fayette">Christian/Montgomery/Bond/Effingham/Fayette</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Kane">31</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Kane">Kane</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Boone/Winnebago">04</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Boone/Winnebago">Boone/Winnebago</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Iroquois/Kankakee">32</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Iroquois/Kankakee">Iroquois/Kankakee</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=REGION 05 NORTH COOK ISC 1">05</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=REGION 05 NORTH COOK ISC 1">REGION 05 NORTH COOK ISC 1</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Knox/Henderson/Mercer/Warren">33</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Knox/Henderson/Mercer/Warren">Knox/Henderson/Mercer/Warren</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=REGION 06 WEST COOK ISC 2">06</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=REGION 06 WEST COOK ISC 2">REGION 06 WEST COOK ISC 2</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Lake">34</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Lake">Lake</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=REGION 07 SOUTH COOK ISC 4">07</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=REGION 07 SOUTH COOK ISC 4">REGION 07 SOUTH COOK ISC 4</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Lasalle/Marshall/Putnam">35</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Lasalle/Marshall/Putnam">Lasalle/Marshall/Putnam</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Carrol/Jo Daviess/Stephenson">08</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Carrol/Jo Daviess/Stephenson">Carrol/Jo Daviess/Stephenson</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Macon/Piatt">39</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Macon/Piatt">Macon/Piatt</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Champain/Ford">09</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Champain/Ford">Champain/Ford</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Calhoun/Greene/Jersey/Macoupin">40</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Calhoun/Greene/Jersey/Macoupin">Calhoun/Greene/Jersey/Macoupin</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Clark/Coles/Cumberland/Douglas/Edger/Moultrie/Shelby">11</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Clark/Coles/Cumberland/Douglas/Edger/Moultrie/Shelby">Clark/Coles/Cumberland/Douglas/Edger/Moultrie/Shelby</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Madison">41</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Madison">Madison</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Clay/Crawford/Jasper/Lawrence/Richland">12</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Clay/Crawford/Jasper/Lawrence/Richland">Clay/Crawford/Jasper/Lawrence/Richland</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=McHenry">44</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=McHenry">McHenry</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Clinton/Marion/Washington/Jefferson">13</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Clinton/Marion/Washington/Jefferson">Clinton/Marion/Washington/Jefferson</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=">45</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText="></a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=City of Chicago 299">15</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=City of Chicago 299">City of Chicago 299</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Lee/Ogle/Whiteside">47</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Lee/Ogle/Whiteside">Lee/Ogle/Whiteside</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=">16</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText="></a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Peoria">48</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Peoria">Peoria</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=">17</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText="></a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Rock Island">49</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Rock Island">Rock Island</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=DuPage">19</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=DuPage">DuPage</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=St. Clair">50</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=St. Clair">St. Clair</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Edwards/Gallatin/Hardin/Pope/Saline/Wabash/Wayne/White/Hamilton">20</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Edwards/Gallatin/Hardin/Pope/Saline/Wabash/Wayne/White/Hamilton">Edwards/Gallatin/Hardin/Pope/Saline/Wabash/Wayne/White/Hamilton</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Menard/Sangamon">51</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Menard/Sangamon">Menard/Sangamon</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Franklin/Williamson/Johnson/Massac">21</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Franklin/Williamson/Johnson/Massac">Franklin/Williamson/Johnson/Massac</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Mason/Tazewell/Woodford">53</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Mason/Tazewell/Woodford">Mason/Tazewell/Woodford</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Grundy/Kendall">24</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Grundy/Kendall">Grundy/Kendall</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Vermilion">54</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Vermilion">Vermilion</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Hancook/McDonough/Fulton/Schuyler">26</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Hancook/McDonough/Fulton/Schuyler">Hancook/McDonough/Fulton/Schuyler</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row1" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Will">56</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row1 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Will">Will</a></div>
+    </div>
+  </div>
+</div>
+<div class="row mb-1">
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=Bureau/Henry/Stark">28</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=Bureau/Henry/Stark">Bureau/Henry/Stark</a></div>
+    </div>
+  </div>
+  <div class="col-xs-6 col-sm-6">
+    <div class="row">
+      <div class="col-xs-4 col-sm-4 cellLeft &#xA;      row0" style="padding-left:5px;"><a href="SearchResult.aspx?type=REGION&amp;searchText=NA">60</a></div>
+      <div class="col-xs-8 col-sm-8 cellLeft &#xA;      row0 "><a href="SearchResult.aspx?type=REGION&amp;searchText=NA">NA</a></div>
+    </div>
+  </div>
+</div>
+    </div>
+
+                </section>        
+        </div>       
+        <footer class="bg-dark text-white">
+            
+<div class="container p-5">
+    <div class="row no-gutters">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md">
+                    <h2 class="h5">Quick Links</h2>
+                    <ul class="list-unstyled">
+                        <h3>
+                            <li class="mx-0 h6"><a aria-label="Español" href="javascript:void(0);" class="languagePrefdropDown" lang="en">Español</a></li>
+                        </h3> 
+                        <h3>
+                            <li class="mx-0 h6"><a aria-label="Help/FAQ" href="Help">Help/FAQ</a></li>      
+                        </h3> 
+                        <h3>
+                            <li class="mx-0 h6"><a aria-label="ISBE Classic PDF Search" href="/ClassicPDF.aspx">ISBE Classic PDF Search</a></li>
+                        </h3> 
+                        <h3>
+                            <li class="mx-0 h6"><a aria-label="Provide Feedback" href="Contact">Provide Feedback</a></li>
+                        </h3>  
+                    </ul>
+                </div>
+                <div class="col-md">
+                  <h2 class="h5">Contact</h2>
+                  <p>
+                      <span class="d-block">100 N First Street</span>
+                      <span class="d-block">Springfield, IL 62777</span>
+                  </p>
+                  <p>
+                      
+                      <span class="d-block"> <a href="mailto:reportcard@isbe.net">reportcard@isbe.net</a></span>
+                  </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex justify-content-center">
+            <img src="/images/isbe-logo.png" class="isbe-logo-footer"  alt="ISBE Seal Logo Footer" />
+        </div>
+    </div>
+</div>
+
+<div class="container footer">
+    <div class="container">
+    <div class="row px-md-5">
+        <div class="col-md-12 py-2 px-0"><strong>&copy; 2026 Illinois State Board of Education</strong></div>
+    </div>
+    </div>
+</div>
+        </footer>
+       </div>
+</body>
+<!--begin google analytics section-->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TR6JVCNKX1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+
+    gtag('js', new Date()); 
+    gtag('config', siteconfig['google-analytics-account']);
+
+    //page view 
+    capturepageview();
+    function capturepageview() {  
+        let title = document.title && document.title.split('|').slice(-1).join('').replace(/\s/g, '');
+        gtag('event', 'page_view', {
+            page_title: title,
+            page_location: window.location.href,
+            page_path: window.location.pathname,
+            send_to: siteconfig['google-analytics-account']
+        });
+    }
+</script> 
+    <!--end google analytics section-->
+<script type="text/javascript">  
+    $(document).ready(function () {
+
+        [].forEach.call(document.querySelectorAll('.modal'), function (mdl) {
+            $(mdl).on('shown.bs.modal', function (e) {
+                ada_modal.addadacompliance(mdl)
+            })
+        });
+    })
+</script> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+<script src="/js/jquery.responsivetabs.js" type="text/javascript"></script> 
+<script src="/js/jquery.jqplugin.js" type="text/javascript"></script>
+<script type="text/javascript" src="/js/geocoder.js"></script>
+<script type="text/javascript" src="/js/ada-modal.js?d=03082023"></script>
+
+
+</html>

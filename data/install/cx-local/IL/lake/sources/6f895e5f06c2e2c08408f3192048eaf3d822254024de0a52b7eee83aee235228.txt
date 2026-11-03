@@ -1,0 +1,2632 @@
+Title: Official Government Website of the Illinois General Assembly
+
+URL Source: https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50
+
+Markdown Content:
+[Printer Friendly](https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1835&ChapterID=50&Print=True)
+
+Updating the database of the Illinois Compiled Statutes (ILCS) is an ongoing process. Recent laws may not yet be included in the ILCS database, but they are found on this site as [Public Acts](https://www.ilga.gov/legislation/publicacts) soon after they become law. For information concerning the relationship between statutes and Public Acts, refer to the [Guide](https://www.ilga.gov/Legislation/ILCS/Guide).
+
+Because the statute database is maintained primarily for legislative drafting purposes, statutory changes are sometimes included in the statute database before they take effect. If the source note at the end of a Section of the statutes includes a Public Act that has not yet taken effect, the version of the law that is currently in effect may have already been removed from the database and you should refer to that Public Act to see the changes made to the current law.
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/0.01)``(from Ch. 37, par. 72.01)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 0.01.`
+```
+
+```
+`Short title.`
+```
+
+```
+
+```
+This Act may be cited as the
+```
+`Circuit Courts Act.`
+```
+
+```
+  
+`(Source: P.A. 86-1324.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/1)``(from Ch. 37, par. 72.1)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 1.``Judicial circuits created.`
+```
+The county of Cook shall be one
+judicial circuit and the State of
+Illinois, exclusive of the county of Cook, shall be and is divided into
+judicial circuits as follows:
+```
+
+```
+
+```
+  
+``
+```
+First Circuit--The counties of Alexander, Pulaski, Massac, Pope,
+Johnson, Union, Jackson, Williamson and Saline.
+```
+
+```
+
+```
+  
+``
+```
+Second Circuit--The counties of Hardin, Gallatin, White, Hamilton,
+Franklin, Wabash, Edwards, Wayne, Jefferson, Richland, Lawrence and
+Crawford.
+```
+
+```
+
+```
+  
+```Third Circuit--The counties of Madison and Bond.`
+```
+
+```
+  
+``
+```
+Fourth Circuit--The counties of Clinton, Marion, Clay, Fayette,
+Effingham, Jasper, Montgomery, Shelby, and Christian.
+```
+
+```
+
+```
+  
+``
+```
+Fifth Circuit--The counties of Vermilion, Edgar, Clark, Cumberland and
+Coles.
+```
+
+```
+
+```
+  
+``
+```
+Sixth Circuit--The counties of Champaign, Douglas, Moultrie, Macon,
+DeWitt, and Piatt.
+```
+
+```
+
+```
+  
+``
+```
+Seventh Circuit--The counties of Sangamon, Macoupin, Morgan, Scott,
+Greene, and Jersey.
+```
+
+```
+
+```
+  
+``
+```
+Eighth Circuit--The counties of Adams, Schuyler, Mason, Cass, Brown,
+Pike, Calhoun, and Menard.
+```
+
+```
+
+```
+  
+``
+```
+Ninth Circuit--The counties of Knox, Warren, Henderson, Hancock,
+McDonough, and Fulton.
+```
+
+```
+
+```
+  
+``
+```
+Tenth Circuit--The counties of Peoria, Marshall, Putnam, Stark, and
+Tazewell.
+```
+
+```
+
+```
+  
+``
+```
+Eleventh Circuit--The counties of McLean,
+Livingston, Logan, Ford, and
+Woodford.
+```
+
+```
+
+```
+  
+```Twelfth Circuit--The county of Will.`
+```
+
+```
+  
+```Thirteenth Circuit--The counties of Bureau, LaSalle, and Grundy.`
+```
+
+```
+  
+``
+```
+Fourteenth Circuit--The counties of Rock Island, Mercer, Whiteside, and
+Henry.
+```
+
+```
+
+```
+  
+``
+```
+Fifteenth Circuit--The counties of Jo Daviess, Stephenson, Carroll, Ogle,
+and Lee.
+```
+
+```
+
+```
+  
+```Sixteenth Circuit--The county of Kane.`
+```
+
+```
+  
+```Seventeenth Circuit--The counties of Winnebago and Boone.`
+```
+
+```
+  
+```Eighteenth Circuit--The county of DuPage.`
+```
+
+```
+  
+```Nineteenth Circuit--The county of Lake.`
+```
+
+```
+  
+``
+```
+Twentieth Circuit--Before December 5, 2022, the counties of Randolph, Monroe, St. Clair,
+Washington, and Perry. On and after December 5, 2022, the county of St. Clair.
+```
+
+```
+
+```
+  
+```Twenty-first Circuit--The counties of Iroquois and Kankakee.`
+```
+
+```
+  
+```Twenty-second Circuit--The county of McHenry.`
+```
+
+```
+  
+```Twenty-third Circuit--The counties of DeKalb and Kendall.`  
+```Twenty-fourth Circuit--On and after December 5, 2022, the counties of Randolph, Monroe, Washington, and Perry.`  
+`(Source: P.A. 102-380, eff. 8-13-21.)`
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2)``(from Ch. 37, par. 72.2)`
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2.``Circuit judges.`
+```
+Circuit judges shall be elected at the general elections and
+for terms as provided in Article VI of the Illinois Constitution.
+Ninety-four circuit judges shall be elected in the Circuit of Cook
+County, and 3 circuit
+judges shall be elected in each of the other
+circuits except as provided in this Section. In circuits other than Cook County containing a population
+of 230,000 or more inhabitants and in which there is included a county
+containing a population of 200,000 or more inhabitants, or in circuits
+other than Cook County containing a population of 270,000 or more
+inhabitants, according to the last preceding federal census and in the
+circuit where the seat of State government is situated at the time fixed
+by law for the nomination of judges of the Circuit Court in such circuit
+and in any circuit which meets the requirements set out in Section 2a of
+this Act, 4 circuit judges shall be elected in the manner provided by
+law.  In circuits other than Cook County in which each county in the
+circuit has a population of 475,000 or more, 4 circuit judges shall be
+elected in addition to the 4 circuit judges provided for in this
+Section.  In any circuit composed of 2 counties having a total
+population of 350,000 or more, one circuit judge shall be elected in
+addition to the 4 circuit judges provided for in this Section.
+```
+
+```
+
+```
+  
+```In the 3rd judicial circuit, there shall be no at-large circuit judgeships, and only resident circuit judges shall be elected as provided in Section 2f-13.`  
+```In the 6th judicial circuit, there shall be no at-large circuit judgeships, and only resident circuit judges shall be elected as provided in Section 2f-14.`  
+```In the 17th judicial circuit, there shall be no at-large circuit judgeships, and only resident circuit judges shall be elected as provided in Sections 2f-6 and 2q.`  
+```Any additional circuit judgeships in the 19th and 22nd judicial circuits resulting by operation of this Section shall be filled, if at all, at the general election in 2006 only as provided in Section 2f-1.  Thereafter, however, this Section shall not apply to the determination of the number of circuit judgeships in the 19th and 22nd judicial circuits.  The number of circuit judgeships in the 19th judicial circuit shall be determined thereafter in accordance with Section 2f-1 and Section 2f-2 and shall be reduced in accordance with those Sections.  The number of circuit judgeships in the 22nd judicial circuit shall be determined thereafter in accordance with Section 2f-1 and Section 2f-5 and shall be reduced in accordance with those Sections. In the 19th judicial circuit, there shall be no at-large circuit judgeships, and only resident circuit judges  shall be elected as provided in Sections 2f-2.`  
+``
+```
+Notwithstanding the provisions of this Section or any other law, the number
+of at-large judgeships of the 12th judicial circuit may be reduced as provided in subsections (a-10) and (a-15) of Section 2f-4.
+```
+
+```
+
+```
+  
+```In the 23rd judicial circuit, there shall be no at-large circuit judgeships, and only resident circuit judges shall be elected as provided in Sections 2f-10 and 2f-11.`  
+```In the 24th judicial circuit, there shall be no at-large circuit judgeships, and only resident circuit judges shall be elected as provided in Section 2f-12.`  
+``
+```
+The
+several judges of the circuit courts of this State, before entering upon
+the duties of their office, shall take and subscribe the following oath
+or affirmation, which shall be filed in the office of the Secretary of
+State:
+```
+
+```
+
+```
+  
+``
+```
+"I do solemnly swear (or affirm, as the case may be) that I will
+support the constitution of the United States, and the constitution of
+the State of Illinois, and that I will faithfully discharge the duties
+of judge of.... court, according to the best of my ability."
+```
+
+```
+
+```
+  
+``
+```
+One of the 3 additional circuit judgeships authorized by
+this amendatory Act in circuits other than Cook County in which each
+county in the circuit has a population of 475,000 or more may be filled
+when this Act becomes law.  The 2 remaining circuit
+judgeships in such circuits shall not be filled until on or after July
+1, 1977.
+```
+
+```
+
+```
+  
+`(Source: P.A. 102-693, eff. 1-7-22; 102-1126, eff. 2-10-23.)`
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2a)``(from Ch. 37, par. 72.2a)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2a.`
+```
+
+```
+
+```
+In any circuit, other than Cook County and the 23rd circuit, in which is situated any
+State institution providing educational or welfare facilities for more than
+25,000 persons, 4 circuit judges shall be elected unless that circuit is
+entitled to a greater number under Section 2.
+```
+
+```
+
+```
+  
+`(Source: P.A. 97-1069, eff. 8-24-12.)`
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2b)``(from Ch. 37, par. 72.2b)`
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2b.`
+```
+
+```
+
+```
+In addition to the number of circuit judges authorized under Section 2
+or Section 2a, whichever number is greater, one additional circuit judge
+shall be elected in each circuit, other than Cook County, having a
+population of 230,000 or more inhabitants in which there is included a
+county containing a population of 200,000 or more inhabitants and in which
+circuit there is situated one or more State colleges or universities and
+one or more State Mental Health Institutions and two or more State
+Institutions for Juvenile Offenders under the authority of the Illinois
+Department of Juvenile Justice, each of which institutions has been in existence
+for more than 20 years on the effective date of this amendatory Act of
+1970.
+```
+
+```
+
+```
+  
+`(Source: P.A. 94-696, eff. 6-1-06``.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2c)``(from Ch. 37, par. 72.2c)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2c.`
+```
+
+```
+
+```
+
+```
+
+```
+In addition to the number of circuit judges authorized under
+Section 2 of this Act, there shall be one additional circuit judge elected
+in the third circuit and one additional circuit judge elected from the
+twentieth circuit.
+```
+
+```
+
+```
+  
+`(Source: P.A. 87-410``.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2d)``(from Ch. 37, par. 72.2d)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2d.`
+```
+
+```
+
+```
+
+```
+
+```
+(1) In addition to the number of circuit judges authorized under
+Section 2 of this Act, there shall be two additional circuit judges from
+the sixteenth circuit who shall take office in December, 1990, one of whom
+shall be a resident of and elected from Kendall County
+and one of whom shall be a resident of and elected from DeKalb County.
+```
+
+```
+
+```
+  
+``
+```
+The additional judges provided by this subsection (1) shall be first
+elected at the general election in November of 1990.
+```
+
+```
+
+```
+  
+``
+```
+(2) In addition to the number of circuit judges authorized under
+Section 2 of this Act, there shall be one additional circuit judge from
+the seventh circuit who shall take office in December, 1990.
+```
+
+```
+
+```
+  
+``
+```
+The additional judge provided by this subsection (2) shall be first
+elected at the general election in November of 1990.
+```
+
+```
+
+```
+  
+``
+```
+(3) In addition to the number of circuit judges authorized under
+Section 2 of this Act, there shall be one additional circuit judge elected
+at large in the seventeenth circuit.
+```
+
+```
+
+```
+  
+`(Source: P.A. 85-866; 85-903.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```(705 ILCS 35/2f)``(from Ch. 37, par. 72.2f)`  
+```Sec. 2f.``Circuit of Cook County.`  
+```(a) Until December 2, 2024, the Circuit of Cook County shall be divided into 15 units to be known as subcircuits. On and after December 2, 2024, the Circuit of Cook County is divided into 20 subcircuits as drawn by the General Assembly. The subcircuits shall be compact, contiguous, and substantially equal in population. Beginning in 2031, the General Assembly shall, in the year following each federal decennial census, redraw the boundaries of the subcircuits to reflect the results of the most recent federal decennial census.`  
+```In accordance with subsection (d), a resident judgeship assigned to a subcircuit shall continue to be assigned to that subcircuit. Any vacancy in a resident judgeship existing on or occurring after the effective date of a law redrawing the boundaries of the subcircuits shall be filled by a resident of the redrawn subcircuit.`  
+```(b) The 165 resident judges to be elected from the Circuit of Cook County shall be determined under paragraph (4) of subsection (a) of Section 2 of the Judicial Vacancies Act.`  
+```(c) For resident judgeships to be filled by election on or before the 2022 general election, the Supreme Court shall allot (i) the additional resident judgeships provided by paragraph (4) of subsection (a) of Section 2 of the Judicial Vacancies Act and (ii) all vacancies in resident judgeships existing on or occurring on or after the effective date of this amendatory Act of 1990, with respect to the other resident judgeships of the Circuit of Cook County, for election from the various subcircuits until there are 11 resident judges to be elected from each of the 15 subcircuits (for a total of 165). A resident judgeship authorized before the effective date of this amendatory Act of 1990 that became vacant and was filled by appointment by the Supreme Court before that effective date shall be filled by election at the general election in November of 1992 from the unit of the Circuit of Cook County within Chicago or the unit of that Circuit outside Chicago, as the case may be, in which the vacancy occurred.`  
+```(d) As soon as practicable after the subcircuits are created by law, the Supreme Court shall determine by lot a numerical order for the 15 subcircuits. That numerical order shall be the basis for the order in which resident judgeships are assigned to the subcircuits. After the first round of assignments, the second and all later rounds shall be based on the same numerical order. Once a resident judgeship is assigned to a subcircuit, it shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. No elected judge of the Circuit of Cook County serving on January 7, 2022 shall be required to change his or her residency in order to continue serving in office or to seek retention in office as resident judgeships are allotted by the Supreme Court in accordance with this Section.`  
+```(d-5) For resident judgeships to be filled by election on or after the 2024 general election, a vacancy of a resident judgeship to be elected from a subcircuit shall be allotted by the Supreme Court to the subcircuit created under the Judicial Circuits Districting Act of 2022 that numerically corresponds to the subcircuit from which the resident judgeship was previously allotted. For any resident judgeship to be elected from a subcircuit that was not previously allotted to a subcircuit, vacancies shall be allotted in numerical order to subcircuits created under the Judicial Circuits Districting Act of 2022 which numerically correspond to subcircuits that had less than 11 resident judges on January 7, 2022 until there are 11 resident judges to be elected from each of the respective subcircuits. Vacancies in associate judgeships authorized under Section 2(a) of the Associate Judges Act occurring or after June 1, 2023 shall be converted to resident circuit judgeships and shall be allotted in numerical order to subcircuits 16, 17, 18, 19, and 20, until there are 11 resident judges to be elected from each of those subcircuits (for a total of 55). Beginning with the 2024 election cycle, the maximum number of associate judgeship vacancies which shall be converted to resident circuit judgeships to be allotted in an election cycle shall be 10 resident circuit judgeships, with each subcircuit allotted no more than 2 resident circuit judgeships per election cycle. Any additional associate judgeship vacancies in excess of the maximum number per election cycle shall not be converted to resident circuit judgeships and shall be filled according to Supreme Court Rule 39 until such time that a vacancy in the associate judgeship occurs. A vacancy occurs when an associate judge dies, resigns, retires, is removed, or is not reappointed upon the expiration of his or her term; a vacancy does not occur at the expiration of a term if the associate judge is reappointed. As used in this subsection, "election cycle" means the period that begins on the day following the last day to certify judicial vacancies for election at the next general election and ends on the last day to certify judicial vacancies for election at the next general election, as provided in Section 25-3 of the Election Code.`  
+```(e) A resident judge elected from a subcircuit shall continue to reside in that subcircuit as long as he or she holds that office. A resident judge elected from a subcircuit after January 1, 2008, must retain residency as a registered voter in the subcircuit to run for retention from the circuit at large thereafter.`  
+`(Source: P.A. 102-668, eff. 11-15-21; 102-693, eff. 1-7-22; 102-1126, eff. 2-10-23; 103-597, eff. 7-1-24.)`
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2f-1)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2f-1.``19th and 22nd judicial circuits.`
+```
+
+```
+  
+``
+```
+(a) On December 4, 2006, the 19th judicial circuit is divided into the 19th
+and
+22nd judicial circuits as provided in Section 1 of the Circuit Courts Act. This
+division
+does not invalidate any action taken by the 19th judicial circuit or any of its
+judges,
+officers, employees, or agents before December 4, 2006. This division does not
+affect
+any person's rights, obligations, or duties, including applicable civil and
+criminal
+penalties, arising out of any action taken by the 19th judicial circuit or any
+of its judges,
+officers, employees, or agents before December 4, 2006.
+```
+
+```
+
+```
+  
+``
+```
+(b) Of the 7 circuit judgeships elected at large in the 19th circuit before
+the
+general election in 2006, the Supreme Court shall assign 5 to the 19th circuit
+and 2 to the
+22nd circuit, based on residency of the circuit judges then holding those
+judgeships. The
+5 assigned to the 19th circuit shall continue to be elected at large, except those at large judgeships that become resident judgeships as provided in subsection (a-5) of Section 2f-2.
+The 2 assigned to the 22nd circuit shall continue to be elected at large.
+```
+  
+``
+```
+(b-5) Except as provided in subsection (b-10), the number of at large judgeships of the 19th judicial circuit shall be the number of at large judgeships specified for the 19th judicial circuit pursuant to subsection (b) plus only the judgeship designated as vacancy A by the State Board of Elections filled at the 2006 general election.  If, before, on, or after the effective date of this amendatory Act of the 94th General Assembly, the State Board of Elections has certified or certifies one or more candidates for a judgeship of the 19th judicial circuit designated as vacancy B or C by the State Board of Elections, then all such certifications are revoked and are null and void by operation of law and the names of any such candidates shall not appear upon the 2006 general primary ballot or the 2006 general election ballot for any of those judgeships.
+
+Except as provided in subsection (b-10), the number of at large judgeships of the 22nd judicial circuit shall be the number of at large judgeships assigned to the 22nd judicial circuit pursuant to subsection (b) plus only the judgeship designated as vacancy A by the State Board of Elections filled at the 2006 general election. If, before, on, or after the effective date of this amendatory Act of the 94th General Assembly, the State Board of Elections has certified or certifies one or more candidates for the judgeship of the 22nd judicial circuit designated as vacancy B by the State Board of Elections, then any such certifications are revoked and are null and void by operation of law and the names of any such candidates shall not appear upon the 2006 general primary ballot or the 2006 general election ballot for that judgeship.
+```
+  
+```(b-10) If this amendatory Act of the 94th General Assembly is held unconstitutional and as a result the judgeships designated by the State Board of Elections as vacancies A, B, and C of the 19th judicial circuit are filled at the 2006 general election, then the number of at large judgeships of the 19th judicial circuit shall be only the number of at large judgeships specified for the 19th judicial circuit pursuant to subsection (b).  If this amendatory Act of the 94th General Assembly is held unconstitutional and as a result the judgeships designated by the State Board of Elections as  vacancies A and B of the 22nd judicial circuit are filled at the 2006 general election, then the number of at large judgeships of the 22nd judicial circuit shall be only the number of at large judgeships assigned to the 22nd judicial circuit pursuant to subsection (b).`  
+``
+```
+(b-15)  If subsection (b-10) applies, then each vacancy occurring in an at large judgeship of the 19th judicial circuit on or after the holding of unconstitutionality shall not be filled by any means and each of those vacant judgeships is abolished, until the number of at large judgeships of the 19th judicial circuit returns to the number of at large judgeships specified for the 19th judicial circuit by subsection (b-10). If subsection (b-10) applies, then each vacancy occurring in an at large judgeship of the 22nd judicial circuit on or after the holding of unconstitutionality shall not be filled by any means and each of those vacant judgeships is abolished, until the number of at large judgeships of the 22nd judicial circuit returns to the number of at large judgeships specified for the 22nd judicial circuit by subsection (b-10).
+```
+
+```
+
+```
+  
+``
+```
+(c) The 6 resident judgeships elected from Lake County before the general
+election in 2006 shall become resident judgeships in the 19th circuit on
+December 4,
+2006, and the 3 resident judgeships elected from McHenry County before the
+general
+election in 2006 shall become resident judgeships in the 22nd circuit on
+December 4,
+2006.
+```
+
+```
+
+```
+  
+``
+```
+(d) On December 4, 2006, the Supreme Court shall allocate the associate
+judgeships of the 19th circuit before that date between the 19th and 22nd
+circuits based
+on the residency of the associate judges; however, the number of associate judges allocated to the 19th circuit shall be no less than the number of associate judges residing in Lake County on March 22, 2004.
+```
+
+```
+
+```
+  
+``
+```
+(e) On December 4, 2006, the Supreme Court shall allocate personnel, books,
+records, documents, property (real and personal), funds, assets, liabilities,
+and pending
+matters concerning the 19th circuit before that date between the 19th and 22nd
+circuits
+based on the population and staffing needs of those circuits and the efficient
+and proper
+administration of the judicial system. The rights of employees under applicable
+collective bargaining agreements are not affected by this amendatory Act of the
+93rd
+General Assembly.
+```
+
+```
+
+```
+  
+``
+```
+(f) The judgeships set forth in this Section include the judgeships
+authorized
+under Sections 2g, 2h, and 2j. The judgeships authorized in those Sections are
+not in
+addition to those set forth in this Section.
+```
+
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+```
+
+```
+
+  
+
+```(705 ILCS 35/2f-2)`  
+```Sec. 2f-2.``19th judicial circuit; subcircuits; additional judges.`  
+```(a) Prior to December 5, 2022, the 19th circuit shall be divided into 6 subcircuits. The subcircuits shall be compact, contiguous, and substantially equal in population. The General Assembly by law shall create the subcircuits, using population data as determined by the 2000 federal census, and shall determine a numerical order for the 6 subcircuits. That numerical order shall be the basis for the order in which resident judgeships are assigned to the subcircuits. The 6 resident judgeships to be assigned that are not added by or converted from at-large judgeships as provided in this amendatory Act of the 96th General Assembly shall be assigned to the 1st, 2nd, 3rd, 4th, 5th, and 6th subcircuits, in that order. The 6 resident judgeships to be assigned that are added by or converted from at-large judgeships as provided in this amendatory Act of the 96th General Assembly shall be assigned to the 6th, 5th, 4th, 3rd, 2nd, and 1st subcircuits, in that order. Once a resident judgeship is assigned to a subcircuit, it shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution.`  
+```(a-3) On and after December 5, 2022, the 19th circuit is divided into 12 subcircuits. Beginning in 2031, the General Assembly shall, in the year following each federal decennial census, redraw the boundaries of the subcircuits to reflect the results of the most recent federal decennial census. The subcircuits shall be compact, contiguous, and substantially equal in population. Once a judgeship is assigned to a subcircuit or an at-large judgeship is converted to a resident judgeship and assigned to a subcircuit, it shall be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. Any vacancy in a resident judgeship existing on or occurring after the effective date of a law redrawing the boundaries of the subcircuits shall be filled by election by a resident of the redrawn subcircuit. When a vacancy occurs in a resident judgeship, the resident judgeship shall be allotted by the Supreme Court under subsection (c) and filled by election.`  
+```(a-5) Of the at-large judgeships of the 19th judicial circuit, the first 3 that are or become vacant on or after the effective date of this amendatory Act of the 96th General Assembly shall become resident judgeships of the 19th judicial circuit to be allotted by the Supreme Court under subsection (c) and filled by election, except that the Supreme Court may fill those judgeships by appointment for any remainder of a vacated term until the resident judgeships are filled initially by election. As used in this subsection, a vacancy does not include the expiration of a term of an at-large judge who seeks retention in that office at the next term.`  
+```(a-10) The 19th judicial circuit shall have 3 additional resident judgeships to be allotted by the Supreme Court under subsection (c). One of the additional resident judgeships shall be filled by election beginning at the 2010 general election. Two of the additional resident judgeships shall be filled by election beginning at the 2012 general election.`  
+```(a-15) On and after January 7, 2022, each at-large judgeship of the 19th judicial circuit existing on January 7, 2022 shall be converted to a resident judgeship as it is or becomes vacant and shall be allotted by the Supreme Court according to subsection (c) of this Section. It is the intent of the General Assembly not to create any additional judgeships in the 19th judicial circuit by this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under this subsection shall not entitle the 19th judicial circuit to any additional circuit judgeships elected at-large.`  
+```(a-20) Any judgeship that became vacant after January 1, 2020 and on June 1, 2020 (the effective date of Public Act 102-380) is held by an individual appointed by the Supreme Court also shall be filled by election at the 2022 general election.`  
+```(b) Prior to December 5, 2022, the 19th circuit shall have a total of 12 resident judgeships (6 resident judgeships existing on the effective date of this amendatory Act of the 96th General Assembly, 3 formerly at-large judgeships as provided in subsection (a-5), and 3 resident judgeships added by subsection (a-10)). The number of resident judgeships allotted to subcircuits of the 19th judicial circuit pursuant to this Section shall constitute all the resident judgeships of the 19th judicial circuit.`  
+```(c) Prior to January 7, 2022 (the effective date of Public Act 102-693), the Supreme Court shall allot (i) all vacancies in resident judgeships of the 19th circuit existing on or occurring on or after the effective date of this amendatory Act of the 93rd General Assembly and not filled at the 2004 general election, (ii) the resident judgeships of the 19th circuit filled at the 2004 general election as those judgeships thereafter become vacant, (iii) the 3 formerly at-large judgeships described in subsection (a-5) as they become available, (iv) the 3 resident judgeships added by subsection (a-10), and (v) the additional resident judgeships provided for by subsection (a-3), for election from the various subcircuits until there are 2 resident judges to be elected from each subcircuit. On and after January 7, 2022, the Supreme Court shall allot all vacancies in the 16 resident judgeships of the 19th circuit (the 13 resident judgeships and 3 formerly at-large judgeships converted under subsection (a-15)) for election from the various subcircuits created by Public Act 102-693 in numerical order until there is one resident judge to be elected from each subcircuit, except the 1st, 2nd, 3rd, and 4th subcircuits which shall have 2 resident judges each; provided that the first vacancy shall be allotted to the 12th subcircuit, that the second vacancy shall be allotted to the 3rd subcircuit, that the third vacancy shall be allotted to the 4th subcircuit, that the fourth vacancy shall be allotted to the 2nd subcircuit, that the fifth vacancy shall be allotted to the 1st subcircuit, and the sixth vacancy shall be allotted to the 3rd subcircuit. Following these allotments, judicial vacancies shall be allotted in numerical order starting with the 5th subcircuit. No resident judge of the 19th circuit serving on January 7, 2022 shall be required to change his or her residency in order to continue serving in office or to seek retention in office as resident judgeships are allotted by the Supreme Court in accordance with this Section.`  
+```(c-5) If 2 or more judgeships in the same subcircuit are to be filled at the same election under this Section, the State Board of Elections shall designate those vacancies alphabetically.`  
+```(d) A resident judge elected from a subcircuit shall continue to reside in that subcircuit as long as he or she holds that office. A resident judge elected from a subcircuit after January 1, 2008, must retain residency as a registered voter in the subcircuit to run for retention from the circuit at-large thereafter.`  
+```(e) Vacancies in resident judgeships of the 19th circuit shall be filled in the manner provided in Article VI of the Illinois Constitution.`  
+`(Source: P.A. 104-809, eff. 8-7-26.)`
+
+  
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2f-4)`
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2f-4.``12th circuit; subcircuits; additional judges.`
+```
+
+```
+  
+``
+```
+(a) The 12th circuit shall be divided into 5 subcircuits.  The
+subcircuits shall be
+compact, contiguous, and substantially equal in population.  The General
+Assembly by law shall
+create the subcircuits, using population
+data as
+determined by the 2000 federal census, and
+shall determine a numerical order for the 5 subcircuits.  That numerical
+order shall
+be the basis for the order in which resident judgeships are assigned to the
+subcircuits.
+The 5 resident judgeships to be assigned after the effective date of this amendatory Act of the 96th General Assembly shall be assigned to the 3rd, 4th, 5th, 1st, and 2nd subcircuits, in that order. Once a resident judgeship is
+assigned to a subcircuit, it shall continue to be
+assigned to
+that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution.
+```
+
+```
+
+```
+  
+```(a-5) In 2022, the General Assembly shall redraw the boundaries of the subcircuits to reflect the results of the 2020 federal decennial census. The General Assembly shall redraw the subcircuit boundaries after every federal decennial census. The subcircuits shall be compact, contiguous, and substantially equal in population. In accordance with subsection (a), a resident judgeship assigned to a subcircuit shall continue to be assigned to that subcircuit; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. Any vacancy in a resident judgeship existing on or occurring after the effective date of a law redrawing the boundaries of the subcircuits shall be filled by a resident of the redrawn subcircuit.`  
+```(a-10) The first vacancy in the 12th judicial circuit's 10 existing circuit judgeships (8 at large and 2 resident), but not in the additional judgeships described in subsections (b) and (b-5), that exists on or after the effective date of this amendatory Act of the 94th General Assembly shall not be filled, by appointment or election, and that judgeship is eliminated.  Of the 12th judicial circuit's 10 existing circuit judgeships (8 at large and 2 resident), but not the additional judgeships described in subsections (b) and (b-5), the second to be vacant or become vacant on or after the effective date of this amendatory Act of the 94th General Assembly shall be allotted as a 12th circuit resident judgeship under subsection (c).`  
+```(a-15) Of the at large judgeships of the 12th judicial circuit not affected by subsection (a-10), the first 2 that are or become vacant on or after the effective date of this amendatory Act of the 96th General Assembly shall become resident judgeships of the 12th judicial circuit to be allotted by the Supreme Court under subsection (c) and filled by election, except that the Supreme Court may fill those judgeships by appointment for any remainder of a vacated term until the resident judgeships are filled initially by election.`  
+``
+```
+(a-20) As used in subsections (a-10) and (a-15), a vacancy does not include the
+expiration of a term of an at large or resident judge who seeks
+retention in that office at the next term.
+```
+
+```
+
+```
+  
+``
+```
+(b) The 12th circuit shall have 6 additional resident judgeships, as well
+as
+its existing resident judgeship as established in subsection (a-10), and existing at large judgeships, for a
+total of 15 judgeships available to be allotted under subsection (c)
+to the 10 subcircuit resident
+judgeships.  The
+additional resident
+judgeship created
+by Public Act 93-541 shall be filled by election beginning at the
+general
+election in
+2006. The 2 additional resident judgeships created by this amendatory Act of 2004 shall be filled by election beginning at the general election in 2008.  The additional resident judgeships created by this amendatory Act of the 96th General Assembly shall be filled by election beginning at the general election in 2010. After the subcircuits are created by
+law, the Supreme Court may fill by appointment the additional resident judgeships created by Public Act 93-541,
+this
+amendatory Act of 2004, and this amendatory Act of the 96th General Assembly until the 2006, 2008, or 2010
+general
+election, as the case may be.
+```
+
+```
+
+```
+  
+```(b-5)  In addition to the number of circuit judges and resident judges otherwise authorized by law, and notwithstanding any other provision of law, beginning on April 1, 2006 there shall be one additional resident judge who is a  resident of and elected from the fourth judicial subcircuit of the 12th judicial circuit.  That additional resident judgeship may be filled by appointment by the Supreme Court until filled by election at the general election in 2008, regardless of whether the judgeships for subcircuits 1, 2, and 3 have been filled.`  
+``
+```
+(c) The Supreme Court shall allot (i) the additional resident judgeships
+
+of the 12th circuit created by Public Act 93-541, this amendatory Act of 2004, and this amendatory Act of the 96th General Assembly, (ii)
+the second vacancy in the at large and resident judgeships of the 12th
+circuit as provided in subsection (a-10),
+ and (iii) the 2 formerly at large judgeships described in subsection (a-15) as they become available, for election from the
+various
+subcircuits until, with the additional judge of the fourth subcircuit described in subsection (b-5), there are 2 resident judges to be elected from each
+subcircuit. No at large or resident judge of the 12th circuit serving on
+August 18, 2003 shall be
+required to change his or her residency in order to continue serving in office
+or
+to seek retention in office as at large or resident judgeships are allotted by
+the
+Supreme Court in accordance with this Section.
+```
+
+```
+
+```
+  
+``
+```
+(d) A resident judge elected from a subcircuit shall continue to reside in
+that
+subcircuit as long as he or she holds that office. A resident judge elected from a subcircuit after January 1, 2008, must retain residency as a registered voter in the subcircuit to run for retention from the  circuit at large thereafter.
+```
+
+```
+
+```
+  
+``
+```
+(e) Vacancies in resident judgeships of the 12th circuit shall be filled
+in the manner provided in Article VI of the Illinois Constitution, except as otherwise provided in this Section.
+```
+
+```
+
+```
+  
+`(Source: P.A. 101-477, eff. 6-1-20; 102-668, eff. 11-15-21; 102-1126, eff. 2-10-23.)`
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2f-5)`
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2f-5.``22nd circuit; subcircuits; additional resident judgeship.`
+```
+
+```
+  
+``
+```
+(a) The 22nd circuit shall be divided into 4 subcircuits.  The
+subcircuits shall be
+compact, contiguous, and substantially equal in population.  The General
+Assembly by law shall
+create the subcircuits, using population
+data as
+determined by the 2000 federal census, and
+shall determine a numerical order for the 4 subcircuits.  That numerical
+order shall
+be the basis for the order in which resident judgeships are assigned to the
+subcircuits.
+Once a resident judgeship is
+assigned to a subcircuit, it shall continue to be
+assigned to
+that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution.
+```
+
+```
+
+```
+  
+```(a-5) In 2022, the General Assembly shall redraw the boundaries of the subcircuits to reflect the results of the 2020 federal decennial census. The General Assembly shall redraw the subcircuit boundaries after every federal decennial census. The subcircuits shall be compact, contiguous, and substantially equal in population. In accordance with subsection (a), a resident judgeship assigned to a subcircuit shall continue to be assigned to that subcircuit; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at-large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. Any vacancy in a resident judgeship existing on or occurring after the effective date of a law redrawing the boundaries of the subcircuits shall be filled by a resident of the redrawn subcircuit.`  
+``
+```
+(b) Other than the resident judgeship added by this amendatory Act of the 96th General Assembly, the 22nd circuit shall have one additional resident judgeship, as well as its 3 existing resident judgeships, for a total of 4 resident judgeships to be allotted to the 4 subcircuit resident judgeships. The additional resident judgeship created by this amendatory Act of the 93rd General Assembly shall be filled by election beginning at the general election in 2006 and shall not be filled by appointment before the general election in 2006.
+The number of resident judgeships allotted to subcircuits of the 22nd judicial circuit pursuant to this Section, and the resident judgeship added by this amendatory Act of the 96th General Assembly,   shall constitute all the resident judgeships of the 22nd judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(c) The Supreme Court shall allot (i)
+all eligible vacancies in
+resident
+judgeships of the 22nd circuit existing on or occurring on or after August 18, 2003 and not filled at the 2004 general election, (ii) the resident
+judgeships of the 22nd circuit filled at the 2004 general election as
+those judgeships thereafter become vacant,
+and (iii) the additional resident judgeship of the 22nd circuit created by this amendatory Act of the 93rd General Assembly, for election from the
+various
+subcircuits until there is one resident judge to be elected from each
+subcircuit.
+No resident judge of the 22nd circuit serving on
+August 18, 2003 shall be
+required to change his or her residency in order to continue serving in office
+or
+to seek retention in office as resident judgeships are allotted by the
+Supreme Court in accordance with this Section.
+```
+
+```
+
+```
+  
+``
+```
+(d) A resident judge elected from a subcircuit shall continue to reside in
+that
+subcircuit as long as he or she holds that office. A resident judge elected from a subcircuit after January 1, 2008, must retain residency as a registered voter in the subcircuit to run for retention from the circuit at large thereafter.
+```
+
+```
+
+```
+  
+``
+```
+(e) Vacancies in resident judgeships of the 22nd circuit shall be
+filled
+in the manner provided in Article VI of the Illinois Constitution.
+```
+
+```
+
+```
+  
+`(Source: P.A. 101-477, eff. 6-1-20; 102-668, eff. 11-15-21; 102-1126, eff. 2-10-23.)`
+```
+
+```
+
+  
+
+```(705 ILCS 35/2f-6)`  
+```Sec. 2f-6.``17th judicial circuit; subcircuits.`  
+``
+```
+(a) Until December 2, 2024, the 17th circuit shall be divided into 4 subcircuits. On and after December 2, 2024, the 17th circuit is divided into 2 subcircuits as drawn by the General Assembly.  The
+subcircuits shall be
+compact, contiguous, and substantially equal in population. Beginning in 2031, the General Assembly shall, in the year following each federal decennial census, redraw the boundaries of the subcircuits to reflect the results of the most recent federal decennial census. Once a resident judgeship is assigned to a subcircuit, it
+shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at-large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution.
+```
+  
+```Any vacancy in a resident judgeship existing on or occurring after the effective date of a law redrawing the boundaries of the subcircuits shall be filled by a resident of the redrawn subcircuit.`  
+``
+```
+(a-10) Of the 17th circuit's 9 circuit judgeships existing on April 7, 2005 (6 at large and
+3 resident), but not including the one resident judgeship added by Public Act 96-108, the 3 resident judgeships shall be allotted as 17th circuit resident judgeships under
+subsection (c) as those resident judgeships
+are or become vacant on or after that date. Of the 17th circuit's associate judgeships, the first associate judgeship that is or becomes vacant on or after April 7, 2005 shall become a resident judgeship of the 17th circuit to be allotted by the Supreme Court under subsection (c) as a resident subcircuit judgeship; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at-large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution.      These resident judgeships, and the one resident judgeship added by this amendatory Act of the 96th General Assembly, shall constitute all of the resident judgeships of the 17th circuit. As used in this subsection, a vacancy does not include the
+expiration of a term of a resident judge who seeks
+retention in that office at the next term. A vacancy does not exist or occur at the expiration of an associate judge's term if the associate judge is reappointed.
+```
+  
+``
+```
+(b) The 17th circuit shall have a total of 4 judgeships (3 resident judgeships existing on April 7, 2005 and one associate judgeship), but not including the one resident judgeship added by this amendatory Act of the 96th General Assembly, available to be allotted to the 4 subcircuit resident judgeships.
+The at-large judgeships existing on January 7, 2022 (the effective date of Public Act 102-693) shall be converted to resident judgeships as they are or become vacant and shall be allotted by the Supreme Court according to subsection (c-5) of this Section.
+```
+  
+``
+```
+(c) The Supreme Court shall allot (i) the 3 resident
+judgeships of the 17th circuit existing on April 7, 2005 as they are or become vacant as provided in subsection (a-10) and (ii) the one associate judgeship converted into a resident judgeship of the 17th circuit as it is or becomes vacant as provided in subsection (a-10),
+for election from the
+various
+subcircuits until there is one resident judge to be elected from each
+subcircuit.
+  No resident or associate judge of the 17th circuit serving on
+the effective date of this amendatory Act of the 93rd General Assembly shall be
+required to change his or her residency in order to continue serving in office
+or
+to seek retention or reappointment in office as resident judgeships are allotted by the
+Supreme Court in accordance with this Section.
+```
+  
+```(c-5) For vacancies to be filled beginning with the 2024 general election, the Supreme Court shall allot (i) the 4 resident judgeships of the 17th circuit existing on the effective date of this amendatory Act of the 102nd General Assembly as they become vacant after January 7, 2022 (the effective date of Public Act 102-693) and (ii) the at-large judgeships converted to resident judgeships under subsection (b) as they become vacant after that date, to the subcircuits created by Public Act 102-693 in numerical order until there are 6 to be elected from the 1st subcircuit and 4 to be elected from the 2nd subcircuit.`  
+``
+```
+(d) A resident judge elected from a subcircuit shall continue to reside in
+that
+subcircuit as long as he or she holds that office.
+A resident judge elected from a subcircuit after January 1, 2008, must retain residency as a registered voter in the subcircuit to run for retention from the circuit at large thereafter.
+```
+  
+``
+```
+(e) Vacancies in resident judgeships of the 17th circuit shall be
+filled
+in the manner provided in Article VI of the Illinois Constitution.
+```
+
+```
+
+```
+  
+`(Source: P.A. 101-477, eff. 6-1-20; 102-668, eff. 11-15-21; 102-693, eff. 1-7-22; 102-1126, eff. 2-10-23.)`
+
+  
+
+```(705 ILCS 35/2f-7)`  
+```Sec. 2f-7.``Additional circuit judge; 9th circuit.`
+```
+In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be one additional circuit judge elected in the
+9th circuit, who shall be a resident of and elected from Fulton
+County. The additional circuit judgeship provided by this subsection shall be filled by appointment until that judgeship is filled by election at the 2006 general election.
+```
+
+```
+
+```
+  
+`(Source: P.A. 93-1102, eff. 4-7-05.)`
+
+  
+
+```(705 ILCS 35/2f-9)`  
+```Sec. 2f-9.``16th judicial circuit; subcircuits.`  
+``
+```
+(a) The 16th circuit shall be divided into 4 subcircuits.  Subcircuits 1, 2, and 4 of the 16th circuit in existence on April 15, 2011 shall continue to use their established boundaries in the new 16th circuit as of December 3, 2012. Subcircuit 3 in existence on  April 15, 2011 shall continue to use its established boundary until December 3, 2012. For a judge elected to subcircuit 3 as of April 15, 2011, the current boundaries in existence as of April 15, 2011 shall continue until the conclusion of the existing term of office, following the 2012 general election, and upon the conclusion of the existing term of office, the new boundary shall go into effect. The new boundary for subcircuit 3 shall contain and be made up of the following townships in the County of Kane, excluding the portions of the townships currently served by subcircuit 1, 2, or 4: Aurora, Blackberry, Big Rock, Burlington, Campton, Dundee, Elgin,  Hampshire, Kaneville, Plato, Rutland, Sugar Grove, and Virgil. The
+subcircuits shall be
+compact, contiguous, and substantially equal in population.  The General
+Assembly by law shall
+create the subcircuits, using population
+data as
+determined by the 2000 federal census, and
+shall determine a numerical order for the 4 subcircuits.  That
+numerical order shall be the basis for the order in which resident judgeships
+are assigned to
+the subcircuits. Once a resident judgeship is assigned to a subcircuit, it
+shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at-large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution.
+```
+  
+```(a-5) In 2022, the General Assembly shall redraw the boundaries of the subcircuits to reflect the results of the 2020 federal decennial census. The General Assembly shall redraw the subcircuit boundaries after every federal decennial census. The subcircuits shall be compact, contiguous, and substantially equal in population. In accordance with subsection (a), a resident judgeship assigned to a subcircuit shall continue to be assigned to that subcircuit; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at-large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. Any vacancy in a resident judgeship existing on or occurring after the effective date of a law redrawing the boundaries of the subcircuits shall be filled by a resident of the redrawn subcircuit.`  
+``
+```
+(b) (Blank).
+```
+  
+``
+```
+(c) No resident judge of the 16th circuit serving on
+the effective date of this amendatory Act of the 93rd General Assembly shall be
+required to change his or her residency in order to continue serving in office
+or
+to seek retention in office as judgeships are allotted by the
+Supreme Court in accordance with this Section.
+No resident judge elected from a subcircuit serving on the effective date of this amendatory Act of the 97th General Assembly shall be required to change his or her residency in order to continue serving in or to seek retention in office until the 2012 general election, or until the conclusion of the existing term.
+```
+  
+``
+```
+(d) A resident judge elected from a subcircuit shall continue to reside in
+that
+subcircuit as long as he or she holds that office.
+A resident judge elected from a subcircuit after January 1, 2008, must retain residency as a registered voter in the subcircuit to run for retention  from the circuit at large thereafter.
+A resident judge elected from a subcircuit after January 1, 2011, must retain residency as a registered voter in the subcircuit to run for retention from the circuit at large thereafter.
+```
+  
+``
+```
+(e) Vacancies in resident judgeships of the 16th circuit shall be
+filled
+in the manner provided in Article VI of the Illinois Constitution.
+```
+
+```
+
+```
+  
+`(Source: P.A. 101-477, eff. 6-1-20; 102-668, eff. 11-15-21; 102-1126, eff. 2-10-23.)`
+
+  
+
+```(705 ILCS 35/2f-10)`  
+```Sec. 2f-10.``16th and 23rd  judicial circuits.`  
+```(a) On December 3, 2012, the 16th judicial circuit is divided into the 16th and 23rd judicial circuits as provided in Section 1 of the Circuit Courts Act. This division does not invalidate any action taken by the 16th judicial circuit or any of its judges, officers, employees, or agents before December 3, 2012. This division does not affect any person's rights, obligations, or duties, including applicable civil and criminal penalties, arising out of any action taken by the 16th judicial circuit or any of its judges, officers, employees, or agents before December 3, 2012.`  
+```(b) The 16th circuit shall have one additional resident judgeship to be allotted by the Supreme Court under subsection (d). The additional resident judgeship shall be filled by election beginning at the 2012 general election.`  
+```(c) The 16th circuit shall have an additional resident judgeship from Kendall County to be allotted by the Supreme Court. The additional judgeship shall be filled by election beginning at the 2012 general election. This judgeship shall become a resident judgeship from Kendall County in the 23rd circuit on December 3, 2012.`  
+```(d) The Supreme Court shall allot: (i) all vacancies in at large judgeships or resident judgeships from the County of Kane of the 16th circuit occurring after the 2012 general election, excluding the vacancy in subsection (e); and  (ii) the one resident judgeship added by subsection (b), for election from the various subcircuits until there are 2 resident judges to be elected from each subcircuit. The additional resident judgeship added by subsection (b) that shall be filled by election beginning at the 2012 general election shall be assigned to subcircuit 2 for election. The Supreme Court may fill the judgeship by appointment prior to the 2012 general election. The vacancies allotted by the Supreme Court under  this subsection shall become resident judgeships of the 16th circuit to be assigned to the 3rd, 1st, and 4th subcircuits in that order. Subcircuit judgeships in the 3rd, 1st, and 4th subcircuits shall be filled by election as vacancies occur. No resident judge of the 16th circuit serving on the effective date of this amendatory Act of the 97th General Assembly shall be required to change his or her residency in order to continue serving in office or to seek retention in office as resident judgeships are allotted by the Supreme Court in accordance with this Section. As used in this subsection, a vacancy does not include the expiration of a term of an at large judge or of a resident judge who intends to seek retention in that office at the next term.`  
+``
+```
+(e) The Supreme Court shall assign to the 16th circuit the 7 circuit judgeships elected at large in the 16th circuit before and at the 2012 general election. The 3 resident judgeships elected from Kane County before the 2012 general election shall become at large circuit judgeships on December 3, 2012. An individual seeking election to one of the 7 judgeships at large or a judge seeking retention to one of the 7 judgeships at large at the 2012 general election shall seek election or retention solely within the boundaries of Kane County.
+
+The 7 circuit judgeships assigned to the 16th circuit shall continue to be elected at large, and the 3 resident judges shall be elected at large at the first general election following the expiration of a term of office. Of the 7 circuit judgeships elected at large as of April 15, 2011, and the 3 resident judgeships elected from Kane County before the general election of 2012 converting to at large judgeships on December 3, 2012, the first vacancy occurring after December 3, 2012 shall be assigned to the 23rd circuit as a Kendall County resident judge. As used in this subsection, a vacancy does not include the expiration of a term of an at large judge or of a resident judge who intends to seek retention in that office at the next term.
+```
+  
+```(f) The 3 resident judgeships elected from DeKalb County before the 2012 general election shall become resident judgeships from DeKalb County in the 23rd circuit on December 3, 2012, and the 2 resident judgeships elected from Kendall County before the 2012 general election shall become resident judgeships from Kendall County in the 23rd circuit on December 3, 2012.`  
+```(g) The 4 subcircuit judgeships of the 16th circuit elected as of April 15, 2011, shall become the 4 subcircuit judgeships of the 16th circuit as established in Section 2f-9. The remaining unfilled subcircuit judgeship of the 16th circuit as of April 15, 2011 shall be eliminated. If the judgeship of the 5th subcircuit of the 16th circuit is filled prior to the effective date of this amendatory Act of the 97th General Assembly, that judgeship shall be eliminated on December 3, 2012.`  
+```(h) On December 3, 2012, the Supreme Court shall allocate the associate judgeships of the 16th circuit before that date between the 16th and 23rd circuits. The number of associate judges allocated to the 23rd circuit shall be no less than 5.`  
+```(i) On December 3, 2012, the Supreme Court shall allocate personnel, books, records, documents, property (real and personal), funds, assets, liabilities, and pending matters concerning the 16th circuit before that date between the 16th and 23rd circuits based on the population and staffing needs of those circuits and the efficient and proper administration of the judicial system. The rights of employees under applicable collective bargaining agreements are not affected by this amendatory Act of the 97th General Assembly.`  
+```(j) The judgeships set forth in this Section include the judgeships authorized under Sections 2g, 2h, 2j, 2k, 2m, and 2n. The judgeships authorized in those Sections are not in addition to those set forth in this Section.`
+```
+
+```
+  
+``
+```
+(k) Of the 23rd circuit's associate judgeships, the first associate judgeship that is or becomes vacant on or after the effective date of this amendatory Act of the 98th General Assembly shall become a resident judgeship from DeKalb County in the 23rd circuit.      The additional resident judgeship shall be filled by election beginning at the 2016 general election. The Supreme Court may fill the judgeship by appointment prior to the 2016 general election. As used in this subsection, a vacancy does not include the
+expiration of a term of a resident judge who seeks
+retention in that office at the next term. A vacancy does not exist or occur at the expiration of an associate judge's term if the associate judge is reappointed. A vacancy exists or occurs when an associate
+judge dies, resigns, retires, is removed, or is not reappointed
+upon expiration of his or her term, or when a new judgeship is authorized under subsection (a) of Section 2 of the Associate Judges Act but is not filled.
+```
+  
+`(Source: P.A. 97-81, eff. 8-26-11; 97-585, eff. 8-26-11; 98-744, eff. 7-16-14.)`
+
+  
+
+```(705 ILCS 35/2f-11)`  
+```Sec. 2f-11.``23rd judicial circuit.`  
+```(a) The 23rd circuit shall have a total of 7 resident judgeships (5 resident judgeships existing on the effective date of this amendatory Act of the 97th General Assembly, the resident judgeship for Kendall County that is to be filled by election at the 2012 general election, and the resident judgeship for Kendall County created by the first vacancy of an at large judgeship or resident judgeship in the new 16th circuit).`  
+```(b) Vacancies in resident judgeships of the 23rd circuit shall be filled in the manner provided in Article VI of the Illinois Constitution.`
+```
+
+```
+  
+`(Source: P.A. 97-81, eff. 8-26-11; 97-585, eff. 8-26-11.)`
+
+  
+
+```(705 ILCS 35/2f-12)`  
+```Sec. 2f-12.``20th and 24th judicial circuits.`  
+```(a) On December 5, 2022, the 20th judicial circuit is divided into the 20th and 24th judicial circuits as provided in Section 1. This division does not invalidate any action taken by the 20th judicial circuit or any of its judges, officers, employees, or agents before December 5, 2022. This division does not affect any person's rights, obligations, or duties, including applicable civil and criminal penalties, arising out of any action taken by the 20th judicial circuit or any of its judges, officers, employees, or agents before December 5, 2022.`  
+```(b) Any vacancies in at-large judgeships or resident judgeships shall be filled in the 2022 general election. The Supreme Court shall fill any remaining vacancies in at-large judgeships or resident judgeships by appointment after the 2022 general election.`  
+```(c) The Supreme Court shall assign to the 20th circuit the 5 circuit judgeships elected at-large in the 20th circuit before and at the 2022 general election. The 3 resident judgeships elected from St. Clair County before the 2012 general election shall become at-large circuit judgeships in the 20th circuit on December 5, 2022. An individual seeking election to one of the 5 judgeships at-large or a judge seeking retention to one of the 5 judgeships at-large at the 2022 general election shall seek election or retention solely within the boundaries of St. Clair County. The 5 circuit judgeships assigned to the 20th circuit shall continue to be elected at-large, and the 3 resident judges shall be elected at-large at the first general election following the expiration of a term of office. As used in this subsection, a vacancy does not include the expiration of a term of an at-large judge or of a resident judge who intends to seek retention in that office at the next term.`  
+```(d) The one resident judgeship elected from Monroe County before the 2022 general election shall become a resident judge in Monroe County in the 24th circuit on December 5, 2022, the one resident judgeship elected from Randolph County before the 2022 general election shall become a resident judge in Randolph County in the 24th circuit on December 5, 2022, the one resident judgeship elected from Perry County before the 2022 general election shall become a resident judge in Perry County in the 24th circuit on December 5, 2022, and the one resident judgeship elected from Washington County before the 2022 general election shall become a resident judge in Washington County in the 24th circuit on December 5, 2022.`  
+```(e)  On December 5, 2022, the Supreme Court shall allocate the associate judgeships of the 20th circuit before that date between the 20th and 24th circuits based on the residency of the associate judges. Any vacancies in associate judgeships shall be filled in accordance with the Associate Judges Act.`  
+```(f) On December 5, 2022, the Supreme Court shall allocate personnel, books, records, documents, real and personal property, funds, assets, liabilities, and pending matters concerning the 20th circuit before that date between the 20th and 24th circuits based on the population and staffing needs of those circuits and the efficient and proper administration of the judicial system. The rights of employees under applicable collective bargaining agreements are not affected by this amendatory Act of the 102nd General Assembly.`  
+```(g) The judgeships set forth in this Section include the judgeships authorized under Section 2c.`
+```
+
+```
+  
+`(Source: P.A. 102-380, eff. 8-13-21.)`
+
+  
+
+```(705 ILCS 35/2f-13)`  
+```Sec. 2f-13.``3rd judicial circuit; subcircuits.`  
+```(a) The 3rd judicial circuit is divided into 4 subcircuits as drawn by the General Assembly. The 4th subcircuit shall contain and be made up of Bond County. The 3 remaining subcircuits shall be contained within Madison County and shall be compact, contiguous, and substantially equal in population. Beginning in 2031, the General Assembly shall, in the year following each federal decennial census, redraw the boundaries of the subcircuits to reflect the results of the most recent federal decennial census.`  
+```(b) The at-large judgeships of the 3rd judicial circuit existing on January 7, 2022 (the effective date of Public Act 102-693) shall be converted to resident judgeships and allotted to the subcircuits as provided in this subsection as those judgeships are or become vacant on or after that date. The resident judgeship from Bond County existing on January 7, 2022 shall be allotted by the Supreme Court to the 4th subcircuit as the judgeship is or becomes vacant on or after that date. Of the 3rd circuit's remaining 8 circuit judgeships existing on January 7, 2022, the Supreme Court shall allot: (i) the first 3 judgeships as they are or become vacant, including the vacancies to be filled by election at the 2022 general election, to the 1st subcircuit, (ii) the next 3 judgeships as they are or become vacant to the 2nd subcircuit, and (iii) the last 2 judgeships as they are or become vacant to the 3rd subcircuit. Once a resident judgeship is assigned to a subcircuit, it shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. No elected judge of the 3rd judicial circuit serving on January 7, 2022 shall be required to change his or her residency in order to continue serving in office or to seek retention in office as resident judgeships are allotted by the Supreme Court in accordance with this Section. A resident judge elected from a subcircuit shall continue to reside in that subcircuit as long as he or she holds that office.`  
+```(c) If 2 or more judgeships in a subcircuit are to be filled at the same election under this Section, the State Board of Elections shall designate those vacancies alphabetically.`  
+```(d) Vacancies in resident judgeships of the 3rd judicial circuit shall be filled in the manner provided in Article VI of the Illinois Constitution.`  
+```(e) It is the intent of the General Assembly not to create any additional judgeships in the 3rd judicial circuit by this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under subsection (b) of this Section shall not entitle the 3rd judicial circuit to any additional circuit judgeships elected at-large.`
+```
+
+```
+  
+`(Source: P.A. 102-693, eff. 1-7-22; 102-1126, eff. 2-10-23.)`
+
+  
+
+```(705 ILCS 35/2f-14)`  
+```Sec. 2f-14.``6th judicial circuit; resident judgeships.`  
+```(a) The at-large judgeships of the 6th judicial circuit existing on January 7, 2022 shall be converted to resident judgeships as provided in this subsection as those judgeships are or become vacant. When a vacancy occurs in an at-large judgeship of the 6th judicial circuit, the at-large judgeship shall be converted to a resident judgeship for either Champaign County or Macon County, depending on which of those 2 counties the incumbent at-large circuit judge resided in when the incumbent judge was elected. Thereafter, persons elected to those resident judgeships shall be residents of the county which elects them.`  
+```(b) It is the intent of the General Assembly not to create any additional judgeships in the 6th judicial circuit by Public Act 102-693 and this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under subsection (a) of this Section shall not entitle the 6th judicial circuit to any additional circuit judgeships elected at-large.`  
+`(Source: P.A. 104-809, eff. 8-7-26.)`
+
+  
+
+```(705 ILCS 35/2f-15)`  
+```Sec. 2f-15.``7th judicial circuit; subcircuits.`  
+```(a) On and after December 2, 2024, the 7th judicial circuit is divided into 7 subcircuits as drawn by the General Assembly. The 1st and 2nd subcircuits shall be contained within Sangamon County and shall be compact, contiguous, and substantially equal in population. The 3rd subcircuit shall contain and be made up of Macoupin County. The 4th subcircuit shall contain and be made up of Morgan County. The 5th subcircuit shall contain and be made up of Scott County. The 6th subcircuit shall contain and be made up of Greene County. The 7th subcircuit shall contain and be made up of Jersey County. Beginning in 2031, the General Assembly shall, in the year following each federal decennial census, redraw the boundaries of the subcircuits to reflect the results of the most recent federal decennial census.`  
+```(b) Of the 5 at-large judgeships of the 7th judicial circuit existing on January 7, 2022 (the effective date of Public Act 102-693), 4 at-large judgeships shall be converted to resident judgeships and allotted to the subcircuits as provided in this subsection as those judgeships are or become vacant on or after that date. The resident judgeship from Macoupin County existing on January 7, 2022 shall be allotted by the Supreme Court to the 3rd subcircuit as the judgeship is or becomes vacant on or after that date. The resident judgeship from Morgan County existing on January 7, 2022 shall be allotted by the Supreme Court to the 4th subcircuit as the judgeship is or becomes vacant on or after that date. The resident judgeship from Scott County existing on January 7, 2022 shall be allotted by the Supreme Court to the 5th subcircuit as the judgeship is or becomes vacant on or after that date. The resident judgeship from Greene County existing on January 7, 2022 shall be allotted by the Supreme Court to the 6th subcircuit as the judgeship is or becomes vacant on or after that date. The resident judgeship from Jersey County existing on January 7, 2022 shall be allotted by the Supreme Court to the 7th subcircuit as the judgeship is or becomes vacant on or after that date. Of the 7th Circuit's remaining 6 resident judgeships (the 2 resident judgeships from Sangamon County existing on January 7, 2022 and the 4 at-large judgeships converted to resident judgeships), the Supreme Court shall allot (i) the first 3 judgeships as they are or become vacant to the 1st subcircuit and (ii) the next 3 judgeships as they are or become vacant to the 2nd subcircuit. Once a resident judgeship is assigned to a subcircuit, it shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. No elected judge of the 7th judicial circuit serving on January 7, 2022 shall be required to change his or her residency in order to continue serving in office or to seek retention or reappointment in office as resident judgeships are allotted by the Supreme Court in accordance with this Section. A resident judge elected from a subcircuit shall continue to reside in that subcircuit as long as he or she holds that office.`  
+```(c) If 2 or more judgeships in a subcircuit are to be filled at the same election under this Section, the State Board of Elections shall designate those vacancies alphabetically.`  
+```(d) Vacancies in resident judgeships of the 7th judicial circuit shall be filled in the manner provided in Article VI of the Illinois Constitution.`  
+```(e) It is the intent of the General Assembly not to create any additional judgeships in the 7th judicial circuit by this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under subsection (b) of this Section shall not entitle the 7th judicial circuit to any additional circuit judgeships elected at-large.`
+```
+
+```
+  
+`(Source: P.A. 102-693, eff. 1-7-22; 102-1126, eff. 2-10-23.)`
+
+  
+
+```(705 ILCS 35/2f-16)`  
+```Sec. 2f-16.``10th judicial circuit; resident judgeships.`  
+```(a) Of the at-large judgeships of the 10th judicial circuit, the first 3 that become vacant after the effective date of this amendatory Act of the 102nd General Assembly shall be converted to resident judgeships elected from Peoria County. Thereafter, persons elected to those resident judgeships shall be residents of Peoria County.`  
+```(b) It is the intent of the General Assembly not to create any additional judgeships in the 10th judicial circuit by this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under subsection (a) of this Section shall not entitle the 10th judicial circuit to any additional circuit judgeships elected at-large.`
+```
+
+```
+  
+`(Source: P.A. 102-693, eff. 1-7-22.)`
+
+  
+
+```(705 ILCS 35/2f-17)`  
+```Sec. 2f-17.``14th judicial circuit; resident judgeships.`  
+```(a) The 4 at-large judgeships of the 14th judicial circuit shall be converted to resident judgeships elected from Rock Island County as they become vacant after the effective date of this amendatory Act of the 102nd General Assembly. Thereafter, persons elected to those resident judgeships shall be residents of Rock Island County. This subsection shall not apply to a vacancy existing on the effective date of this amendatory Act of the 102nd General Assembly to be filled at the 2022 general election.`  
+```(b) It is the intent of the General Assembly not to create any additional judgeships in the 14th judicial circuit by this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under subsection (a) of this Section shall not entitle the 14th judicial circuit to any additional circuit judgeships elected at-large.`
+```
+
+```
+  
+`(Source: P.A. 102-693, eff. 1-7-22.)`
+
+  
+
+```(705 ILCS 35/2f-18)`  
+```Sec. 2f-18.``18th judicial circuit; subcircuits.`  
+```(a) On and after December 2, 2024, the 18th judicial circuit is divided into 7 subcircuits as drawn by the General Assembly. The subcircuits shall be compact, contiguous, and substantially equal in population. Beginning in 2031, the General Assembly shall, in the year following each federal decennial census, redraw the boundaries of the subcircuits to reflect the results of the most recent federal decennial census.`  
+```(b) The at-large judgeships of the 18th judicial circuit shall be converted to resident judgeships and allotted to the subcircuits as provided in this subsection as those judgeships become vacant on or after January 7, 2022 (the effective date of Public Act 102-693). The Supreme Court shall allocate the circuit judgeships of the 18th judicial circuit existing on January 7, 2022 as those judgeships are or become vacant on or after that date to the subcircuits in numerical order until there are at least 2 resident judges for each subcircuit. Once a judgeship is assigned to a subcircuit, it shall continue to be assigned to that subcircuit for all purposes; provided that a resident judge elected from a subcircuit seeking retention shall run for retention at large in the circuit in accordance with Article VI, Section 12(d) of the Illinois Constitution. A resident judge elected from a subcircuit shall continue to reside in that subcircuit as long as he or she holds that office.`  
+```(c) Vacancies in resident judgeships of the 18th judicial circuit shall be filled in the manner provided in Article VI of the Illinois Constitution.`  
+```(d) It is the intent of the General Assembly not to create any additional judgeships in the 18th judicial circuit by this amendatory Act of the 102nd General Assembly. Notwithstanding any other provision of law to the contrary, the conversion of at-large judgeships to resident judgeships under subsection (b) of this Section shall not entitle the 18th judicial circuit to any additional circuit judgeships elected at-large.`
+```
+
+```
+  
+`(Source: P.A. 102-693, eff. 1-7-22; 102-1126, eff. 2-10-23.)`
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2g)``(from Ch. 37, par. 72.2g)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2g.`
+```
+
+```
+`Additional circuit judges; 16th, 18th, and 19th circuits.`
+```
+
+```
+
+```
+
+```
+  
+``
+```
+(a) In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be 3 additional circuit judges elected in the
+nineteenth circuit, 2 of whom shall be residents of and elected from Lake
+County and one of whom shall be a resident of and elected from McHenry County.
+```
+
+```
+
+```
+  
+``
+```
+(b) In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be 3 additional circuit judges elected at large in
+the eighteenth circuit.
+```
+
+```
+
+```
+  
+``
+```
+(c) In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be one additional circuit judge in
+the sixteenth circuit who shall be a resident of and elected from Kane County.
+```
+
+```
+
+```
+  
+``
+```
+(d) The additional circuit judgeships provided by this Section shall be
+filled by appointment until those judgeships are filled by election at the
+general election in November of 1992.
+```
+
+```
+
+```
+  
+`(Source: P.A. 87-145.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2h)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2h.`
+```
+
+```
+`Additional circuit judge.`
+```
+
+```
+
+```
+
+```
+  
+``
+```
+(a) In addition to the number of circuit judges otherwise authorized by this
+Act, there shall be one additional circuit judge elected at large in the
+eleventh judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(b) In addition to the number of circuit judges otherwise authorized by
+this
+Act, there shall be one additional circuit judge elected at large in the
+fifth judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(c) In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be 2 additional circuit judges elected at large in the
+sixteenth judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(d) In addition to the number of circuit judges otherwise authorized by
+this
+Act, there shall be one additional circuit judge elected at large in the
+eighteenth judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(e) In addition to the number of circuit judges otherwise authorized by this
+Act, there shall be one additional circuit judge elected at large in the
+twenty-first judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(f) In addition to the number of circuit judges otherwise authorized by this
+Act, there shall be 2 additional circuit judges elected at large in the
+nineteenth judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(g) The additional circuit judgeships provided by this Section shall be
+filled by appointment until the judgeships are filled by election at the
+general
+election in November of 1996.
+```
+
+```
+
+```
+  
+`(Source: P.A. 89-401, eff. 8-20-95.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2i)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2i.`
+```
+
+```
+`Additional circuit judges; sixth circuit.`
+```
+
+```
+
+```
+In addition to the
+number of circuit judges otherwise authorized by this Act, there shall be 2
+additional circuit judges in the sixth circuit, one who shall be a resident of
+and elected from Champaign County and one who shall be elected at large.  The
+additional circuit judgeships provided by this Section shall be filled by
+appointment until those judgeships are filled by election at the general
+election in November of 1996.
+```
+
+```
+
+```
+  
+`(Source: P.A. 89-401, eff. 8-20-95.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/2j)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 2j.`
+```
+
+```
+`Additional judges.`
+```
+
+```
+
+```
+
+```
+  
+``
+```
+(a) In addition to the number of circuit judges otherwise authorized by this
+Act, there shall be one additional circuit judge elected at large in the
+seventeenth judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(b) In addition to the number of circuit judges otherwise authorized by this
+Act, there shall be one additional circuit judge elected at large in the
+eighteenth judicial circuit.
+```
+
+```
+
+```
+  
+``
+```
+(c) In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be one additional circuit judge elected in the nineteenth
+judicial circuit who is a resident of and elected from Lake County.
+```
+
+```
+
+```
+  
+``
+```
+(d) In addition to the number of circuit judges otherwise authorized by
+this Act, there shall be one additional circuit judge elected in the fifth
+judicial circuit who is a resident of and elected from Vermilion County.
+```
+
+```
+
+```
+  
+``
+```
+(e) In addition to the number of circuit judges and resident judges
+otherwise authorized by
+law, and notwithstanding any other provision of law, there shall be one
+additional resident judge elected from the unit within Chicago of the
+Circuit of Cook County to serve in the juvenile division.
+```
+
+```
+
+```
+  
+``
+```
+(f) In addition to the number of circuit judges and resident judges
+otherwise authorized by law,
+and notwithstanding any other provision of law, there shall be one additional
+resident judge who is a resident of and elected from the third
+judicial subcircuit in Cook County.
+```
+
+```
+
+```
+  
+``
+```
+(g) The additional circuit judgeships, subcircuit judgeships, and resident
+judgeship provided by
+this Section shall be
+filled by appointment until those judgeships are filled by election at the
+general election in November of 1998.
+```
+
+```
+
+```
+  
+`(Source: P.A. 90-526, eff. 11-12-97.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```(705 ILCS 35/2k)`
+```
+
+```
+  
+```Sec. 2k.``Additional 16th circuit resident judge; Kane County.``In addition to the number of circuit judges otherwise authorized by this Act, there shall be one additional judge elected in the 16th judicial circuit who shall be a resident of and elected from Kane County.  The additional resident circuit judgeship created by this Section may be filled by appointment by the Illinois Supreme Court until the judgeship is filled by election beginning at the 2010 general election.  The judgeship provided by this Section shall not be a subcircuit judgeship.`
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+
+  
+
+```(705 ILCS 35/2m)`
+```
+
+```
+  
+```Sec. 2m.``Additional 16th circuit resident judge; DeKalb County.``In addition to the number of circuit judges otherwise authorized by this Act, there shall be one additional judge elected in the 16th judicial circuit who shall be a resident of and elected from DeKalb County.  The additional resident circuit judgeship created by this Section may be filled by appointment by the Illinois Supreme Court until the judgeship is filled by election beginning at the 2010 general election.  The judgeship provided by this Section shall not be a subcircuit judgeship.`
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+
+  
+
+```(705 ILCS 35/2n)`  
+```Sec. 2n.``Additional 16th circuit resident judge; Kendall County.``In addition to the number of circuit judges otherwise authorized by this Act, there shall be one additional judge elected in the 16th judicial circuit who shall be a resident of and elected from Kendall County.  The additional resident circuit judgeship created by this Section may be filled by appointment by the Illinois Supreme Court until the judgeship is filled by election beginning at the 2010 general election.  The judgeship provided by this Section shall not be a subcircuit judgeship.`
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+
+  
+
+```(705 ILCS 35/2p)`
+```
+
+```
+  
+```Sec. 2p.``Additional 13th circuit resident judge; Grundy County.`
+```
+In addition to the number of circuit judges otherwise authorized by this Act, there shall be one additional circuit judge in the
+
+13th circuit who shall be a resident of and elected from Grundy County. The judgeship shall be filled by appointment until it is filled by election at the general election in November of 2010.
+```
+
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+
+  
+
+```(705 ILCS 35/2q)`  
+```Sec. 2q.``Additional 17th circuit resident judge; Boone County.``In addition to the number of circuit judges otherwise authorized by this Act, there shall be one additional judge elected in the 17th judicial circuit who shall be a resident of and elected from Boone County.  The additional resident circuit judgeship created by this Section may be filled by appointment by the Illinois Supreme Court until the judgeship is filled by election beginning at the 2010 general election.  The judgeship provided by this Section shall not be a subcircuit judgeship. A resident judge elected from Boone County under this Section must continue to reside in Boone County as long as he or she holds that office.`
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+
+  
+
+```(705 ILCS 35/2r)`
+```
+
+```
+  
+```Sec. 2r.``Additional 22nd circuit resident judge.``In addition to the number of circuit judges otherwise authorized by this Act, there shall be one additional judge elected in the 22nd judicial circuit.  The additional resident circuit judgeship created by this Section may be filled by appointment by the Illinois Supreme Court until the judgeship is filled by election beginning at the 2010 general election.  The judgeship provided by this Section shall not be a subcircuit judgeship.`
+```
+
+```
+  
+`(Source: P.A. 96-108, eff. 7-30-09.)`
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/3)``(from Ch. 37, par. 72.3)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 3.`
+```
+
+```
+
+```
+
+```
+
+```
+The said courts, respectively, shall have a seal, and may renew or
+alter the same from time to time, as may be necessary. The expense of such
+seal, and renewing and altering the same, shall be paid by the county.
+```
+
+```
+
+```
+  
+`(Source: Laws 1933, p. 435.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/4)``(from Ch. 37, par. 72.4)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 4.`
+```
+
+```
+
+```
+
+```
+
+```
+There shall be no stated terms in the circuit courts, which shall
+always be open for the transaction of all business, subject to adjournment
+from time to time. The circuit judges in each circuit shall prescribe by
+rule the times of calling grand and petit juries in each of the counties of
+the circuit and the periods for which the jurors shall serve.
+```
+
+```
+
+```
+  
+`(Source: Laws 1963, p. 2642.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/4.1)``(from Ch. 37, par. 72.4-1)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 4.1.`
+```
+
+```
+
+```
+
+```
+
+```
+The chief judge of each circuit may appoint
+an Administrative assistant to assist him in carrying out
+his administrative duties in the circuit. The salary of each
+administrative assistant shall be determined by the Supreme
+Court and paid at least monthly from the State Treasury on the
+warrant of the Comptroller, out of appropriations made for that
+purpose by the General Assembly. The salary of each individual
+administrative assistant shall be computed from a schedule
+established by the Supreme Court.
+```
+
+```
+
+```
+  
+`(Source: P.A. 86-1378.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/4.2)``(from Ch. 37, par. 72.4-2)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 4.2.`
+```
+
+```
+
+```
+
+```
+
+```
+Administrative Secretaries, as provided for in Section 4.1 of
+this Act, shall receive travel expenses for traveling, within or without
+their county of residence, in the performance of their administrative
+duties at the direction of their Chief Judge. All expense vouchers shall be
+submitted to the Supreme Court for approval. Approved expenses shall be
+paid from the State treasury.
+```
+
+```
+
+```
+  
+`(Source: P.A. 84-1395.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/4.3)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 4.3.``Witness fees.`
+```
+
+```
+  
+``
+```
+(a) Every witness attending in
+any county upon trials in the
+courts, except for actions arising under Article II of the Juvenile Court Act of 1987, shall be entitled to receive the sum of $20 for each
+day's
+attendance and $0.20 per mile each way for necessary travel.
+For
+attending in a foreign county, each day's travel shall constitute a day
+of attendance. Every person attending for the purpose of having his
+deposition taken shall receive the same per diem and mileage as provided
+in this Section for witnesses in circuit courts. No
+allowance
+or charge shall be made, however, for the attendance of a witness unless
+the witness makes an affidavit stating the number
+of
+days he or she
+actually attended, and that attendance was at the instance of one
+or both of the parties or his or her attorney.
+```
+
+```
+
+```
+  
+``
+```
+(b) In a criminal case or action arising under Article II of the Juvenile Court Act of 1987 in which a
+witness is required to attend from a foreign county or state,
+either before the grand jury or at the trial of the cause in the court,
+the witness shall receive the same per diem and mileage as
+provided in this Section for
+witnesses in circuit courts to be paid out of the county treasury of the
+county where the crime was committed or the case under Article II of the Juvenile Court Act of 1987 is filed on the certificate of the clerk of
+the court where the trial is being had if the witness makes an affidavit stating (i) the distance traveled,
+(ii) that it was the usually traveled and
+most direct route, (iii) the number of days' actual travel and
+attendance,
+and (iv) that attendance was at the instance of the State's
+Attorney or
+the accused, or his or her attorney or, in the case of an action filed under Article II of the Juvenile Court Act of 1987, at the instance of the State's Attorney or attorney of any other party to the action. To the affidavit shall be
+added the certificate of
+the judge that the amount is reasonable and that the witness was a
+material
+witness in the court or before the grand jury.
+```
+
+```
+
+```
+  
+`(Source: P.A. 98-826, eff. 8-1-14.)`
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/25)``(from Ch. 37, par. 72.25)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 25.`
+```
+
+```
+
+```
+
+```
+
+```
+The several circuit courts in this state may enter such
+judgments, orders and injunctions, and shall issue all such processes as
+may be necessary or proper to carry into effect the powers
+granted to them.
+```
+
+```
+
+```
+  
+`(Source: P.A. 83-346.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/26)``(from Ch. 37, par. 72.26)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 26.`
+```
+
+```
+
+```
+
+```
+
+```
+The respective courts and the several judges thereof shall have
+the power to award throughout the state, and returnable in the proper
+county, relief by injunction, ne exeat, habeas corpus,
+quo warranto, and all
+other processes that may be necessary to the due execution of the
+powers with which they are or may be vested.
+```
+
+```
+
+```
+  
+`(Source: P.A. 83-346.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/27)``(from Ch. 37, par. 72.27)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 27.`
+```
+
+```
+
+```
+
+```
+
+```
+All process shall be executed and returned by the officer or
+person to whom directed.
+```
+
+```
+
+```
+  
+`(Source: Laws 1965, p. 2515.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/28)``(from Ch. 37, par. 72.28)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 28.`
+```
+
+```
+
+```
+
+```
+
+```
+The said courts may, from time to time, make all such rules for
+the orderly disposition of business before them as may be deemed expedient,
+consistent with law.
+```
+
+```
+
+```
+  
+`(Source: Laws 1933, p. 435.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```(705 ILCS 35/28.5)`  
+```Sec. 28.5.``Complaints; information for filing.``The clerk shall post in the common areas of the courthouse a notice that a person may file a complaint against the judge that includes contact information for the Judicial Inquiry Board. The Judicial Inquiry Board shall develop a uniform statewide notice and provide the format of the notice to each clerk.`
+```
+
+```
+  
+`(Source: P.A. 100-34, eff. 1-1-18``.)`
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/33)``(from Ch. 37, par. 72.33)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 33.`
+```
+
+```
+
+```
+
+```
+
+```
+If there is no court house in any county, or if from any cause the
+court house is unfit for the holding of court therein, the proper
+authorities of the county may temporarily provide another place at the
+county seat for the holding of court, or the court, by order entered upon
+its records, may adjourn to a suitable place at such county seat, and the
+place so provided, or to which such adjournment is made, shall, during the
+time the court is so held thereat, be held to be the court house of such
+county for all judicial purposes connected with such court.
+```
+
+```
+
+```
+  
+`(Source: Laws 1933, p. 435.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/34)``(from Ch. 37, par. 72.34)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 34.`
+```
+
+```
+
+```
+
+```
+
+```
+If, by reason of war, rebellion, mob, pestilence or other
+public calamity, it is unsafe or inexpedient to hold a court at the time
+and place appointed by law, the judge or judges of the court may appoint
+another time and place for the holding of the court.
+The place appointed shall be at the nearest convenient place to that at
+which the court is appointed by law to be held. If the court appoints
+another time and place, the clerk of the court shall give at least 20
+days' notice thereof, by publication in some newspaper published in the
+county, or if none is published in the county, then in a newspaper
+published nearest to the place of holding court and by posting a notice in
+his office and in 4 other of the most public places in the
+county. The clerk shall also notify the sheriff of the county and the
+state's attorney of such appointment, 20 days before
+court is held at the place appointed by the court.
+```
+
+```
+
+```
+  
+`(Source: P.A. 86-1475.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/35)``(from Ch. 37, par. 72.35)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 35.`
+```
+
+```
+
+```
+
+```
+
+```
+In such case the court may require the services of any sheriff or
+other proper officer of the county into which the court is removed, or of
+the county from which it may remove to execute process and attend upon the
+court. It may also cause the grand and petit jurors to be summoned from
+either or both of such counties. And it shall have all the power and
+authority in either county which it might have exercised in the county
+where such court is appointed by law to be held, and may try and determine
+all causes, civil and criminal, which it might have tried and determined in
+such county, with like effect.
+```
+
+```
+
+```
+  
+`(Source: Laws 1933, p. 435.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+```(705 ILCS 35/36)``(from Ch. 37, par. 72.36)`
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+  
+```Sec. 36.`
+```
+
+```
+
+```
+
+```
+
+```
+If the clerk fails to give the notices specified in Section 34 he
+commits a petty offense and may be fined not to exceed $500. But the
+failure to give such notice shall not prevent the holding of such court at
+the appointed time and place or invalidate any of the proceedings thereat.
+```
+
+```
+
+```
+  
+`(Source: P.A. 77-2401``.)`
+```
+
+```
+
+```
+
+```
+
+  
+
+```(705 ILCS 35/37)`  
+```Sec. 37.``Currently serving circuit judges.`  
+```(a) Nothing in this amendatory Act of the 102nd General Assembly shall affect the tenure of any circuit judge serving on the effective date of this amendatory Act. No circuit judge serving on August 13, 2021 (the effective date of Public Act 102-380) shall be required to change his or her residency in order to continue serving in office or to seek retention in office. Any circuit judge elected to that office prior to August 13, 2021 who files to run for retention after that date shall have the right to seek retention in the circuit the judge was elected from or to seek retention in the circuit  created by Public Act 102-380. The Secretary of State, not less than 63 days before the election, shall certify the judge's candidacy to the proper election officials.`
+```
+
+```
+  
+```(b) Nothing in Public Act 102-693 shall affect the tenure of any circuit judge serving on January 7, 2022. No elected circuit judge serving on January 7, 2022 shall be required to change his or her residency under Public Act 102-693 in order to continue serving in office or to seek retention in office. Any circuit judge elected to that office prior to January 7, 2022 who files to run for retention after the effective date of this amendatory Act shall have the right to seek retention in the circuit the judge was elected from.`  
+`(Source: P.A. 102-380, eff. 8-13-21; 102-1126, eff. 2-10-23.)`

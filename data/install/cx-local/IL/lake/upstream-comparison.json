@@ -1,0 +1,40 @@
+{
+  "ref": "331e9d448f05dc0fda538500fd134ff19797312a",
+  "files": [
+    {
+      "sourcePath": "data/install/cx-votes/IL/ballot-additions/ballot-input/il.json",
+      "sha256": "8838812c83688b9c010e601299b542c2d8f5da3acc05ad9e639258858e5d6b99",
+      "allNestedBallotsRead": true,
+      "noSameLocalOfficeOverlap": true
+    },
+    {
+      "sourcePath": "data/install/cx-votes/IL/explainer-expansion/ballot-input/il.json",
+      "sha256": "5cbe62a938e75784448dfc3d1e26f3523b78e9555ebfbdd75c8232ae2d7da1cc",
+      "allNestedBallotsRead": true,
+      "noSameLocalOfficeOverlap": true
+    },
+    {
+      "sourcePath": "data/install/cx-votes/IL/explainer-expansion/will/ballot-input/il.json",
+      "sha256": "56c921e1ecaf854867a3a0d06d77e49044a009aca790f2c2819b9d934a0c8674",
+      "allNestedBallotsRead": true,
+      "noSameLocalOfficeOverlap": true
+    }
+  ],
+  "preparedPacketsRead": [
+    {
+      "packet": "cook",
+      "sha256": "ca2a69ffcc66cd4796c75f8a2f357ae004c7e7c1e46c814f80bf2c7f6fb7d35c"
+    },
+    {
+      "packet": "cook-additions",
+      "sha256": "84b1dea936d1107bebf6adfa85005950b487fa7957e9ee06d0a2b8c4c4bdbdd7"
+    },
+    {
+      "packet": "dupage",
+      "sha256": "bfa91757651bba96fa9a5df3edc2f28a37833cc9ab5fc544897753d5ba9add91"
+    }
+  ],
+  "heldContests": 170,
+  "heldCandidateCoreRecords": 263,
+  "action": "No held or fresh upstream federal/state/legislative facts or questions changed. No unprinted SecondAppellate field invented; current samples have only two Circuit19 retention questions."
+}

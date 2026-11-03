@@ -90,14 +90,14 @@
         },
         {
           "contestId": "ri-providence-2026:question-7",
-          "whatItDoes": "Approve an ordinance to withdraw investments from foreign countries conducting severe human rights violations, such as ethnic cleansing, apartheid, illegal military occupation or genocide.",
-          "yesMeans": "Approve that proposed divestment ordinance.",
-          "noMeans": "Reject that proposed divestment ordinance.",
+          "whatItDoes": "Set investment restrictions concerning foreign countries conducting ethnic cleansing, apartheid, illegal military occupation or genocide, using the listed United Nations, U.S. and International Court of Justice findings, and corporations that directly and knowingly enable those violations. The policy would cover city funds overseen by the investment commissioners, including retirement funds. To the best of its ability, the city would avoid new holdings of covered foreign-government debt and direct investments in those corporations; existing direct corporate investments would end subject to fiduciary duties. For pooled accounts and state-managed funds, the city would publicly ask managers to consider the restrictions. The policy would not apply where it would violate obligations to pensioners and beneficiaries. The treasurer would review holdings upon passage and annually, and submit a public implementation report to the city clerk by January 31 each year.",
+          "yesMeans": "Approve those investment restrictions, fiduciary-duty exceptions, requests to pooled-fund managers, annual reviews and public reports.",
+          "noMeans": "Reject the proposed divestment ordinance.",
           "parts": [],
-          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
-          "sourceHash": "5545477b7bcc4cf2f518e8603b0f22f34ad6efb3057afec35cb0aabba7a1804e",
+          "sourceUrl": "https://providenceri.iqm2.com/Citizens/FileOpen.aspx?Type=30&ID=67871&MeetingID=16094",
+          "sourceHash": "27a2704c57dee1c6f02cb40c90f2e03c273a2b238ac075cbafbce80353770717",
           "sourceHashKind": "CAPTURE_BYTES",
-          "writtenAt": "2026-11-03T08:17:43.500720+00:00",
+          "writtenAt": "2026-11-03T08:26:34.152977+00:00",
           "citation": "measure-source"
         }
       ]
@@ -106,8 +106,8 @@
   "sourceReceipt": {
     "contractId": "ballot-contests:RI",
     "contractVersion": 1,
-    "reviewedAt": "2026-11-03T08:17:43.500720+00:00",
-    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "reviewedAt": "2026-11-03T08:26:34.152977+00:00",
+    "reviewedBy": "CX-VOTES manual original ballot and complete adopted divestment ordinance review; no model calls",
     "sources": [
       {
         "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2801.pdf",
@@ -118,6 +118,16 @@
         "publisher": "Rhode Island Department of State",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      },
+      {
+        "requestedUrl": "https://providenceri.iqm2.com/Citizens/FileOpen.aspx?Type=30&ID=67871&MeetingID=16094",
+        "finalUrl": "https://providenceri.iqm2.com/Citizens/FileOpen.aspx?Type=30&ID=67871&MeetingID=16094",
+        "httpStatus": 200,
+        "rawHash": "27a2704c57dee1c6f02cb40c90f2e03c273a2b238ac075cbafbce80353770717",
+        "retrievedAt": "2026-11-03T08:21:30.578455+00:00",
+        "publisher": "City of Providence City Council",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native two-page resolution printout including full divestment ordinance definitions, restrictions, fiduciary exceptions and reporting provisions. Current public City Council legislative item marks it Passed July30,2026 and links adopted2026-326 attachment. Full .gov City Council public-reader capture links this exact official meeting portal. Native .gov source was307; capturedsource-text authority evidence is labeled separately, never claimed as native HTML. Final question text remains from original November3,2026 DepartmentofState ballot."
       }
     ]
   }

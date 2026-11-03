@@ -41,5 +41,10 @@
     "sourceCaptureCredentialScan": "PASS",
     "productionWrites": 0,
     "appCodeChanges": 0
+  },
+  "supersedes": {
+    "inputSha256": "2344aec531f797ce73b669d96b49705a2ddb020b28f2f7dde9bbd7290876cf3f",
+    "contestId": "ri-providence-2026:question-7",
+    "operation": "Replace the existing same-contest MeasureRecord with the complete-ordinance explanation; do not create another contest. Original final ballot question, electorate and housing measure stay unchanged."
   }
 }

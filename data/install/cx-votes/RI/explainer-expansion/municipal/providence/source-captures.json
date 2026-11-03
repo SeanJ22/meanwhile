@@ -24,5 +24,49 @@
     "encoding": "identity",
     "method": "POST",
     "lookupPurpose": "Public official SmithfieldTownHall address (not residential or personal voter lookup), solely to open official sample ballot URL through normal public UI."
+  },
+  {
+    "requestedUrl": "https://providenceri.iqm2.com/Citizens/FileOpen.aspx?Type=30&ID=67871&MeetingID=16094",
+    "finalUrl": "https://providenceri.iqm2.com/Citizens/FileOpen.aspx?Type=30&ID=67871&MeetingID=16094",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:21:30.578455+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "27a2704c57dee1c6f02cb40c90f2e03c273a2b238ac075cbafbce80353770717",
+    "storedHash": "27a2704c57dee1c6f02cb40c90f2e03c273a2b238ac075cbafbce80353770717",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/27a2704c57dee1c6f02cb40c90f2e03c273a2b238ac075cbafbce80353770717.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://providenceri.iqm2.com/Citizens/Detail_LegiFile.aspx?Frame=&MeetingID=16094&MediaPosition=64122.000&ID=54249&CssClass=",
+    "finalUrl": "https://providenceri.iqm2.com/Citizens/Detail_LegiFile.aspx?Frame=&MeetingID=16094&MediaPosition=64122.000&ID=54249&CssClass=",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:21:32.321275+00:00",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "a9517235acaced505210722a679b99d6713fea8cfd8b0edadf2e4283a102bd63",
+    "storedHash": "a9517235acaced505210722a679b99d6713fea8cfd8b0edadf2e4283a102bd63",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/a9517235acaced505210722a679b99d6713fea8cfd8b0edadf2e4283a102bd63.html",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://council.providenceri.gov/",
+    "finalUrl": "https://council.providenceri.gov/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:25:15.187780+00:00",
+    "rawHash": "8f5f99de0ad0cf263dee05b89d3780c48dbb09300e450983521c73e168d6d030",
+    "storedHash": "8f5f99de0ad0cf263dee05b89d3780c48dbb09300e450983521c73e168d6d030",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceFile": "sources/8f5f99de0ad0cf263dee05b89d3780c48dbb09300e450983521c73e168d6d030.source.txt",
+    "encoding": "identity",
+    "hashScope": "Complete exact saved deterministic public-reader UTF-8 text of official .gov page, not original native HTML bytes.",
+    "captureMetadata": {
+      "readerUrl": "https://r.jina.ai/https://council.providenceri.gov/",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://council.providenceri.gov/",
+      "originHttpStatus": null,
+      "nativeGovernmentFetchHttpStatus": 307,
+      "provider": "Jina deterministic public reader, no model/ReaderLM calls"
+    }
   }
 ]

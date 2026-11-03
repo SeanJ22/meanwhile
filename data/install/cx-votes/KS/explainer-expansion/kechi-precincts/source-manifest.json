@@ -1,0 +1,92 @@
+[
+  {
+    "requestedUrl": "https://www.sedgwick.gov/gis/",
+    "finalUrl": "https://www.sedgwick.gov/gis/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:38:00.330747+00:00",
+    "rawHash": "aa8c8a1dcdc79638ec824830cd877988feb1f319e8f1286f137c8ae3fc4082db",
+    "sourceFile": "sources/aa8c8a1dcdc79638ec824830cd877988feb1f319e8f1286f137c8ae3fc4082db.html",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://sedgwick-county-gis-sedgwickcounty.hub.arcgis.com/",
+    "finalUrl": "https://sedgwick-county-gis-sedgwickcounty.hub.arcgis.com/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:29:15.277029+00:00",
+    "rawHash": "4f62cabcb3fd2b5881698e94169c49268f3c7b524a2643dfccc66e968a9c0e65",
+    "sourceFile": "sources/4f62cabcb3fd2b5881698e94169c49268f3c7b524a2643dfccc66e968a9c0e65.html",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://www.arcgis.com/sharing/rest/search?f=pjson&q=orgid%3AMcLat6HlPl45bNBv+AND+%28precinct+OR+election%29&num=100",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/search?f=pjson&q=orgid%3AMcLat6HlPl45bNBv+AND+%28precinct+OR+election%29&num=100",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:30:23.097141+00:00",
+    "rawHash": "867f552c69b97eaa74678d4c6d3016941247372580e431e0656692edf626c42f",
+    "sourceFile": "sources/867f552c69b97eaa74678d4c6d3016941247372580e431e0656692edf626c42f.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer?f=pjson",
+    "finalUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:31:03.064038+00:00",
+    "rawHash": "1cacbdc162ef1501eb54a6e9c28bce36ad51107bdf40bb27c41285a3d86caddf",
+    "sourceFile": "sources/1cacbdc162ef1501eb54a6e9c28bce36ad51107bdf40bb27c41285a3d86caddf.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer/6?f=pjson",
+    "finalUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer/6?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:31:53.190486+00:00",
+    "rawHash": "1242cf561c823d970e0ebaa528dfb984a6eedb28b8c9d7f9cd56df48f841fdcf",
+    "sourceFile": "sources/1242cf561c823d970e0ebaa528dfb984a6eedb28b8c9d7f9cd56df48f841fdcf.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer/6/query?where=Precinct+IN+%28%27KE03%27%2C%27KE08%27%2C%27KE10%27%2C%27KE19%27%2C%27KE26%27%2C%27KE06%27%2C%27KE09%27%2C%27KE11%27%2C%27KE12%27%2C%27KE13%27%2C%27KE31%27%2C%27KE01%27%2C%27KE02%27%29&f=pjson&returnCountOnly=true",
+    "finalUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer/6/query?where=Precinct+IN+%28%27KE03%27%2C%27KE08%27%2C%27KE10%27%2C%27KE19%27%2C%27KE26%27%2C%27KE06%27%2C%27KE09%27%2C%27KE11%27%2C%27KE12%27%2C%27KE13%27%2C%27KE31%27%2C%27KE01%27%2C%27KE02%27%29&f=pjson&returnCountOnly=true",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:32:35.533270+00:00",
+    "rawHash": "0050c47c68f8172dee4d05949b1759b561c204812b55f952235cd60ad27ac964",
+    "sourceFile": "sources/0050c47c68f8172dee4d05949b1759b561c204812b55f952235cd60ad27ac964.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer/6/query?where=Precinct+IN+%28%27KE03%27%2C%27KE08%27%2C%27KE10%27%2C%27KE19%27%2C%27KE26%27%2C%27KE06%27%2C%27KE09%27%2C%27KE11%27%2C%27KE12%27%2C%27KE13%27%2C%27KE31%27%2C%27KE01%27%2C%27KE02%27%29&f=geojson&outFields=Precinct&returnGeometry=true&outSR=4326&returnZ=false",
+    "finalUrl": "https://services7.arcgis.com/McLat6HlPl45bNBv/arcgis/rest/services/Sedgwick_County_Voter_Districts/FeatureServer/6/query?where=Precinct+IN+%28%27KE03%27%2C%27KE08%27%2C%27KE10%27%2C%27KE19%27%2C%27KE26%27%2C%27KE06%27%2C%27KE09%27%2C%27KE11%27%2C%27KE12%27%2C%27KE13%27%2C%27KE31%27%2C%27KE01%27%2C%27KE02%27%29&f=geojson&outFields=Precinct&returnGeometry=true&outSR=4326&returnZ=false",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:32:36.002956+00:00",
+    "rawHash": "748ecaa1d5fe1e730b9df4f773be7de142b414672f16cd20326b1fed4432b209",
+    "sourceFile": "sources/748ecaa1d5fe1e730b9df4f773be7de142b414672f16cd20326b1fed4432b209.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-97.3488440642168%2C37.744881361307%2C-97.2625262880505%2C37.8250196311001&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&f=pjson&returnCountOnly=true",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-97.3488440642168%2C37.744881361307%2C-97.2625262880505%2C37.8250196311001&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&f=pjson&returnCountOnly=true",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:34:23.133082+00:00",
+    "rawHash": "c745d561f3a8086e2fd7e94b826896a52339f1ecc276fa2c7a896528e8ab13d9",
+    "sourceFile": "sources/c745d561f3a8086e2fd7e94b826896a52339f1ecc276fa2c7a896528e8ab13d9.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-97.3488440642168%2C37.744881361307%2C-97.2625262880505%2C37.8250196311001&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-97.3488440642168%2C37.744881361307%2C-97.2625262880505%2C37.8250196311001&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:34:23.695002+00:00",
+    "rawHash": "8e6b0d7e7ea435a0e176fa8ab08e466e20f8743857a42730371edfff5c880f4d",
+    "sourceFile": "sources/8e6b0d7e7ea435a0e176fa8ab08e466e20f8743857a42730371edfff5c880f4d.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  },
+  {
+    "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2720%27&outFields=STATE%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2720%27&outFields=STATE%2CNAME&returnGeometry=true&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:38:03.636993+00:00",
+    "rawHash": "75c189d20a1048922aec514b167f2c27dc3486e1a33410e9c9a8053a8abd0f99",
+    "sourceFile": "sources/75c189d20a1048922aec514b167f2c27dc3486e1a33410e9c9a8053a8abd0f99.json",
+    "representation": "Original native publicgovernment/GIS response; no household/owner/contact data queried."
+  }
+]

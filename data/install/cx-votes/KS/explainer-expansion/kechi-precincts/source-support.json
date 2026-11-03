@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "ks-cx-2026-kechi-township-building",
+    "sourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-special-question-election-kechi-township-sedgwick-county-kansas/",
+    "rawHash": "e6e52bcf78f00d60a9cdb62f2728995913a9cfc95e4535292200593079964fee",
+    "sourceFile": "sources/e6e52bcf78f00d60a9cdb62f2728995913a9cfc95e4535292200593079964fee.source",
+    "sourceTextFile": "sources/13679fa158873edefe62d5a0cbcb4714c80271047005b3555d2bf9446b09a4ef.txt",
+    "excerpt": "“Shall the Kechi Township, Kansas, be authorized to construct, equip and furnish a new township building for administrative use, equipment storage and maintenance, at an estimated total cost not to exceed $400,000; provided that all required funds for said project shall be derived solely from existing cash reserves currently held by the township and the proceeds from the sale of the existing township building, with zero dollars ($0.00) raised through the issuance of new bonds or any increase in the township's property tax levy, pursuant to the provisions of K.S.A. 80-104 et seq., as amended??”",
+    "fields": {
+      "whatItDoes": [
+        "“Shall the Kechi Township, Kansas, be authorized to construct, equip and furnish a new township building for administrative use, equipment storage and maintenance, at an estimated total cost not to exceed $400,000; provided that all required funds for said project shall be derived solely from existing cash reserves currently held by the township and the proceeds from the sale of the existing township building, with zero dollars ($0.00) raised through the issuance of new bonds or any increase in the township's property tax levy, pursuant to the provisions of K.S.A. 80-104 et seq., as amended??”"
+      ],
+      "yesMeans": [
+        "“Shall the Kechi Township, Kansas, be authorized to construct, equip and furnish a new township building for administrative use, equipment storage and maintenance, at an estimated total cost not to exceed $400,000; provided that all required funds for said project shall be derived solely from existing cash reserves currently held by the township and the proceeds from the sale of the existing township building, with zero dollars ($0.00) raised through the issuance of new bonds or any increase in the township's property tax levy, pursuant to the provisions of K.S.A. 80-104 et seq., as amended??”"
+      ],
+      "noMeans": [
+        "“Shall the Kechi Township, Kansas, be authorized to construct, equip and furnish a new township building for administrative use, equipment storage and maintenance, at an estimated total cost not to exceed $400,000; provided that all required funds for said project shall be derived solely from existing cash reserves currently held by the township and the proceeds from the sale of the existing township building, with zero dollars ($0.00) raised through the issuance of new bonds or any increase in the township's property tax levy, pursuant to the provisions of K.S.A. 80-104 et seq., as amended??”"
+      ]
+    },
+    "semanticConditions": [
+      "Retain all material amount, purpose, beginning date and end-condition terms from complete official question.",
+      "The Kechi Township printed double question mark is preserved; township is distinct from Kechi city."
+    ],
+    "textExtraction": {
+      "method": "pdftotext -layout from native publisher PDF; exact native bytes retained separately"
+    },
+    "inventoryScope": "One current exact13precinct electorate; othercounty questions remain independent.",
+    "electorateQuote": "Voters Residing In Precincts\nWill Vote At\nLocation\nKE03, KE08, KE10, KE19, KE26\nKechi City Building\n220 W Kechi Rd\nKE06, KE09, KE11, KE12, KE13, KE31\nPark City Senior Center\n1811 Stuart Dr\nKE01, KE02,\nWord of Life Church\n915 E 53rd St N",
+    "identityRule": "Exact union of13 current county election precincts expressly listed in official November3 notice. Neither CensusKechiTownship nor KechiCity is used as an electorate substitute.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

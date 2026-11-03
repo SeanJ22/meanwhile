@@ -1,0 +1,55 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "KS",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:KS",
+  "inputDirectory": "ballot-input",
+  "operation": "Load only this source-defined13precinct voting-area map via existing loadStatePlaceMap, then merge its one measure/question/explainer through existing runBallotPublication. Preserve unrelated geography and ballot data; do not replace whole CensusKechiTownship or any city. Resolves prior pending-geography/kechi-township.json, which is removed in this same change.",
+  "subjects": [
+    {
+      "id": "ks-cx-2026-kechi-township-building",
+      "title": "Kechi Township — New township building",
+      "ocdId": "ocd-division/country:us/state:ks/county:sedgwick/ballot_area:kechi_township_2026_building",
+      "sourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-special-question-election-kechi-township-sedgwick-county-kansas/"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "KS",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "currentLoaderReaderMap": "PASS: reader-map-checks.json"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "placeMapFile": "map.json",
+  "placeMapSha256": "2cbba45cf663cd5c556b78b6a9cb3cd2882ab521cc20915c94b7af3279036e16",
+  "jurisdictionProof": "jurisdiction-bindings.json and geometry-proof.json",
+  "sourceManifest": "source-manifest.json",
+  "supersedes": {
+    "removedPendingDraft": "../sedgwick-reno-schools/pending-geography/kechi-township.json",
+    "priorFiveMeasureInputSha256Unchanged": "0d338951cdca6a9dd430c1cc8893228c5bf26b7012b85fdd0e40dfc2abd46db7"
+  },
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

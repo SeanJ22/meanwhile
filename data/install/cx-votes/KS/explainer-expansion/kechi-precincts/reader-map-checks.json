@@ -1,0 +1,16 @@
+{
+  "state": "KS",
+  "sourceHashes": "PASS",
+  "completeExactOfficialNoticePrecincts": 13,
+  "deterministicNativePrecinctUnion": "PASS no simplification or input precision reduction; generatedintersectionvertices explicitly retained",
+  "actualExistingLoader": "PASS offline memory fixture",
+  "actualReaderPositivePoints": 13,
+  "outsidePrecinctUnionNegatives": 3,
+  "stateCountyCensusTownshipAndCityAloneNegative": "PASS",
+  "actualZipReaderChecks": 5,
+  "partialZipAddressDisambiguation": 5,
+  "governmentEntitiesOrLinksCreated": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limits": "Actual registered loader/reader executed against local synthetic fixture only. River installsdata and checks live; captureyear is not asserted legalboundaryadoption date."
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "contestId": "ks-cx-2026-kechi-township-building",
+    "divisionId": "ocd-division/country:us/state:ks/county:sedgwick/ballot_area:kechi_township_2026_building",
+    "kind": "SOURCE_DEFINED_ELECTION_AREA",
+    "censusIdClaim": false,
+    "sourceNoticeUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-special-question-election-kechi-township-sedgwick-county-kansas/",
+    "sourceGeometry": "map.json",
+    "geometryProof": "geometry-proof.json",
+    "eligiblePrecinctCodes": [
+      "KE01",
+      "KE02",
+      "KE03",
+      "KE06",
+      "KE08",
+      "KE09",
+      "KE10",
+      "KE11",
+      "KE12",
+      "KE13",
+      "KE19",
+      "KE26",
+      "KE31"
+    ],
+    "originalCensusTownshipNotUsedAsJoin": "ocd-division/country:us/state:ks/county:sedgwick/place:kechi_township",
+    "governmentEntityCreated": false
+  }
+]

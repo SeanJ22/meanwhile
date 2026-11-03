@@ -1,0 +1,106 @@
+[
+  {
+    "precinct": "KE01",
+    "point": [
+      -97.30606588174365,
+      37.74671084988525
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE02",
+    "point": [
+      -97.3171575721401,
+      37.7740864100916
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE03",
+    "point": [
+      -97.2809719958369,
+      37.802906118327
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE06",
+    "point": [
+      -97.31385472812453,
+      37.76602839405552
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE08",
+    "point": [
+      -97.29343451672185,
+      37.7748681547195
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE09",
+    "point": [
+      -97.3236698097158,
+      37.7605341885553
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE10",
+    "point": [
+      -97.30646298786253,
+      37.78563454707424
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE11",
+    "point": [
+      -97.32816477299815,
+      37.75671023296215
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE12",
+    "point": [
+      -97.3082426810603,
+      37.7519428888868
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE13",
+    "point": [
+      -97.30385533977115,
+      37.7584926301789
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE19",
+    "point": [
+      -97.29529627315017,
+      37.76974136119114
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE26",
+    "point": [
+      -97.29727914703071,
+      37.7779853737016
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  },
+  {
+    "precinct": "KE31",
+    "point": [
+      -97.33633305992424,
+      37.76499132561486
+    ],
+    "basis": "Deterministic native-precinct interior geometry; no residential address"
+  }
+]

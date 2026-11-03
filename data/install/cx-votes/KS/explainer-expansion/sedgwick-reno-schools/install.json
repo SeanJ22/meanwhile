@@ -42,7 +42,12 @@
     "newMeasures": 5,
     "newPlainLanguageExplanations": 5,
     "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion.",
-    "pendingGeography": 1
+    "pendingGeography": 0,
+    "resolvedGeography": {
+      "contestId": "ks-cx-2026-kechi-township-building",
+      "readyPacket": "../kechi-precincts/install.json",
+      "basis": "Exact union of all13 precincts explicitly listed in current official electionnotice, using currentpublicCountyGIS. SupersededCensusTownshipbinding draft removed."
+    }
   },
   "validation": {
     "state": "KS",

@@ -1,0 +1,16 @@
+{
+  "state": "CA",
+  "county": "San Diego",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureDenominator": 20,
+  "preparedAttached": 1,
+  "scope": "Countywide Measure A drafted from the current official November2026 VIG, exact existing county identity. The older incomplete filing attachment is excluded. Other San Diego measures are prepared separately or remain standing work.",
+  "sourceNotes": [
+    "Current native officialVIG001 page52 supplies CountyCounsel analysis; pages55–66 supply full operative charter amendments. Submitted voterarguments on pages53–54 are excluded from bounded text and support.",
+    "The older filing attachment includes an incomplete restated charter and is excluded; currentVIG contains substantive sections702,711 and804 missing from that attachment.",
+    "Analyst/auditor appointments are optional under section702 even though section501 lists the positions; ethicscommission establishment is mandatory. No unsupported cost-free or automatic subpoena promise.",
+    "Supervisor partial-term rules are preserved; do not describe an unconditional lifetime12year maximum."
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

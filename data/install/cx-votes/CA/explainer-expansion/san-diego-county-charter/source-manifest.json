@@ -1,0 +1,50 @@
+[
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+    "sha256": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+    "bytes": 366927,
+    "savedFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.pdf",
+    "sourceTextFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.txt",
+    "extractedTextSha256": "b3461b4772853e1dfc3b394bbe1a611b55a368748e45b2561b72439703d214c4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW",
+    "ocrPages": [],
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "composite"
+  },
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-001.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-001.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:03:41.139957+00:00",
+    "sha256": "02126bc36097dc1366d011d4a1b6117a4cfa99f44fa3170abe96518e954dbf1c",
+    "bytes": 11784626,
+    "savedFile": "sources/02126bc36097dc1366d011d4a1b6117a4cfa99f44fa3170abe96518e954dbf1c.pdf",
+    "sourceTextFile": "sources/02126bc36097dc1366d011d4a1b6117a4cfa99f44fa3170abe96518e954dbf1c.txt",
+    "extractedTextSha256": "9b41e801839222331d54c27e7943181b0422cb00ae50ad642c2d43b108056dd8",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW_BOUNDED_CURRENT_A",
+    "ocrPages": [],
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "measure",
+    "boundedPdfPages": [
+      52,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66
+    ],
+    "extractionScope": "Exact current CountyCounsel analysis plus full currentMeasureA charter text only; voterargument pages53\u201354 excluded."
+  }
+]

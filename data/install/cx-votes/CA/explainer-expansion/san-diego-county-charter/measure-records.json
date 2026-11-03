@@ -1,0 +1,64 @@
+[
+  {
+    "contestId": "ca-2026-san-diego-a",
+    "whatItDoes": "Amend San Diego County’s charter to increase supervisors’ limit from two four-year terms to three, counting prior service under the partial-term rules below. Require a seven-member ethics commission and allow the board to appoint an independent budget analyst and program auditor, including one person serving both roles. Require board review and confirmation of specified senior appointments, with a separate option for the board to appoint the public defender. Require public online spending data and an annual independent financial and performance audit of county expenditures. The package also clarifies the non-interference and purchasing rules, updates community advisory-board appointments, political-activity and family-hiring provisions, and modernizes charter terminology. Approval requires a majority vote.",
+    "yesMeans": "Approve the entire charter-amendment package, including the three-term supervisor limit and the oversight, appointment and disclosure changes.",
+    "noMeans": "Keep the existing charter, including its two-term supervisor limit, rather than adopt this amendment package.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-a#terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Supervisor term counting",
+        "what": "The limit would be three terms regardless of which supervisor district a person represents. Current and former supervisors’ prior service counts. A person elected or appointed to an unexpired term who serves more than half a full four-year term is counted as serving a full term. A supervisor who resigns or is removed with less than half a term remaining is also counted as serving a full term. The rule therefore includes specific treatment of partial terms, rather than a simple promise of twelve years for every person."
+      },
+      {
+        "id": "ca-2026-san-diego-a#ethics-members",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Ethics commission membership",
+        "what": "The board must establish the commission by ordinance. Each supervisor appoints one member and County Counsel appoints two; all require majority board confirmation. Members serve without pay in staggered four-year terms and must remain county residents and be current or former judges, attorneys, educators or professionals experienced in professional, government or corporate ethics and accountability, with no prohibited conflicts. After a full four-year term, a member must wait at least two years before reappointment. The charter also bars commissioners and commission staff from seeking elective office unless the election is at least two years after the commissioner’s last day of service. Vacancies must be filled within 90 days for the remaining term. Five of seven commissioners may remove a member for cause; the board also retains removal authority under the charter’s appointive-officer rule."
+      },
+      {
+        "id": "ca-2026-san-diego-a#ethics-powers",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Ethics investigations",
+        "what": "The commission investigates signed ethics complaints involving people in elective office, makes findings and recommendations using a clear-and-convincing-evidence standard, and publicly reports both substantiated and unsubstantiated findings. Additional related duties may be set by ordinance. Subpoena and oath powers are optional and require a board ordinance. Commission rules and appointment of necessary staff remain subject to board approval."
+      },
+      {
+        "id": "ca-2026-san-diego-a#independent-offices",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Budget analyst and program auditor",
+        "what": "The board may appoint one or two people for these roles and may remove them by majority vote. The budget analyst responds to board direction or an individual supervisor’s request, analyzing revenues, costs, budget assumptions, policy options and long-term fiscal risks and publishing accessible findings. The analyst must have the specified professional or educational qualifications and municipal-finance or equivalent experience. The program auditor evaluates county programs and proposed initiatives, outcomes and cost-effectiveness, alternatives and corrective actions at board direction. The board sets the evaluation’s scope and design, while the auditor retains professional independence over analysis, conclusions and public reporting."
+      },
+      {
+        "id": "ca-2026-san-diego-a#appointments",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Senior appointments and removal",
+        "what": "The board must create a process to review and confirm the chief administrative officer’s appointments of assistant and deputy chief administrative officers, the emergency-services director, public health officer and public defender when not appointed directly by the board. It may designate additional officers by ordinance. Except where the charter provides otherwise, these officers serve at the chief administrative officer’s pleasure and may also be removed by four-fifths of the board, with or without cause. The board may separately make the public defender a direct board appointment and create additional independent evaluative offices that do not duplicate the chief administrative officer’s functions."
+      },
+      {
+        "id": "ca-2026-san-diego-a#noninterference-purchasing",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Supervisors, staff and purchasing",
+        "what": "The general prohibition on directing or interfering with staff appointed under the chief administrative officer remains. Clarifications allow lawful information requests; assistance with supervisor initiatives under board policy and prompt notice to the chief administrative officer; use of internal services under the usual rules; and input on hiring or dismissal of specified unclassified managers. Violations remain infractions, with supervisor violations also misconduct in office. The purchasing provision would prohibit influence or coercion for illegal personal gain or contrary to the non-interference rule, replacing the prior broader purchasing-agent wording."
+      },
+      {
+        "id": "ca-2026-san-diego-a#disclosure-other",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Spending disclosure and other changes",
+        "what": "The auditor and controller must post all county spending data online in an accessible format, order an annual independent accountant’s financial and performance audit, publish findings and implement oversight of corrective actions. Citizen advisory boards become community advisory boards, with appointments reflecting affected communities and their geographic, cultural, socioeconomic and other characteristics. The political-activity rule would expressly preserve activities by elected officials and their staff that state and federal law allow. The family-hiring ban specifies the fourth degree of relationship and retains its exception for people appointed before that provision’s operative date. Other changes update structure and terminology."
+      }
+    ],
+    "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-001.pdf",
+    "sourceHash": "02126bc36097dc1366d011d4a1b6117a4cfa99f44fa3170abe96518e954dbf1c",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:07:35.742512+00:00",
+    "citation": "measure-source"
+  }
+]

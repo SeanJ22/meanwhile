@@ -1,0 +1,34 @@
+{
+  "state": "MD",
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "ab0b3f3f3951cc5599ef69921460c56f891d7ec5cb3abac7b57111ceeafdb046",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "md-county-questions-2026-dorchester-c",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "PASS",
+  "sourceSemanticReview": "PASS",
+  "reviewedScratchPacketSha256": "ab0b3f3f3951cc5599ef69921460c56f891d7ec5cb3abac7b57111ceeafdb046",
+  "canonicalInputSha256": "7238ace20f281f6456ed887e72f5ed313a0d2c98428566555a25924c8939c78d"
+}

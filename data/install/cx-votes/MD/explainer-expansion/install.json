@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MD",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MD",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 0,
+    "newPlainLanguageExplanations": 0,
+    "improvedExistingExplanations": 1,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 0
+  },
+  "subjects": [
+    {
+      "id": "md-county-questions-2026-dorchester-c",
+      "ocdId": "ocd-division/country:us/state:md/county:dorchester",
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS",
+    "independentSemanticReview": "PASS",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT",
+    "rootPublicationAdmission": "PASS",
+    "rootActualReaderReplay": "PASS"
+  },
+  "sourceFormat": "Complete retained official PDF conversion text is CAPTURED_SOURCE_TEXT; replacement record is HELD_TEXT of exact unchanged question plus newline and statement.",
+  "reviewedScratchPacketSha256": "ab0b3f3f3951cc5599ef69921460c56f891d7ec5cb3abac7b57111ceeafdb046",
+  "canonicalInputSha256": "7238ace20f281f6456ed887e72f5ed313a0d2c98428566555a25924c8939c78d",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

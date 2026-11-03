@@ -1,0 +1,11 @@
+{
+  "state": "MD",
+  "status": "PASS",
+  "packetSha256": "ab0b3f3f3951cc5599ef69921460c56f891d7ec5cb3abac7b57111ceeafdb046",
+  "records": 1,
+  "whatYesNoDirection": "PASS",
+  "materialConditions": "DorchesterC covers all5listedmanager/assistant/vacancy changes.",
+  "sourceHashAndExactQuestion": "PASS",
+  "unsupportedConsequences": "None added",
+  "reviewedAt": "2026-11-03T04:28:11.239409+00:00"
+}

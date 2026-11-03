@@ -1,0 +1,90 @@
+{
+  "ballots": {
+    "MD:md-2026-11-03": {
+      "election": {
+        "id": "md-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Maryland Gubernatorial General Election",
+        "state": "MD"
+      },
+      "contests": [
+        {
+          "id": "md-county-questions-2026-dorchester-c",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:md/county:dorchester",
+          "title": "Dorchester County — Question C — County Manager Responsibilities",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "md-2026-11-03",
+          "provenance": {
+            "quote": "Question C | County Manager Responsibilities | Identical wording appears on all 44 county ballot styles.",
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+            "verifiedAt": "2026-10-21T00:16:23.284841+00:00",
+            "collectedAt": "2026-10-21T00:16:23.284841+00:00"
+          },
+          "measureTextUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "md-county-questions-2026-dorchester-c:question",
+          "contestId": "md-county-questions-2026-dorchester-c",
+          "provenance": {
+            "sourceOrg": "Maryland State Board of Elections",
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+            "verifiedAt": "2026-10-21T00:16:23.284841+00:00",
+            "collectedAt": "2026-10-21T00:16:23.284841+00:00"
+          },
+          "questionText": "Currently, the duties and responsibilities of the County Manager are specified in Section 405 of the County Charter. A vote in favor of the question amends the duties and responsibilities of the County Manager, as follows: clarifying when certain vacancies may be filled by the County Manager and when certain studies and investigations are performed by the County Manager; requiring the County Manager to attend all County Council meetings; providing for the appointment and function of an Assistant County Manager; clarifying that the County Manager is responsible for the day-to-day operation of the County government; and establishing a process for the County Council when the County Manager position becomes vacant. A vote against the question will keep the duties and responsibilities of the County Manager as currently specified in the County Charter.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "md-county-questions-2026-dorchester-c",
+          "whatItDoes": "Changes Section 405 of Dorchester County’s charter to clarify when the County Manager may fill certain vacancies or perform certain studies and investigations. It requires the manager to attend all County Council meetings and confirms responsibility for daily county operations. It also provides for appointment and duties of an Assistant County Manager and establishes a Council process when the County Manager position becomes vacant.",
+          "yesMeans": "Approve these changes to the County Manager’s responsibilities, the assistant position and the vacancy process.",
+          "noMeans": "Keep the County Manager’s duties and responsibilities as currently specified in the charter.",
+          "parts": [],
+          "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+          "sourceHash": "7bf0e64ae127f72737a96dc7a444c67c5e054d5f3e2d6c6147a5e6e7ecafc4e1",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:22:54.140309+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:22:54.140309+00:00",
+    "reviewedBy": "CX-VOTES source-supported replacement of incomplete existing measure summary",
+    "sources": [
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+        "httpStatus": 200,
+        "rawHash": "25a0d996c93e3a967d186b7a5d66a6b9a773d6025496b43721e0a12d7f24b885",
+        "retrievedAt": "2026-10-21T00:16:23.284841+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact retained official general-election source replayed. Existing contest ID, jurisdiction, question and official statement preserved; only plain-language explanation improved. Record is HELD_TEXT SHA of exact question plus newline and statement. Original PDF bytes are available for GA; MD active source hash is complete retained official conversion text, not PDF bytes.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete exact retained official certified ballot pdftotext conversion, not original PDF bytes.",
+        "captureMetadata": {
+          "historicalOriginalPdfSha256": "08c8ba0d734680489bf406c6dd1dae387f207e868db7f746c2985c75ddf6b1a5",
+          "historicalOriginalPdfBytes": 799117,
+          "historicalSourceRetrievedAt": "2026-10-21T00:16:23.284841+00:00",
+          "extraction": "pdftotext -raw; exact official certified ballot source text; original PDF identified by rawHash",
+          "nativeCurrentFetchAttempted": false,
+          "reason": "Reuse verified retained official capture during global session proxy transport incident."
+        }
+      }
+    ]
+  }
+}

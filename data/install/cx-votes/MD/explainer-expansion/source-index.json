@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/md.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+      "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Dorchester.pdf",
+      "rawPath": "sources/25a0d996c93e3a967d186b7a5d66a6b9a773d6025496b43721e0a12d7f24b885.txt",
+      "rawHash": "25a0d996c93e3a967d186b7a5d66a6b9a773d6025496b43721e0a12d7f24b885",
+      "textPath": "sources/25a0d996c93e3a967d186b7a5d66a6b9a773d6025496b43721e0a12d7f24b885.txt",
+      "textSha256": "25a0d996c93e3a967d186b7a5d66a6b9a773d6025496b43721e0a12d7f24b885",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "md-county-questions-2026-dorchester-c"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

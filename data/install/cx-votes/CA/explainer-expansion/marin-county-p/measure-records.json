@@ -1,0 +1,85 @@
+[
+  {
+    "whatItDoes": "Creates a countywide tax starting at 5 cents per square foot of building floor area, counting up to 100,000 square feet per parcel, to fund childcare, early education and educator compensation. It allows annual inflation adjustments and is estimated to raise $12.5 million a year.",
+    "yesMeans": "Approve the restricted childcare tax, its planning and oversight system, and a four-year increase in the County’s constitutional spending limit. The full ordinance lasts 15 years from its effective date; tax collection begins with the first full fiscal year after that date.",
+    "noMeans": "Do not create this parcel tax or its proposed childcare fund and administrative system.",
+    "contestId": "ca-2026-marin-p",
+    "parts": [
+      {
+        "id": "ca-2026-marin-p#rate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Rate, building-area cap and inflation",
+        "what": "The starting rate is 5 cents per square foot of building floor area, counting no more than 100,000 square feet per parcel. Starting in the second tax year, the Board of Supervisors may adjust the rate annually with the San Francisco–Oakland–Hayward CPI for all urban consumers. Adjustments are optional, not automatic."
+      },
+      {
+        "id": "ca-2026-marin-p#duration",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Start, duration and spending limit",
+        "what": "The ordinance takes effect ten days after Supervisors declare the result. The full ordinance says it lasts 15 years from that effective date, while the county analysis describes 15 years from the tax’s start. Tax begins in the first full fiscal year after effectiveness. The constitutional spending-limit increase lasts four years from the election, for the amount collected."
+      },
+      {
+        "id": "ca-2026-marin-p#benefits",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Who and what the fund supports",
+        "what": "Money supports childcare, preschool and early education access for low- and middle-income families, with access funding directed to children from birth through age five. Priority goes to historically under-resourced communities, children who are homeless, and other high-priority needs defined in the five-year plan. Income-based scholarships are allowed but are not the only permitted approach."
+      },
+      {
+        "id": "ca-2026-marin-p#workforce",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Educator pay and facilities",
+        "what": "Funds may improve provider and early-educator wages, benefits, training and workforce supports, and develop, maintain, upgrade or expand early-education facilities. The five-year plan must address wages, with a goal of moving toward pay comparable to public TK–12 educators with similar work and experience. The measure sets no fixed percentage split among these purposes."
+      },
+      {
+        "id": "ca-2026-marin-p#costs",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Administration and existing funding",
+        "what": "Tax collection and tax-administration costs are paid before remaining revenue and interest are assigned to the fund’s purposes. The administering agency’s fund-administration expenses must be actual costs and cannot exceed 5% of annual fund proceeds. Money may be reserved across years. Existing provider funding cannot be replaced; the separate 2025–26 direct-service funding protection permits an exception for an equal loss of designated non-County funding."
+      },
+      {
+        "id": "ca-2026-marin-p#governance",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Who administers the program",
+        "what": "The Children and Families Commission initially administers the fund; Supervisors may designate a successor. The agency and Supervisors approve a five-year program plan and budget, with annual appropriations by Supervisors. The agency approves an annual spending strategy and may reduce services if tax revenue falls."
+      },
+      {
+        "id": "ca-2026-marin-p#advisory",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Community advisory council",
+        "what": "Supervisors must establish an 11-member advisory council within 45 days and appoint members within 90 days of the ordinance taking effect. Its seats represent childcare workers/providers, parents, referral and subsidized-care organizations, planning, education, health, business and the public. Terms are four years, with five initial two-year terms chosen by lottery and a 12-consecutive-year limit. The council recommends plans, seeks public input and reviews audits."
+      },
+      {
+        "id": "ca-2026-marin-p#accountability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Separate fund, independent audit and evaluation",
+        "what": "Proceeds and interest go into a separate county childcare fund. An independent certified public accountant, outside the County, Commission and designated bodies, must audit the fund annually; reports go to Supervisors and the public. The agency must collect program data and evaluate each five-year plan to inform the next one."
+      },
+      {
+        "id": "ca-2026-marin-p#properties",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and collection",
+        "what": "The tax applies to taxable parcels identified by assessor’s parcel numbers. Property exempt from regular property tax under state or federal law is exempt. Otherwise the July 1 owner is assessed, or a taxable possessory-interest holder if the owner is legally exempt. County secured-roll collection rules apply, including appeals, refunds, penalties, liens and legally authorized personal liability."
+      },
+      {
+        "id": "ca-2026-marin-p#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval and future changes",
+        "what": "A simple majority of votes cast must approve Measure P. Later amendments require voter approval. If a court invalidates part of the ordinance, the other provisions remain effective as far as the law allows."
+      }
+    ],
+    "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-p-110326",
+    "sourceHash": "bc94db23b58c6d3c51a7b22c3d8b0d41e0792a05bb5d0b0ea1d748dc75af657e",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:04:50.388117+00:00",
+    "citation": "measure-source"
+  }
+]

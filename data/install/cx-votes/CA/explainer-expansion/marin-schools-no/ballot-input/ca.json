@@ -1,0 +1,279 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-marin-n",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:dixie_elementary_school_district",
+          "title": "Miller Creek Elementary School District facilities bond — Measure N",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-n-110226",
+            "collectedAt": "2026-11-03T08:57:22.184589+00:00",
+            "verifiedAt": "2026-11-03T09:02:55.655065+00:00",
+            "quote": "Miller Creek Elementary School District Classroom Repair/ Upgrade Measure. To improve aging local elementary/middle schools by fixing bathrooms, plumbing, roofs, HVAC, and electrical systems; upgrading classrooms to support high quality math, science, technology, reading, writing, arts/music instruction; and improve school security/ student safety, shall Miller Creek Elementary School District’s measure be adopted authorizing $67,000,000 in bonds at legal rates, with levies averaging $28 per $100,000 assessed value ($3,800,000 annually) while bonds are outstanding, independent oversight, audits and all funds locally controlled?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-n-110226",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-marin-o",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:reed_union_elementary_school_district",
+          "title": "Reed Union School District facilities bond — Measure O",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326",
+            "collectedAt": "2026-11-03T08:57:22.232123+00:00",
+            "verifiedAt": "2026-11-03T09:02:55.655065+00:00",
+            "quote": "Reed Union School District Repair, Safety, Upgrade Measure: To support quality education and retain/attract quality teachers by upgrading all Reed schools, keeping them safe; repairing deteriorating classrooms/bathrooms, leaky roofs; updating fire/electrical/security systems and earthquake safety; removing mold/asbestos; constructing, repairing facilities, acquiring equipment; shall a measure authorizing $115,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, ($6,200,000 annually) while bonds are outstanding, requiring citizens’ oversight, spending disclosure/audits, be adopted?"
+          },
+          "measureTextUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-marin-n-text",
+          "contestId": "ca-2026-marin-n",
+          "officialNumber": "Measure N",
+          "questionText": "Miller Creek Elementary School District Classroom Repair/ Upgrade Measure. To improve aging local elementary/middle schools by fixing bathrooms, plumbing, roofs, HVAC, and electrical systems; upgrading classrooms to support high quality math, science, technology, reading, writing, arts/music instruction; and improve school security/ student safety, shall Miller Creek Elementary School District’s measure be adopted authorizing $67,000,000 in bonds at legal rates, with levies averaging $28 per $100,000 assessed value ($3,800,000 annually) while bonds are outstanding, independent oversight, audits and all funds locally controlled?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-n-110226",
+            "collectedAt": "2026-11-03T08:57:22.184589+00:00",
+            "verifiedAt": "2026-11-03T09:02:55.655065+00:00",
+            "quote": "Miller Creek Elementary School District Classroom Repair/ Upgrade Measure. To improve aging local elementary/middle schools by fixing bathrooms, plumbing, roofs, HVAC, and electrical systems; upgrading classrooms to support high quality math, science, technology, reading, writing, arts/music instruction; and improve school security/ student safety, shall Miller Creek Elementary School District’s measure be adopted authorizing $67,000,000 in bonds at legal rates, with levies averaging $28 per $100,000 assessed value ($3,800,000 annually) while bonds are outstanding, independent oversight, audits and all funds locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-marin-o-text",
+          "contestId": "ca-2026-marin-o",
+          "officialNumber": "Measure O",
+          "questionText": "Reed Union School District Repair, Safety, Upgrade Measure: To support quality education and retain/attract quality teachers by upgrading all Reed schools, keeping them safe; repairing deteriorating classrooms/bathrooms, leaky roofs; updating fire/electrical/security systems and earthquake safety; removing mold/asbestos; constructing, repairing facilities, acquiring equipment; shall a measure authorizing $115,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, ($6,200,000 annually) while bonds are outstanding, requiring citizens’ oversight, spending disclosure/audits, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Marin County Elections",
+            "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326",
+            "collectedAt": "2026-11-03T08:57:22.232123+00:00",
+            "verifiedAt": "2026-11-03T09:02:55.655065+00:00",
+            "quote": "Reed Union School District Repair, Safety, Upgrade Measure: To support quality education and retain/attract quality teachers by upgrading all Reed schools, keeping them safe; repairing deteriorating classrooms/bathrooms, leaky roofs; updating fire/electrical/security systems and earthquake safety; removing mold/asbestos; constructing, repairing facilities, acquiring equipment; shall a measure authorizing $115,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, ($6,200,000 annually) while bonds are outstanding, requiring citizens’ oversight, spending disclosure/audits, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Authorizes Miller Creek Elementary School District to borrow up to $67 million through bonds for school facilities and equipment, repaid through property taxes. The tax-rate statement estimates an average $27.55 per $100,000 of assessed property value and about $132.5 million in total principal and interest.",
+          "yesMeans": "Authorize the bonds and property-tax levies to repay them, with facilities-only spending restrictions, independent audits and citizen oversight.",
+          "noMeans": "Do not authorize these $67 million in bonds or the property-tax levies associated with them.",
+          "contestId": "ca-2026-marin-n",
+          "parts": [
+            {
+              "id": "ca-2026-marin-n#cost",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Repayment estimates",
+              "what": "The estimate is $27.55 per $100,000 of assessed value on average, a highest rate of $30 expected in fiscal years 2027–28 through 2055–56, and collections through 2060–61. Estimated annual debt service is $3.8 million and total principal plus interest is $132.5 million. These are estimates, not binding caps or guaranteed end dates; rates depend on sales, interest rates and assessed values, not market values."
+            },
+            {
+              "id": "ca-2026-marin-n#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Authorized school projects",
+              "what": "The list covers roofs, bathrooms, plumbing, electrical and heating/cooling systems, classrooms and libraries, technology, accessibility, school security, energy efficiency, playgrounds and outdoor areas. It permits school construction, expansion, replacement, land acquisition and related equipment at existing or future sites."
+            },
+            {
+              "id": "ca-2026-marin-n#restrictions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Facilities spending, with related costs",
+              "what": "Bond money cannot fund ordinary teacher or administrator salaries, school operating expenses, or current routine maintenance and repairs. It may pay costs directly related to listed facilities projects, such as design, permits, construction management, temporary facilities, audits, election and bond-issuance costs, and technology equipment."
+            },
+            {
+              "id": "ca-2026-marin-n#flexibility",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Project choices and other funding",
+              "what": "The Board decides project priorities and may change plans or replace a building instead of renovating when appropriate. The money may pay or retire interim financing for listed projects and support joint-use projects with other public entities. No particular project or state matching money is guaranteed; the capital needs exceed this authorization."
+            },
+            {
+              "id": "ca-2026-marin-n#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Audits and public oversight",
+              "what": "An independent citizens’ committee must be formed within 60 days after results enter Board minutes. Independent financial and performance audits occur annually, proceeds go to a county-held building fund, and an annual report due by January 1 shows collections, spending and project status."
+            },
+            {
+              "id": "ca-2026-marin-n#terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval and legal borrowing limits",
+              "what": "At least 55% of votes cast must approve Measure N. Bonds may be issued in multiple series within applicable debt-capacity rules, including any properly granted waiver. County counsel states interest cannot exceed 12% and bonds must mature within 40 years under state law."
+            },
+            {
+              "id": "ca-2026-marin-n#severability",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "If part is invalidated",
+              "what": "If a court invalidates part of the measure, the other provisions remain effective as far as the law allows."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-n-110226",
+          "sourceHash": "3438c77484ed038cfe0b0332a071e869bbcfcb06c81e352f057c5ab1f14861ee",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:02:55.655065+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Authorizes Reed Union School District to borrow up to $115 million through bonds for school facilities and equipment, repaid through property taxes. The tax-rate statement estimates an average $26.63 per $100,000 of assessed value, a highest rate of $30, and about $213 million in total principal and interest.",
+          "yesMeans": "Authorize the bonds and the property-tax levies to repay them, with facilities-only spending restrictions, independent audits and citizen oversight.",
+          "noMeans": "Do not authorize these $115 million in bonds or the property-tax levies associated with them.",
+          "contestId": "ca-2026-marin-o",
+          "parts": [
+            {
+              "id": "ca-2026-marin-o#cost",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Repayment estimates",
+              "what": "The estimate is $26.63 per $100,000 of assessed value on average, a highest rate of $30 first expected in 2027–28, and collections through 2060–61. Estimated debt service is $6.2 million a year and $213 million in total principal and interest. These estimates can change and are not binding caps. Taxes are based on assessed value, not market value, and are in addition to taxes for other bond authorizations."
+            },
+            {
+              "id": "ca-2026-marin-o#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "School facilities covered",
+              "what": "The project list includes Reed Elementary, Bel Aire Elementary and Del Mar Middle School. It permits classroom and lab construction or upgrades, roofs and utilities, safety/security and earthquake work, removal of hazardous materials, accessibility and community-use improvements, technology, outdoor/play areas, energy systems and related support facilities and equipment. Land acquisition and new buildings are also allowed."
+            },
+            {
+              "id": "ca-2026-marin-o#restriction",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Restrictions and related project costs",
+              "what": "Proceeds cannot pay ordinary teacher or administrator salaries or other school operating expenses. They may pay facilities work and related design, engineering, permits, legal, audit, temporary-housing and management costs, including district staff work necessary and incidental to bond projects, and retire prior lease or interim financing for listed projects."
+            },
+            {
+              "id": "ca-2026-marin-o#choices",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Board priorities and project changes",
+              "what": "The Board chooses the order and timing based on needs, readiness and available funding. Some projects may be delayed or not completed. Joint-use projects with other public or nonprofit agencies are allowed. Demolition and reconstruction may replace renovation when the Board finds that more cost-effective."
+            },
+            {
+              "id": "ca-2026-marin-o#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Audits and citizen oversight",
+              "what": "Independent financial and performance audits occur annually. Bond proceeds have a separate account and statutory reporting. The citizens’ committee must include taxpayer, business and senior-citizen representation; district employees and vendors cannot serve. Spending must stay within the authorized project types."
+            },
+            {
+              "id": "ca-2026-marin-o#terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval and borrowing limits",
+              "what": "At least 55% of votes cast must approve Measure O. The tax statement anticipates multiple bond series after a state debt-capacity waiver is received. County counsel states interest cannot exceed 12% and bonds must mature within 40 years under state law."
+            }
+          ],
+          "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326",
+          "sourceHash": "d65555fc2108b802f09320ed1d859259bffc29578d1fb0bfffdf158d21caaca5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:02:55.655065+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:02:55.655065+00:00",
+    "reviewedBy": "CX-VOTES current official Marin source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326",
+        "httpStatus": 200,
+        "rawHash": "00c2b9471950e708183cbb64366ea647627f18dee1cd6ceca0d7f7e6a1e19210",
+        "retrievedAt": "2026-11-03T08:57:09.598609+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current corrected official November3,2026 list of20localmeasures. Earlier R/U label announcement error explicitly noted by county; current labels control."
+      },
+      {
+        "requestedUrl": "https://sd.cde.ca.gov/schooldirectory/details?cdscode=21653180000000",
+        "finalUrl": "https://sd.cde.ca.gov/schooldirectory/details?cdscode=21653180000000",
+        "httpStatus": 200,
+        "rawHash": "0b5a90d165918e0656ceea3f696e02ac8c4e90d020da19a9216b141330759a38",
+        "retrievedAt": "2026-11-03T09:01:43.160022+00:00",
+        "publisher": "California Department of Education",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official state/federal school directory identity confirms current named district NCES0611220; existing held reader alias retained, no invented school geography."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0611220&details=5",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0611220&details=5",
+        "httpStatus": 200,
+        "rawHash": "44ab145cd42afb8784d7a363678d96f2aefa558e2e01a38f4f70c571568529f3",
+        "retrievedAt": "2026-11-03T09:01:43.270741+00:00",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official state/federal school directory identity confirms current named district NCES0611220; existing held reader alias retained, no invented school geography."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-n-110226",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-n-110226",
+        "httpStatus": 200,
+        "rawHash": "3438c77484ed038cfe0b0332a071e869bbcfcb06c81e352f057c5ab1f14861ee",
+        "retrievedAt": "2026-11-03T08:57:22.184589+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-miller-creek-school-district-110226/measure-n-full-text-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-miller-creek-school-district-110226/measure-n-full-text-110326",
+        "httpStatus": 200,
+        "rawHash": "942c187a6e63abd38c71837f91f98a104e239b14fe6cf6863ea2d2f7dc6810f8",
+        "retrievedAt": "2026-11-03T08:58:02.448661+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County-published full proposed voter ordinance/resolution; not claimed signed or already voter-adopted."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326",
+        "httpStatus": 200,
+        "rawHash": "d65555fc2108b802f09320ed1d859259bffc29578d1fb0bfffdf158d21caaca5",
+        "retrievedAt": "2026-11-03T08:57:22.232123+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current full ballot question and complete neutral official attorney analysis; submitted arguments excluded from extracted source/support."
+      },
+      {
+        "requestedUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326/measure-o-full-text-110326",
+        "finalUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-o-110326/measure-o-full-text-110326",
+        "httpStatus": 200,
+        "rawHash": "02b2f74832967d3b94e39712656219d2d264ca02547b4366acd71a26c8d4b126",
+        "retrievedAt": "2026-11-03T08:58:02.321496+00:00",
+        "publisher": "Marin County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County-published full proposed voter ordinance/resolution; not claimed signed or already voter-adopted."
+      }
+    ]
+  }
+}

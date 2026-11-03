@@ -1,0 +1,39 @@
+Search for Public School Districts - District Detail for
+Search for Public School Districts
+District Directory Information (2025-2026 School Year)
+Modify Search
+Data Notes/Grant IDs
+Help
+District Name:
+Miller Creek Elementary
+(Schools in this District)
+NCES District ID:
+0611220
+State District ID:
+CA-2165318
+Mailing Address:380 Nova Albion WaySan Rafael CA, 94903 –3523
+Physical Address:380 Nova Albion Way
+San Rafael CA, 94903 –3523
+Phone:
+(415)492-3700
+Type:
+Regular local school district
+Status:
+Open
+Total Schools:
+4
+Supervisory Union #:
+N/A
+Grade Span:
+KG - 8
+KG12345678
+Website: http://www.millercreeksd.org
+District Demographics:School District Demographic Dashboard
+Source: CCD public school district data for the 2024-2025, 2025-2026 school years
+Notes:
+* denotes a column with data from 2025-2026
+[ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released.
+[ – ] indicates that the data are missing.
+[ ‡ ] indicates that the data do not meet NCES data quality standards.
+The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026.
+Data provided on student membership and staffing are from the official district level data for 2024-2025.

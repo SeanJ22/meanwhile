@@ -1,0 +1,23 @@
+{
+  "scope": "Held canonical school identities preserved; name update established by current state/federal directory, not guessed from town name.",
+  "MillerCreek": {
+    "currentName": "Miller Creek Elementary",
+    "ncesDistrictId": "0611220",
+    "heldDivision": [
+      "ocd-division/country:us/state:ca/school_district:dixie_elementary_school_district",
+      "elsd",
+      "0611220",
+      "Dixie Elementary School District"
+    ],
+    "stateDirectoryUrl": "https://sd.cde.ca.gov/schooldirectory/details?cdscode=21653180000000",
+    "federalDirectoryUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=0611220&details=5"
+  },
+  "Reed": {
+    "heldDivision": [
+      "ocd-division/country:us/state:ca/school_district:reed_union_elementary_school_district",
+      "elsd",
+      "0632160",
+      "Reed Union Elementary School District"
+    ]
+  }
+}

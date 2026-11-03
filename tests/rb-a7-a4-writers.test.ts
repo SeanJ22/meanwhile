@@ -53,6 +53,14 @@ test("replacing a bare state association queues the old root and newly served lo
   }finally{await db.pg.close();}
 });
 
+test("a state is not filed again for an entity that holds a place within it, so the next filing does not unfile it", async () => {
+  const db = await fixture();
+  try {
+    const filed = await db.transaction(query => fileEntityPlaces(query, BODY, [{ placeId: ROOT, boundaryYear: 0, basis: "SERVICE_AREA" }]));
+    assert.deepEqual([filed.moved, filed.removed], [false, []]);
+  } finally { await db.pg.close(); }
+});
+
 test("a refused fact cannot file an additional place or queue its readers",async()=>{
   const db=await fixture();
   try {

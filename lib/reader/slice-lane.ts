@@ -63,15 +63,21 @@ async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: R
   return written;
 }
 
-/** Rebuilds the slices the Slide marked. The rows taken are finished together. */
+/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. At the turn's end the marked slices go back to waiting. */
 async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, purge?: ReaderCachePurger): Promise<SliceTurn> {
-  const { owner, rows } = await list.take("slice", CLAIM_LIMIT);
-  if (!rows.length) return NOTHING;
+  const claims = await list.claim("slice", CLAIM_LIMIT);
+  if (!claims.length) return NOTHING;
   const wanted = new Map<string, Set<SliceCard>>();
-  for (const { subjectId, field } of rows) wanted.set(subjectId, (wanted.get(subjectId) ?? new Set<SliceCard>()).add(field as SliceCard));
+  for (const claim of claims) wanted.set(claim.subjectId!, (wanted.get(claim.subjectId!) ?? new Set<SliceCard>()).add(claim.field as SliceCard));
   const built = wanted.size;
-  try { const written = await untilEnd(end, make(facts, wanted, purge)); await list.finishTaken(owner); return { claimed: rows.length, built, written, backfilled: 0 }; }
-  catch (error) { if (!end?.aborted) await list.laterTaken(owner, error instanceof Error ? error.message || "failed" : String(error)); throw error; }
+  try {
+    const written = await untilEnd(end, make(facts, wanted, purge));
+    for (const claim of claims) await list.finish(claim);
+    return { claimed: claims.length, built, written, backfilled: 0 };
+  } catch (error) {
+    for (const claim of claims) await (end?.aborted ? list.release(claim) : list.later(claim, error instanceof Error ? error.message || "failed" : String(error)));
+    throw error;
+  }
 }
 
 /** Where the backfill is: the ZIP it has reached (most residents first), then, once every ZIP's places have slices, the rest of the places in id order. */

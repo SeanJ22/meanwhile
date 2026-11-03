@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { Query } from "../facts/publish.ts";
 import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL, UNSTAMPED_SQL } from "./canonical.ts";
-import { groupedBy, intern, MEETING_CARDS, unpackSlice, type MeetingCard } from "./slices.ts";
+import { groupedBy, intern, MEETING_CARDS, type MeetingCard } from "./slices.ts";
 
 type Row = Record<string, unknown>;
 type Meeting = Row & { readonly id: string; readonly bodyId?: string | null; readonly ocdId?: string | null };

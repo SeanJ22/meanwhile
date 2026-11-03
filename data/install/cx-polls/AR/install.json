@@ -1,0 +1,61 @@
+{
+  "kind": "CX_POLLS_VOTING_DATA_INSTALL",
+  "state": "AR",
+  "step": "CX-POLLS-AR",
+  "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+  "productionWritesByThisBundle": false,
+  "appCodeChanges": false,
+  "contractId": "voting-sites:AR",
+  "readyDoors": "doors.json",
+  "sourceCaptures": "sources.json",
+  "validationFile": "checks.json",
+  "sourceLinkingCopies": "linking-copies.json",
+  "coverage": {
+    "scope": "66counties officially marked VoteCenter=Yes; nine assigned counties open",
+    "counties": 66,
+    "counts": {
+      "electionDayVoteCenterRows": 666,
+      "physicalSites": 661,
+      "sourceCounties": 75,
+      "sourceTotalRows": 846
+    },
+    "statewideComplete": false
+  },
+  "sourceOnlyPrepared": true,
+  "liveStatus": "Prepared data awaits River installation and live verification",
+  "limitations": [
+    "Assigned counties Chicot,Cleveland,Crittenden,Jefferson,Mississippi,Nevada,Perry,Pulaski,Searcy remain without current precinct-to-site mapping.",
+    "River must install AR-linking-copies.json normalized observed official links; original public authority page wraps the experience link in SafeLinks.",
+    "Containerwebmap explicitly titles this layer2026GeneralElection; current-Nov3 association was verified from that current official map and election scope.",
+    "Live installation and reader verification remain River work."
+  ],
+  "existingInstallOperation": {
+    "register": {
+      "module": "lib/ballot/voting-source-publication.ts",
+      "function": "saveVotingSourceDoor",
+      "arguments": [
+        "context.repos.doors",
+        "each door from doors.json",
+        "actual install timestamp"
+      ]
+    },
+    "refresh": {
+      "module": "scripts/fetch-voting-sites.mts",
+      "function": "refreshVotingSources",
+      "arguments": {
+        "state": "AR",
+        "store": "existing PostgresRoutineDataStore",
+        "context": "existing workerPublicationContext",
+        "seeds": "ready doors from doors.json"
+      }
+    },
+    "productionWriteContext": "River performs installation through the existing authorized worker publication context."
+  },
+  "installOrder": [
+    "Use the saved source captures and their hashes for this data handoff. The savedDocument encoding is the existing VotingRawCapture gzip-base64 format.",
+    "Save the linked official page copies from linking-copies.json through the existing saveLinkingCopy operation before registering dependent doors. Preserve each normalized-link derivation label.",
+    "Register doors.json with saveVotingSourceDoor; preserve unrelated source mappings and verified holdings.",
+    "Refresh the registered sources through refreshVotingSources in the existing authorized publication context.",
+    "Check real residential lookups in the named coverage on the live site. Live POST verification was rejected by automatic approval review under the data-only/no-production-writes instruction."
+  ]
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "cx-polls-ar-state-general-vote-center-counties-2026",
+    "publisher": "Arkansas State Board of Election Commissioners",
+    "url": "https://services.arcgis.com/PwY9ZuZRDiI5nXUB/arcgis/rest/services/SBEC_General_Election/FeatureServer/1",
+    "shape": "map-service",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar",
+      "name": "Arkansas"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://services.arcgis.com/PwY9ZuZRDiI5nXUB/arcgis/rest/services/SBEC_General_Election/FeatureServer/1",
+    "electionAssociationVerified": true,
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "linkingPage": {
+      "url": "https://www.arcgis.com/sharing/rest/content/items/a1bc6c60e69d49ad819a28bac01f9299/data?f=json",
+      "sourceCopyId": -1635689534843495,
+      "linkingPage": {
+        "url": "https://experience.arcgis.com/experience/03fe56e9abf945c68ac3cab3d1b7b869",
+        "sourceCopyId": -4347337957800228,
+        "linkingPage": {
+          "url": "https://sbec.arkansas.gov/election-information/",
+          "sourceCopyId": -3510682094222035
+        }
+      }
+    },
+    "discoveredFrom": "https://sbec.arkansas.gov/election-information/",
+    "extraction": {
+      "kind": "ELECTION_DAY",
+      "where": "General_elect_day = 'yes' AND Vote_Center = 'Yes'",
+      "filters": {
+        "General_elect_day": "yes",
+        "Vote_Center": "Yes"
+      },
+      "columns": {
+        "name": "USER_Polling_Location",
+        "address": [
+          "USER_Address",
+          "USER_City",
+          "USER_Zip_Code"
+        ],
+        "countyName": "county_1",
+        "phone": "Clerk_Phone",
+        "officeName": "Clerk",
+        "locationNotes": "Action_note"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:57:28.287Z",
+      "detail": "Current official statewide SBEC2026 General Election map supplies846 Election Day locations. This mapping includes only666 locations in66 counties explicitly marked Vote Center=Yes. Nine assigned-polling counties remain open; current official layer contains no per-precinct assignment field."
+    }
+  }
+]

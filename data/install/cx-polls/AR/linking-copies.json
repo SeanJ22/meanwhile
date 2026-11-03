@@ -1,0 +1,20 @@
+{
+  "-3510682094222035": {
+    "url": "https://sbec.arkansas.gov/election-information/",
+    "html": "<a href=\"https://experience.arcgis.com/experience/03fe56e9abf945c68ac3cab3d1b7b869\">SBEC Elections</a>",
+    "sha256": "161166a838fe593a62d24b477b79679f84d008293cd46950176ea0d797236049",
+    "derivation": "Normalized observed official links from saved native source; not unchanged HTTP HTML"
+  },
+  "-4347337957800228": {
+    "url": "https://experience.arcgis.com/experience/03fe56e9abf945c68ac3cab3d1b7b869",
+    "html": "<a href=\"https://www.arcgis.com/sharing/rest/content/items/a1bc6c60e69d49ad819a28bac01f9299/data?f=json\">Arkansas Elections Intel Map</a>",
+    "sha256": "902e622acee1dd118d2d6a1da45049f54b5cf9dd46347eb12089ef1ff36e5aeb",
+    "derivation": "Normalized observed official links from saved native source; not unchanged HTTP HTML"
+  },
+  "-1635689534843495": {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/a1bc6c60e69d49ad819a28bac01f9299/data?f=json",
+    "html": "<a href=\"https://services.arcgis.com/PwY9ZuZRDiI5nXUB/arcgis/rest/services/SBEC_General_Election/FeatureServer/1\">2026 General Election Polling Locations - Election Day Voting</a>",
+    "sha256": "4d2d42ba3c4cc200c3d6a5c11b0f5f1af1d79d41ed73b99d9bdad17c97180acf",
+    "derivation": "Normalized observed official links from saved native source; not unchanged HTTP HTML"
+  }
+}

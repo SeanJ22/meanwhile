@@ -1,0 +1,45 @@
+{
+  "sourceToAnswer": "PASS_FOR_RESIDENTIAL_SAMPLE",
+  "residentialSamples": [
+    {
+      "state": "AR",
+      "countyFips": [
+        "05143"
+      ],
+      "electionDaySites": 41,
+      "narrowing": [
+        "NOT_NEEDED"
+      ],
+      "sourcePhysicalSites": 661,
+      "sourceCounties": 66,
+      "sourceRows": 666,
+      "remainingAssignedCounties": [
+        "Chicot",
+        "Cleveland",
+        "Crittenden",
+        "Jefferson",
+        "Mississippi",
+        "Nevada",
+        "Perry",
+        "Pulaski",
+        "Searcy"
+      ]
+    }
+  ],
+  "authorityLinkCopies": "/tmp/cx-polls/AR-linking-copies.json",
+  "sourceReader": "PASS",
+  "productionWrites": false,
+  "liveVerification": "PENDING_RIVER_INSTALL; live POST not attempted under no-production-writes constraint",
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 1,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "cx-polls-ar-state-general-vote-center-counties-2026",
+      "sites": 661,
+      "boundaries": 0,
+      "currentElectionSites": 661
+    }
+  ]
+}

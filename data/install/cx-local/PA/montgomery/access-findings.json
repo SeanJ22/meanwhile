@@ -1,0 +1,12 @@
+{
+  "county": "Montgomery",
+  "state": "PA",
+  "nativeFailedRoutes": [],
+  "publicMunicipalityPostFilters": 62,
+  "allPublishedPdfGetRequests": 431,
+  "voterIdentitySubmitted": false,
+  "ballotChoicesSubmitted": false,
+  "proxyPreserved": true,
+  "vpnEnabled": false,
+  "productionWrites": false
+}

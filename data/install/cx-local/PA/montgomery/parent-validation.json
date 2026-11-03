@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "kind": "SOURCE_REVIEW_NO_WRITE",
+  "checkedAt": "2026-11-03T07:31:22.516790+00:00",
+  "sourceHashes": "PASS",
+  "sourceFiles": 507,
+  "fingerprintedBlobs": 1521,
+  "publishedStyles": 431,
+  "municipalities": 62,
+  "retainedContests": 22,
+  "candidateQuoteReplays": 42,
+  "exactFieldQuoteReplays": 29,
+  "nativeOriginalPdfsReplayedInScratch": 431,
+  "nativeOriginalBytesReplayed": 246459903,
+  "localUnnamedOfficeExists": true,
+  "commissionStyles": 7,
+  "blankSlotsPerCommissionStyle": 7,
+  "printedLocalCandidateNames": 0,
+  "ballotInputChange": false,
+  "productionWrites": false,
+  "merge": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "manualProjectionCandidate": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE"
+}

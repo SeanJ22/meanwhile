@@ -1,0 +1,64 @@
+{
+  "parentSuppliedComparison": {
+    "ref": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/PA/ballot-additions/ballot-input/pa.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/ballot-additions__ballot-input__pa.json",
+        "sha256": "3596c14f1eca6e1b525c70f1c38ed550444167cb6997d573b43a2537a8ea6f09"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/PA/ballot-input/pa.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/ballot-input__pa.json",
+        "sha256": "120850399d54d70d827f17ac4541434059dc5316327ffea840b2c8c591ac142d"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/PA/explainer-expansion/ballot-input/pa.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/explainer-expansion__ballot-input__pa.json",
+        "sha256": "7403587d269b841f7abef25b767a2fc32412ed3d16c448b1ca90592c08f7a41b"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/PA/explainer-expansion/delaware-county-supplement/ballot-input/pa.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/explainer-expansion__delaware-county-supplement__ballot-input__pa.json",
+        "sha256": "61c6fbf677bc7e7a031bb92e0e9828eeffafceb65c8e66a9681cd5592ef8d42c"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/PA/lehigh-measures/ballot-input/pa.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/lehigh-measures__ballot-input__pa.json",
+        "sha256": "15481576ba3dcef7c89ba7e566fcd057b73a42b813c78f4f4e46d9378a45769a"
+      }
+    ]
+  },
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/pa.json",
+      "sha256": "4a3ab6fda1ac3c0f621631c6b465691bada21a4693396c8764215fa1203c15d2"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/ballot-additions__ballot-input__pa.json",
+      "sha256": "3596c14f1eca6e1b525c70f1c38ed550444167cb6997d573b43a2537a8ea6f09"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/ballot-input__pa.json",
+      "sha256": "120850399d54d70d827f17ac4541434059dc5316327ffea840b2c8c591ac142d"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/explainer-expansion__ballot-input__pa.json",
+      "sha256": "7403587d269b841f7abef25b767a2fc32412ed3d16c448b1ca90592c08f7a41b"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/explainer-expansion__delaware-county-supplement__ballot-input__pa.json",
+      "sha256": "61c6fbf677bc7e7a031bb92e0e9828eeffafceb65c8e66a9681cd5592ef8d42c"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-PA-92b249b5e/lehigh-measures__ballot-input__pa.json",
+      "sha256": "15481576ba3dcef7c89ba7e566fcd057b73a42b813c78f4f4e46d9378a45769a"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/PA/allegheny/ballot-input/pa.json",
+      "sha256": "ae9e13ae112433462dc2681c56e11f4398d873131a6033f34e84e1534029cf1f"
+    }
+  ],
+  "status": "PASS_ALL_FIVE_PINNED_PA_INPUTS_FULLY_READ;ALL_LEGISLATIVE_AND_QUESTION_IDENTITIES_AND_EXPLANATIONS_UNCHANGED",
+  "workerGitOperations": "NONE"
+}

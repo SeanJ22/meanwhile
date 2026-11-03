@@ -1,0 +1,55 @@
+{
+  "conclusion": "The complete current official431sample/62municipality source set prints no additional NAMED local candidate field. A local Conshohocken Borough Government Study Commission office DOES exist and appears in seven samples, each with exactly seven blank Write-In slots and no printed candidate name. This is source-review evidence only; no reader absence, no-election assertion or empty publication input is created.",
+  "electionDate": "2026-11-03",
+  "publisher": "Montgomery County Voter Services / Board of Elections",
+  "officeInventory": {
+    "existingUniqueNamedFields": 22,
+    "existingNamedChoicesPreserved": 42,
+    "printedExistingNamedOfficeOccurrences": 1613,
+    "localCommissionOfficeExists": true,
+    "localCommissionStyles": 7,
+    "printedCommissionNames": 0,
+    "blankSlotsPerCommissionStyle": 7,
+    "observedLocalQuestionTypes": 2,
+    "newLocalContests": 0,
+    "newLocalCandidacies": 0
+  },
+  "methods": [
+    "Acquire the native public county index, enumerate all62municipality form selections without voter identity and acquire every one of431linked native PDFs.",
+    "Validate all862physicalpages, November3headers, complete bold office-heading universe and all1613printed named-office blocks against22held IDs and42held personchoices.",
+    "Verify all1293embeddedrasterimages occupy the three officialsignature/footer positions perfrontpage; native office/question text is complete and no extra image candidate field exists.",
+    "Read allfiveparent-pinnedCX-VOTESPAinputs at92b249b5e and preparedPAlaneinput; preserve every legislative/candidate/question/explanation record.",
+    "Retain246459903nativePDFbytes in scratch with exact originalmetadata; put complete deterministically extracted native text in packet with text-artifact hashes and nativePDF URL/status/hash/size/time. Original nativePDFs for allsevenlocalcommissionstyles plus two focalstyles are included too.",
+    "Keep Conshohockencommissionoffice existence and sevenblankslots explicit in blank-fields.json; no ordinary candidate, active emptycontest, heldcontestmutation or absence invented."
+  ],
+  "visualReview": [
+    {
+      "file": "sources/67d2986658e251b3c521508c31e13dd2acaaa1027e1365cfaca3cb6c1d7facdb.png",
+      "sha256": "67d2986658e251b3c521508c31e13dd2acaaa1027e1365cfaca3cb6c1d7facdb",
+      "description": "Original native Conshohocken1reverse; local commission field exists with seven blankwriteins, no printed names."
+    },
+    {
+      "file": "sources/fa83f4067618940bd51a76dcc2b11e4ab675eedac92db38d4ada9e2ada64c88c.png",
+      "sha256": "fa83f4067618940bd51a76dcc2b11e4ab675eedac92db38d4ada9e2ada64c88c",
+      "description": "Original native representative front; four existing named office classes and three official signature/footer graphics."
+    },
+    {
+      "file": "sources/e0baf62bad9531a157c9ab3bfce2734e7c0f2ad43106fd8a044b34aad267ce6d.png",
+      "sha256": "e0baf62bad9531a157c9ab3bfce2734e7c0f2ad43106fd8a044b34aad267ce6d",
+      "description": "Original native Hatfieldreverse; local question only, no named candidate office."
+    },
+    {
+      "file": "sources/f8bbd93beaff28786b50107fd28a3001056edfe63d935819d3da2e7fd212bc5e.png",
+      "sha256": "f8bbd93beaff28786b50107fd28a3001056edfe63d935819d3da2e7fd212bc5e",
+      "description": "Unmodified native footer-region render shows the three embedded rasters are Board of Elections signatures, not candidate fields."
+    }
+  ],
+  "noBallotMutation": true,
+  "absencesCreated": 0,
+  "declaredWriteInStatus": "No separate named declaration/certification source acquired; no inference of none.",
+  "remainingSourceLimits": [
+    "This review is scoped to the complete current published county catalog; it does not independently certify unpublished formats, later write-in declarations or cancelled/elected-status supplements.",
+    "Conshohocken and Hatfield questions are observed and left outside this candidate task; all held/latest measure IDs and explanations are preserved.",
+    "No reader delivery is claimed and no geography membership is expanded."
+  ]
+}

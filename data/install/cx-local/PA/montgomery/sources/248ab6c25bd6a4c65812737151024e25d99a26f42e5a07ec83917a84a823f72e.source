@@ -1,0 +1,105 @@
+
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head><link href="stylesheets/StyleNewBranding.css" type="text/css" rel="stylesheet" /><link href="print.css" type="text/css" media="print" rel="stylesheet" /><title>
+	Voter Services Montgomery County, PA
+</title>
+</head>
+<body>
+<img src="images/VoterServicesHeader956x227.jpg" alt="Header graphic for Montgomery County, PA Office of Voter Services showing a green oval logo with a courthouse-style building, nearby homes, trees, a winding stream, and a sun above the landscape, alongside the office name in dark green text." style="border-width:0px;" width="956" height="227"/>
+<table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+  <tr>
+  <td valign="top" align="left" width="100%">
+    <div id="Content">        
+   <p><b><font size="4" color="#03425c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+<font size="4" color="#03425c"><br>
+Unofficial Sample Ballots</font><font size="5" color="#03425c"><br>
+	</font></b><font size="3" color="#03425c"><b>&nbsp;&nbsp; For 2026 General Election</b></font><b><font color="#03425c" size="3"><br>
+	</font></b><b><font color="#03425c" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#03425c" size="3">Tuesday, 
+	November 3, 2026&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Voting Districts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font size="4" color="#03425c">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></b></p>
+	<form method="POST" action="Listsampleballots.asp">
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <select size="20" name="Municipalities">
+		<option value="Abington">Abington</option>
+		<option value="Ambler">Ambler</option>
+	    <option value="Bridgeport">Bridgeport</option>
+		<option value="Bryn Athyn">Bryn Athyn</option>
+		<option value="Cheltenham">Cheltenham</option>
+		<option value="Collegeville">Collegeville</option>
+		<option value="Conshohocken">Conshohocken</option>
+		<option value="Douglass">Douglass</option>
+		<option value="East Greenville">East Greenville</option>
+		<option value="East Norriton">East Norriton</option>
+		<option value="Franconia">Franconia</option>
+		<option value="Green Lane">Green Lane</option>
+		<option value="Hatboro">Hatboro</option>
+		<option value="Hatfield Borough">Hatfield Borough</option>
+		<option value="Hatfield">Hatfield</option>
+		<option value="Horsham">Horsham</option>
+		<option value="Jenkintown">Jenkintown</option>
+		<option value="Lansdale">Lansdale</option>
+		<option value="Limerick">Limerick</option>
+		<option value="Lower Frederick">Lower Frederick</option>
+		<option value="Lower Gwynedd">Lower Gwynedd</option>
+		<option value="Lower Merion">Lower Merion</option>
+		<option value="Lower Moreland">Lower Moreland</option>
+		<option value="Lower Pottsgrove">Lower Pottsgrove</option>
+		<option value="Lower Providence">Lower Providence</option>
+		<option value="Lower Salford">Lower Salford</option>
+		<option value="Marlborough">Marlborough</option>
+		<option value="Montgomery">Montgomery</option>
+		<option value="Narberth">Narberth</option>
+		<option value="New Hanover">New Hanover</option>
+		<option value="Norristown">Norristown</option>
+		<option value="North Wales">North Wales</option>
+		<option value="Pennsburg">Pennsburg</option>
+		<option value="Perkiomen">Perkiomen</option>
+		<option value="Plymouth">Plymouth</option>
+		<option value="Pottstown">Pottstown</option>
+		<option value="Red Hill">Red Hill</option>
+		<option value="Rockledge">Rockledge</option>
+		<option value="Royersford">Royersford</option>
+		<option value="Salford">Salford</option>
+		<option value="Schwenksville">Schwenksville</option>
+		<option value="Skippack">Skippack</option>
+		<option value="Souderton">Souderton</option>
+		<option value="Springfield">Springfield</option>
+		<option value="Telford">Telford</option>
+		<option value="Towamencin">Towamencin</option>
+		<option value="Trappe Borough">Trappe Borough</option>
+		<option value="Upper Dublin">Upper Dublin</option>
+		<option value="Upper Frederick">Upper Frederick</option>
+		<option value="Upper Gwynedd">Upper Gwynedd</option>
+		<option value="Upper Hanover">Upper Hanover</option>
+		<option value="Upper Merion">Upper Merion</option>
+		<option value="Upper Moreland">Upper Moreland</option>
+		<option value="Upper Pottsgrove">Upper Pottsgrove</option>
+		<option value="Upper Providence">Upper Providence</option>
+		<option value="Upper Salford">Upper Salford</option>
+		<option value="West Conshohocken">West Conshohocken</option>
+		<option value="West Norriton">West Norriton</option>
+		<option value="West Pottsgrove">West Pottsgrove</option>
+		<option value="Whitemarsh">Whitemarsh</option>
+		<option value="Whitpain">Whitpain</option>
+		<option value="Worcester">Worcester</option>
+		</select>
+		<input type="submit" value="Submit" name="B3"></p>
+	</form>
+		<p>&nbsp; <b><font size="4">
+		<a target="_blank" href="https://www.pavoterservices.pa.gov/Pages/PollingPlaceInfo.aspx">
+		<font size="2" color="#03425c">WHERE DO I VOTE</a></font></b></p>
+	<p><a href="https://www.montgomerycountypa.gov/voterservices"><font size="2" color="#03425c">Voter Services Website</a></font><br>
+		<a href="https://www.montgomerycountypa.gov"><font size="2" color="#03425c">County Website</a></font></p>
+		
+		<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;<p>&nbsp;</div>
+    </div>
+    
+
+  </td>  
+ <tr>
+  <td align="center" valign="bottom" width="100%">
+   County of Montgomery, Pa<br></td>
+ </tr>
+</table>
+</body>
+</html>

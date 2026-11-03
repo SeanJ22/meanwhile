@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:18:58.198356+00:00",
+  "preparedAt": "2026-11-03T07:34:46.788636+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1746,6 +1746,35 @@
         "absencesCreated": 0
       },
       "sourceScope": "No additional local candidate field appears in the complete current official48published split-style samples or the associated official office/candidate inventory. This is a source-scoped review result; no countywide reader absence or no-election record is created."
+    },
+    {
+      "state": "PA",
+      "county": "Montgomery",
+      "populationRank": 71,
+      "manifest": "PA/montgomery/install.json",
+      "status": "SOURCE_REVIEW_NO_WRITE",
+      "counts": {
+        "publishedMunicipalities": 62,
+        "publishedStyles": 431,
+        "reviewedStyles": 431,
+        "originalSamplePdfPages": 862,
+        "nativeSampleBytesPreservedInScratch": 246459903,
+        "completeNativeTextCaptures": 431,
+        "originalFocalSamplePdfsInPacket": 9,
+        "existingUniqueCandidateOfficeFields": 22,
+        "existingCandidaciesPreserved": 42,
+        "printedExistingNamedOfficeOccurrences": 1613,
+        "localUnnamedCommissionFields": 1,
+        "localCommissionStyles": 7,
+        "blankCommissionSlotsPerStyle": 7,
+        "printedLocalCandidateNames": 0,
+        "observedLocalQuestionTypes": 2,
+        "newLocalContests": 0,
+        "newLocalCandidacies": 0,
+        "newOrRefreshedMeasures": 0,
+        "absencesCreated": 0
+      },
+      "sourceScope": "The complete current official431sample/62municipality source set prints no additional NAMED local candidate field. A local Conshohocken Borough Government Study Commission office DOES exist and appears in seven samples, each with exactly seven blank Write-In slots and no printed candidate name. This is source-review evidence only; no reader absence, no-election assertion or empty publication input is created."
     }
   ],
   "totals": {
@@ -1758,8 +1787,8 @@
     "distinctPreparedContestIds": 3607,
     "distinctPreparedCandidateIds": 7793,
     "distinctNewContestsAgainstCheckedInBaseline": 2934,
-    "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 68
+    "sourceReviewCounties": 2,
+    "distinctCountyHandoffs": 69
   },
   "remainingWork": [
     {

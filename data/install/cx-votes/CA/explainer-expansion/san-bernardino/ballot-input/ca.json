@@ -1,0 +1,1560 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-bernardino-z",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:san_bernardino_city_unified_school_district",
+          "title": "San Bernardino City Unified School District — Measure Z",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/Notice_SBCUSD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.194005+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To repair/upgrade aging classrooms, labs, career technology, school facilities to support college/career readiness in math, science, engineering, arts, skilled trades; fix/replace deteriorating roofs, plumbing, HVAC, electrical; and upgrade schools to meet current health/safety codes and improve disabled access, shall San Bernardino City Unified School District's measure authorizing $345,000,000 in bonds, at legal rates, be adopted, levying approximately $45 per $100,000 assessed value ($22,000,000 annually) while bonds are outstanding, with oversight, audits, and all money locally controlled?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/FT_SBCityUSD.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:upland_unified_school_district",
+          "title": "Upland Unified School District — Measure A",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/Notice_UUSD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.338404+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To improve the quality of education by modernizing, constructing, upgrading and equipping classrooms, restrooms/school facilities, career technical classrooms/labs; replace roofs; make safety/security improvements; and renovate/replace electrical/plumbing/sewer systems; shall Upland Unified School District’s measure be adopted, authorizing $236,700,000 of bonds at legal rates, levying approximately $47.50 per $100,000 assessed value (raising $14,200,000 annually) while bonds are outstanding, with audits, independent oversight, NO money for salaries, including administrators, only Upland USD educational facilities?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/FT_UplandUSD.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-b",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:beaumont_unified_school_district",
+          "title": "Beaumont Unified School District — Measure B",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.412129+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Without increasing current tax rates, to repair/replace deteriorating roofs, plumbing, HVAC and electrical systems; improve student safety/security; repair/upgrade aging classrooms, science labs, school/career technology facilities at existing schools to support college/career readiness in health sciences, engineering, skilled trades; shall Beaumont Unified School District’s measure be adopted authorizing $86,000,000 in bonds at legal rates, levying $20 per $100,000 assessed value ($6,000,000 annually) while bonds are outstanding, with audits, citizen oversight, all money locally controlled?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:needles",
+          "title": "Needles — Measure D",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/RES_CityofNeedles.pdf",
+            "collectedAt": "2026-11-03T05:20:41.775027+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the proposed amendment to Section 503 of the City Charter to increase the compensation for each member of the City Council from $1 per month to $150 per month be approved?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/FT_CityofNeedles.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-e",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:highland",
+          "title": "Highland — Measure E",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/RES_CityofHighland.pdf",
+            "collectedAt": "2026-11-03T05:20:41.977958+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To maintain local funding for police, fire, emergency services; and improve critical infrastructure, including maintaining roads, bridges, drainage, 5th Street Corridor Interchange, and other improvement projects; shall the City of Highland enact a 1¢ sales tax, providing approximately $6.35 million annually, remaining in effect until ended by voters, with funds staying in the City and generated from purchases paid by both visitors and City residents?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/FT_CityofHighland.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-f",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:chino",
+          "title": "Chino — Measure F",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/RES_CityofChino.pdf",
+            "collectedAt": "2026-11-03T05:20:42.273337+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Without taxing residents, and to support general city services such as 911/police response; protect local drinking water sources; retain/attract local businesses; shall the measure be adopted to reform City of Chino’s outdated business license ordinance with rates of $0.60 - $1.50 per $1,000 of gross receipts for larger businesses based on business category; and only $25 for smaller businesses (under $75,000), generating approximately $4,800,000 annually until ended by voters; with audits, spending disclosure, funds locally controlled?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/FT_CityofChino.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-g",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:twentynine_palms",
+          "title": "Twentynine Palms — Measure G",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/RES_TP.pdf",
+            "collectedAt": "2026-11-03T05:20:42.084589+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the measure funding services for City of Twentynine Palms residents (including those required for maintaining 911 and emergency response times, police officers and patrols; repairing streets/sidewalks; responding to floods/natural disasters; maintaining clean and safe public parks; and upgrading the animal shelter) by levying a transaction (sales) and use tax of 1%, providing approximately $2,000,000 in funds annually until ended by voters, requiring audits, public spending disclosures, and that all funds are used locally, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/FT_TP.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-h",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:ontario",
+          "title": "Ontario — Measure H",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/RES_Ontario.pdf",
+            "collectedAt": "2026-11-03T05:20:42.218752+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To maintain fire, paramedic, police, 911 response, anti-gang programs; respond to property crimes, thefts, burglaries; clean and maintain public areas; repair streets/potholes; address homelessness; increase access to affordable housing for seniors/families/individuals; retain/attract local businesses; for general City services; shall the measure establishing a half-cent sales tax providing approximately $32,500,000 annually until ended by voters; requiring audits, spending disclosure, funds locally controlled, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/FT_Ontario.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-i",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/county:san_bernardino",
+          "title": "San Bernardino County Transportation Authority — Measure I",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/Notice_SBCTA.pdf",
+            "collectedAt": "2026-11-03T05:20:41.706531+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "LOCAL TRANSPORTATION IMPROVEMENT PROGRAM San Bernardino County Road Repair/Traffic Relief Extension Without raising tax rates, shall an ordinance to fund repairing potholes; keeping local roads in good condition; completing freeway/highway projects to improve traffic flow/safety, reduce traffic bottlenecks; upgrading aging bridges/overpasses; creating local jobs; keeping student/senior/disabled/veteran transit fares low be adopted, extending the ½¢ voter-approved transportation sales tax, providing approximately $250,000,000 annually until ended by voters, requiring audits, oversight, spending disclosure, local control?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/FT_SBCTA.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-j",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:chino_hills",
+          "title": "Chino Hills — Measure J",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/RES_ChinoHills.pdf",
+            "collectedAt": "2026-11-03T05:20:42.283018+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Chino Hills Services Measure: Shall the measure protecting Chino Hills’ financial stability and maintaining City services including public safety response times; reducing wildfire risk; preparing for/responding to wildfires/natural disasters; helping prevent crime, thefts, burglaries; keeping public areas safe/clean; protecting Clean Water Act resources; preserving/maintaining open space; supporting other city services by establishing a 1¢ sales tax, providing approximately $11,500,000 annually until ended by voters; with audits, spending disclosure, all funds used locally, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/FT_ChinoHills.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:needles",
+          "title": "Needles — Measure K",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/RES_CityofNeedles.pdf",
+            "collectedAt": "2026-11-03T05:20:42.409113+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the measure to maintain and improve quality of life by supporting local businesses and jobs; keeping public areas safe, clean, and well maintained; maintaining and improving streets, parks, and other public infrastructure; and funding other general City services, by increasing the City of Needles Transient Occupancy Tax paid primarily by hotel, motel, and short-term rental guests from 10% to 14% in phases, generating approximately $400,000 annually, with annual public disclosure and remaining in effect until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/FT_CityofNeedles.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-l",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:needles",
+          "title": "Needles — Measure L",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf",
+            "collectedAt": "2026-11-03T05:20:42.501722+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To improve the City of Needles including roads and transportation infrastructure; repairing and repaving streets; fixing potholes; maintaining community safety; improving parks and recreational facilities; and revitalizing downtown Main Street; shall the City of Needles measure be approved authorizing $11,200,000 of bonds at legal rates, generating on average $739,971 annually while bonds are outstanding at a rate of $60 per $100,000 assessed value, with annual audits, independent citizens' oversight, NO money for salaries and all money staying in Needles?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-m",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:upland",
+          "title": "Upland — Measure M",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/RES_Upland.pdf",
+            "collectedAt": "2026-11-03T05:20:42.633576+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To modernize City of Upland’s 31-year-old business license tax, with no tax increase to residents, lowering taxes on most small businesses, and ensuring large businesses pay their fair share for general city services such as: fixing potholes/streets; repairing infrastructure; and 9-1-1 response, shall the measure with rates between 0.065% and 0.2% of gross receipts, generating $3.3 million in local funds until ended by voters, and requiring independent audits, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/FT_Upland.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-n",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:grand_terrace",
+          "title": "Grand Terrace — Measure N",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/RES_GT.pdf",
+            "collectedAt": "2026-11-03T05:20:42.612286+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "GRAND TERRACE GENERAL SERVICES MEASURE. To maintain and enhance essential City services — including police protection, neighborhood patrols, 9-1-1 emergency response, and rapid response times — shall the City of Grand Terrace enact a one percent (1%) sales tax, providing approximately $1.2 million annually for general City use until ended by voters, with all funds staying local, public spending disclosure, and independent annual audits?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/FT_GT.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-o",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:colton",
+          "title": "Colton — Measure O",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/RES_CityofColton.pdf",
+            "collectedAt": "2026-11-03T05:20:42.777624+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the office of Colton City Treasurer be appointive?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/FT_CityofColton.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-bernardino-p",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:adelanto",
+          "title": "Adelanto — Measure P",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/RES_CityofAdelanto.pdf",
+            "collectedAt": "2026-11-03T05:20:42.842499+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the measure to provide funding for Adelanto city services, such as paving streets and fixing potholes, fire protection, paramedic, and 911 response; law enforcement and crime prevention; keeping public areas/parks safe/clean; addressing homelessness; and repairing aging storm drains, pipes, bridges, and public areas by establishing a 1% transactions and use tax, providing approximately $3,000,000 annually until ended by voters, requiring audits, public spending disclosure, all money controlled locally, be adopted?"
+          },
+          "measureTextUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/FT_CityofAdelanto.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-bernardino-z-text",
+          "contestId": "ca-2026-san-bernardino-z",
+          "officialNumber": "Measure Z",
+          "questionText": "To repair/upgrade aging classrooms, labs, career technology, school facilities to support college/career readiness in math, science, engineering, arts, skilled trades; fix/replace deteriorating roofs, plumbing, HVAC, electrical; and upgrade schools to meet current health/safety codes and improve disabled access, shall San Bernardino City Unified School District's measure authorizing $345,000,000 in bonds, at legal rates, be adopted, levying approximately $45 per $100,000 assessed value ($22,000,000 annually) while bonds are outstanding, with oversight, audits, and all money locally controlled?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF BOND MEASURE Z\n\nThis Impartial Analysis of Bond Measure Z has been prepared by County Counsel pursuant to Section 9500\nof the California Elections Code.\nThis Measure was placed on the ballot by a resolution adopted by the Board of Education of the San Bernardino City\nUnified School District (District). A \"yes\" vote by at least fifty-five percent of the voters voting on this Measure will\nauthorize the District to issue bonds in the amount of up to $345,000,000 to be used solely for the purposes set forth in\nthis ballot Measure. A \"no\" vote means that the District will not be authorized to issue and sell the up to $345,000,000 in\nbonds set forth in the Measure.\nThe District's Resolution was adopted pursuant to California Education Code sections 5304, 5322, 15100 et seq., 15266,\nand Articles XIIIA and XVI of the California Constitution. The bond proceeds may only be used for specific projects listed\nin the \"Bond Project List.\" The \"Bond Project List\" section contains the specific projects the District proposes to finance\nwith proceeds from the sale of the bonds authorized by this ballot Measure and the bond proceeds may only be used for\nthose specific projects. These projects include: renovation and construction projects to replace portable classrooms with\npermanent facilities; construction or acquiring and installing additional classrooms; modernizing all classrooms for current\neducational standards, including upgrading technology equipment; improvement to school grounds to create innovative\nindoor and outdoor learning areas; construction, replacement, improvement, renovation, or acquisition and installation of\nrestrooms, warming kitchens, Early Learning Centers, Transitional Kindergarten facilities, Career Technical Education\nclassrooms, auditoriums, performing arts classrooms, physical education facilities, green spaces, playgrounds, playfields,\nand other projects; energy-efficient upgrades to equipment; construction of a new school to reduce overcrowding; and\nvarious other projects. Some of the projects listed in the Measure may assume the receipt of matching State funds which\nmay or may not be approved by the State Legislature.\nThe District will conduct financial and performance audits annually and all bond expenditures will be monitored by an\nIndependent Citizens' Oversight Committee to ensure that the bond proceeds are spent as promised and specified as\nrequired by Education Code section 15278 et seq. in order to ensure bond revenues are used for proper purposes and\nthat no funds are used for any teacher or administrative salaries or other operating expenses. No District employees or\nvendors will be allowed to serve on the Citizens' Oversight Committee. The District will also take all actions necessary to\nestablish an account in which proceeds from the bond measure will be deposited in accordance with state law.\nThe bonded debt will be a general obligation of the District and will be financed by taxes levied annually on taxable\nproperty located within the District.\nLAURA FEINGOLD\nCounty Counsel\ns/ JOLENA E. GRIDER\nDeputy County Counsel",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/Notice_SBCUSD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.194005+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To repair/upgrade aging classrooms, labs, career technology, school facilities to support college/career readiness in math, science, engineering, arts, skilled trades; fix/replace deteriorating roofs, plumbing, HVAC, electrical; and upgrade schools to meet current health/safety codes and improve disabled access, shall San Bernardino City Unified School District's measure authorizing $345,000,000 in bonds, at legal rates, be adopted, levying approximately $45 per $100,000 assessed value ($22,000,000 annually) while bonds are outstanding, with oversight, audits, and all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-a-text",
+          "contestId": "ca-2026-san-bernardino-a",
+          "officialNumber": "Measure A",
+          "questionText": "To improve the quality of education by modernizing, constructing, upgrading and equipping classrooms, restrooms/school facilities, career technical classrooms/labs; replace roofs; make safety/security improvements; and renovate/replace electrical/plumbing/sewer systems; shall Upland Unified School District’s measure be adopted, authorizing $236,700,000 of bonds at legal rates, levying approximately $47.50 per $100,000 assessed value (raising $14,200,000 annually) while bonds are outstanding, with audits, independent oversight, NO money for salaries, including administrators, only Upland USD educational facilities?",
+          "officialStatement": "         August 13, 2026                                                              (909) 387-5455\n\n        JOLENA E. GRIDER, Deputy County Counsel\n        County Counsel\n        LETESHIA WILSON\n        Elections Specialist\n        Communications Department of the Registrar of Voters\n       COUNTY COUNSEL IMPARTIAL ANALYSIS- UPLAND UNIFIED SCHOOL DISTRICT BOND\n       MEASURE ELECTION TO BE HELD ON NOVEMBER 3, 2026\n\nThis Measure was placed on the ballot by a resolution adopted by the Board of Education of the Upland\nUnified School District (District). A “yes” vote by at least fifty-five percent of the voters voting on this\nMeasure will authorize the District to issue bonds in the amount of $236,700,000 to be used solely for the\npurposes set forth in this ballot Measure. A “no” vote means that the District will not be authorized to issue\nand sell the $236,700,000 in bonds set forth in the Measure.\nThe District’s Resolution was adopted pursuant to California Education Code sections 15100 et seq.,\n15264, et seq., Government Code section 53506 and Articles XIIIA and XVI of the California Constitution.\nThe bond proceeds may only be used for the types of projects listed in the Measure which is contained in\nExhibit B to the Resolution. These projects include: constructing, expanding, renovating, modernizing,\nreplacing, upgrading, or removing classrooms and learning spaces to support current educational programs\nand improve safety, accessibility and operational efficiency; various building property maintenance projects\nand updating/adding restrooms; providing upgraded or new classrooms, labs, shops, and specialized\ninstructional spaces for job training and career readiness after high school; constructing or renovating\nscience, technology, engineering and math (STEM) classrooms, labs, and teaching spaces, student\nsupport facilities, facilities to provide administrative services and multi-purpose rooms/auditoriums/theaters;\nimproving school safety and security through upgraded emergency communications, cameras, alarms,\nfencing,              emergency           response        systems,     security       infrastructure,   secure\ncampus entry points, student safety and traffic flow at parking and school drop-off and pick-up areas;\nimproving facilities for accessibility, including those required by the Americans with Disabilities Act; and\nother projects for all grade levels of schools and other District sites. Some of the projects listed in the\nMeasure may assume the receipt of matching State funds which may or may not be approved by the State\nLegislature.\nThe District will conduct financial and performance audits annually and all bond expenditures will be\nmonitored by an Independent Citizens’ Oversight Committee to ensure that the bond proceeds are spent\nas promised and specified as required by Education Code section 15278 et seq. in order to ensure bond\nrevenues are used for proper purposes. No District employees or vendors will be allowed to serve on the\nCitizens’ Oversight Committee. Bond proceeds cannot be used for teacher or administrator salaries not\nrelated to oversight of the projects.\nThe District will also take all actions necessary to establish an account in which proceeds from the bond\nMeasure will be deposited in accordance with state law.\nThe bonded debt will be a general obligation of the District and will be financed by taxes levied annually on\ntaxable property located within the District.\n\nLAURA FEINGOLD\nCounty Counsel\n\n\nJOLENA E. GRIDER\nDeputy County Counsel\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/Notice_UUSD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.338404+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To improve the quality of education by modernizing, constructing, upgrading and equipping classrooms, restrooms/school facilities, career technical classrooms/labs; replace roofs; make safety/security improvements; and renovate/replace electrical/plumbing/sewer systems; shall Upland Unified School District’s measure be adopted, authorizing $236,700,000 of bonds at legal rates, levying approximately $47.50 per $100,000 assessed value (raising $14,200,000 annually) while bonds are outstanding, with audits, independent oversight, NO money for salaries, including administrators, only Upland USD educational facilities?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-b-text",
+          "contestId": "ca-2026-san-bernardino-b",
+          "officialNumber": "Measure B",
+          "questionText": "Without increasing current tax rates, to repair/replace deteriorating roofs, plumbing, HVAC and electrical systems; improve student safety/security; repair/upgrade aging classrooms, science labs, school/career technology facilities at existing schools to support college/career readiness in health sciences, engineering, skilled trades; shall Beaumont Unified School District’s measure be adopted authorizing $86,000,000 in bonds at legal rates, levying $20 per $100,000 assessed value ($6,000,000 annually) while bonds are outstanding, with audits, citizen oversight, all money locally controlled?",
+          "officialStatement": "                               County Counsel’s Impartial Analysis\n\n                                            Measure B\n\n                               Beaumont Unified School District\n\n\nThe purpose of Measure B is to enable voters to authorize or reject the Beaumont Unified School\nDistrict (“District”) issuing and selling bonds to provide financing for school facilities projects.\nThe Board of Trustees of the District, by adopting Resolution No. 2026-27-03 (“Resolution”),\nelected to call an election to place this Measure on the ballot.\n\nMeasure B would enable the District to issue and sell bonds of up to a maximum of eighty six\nmillion ($86,000,000), at legal rates, levying 2¢ per $100 (or $20 per $100,000) of assessed value\nwhile the bonds are outstanding. This Measure, if approved, will not increase current tax rates.\nMoney raised by the sale of the bonds must be used exclusively to finance the list of projects\ndescribed in the full text of Measure B, which is included in this voter information pamphlet. Bond\nproceeds will be expended on improvements of deteriorating roofs; plumbing; HVAC; electrical;\nsafety systems; repair/upgrade aging classrooms; science labs; school/career technology facilities\nat existing schools to support college/career readiness in health sciences, engineering, and skilled\ntrades. Monies generated by the sale of such bonds shall only be spent for these specified purposes.\nBond proceeds cannot be expended to finance teacher and administrator salaries or other school\noperating expenses.\n\nMeasure B provides for the District to establish an independent citizens’ oversight committee to\nensure bonds proceeds are expended only on the types of school facilities projects that have been\nlisted on the ballot pamphlet. The District will conduct an annual, independent performance and\nfinancial audits to oversee that bond proceeds have been expended only on the school facilities\nprojects listed.\n\nFor this Measure to be approved, at least 55% of qualified voters within the District who vote on\nthe Measure must vote yes.\n\nA “YES” vote on Measure “B” is a vote to authorize the District to issue and sell bonds to provide\nfinancing of school facilities projects.\n\nA “NO” VOTE on Measure “B” is a vote to reject the District from issuing and selling bonds to\nprove financing of school facilities projects.\n\n\n\n\n   3960 Orange Street, Suite 500•Riverside CA•92501•(951)955-6300•FAX (951)955-6322 & (951)955-6363\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf",
+            "collectedAt": "2026-11-03T05:20:41.412129+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Without increasing current tax rates, to repair/replace deteriorating roofs, plumbing, HVAC and electrical systems; improve student safety/security; repair/upgrade aging classrooms, science labs, school/career technology facilities at existing schools to support college/career readiness in health sciences, engineering, skilled trades; shall Beaumont Unified School District’s measure be adopted authorizing $86,000,000 in bonds at legal rates, levying $20 per $100,000 assessed value ($6,000,000 annually) while bonds are outstanding, with audits, citizen oversight, all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-d-text",
+          "contestId": "ca-2026-san-bernardino-d",
+          "officialNumber": "Measure D",
+          "questionText": "Shall the proposed amendment to Section 503 of the City Charter to increase the compensation for each member of the City Council from $1 per month to $150 per month be approved?",
+          "officialStatement": "              CITYATTORNEY'S IMPARTIALANALYSIS OF MEASURE _____\n\nThe City Council of the City of Needles has placed Measure __ on the ballot for the November\n3, 2026 General Municipal Election. Measure __ would amend Section 503 of the City Charter\nto increase the compensation paid to each member of the City Council from one dollar ($1.00)\nper month to one hundred fifty dollars ($150.00) per month.\n\nEffect of Measure on Existing Law:\n\nThe City of Needles is a charter city operating under a City Charter adopted by the voters in\n1958. Section 503 of the Charter currently provides that each member of the City Council shall\nreceive compensation in the amount of one dollar ($1.00) per month. That amount has remained\nunchanged since the Charter was adopted approximately sixty-eight years ago.\n\nBecause the amount of City Council compensation is established by the City Charter, it may not\nbe changed by ordinance or resolution of the City Council. Under the California Constitution and\napplicable law governing charter cities, any amendment to the Charter, including a change to\nCity Council compensation, must be approved by the voters.\n\nIf approved, Measure __ would amend Section 503 of the City Charter to establish compensation\nfor each City Council Member at one hundred fifty dollars ($150.00) per month. The measure\nwould not modify any other provision of Section 503. Existing Charter provisions authorizing\nreimbursement for actual and necessary travel and other official expenses incurred in the\nperformance of official duties would remain unchanged. The measure would not authorize any\nadditional salary, benefits, or compensation beyond that expressly provided in the Charter.\n\n If approved, the City has determined Measure ___ would result in an additional annual cost of\n$20,916 to the City. Pursuant to State law, approval of Measure ___ requires a majority vote of\nthe City’s voters who vote in the election.\n\nIf approved, the amendment would become effective following certification of the election\nresults and completion of all procedures required by law for charter amendments.\n\nA \"Yes\" vote is a vote in favor of amending Section 503 of the City Charter to increase City\nCouncil compensation from one dollar ($1.00) per month to one hundred fifty dollars ($150.00)\nper month.\n\nA \"No\" vote is a vote against the proposed Charter amendment, and Section 503 of the City\nCharter would remain unchanged, with City Council compensation continuing at one dollar\n($1.00) per month.\n\nThe above statement is an impartial analysis of Measure _____. If you desire a copy of the Measure,\nplease call the City Clerk's office at (760 ) 326-2113 and a copy will be mailed at no cost to you, or\nyou may obtain a copy by visiting the City's website at www.cityofneedles.com\n\n                                                       Lena D. Wade\n                                                       Deputy City Attorney\n                                                       City of Needles\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/RES_CityofNeedles.pdf",
+            "collectedAt": "2026-11-03T05:20:41.775027+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the proposed amendment to Section 503 of the City Charter to increase the compensation for each member of the City Council from $1 per month to $150 per month be approved?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-e-text",
+          "contestId": "ca-2026-san-bernardino-e",
+          "officialNumber": "Measure E",
+          "questionText": "To maintain local funding for police, fire, emergency services; and improve critical infrastructure, including maintaining roads, bridges, drainage, 5th Street Corridor Interchange, and other improvement projects; shall the City of Highland enact a 1¢ sales tax, providing approximately $6.35 million annually, remaining in effect until ended by voters, with funds staying in the City and generated from purchases paid by both visitors and City residents?",
+          "officialStatement": "                       CITY ATTORNEY’S IMPARTIAL ANALYSIS\nThis Impartial Analysis of Measure __ has been prepared by the City Attorney pursuant to Section\n9280 of the California Elections Code.\n\nOn June 9, 2026, the Highland City Council unanimously voted to place Measure __ on the\nNovember ballot. If approved by the voters, Measure __ would authorize a one percent (1%) retail\ntransactions and use tax (“Sales Tax Ordinance”) within the City of Highland. This would increase\nthe City’s existing sales tax rate by 1%, or 1 cent, on every dollar of taxable sales of goods in the\nCity, and on the taxable storage, use or consumption of goods purchased in the City. The Sales\nTax Ordinance would remain effective until ended by the voters.\n\nThis sales tax would be a “general tax,” meaning that revenues raised from the tax would go into\nthe City’s general fund to pay for any lawful City program, improvement, or service. City staff\nhave estimated that the Sales Tax Ordinance will raise approximately $6.35 million in local\nrevenue. The City Council’s adopted ballot question states the revenue from Measure _ would be\nused to fund police, fire, and emergency services, and repair critical infrastructure such as roads,\nbridges, and interchanges, including the 5th Street Corridor Interchange, among other public\nimprovements.\n\nSimilar to other sales tax revenue, the State of California will collect revenue generated by the\nMeasure under a contract with the City, and will pay the revenue over to the City. The City’s\nbudget process and annual independent audit, as well as the City’s Annual Comprehensive\nFinancial Report and other publicly available documents, will provide accountability over revenue\nand expenditures from the Sales Tax Ordinance. The total sales tax rate paid in the City of\nHighland, which includes the sales tax collected for the State of California, San Bernardino\nCounty, and other public agencies, is currently 7.75%. If voters approve the Measure, the total\nsales tax rate paid in the City would be 8.75%. Sales tax is not collected on certain exempt items\nsuch as prescription medications or groceries.\n\nArticle XIIIC of the California Constitution, commonly known as Proposition 218, requires that\na majority of the voters voting on a general tax measure adopt the Sales Tax Ordinance for it to\ntake effect. A “yes” vote on Measure __ is to adopt the Sales Tax Ordinance. A “no” vote on\nMeasure __ is to not adopt the Sales Tax Ordinance.\n\n\nMaricela Marroquin\nHighland City Attorney\n\nThe above statement is an impartial analysis of Measure __. If you desire a complete copy\nof the Sales Tax Ordinance, please call the City Clerk at (909) 864-6861 and a copy will be\nsent to you at no cost.\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/RES_CityofHighland.pdf",
+            "collectedAt": "2026-11-03T05:20:41.977958+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To maintain local funding for police, fire, emergency services; and improve critical infrastructure, including maintaining roads, bridges, drainage, 5th Street Corridor Interchange, and other improvement projects; shall the City of Highland enact a 1¢ sales tax, providing approximately $6.35 million annually, remaining in effect until ended by voters, with funds staying in the City and generated from purchases paid by both visitors and City residents?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-f-text",
+          "contestId": "ca-2026-san-bernardino-f",
+          "officialNumber": "Measure F",
+          "questionText": "Without taxing residents, and to support general city services such as 911/police response; protect local drinking water sources; retain/attract local businesses; shall the measure be adopted to reform City of Chino’s outdated business license ordinance with rates of $0.60 - $1.50 per $1,000 of gross receipts for larger businesses based on business category; and only $25 for smaller businesses (under $75,000), generating approximately $4,800,000 annually until ended by voters; with audits, spending disclosure, funds locally controlled?",
+          "officialStatement": "                       CHINO BUSINESS LICENSE TAX MEASURE\n                       CITY ATTORNEY’S IMPARTIAL ANALYSIS\n\nMeasure __ was placed on the ballot by the Chino City Council. If approved by a majority of voters\nvoting on the measure, it would adopt an ordinance adding Chapter 3.44 to the Chino Municipal\nCode and repealing related existing business license tax provisions.\n\nThe City currently imposes a business license tax on businesses operating in the City. The measure\nwould replace portions of the existing business license tax structure with a gross receipts-based\ntax. The tax would apply to gross receipts attributable to business activity conducted in the City.\n\nFor businesses with $75,000 or less in gross receipts, the tax would be $25. For gross receipts\nabove $75,000, the measure would impose the following maximum tax rates on gross receipts\nabove $75,000:\n\nGeneral/retail businesses: $0.60 per $1,000\nContractors: $1.00 per $1,000\nServices: $1.00 per $1,000\nProfessional/advanced businesses: $1.50 per $1,000\nReal property/rental businesses: $1.50 per $1,000\nThe measure would authorize the City to administer, collect, and enforce the business license tax,\nincluding through rules, procedures, audits, determinations, penalties, interest, refund procedures,\nand collection remedies, as provided in the ordinance. The City Council could adopt implementing\nrules and make amendments to administer the ordinance, clarify procedures, correct errors,\nconform the ordinance to law, or reduce, suspend, or repeal the tax. The City Council could not,\nwithout further voter approval, increase any tax rate above the voter-approved maximum rate,\nexpand the tax to persons or activities not subject to the tax, or otherwise increase the tax in a\nmanner requiring voter approval.\n\nThe measure is a general tax. Revenue from the tax would be deposited into the City’s General\nFund and could be used for any lawful municipal purpose. The measure states that revenue may\nbe used for general City services, including police and 911 emergency response, streets, public\narea safety and cleanliness, protecting local drinking water sources, and other general City\nservices. The measure does not legally restrict the use of revenues to those purposes.\n\nIf the measure is approved, the ordinance would be considered adopted when the City Council\ndeclares the election results and would become operative on the date specified in the ordinance. If\nthe measure is not approved by a majority of voters voting on it, the ordinance would not be\nadopted and would have no force or effect.\n\nA “Yes” vote is a vote to approve the business license tax ordinance.\n\nA “No” vote is a vote against approving the business license tax ordinance.\n\n\n\n\n01225.0007 2176110.1                             1\n\fThe above statement is an impartial analysis of the Measure. If you desire a copy of the\nordinance or measure, please call the elections official's office (City Clerk) at (909) 334-3306\nand a copy will be mailed at no cost to you.\n\ns/Fred Galante, City Attorney\nCity of Chino\nDated: August 7, 2026\n\n\n\n\n01225.0007 2176110.1                           2\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/RES_CityofChino.pdf",
+            "collectedAt": "2026-11-03T05:20:42.273337+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Without taxing residents, and to support general city services such as 911/police response; protect local drinking water sources; retain/attract local businesses; shall the measure be adopted to reform City of Chino’s outdated business license ordinance with rates of $0.60 - $1.50 per $1,000 of gross receipts for larger businesses based on business category; and only $25 for smaller businesses (under $75,000), generating approximately $4,800,000 annually until ended by voters; with audits, spending disclosure, funds locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-g-text",
+          "contestId": "ca-2026-san-bernardino-g",
+          "officialNumber": "Measure G",
+          "questionText": "Shall the measure funding services for City of Twentynine Palms residents (including those required for maintaining 911 and emergency response times, police officers and patrols; repairing streets/sidewalks; responding to floods/natural disasters; maintaining clean and safe public parks; and upgrading the animal shelter) by levying a transaction (sales) and use tax of 1%, providing approximately $2,000,000 in funds annually until ended by voters, requiring audits, public spending disclosures, and that all funds are used locally, be adopted?",
+          "officialStatement": "                             CITY OF TWENTYNINE PALMS\n                 CITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “___”\n                    ONE PERCENT TRANSACTIONS AND USE (SALES) TAX\n\nOn July 14, 2026, the City Council voted to place Measure “___” on the November 3, 2026 general\nmunicipal election ballot to seek voter approval of an ordinance enacting a one percent transactions\nand use tax locally in the City of Twentynine Palms (City), referred to herein by its common name a\n“Sales Tax.” Such taxes are not taxes on homes or properties, and rather are applied to purchases\n(with exceptions for items such as groceries or prescription medication). As a result, the proposed\nSales Tax will apply equally to anyone making an applicable purchase, including tourists and other\nvisitors.\n\nIf approved by a majority of Twentynine Palms voters, this Measure would implement a one percent\n“sales tax” on applicable transactions within the City. The “sales tax” will be calculated based on the\nsales price of tangible personal property sold at retail in the City. For example, for every $100 spent on\ntaxable goods, the proposed tax would be one dollar ($1.00).\n\nThe stated “Purpose” of the Measure is “to create a locally-controlled funding source, which is legally\nprotected from being taken by the State, by creating a 1% transaction (sales) and use tax, the proceeds\nof which may only be used for local services and to address local priorities such as: maintaining 911\nand emergency response times, police officers and patrols; repairing streets/sidewalks; responding to\nfloods/natural disasters; maintaining safety of public parks; and upgrading the animal shelter.” It is\nestimated this Measure will provide an additional $2,000,000 in annual funding for the City. While the\nproposed tax would be a “general tax,” meaning that funds received may be used to pay for any lawful\nCity program, the Measure requires that any funds derived only be used in furtherance of the stated\n“Purpose.” It also requires that the City’s annual audit include a confirmation that this limitation on\nspending has been complied with, a summary of how the funds were spent, and that this summary be\navailable for public review.\n\nIf approved, it is anticipated that the Sales Tax would begin to be implemented on April 1, 2027, and\nwill remain in effect until ended by voters.\n\nA “yes” vote on Measure “___” will authorize the one percent transactions and use (sales) tax.\n\nA “no” vote on Measure “___” will not authorize the one percent transactions and use (sales) tax.\n\n\nThe above statement is an impartial analysis of Measure ____. If you desire a copy of the\nmeasure, please visit the City’s website or call the City Clerk’s Office at (760) 367-6799 and a\ncopy will be mailed at no cost to you.\n\n\n_______________________\nA. Patrick Muñoz\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/RES_TP.pdf",
+            "collectedAt": "2026-11-03T05:20:42.084589+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the measure funding services for City of Twentynine Palms residents (including those required for maintaining 911 and emergency response times, police officers and patrols; repairing streets/sidewalks; responding to floods/natural disasters; maintaining clean and safe public parks; and upgrading the animal shelter) by levying a transaction (sales) and use tax of 1%, providing approximately $2,000,000 in funds annually until ended by voters, requiring audits, public spending disclosures, and that all funds are used locally, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-h-text",
+          "contestId": "ca-2026-san-bernardino-h",
+          "officialNumber": "Measure H",
+          "questionText": "To maintain fire, paramedic, police, 911 response, anti-gang programs; respond to property crimes, thefts, burglaries; clean and maintain public areas; repair streets/potholes; address homelessness; increase access to affordable housing for seniors/families/individuals; retain/attract local businesses; for general City services; shall the measure establishing a half-cent sales tax providing approximately $32,500,000 annually until ended by voters; requiring audits, spending disclosure, funds locally controlled, be adopted?",
+          "officialStatement": "                        CITY OF ONTARIO\n       CITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “H”\n              1/2% TRANSACTIONS AND USE (SALES) TAX\n\nOn August 7, 2026, the City Council voted to place Measure “H” on the November 3,\n2026 General Municipal Election ballot.\n\nIf approved by a majority of Ontario voters, this Measure would authorize a one-half\npercent (1/2%) retail transactions and use (sales) tax within the City of Ontario. A one-\nhalf percent (1/2%) rate equates to an extra 50¢ per $100 purchased. It is estimated that\nMeasure “H” will provide an additional $32,500,000 in annual local funding that could\nbe used for maintaining general City services such as 911 fire, paramedic and police\nresponse, anti-gang programs, cleaning and maintaining public areas, repairing streets\nand potholes, addressing homelessness, increasing access to affordable housing for\nseniors, families and individuals, and retaining and attracting local businesses. This tax\nwould be a “general tax,” meaning that revenues raised from the tax would go into the\nCity’s general fund to pay for any lawful City program, improvement, or service.\n\nCalifornia Proposition 218 and Revenue and Taxation Code section 7285.9 authorize the\nCity to levy a general transactions and use/sales tax at a rate of one-half percent (1/2%)\nso long as the tax is approved by a majority of the voters voting in an election on that\nissue. If approved, the tax would start being collected on April 1, 2027 and would remain\nin effect until repealed by voters at a subsequent election.\n\nThe tax would be paid in addition to current sales taxes and would be collected at the\nsame time and in the same manner as existing sales taxes. All revenues raised by the tax\nwould remain in the City and would not be shared with the State, County or any other\nagency.\n\nA “yes” vote on Measure “H” will authorize the 1/2% transactions and use (sales) tax.\n\nA “no” vote on Measure “H” will not authorize the 1/2% transactions and use (sales) tax.\n\nThe above statement is an impartial analysis of Measure “H”. If you desire a copy\nof the Measure, please call the City’s elections official at (909) 395-2000 and a copy\nwill be mailed at no cost to you.\n\n                                            /s/     RUBEN DURAN\n                                                    City Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/RES_Ontario.pdf",
+            "collectedAt": "2026-11-03T05:20:42.218752+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To maintain fire, paramedic, police, 911 response, anti-gang programs; respond to property crimes, thefts, burglaries; clean and maintain public areas; repair streets/potholes; address homelessness; increase access to affordable housing for seniors/families/individuals; retain/attract local businesses; for general City services; shall the measure establishing a half-cent sales tax providing approximately $32,500,000 annually until ended by voters; requiring audits, spending disclosure, funds locally controlled, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-i-text",
+          "contestId": "ca-2026-san-bernardino-i",
+          "officialNumber": "Measure I",
+          "questionText": "LOCAL TRANSPORTATION IMPROVEMENT PROGRAM San Bernardino County Road Repair/Traffic Relief Extension Without raising tax rates, shall an ordinance to fund repairing potholes; keeping local roads in good condition; completing freeway/highway projects to improve traffic flow/safety, reduce traffic bottlenecks; upgrading aging bridges/overpasses; creating local jobs; keeping student/senior/disabled/veteran transit fares low be adopted, extending the ½¢ voter-approved transportation sales tax, providing approximately $250,000,000 annually until ended by voters, requiring audits, oversight, spending disclosure, local control?",
+          "officialStatement": "                         -\n                                                                                                      FILED\n            RNARDINO\n              NTY                      Interoffice Memo                                               AUG 1 O 2026\n                                                                                              BY      Q.. S          DEPUTY\n                                                                                                   REGISTRAR OF VOTERS\n\n\n     DATE: August 10, 2026                                                       PHONE: (909) 387-5455\n\n    FROM: JOLENA E. GRIDER, Deputy County Counsel\n             County Counsel\n\n      TO:   LETESHIA WILSON\n            Elections Specialist\n            Communications Department of the Registrar of Voters\n\n            COUNTY COUNSEL IMPARTIAL ANALYSIS-SAN BERNARDINO COUNTY TRANSPORTATION\nSUBJECT     AUTHORITY MEASURE I ELECTION TO BE HELD ON NOVEMBER 3, 2026\n\n\n   This Measure was placed on the ballot by an ordinance adopted by the San Bernardino County\n   Transportation Authority (Authority) and a Resolution passed by the San Bernardino County Board of\n   Supervisors.\n   Currently there is a one-half percent (1/2%) Retail Transactions and Use Tax that was approved by voters\n   in 2004 and will remain in effect until March 31, 2040.\n   A \"yesn vote by at least two-thirds of the voters casting votes on this Measure will authorize the Authority to\n   continue levying the already voter approved one-half percent (1/2%) Retail Transactions and Use Tax until\n   repealed by a subsequent ballot measure approved by County voters and until all debt is satisfied and\n   committed contracts are fulfilled. A \"no\" vote will not extend the already existing one-half percent (1/2%)\n   tax after March 31, 2040.\n   The Authority's Ordinance No. 26-1 was adopted pursuant to California Constitution Article XIIIC §2(d},\n   California Public Utilitres Code §§180000 et seq. and Revenue and Taxation Code §§7251 et seq.\n   Proceeds from this tax can only be used for the construction, maintenance, improvements, and operation\n   of local streets, roads, and highways, state highways, and freeways; construction, maintenance,\n   improvements, and operation of public transit systems; transportation technologies; and administration of\n   this tax and its revenues. Profits from this tax cannot be used for other governmental purposes or programs.\n   The Measure requires some of the identified revenue generated in specific subareas of San Bernardino\n   County are spent on projects in that subarea.\n   The Measure requires that funding from this tax be used in accordance with the specified voter-approved\n   Transportation Expenditure Plan included in this Ballot Measure. The specific projects and programs\n   included in the Transportation Expenditure Plan can only be changed after the Retail Transactions and Use\n   Tax has been in effect for 10 years, or after the year 2050.\n   Commencing in 2050 and at least every ten years thereafter, the Authority shall review and, where\n   necessary, propose revisions to the Transportation Expenditure Plan. The review will include\n   recommendations from local jurisdictions, transportation agencies, interest groups, and the general public.\n   The Authority will be required to notify all local jurisdictions and the Board of Supervisors in writing of the\n   proposed revision and said revisions will go into effect 45 days after the notice is given.\n   The Measure will also continue the Independent Taxpayer Oversight Committee that was created in 2004\n   to provide citizen review and to ensure that all funds generated by this tax are spent in accordance with the\n   Transportation Expenditure Plan. An Administration fund will be established and one percent (1 %) of the\n   annual net amount of revenue raised by the tax shall be credited to the fund . Expenditures for the\n   administration of the Retail and Transaction Use Tax shall not exceed the revenues in the Administration\n   fund.\n\fCollection of the tax enacted by this Measure shall commence on April 1, 2040.\n\nLAURA FEINGOLD\nCounty Counsel\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/Notice_SBCTA.pdf",
+            "collectedAt": "2026-11-03T05:20:41.706531+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "LOCAL TRANSPORTATION IMPROVEMENT PROGRAM San Bernardino County Road Repair/Traffic Relief Extension Without raising tax rates, shall an ordinance to fund repairing potholes; keeping local roads in good condition; completing freeway/highway projects to improve traffic flow/safety, reduce traffic bottlenecks; upgrading aging bridges/overpasses; creating local jobs; keeping student/senior/disabled/veteran transit fares low be adopted, extending the ½¢ voter-approved transportation sales tax, providing approximately $250,000,000 annually until ended by voters, requiring audits, oversight, spending disclosure, local control?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-j-text",
+          "contestId": "ca-2026-san-bernardino-j",
+          "officialNumber": "Measure J",
+          "questionText": "Chino Hills Services Measure: Shall the measure protecting Chino Hills’ financial stability and maintaining City services including public safety response times; reducing wildfire risk; preparing for/responding to wildfires/natural disasters; helping prevent crime, thefts, burglaries; keeping public areas safe/clean; protecting Clean Water Act resources; preserving/maintaining open space; supporting other city services by establishing a 1¢ sales tax, providing approximately $11,500,000 annually until ended by voters; with audits, spending disclosure, all funds used locally, be adopted?",
+          "officialStatement": "                                        MEASURE __\n\n                   CITY ATTORNEY’S IMPARTIAL ANALYSIS\n\nIf approved, Measure __ would authorize a one percent (1% - one cent on every dollar)\ntransactions and use (sales) tax within the City of Chino Hills. It is estimated that Measure __\nwill provide an additional $11,500,00.00 annually to the City’s general fund, which is used\nmainly to fund police services, open space maintenance (including wildfire prevention services),\npark and street maintenance, and community programs and events. This tax would be a “general\ntax,” meaning that revenues raised from the tax would be deposited into the City’s general fund\nand could be used for any lawful City purpose.\n\nThe sales tax would generally be applicable to retail sales of tangible items. Like the existing\nsales tax, it would not apply to sales of certain food products for human consumption, sales of\nprescription medicine, tuition, rent, or utilities. Labor and services are also generally exempt\nfrom sales tax.\n\nCalifornia Revenue and Taxation Code section 7285.9 authorizes the City to levy a general\ntransactions and use (sales) tax so long as the tax is approved by a majority of the voters voting\nin an election on the issue. If approved, the tax would remain in effect until ended by Chino\nHills voters voting at a subsequent election. The City Council may also choose to suspend all or\na portion of the tax at any time in its discretion.\n\nThe current sales tax rate in Chino Hills is 7.75%, of which the state receives 6%, the City\nreceives 1%, and the county receives 0.75%. The proposed 1% sales tax would be in addition to\nthe current sales tax rate. However, all revenues raised by the proposed tax would be controlled\nby the City and available for local use. Neither the state nor the county would share in the tax\nrevenue.\n\n\nThe Chino Hills City Council placed Measure __ on the ballot. It takes a simple majority of the\nvotes cast to pass Measure __.\n\nA “yes” vote is a vote in favor of the 1% transactions and use (sales) tax.\n\nA “no” vote is a vote against the 1% transactions and use (sales) tax.\n\nThe above statement is an impartial analysis of Measure ___. If you desire a copy of the\nMeasure, please call the City’s elections official at (909) 364-2620 and a copy will be mailed\nat no cost to you.\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/RES_ChinoHills.pdf",
+            "collectedAt": "2026-11-03T05:20:42.283018+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Chino Hills Services Measure: Shall the measure protecting Chino Hills’ financial stability and maintaining City services including public safety response times; reducing wildfire risk; preparing for/responding to wildfires/natural disasters; helping prevent crime, thefts, burglaries; keeping public areas safe/clean; protecting Clean Water Act resources; preserving/maintaining open space; supporting other city services by establishing a 1¢ sales tax, providing approximately $11,500,000 annually until ended by voters; with audits, spending disclosure, all funds used locally, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-k-text",
+          "contestId": "ca-2026-san-bernardino-k",
+          "officialNumber": "Measure K",
+          "questionText": "Shall the measure to maintain and improve quality of life by supporting local businesses and jobs; keeping public areas safe, clean, and well maintained; maintaining and improving streets, parks, and other public infrastructure; and funding other general City services, by increasing the City of Needles Transient Occupancy Tax paid primarily by hotel, motel, and short-term rental guests from 10% to 14% in phases, generating approximately $400,000 annually, with annual public disclosure and remaining in effect until ended by voters, be adopted?",
+          "officialStatement": "                                 CITY OF NEEDLES\n                        CITY ATTORNEY’S IMPARTIAL ANALYSIS\n                                   MEASURE ___\n                        TRANSIENT OCCUPANCY TAX MEASURE\n\nExisting Law:\n\nThe City Council of the City of Needles has placed Measure __ on the ballot for the November\n3, 2026 General Municipal Election. Measure __ would amend sections 20-8, 20-9, and 20-10 of\nthe Needles City Code to increase the City's transient occupancy tax (\"TOT\") from its current\nrate of ten percent (10%) to fourteen percent (14%) through a phased implementation.\n\nEffect of Measure on Existing Law:\n\nThe City's transient occupancy tax is imposed on the rent charged for occupancy of hotels,\nmotels, recreational vehicle parks, short-term residential rental units, and other lodging\nestablishments within the City for stays of 30 days or less. Although hotel and lodging operators\ncollect and remit the tax to the City, the tax is paid by the transient occupant rather than the\nproperty owner or operator.\n\nCurrently, the City's transient occupancy tax rate is ten percent (10%). If approved by the voters,\nMeasure __ would increase the tax rate in the following phases:\n\n   -- Effective January 1, 2027, the tax rate would increase to twelve percent (12%);\n   -- Effective January 1, 2029, the tax rate would increase to thirteen percent (13%); and\n   -- Effective January 1, 2030, the tax rate would increase to fourteen percent (14%).\n\nThe measure would also amend related provisions of the Needles City Code governing the\nmonthly reporting and remittance of the tax by lodging operators and the calculation of penalties\nfor delinquent reports and payments to reflect the applicable tax rate in effect at the time the tax\nis due.\n\nMeasure __ would impose a general tax. Revenues generated by the measure would be deposited\ninto the City's General Fund and may be used for any lawful municipal purpose as determined by\nthe City Council through the annual budget process. The measure itself does not dedicate the\nadditional revenues to any particular program, project, or service.\n\nIf approved, the increased tax rates would apply beginning on the effective dates specified above\nand would remain in effect unless subsequently amended or repealed in accordance with\napplicable law.\n\nBased on current lodging activity, if approved, the City has determined that Measure ___ would\ngenerate approximately $200,000 annually beginning in 2027, $300,000 annually beginning in\n2029, and approximately $400,000 annually upon full implementation beginning in 2030.\n\fBecause Measure __ would enact a general tax, it requires approval by a majority of the voters\nvoting on the measure to become effective.\n\nA \"Yes\" vote is a vote in favor of increasing the City's transient occupancy tax from ten percent\n(10%) to fourteen percent (14%) through phased increases beginning January 1, 2027.\nA \"No\" vote is a vote against the measure, and the transient occupancy tax would remain at ten\npercent (10%).\n\nThe above statement is an impartial analysis of Measure __. If you desire a copy of the\nmeasure, please call the Office of the City Clerk at (760) 326-2113, and a copy will be\nmailed at no cost to you.\n\n____________________________________                 Dated: _________________________\nLena Wade, Deputy City Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/RES_CityofNeedles.pdf",
+            "collectedAt": "2026-11-03T05:20:42.409113+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the measure to maintain and improve quality of life by supporting local businesses and jobs; keeping public areas safe, clean, and well maintained; maintaining and improving streets, parks, and other public infrastructure; and funding other general City services, by increasing the City of Needles Transient Occupancy Tax paid primarily by hotel, motel, and short-term rental guests from 10% to 14% in phases, generating approximately $400,000 annually, with annual public disclosure and remaining in effect until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-l-text",
+          "contestId": "ca-2026-san-bernardino-l",
+          "officialNumber": "Measure L",
+          "questionText": "To improve the City of Needles including roads and transportation infrastructure; repairing and repaving streets; fixing potholes; maintaining community safety; improving parks and recreational facilities; and revitalizing downtown Main Street; shall the City of Needles measure be approved authorizing $11,200,000 of bonds at legal rates, generating on average $739,971 annually while bonds are outstanding at a rate of $60 per $100,000 assessed value, with annual audits, independent citizens' oversight, NO money for salaries and all money staying in Needles?",
+          "officialStatement": "              CITY ATTORNEY'S IMPARTIAL ANALYSIS OF MEASURE _____\n\nThe City Council of Needles has voted to place a Measure on the November 3, 2026 ballot\nto seek voter approval to issue general obligation bonds up to $11,200,000. The funds raised\nthrough these bonds would finance the cost of acquiring, constructing, improving,\nrenovating, and equipping municipal improvements and public infrastructure within the\nCity, including but not limited to, improvements to roads and transportation infrastructure,\nstreet rehabilitation, street repaving, and pothole repair, public facilities, parks and\nrecreational facilities, community safety improvements, and the revitalization of Downtown\nMain Street.\n\nThe maximum interest rate on these bonds will not exceed the legal limit. The Measure also\nsets forth a series of accountability measures to ensure that the funds are used exclusively\nfor the intended purposes. These include:\n\n\n   1. Annual Reporting and Audits: The City Treasurer is required to file an annual report with\n      the City Council detailing the amount of funds collected and spent, as well as the status of\n      the projects. Furthermore, the city will conduct annual independent financial and\n      performance audits to ensure compliance with the Measure's provisions. These audits will\n      be made publicly accessible and submitted to the California State Auditor for review.\n   2. Use of Funds: The Measure explicitly prohibits the use of bond funds for city\n      employee salaries or general operating expenses.\n\nTo pass, the Measure must receive approval from at least two-thirds of the voters.\n\nMeasure ____ would allow an increase in the property tax rate to pay debt service on the\nbonds. The City estimates that the tax rate required to pay for the bonds will be $60 per\n$100,000 of assessed value of taxable property.\n\nA \"yes\" vote would authorize the issuance and sale of general obligation bonds in the amount\nup to $11,200,000 to fund street, roadway, and pothole repair improvements, sidewalk and\npedestrian safety improvements, and upgrade park and recreational facilities including\nrestrooms, irrigation, landscaping, and parking at City parks and recreational facilities.\n\nA \"no\" vote would not authorize the issuance and sale of the bonds.\n\nThe above statement is an impartial analysis of Measure _____. If you desire a copy of the\nMeasure, please call the City Clerk's office at (760 ) 326-2113 and a copy will be mailed at no\ncost to you, or you may obtain a copy by visiting the City's website at www.cityofneedles.com\n\n                                                    Lena D. Wade\n                                                    Deputy City Attorney\n                                                    City of Needles\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf",
+            "collectedAt": "2026-11-03T05:20:42.501722+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To improve the City of Needles including roads and transportation infrastructure; repairing and repaving streets; fixing potholes; maintaining community safety; improving parks and recreational facilities; and revitalizing downtown Main Street; shall the City of Needles measure be approved authorizing $11,200,000 of bonds at legal rates, generating on average $739,971 annually while bonds are outstanding at a rate of $60 per $100,000 assessed value, with annual audits, independent citizens' oversight, NO money for salaries and all money staying in Needles?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-m-text",
+          "contestId": "ca-2026-san-bernardino-m",
+          "officialNumber": "Measure M",
+          "questionText": "To modernize City of Upland’s 31-year-old business license tax, with no tax increase to residents, lowering taxes on most small businesses, and ensuring large businesses pay their fair share for general city services such as: fixing potholes/streets; repairing infrastructure; and 9-1-1 response, shall the measure with rates between 0.065% and 0.2% of gross receipts, generating $3.3 million in local funds until ended by voters, and requiring independent audits, be adopted?",
+          "officialStatement": "                         CITY OF UPLAND\n       CITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “M”\n         THE “UPLAND BUSINESS LICENSE REFORM MEASURE”\nADJUSTING THE RATES OF BUSINESS LICENSE TAXES WITHIN THE CITY AND\n                MAKING OTHER TECHNICAL UPDATES\n\nFor decades, the City of Upland has levied a license tax on businesses operating within the City.\nThe business license tax is a general tax. Revenues are deposited into the General Fund and may\nbe spent for any City expense, like street repair, infrastructure repair and maintenance,\nemergency response, and public safety. The existing license tax structure was last updated in\n1994. Because the existing structure treats most businesses with gross receipts over $1,400,001\nidentically, capping the amount of the tax at $864, the structure taxes small businesses at a higher\nproportional rate while taxing larger businesses at a lower proportional rate.\n\nOn August 3, 2026, the City Council unanimously voted to place Measure “M” on the November\n3, 2026 ballot. If approved by majority (50%+1) of Upland voters, this Measure would revise\nthe City’s business license tax to be based predominantly on gross receipts rather than a range of\nfactors, including number of employees. For small businesses with less than $100,000 in annual\ngross receipts, the business license tax shall be a flat $75.00 per year. For annual gross receipts\nover $100,000, the rates for each business classification would be:\n\n   •   Retail/Commercial: 0.065%;\n\n   •   Contractors: 0.150%;\n\n   •   Rental (commercial or residential): 0.200%;\n\n   •   General Service (nonprofessional or non-semiprofessional, e.g., hair and nail salons):\n       0.125%; and\n\n   •   Professional service/calling or semiprofessional: 0.125%.\n\nIn addition, self-storage facilities would pay $50 per unit.\n\nNotwithstanding the above, the maximum business license tax would be capped at $28,000 per\nbusiness per year. With the larger cap, the proposed measure would result in larger businesses\npaying a greater proportional share relative to small businesses than they do under the current\nstructure.\n\nThe Measure would continue to exempt businesses exempted by Federal or State law along with\nany person issued a special event permit who does not have a fixed place of business and is not\notherwise engaged in business within the City.\n\nThe Measure also updates the City’s tax collection and administrative procedures. This includes\nupdating definitions, license application, review, denial, approval, renewal and transfer\nprocedures, tax calculation formulas, and tax deficiency, credit, refund and appeal procedures.\nProceeds from the tax will be subject to an annual, independent financial audit, and audit results\n\fshall be available to the public.\n\nThis tax is estimated to generate $3.3 million annually, $2.1 million more than the current\nbusiness license tax structure. The new rates would become effective on January 1, 2028 and\nremain in effect until repealed by voters. From January 1, 2027 until December 31, 2027, the\nbusiness license tax will be levied at a rate temporarily lowered by 0.005%-0.075%.\n\nA “yes” vote on Measure “M” will approve this amendment to the City’s business license tax\ncode.\n\nA “no” vote on Measure “M” will not approve this amendment to the City’s business license tax\ncode.\n\nThe above statement is an impartial analysis of Measure “M”. If you desire a copy of the\nMeasure, please call the City’s elections official at (909) 931-4120 and a copy will be mailed\nat no cost to you.\n\n\n\n                                           /s/    THOMAS A. RICE\n                                                  City Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/RES_Upland.pdf",
+            "collectedAt": "2026-11-03T05:20:42.633576+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "To modernize City of Upland’s 31-year-old business license tax, with no tax increase to residents, lowering taxes on most small businesses, and ensuring large businesses pay their fair share for general city services such as: fixing potholes/streets; repairing infrastructure; and 9-1-1 response, shall the measure with rates between 0.065% and 0.2% of gross receipts, generating $3.3 million in local funds until ended by voters, and requiring independent audits, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-n-text",
+          "contestId": "ca-2026-san-bernardino-n",
+          "officialNumber": "Measure N",
+          "questionText": "GRAND TERRACE GENERAL SERVICES MEASURE. To maintain and enhance essential City services — including police protection, neighborhood patrols, 9-1-1 emergency response, and rapid response times — shall the City of Grand Terrace enact a one percent (1%) sales tax, providing approximately $1.2 million annually for general City use until ended by voters, with all funds staying local, public spending disclosure, and independent annual audits?",
+          "officialStatement": "             MEASURE N: GRAND TERRACE GENERAL SERVICES MEASURE\n\n                                    IMPARTIAL ANALYSIS\n\nOn July 28, 2026, the Grand Terrace City Council voted to place Measure N, entitled the “Grand\nTerrace General Services Measure” (“Measure”) on the November 3, 2026 general municipal\nelection ballot.\n\nIf approved by a majority of voters, the Measure would add Chapter 3.32 to the City of Grand\nTerrace Municipal Code, establishing a one percent (1.00%) transactions and use tax (commonly\nknown as a “sales tax”) for City general fund purposes.\n\nState law allows certain entities, including municipalities, to increase sales tax within their\njurisdictions if approved by the voters. If approved, the Measure would impose a 1.00% tax upon\nretailers’ gross receipts from the retail sale of most tangible personal property sold within the City,\nand to the storage, use, or other consumption within the City of most tangible personal property\npurchased from retailers.\n\nIt is estimated that this tax will generate approximately $1,200,000 annually in revenue. Funds\ngenerated would be unrestricted and be placed in the City’s general fund, and may be used for any\nCity general fund purposes, such as the following:\n\n                   •   Law enforcement services,\n\n                   •   Responding to non-emergency calls for service,\n\n                   •   Funding general public services provided by the City.\n\nFood purchased as groceries and prescription medication, among other common essentials, would\nnot be taxed under the Measure. Visitors to Grand Terrace would bear part of the tax burden\nimposed by their local activities and thus contribute to the City’s ability to maintain general public\nservices they use while visiting. Residents and other purchasers of goods in the City would also be\nsubject to the tax. The specific retail sales and uses subject to the tax would be determined under\nCalifornia Department of Tax and Fee Administration (“CDTFA”) regulations and the CDTFA\nwould administer the tax under contract with the City of Grand Terrace.\n\nThe Measure includes accountability provisions, including the creation of an Advisory Committee\nto review revenues and expenditures of the tax and review annual audit reports related to the tax,\nand make at least one written annual report to the City Council summarizing findings and including\nany appropriate recommendations.\n\nWhile the ordinance permits future amendments by the City Council, any tax increase must be\napproved by voters. The transactions and use tax proposed by the Measure would take effect only\nif it receives a majority “YES” vote at the November 3, 2026 general municipal election.\n\nA “YES” vote is a vote to approve a 1.00% transactions and use general tax.\n\n\n\n01247.0007 2162875.3\n\fA “NO” vote is a vote against a 1.00% transactions and use general tax.\n\nThe above statement is an impartial analysis of Measure N. If you desire a copy of the\nordinance or measure, please call the Grand Terrace City Clerk’s Office at (909) 954-5207\nand a copy will be mailed at no cost to you.\n\nDated:\n\n______________________________________\nAdrian R. Guerra, City Attorney\nCity of Grand Terrace\n\n\n\n\n01247.0007 2162875.3\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/RES_GT.pdf",
+            "collectedAt": "2026-11-03T05:20:42.612286+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "GRAND TERRACE GENERAL SERVICES MEASURE. To maintain and enhance essential City services — including police protection, neighborhood patrols, 9-1-1 emergency response, and rapid response times — shall the City of Grand Terrace enact a one percent (1%) sales tax, providing approximately $1.2 million annually for general City use until ended by voters, with all funds staying local, public spending disclosure, and independent annual audits?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-o-text",
+          "contestId": "ca-2026-san-bernardino-o",
+          "officialNumber": "Measure O",
+          "questionText": "Shall the office of Colton City Treasurer be appointive?",
+          "officialStatement": "                         CITY OF COLTON\n       CITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE \"__\"\n             CHANGING THE OFFICE OF CITY TREASURER\n             FROM AN ELECTED TO AN APPOINTED OFFICE\n\nOn March 3, 2026, the City Council placed Measure \"__\" on the November 3, 2026\nGeneral Municipal Election ballot. Measure \"__\" asks Colton voters whether the position\nof Colton City Treasurer should be an appointed position or remain an elected one. If\nMeasure \"__\" passes, the City Treasurer would be appointed by the Colton City Council\nand no longer elected by Colton voters. If Colton voters approve Measure \"__\", the City\nCouncil will appoint the next City Treasurer when the term of the current incumbent\nexpires in November, 2028.\n\nCurrently in Colton, an elected City Treasurer serves a four year term. The Office was\nlast elected in November, 2024, is currently occupied by Mr. Michael Razo, and will\nexpire in November, 2028. California law requires that general law cities, like Colton,\nhave either an elected or appointed City Treasurer. However, a transition from an elected\nCity Treasurer to an appointed City Treasurer must be approved by a majority of the\nCity’s voters voting at an election. If Measure \"__\" passes and the position becomes\nappointed, the City Council will decide the minimum education and training requirements\nfor the position and periodically review the City Treasurer’s performance.\n\nA \"yes\" vote on Measure \"__\" will convert the office of Colton City Treasurer into an\nappointed position and no election for the City Treasurer’s Office would be held in\nNovember, 2028 or future years unless and until changed again by Colton voters via\nanother measure.\n\nA \"no\" vote on Measure \"__\" will leave the City Treasurer as an elected office which\nwould be placed back up for election in November, 2028.\n\nThe above statement is an impartial analysis of Measure \"__\". If you desire a copy\nof the Measure, please call Stephanie Vargas, the City’s elections official at (909)\n370-5001 and a copy will be mailed at no cost to you.\n\n\n                                            /s/    CARLOS CAMPOS\n                                                   City Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/RES_CityofColton.pdf",
+            "collectedAt": "2026-11-03T05:20:42.777624+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the office of Colton City Treasurer be appointive?"
+          }
+        },
+        {
+          "id": "ca-2026-san-bernardino-p-text",
+          "contestId": "ca-2026-san-bernardino-p",
+          "officialNumber": "Measure P",
+          "questionText": "Shall the measure to provide funding for Adelanto city services, such as paving streets and fixing potholes, fire protection, paramedic, and 911 response; law enforcement and crime prevention; keeping public areas/parks safe/clean; addressing homelessness; and repairing aging storm drains, pipes, bridges, and public areas by establishing a 1% transactions and use tax, providing approximately $3,000,000 annually until ended by voters, requiring audits, public spending disclosure, all money controlled locally, be adopted?",
+          "officialStatement": "                    CITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE __\n\n\nThis ballot measure establishes a local transactions and use tax in the City of Adelanto. The\nballot measure amends the Adelanto Municipal Code to add Chapter 3.70 to include the tax.\nIt is estimated that the tax will raise approximately $3,000,000 for the City of Adelanto. All\nfunds raised would go to the City’s General Fund and could be used for any legitimate municipal\npurpose including, but not limited to, repairing and improving streets and infrastructure such as\nstorm drains, sidewalks and public facilities, maintaining parks and public areas, fire protection,\nparamedic and emergency response services, public safety and crime prevention efforts,\nhomelessness response activities, and other municipal services identified through the annual\nCity budget process.\nA transactions tax is generally known as a sales tax. The sales tax is imposed on all retailers\nwithin the City of Adelanto at the rate of 1% (one percent) of the gross receipts of the retailer\nfrom the sale of all tangible personal property sold within the City.\nThe use tax is similar to a sales tax and it applies when one purchases an item from a retailer\noutside of the City of Adelanto that does not collect sales tax. The use tax is at the rate of 1%\n(one percent) of the sales price of the property and includes delivery charges when such\ncharges are subject to state sales or use taxes. Use taxes are charged in order to treat\ntransactions equally and not penalize local retailers that are subject to a sales tax.\nAny transaction is only charged a sales or use tax and not both taxes. The 1% (one percent) tax\nis only charged once to any transaction. The tax is not only on transactions involving City\nresidents, but the tax is also charged on transactions by non-residents that occur within the\nCity.\nThe tax is not charged to transactions that are exempt from such taxation under applicable law.\nIf approved, the tax would go into effect April 1, 2027.\nThe proceeds of the tax shall be subject to an annual audit by an independent certified public\naccountant and the results of the audit shall be reported to the City Council in a document\nposted on the City’s website and available for public inspection.\nThe measure will be adopted if a majority of voters who vote on the measure vote to approve\nthe measure.\nThe measure was placed on the ballot by the Adelanto City Council.\n\fThe above statement is an impartial analysis of Measure __. If you desire a copy of the\nmeasure, please call the City Clerk’s office at 760-246-2300 x11123 and a copy will be mailed at\nno cost to you.\n\n\nTodd Litfin, City Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "San Bernardino County Registrar of Voters",
+            "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/RES_CityofAdelanto.pdf",
+            "collectedAt": "2026-11-03T05:20:42.842499+00:00",
+            "verifiedAt": "2026-11-03T05:40:50.643457+00:00",
+            "quote": "Shall the measure to provide funding for Adelanto city services, such as paving streets and fixing potholes, fire protection, paramedic, and 911 response; law enforcement and crime prevention; keeping public areas/parks safe/clean; addressing homelessness; and repairing aging storm drains, pipes, bridges, and public areas by establishing a 1% transactions and use tax, providing approximately $3,000,000 annually until ended by voters, requiring audits, public spending disclosure, all money controlled locally, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-bernardino-z",
+          "whatItDoes": "Authorize up to $345 million in bonds for classrooms, laboratories, career-technology and school facilities, roofs, plumbing, heating and cooling, electrical systems, safety and disabled access, including the listed new-school and classroom projects. Property taxes on taxable property in the district would repay principal and interest. The district estimates $22 million annually, an average rate of $45 and highest rate of $45 per $100,000 of assessed value, collection through fiscal year 2056–57, and approximately $670,286,938 total repayment. These are estimates that may vary, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and be spent on the listed facility projects. Bond proceeds cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on state matching funds that are not guaranteed. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $345 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/FT_SBCityUSD.pdf",
+          "sourceHash": "4946128c494c9c6e96604e8d5b061f4124723f02280375907985f92f8cb6c48c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-a",
+          "whatItDoes": "Authorize up to $236.7 million in bonds for classroom, restroom, career-technical and other school facilities, roof repairs, safety and security, and electrical, plumbing and sewer systems. Property taxes on taxable property in the district would repay principal and interest. The district estimates $14.2 million annually, an average rate of $47.46 and highest rate of $49 per $100,000 of assessed value, collection through fiscal year 2062–63, and approximately $511.36 million total repayment. These are estimates that may vary, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and be spent on the listed facility projects. Money cannot pay teacher or administrator salaries unrelated to project oversight, or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. The ballot question describes an approximate $47.50 rate. Some projects may depend on other funding; not every listed project is guaranteed. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $236.7 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/FT_UplandUSD.pdf",
+          "sourceHash": "00558fe8b40d575681c9332ae7efd03cf75df1f132acd94c142a6a1815462e5e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-b",
+          "whatItDoes": "Authorize up to $86 million in bonds for school roofs, plumbing, heating and cooling, electrical systems, safety, classrooms, laboratories and career-technology facilities. Property taxes on taxable property in the district would repay principal and interest. The district estimates $6 million annually, an average rate of $20 and highest rate of $20 per $100,000 of assessed value, collection through fiscal year 2056–57, and approximately $178 million total repayment. These are estimates that may vary, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and be spent on the listed facility projects. Bond proceeds cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. The district plans to maintain the current tax rate through its bond schedule; actual rates and timing may change. Some projects may need state matching funds that are not guaranteed. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $86 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf",
+          "sourceHash": "e19df487e4519ec896a4b6aa70ab264b52f66594d9986e2f69f4b77a4eeb7cd4",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-d",
+          "whatItDoes": "Increase each Needles City Council member’s compensation from $1 to $150 per month by amending the city charter. Reimbursement for actual and necessary official travel and expenses would remain available, and the amendment would not create other compensation or benefits beyond those allowed by the charter. The city attorney estimates $20,916 in additional annual city spending. Approval requires a majority vote.",
+          "yesMeans": "Approve the increase to $150 per member per month.",
+          "noMeans": "Keep the charter’s $1-per-month council compensation.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/FT_CityofNeedles.pdf",
+          "sourceHash": "cbb360c92f3e2d008a98106a7bfcc8ea82761cac1663a3c24e15d4d0a36150e4",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-e",
+          "whatItDoes": "Add a 1% Highland sales and use tax, or $1 per $100 of taxable purchases, increasing the current combined rate from 7.75% to 8.75%. Groceries and prescription medicines remain exempt. The city estimates $6.35 million annually for its general fund, available for any lawful city service, including police, fire, roads and other infrastructure; those examples are not binding earmarks. Annual independent audits are required. Collection would begin in the first calendar quarter more than 110 days after adoption, subject to the state administration agreement. The tax would continue until voters repeal it. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional 1% local sales and use tax under these rules.",
+          "noMeans": "Do not add this proposed 1% tax.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/FT_CityofHighland.pdf",
+          "sourceHash": "5b9dc6b5bb0897363fb583f78055dbf8dbc01c197de1258bf27f0b4c43c8c6ba",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-f",
+          "whatItDoes": "Replace parts of Chino’s business-license tax with a tax on gross receipts from business conducted in the city, starting January 1, 2027 unless law requires another date. Businesses with $75,000 or less in receipts would pay $25. Above that amount, the tax would be $25 plus a category rate on receipts exceeding $75,000: $0.60 per $1,000 for general or retail businesses; $1 for contractors and services; and $1.50 for professional or advanced businesses and real-property or rental businesses. Revenue would go to the general fund for any lawful city purpose, with annual independent audits and public reporting. This taxes business activity, not residency alone. Approval requires a majority vote.",
+          "yesMeans": "Approve the new business-license tax structure and its administration rules.",
+          "noMeans": "Reject this replacement business-license tax ordinance; existing business-license tax provisions would remain.",
+          "parts": [
+            {
+              "id": "ca-2026-san-bernardino-f#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and mixed businesses",
+              "what": "Federal and state tax exemptions and qualifying nonprofit, religious and government exemptions remain. State-required fees are separate. Receipts from different business categories may be reasonably allocated; if they cannot be, the highest applicable rate applies."
+            },
+            {
+              "id": "ca-2026-san-bernardino-f#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Future changes",
+              "what": "The council could reduce, suspend, repeal or restore the tax within the approved maximum and make administrative amendments. Increasing the approved rates or expanding taxable persons or activities would require voter approval."
+            },
+            {
+              "id": "ca-2026-san-bernardino-f#estimates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Conflicting official revenue estimates",
+              "what": "The ordered ballot question estimates $4.8 million annually. The ordinance’s recital estimates $5.9 million. Actual collections may vary; the two official documents do not give the same estimate."
+            }
+          ],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/FT_CityofChino.pdf",
+          "sourceHash": "e16567940df9c120240a4cc5f6baa788bb27f84612247614c068a95d8a2e15d1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-g",
+          "whatItDoes": "Add a 1% Twentynine Palms sales and use tax, or $1 per $100 of taxable purchases, expected to begin April 1, 2027. Groceries and prescription medicines would remain exempt. The city estimates $2 million annually for local services and priorities such as emergency response, police, streets, flood and disaster response, parks and the animal shelter. Although this is a general tax, the ordinance requires spending to further its stated local-service purpose. The annual audit must check that restriction, summarize spending and make the summary public. The tax has no fixed expiration and would continue until lawfully ended. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional 1% tax and its local-purpose and audit requirements.",
+          "noMeans": "Do not add this proposed 1% tax.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/FT_TP.pdf",
+          "sourceHash": "17ac59811d3e6ba185ed11cf485a8caf4beeb33228c1d56c8520948f72f10b3d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-h",
+          "whatItDoes": "Add a 0.5% Ontario sales and use tax, or 50 cents per $100 of taxable purchases, in addition to current sales taxes. Collection would start April 1, 2027. The city estimates $32.5 million annually for its general fund, available for any lawful city program or service, including emergency response, streets, public areas, homelessness and housing programs. Revenue would stay in Ontario. The ballot measure requires audits and spending disclosure. The tax would continue until repealed by voters. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional 0.5% local sales and use tax.",
+          "noMeans": "Do not add this proposed 0.5% tax.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/FT_Ontario.pdf",
+          "sourceHash": "bafc0e5f2066f37fe8d069748703494dfcf18f03c57c5e42f82f05c5613cee38",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-i",
+          "whatItDoes": "Extend San Bernardino County’s existing 0.5% transportation sales tax beginning April 1, 2040, after the current authorization ends March 31, 2040. This would not immediately increase the rate. The question estimates $250 million annually for the adopted road, highway, transit and transportation-technology plan. Revenue would stay under local control and be limited to transportation purposes, with audits, spending disclosure and independent taxpayer oversight. The extension has no fixed end; repeal requires a countywide voter decision and satisfaction of outstanding bond and contractual obligations. Approval requires a two-thirds vote.",
+          "yesMeans": "Extend the existing 0.5% transportation tax from April 2040 under the new spending plan and oversight rules.",
+          "noMeans": "Do not approve this extension; the current authorization would still run through March 31, 2040.",
+          "parts": [
+            {
+              "id": "ca-2026-san-bernardino-i#allocations",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "How the money would be divided",
+              "what": "After state collection fees, 3% is designated for interregional mobility, and 1% of net revenue for the administration fund. Remaining revenue is returned to the county’s subareas. In the Valley, 25% goes to local mobility, 50% regional mobility and 25% operations. In the Mountain and Desert subareas, the shares are 70%, 20% and 10%; additional transit operations may be funded from local mobility for unmet needs. Valley local shares use population; Mountain and Desert local shares use half population and half tax generation. Each jurisdiction reserves 5% of its local allocation for active transportation. After at least ten years, a jurisdiction may release that reserve if its governing body finds it unnecessary and the authority board approves."
+            },
+            {
+              "id": "ca-2026-san-bernardino-i#safeguards",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Spending and borrowing limits",
+              "what": "Tax-administration salaries and benefits cannot exceed the administration fund, which receives 1% of annual net tax revenue. Existing transportation funding must be maintained against the fiscal 2038–39 baseline, and this tax cannot replace development’s required fair share. The authority may borrow against future tax revenue, including before the extension begins, subject to the ordinance and its debt policy; outstanding principal cannot exceed estimated tax proceeds. Authority audits are biennial and local recipients’ audits annual."
+            },
+            {
+              "id": "ca-2026-san-bernardino-i#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Changing the plan",
+              "what": "Plan changes cannot take effect before 2050. Reviews are required at least every ten years afterward, with public and local-jurisdiction input; amendments take effect 45 days after written notice to local jurisdictions and the county board. Changing subarea boundaries requires unanimous agreement of affected local jurisdictions. The measure also adjusts the constitutional spending limit by projected tax revenue."
+            }
+          ],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/FT_SBCTA.pdf",
+          "sourceHash": "b3942a6d04bb9d2469f05fdc6290772978cfe4f6a4fce98e0f16cc4186adb85c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-j",
+          "whatItDoes": "Add a 1% Chino Hills sales and use tax, increasing the current combined rate from 7.75% to 8.75%. The city estimates $11.5 million annually for its general fund, available for any lawful city purpose, including public safety, wildfire preparation, open space, parks and streets. Groceries, prescription medicines, tuition, rent, utilities and generally labor and services would remain exempt. Collection would begin in the first calendar quarter more than 110 days after adoption, subject to state administration arrangements. The tax would continue until voters repeal it; the council could suspend all or part. Independent annual audits and public spending reports are required. Rate increases and expansion to new taxable transactions require voter approval. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional 1% local sales and use tax under these rules.",
+          "noMeans": "Do not add this proposed 1% tax.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/FT_ChinoHills.pdf",
+          "sourceHash": "3a5207dfd6e03d080423de2c8ae7d14aaaaae07bed44ee5b699bbd7c4f25a7ef",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-k",
+          "whatItDoes": "Increase Needles’ tax on hotel, motel, recreational-vehicle and short-term lodging stays of 30 days or less from 10% to 12% on January 1, 2027, 13% on January 1, 2029 and 14% on January 1, 2030. Guests pay the tax and lodging operators collect it. The city estimates additional annual revenue of $200,000 at 12%, $300,000 at 13% and $400,000 at 14%, for its general fund and any lawful city purpose. The measure also updates monthly remittance and delinquency rules and requires annual public disclosure. It has no fixed expiration and would continue until ended by voters. Approval requires a majority vote.",
+          "yesMeans": "Approve the phased lodging-tax increase and related collection rules.",
+          "noMeans": "Keep the current 10% lodging-tax rate rather than adopting this increase.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/FT_CityofNeedles.pdf",
+          "sourceHash": "013093c1d4baf71949443a7543136dd56dc2e26bd6933268b088b0002a810919",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-l",
+          "whatItDoes": "Authorize up to $11.2 million in Needles bonds for roads, streets and potholes, community safety, parks and recreation, and downtown Main Street improvements. Property taxes would repay principal and interest. The city estimates $739,971 annually, an average and highest rate of $60 per $100,000 of assessed value, and $25.16 million total repayment. These projections may vary and are not binding caps. Interest must stay within legal limits. Money must stay in Needles and cannot pay employee salaries or routine operating expenses. Annual financial and performance audits, independent citizen oversight, separate accounts and public reports are required. Approval requires a two-thirds vote.",
+          "yesMeans": "Authorize the city to borrow up to $11.2 million for these improvements and levy property taxes to repay the bonds.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [
+            {
+              "id": "ca-2026-san-bernardino-l#dates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Conflicting projected tax dates",
+              "what": "The official tax statement projects final tax collection in fiscal 2058–59, but also projects its highest rate through 2060–61. These inconsistent dates are estimates; taxes would be collected as needed while the bonds remain outstanding."
+            }
+          ],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf",
+          "sourceHash": "986dbfbc08bd1ba0779cd307a579c0df009decccb2c28058837b03c3ed3ef864",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-m",
+          "whatItDoes": "Revise Upland’s business-license tax starting January 1, 2027, with lower transition rates in 2027 and full rates in 2028. The first $100,000 of annual gross receipts would be subject only to a $75 minimum; receipts above that threshold would use rates based on business type. Self-storage facilities would also pay a per-unit amount. The schedule has an initial $28,000 annual maximum, with inflation adjustments described below. The city estimates $3.3 million total annual revenue, about $2.1 million more than the current tax, for general city services. Independent audits and public spending disclosure are required. This taxes businesses, including businesses operated by residents, rather than residency alone. Approval requires a majority vote.",
+          "yesMeans": "Approve the revised business-license tax, transition rates, limits and exemptions.",
+          "noMeans": "Reject this proposed tax revision and keep the current business-license tax structure.",
+          "parts": [
+            {
+              "id": "ca-2026-san-bernardino-m#rates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rates and inflation adjustments",
+              "what": "In 2027, rates on receipts above $100,000 would be 0.060% for retail and general commercial businesses, 0.100% for contractors, 0.125% for rentals and 0.090% for general or professional services. From 2028, the rates would be 0.065%, 0.150%, 0.200% and 0.125%, respectively. Self-storage facilities would also pay $50 per unit. The $75 minimum, $28,000 maximum and $50 per-unit amount would each rise with the applicable Consumer Price Index every January 1. The ordinance retains a separate tonnage-based tax for rock, sand and gravel extraction."
+            },
+            {
+              "id": "ca-2026-san-bernardino-m#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and veterans",
+              "what": "Businesses exempt under federal or state law remain exempt. An approved special-event vendor without a fixed city business or other city business activity may be exempt. Qualifying honorably discharged veterans unable to earn a livelihood through manual labor may obtain a free license with the required California voter eligibility and recent medical proof. Other honorably discharged veterans receive an application-fee waiver and a $100,000 gross-receipts credit, or the specified $108 business-tax credit, with proof of discharge. State-required fees cannot be waived."
+            },
+            {
+              "id": "ca-2026-san-bernardino-m#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Future changes",
+              "what": "The council may amend or repeal the ordinance or reduce and later restore taxes within voter-approved limits. Increasing approved maximum rates or changing the tax method to increase the tax requires voter approval. The ballot question describes the tax as continuing until ended by voters; it has no fixed expiration."
+            }
+          ],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/FT_Upland.pdf",
+          "sourceHash": "9bf9153c6cfed5f2872ac7520c1711deaf72320025172b8e4bd097550a38e166",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-n",
+          "whatItDoes": "Add a 1% Grand Terrace sales and use tax. The city estimates $1.2 million annually for its general fund, available for any lawful general city purpose, including police and emergency response. Groceries and prescription medicines remain exempt. Collection would begin in the first calendar quarter more than 110 days after adoption, subject to state administration arrangements. An advisory committee would review tax revenue, spending and annual audit reports and submit at least one written report a year to the council. Independent annual audits and public disclosure are required. The tax would continue until voters repeal it. The council could make administrative amendments, but a tax increase requires voter approval. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional 1% local tax and its oversight requirements.",
+          "noMeans": "Do not add this proposed 1% tax.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/FT_GT.pdf",
+          "sourceHash": "c12354b86745aefb42f72eeb7f79567a4971a88d1f1460f91958b59bab3d3b5e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-o",
+          "whatItDoes": "Change Colton’s city treasurer from an elected to an appointed office beginning November 7, 2028, or earlier if the current office becomes vacant. The current elected term would otherwise continue until that date. The council would appoint the treasurer, who would serve at its pleasure and would not have to be a city resident or registered voter. The council could delegate appointment authority to the city manager by ordinance. Later amendment or repeal of this measure would require voter approval. Approval requires a majority vote.",
+          "yesMeans": "Approve an appointed city treasurer under this transition and appointment process.",
+          "noMeans": "Keep the city treasurer as an elected office.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/FT_CityofColton.pdf",
+          "sourceHash": "ebcd6cddbcffb12e94313999711b2da53f34e8ede488c1df154a521a85d8e170",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-bernardino-p",
+          "whatItDoes": "Add a 1% Adelanto sales and use tax beginning April 1, 2027. The city estimates $3 million annually for its general fund, available for any lawful municipal purpose, including streets, emergency services, public safety, parks, homelessness response and infrastructure. The tax applies to taxable purchases by residents and visitors; transactions exempt under existing law remain exempt. A transaction would pay the sales or use tax once, not both. Annual independent accountant audits must be reported publicly and posted on the city website. The tax has no fixed expiration and would continue until lawfully ended. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional 1% local sales and use tax and its audit requirements.",
+          "noMeans": "Do not add this proposed 1% tax.",
+          "parts": [],
+          "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/FT_CityofAdelanto.pdf",
+          "sourceHash": "82993a6d0840614c5dea52bae69489f3e317809c2abb9c3bb950cfb68e16df3b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:40:50.643457+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:40:50.643457+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/Notice_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/Notice_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "7e4d8ed6ab4233ac91611e96044d162f8e8266313ff0a6a1924d0e3566c51406",
+        "retrievedAt": "2026-11-03T05:20:40.839663+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/RES_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/RES_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "243cf92dec698091a4595c3fdc0abf657037b277e5f2377bde479db8c5d1176a",
+        "retrievedAt": "2026-11-03T05:20:41.060048+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/FT_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "ea4420a2f7563a4bac6fb0a609639633c7fe89864d03aeabc78016e95ddc7d8b",
+        "retrievedAt": "2026-11-03T05:20:40.549284+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/IA_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/IA_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "a812b037f4f2102a076c9c3443ed6f9a328a8dbe8dd9744673ee9e8bdbbefad8",
+        "retrievedAt": "2026-11-03T05:20:40.864684+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/TR_SBCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCCD/TR_SBCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "1535d241cb7471ad849ef19ebd3c3d1446301c5f34da1109bc5262ec78d73ff4",
+        "retrievedAt": "2026-11-03T05:20:40.738499+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/Notice_SBCUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/Notice_SBCUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "1bd66fc0bfde80543b6a42719f76248ea4d7559f3b7160882706bd8aa70f4d34",
+        "retrievedAt": "2026-11-03T05:20:41.194005+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/RES_SBCityUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/RES_SBCityUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "afca8d7fba12f6c82846b1309ceaf470d59c2aa1d62afe285b87af81c05c3406",
+        "retrievedAt": "2026-11-03T05:20:41.020163+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/FT_SBCityUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/FT_SBCityUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "4946128c494c9c6e96604e8d5b061f4124723f02280375907985f92f8cb6c48c",
+        "retrievedAt": "2026-11-03T05:20:40.904245+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/TR_SBCityUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/TR_SBCityUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "f799e0574257fe6fe010ec20bd6b0b74f34a632a6c5bd4995ba861e35958ac17",
+        "retrievedAt": "2026-11-03T05:20:40.969744+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/Notice_UUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/Notice_UUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "430ba7a95a7a673df640d393a3f48108216105339a717f4f04f2d2e5626abf63",
+        "retrievedAt": "2026-11-03T05:20:41.338404+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/RES_UplandUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/RES_UplandUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "514b41e94c0edef649eb408f2abfc7a48169c064fbc60ceebaa666c9208aa491",
+        "retrievedAt": "2026-11-03T05:20:41.272438+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/FT_UplandUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/FT_UplandUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "00558fe8b40d575681c9332ae7efd03cf75df1f132acd94c142a6a1815462e5e",
+        "retrievedAt": "2026-11-03T05:20:41.288227+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/IA_UplandUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/IA_UplandUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "a0b43037d072f4e9102973df691dc2ea293b3bd0f27922a0b335b9af4daef1d7",
+        "retrievedAt": "2026-11-03T05:20:41.250773+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/TR_UplandUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/TR_UplandUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "c71ee98eb8aeb7e5406c77bf68784c45678edef4c7fa43506065954db85b6a73",
+        "retrievedAt": "2026-11-03T05:20:41.237603+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/RES_BUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/RES_BUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "0fd0a45cf4e13590eb18cc9f783a1cb3aa3f88bf498420a252b958e61b48c4ae",
+        "retrievedAt": "2026-11-03T05:20:41.299659+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "e19df487e4519ec896a4b6aa70ab264b52f66594d9986e2f69f4b77a4eeb7cd4",
+        "retrievedAt": "2026-11-03T05:20:41.412129+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/IA_BUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/IA_BUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "5f6c0085f8da65d1a2ec277ec2f1310be0c5201417646ba4aa8667ccd582d54f",
+        "retrievedAt": "2026-11-03T05:20:41.421120+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/TR_BUSD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/TR_BUSD.pdf",
+        "httpStatus": 200,
+        "rawHash": "16d9cbc9abed90ac5e1336d183697527cf2d03b6cb0c7bd74306c6412548c019",
+        "retrievedAt": "2026-11-03T05:20:41.453533+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/Notice_BCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/Notice_BCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "5537d9f7443b9fafc844f973357e3842599b2ce6c989f55f8a521178c51e7f2a",
+        "retrievedAt": "2026-11-03T05:20:41.643844+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/RES_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/RES_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "ce93075ca048c14aef2a7b3b34c98c03724d89d47a3e214f7311c1ef0eb10624",
+        "retrievedAt": "2026-11-03T05:20:41.516104+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/FT_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "0127a4469d83675f6a20c2de1b95a5b8bca91532cede9dc1ae8a6989a7ecc508",
+        "retrievedAt": "2026-11-03T05:20:41.510864+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/IA_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/IA_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "62c5024756fb98a218647442b870647fb5ac86f15d074b9d22a6acff3aa264f4",
+        "retrievedAt": "2026-11-03T05:20:41.743293+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/TR_BarstowCCD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BarstowCCD/TR_BarstowCCD.pdf",
+        "httpStatus": 200,
+        "rawHash": "ed041f0615481b580f1f1b193733565c42ef47beb1c9a26f215d22b8baa3d1a3",
+        "retrievedAt": "2026-11-03T05:20:41.586895+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/Notice_SBCTA.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/Notice_SBCTA.pdf",
+        "httpStatus": 200,
+        "rawHash": "95db92811a4f6fde33d9fbf81aff880979f3a04fb4676bf37cf1964e97bf0331",
+        "retrievedAt": "2026-11-03T05:20:41.706531+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/RES_SBCTA.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/RES_SBCTA.pdf",
+        "httpStatus": 200,
+        "rawHash": "f48ad830f7177eab3511f89cc3c0857eb0c32c0eefe94186869a9f03e7d9fc53",
+        "retrievedAt": "2026-11-03T05:20:41.600714+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/FT_SBCTA.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/FT_SBCTA.pdf",
+        "httpStatus": 200,
+        "rawHash": "b3942a6d04bb9d2469f05fdc6290772978cfe4f6a4fce98e0f16cc4186adb85c",
+        "retrievedAt": "2026-11-03T05:20:42.421528+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/IA_SBCTA.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/IA_SBCTA.pdf",
+        "httpStatus": 200,
+        "rawHash": "8ab1287c34f603939b306bd629572697753062e9369eddf33092ad44e6d53904",
+        "retrievedAt": "2026-11-03T05:20:41.979617+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/RES_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/RES_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "d8add9a76f7a19dd6735c7b730c0c64202cc9bc7741ed0b20416c4593581b103",
+        "retrievedAt": "2026-11-03T05:20:41.775027+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/FT_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/FT_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "cbb360c92f3e2d008a98106a7bfcc8ea82761cac1663a3c24e15d4d0a36150e4",
+        "retrievedAt": "2026-11-03T05:20:41.790651+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/IA_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/IA_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "47271d89ff3d6a522d0e01f9f24c1802a0f96088b01b33e237c724b072dbdd5a",
+        "retrievedAt": "2026-11-03T05:20:41.783329+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/RES_CityofHighland.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/RES_CityofHighland.pdf",
+        "httpStatus": 200,
+        "rawHash": "43a0ef7d5f38fa5e5eb551d86949ff0fb2f36fb3f1398ccf8ada6f881433a631",
+        "retrievedAt": "2026-11-03T05:20:41.977958+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/FT_CityofHighland.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/FT_CityofHighland.pdf",
+        "httpStatus": 200,
+        "rawHash": "5b9dc6b5bb0897363fb583f78055dbf8dbc01c197de1258bf27f0b4c43c8c6ba",
+        "retrievedAt": "2026-11-03T05:20:41.963020+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/IA_CityofHighland.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/IA_CityofHighland.pdf",
+        "httpStatus": 200,
+        "rawHash": "688041e77ae02f9d46fadad96f829ecc97aced8de191d8094d6a76e396749b79",
+        "retrievedAt": "2026-11-03T05:20:41.914837+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/RES_CityofChino.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/RES_CityofChino.pdf",
+        "httpStatus": 200,
+        "rawHash": "8ccd6fea22df9e2b6d4ec05eba5b043a3af4ec1f0d4f4fbde835037cf68ba1fa",
+        "retrievedAt": "2026-11-03T05:20:42.273337+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/FT_CityofChino.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/FT_CityofChino.pdf",
+        "httpStatus": 200,
+        "rawHash": "e16567940df9c120240a4cc5f6baa788bb27f84612247614c068a95d8a2e15d1",
+        "retrievedAt": "2026-11-03T05:20:42.063566+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/IA_CityofChino.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/IA_CityofChino.pdf",
+        "httpStatus": 200,
+        "rawHash": "4e178d9ca921e321971985bed37db121c51352b254002a25bdfab8b54f89be64",
+        "retrievedAt": "2026-11-03T05:20:42.001369+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/RES_TP.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/RES_TP.pdf",
+        "httpStatus": 200,
+        "rawHash": "0ad40564b50f2cf7fe7e1a9e4266a4d0ec40bb81f5bb6c7baa967fc9f809e111",
+        "retrievedAt": "2026-11-03T05:20:42.084589+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/FT_TP.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/FT_TP.pdf",
+        "httpStatus": 200,
+        "rawHash": "17ac59811d3e6ba185ed11cf485a8caf4beeb33228c1d56c8520948f72f10b3d",
+        "retrievedAt": "2026-11-03T05:20:42.197550+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/IA_TP.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/IA_TP.pdf",
+        "httpStatus": 200,
+        "rawHash": "cf05bb695c5b3e529c08ff96d4cb46933b5a45ecf654e7636933b202270f6283",
+        "retrievedAt": "2026-11-03T05:20:42.163058+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/RES_Ontario.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/RES_Ontario.pdf",
+        "httpStatus": 200,
+        "rawHash": "7970fee795d723df1b2cf71413d398a01fa93dba43aa89533e764959864e74ba",
+        "retrievedAt": "2026-11-03T05:20:42.218752+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/FT_Ontario.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/FT_Ontario.pdf",
+        "httpStatus": 200,
+        "rawHash": "bafc0e5f2066f37fe8d069748703494dfcf18f03c57c5e42f82f05c5613cee38",
+        "retrievedAt": "2026-11-03T05:20:42.193339+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/IA_Ontario.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/IA_Ontario.pdf",
+        "httpStatus": 200,
+        "rawHash": "53f3b7d679211fdf33e9d045bdc9cd0f77c580b5f181ea3c46a23b6c4e4aae30",
+        "retrievedAt": "2026-11-03T05:20:42.245346+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/RES_ChinoHills.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/RES_ChinoHills.pdf",
+        "httpStatus": 200,
+        "rawHash": "4b15853f6c2e195e46333a9faa452817f13ed2496e67a8a21e92ab4b785f7877",
+        "retrievedAt": "2026-11-03T05:20:42.283018+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/FT_ChinoHills.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/FT_ChinoHills.pdf",
+        "httpStatus": 200,
+        "rawHash": "3a5207dfd6e03d080423de2c8ae7d14aaaaae07bed44ee5b699bbd7c4f25a7ef",
+        "retrievedAt": "2026-11-03T05:20:42.364616+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/IA_ChinoHills.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/IA_ChinoHills.pdf",
+        "httpStatus": 200,
+        "rawHash": "d9a86dae6448d33af9611b354224a5acab300e939c0eed861cb1c527e25a0a92",
+        "retrievedAt": "2026-11-03T05:20:42.381590+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/RES_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/RES_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "18a2dbbf59022db2832c689d6e23467aaed82b8f71b5da10d107b2afb2f9d3a5",
+        "retrievedAt": "2026-11-03T05:20:42.409113+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/FT_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/FT_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "013093c1d4baf71949443a7543136dd56dc2e26bd6933268b088b0002a810919",
+        "retrievedAt": "2026-11-03T05:20:42.446079+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/IA_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/IA_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "17229e2621592ebf3c14bacaf6c35817ef3f1217ad187253e45a17555544bef2",
+        "retrievedAt": "2026-11-03T05:20:42.416399+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/RES_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/RES_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "b99009b35552dbeccb78634d5cc5ff4fb15134fae665d7b46eee546cc14862c9",
+        "retrievedAt": "2026-11-03T05:20:42.461891+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "986dbfbc08bd1ba0779cd307a579c0df009decccb2c28058837b03c3ed3ef864",
+        "retrievedAt": "2026-11-03T05:20:42.501722+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/IA_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/IA_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "899dc81c478cc2ae3cd49b56e14e42685e52d04c9304f02e0121280be8c7904e",
+        "retrievedAt": "2026-11-03T05:20:42.557803+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/TR_CityofNeedles.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/TR_CityofNeedles.pdf",
+        "httpStatus": 200,
+        "rawHash": "d52120c0060353e5184d43b48b0e33877a3d1a5a9d9c13a3b1447cdb21d8d23d",
+        "retrievedAt": "2026-11-03T05:20:42.608603+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/RES_Upland.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/RES_Upland.pdf",
+        "httpStatus": 200,
+        "rawHash": "c66d9160ccf35a3dea50546b06709ede97d5fbe5a06080edc474e22bdea6973e",
+        "retrievedAt": "2026-11-03T05:20:42.633576+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/FT_Upland.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/FT_Upland.pdf",
+        "httpStatus": 200,
+        "rawHash": "9bf9153c6cfed5f2872ac7520c1711deaf72320025172b8e4bd097550a38e166",
+        "retrievedAt": "2026-11-03T05:20:43.000605+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/IA_Upland.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/IA_Upland.pdf",
+        "httpStatus": 200,
+        "rawHash": "6d590a9bd1974e69fd93134a0e37f8dd558afff54323c736dd19f7698b11b80d",
+        "retrievedAt": "2026-11-03T05:20:42.641600+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/RES_GT.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/RES_GT.pdf",
+        "httpStatus": 200,
+        "rawHash": "31c055fc7e0f94615be383930d0568cd170574b34e4b67030e1f928fd2f52ca4",
+        "retrievedAt": "2026-11-03T05:20:42.612286+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/FT_GT.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/FT_GT.pdf",
+        "httpStatus": 200,
+        "rawHash": "c12354b86745aefb42f72eeb7f79567a4971a88d1f1460f91958b59bab3d3b5e",
+        "retrievedAt": "2026-11-03T05:20:42.666643+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/IA_GT.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/IA_GT.pdf",
+        "httpStatus": 200,
+        "rawHash": "74b460d3b4b7447cdf1e5835618e322348b7e5675c4c170a3911b8c651b01c36",
+        "retrievedAt": "2026-11-03T05:20:42.896550+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/RES_CityofColton.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/RES_CityofColton.pdf",
+        "httpStatus": 200,
+        "rawHash": "7e57ce2afb505113ab7513ab82759852d63a2b4210f5e02b5bdc803baecd94a7",
+        "retrievedAt": "2026-11-03T05:20:42.777624+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/FT_CityofColton.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/FT_CityofColton.pdf",
+        "httpStatus": 200,
+        "rawHash": "ebcd6cddbcffb12e94313999711b2da53f34e8ede488c1df154a521a85d8e170",
+        "retrievedAt": "2026-11-03T05:20:42.815392+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/IA_CityofColton.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/IA_CityofColton.pdf",
+        "httpStatus": 200,
+        "rawHash": "d60a41911e854a9a3c50880a848eb407a69e382b771a0badc7577053a60d6e06",
+        "retrievedAt": "2026-11-03T05:20:42.808676+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/RES_CityofAdelanto.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/RES_CityofAdelanto.pdf",
+        "httpStatus": 200,
+        "rawHash": "965dddaab6b22dd6c35235a306f2e8b22862c7846373f7e10463758b7f0c5d7a",
+        "retrievedAt": "2026-11-03T05:20:42.842499+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/FT_CityofAdelanto.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/FT_CityofAdelanto.pdf",
+        "httpStatus": 200,
+        "rawHash": "82993a6d0840614c5dea52bae69489f3e317809c2abb9c3bb950cfb68e16df3b",
+        "retrievedAt": "2026-11-03T05:20:42.853137+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/IA_CityofAdelanto.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/IA_CityofAdelanto.pdf",
+        "httpStatus": 200,
+        "rawHash": "ae108d0c9af99750309a3b3d63918233895302cc8cbb90bb036215bf3128e356",
+        "retrievedAt": "2026-11-03T05:20:42.928948+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/Notice_SBMCHD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/Notice_SBMCHD.pdf",
+        "httpStatus": 200,
+        "rawHash": "6296d3e0b68cae8b5af33f23084cdac1420ec43792095cf512bf7f3342a7cc0d",
+        "retrievedAt": "2026-11-03T05:20:43.001648+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/RES_SBMCHD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/RES_SBMCHD.pdf",
+        "httpStatus": 200,
+        "rawHash": "846c739527fb852d7ac0fb6aaefb45586f207304123e2b443a4920788b7d113b",
+        "retrievedAt": "2026-11-03T05:20:43.024451+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/FT_SBMCHD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/FT_SBMCHD.pdf",
+        "httpStatus": 200,
+        "rawHash": "e2acc72f5de0bc553e00efd7d0425669b371bb494f252f5f796864b7a80b0fd1",
+        "retrievedAt": "2026-11-03T05:20:43.043003+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/IA_SBMCHD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/IA_SBMCHD.pdf",
+        "httpStatus": 200,
+        "rawHash": "c2c8592c6c96cc6f6a56b4d8d8be78f6fa5fe443861eb2af1039c90f66086835",
+        "retrievedAt": "2026-11-03T05:20:43.201772+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/TR_SBMCHD.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBMCHD/TR_SBMCHD.pdf",
+        "httpStatus": 200,
+        "rawHash": "47794242cbec857b26d1cb8f4d444e4381e33e079fe0f0c2babf7224525eebd1",
+        "retrievedAt": "2026-11-03T05:20:43.037254+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/Notice_ROTW.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/Notice_ROTW.pdf",
+        "httpStatus": 200,
+        "rawHash": "aeb5379265d41d6f2e347bfe568fa0b3f2a9fe745b3d4ae00b8422559f0dcda3",
+        "retrievedAt": "2026-11-03T05:20:43.093002+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/RES_ROTW.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/RES_ROTW.pdf",
+        "httpStatus": 200,
+        "rawHash": "036b8ec7ff6c34553211172d66231a1cf47baaa6a9c3447eaaa2d97b6d324815",
+        "retrievedAt": "2026-11-03T05:20:43.165592+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/FT_ROTW.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/FT_ROTW.pdf",
+        "httpStatus": 200,
+        "rawHash": "2a4c14ae4965f55694d1b622dabd8d4ae905b81c2574dc5a1715e4bc672ed19f",
+        "retrievedAt": "2026-11-03T05:20:43.932381+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/IA_ROTW.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/RimoftheWorldRPD/IA_ROTW.pdf",
+        "httpStatus": 200,
+        "rawHash": "8eef2531d45d736a3e99eba4bcdb3eeb91c2de30a1e929f081fea4484cb937fe",
+        "retrievedAt": "2026-11-03T05:20:43.183579+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current November 2026 measure question, resolution, legal text, impartial analysis or bond tax-rate statement; original bytes saved. Voter arguments are excluded from explanation support."
+      },
+      {
+        "requestedUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/VIG.pdf",
+        "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/VIG.pdf",
+        "httpStatus": 200,
+        "rawHash": "4914738fe0ef7e261858c1e96bc13d5ef4f2ec14942e01fb88c858db33bca9d6",
+        "retrievedAt": "2026-11-03T05:27:16.512250+00:00",
+        "publisher": "San Bernardino County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official comprehensive November 2026 VIG supplies correct Z neutral analysis at printed page SB COMPREHENSIVE-262 (PDF page 264). The derived source excludes the following voter argument."
+      }
+    ]
+  }
+}

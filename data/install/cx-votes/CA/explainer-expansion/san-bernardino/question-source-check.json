@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "questionSourceMatch": [
+    {
+      "contestId": "ca-2026-san-bernardino-y",
+      "questionSourceHash": "7e4d8ed6ab4233ac91611e96044d162f8e8266313ff0a6a1924d0e3566c51406",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-z",
+      "questionSourceHash": "1bd66fc0bfde80543b6a42719f76248ea4d7559f3b7160882706bd8aa70f4d34",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-a",
+      "questionSourceHash": "430ba7a95a7a673df640d393a3f48108216105339a717f4f04f2d2e5626abf63",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-b",
+      "questionSourceHash": "e19df487e4519ec896a4b6aa70ab264b52f66594d9986e2f69f4b77a4eeb7cd4",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-c",
+      "questionSourceHash": "5537d9f7443b9fafc844f973357e3842599b2ce6c989f55f8a521178c51e7f2a",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-d",
+      "questionSourceHash": "d8add9a76f7a19dd6735c7b730c0c64202cc9bc7741ed0b20416c4593581b103",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-e",
+      "questionSourceHash": "43a0ef7d5f38fa5e5eb551d86949ff0fb2f36fb3f1398ccf8ada6f881433a631",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-f",
+      "questionSourceHash": "8ccd6fea22df9e2b6d4ec05eba5b043a3af4ec1f0d4f4fbde835037cf68ba1fa",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-g",
+      "questionSourceHash": "0ad40564b50f2cf7fe7e1a9e4266a4d0ec40bb81f5bb6c7baa967fc9f809e111",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-h",
+      "questionSourceHash": "7970fee795d723df1b2cf71413d398a01fa93dba43aa89533e764959864e74ba",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-i",
+      "questionSourceHash": "95db92811a4f6fde33d9fbf81aff880979f3a04fb4676bf37cf1964e97bf0331",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-j",
+      "questionSourceHash": "4b15853f6c2e195e46333a9faa452817f13ed2496e67a8a21e92ab4b785f7877",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-k",
+      "questionSourceHash": "18a2dbbf59022db2832c689d6e23467aaed82b8f71b5da10d107b2afb2f9d3a5",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-l",
+      "questionSourceHash": "986dbfbc08bd1ba0779cd307a579c0df009decccb2c28058837b03c3ed3ef864",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-m",
+      "questionSourceHash": "c66d9160ccf35a3dea50546b06709ede97d5fbe5a06080edc474e22bdea6973e",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-n",
+      "questionSourceHash": "31c055fc7e0f94615be383930d0568cd170574b34e4b67030e1f928fd2f52ca4",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-o",
+      "questionSourceHash": "7e57ce2afb505113ab7513ab82759852d63a2b4210f5e02b5bdc803baecd94a7",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-p",
+      "questionSourceHash": "965dddaab6b22dd6c35235a306f2e8b22862c7846373f7e10463758b7f0c5d7a",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-q",
+      "questionSourceHash": "6296d3e0b68cae8b5af33f23084cdac1420ec43792095cf512bf7f3342a7cc0d",
+      "completeQuestionSourceMatch": true
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-r",
+      "questionSourceHash": "aeb5379265d41d6f2e347bfe568fa0b3f2a9fe745b3d4ae00b8422559f0dcda3",
+      "completeQuestionSourceMatch": true
+    }
+  ],
+  "normalization": "Remove punctuation, whitespace and printed YES/NO columns; preserve every substantive word and number. Original source bytes unchanged."
+}

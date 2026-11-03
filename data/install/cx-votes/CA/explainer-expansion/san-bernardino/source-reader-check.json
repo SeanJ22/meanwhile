@@ -1,0 +1,100 @@
+{
+  "checkedAt": "2026-11-03T05:40:51.826Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 16,
+  "checks": [
+    {
+      "contestId": "ca-2026-san-bernardino-z",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-a",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-b",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-d",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-e",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-f",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-g",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-h",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-i",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-j",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-k",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-l",
+      "status": "PASS",
+      "parts": 1
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-m",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-n",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-o",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-bernardino-p",
+      "status": "PASS",
+      "parts": 0
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

@@ -1,0 +1,62 @@
+{
+  "state": "CA",
+  "county": "San Bernardino",
+  "electionDate": "2026-11-03",
+  "checkedAt": "2026-11-03T05:40:50.643457+00:00",
+  "officialList": {
+    "url": "https://elections.sbcounty.gov/elections/2026/1103/measures/",
+    "retrievedAt": "2026-11-03T05:17:01.650811+00:00",
+    "rawHash": "3a2aabbad67cf6c69654cf77ccef7fdd868ec732faf7e055da757bf98f91b0f9",
+    "savedFile": "sources/3a2aabbad67cf6c69654cf77ccef7fdd868ec732faf7e055da757bf98f91b0f9.html",
+    "denominator": 20,
+    "measureLetters": [
+      "Y",
+      "Z",
+      "A",
+      "B",
+      "C",
+      "I",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R"
+    ]
+  },
+  "preparedAttached": 16,
+  "preparedUnscoped": 4,
+  "scope": "Complete official county measure inventory identified; sixteen exact held place/county/K–12 identities attached. Four college/hospital/park questions remain source-backed drafts pending exact reader geography. This is not California-wide local completeness.",
+  "sourceNotes": [
+    {
+      "measure": "Z",
+      "finding": "Table link labelled Impartial serves an Argument in Favor. It is excluded; the true County Counsel analysis is recovered from the comprehensive VIG."
+    },
+    {
+      "measure": "F",
+      "finding": "Ordered question estimates $4.8M annually; ordinance recital says $5.9M. Explanation reports both as conflicting official estimates, without reconciling them."
+    },
+    {
+      "measure": "L",
+      "finding": "Tax statement projects final collection in 2058–59 and highest rates through 2060–61. Explanation explicitly preserves this inconsistency; neither is described as a fixed payoff promise."
+    },
+    {
+      "measure": "I",
+      "finding": "Notice explicitly identifies all qualified county voters; existing county OCD binding is therefore valid for this authority’s question."
+    },
+    {
+      "measure": "A",
+      "finding": "Notice and legal-text question have slightly different wording. Full question from official election notice is preserved, with project-oversight salary exception supported by neutral analysis."
+    }
+  ],
+  "productionWrites": 0,
+  "applicationChanges": 0
+}

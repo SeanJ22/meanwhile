@@ -1,0 +1,16 @@
+{
+  "ocd-division/country:us/state:ca/county:san_bernardino": "data/derived/zip-divisions/93.json",
+  "ocd-division/country:us/state:ca/place:chino": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:chino_hills": "data/derived/zip-divisions/91.json",
+  "ocd-division/country:us/state:ca/place:ontario": "data/derived/zip-divisions/91.json",
+  "ocd-division/country:us/state:ca/place:upland": "data/derived/zip-divisions/91.json",
+  "ocd-division/country:us/state:ca/school_district:upland_unified_school_district": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:adelanto": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:colton": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:grand_terrace": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:highland": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:needles": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:twentynine_palms": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/school_district:beaumont_unified_school_district": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/school_district:san_bernardino_city_unified_school_district": "data/derived/zip-divisions/92.json"
+}

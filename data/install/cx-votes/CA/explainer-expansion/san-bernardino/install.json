@@ -1,0 +1,100 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-bernardino-z",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/SBCityUSD/FT_SBCityUSD.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-a",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/UplandUSD/FT_UplandUSD.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-b",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/BeaumontUSD/FT_BUSD.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-d",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/29/FT_CityofNeedles.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-e",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofHighland/FT_CityofHighland.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-f",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChino/FT_CityofChino.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-g",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofTwentyninePalms/FT_TP.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-h",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofOntario/FT_Ontario.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-i",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/County/FT_SBCTA.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-j",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofChinoHills/FT_ChinoHills.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-k",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/27/FT_CityofNeedles.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-l",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofNeedles/30/FT_CityofNeedles.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-m",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofUpland/FT_Upland.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-n",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofGrandTerrace/FT_GT.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-o",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofColton/FT_CityofColton.pdf"
+    },
+    {
+      "id": "ca-2026-san-bernardino-p",
+      "sourceUrl": "https://uploads.rov.sbcounty.gov/ROV/Elections/2026/1103/Measures/CityofAdelanto/FT_CityofAdelanto.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory. Preserve all unrelated candidates, contests, explanations and other county additions. No app release.",
+  "coverage": {
+    "officialCountyMeasures": 20,
+    "newLocalMeasuresWithExplanations": 16,
+    "sourceReadyAwaitingExactGeography": 4,
+    "localCompleteness": "San Bernardino complete official inventory identified. Y/C/Q/R remain pending district identity and reader geography. Other county inventories remain under acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "sourceHashes": "PASS",
+    "questionSourceMatch": "PASS",
+    "measureRecordContract": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS"
+  },
+  "sourceNotes": "See coverage.json for the excluded mislabeled voter argument and explicit official estimate/date contradictions.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

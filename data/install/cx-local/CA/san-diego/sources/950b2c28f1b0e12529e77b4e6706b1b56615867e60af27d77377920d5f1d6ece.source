@@ -1,0 +1,1218 @@
+
+<!DOCTYPE HTML>
+<html  lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=640">
+    <link rel="stylesheet" href="/etc.clientlibs/oesshared/clientlibs/clientlibs-contentFragment.css" type="text/css">
+<link rel="stylesheet" href="/etc.clientlibs/foundation/clientlibs/main.css" type="text/css">
+<script src="/etc.clientlibs/clientlibs/granite/jquery.js"></script>
+<script src="/etc.clientlibs/oesshared/clientlibs/clientlibs-contentFragment.js"></script>
+<script src="/etc.clientlibs/clientlibs/granite/utils.js"></script>
+<script src="/etc.clientlibs/clientlibs/granite/jquery/granite.js"></script>
+<script src="/etc.clientlibs/foundation/clientlibs/jquery.js"></script>
+<script src="/etc.clientlibs/foundation/clientlibs/shared.js"></script>
+<script src="/etc.clientlibs/foundation/clientlibs/main.js"></script>
+
+
+<link href="/etc/designs/sdc/county/countydesign.css" rel="stylesheet" type="text/css">
+
+    
+
+	<link rel="stylesheet" href="/etc/designs/sdc/county/countydesign/css/static.css" type="text/css">
+	
+<meta property="og:url" content="inheritedPageproderdomain/content/rov/en/elections/facsimile.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Facsimile" />
+<meta property="og:description" content="" />
+<meta property="og:image" content="https://www.sandiegocounty.gov/content/dam/sdc/initialcontent/logo/County-logo-OpenGraph-1200x630.png" />
+<meta property="og:site_name" content="County of San Diego" />
+
+<link rel="canonical" href="/content/rov/en/elections/facsimile.html"/>
+
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="/etc/clientlibs/sdc/bootstrap3.css" type="text/css">
+
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="/etc/clientlibs/sdc/ie9.js"></script>
+
+<link href="/etc/designs/sdc/county/countydesign/css/cosd-ie8.css" rel="stylesheet">
+<![endif]-->
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" href="/etc/designs/sdc/county/grantappl.css" type="text/css">
+
+<link rel="stylesheet" href="/etc/designs/sdc/county/cegrantappl.css" type="text/css">
+
+<link rel="stylesheet" href="/etc/designs/sdc/county/recycle-permit.css" type="text/css">
+
+
+<link href="/etc/designs/sdc/county/countydesign/css/carousel.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/cosd.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/cosd-secondary.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/cosd-supplemental.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/print.css" rel="stylesheet" media="print">
+
+<link rel="stylesheet" href="/etc.clientlibs/aem-cosd-global/clientlibs/vendor/font-awesome.css" type="text/css">
+<link rel="stylesheet" href="/etc/designs/sdc/county/countydesign/clientlibs.css" type="text/css">
+
+
+
+ 
+
+<!-- GOOGLE TRACKING PIXEL -- HEAD START-->
+	<!-- Google Tag Manager -->
+	<script async src='https://www.googletagmanager.com/gtag/js?id=GTM-5D777D2'></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'GTM-5D777D2'); </script>
+	<!-- End Google Tag Manager -->
+
+<!-- GOOGLE TRACKING PIXEL -- HEAD END -->
+    
+
+    
+    <link rel="icon" type="image/vnd.microsoft.icon" href="/etc/designs/sdc/county/countydesign/favicon.ico">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/etc/designs/sdc/county/countydesign/favicon.ico">
+    
+    <title>Facsimile</title>
+
+<script src="//assets.adobedtm.com/f79cf53c56a50a65aff8f56f975225a9c952e351/satelliteLib-4c04d1ca7be64d09229601bd7ec2035c876c8a03.js"></script>
+
+
+	<script type="text/javascript">
+	var digitalData = {
+        pageInfo:{
+            pageName:"facsimile"
+            }
+	}
+    </script>
+</head>
+
+
+
+<body>
+    <div class="bootstrap-wrapper">
+
+       	 
+
+
+
+        <div class="iparheader iparsys parsys"><div class="section"><div class="new"></div>
+</div><div class="iparys_inherited"><div class="iparheader iparsys parsys"><div class="emergencydisplay section">
+
+
+
+
+
+
+	
+
+</div>
+<div class="headerinternal section">
+
+
+
+ 
+<div id="header">
+	<div id="cosd-header" class="dept-header">
+		<a id="cosd-seal-link" href="/content/rov/en.html">
+			<img title="County of San Diego Seal" alt="County of San Diego Seal" id="cosd-seal" src="/content/dam/sdc/initialcontent/logo/cosd-seal-sm.png"/>
+		</a>
+		<span class="cosd-spacer">|</span>
+		<a id="dept-name-link" href="/content/rov/en.html">
+			<span id="dept-name">Registrar Of Voters</span>
+		</a>
+		<div id="terrain-dept">
+			<img id="terrain-full" title="County Topology Image" alt="County Topology Image" src="/content/dam/sdc/initialcontent/logo/terrain.png"/>
+       		<img id="terrain-mobile" alt=" @ context='unsafe'>" src="/etc/designs/sdc/county/countydesign/images/terrain-mobile.png"/>
+       	</div>
+		<div id="search-box" class="container">
+			<script>
+			  (function() {
+			    var cx = '015466730696295969998:wokiau6kw8k';
+			    var gcse = document.createElement('script');
+			    gcse.type = 'text/javascript';
+			    gcse.async = true;
+			    gcse.src = '//cse.google.com/cse.js?cx=' + cx;
+			    var s = document.getElementsByTagName('script')[0];
+			    s.parentNode.insertBefore(gcse, s);
+			  })();
+			</script>
+			
+			<!--<cq:includeClientLib css="gcse.cosd" />-->
+			
+			<!-- Place this tag where you want the search box to render -->
+			
+				<gcse:searchbox-only resultsUrl="/content/rov/en/search.html"></gcse:searchbox-only>
+			
+		</div>
+	</div>
+</div>
+
+<div id="horizon-left"></div>
+<div id="horizon-right"></div>
+</div>
+<div class="homenavigation section">
+
+<!-- nav start -->
+<div id="navbar-wrapper" class="navbar navbar-inverse" role="navigation">
+ 	<div class="navbar-container">
+		<div class="navbar-header">
+			<button id="nav-button-min" type="button" class="navbar-toggle chevron-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span>Menu</span><span class="chevron nav-chevron-down"></span></button>
+			<button id="nav-mobile-divider" type="button" class="navbar-toggle">&nbsp;</button>
+			<button id="search-button-min" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".search-collapse"><span>Search</span><img id="search-min-icon" src="/etc/designs/sdc/county/countydesign/images/icon-search.png"/></button>
+		</div>
+		<div class="navbar-collapse collapse">
+			<a id="nav-home" href="/content/rov/en.html">
+				<img id="icon-home" alt="home icon" src="/etc/designs/sdc/county/countydesign/images/icon-home.png"/>
+			</a>
+			<ul class="nav navbar-nav home-nowrap">
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">I Want To</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Register</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/Registration.html#register">Register To Vote</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voter-info-lookup.html">Check My Registration</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#change">Change My Address</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#change">Change My Name</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#change">Change My Party</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#cancelRegistration">Cancel My Registration</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#cancelRegistration">Cancel Registration: Deceased</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#register">Re-Register To Vote</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration/conditional-registration.html">Conditional Voter Registration</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Vote</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/voting-options.html">Your Voting Options</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail.html">How to Vote by Mail</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voters-choice-act.html">Voter’s Choice Act</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/sample-ballot-info-lookup.html">View A Voter Information Pamphlet (Sample Ballot)</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail.html">Request New Mail Ballot</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voter-info-lookup.html">Verify Receipt of Mail Ballot</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/esample-ballot.html">Sign up for an eVoter Information Pamphlet</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/military-and-overseas-voting.html">Military / Overseas Voting</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/request-translation.html">Request Translations</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail/ravbm-election.html">Remote Accessible Vote-By-Mail (RAVBM) Ballot Application</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail/info-for-replacement-ballot.html">Request a Replacement Vote-By-Mail Ballot</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Find</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/sample-ballot-info-lookup.html">View Voter Information Pamphlet (Sample Ballot)</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voting-options.html#votecenter">Vote Center Near Me</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voting-options.html#ballotdropbox">Ballot Drop Box Near Me</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elec-rep-info-lookup.html">My Districts/Representatives</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/poll-workers.html">Be A Poll Worker</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/en/election/directory-of-public-officials.pdf">Public Officials Directory</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/faq.html">FAQs For Voters</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/faq-candidates-measures.html">FAQs For Campaigns</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/campaign-financial-disclosure.html">Campaign Finance Disclosure</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/forms.html">Forms</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/poll-workers/polling-places-needed.html">Vote Centers</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/Maps.html">Maps</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/contact-us/jobs.html">Jobs</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/petition.html">Petition Process Resources</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/shared/petition/countywide-petition-status.pdf" target="_blank">Petition Status (County Only)</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Election</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Results</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/past-election-info.html">Results By Year</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Information</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/elections/news.html">News Releases</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/election-information.html">More Election Information</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voters-choice-act.html">Voter’s Choice Act</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voters-choice-act.html">Election Administration Plan</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/election-security.html">Election Security</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/election-observation.html">Election Observation</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Reports</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/elections/report-query.html">Voter Registration </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/report-query.html">Past Voter Turnout </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/report-query.html">Voter Registration By Year</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Campaigns</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Filing (Primary &amp; General)</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/campaign-financial-disclosure.html">Campaign Finance Disclosure</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/filing.html">More Information</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Tools</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/Maps.html">Maps </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/faq-candidates-measures.html">FAQs for Campaigns</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/campaign-law.html">Campaign Law</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Poll Worker</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Be a Poll Worker</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/poll-workers.html">Be a Poll Worker</a>
+											</li>
+										
+											<li>
+												<a></a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Poll Worker Training</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/poll-workers/poll-worker-training.html">More Training Information</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Provide a Vote Center</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/poll-workers/polling-places-needed.html">Vote Center</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/en/election/vote-center-application.pdf">Vote Center Application</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Community</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Community Outreach</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/outreach/community-calendar.html">Community Events Calendar</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/community-outreach-request-form.html">Voter Outreach Request</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/community-outreach-request-form.html">Voter Registration Drive Training Request</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/community-outreach-request-form.html">Voter Education Workshop Request</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Outreach Tools</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="http://www.sos.ca.gov/elections/voting-resources/voting-california/reaching-new-voters/">Reaching New Voters</a>
+											</li>
+										
+											<li>
+												<a href="http://elections.cdn.sos.ca.gov/guides/guide-to-vr-drives.pdf">Voter Registration Drive</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/poll-workers.html">Be A Poll Worker</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/voter-resources.html">Voter Resources</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/college-students.html">Voter Information for College Students</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voting-options.html">Vote By Mail</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/accessible-voting.html">Accessible Voting</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/vaac.html">Voter Accessibility Advisory Committee</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/laac.html">Language Accessibility Advisory Committee</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/language-assistance.html">Language Assistance</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/videos.html">Outreach Videos</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/how-rov-works.html">How ROV Works</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/toolkits.html">Social Media Toolkits</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Contact</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Contact</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/contact-us.html">Directory/Find Us</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/contact-us/about-us.html">About Us </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/contact-us/jobs.html">Registrar of Voters Jobs</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/en/election/directory-of-public-officials.pdf">Public Officials Directory</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			</ul>
+			<ul class="nav navbar-nav home-nowrap"><li class="close-menu"><span>CLOSE MENU</span></li></ul>
+		</div>
+		<!-- search min start -->
+		<div class="search-collapse collapse">
+			<div id="search-box-min">
+				<div id="search-form-min"></div>           
+		<!-- search min end -->
+
+			</div>
+		</div>
+	</div>
+<!-- nav end -->
+<!-- nav desktop header end -->
+</div></div>
+<div class="languageselector section">
+
+
+
+
+
+
+
+
+
+
+					<div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Language
+						  <span class="caret"></span></button>
+
+                        <ul class="dropdown-menu">
+
+					
+
+							<li><a href="/content/rov/es/elections/facsimile.html">Español</a></li>
+
+                        
+
+							<li><a href="/content/rov/tl/elections/facsimile.html">Filipino</a></li>
+
+                        
+
+							<li><a href="/content/rov/zh/elections/facsimile.html">中文</a></li>
+
+                        
+
+							<li><a href="/content/rov/vi/elections/facsimile.html">Tiếng Việt</a></li>
+
+                        
+
+ 						 </ul>
+						</div>
+                 
+<link rel="stylesheet" href="/etc/designs/rovsd/clientlibs.css" type="text/css">
+<script src="/etc/designs/rovsd/clientlibs.js"></script>
+
+</div>
+</div>
+</div>
+</div>
+
+        
+
+     <div id="page-content">
+       	 
+
+
+    <!-- GOOGLE TRACKING PIXEL -- BODY START-->
+    	<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src='https://www.googletagmanager.com/ns.html?id=GTM-5D777D2' height='0' width='0' style='display:none;visibility:hidden'></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+
+    <!-- GOOGLE TRACKING PIXEL -- BODY END -->
+
+
+
+
+<div class="container" id="content-area-wrapper">
+
+      <div class="row row-offcanvas row-offcanvas-right" id="content-area">
+
+          <div class="partop parsys">
+</div>
+
+<!--PAGEWATCH-->
+        <div class="col-xs-12 col-sm-9" id="content-main">
+
+ <div class="row">
+
+            <div class="col-xs-12">
+
+
+                
+                	 <div id="content-secondary" class="boxshadow">
+         <div id="email-print">
+             <div id="email-this">
+                 <a href="mailto:?subject=View this page! &body=[sub]" onclick="this.href = this.href.replace('[sub]',window.location)">
+                     <img alt="email icon" src="/etc/designs/sdc/county/countydesign/images/icon-email-page.png"></a>
+             </div>
+             <div id="print-this">
+                 <a href="javascript:window.print()">
+                     <img alt="print icon" src="/etc/designs/sdc/county/countydesign/images/icon-print-page.png"></a>
+             </div>
+         </div>    
+
+	<div class="par parsys"><div class="title section"><h1 class="page-title">Facsimile/Reference Ballots</h1>
+</div>
+<div class="image parbase section"><div id="cq-image-jsp-/content/rov/en/elections/facsimile/jcr:content/par/image_2136141617"><img src="/content/rov/en/elections/facsimile/_jcr_content/par/image_2136141617.img.jpg/1696603522330.jpg" alt="rov-line" title="rov-line" class="cq-dd-image"></div>
+    
+    
+<script type="text/javascript">
+    (function() {
+        var imageDiv = document.getElementById("cq\u002Dimage\u002Djsp\u002D\/content\/rov\/en\/elections\/facsimile\/jcr:content\/par\/image_2136141617");
+        var imageEvars = '{ imageLink: "", imageAsset: "/content/dam/rov/shared/rov-line.jpg", imageTitle: "rov\u002Dline" }';
+        var tagNodes = imageDiv.getElementsByTagName('A');
+        for (var i = 0; i < tagNodes.length; i++) {
+            var link = tagNodes.item(i); 
+            link.setAttribute('onclick', 'CQ_Analytics.record({event: "imageClick", values: ' + imageEvars + ', collect: false, options: { obj: this }, componentPath: "foundation\/components\/image"})');
+        }
+        
+    })();
+</script>
+
+</div>
+<div class="text parbase section">
+<p>Facsimile/Reference Ballots are available in Spanish, Filipino,
+  Vietnamese, Chinese, Arabic, Farsi, Hindi, Hmong, Indonesian,
+  Japanese, Khmer, Korean, Lao, Somali, and Thai. In addition, hardcopy
+  Facsimile/Reference Ballots are available at all vote centers in San
+  Diego County.</p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf">Facsimile/Reference Ballot</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/spanish-reference-ballot.pdf">Facsímil/Boleta
+    de Referencia</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/filipino-reference-ballot.pdf">Kopya/Reperensiya
+    ng Balota</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/vietnamese-reference-ballot.pdf">Lá
+    Phiếu Phiên Bản Mẫu/Tham Khảo</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/chinese-reference-ballot.pdf">選票摹本/ 參照選票</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/arabic-reference-ballot.pdf">بطاقة
+    الاقتراع المرجعية/المرسلة بالفاكس</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/japanese-reference-ballot.pdf">ファクシミリ／参照用投票用紙</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/korean-reference-ballot.pdf">팩시밀리/참고용 투표지</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/laotian-reference-ballot.pdf">ບັດລົງຄະແນນສຽງທາງໂທລະສານ/ບັດລົງຄະແນນສຽງອ້າງອີງ</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/farsi-reference-ballot.pdf">برگه
+    رای فاکسیمیلی/مرجع</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/somali-reference-ballot.pdf">DAABACAADA/TIXRAACA
+    WARQADA CODBIXINTA</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/hindi-reference-ballot.pdf">संदर्भ मतपत्र</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/hmong-reference-ballot.pdf">DAIM
+    NTAWV POV NTAWV QAUV / SIV UA KEV SIV</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/indonesian-reference-ballot.pdf">FAKSIMILI/REFERENSI
+    SURAT SUARA</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/khmer-reference-ballot.pdf">សន្លឹកបោះឆ្នោតគំរូ</a></p>
+ <p>
+  <a href="/content/dam/rov/en/election/facsimile-reference-ballot/thai-reference-ballot.pdf">บัตรเลือกตั้งฉบับอ้างอิง/ฉบับแปล</a></p>
+ <p>A list of State and County covered languages by precinct is located
+  in the <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/state-and-county-covered-languages-by-precinct.pdf">State
+    and County Covered Languages by Precinct PDF</a>. Visit our <a href="/content/rov/en/outreach/language-assistance.html">Language
+    Assistance webpage</a> for more information.</p>
+
+</div>
+<div class="image parbase section"><div id="cq-image-jsp-/content/rov/en/elections/facsimile/jcr:content/par/image_2136141617_cop"><img src="/content/rov/en/elections/facsimile/_jcr_content/par/image_2136141617_cop.img.jpg/1696603522330.jpg" alt="rov-line" title="rov-line" class="cq-dd-image"></div>
+    
+    
+<script type="text/javascript">
+    (function() {
+        var imageDiv = document.getElementById("cq\u002Dimage\u002Djsp\u002D\/content\/rov\/en\/elections\/facsimile\/jcr:content\/par\/image_2136141617_cop");
+        var imageEvars = '{ imageLink: "", imageAsset: "/content/dam/rov/shared/rov-line.jpg", imageTitle: "rov\u002Dline" }';
+        var tagNodes = imageDiv.getElementsByTagName('A');
+        for (var i = 0; i < tagNodes.length; i++) {
+            var link = tagNodes.item(i); 
+            link.setAttribute('onclick', 'CQ_Analytics.record({event: "imageClick", values: ' + imageEvars + ', collect: false, options: { obj: this }, componentPath: "foundation\/components\/image"})');
+        }
+        
+    })();
+</script>
+
+</div>
+<div class="image parbase section"><div id="cq-image-jsp-/content/rov/en/elections/facsimile/jcr:content/par/image"><img src="/content/rov/en/elections/facsimile/_jcr_content/par/image.img.jpg/1696618068858.jpg" alt="flag_header" title="flag_header" class="cq-dd-image"></div>
+    
+    
+<script type="text/javascript">
+    (function() {
+        var imageDiv = document.getElementById("cq\u002Dimage\u002Djsp\u002D\/content\/rov\/en\/elections\/facsimile\/jcr:content\/par\/image");
+        var imageEvars = '{ imageLink: "", imageAsset: "/content/dam/rov/shared/home/flag_header.jpg", imageTitle: "flag_header" }';
+        var tagNodes = imageDiv.getElementsByTagName('A');
+        for (var i = 0; i < tagNodes.length; i++) {
+            var link = tagNodes.item(i); 
+            link.setAttribute('onclick', 'CQ_Analytics.record({event: "imageClick", values: ' + imageEvars + ', collect: false, options: { obj: this }, componentPath: "foundation\/components\/image"})');
+        }
+        
+    })();
+</script>
+
+</div>
+<div class="textimage parbase section">
+
+<div
+        class="clear"></div>
+</div>
+
+</div>
+
+
+	</div>
+                
+
+
+
+
+     </div>
+            </div>
+
+        </div>
+        <!--/PAGEWATCH-->
+        <!--/span-->
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+
+
+
+
+        <div class="iparside iparsys parsys"><div class="section"><div class="new"></div>
+</div><div class="iparys_inherited"><div class="iparside iparsys parsys">
+</div>
+</div>
+</div>
+
+
+        <div class="iparside_optional iparsys parsys"><div class="iparys_inherited"><div class="iparside_optional iparsys parsys"><div class="genericcontent section">
+
+
+
+  <div id="generic-content" style="background-image:url('/content/dam/rov/shared/home/esample-ballot.jpg');background-color:#891218;background-repeat:no-repeat;">
+	<font color="#0">
+      
+      </font>
+      <div class="par parsys"><div class="text parbase section">
+<p> </p>
+ <h3 style="color: rgb(255,255,255);text-align: center;"> Election Information</h3>
+ <p style="text-align: center;">
+  <a href="/content/rov/en/elections/election-information.html" adhocenable="false">Click here »</a></p>
+ <p> </p>
+
+</div>
+
+</div>
+
+    </div></div>
+<div class="genericcontent section">
+
+
+
+  <div id="generic-content" style="background-image:url('');background-color:#ffffff;background-repeat:no-repeat;">
+	<font color="#0">
+      
+      </font>
+      <div class="par parsys"><div class="adaptiveimage image parbase section"></div>
+
+</div>
+
+    </div></div>
+<div class="genericcontent section">
+
+
+
+  <div id="generic-content" style="background-image:url('/content/dam/rov/shared/home/hassle-free.jpg');background-color:#1d479c;background-repeat:no-repeat;">
+	<font color="#0">
+      
+      </font>
+      <div class="par parsys"><div class="text parbase section">
+<p> </p>
+ <h3 style="color: rgb(255,255,255);text-align: center;">The
+  Hassle-Free<br /> Voting Guide</h3>
+ <p style="text-align: center;">
+  <a href="/content/dam/rov/en/election/elections-2022/HassleFreeVoting2022En.pdf" target="_blank">Click here for more info »</a></p>
+ <p> </p>
+
+</div>
+
+</div>
+
+    </div></div>
+<div class="genericcontent section">
+
+
+
+  <div id="generic-content" style="background-image:url('');background-color:#ffffff;background-repeat:no-repeat;">
+	<font color="#0">
+      
+      </font>
+      <div class="par parsys"><div class="adaptiveimage image parbase section">
+
+
+<a href="/content/rov/en/elections/esample-ballot.html" target="_self">
+    
+    <div class="adaptive-img-center">
+		<div data-picture data-alt='Sign up for your eVoter Information Pamphlet' class="cq-dd-image adaptFull" data-title='Sign up for eSample Ballots'>
+			<div data-src='/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.320.low.png/1696618337147.png'       data-media="(min-width: 1px)"></div>    
+			<div data-src='/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.320.medium.png/1696618337147.png'    data-media="(min-width: 320px)"></div>  
+			<div data-src='/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.480.medium.png/1696618337147.png'    data-media="(min-width: 321px)"></div>  
+			<div data-src='/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.476.high.png/1696618337147.png'      data-media="(min-width: 481px)"></div>  
+			<div data-src='/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.620.high.png/1696618337147.png'      data-media="(min-width: 769px)"></div>  
+			<div data-src='/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.full.high.png/1696618337147.png'     data-media="(min-width: 1025px)"></div> 
+			
+			
+			<noscript>
+			    <img title='Sign up for eSample Ballots' alt='Sign up for your eVoter Information Pamphlet' src='/content/rov/en/elections/_jcr_content/iparside_optional/genericcontent_953928965/par/adaptiveimage.img.320.low.png/1696618337147.png' style='width:100%;'>
+			</noscript>
+		</div>
+	</div>
+    </a>
+
+         
+</div>
+
+</div>
+
+    </div></div>
+<div class="genericcontent section">
+
+
+
+  <div id="generic-content" style="background-image:url('');background-color:#ffffff;background-repeat:no-repeat;">
+	<font color="#0">
+      
+      </font>
+      <div class="par parsys"><div class="image parbase section"><div id="cq-image-jsp-/content/rov/en/elections/jcr:content/iparside_optional/genericcontent_824023391/par/image"><a href="https://registertovote.ca.gov/"><img src="/content/rov/en/elections/_jcr_content/iparside_optional/genericcontent_824023391/par/image.img.png/1696618340523.png" alt="Register To Vote" title="Register To Vote" class="cq-dd-image"></a></div>
+    
+    
+<script type="text/javascript">
+    (function() {
+        var imageDiv = document.getElementById("cq\u002Dimage\u002Djsp\u002D\/content\/rov\/en\/elections\/jcr:content\/iparside_optional\/genericcontent_824023391\/par\/image");
+        var imageEvars = '{ imageLink: "https://registertovote.ca.gov/", imageAsset: "/content/dam/rov/en/images/register-to-vote.png", imageTitle: "Register To Vote" }';
+        var tagNodes = imageDiv.getElementsByTagName('A');
+        for (var i = 0; i < tagNodes.length; i++) {
+            var link = tagNodes.item(i); 
+            link.setAttribute('onclick', 'CQ_Analytics.record({event: "imageClick", values: ' + imageEvars + ', collect: false, options: { obj: this }, componentPath: "foundation\/components\/image"})');
+        }
+        
+    })();
+</script>
+
+</div>
+
+</div>
+
+    </div></div>
+<div class="rovpopservices section">
+
+ 
+
+<div id="dept-services" class="component-panel boxshadow">
+          <h3><img alt="popular services icon" src="/etc/designs/sdc/county/countydesign/images/icon-star.png"/>Popular Services</h3>
+			<div id="services-list">
+            <p><a href="/content/rov/en/elections/report-query.html" target="_blank">  Results From Past Elections</a></p>
+
+<p><a href="/content/rov/en/elections/news.html" target="_blank">  News Releases</a></p>
+
+<p><a href="/content/rov/en/elections/report-query.html" target="_blank">  Voter Registration Reports</a></p>
+
+<p><a href="/content/rov/en/elections/report-query.html" target="_blank">  Past Voter Turnout </a></p>
+
+<p><a href="/content/rov/en/elections/report-query.html" target="_blank">  Voter Registration By Year</a></p>
+
+<p><a href="/content/rov/en/survey.html" target="_blank">  Customer Service Survey</a></p>
+
+</div>
+
+		
+       
+   </div>     
+   
+ 
+</div>
+<div class="internalnewscenter section">
+
+
+
+
+
+<script src="/etc/clientlibs/sdc/newscenter.js"></script>
+
+<script>
+window.onload=parseRSS(3,'/news/rss');
+</script>
+<div id="cosd-news" class="component-panel boxshadow">
+    <h3><img alt="cosd-news" src="/etc/designs/sdc/county/countydesign/images/county-news-center.png"/></h3>
+    <p id="cosd-news-list">
+    </p>
+    <p class="more"><a href="https://www.countynewscenter.com" target="_blank">More Stories</a></p>
+</div></div>
+
+</div>
+</div>
+</div>
+
+      </div>
+
+
+
+      </div>
+<div class="parbottom parsys">
+</div>
+
+   </div>
+
+
+     </div>
+     
+
+         <div class="footer">
+
+
+
+
+
+
+			<div class="sdcfooter"><div id="footer-container">
+	<!-- FOOTER -->
+	<footer>
+
+		<div id="cosd-logo" class="footer-column">
+			<img alt="cosd logo" src="/content/dam/sdc/initialcontent/logo/cosd-logo.png"/>
+		</div>
+
+		<div id="footer-contact" class="footer-column">
+			<div><h2 class="footer-heading">Contact</h2>
+  <p>   <a href="https://www.sandiegocounty.gov/contact-information/">General
+    County Information</a><br /> (858) 694-3900<br /> <br /> <a href="https://www.211sandiego.org/" target="_blank">2-1-1 San
+  Diego</a><br /> <a href="https://www.sandiegocounty.gov/content/sdc/general/bos.html" target="_blank">Board of Supervisors</a><br /> <a href="https://www.countynewscenter.com/contact-us/" target="_blank">Media Information</a></p>
+</div> 
+		</div>
+		
+		<div id="footer-nav" class="footer-column">
+			<h2 class="footer-heading">
+				Navigation
+			</h2>
+			<dl>
+				<dd><a href="https://www.sandiegocounty.gov/" target="_blank">County Home</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/departments/" target="_blank">Departments</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/i-want-to.html" target="_blank">I Want To...</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/government.html" target="_blank">Government</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/residents.html" target="_blank">Residents</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/business.html" target="_blank">Business</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/hr.html" target="_blank">Jobs</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/services.html" target="_blank">Services A-Z</a></dd>
+			</dl> 
+		</div>
+
+		<div id="footer-web" class="footer-column">
+			<h2 class="footer-heading">
+				Website
+			</h2>
+			<dl>
+				<dd><a href="https://www.sandiegocounty.gov/accessibility/" target="_blank">Accessibility</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/security-and-privacy-policies/" target="_blank">Security &amp; Privacy Policies</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/contact-information/" target="_blank">Website Issues</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/language-access/" target="_blank">Language</a></dd>
+			
+				<dd><a href="/content/sdc/cosd/online-comment-policy.html" target="_blank">Online Comment Policy</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/diversity.html" target="_blank">Diversity &amp; Inclusion</a></dd>
+			</dl> 
+		</div>
+
+		<div id="footer-social" class="footer-column">
+			<h2 class="footer-heading">County Connections</h2>
+			<div id="social-media">
+			
+				<div>
+					<a href="https://twitter.com/SanDiegoCounty" target="_blank">
+						<img alt="Follow @SanDiegoCounty on X (formerly known as Twitter)" title="Follow @SanDiegoCounty on X (formerly known as Twitter)" src="/etc/designs/sdc/county/countydesign/images/icon-x.png"/>
+					</a>
+					<br/>X
+				</div>
+				
+				<div>
+					<a href="https://www.facebook.com/sandiegocounty" target="_blank">
+						<img alt="Like SanDiegoCounty on Facebook" title="Like SanDiegoCounty on Facebook" src="/etc/designs/sdc/county/countydesign/images/icon-facebook.png"/>
+					</a>
+					<br/>Facebook
+				</div>
+				
+				<div>
+					<a href="https://www.surveymonkey.com/r/cosd-feedback?type=GlobalFooter" target="_blank">
+						<img title="Provide Feedback" src="/etc/designs/sdc/county/countydesign/images/icon-feedback.png"/>
+					</a>
+					<br/>Feedback
+				</div>
+				
+				<div>
+					<a href="https://www.sandiegocounty.gov/county-app-center/" target="_blank">
+						<img alt="County App Center" title="County App Center" src="/etc/designs/sdc/county/countydesign/images/icon-app.png"/>
+					</a>
+					<br/>App<br/>Center
+				</div>
+				
+				<div>
+					<a href="https://service.govdelivery.com/service/multi_subscribe.html?code=CASAND" target="_blank">
+						<img alt="Subscribe to E-mail Updates" title="Subscribe to E-mail Updates" src="/etc/designs/sdc/county/countydesign/images/icon-email.png"/>
+					</a>
+					<br/>E-Mail<br/>Updates
+				</div>	
+																							
+				<div>
+					<a href="https://www.alertsandiego.org/" target="_blank">
+						<img alt="Alert San Diego" title="Alert San Diego" src="/etc/designs/sdc/county/countydesign/images/icon-alert.png"/>
+					</a>
+					<br/>Emergency<br/>Alerts
+				</div>					
+
+			</div>
+			<p class="footer-more">
+				<a href="https://www.sandiegocounty.gov/content/sdc/cosd/connections.html" target="_blank">More
+				Connections</a>
+			</p>
+		</div>
+
+	</footer>
+</div>
+
+<link rel="stylesheet" href="/etc/designs/sdc/county/countydesign/css/google-search-overrides.css" type="text/css"/></div>
+
+
+</div>
+
+    
+
+     	 
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+
+
+<script src="/etc/clientlibs/sdc/bootstrap3.js"></script>
+
+<script src="/etc/designs/sdc/county/countydesign/clientlibs.js"></script>
+
+
+<script src="/etc/designs/sdc/county/grantappl.js"></script>
+
+<script src="/etc/designs/sdc/county/cegrantappl.js"></script>
+
+<script src="/etc/designs/sdc/county/recycle-permit.js"></script>
+
+
+
+
+
+    </div>
+
+    <script type="text/javascript">_satellite.pageBottom();</script>
+
+</body>
+</html>

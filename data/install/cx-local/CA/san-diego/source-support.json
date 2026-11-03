@@ -1,0 +1,62 @@
+[
+  {
+    "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "sourceCheckedAt": "2026-11-03T03:41:56.382809+00:00",
+    "sha256": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+    "sourceFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.source",
+    "excerptFile": "sources/c933290f710ef757e09a70626d3041f2829673052affdb4598f5e2140b77026c.txt",
+    "excerptSha256": "c933290f710ef757e09a70626d3041f2829673052affdb4598f5e2140b77026c",
+    "completeExtractionFile": "sources/578cb4110808c2c2a6a201c3798dff5730dd691fe085f3b69a06c717e518c200.txt",
+    "completeExtractionSha256": "578cb4110808c2c2a6a201c3798dff5730dd691fe085f3b69a06c717e518c200",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original 23-page government PDF bytes",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "provider": "Native official county PDF; PyMuPDF native text and pdftotext -layout extraction",
+      "reportedPdfPages": 23,
+      "discoveryUrl": "https://www.sdvote.com/content/rov/en/elections/facsimile.html"
+    },
+    "evidence": "Official countywide Composite Ballot - General 2026, 23 pages, linked from the current official Facsimile/Reference Ballots page. All 144 local candidacy office blocks on pages 3–17 and every 388 printed name extracted in native document sequence, including candidate continuations into neighboring columns. County, cities, school/college trustee areas, special district divisions/zones and planning groups retained at their printed scope. Blank write-in lines are not people. Statewide/legislative/retention races already held are preserved by the partial merge; later declared write-ins remain separate open work. No residential or mailing addresses occur in imported quotes."
+  },
+  {
+    "sourceUrl": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+    "sourceCheckedAt": "2026-11-03T03:41:27.324949+00:00",
+    "sha256": "0b7225351d0673e5292dbc136ae4f86755357829296a6fb67f31a2b9bd351537",
+    "sourceFile": "sources/0b7225351d0673e5292dbc136ae4f86755357829296a6fb67f31a2b9bd351537.source",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete native official HTML bytes",
+    "evidence": "Official current election/ballot discovery page. Candidate identity fields use the linked official composite ballot PDF."
+  },
+  {
+    "sourceUrl": "https://www.sdvote.com/content/rov/en/elections/facsimile.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/facsimile.html",
+    "sourceCheckedAt": "2026-11-03T03:41:42.220237+00:00",
+    "sha256": "950b2c28f1b0e12529e77b4e6706b1b56615867e60af27d77377920d5f1d6ece",
+    "sourceFile": "sources/950b2c28f1b0e12529e77b4e6706b1b56615867e60af27d77377920d5f1d6ece.source",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete native official HTML bytes",
+    "evidence": "Official current election/ballot discovery page. Candidate identity fields use the linked official composite ballot PDF."
+  },
+  {
+    "sourceUrl": "https://www.sdvote.com/content/rov/en/sample-ballot-info-lookup.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/sample-ballot-info-lookup.html",
+    "sourceCheckedAt": "2026-11-03T03:41:26.364951+00:00",
+    "sha256": "4f0ac0630e08edd4139dfcbf55ff4494e00ab5b7d9326a3648008a3a7490802f",
+    "sourceFile": "sources/4f0ac0630e08edd4139dfcbf55ff4494e00ab5b7d9326a3648008a3a7490802f.source",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete native official HTML bytes",
+    "evidence": "Official current election/ballot discovery page. Candidate identity fields use the linked official composite ballot PDF."
+  },
+  {
+    "sourceUrl": "https://www.sdvote.com/content/rov/en/candidates-campaigns/filing.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/candidates-campaigns/filing.html",
+    "sourceCheckedAt": "2026-11-03T03:41:26.796698+00:00",
+    "sha256": "6565eb1d2d6033e47d922b35f4fe3350f41ddcb8dc51f3ae12e7807c89998b33",
+    "sourceFile": "sources/6565eb1d2d6033e47d922b35f4fe3350f41ddcb8dc51f3ae12e7807c89998b33.source",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete native official HTML bytes",
+    "evidence": "Official current election/ballot discovery page. Candidate identity fields use the linked official composite ballot PDF."
+  }
+]

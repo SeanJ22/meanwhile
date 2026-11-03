@@ -1,0 +1,1078 @@
+
+<!DOCTYPE HTML>
+<html  lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="Learn how to become a candidate in a San Diego County election. Find filing instructions, deadlines, and campaign resources for local elections and offices.">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=640">
+    <link rel="stylesheet" href="/etc.clientlibs/oesshared/clientlibs/clientlibs-contentFragment.css" type="text/css">
+<link rel="stylesheet" href="/etc.clientlibs/foundation/clientlibs/main.css" type="text/css">
+<script src="/etc.clientlibs/clientlibs/granite/jquery.js"></script>
+<script src="/etc.clientlibs/oesshared/clientlibs/clientlibs-contentFragment.js"></script>
+<script src="/etc.clientlibs/clientlibs/granite/utils.js"></script>
+<script src="/etc.clientlibs/clientlibs/granite/jquery/granite.js"></script>
+<script src="/etc.clientlibs/foundation/clientlibs/jquery.js"></script>
+<script src="/etc.clientlibs/foundation/clientlibs/shared.js"></script>
+<script src="/etc.clientlibs/foundation/clientlibs/main.js"></script>
+
+
+<link href="/etc/designs/sdc/county/countydesign.css" rel="stylesheet" type="text/css">
+
+    
+
+	<link rel="stylesheet" href="/etc/designs/sdc/county/countydesign/css/static.css" type="text/css">
+	
+<meta property="og:url" content="inheritedPageproderdomain/content/rov/en/candidates-campaigns/filing.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Filing" />
+<meta property="og:description" content="Learn how to become a candidate in a San Diego County election. Find filing instructions, deadlines, and campaign resources for local elections and offices." />
+<meta property="og:image" content="https://www.sandiegocounty.gov/content/dam/sdc/initialcontent/logo/County-logo-OpenGraph-1200x630.png" />
+<meta property="og:site_name" content="County of San Diego" />
+
+<link rel="canonical" href="/content/rov/en/candidates-campaigns/filing.html"/>
+
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="/etc/clientlibs/sdc/bootstrap3.css" type="text/css">
+
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="/etc/clientlibs/sdc/ie9.js"></script>
+
+<link href="/etc/designs/sdc/county/countydesign/css/cosd-ie8.css" rel="stylesheet">
+<![endif]-->
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" href="/etc/designs/sdc/county/grantappl.css" type="text/css">
+
+<link rel="stylesheet" href="/etc/designs/sdc/county/cegrantappl.css" type="text/css">
+
+<link rel="stylesheet" href="/etc/designs/sdc/county/recycle-permit.css" type="text/css">
+
+
+<link href="/etc/designs/sdc/county/countydesign/css/carousel.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/cosd.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/cosd-secondary.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/cosd-supplemental.css" rel="stylesheet">
+<link href="/etc/designs/sdc/county/countydesign/css/print.css" rel="stylesheet" media="print">
+
+<link rel="stylesheet" href="/etc.clientlibs/aem-cosd-global/clientlibs/vendor/font-awesome.css" type="text/css">
+<link rel="stylesheet" href="/etc/designs/sdc/county/countydesign/clientlibs.css" type="text/css">
+
+
+
+ 
+
+<!-- GOOGLE TRACKING PIXEL -- HEAD START-->
+
+<!-- GOOGLE TRACKING PIXEL -- HEAD END -->
+    
+
+    
+    <link rel="icon" type="image/vnd.microsoft.icon" href="/etc/designs/sdc/county/countydesign/favicon.ico">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/etc/designs/sdc/county/countydesign/favicon.ico">
+    
+    <title>Filing</title>
+
+<script src="//assets.adobedtm.com/f79cf53c56a50a65aff8f56f975225a9c952e351/satelliteLib-4c04d1ca7be64d09229601bd7ec2035c876c8a03.js"></script>
+
+
+	<script type="text/javascript">
+	var digitalData = {
+        pageInfo:{
+            pageName:"filing"
+            }
+	}
+    </script>
+</head>
+
+
+
+<body>
+    <div class="bootstrap-wrapper">
+
+       	 
+
+
+
+        <div class="iparheader iparsys parsys"><div class="section"><div class="new"></div>
+</div><div class="iparys_inherited"><div class="iparheader iparsys parsys"><div class="emergencydisplay section">
+
+
+
+
+
+
+	
+
+</div>
+<div class="headerinternal section">
+
+
+
+ 
+<div id="header">
+	<div id="cosd-header" class="dept-header">
+		<a id="cosd-seal-link" href="/content/rov/en.html">
+			<img title="County of San Diego Seal" alt="County of San Diego Seal" id="cosd-seal" src="/content/dam/sdc/initialcontent/logo/cosd-seal-sm.png"/>
+		</a>
+		<span class="cosd-spacer">|</span>
+		<a id="dept-name-link" href="/content/rov/en.html">
+			<span id="dept-name">Registrar Of Voters</span>
+		</a>
+		<div id="terrain-dept">
+			<img id="terrain-full" title="County Topology Image" alt="County Topology Image" src="/content/dam/sdc/initialcontent/logo/terrain.png"/>
+       		<img id="terrain-mobile" alt=" @ context='unsafe'>" src="/etc/designs/sdc/county/countydesign/images/terrain-mobile.png"/>
+       	</div>
+		<div id="search-box" class="container">
+			<script>
+			  (function() {
+			    var cx = '015466730696295969998:wokiau6kw8k';
+			    var gcse = document.createElement('script');
+			    gcse.type = 'text/javascript';
+			    gcse.async = true;
+			    gcse.src = '//cse.google.com/cse.js?cx=' + cx;
+			    var s = document.getElementsByTagName('script')[0];
+			    s.parentNode.insertBefore(gcse, s);
+			  })();
+			</script>
+			
+			<!--<cq:includeClientLib css="gcse.cosd" />-->
+			
+			<!-- Place this tag where you want the search box to render -->
+			
+				<gcse:searchbox-only resultsUrl="/content/rov/en/search.html"></gcse:searchbox-only>
+			
+		</div>
+	</div>
+</div>
+
+<div id="horizon-left"></div>
+<div id="horizon-right"></div>
+</div>
+<div class="homenavigation section">
+
+<!-- nav start -->
+<div id="navbar-wrapper" class="navbar navbar-inverse" role="navigation">
+ 	<div class="navbar-container">
+		<div class="navbar-header">
+			<button id="nav-button-min" type="button" class="navbar-toggle chevron-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span>Menu</span><span class="chevron nav-chevron-down"></span></button>
+			<button id="nav-mobile-divider" type="button" class="navbar-toggle">&nbsp;</button>
+			<button id="search-button-min" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".search-collapse"><span>Search</span><img id="search-min-icon" src="/etc/designs/sdc/county/countydesign/images/icon-search.png"/></button>
+		</div>
+		<div class="navbar-collapse collapse">
+			<a id="nav-home" href="/content/rov/en.html">
+				<img id="icon-home" alt="home icon" src="/etc/designs/sdc/county/countydesign/images/icon-home.png"/>
+			</a>
+			<ul class="nav navbar-nav home-nowrap">
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">I Want To</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Register</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/Registration.html#register">Register To Vote</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voter-info-lookup.html">Check My Registration</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#change">Change My Address</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#change">Change My Name</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#change">Change My Party</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#cancelRegistration">Cancel My Registration</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#cancelRegistration">Cancel Registration: Deceased</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration.html#register">Re-Register To Vote</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/Registration/conditional-registration.html">Conditional Voter Registration</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Vote</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/voting-options.html">Your Voting Options</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail.html">How to Vote by Mail</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voters-choice-act.html">Voter’s Choice Act</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/sample-ballot-info-lookup.html">View A Voter Information Pamphlet (Sample Ballot)</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail.html">Request New Mail Ballot</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voter-info-lookup.html">Verify Receipt of Mail Ballot</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/esample-ballot.html">Sign up for an eVoter Information Pamphlet</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/military-and-overseas-voting.html">Military / Overseas Voting</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/request-translation.html">Request Translations</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail/ravbm-election.html">Remote Accessible Vote-By-Mail (RAVBM) Ballot Application</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/how-to-vote-by-mail/info-for-replacement-ballot.html">Request a Replacement Vote-By-Mail Ballot</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Find</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/sample-ballot-info-lookup.html">View Voter Information Pamphlet (Sample Ballot)</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voting-options.html#votecenter">Vote Center Near Me</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voting-options.html#ballotdropbox">Ballot Drop Box Near Me</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elec-rep-info-lookup.html">My Districts/Representatives</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/poll-workers.html">Be A Poll Worker</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/en/election/directory-of-public-officials.pdf">Public Officials Directory</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/faq.html">FAQs For Voters</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/faq-candidates-measures.html">FAQs For Campaigns</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/campaign-financial-disclosure.html">Campaign Finance Disclosure</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/forms.html">Forms</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/poll-workers/polling-places-needed.html">Vote Centers</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/Maps.html">Maps</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/contact-us/jobs.html">Jobs</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/petition.html">Petition Process Resources</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/shared/petition/countywide-petition-status.pdf" target="_blank">Petition Status (County Only)</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Election</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Results</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/past-election-info.html">Results By Year</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Information</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/elections/news.html">News Releases</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/election-information.html">More Election Information</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voters-choice-act.html">Voter’s Choice Act</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voters-choice-act.html">Election Administration Plan</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/election-security.html">Election Security</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/election-observation.html">Election Observation</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Reports</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/elections/report-query.html">Voter Registration </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/report-query.html">Past Voter Turnout </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/elections/report-query.html">Voter Registration By Year</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Campaigns</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Filing (Primary &amp; General)</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/campaign-financial-disclosure.html">Campaign Finance Disclosure</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/filing.html">More Information</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Tools</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/Maps.html">Maps </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/faq-candidates-measures.html">FAQs for Campaigns</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/candidates-campaigns/campaign-law.html">Campaign Law</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Poll Worker</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Be a Poll Worker</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/poll-workers.html">Be a Poll Worker</a>
+											</li>
+										
+											<li>
+												<a></a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Poll Worker Training</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/poll-workers/poll-worker-training.html">More Training Information</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Provide a Vote Center</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/poll-workers/polling-places-needed.html">Vote Center</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/en/election/vote-center-application.pdf">Vote Center Application</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Community</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Community Outreach</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/outreach/community-calendar.html">Community Events Calendar</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/community-outreach-request-form.html">Voter Outreach Request</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/community-outreach-request-form.html">Voter Registration Drive Training Request</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/community-outreach-request-form.html">Voter Education Workshop Request</a>
+											</li>
+										</ul>
+									</li>
+								
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Outreach Tools</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="http://www.sos.ca.gov/elections/voting-resources/voting-california/reaching-new-voters/">Reaching New Voters</a>
+											</li>
+										
+											<li>
+												<a href="http://elections.cdn.sos.ca.gov/guides/guide-to-vr-drives.pdf">Voter Registration Drive</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/poll-workers.html">Be A Poll Worker</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/voter-resources.html">Voter Resources</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/college-students.html">Voter Information for College Students</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/voting-options.html">Vote By Mail</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/accessible-voting.html">Accessible Voting</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/vaac.html">Voter Accessibility Advisory Committee</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/laac.html">Language Accessibility Advisory Committee</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/language-assistance.html">Language Assistance</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/videos.html">Outreach Videos</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/how-rov-works.html">How ROV Works</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/outreach/toolkits.html">Social Media Toolkits</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			
+				<li class="dept-panel-menu dropdown">
+					
+						
+							
+							<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Contact</a>
+						
+													
+							
+								<ul class="dropdown-menu panel-menu">
+									<li class="horizontal-menu">
+										<a href="javascript:void(0)" class="dropdown-toggle">Contact</a>
+										<ul class="main-sub-menu">
+											<li>
+												<a href="/content/rov/en/contact-us.html">Directory/Find Us</a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/contact-us/about-us.html">About Us </a>
+											</li>
+										
+											<li>
+												<a href="/content/rov/en/contact-us/jobs.html">Registrar of Voters Jobs</a>
+											</li>
+										
+											<li>
+												<a href="/content/dam/rov/en/election/directory-of-public-officials.pdf">Public Officials Directory</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							
+							
+					
+					
+				</li>
+			</ul>
+			<ul class="nav navbar-nav home-nowrap"><li class="close-menu"><span>CLOSE MENU</span></li></ul>
+		</div>
+		<!-- search min start -->
+		<div class="search-collapse collapse">
+			<div id="search-box-min">
+				<div id="search-form-min"></div>           
+		<!-- search min end -->
+
+			</div>
+		</div>
+	</div>
+<!-- nav end -->
+<!-- nav desktop header end -->
+</div></div>
+<div class="languageselector section">
+
+
+
+
+
+
+
+
+
+
+					<div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Language
+						  <span class="caret"></span></button>
+
+                        <ul class="dropdown-menu">
+
+					
+
+							<li><a href="/content/rov/es/candidates-campaigns/filing.html">Español</a></li>
+
+                        
+
+							<li><a href="/content/rov/tl/candidates-campaigns/filing.html">Filipino</a></li>
+
+                        
+
+							<li><a href="/content/rov/zh/candidates-campaigns/filing.html">中文</a></li>
+
+                        
+
+							<li><a href="/content/rov/vi/candidates-campaigns/filing.html">Tiếng Việt</a></li>
+
+                        
+
+ 						 </ul>
+						</div>
+                 
+<link rel="stylesheet" href="/etc/designs/rovsd/clientlibs.css" type="text/css">
+<script src="/etc/designs/rovsd/clientlibs.js"></script>
+
+</div>
+</div>
+</div>
+</div>
+
+        
+
+     <div id="page-content">
+       	 
+
+
+    <!-- GOOGLE TRACKING PIXEL -- BODY START-->
+    
+    <!-- GOOGLE TRACKING PIXEL -- BODY END -->
+
+
+
+
+<div class="container" id="content-area-wrapper">
+
+      <div class="row row-offcanvas row-offcanvas-right" id="content-area">
+
+          <div class="partop parsys">
+</div>
+
+<!--PAGEWATCH-->
+        <div class="col-xs-12 col-sm-9" id="content-main">
+
+ <div class="row">
+
+            <div class="col-xs-12">
+
+
+                
+                <div class="par parsys"><div class="content section">
+
+
+
+     <div id="content-secondary" class="boxshadow">
+         <div id="email-print">
+             <div id="email-this">
+                 <a href="mailto:?subject=View this page! &body=[sub]" onclick="this.href = this.href.replace('[sub]',window.location)">
+                     <img alt="email icon" src="/etc/designs/sdc/county/countydesign/images/icon-email-page.png"></a>
+             </div>
+             <div id="print-this">
+                 <a href="javascript:window.print()">
+                     <img alt="print icon" src="/etc/designs/sdc/county/countydesign/images/icon-print-page.png"></a>
+             </div>
+         </div>    
+     	 <div class="body-par parsys"><div class="title section"><h1 class="page-title">Candidates and Campaigns</h1>
+</div>
+<div class="adaptiveimage image parbase section">
+
+
+    <div class="adaptive-img-center">
+		<div data-picture data-alt=' ' class="cq-dd-image " data-title='Candidates and Campaigns'>
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage.img.320.low.jpg/1760374180528.jpg'       data-media="(min-width: 1px)"></div>    
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage.img.320.medium.jpg/1760374180528.jpg'    data-media="(min-width: 320px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage.img.480.medium.jpg/1760374180528.jpg'    data-media="(min-width: 321px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage.img.476.high.jpg/1760374180528.jpg'      data-media="(min-width: 481px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage.img.620.high.jpg/1760374180528.jpg'      data-media="(min-width: 769px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage.img.full.high.jpg/1760374180528.jpg'     data-media="(min-width: 1025px)"></div> 
+			
+			
+			<noscript>
+			    <img title='Candidates and Campaigns' alt=' ' src='/content/rov/en/candidates-campaigns/filing/_jcr_content/par/content/body-par/adaptiveimage.img.320.low.jpg/1760374180528.jpg' style='width:100%;'>
+			</noscript>
+		</div>
+	</div>
+    
+         
+</div>
+<div class="text parbase section">
+<h3 style="text-align: center;">
+  <b>How Do I Become a Candidate?</b></h3>
+ <p>Here are the necessary steps potential candidates need to become a
+  qualified candidate. This information applies only for offices managed
+  by the San Diego County Registrar of Voters. For City offices, please
+  contact the respective <a href="/content/dam/rov/shared/candidate-filing/city-clerks.pdf" target="_self">City Clerk.</a></p>
+ <p>
+  <b>In-person Services Provided</b>
+  <br /> </p>
+ <p>We are available Monday through Friday from 8 a.m. to 5 p.m. by
+  phone <a href="tel:8585057260">(858) 505-7260</a> or email <a href="mailto:CandidateFiling@sdcounty.ca.gov">CandidateFiling@sdcounty.ca.gov</a>.<br /> </p>
+ <p>Documents may only be picked up by the candidate, or by the person
+  authorized by the candidate. The form needed to authorize someone to
+  pick up the candidate’s documents is available prior to the next
+  election. To make an appointment, call <a href="tel:8585057260">(858)
+  505-7260</a> or email <a href="mailto:CandidateFiling@sdcounty.ca.gov">CandidateFiling@sdcounty.ca.gov</a>.</p>
+ <p>
+  <a href="/content/rov/en/elec-rep-info-lookup.html">Verify the
+    district you live in.</a></p>
+
+</div>
+<div class="text parbase section">
+<hr style="height: 2.0px;border: none;background-color: rgb(204,204,204);" />
+
+</div>
+<div class="text parbase section">
+<h3>November 3, 2026, General Election</h3>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/measures-general-2026.pdf">Measures Schedule</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/argument-deadline-measures.pdf">Argument Deadline</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/fallbrook-uesd.pdf">Fallbrook UESD</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf">Grossmont-Cuyamaca CCD</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/harris-annex.pdf">Harris Annex</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/jamul-dulzura-union school-district.pdf">Jamul-Dulzura
+    Union School District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/julian-union-high-school-district.pdf">Julian
+    Union High School District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/la-mesa-spring-valley-school-district.pdf">La
+    Mesa-Spring Valley School District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/mountain-empire-unified-school-district.pdf">Mountain
+    Empire Unified School District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/pala-mesa.pdf">Pala Mesa</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/ramona-municipal-water-district.pdf">Ramona
+    Municipal Water District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-fund-health-and-safety-services.pdf">San
+    Diego County Fund Health and Safety Services</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-county-measure-a-transpansparent-accountable-modern-county-government.pdf">San
+    Diego County MEASURE - A Transparent, Accountable Modern County Government</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-unified-school-district.pdf">San
+    Diego Unified School District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/santee-school-district.pdf">Santee
+    School District</a></p>
+  <p style="margin-left: 60.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/vista-unified-school-district.pdf">Vista
+    Unified School District</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/candidate-deadline-extended-for-some-local-offices.pdf">Candidate
+    Filing Deadline Extended for Some Local Offices</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/candidate-authorization-form-general-2026.pdf">Candidate
+    Authorization Form</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/candidate-filing-guide.pdf" style="background-color: rgb(255,255,255);">Candidate Filing Guide</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/candidate-list.pdf" style="background-color: rgb(255,255,255);">Candidate Listing</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/candidate-statement-of-qualifications-form-local-offices.pdf">Candidate
+    Statement of Qualifications Form - Local Offices</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/candidate-statement-of-qualifications-form-voter-nominated-offices.pdf">Candidate
+    Statement of Qualifications Form - Voter Nominated Offices</a></p>
+  <p style="margin-left: 40.0px;">   <a href="/content/rov/en/candidates-campaigns/faqs-candidates.html">FAQs
+    for Candidates</a></p>
+
+</div>
+<div class="text parbase section">
+<hr style="height: 2.0px;border: none;background-color: rgb(204,204,204);" />
+
+</div>
+<div class="text parbase section">
+<h3>More Information</h3>
+ <p style="margin-left: 40.0px;">
+  <a href="https://www.sdvote.com/content/dam/rov/en/pdf/SDCROV_Voter_Reg_Data_Application.pdf"><b>How
+      can I buy a list of registered voters in a particular area?</b></a><b></b></p>
+ <p style="margin-left: 40.0px;">
+  <a href="https://www.sdvote.com/content/rov/en/candidates-campaigns/Maps.html"><b>How
+      can I buy a map of a particular area?</b></a><b></b></p>
+ <p style="margin-left: 40.0px;">
+  <a href="https://www.sdvote.com/content/rov/en/candidates-campaigns/campaign-financial-disclosure.html"><b>Campaign
+      Financial Disclosure</b></a><b></b></p>
+ <p style="margin-left: 40.0px;">
+  <a href="https://www.sdvote.com/content/rov/en/candidates-campaigns/campaign-law.html"><b>Campaign Law</b></a><b></b></p>
+ <p style="margin-left: 40.0px;">
+  <a href="https://www.sdvote.com/content/dam/rov/en/election/july-1-2025-d1-general-election/SDCROV%20Argument-Rebuttal%20Guidelines.pdf"><b>Countywide
+      Ballot Argument Guidelines</b></a><b></b></p>
+
+</div>
+<div class="adaptiveimage image parbase section">
+
+
+    <div class="">
+		<div data-picture data-alt='' class="cq-dd-image " data-title=''>
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage_176425.img.320.low.jpg/1696618068858.jpg'       data-media="(min-width: 1px)"></div>    
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage_176425.img.320.medium.jpg/1696618068858.jpg'    data-media="(min-width: 320px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage_176425.img.480.medium.jpg/1696618068858.jpg'    data-media="(min-width: 321px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage_176425.img.476.high.jpg/1696618068858.jpg'      data-media="(min-width: 481px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage_176425.img.620.high.jpg/1696618068858.jpg'      data-media="(min-width: 769px)"></div>  
+			<div data-src='/content/rov/en/candidates-campaigns/filing/jcr:content/par/content/body-par/adaptiveimage_176425.img.full.high.jpg/1696618068858.jpg'     data-media="(min-width: 1025px)"></div> 
+			
+			
+			<noscript>
+			    <img title='' alt='' src='/content/rov/en/candidates-campaigns/filing/_jcr_content/par/content/body-par/adaptiveimage_176425.img.320.low.jpg/1696618068858.jpg' style='width:100%;'>
+			</noscript>
+		</div>
+	</div>
+    
+         
+</div>
+
+</div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+      
+
+
+
+
+     </div>
+            </div>
+
+        </div>
+        <!--/PAGEWATCH-->
+        <!--/span-->
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+
+
+
+
+        <div class="iparside iparsys parsys"><div class="iparys_inherited"><div class="iparside iparsys parsys"></div>
+</div>
+</div>
+
+
+        <div class="iparside_optional iparsys parsys"><div class="iparys_inherited"><div class="iparside_optional iparsys parsys"></div>
+</div>
+</div>
+
+      </div>
+
+
+
+      </div>
+<div class="parbottom parsys">
+</div>
+
+   </div>
+
+
+     </div>
+     
+
+         <div class="footer">
+
+
+
+
+
+
+			<div class="sdcfooter"><div id="footer-container">
+	<!-- FOOTER -->
+	<footer>
+
+		<div id="cosd-logo" class="footer-column">
+			<img alt="cosd logo" src="/content/dam/sdc/initialcontent/logo/cosd-logo.png"/>
+		</div>
+
+		<div id="footer-contact" class="footer-column">
+			<div><h2 class="footer-heading">Contact</h2>
+  <p>   <a href="https://www.sandiegocounty.gov/contact-information/">General
+    County Information</a><br /> (858) 694-3900<br /> <br /> <a href="https://www.211sandiego.org/" target="_blank">2-1-1 San
+  Diego</a><br /> <a href="https://www.sandiegocounty.gov/content/sdc/general/bos.html" target="_blank">Board of Supervisors</a><br /> <a href="https://www.countynewscenter.com/contact-us/" target="_blank">Media Information</a></p>
+</div> 
+		</div>
+		
+		<div id="footer-nav" class="footer-column">
+			<h2 class="footer-heading">
+				Navigation
+			</h2>
+			<dl>
+				<dd><a href="https://www.sandiegocounty.gov/" target="_blank">County Home</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/departments/" target="_blank">Departments</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/i-want-to.html" target="_blank">I Want To...</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/government.html" target="_blank">Government</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/residents.html" target="_blank">Residents</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/business.html" target="_blank">Business</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/hr.html" target="_blank">Jobs</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/cosd/services.html" target="_blank">Services A-Z</a></dd>
+			</dl> 
+		</div>
+
+		<div id="footer-web" class="footer-column">
+			<h2 class="footer-heading">
+				Website
+			</h2>
+			<dl>
+				<dd><a href="https://www.sandiegocounty.gov/accessibility/" target="_blank">Accessibility</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/security-and-privacy-policies/" target="_blank">Security &amp; Privacy Policies</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/contact-information/" target="_blank">Website Issues</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/language-access/" target="_blank">Language</a></dd>
+			
+				<dd><a href="/content/sdc/cosd/online-comment-policy.html" target="_blank">Online Comment Policy</a></dd>
+			
+				<dd><a href="https://www.sandiegocounty.gov/content/sdc/diversity.html" target="_blank">Diversity &amp; Inclusion</a></dd>
+			</dl> 
+		</div>
+
+		<div id="footer-social" class="footer-column">
+			<h2 class="footer-heading">County Connections</h2>
+			<div id="social-media">
+			
+				<div>
+					<a href="https://twitter.com/SanDiegoCounty" target="_blank">
+						<img alt="Follow @SanDiegoCounty on X (formerly known as Twitter)" title="Follow @SanDiegoCounty on X (formerly known as Twitter)" src="/etc/designs/sdc/county/countydesign/images/icon-x.png"/>
+					</a>
+					<br/>X
+				</div>
+				
+				<div>
+					<a href="https://www.facebook.com/sandiegocounty" target="_blank">
+						<img alt="Like SanDiegoCounty on Facebook" title="Like SanDiegoCounty on Facebook" src="/etc/designs/sdc/county/countydesign/images/icon-facebook.png"/>
+					</a>
+					<br/>Facebook
+				</div>
+				
+				<div>
+					<a href="https://www.surveymonkey.com/r/cosd-feedback?type=GlobalFooter" target="_blank">
+						<img title="Provide Feedback" src="/etc/designs/sdc/county/countydesign/images/icon-feedback.png"/>
+					</a>
+					<br/>Feedback
+				</div>
+				
+				<div>
+					<a href="https://www.sandiegocounty.gov/county-app-center/" target="_blank">
+						<img alt="County App Center" title="County App Center" src="/etc/designs/sdc/county/countydesign/images/icon-app.png"/>
+					</a>
+					<br/>App<br/>Center
+				</div>
+				
+				<div>
+					<a href="https://service.govdelivery.com/service/multi_subscribe.html?code=CASAND" target="_blank">
+						<img alt="Subscribe to E-mail Updates" title="Subscribe to E-mail Updates" src="/etc/designs/sdc/county/countydesign/images/icon-email.png"/>
+					</a>
+					<br/>E-Mail<br/>Updates
+				</div>	
+																							
+				<div>
+					<a href="https://www.alertsandiego.org/" target="_blank">
+						<img alt="Alert San Diego" title="Alert San Diego" src="/etc/designs/sdc/county/countydesign/images/icon-alert.png"/>
+					</a>
+					<br/>Emergency<br/>Alerts
+				</div>					
+
+			</div>
+			<p class="footer-more">
+				<a href="https://www.sandiegocounty.gov/content/sdc/cosd/connections.html" target="_blank">More
+				Connections</a>
+			</p>
+		</div>
+
+	</footer>
+</div>
+
+<link rel="stylesheet" href="/etc/designs/sdc/county/countydesign/css/google-search-overrides.css" type="text/css"/></div>
+
+
+</div>
+
+    
+
+     	 
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+
+
+<script src="/etc/clientlibs/sdc/bootstrap3.js"></script>
+
+<script src="/etc/designs/sdc/county/countydesign/clientlibs.js"></script>
+
+
+<script src="/etc/designs/sdc/county/grantappl.js"></script>
+
+<script src="/etc/designs/sdc/county/cegrantappl.js"></script>
+
+<script src="/etc/designs/sdc/county/recycle-permit.js"></script>
+
+
+
+
+
+    </div>
+
+    <script type="text/javascript">_satellite.pageBottom();</script>
+
+</body>
+</html>

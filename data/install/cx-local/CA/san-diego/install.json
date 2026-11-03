@@ -1,0 +1,1205 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "San Diego",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-general-san-diego-county-board-of-education-3rd-district",
+      "title": "COUNTY BOARD OF EDUCATION 3RD DISTRICT",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-county-board-of-education-5th-district",
+      "title": "COUNTY BOARD OF EDUCATION 5TH DISTRICT",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-grossmont-cuyamaca-community-college-district-governing-board-member-trustee-area-5",
+      "title": "GROSSMONT-CUYAMACA COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:grossmont_cuyamaca_community_college_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-palomar-community-college-district-governing-board-member-trustee-area-1",
+      "title": "PALOMAR COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:palomar_community_college_district/school_board_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-palomar-community-college-district-governing-board-member-trustee-area-5",
+      "title": "PALOMAR COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:palomar_community_college_district/school_board_district:5",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-diego-community-college-district-member-board-of-trustees-district-a",
+      "title": "SAN DIEGO COMMUNITY COLLEGE DISTRICT MEMBER, BOARD OF TRUSTEES DISTRICT A",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_diego_community_college_district/school_board_district:a",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-diego-community-college-district-member-board-of-trustees-district-c",
+      "title": "SAN DIEGO COMMUNITY COLLEGE DISTRICT MEMBER, BOARD OF TRUSTEES DISTRICT C",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_diego_community_college_district/school_board_district:c",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-southwestern-community-college-district-governing-board-member-trustee-area-1",
+      "title": "SOUTHWESTERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:southwestern_community_college_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-southwestern-community-college-district-governing-board-member-trustee-area-4",
+      "title": "SOUTHWESTERN COMMUNITY COLLEGE DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:southwestern_community_college_district/school_board_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-bonsall-unified-school-district-governing-board-member-trustee-area-b",
+      "title": "BONSALL UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA B",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:bonsall_unified_school_district/school_board_district:b",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-carlsbad-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "CARLSBAD UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:carlsbad_unified_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-carlsbad-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "CARLSBAD UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:carlsbad_unified_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-carlsbad-unified-school-district-governing-board-member-trustee-area-5",
+      "title": "CARLSBAD UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:carlsbad_unified_school_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-coronado-unified-school-district-governing-board-member",
+      "title": "CORONADO UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coronado_unified_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-oceanside-unified-school-district-governing-board-member-trustee-area-1",
+      "title": "OCEANSIDE UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oceanside_unified_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-oceanside-unified-school-district-governing-board-member-trustee-area-3",
+      "title": "OCEANSIDE UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oceanside_unified_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-oceanside-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "OCEANSIDE UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oceanside_unified_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-poway-unified-school-district-governing-board-member-trustee-area-b",
+      "title": "POWAY UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA B",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:poway_unified_school_district/school_board_district:b",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-poway-unified-school-district-governing-board-member-trustee-area-c",
+      "title": "POWAY UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA C",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:poway_unified_school_district/school_board_district:c",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-poway-unified-school-district-governing-board-member-trustee-area-d",
+      "title": "POWAY UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA D",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:poway_unified_school_district/school_board_district:d",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-ramona-unified-school-district-governing-board-member-trustee-area-no-1",
+      "title": "RAMONA UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ramona_city_unified_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-ramona-unified-school-district-governing-board-member-trustee-area-no-2",
+      "title": "RAMONA UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ramona_city_unified_school_district/school_board_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-ramona-unified-school-district-governing-board-member-trustee-area-no-5",
+      "title": "RAMONA UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ramona_city_unified_school_district/school_board_district:5",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-diego-unified-school-district-member-board-of-education-district-b",
+      "title": "SAN DIEGO UNIFIED SCHOOL DISTRICT MEMBER, BOARD OF EDUCATION DISTRICT B",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_diego_city_unified_school_district/school_board_district:b",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-diego-unified-school-district-member-board-of-education-district-c",
+      "title": "SAN DIEGO UNIFIED SCHOOL DISTRICT MEMBER, BOARD OF EDUCATION DISTRICT C",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_diego_city_unified_school_district/school_board_district:c",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-marcos-unified-school-district-governing-board-member-trustee-area-e",
+      "title": "SAN MARCOS UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA E",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_marcos_unified_school_district/school_board_district:e",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-valley-center-pauma-unified-school-district-governing-board-member-trustee-area-no-4",
+      "title": "VALLEY CENTER-PAUMA UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:valley_center_pauma_unified_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-vista-unified-school-district-governing-board-member-trustee-area-no-3",
+      "title": "VISTA UNIFIED SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:vista_unified_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-escondido-union-high-school-district-governing-board-member-trustee-area-no-1",
+      "title": "ESCONDIDO UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:escondido_union_high_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-escondido-union-high-school-district-governing-board-member-trustee-area-no-2",
+      "title": "ESCONDIDO UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:escondido_union_high_school_district/school_board_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-escondido-union-high-school-district-governing-board-member-trustee-area-no-5",
+      "title": "ESCONDIDO UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:escondido_union_high_school_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-fallbrook-union-high-school-district-governing-board-member-trustee-area-no-1",
+      "title": "FALLBROOK UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fallbrook_union_high_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-fallbrook-union-high-school-district-governing-board-member-trustee-area-no-3",
+      "title": "FALLBROOK UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fallbrook_union_high_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-grossmont-union-high-school-district-governing-board-member-trustee-area-no-3",
+      "title": "GROSSMONT UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:grossmont_union_high_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-grossmont-union-high-school-district-governing-board-member-trustee-area-no-4",
+      "title": "GROSSMONT UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:grossmont_union_high_school_district/school_board_district:4",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-grossmont-union-high-school-district-governing-board-member-trustee-area-no-5",
+      "title": "GROSSMONT UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:grossmont_union_high_school_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-dieguito-union-high-school-district-governing-board-member-trustee-area-no-1",
+      "title": "SAN DIEGUITO UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_dieguito_union_high_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-dieguito-union-high-school-district-governing-board-member-trustee-area-no-3",
+      "title": "SAN DIEGUITO UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_dieguito_union_high_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-dieguito-union-high-school-district-governing-board-member-trustee-area-no-5",
+      "title": "SAN DIEGUITO UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_dieguito_union_high_school_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-sweetwater-union-high-school-district-governing-board-member-trustee-area-no-1",
+      "title": "SWEETWATER UNION HIGH SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sweetwater_union_high_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-alpine-union-school-district-governing-board-member",
+      "title": "ALPINE UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:alpine_union_elementary_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-cajon-valley-union-school-district-governing-board-member-trustee-area-no-1",
+      "title": "CAJON VALLEY UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cajon_valley_union_elementary_school_district/school_board_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-cajon-valley-union-school-district-governing-board-member-trustee-area-no-2",
+      "title": "CAJON VALLEY UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cajon_valley_union_elementary_school_district/school_board_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-cajon-valley-union-school-district-governing-board-member-trustee-area-no-3",
+      "title": "CAJON VALLEY UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cajon_valley_union_elementary_school_district/school_board_district:3",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-chula-vista-elementary-school-district-governing-board-member-seat-no-1",
+      "title": "CHULA VISTA ELEMENTARY SCHOOL DISTRICT GOVERNING BOARD MEMBER SEAT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:chula_vista_elementary_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-chula-vista-elementary-school-district-governing-board-member-seat-no-3",
+      "title": "CHULA VISTA ELEMENTARY SCHOOL DISTRICT GOVERNING BOARD MEMBER SEAT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:chula_vista_elementary_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-chula-vista-elementary-school-district-governing-board-member-seat-no-5",
+      "title": "CHULA VISTA ELEMENTARY SCHOOL DISTRICT GOVERNING BOARD MEMBER SEAT NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:chula_vista_elementary_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-dehesa-school-district-governing-board-member",
+      "title": "DEHESA SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:dehesa_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-del-mar-union-school-district-governing-board-member",
+      "title": "DEL MAR UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:del_mar_union_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-encinitas-union-school-district-governing-board-member",
+      "title": "ENCINITAS UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:encinitas_union_elementary_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-escondido-union-school-district-governing-board-member-trustee-area-no-2",
+      "title": "ESCONDIDO UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:escondido_union_elementary_school_district/school_board_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-escondido-union-school-district-governing-board-member-trustee-area-no-4",
+      "title": "ESCONDIDO UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:escondido_union_elementary_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-escondido-union-school-district-governing-board-member-trustee-area-no-5",
+      "title": "ESCONDIDO UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:escondido_union_elementary_school_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-fallbrook-union-elementary-school-district-governing-board-member-trustee-area-no-4",
+      "title": "FALLBROOK UNION ELEMENTARY SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fallbrook_union_elementary_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-la-mesa-spring-valley-school-district-governing-board-member-trustee-area-no-1",
+      "title": "LA MESA-SPRING VALLEY SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-la-mesa-spring-valley-school-district-governing-board-member-trustee-area-no-2",
+      "title": "LA MESA-SPRING VALLEY SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district/school_board_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-la-mesa-spring-valley-school-district-governing-board-member-trustee-area-no-3",
+      "title": "LA MESA-SPRING VALLEY SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-national-school-district-governing-board-member-trustee-area-b",
+      "title": "NATIONAL SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA B",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:national_elementary_school_district/school_board_district:b",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-national-school-district-governing-board-member-trustee-area-c",
+      "title": "NATIONAL SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA C",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:national_elementary_school_district/school_board_district:c",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-national-school-district-governing-board-member-trustee-area-e",
+      "title": "NATIONAL SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA E",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:national_elementary_school_district/school_board_district:e",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-rancho-santa-fe-school-district-governing-board-member",
+      "title": "RANCHO SANTA FE SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rancho_santa_fe_elementary_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-ysidro-school-district-governing-board-member",
+      "title": "SAN YSIDRO SCHOOL DISTRICT GOVERNING BOARD MEMBER",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_ysidro_elementary_school_district",
+      "candidates": 11,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-santee-school-district-governing-board-member-seat-no-1",
+      "title": "SANTEE SCHOOL DISTRICT GOVERNING BOARD MEMBER SEAT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santee_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-santee-school-district-governing-board-member-seat-no-5",
+      "title": "SANTEE SCHOOL DISTRICT GOVERNING BOARD MEMBER SEAT NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santee_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-south-bay-union-school-district-governing-board-member-trustee-area-no-1",
+      "title": "SOUTH BAY UNION SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:south_bay_union_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-vallecitos-school-district-governing-board-member-trustee-area-no-4",
+      "title": "VALLECITOS SCHOOL DISTRICT GOVERNING BOARD MEMBER TRUSTEE AREA NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:vallecitos_elementary_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-member-board-of-supervisors-district-no-4",
+      "title": "MEMBER, BOARD OF SUPERVISORS DISTRICT NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-member-board-of-supervisors-district-no-5",
+      "title": "MEMBER, BOARD OF SUPERVISORS DISTRICT NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-assessor-recorder-county-clerk",
+      "title": "ASSESSOR/RECORDER/ COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-treasurer-tax-collector",
+      "title": "TREASURER-TAX COLLECTOR",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-carlsbad-mayor",
+      "title": "CITY OF CARLSBAD MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:carlsbad",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-carlsbad-member-city-council-district-no-1",
+      "title": "CITY OF CARLSBAD MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:carlsbad/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-carlsbad-member-city-council-district-no-3",
+      "title": "CITY OF CARLSBAD MEMBER, CITY COUNCIL DISTRICT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:carlsbad/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-carlsbad-city-clerk",
+      "title": "CITY OF CARLSBAD CITY CLERK",
+      "ocdId": "ocd-division/country:us/state:ca/place:carlsbad",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-carlsbad-treasurer",
+      "title": "CITY OF CARLSBAD TREASURER",
+      "ocdId": "ocd-division/country:us/state:ca/place:carlsbad",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-chula-vista-mayor",
+      "title": "CITY OF CHULA VISTA MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:chula_vista",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-chula-vista-member-city-council-district-no-1",
+      "title": "CITY OF CHULA VISTA MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:chula_vista/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-chula-vista-member-city-council-district-no-2",
+      "title": "CITY OF CHULA VISTA MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:chula_vista/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-chula-vista-city-attorney",
+      "title": "CITY OF CHULA VISTA CITY ATTORNEY",
+      "ocdId": "ocd-division/country:us/state:ca/place:chula_vista",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-coronado-member-city-council",
+      "title": "CITY OF CORONADO MEMBER, CITY COUNCIL",
+      "ocdId": "ocd-division/country:us/state:ca/place:coronado",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-del-mar-member-city-council",
+      "title": "CITY OF DEL MAR MEMBER, CITY COUNCIL",
+      "ocdId": "ocd-division/country:us/state:ca/place:del_mar",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-el-cajon-mayor",
+      "title": "CITY OF EL CAJON MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:el_cajon",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-el-cajon-member-city-council-district-no-1",
+      "title": "CITY OF EL CAJON MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:el_cajon/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-encinitas-mayor-short-term",
+      "title": "CITY OF ENCINITAS MAYOR (SHORT TERM)",
+      "ocdId": "ocd-division/country:us/state:ca/place:encinitas",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-encinitas-member-city-council-district-no-3",
+      "title": "CITY OF ENCINITAS MEMBER, CITY COUNCIL DISTRICT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:encinitas/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-encinitas-member-city-council-district-no-4",
+      "title": "CITY OF ENCINITAS MEMBER, CITY COUNCIL DISTRICT NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:encinitas/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-escondido-mayor",
+      "title": "CITY OF ESCONDIDO MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:escondido",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-escondido-member-city-council-district-no-1",
+      "title": "CITY OF ESCONDIDO MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:escondido/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-escondido-member-city-council-district-no-2",
+      "title": "CITY OF ESCONDIDO MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:escondido/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-imperial-beach-mayor",
+      "title": "CITY OF IMPERIAL BEACH MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:imperial_beach",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-imperial-beach-member-city-council-district-no-1",
+      "title": "CITY OF IMPERIAL BEACH MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:imperial_beach/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-imperial-beach-member-city-council-district-no-3",
+      "title": "CITY OF IMPERIAL BEACH MEMBER, CITY COUNCIL DISTRICT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:imperial_beach/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-la-mesa-mayor",
+      "title": "CITY OF LA MESA MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_mesa",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-la-mesa-member-city-council",
+      "title": "CITY OF LA MESA MEMBER, CITY COUNCIL",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_mesa",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-la-mesa-treasurer",
+      "title": "CITY OF LA MESA TREASURER",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_mesa",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-lemon-grove-member-city-council",
+      "title": "CITY OF LEMON GROVE MEMBER, CITY COUNCIL",
+      "ocdId": "ocd-division/country:us/state:ca/place:lemon_grove",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-lemon-grove-member-city-council-short-term",
+      "title": "CITY OF LEMON GROVE MEMBER, CITY COUNCIL (SHORT TERM)",
+      "ocdId": "ocd-division/country:us/state:ca/place:lemon_grove",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-national-city-mayor",
+      "title": "CITY OF NATIONAL CITY MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:national_city",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-national-city-member-city-council-district-no-1",
+      "title": "CITY OF NATIONAL CITY MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:national_city/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-national-city-member-city-council-district-no-3",
+      "title": "CITY OF NATIONAL CITY MEMBER, CITY COUNCIL DISTRICT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:national_city/council_district:3",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-oceanside-member-city-council-district-no-1",
+      "title": "CITY OF OCEANSIDE MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:oceanside/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-oceanside-member-city-council-district-no-2",
+      "title": "CITY OF OCEANSIDE MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:oceanside/council_district:2",
+      "candidates": 5,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-poway-mayor",
+      "title": "CITY OF POWAY MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:poway",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-poway-member-city-council-district-no-1",
+      "title": "CITY OF POWAY MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:poway/council_district:1",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-poway-member-city-council-district-no-3",
+      "title": "CITY OF POWAY MEMBER, CITY COUNCIL DISTRICT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:poway/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-diego-member-city-council-district-no-2",
+      "title": "CITY OF SAN DIEGO MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_diego/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-diego-member-city-council-district-no-4",
+      "title": "CITY OF SAN DIEGO MEMBER, CITY COUNCIL DISTRICT NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_diego/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-diego-member-city-council-district-no-6",
+      "title": "CITY OF SAN DIEGO MEMBER, CITY COUNCIL DISTRICT NO. 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_diego/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-diego-member-city-council-district-no-8",
+      "title": "CITY OF SAN DIEGO MEMBER, CITY COUNCIL DISTRICT NO. 8",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_diego/council_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-marcos-mayor",
+      "title": "CITY OF SAN MARCOS MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_marcos",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-marcos-member-city-council-district-no-1",
+      "title": "CITY OF SAN MARCOS MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_marcos/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-san-marcos-member-city-council-district-no-2",
+      "title": "CITY OF SAN MARCOS MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_marcos/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-santee-member-city-council-district-no-1",
+      "title": "CITY OF SANTEE MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:santee/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-santee-member-city-council-district-no-2",
+      "title": "CITY OF SANTEE MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:santee/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-solana-beach-member-city-council-district-no-2",
+      "title": "CITY OF SOLANA BEACH MEMBER, CITY COUNCIL DISTRICT NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:solana_beach/council_district:2",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-solana-beach-member-city-council-district-no-4",
+      "title": "CITY OF SOLANA BEACH MEMBER, CITY COUNCIL DISTRICT NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:solana_beach/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-vista-mayor",
+      "title": "CITY OF VISTA MAYOR",
+      "ocdId": "ocd-division/country:us/state:ca/place:vista",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-vista-member-city-council-district-no-1",
+      "title": "CITY OF VISTA MEMBER, CITY COUNCIL DISTRICT NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:vista/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-city-of-vista-member-city-council-district-no-4",
+      "title": "CITY OF VISTA MEMBER, CITY COUNCIL DISTRICT NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:vista/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-canebrake-county-water-district-member-board-of-directors",
+      "title": "CANEBRAKE COUNTY WATER DISTRICT MEMBER, BOARD OF DIRECTORS",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:canebrake_county_water_district",
+      "candidates": 4,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-deer-springs-fire-protection-district-member-board-of-directors",
+      "title": "DEER SPRINGS FIRE PROTECTION DISTRICT MEMBER, BOARD OF DIRECTORS",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:deer_springs_fire_protection_district",
+      "candidates": 5,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-fallbrook-public-utility-district-member-board-of-directors-division-no-2",
+      "title": "FALLBROOK PUBLIC UTILITY DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fallbrook_public_utility_district/division:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-grossmont-healthcare-district-member-board-of-directors-zone-no-2",
+      "title": "GROSSMONT HEALTHCARE DISTRICT MEMBER, BOARD OF DIRECTORS ZONE NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:grossmont_healthcare_district/zone:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-grossmont-healthcare-district-member-board-of-directors-zone-no-4",
+      "title": "GROSSMONT HEALTHCARE DISTRICT MEMBER, BOARD OF DIRECTORS ZONE NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:grossmont_healthcare_district/zone:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-helix-water-district-member-board-of-directors-division-no-2",
+      "title": "HELIX WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:helix_water_district/division:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-helix-water-district-member-board-of-directors-division-no-4",
+      "title": "HELIX WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:helix_water_district/division:4",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-lakeside-community-planning-group-member-planning-group",
+      "title": "LAKESIDE COMMUNITY PLANNING GROUP MEMBER, PLANNING GROUP",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:lakeside",
+      "candidates": 11,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-north-county-fire-protection-district-member-board-of-directors-division-no-2",
+      "title": "NORTH COUNTY FIRE PROTECTION DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:north_county_fire_protection_district/division:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-north-county-fire-protection-district-member-board-of-directors-division-no-3",
+      "title": "NORTH COUNTY FIRE PROTECTION DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:north_county_fire_protection_district/division:3",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-otay-water-district-member-board-of-directors-division-no-3",
+      "title": "OTAY WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:otay_municipal_water_district/division:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-padre-dam-municipal-water-district-member-board-of-directors-division-no-1",
+      "title": "PADRE DAM MUNICIPAL WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:padre_dam_municipal_water_district/division:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-palomar-health-district-member-board-of-directors-division-no-3",
+      "title": "PALOMAR HEALTH DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:palomar_health_district/division:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-palomar-health-district-member-board-of-directors-division-no-5",
+      "title": "PALOMAR HEALTH DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:palomar_health_district/division:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-palomar-health-district-member-board-of-directors-division-no-7",
+      "title": "PALOMAR HEALTH DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 7",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:palomar_health_district/division:7",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-rainbow-municipal-water-district-member-board-of-directors-division-no-3",
+      "title": "RAINBOW MUNICIPAL WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rainbow_municipal_water_district/division:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-ramona-community-planning-group-member-planning-group",
+      "title": "RAMONA COMMUNITY PLANNING GROUP MEMBER, PLANNING GROUP",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:ramona",
+      "candidates": 9,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-ramona-municipal-water-district-member-board-of-directors-division-no-2",
+      "title": "RAMONA MUNICIPAL WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:ramona_municipal_water_district/division:2",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-rincon-del-diablo-municipal-water-district-member-board-of-directors-division-no-3",
+      "title": "RINCON DEL DIABLO MUNICIPAL WATER DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rincon_del_diablo_municipal_water_district/division:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-san-miguel-consolidated-fire-protection-district-member-board-of-directors-division-no-7",
+      "title": "SAN MIGUEL CONSOLIDATED FIRE PROTECTION DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 7",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_miguel_consolidated_fire_protection_district/division:7",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-sweetwater-community-planning-group-member-planning-group",
+      "title": "SWEETWATER COMMUNITY PLANNING GROUP MEMBER, PLANNING GROUP",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:sweetwater",
+      "candidates": 12,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-tri-city-healthcare-district-member-board-of-directors-zone-no-2",
+      "title": "TRI-CITY HEALTHCARE DISTRICT MEMBER, BOARD OF DIRECTORS ZONE NO. 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:tri_city_healthcare_district/zone:2",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-valley-center-community-planning-group-member-planning-group",
+      "title": "VALLEY CENTER COMMUNITY PLANNING GROUP MEMBER, PLANNING GROUP",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:valley_center",
+      "candidates": 9,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-valley-center-fire-protection-district-member-board-of-directors-division-no-3",
+      "title": "VALLEY CENTER FIRE PROTECTION DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:valley_center_fire_protection_district/division:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-general-san-diego-vista-irrigation-district-member-board-of-directors-division-no-2-short-term",
+      "title": "VISTA IRRIGATION DISTRICT MEMBER, BOARD OF DIRECTORS DIVISION NO. 2 (SHORT TERM)",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:vista_irrigation_district/division:2",
+      "candidates": 3,
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf"
+    }
+  ],
+  "operation": "Main validates with existing ballot merge/candidate APIs, then River installs through the existing data path. This worker performed no publication or production writes.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "nativeSourceBytesHash": "PASS",
+    "completePrintedLocalOfficeBlocks": "PASS",
+    "exactCandidateAndOfficeQuotes": "PASS",
+    "namedChoices": 388,
+    "contests": 144,
+    "existingSanDiegoLocalContestsFound": 0,
+    "focusedMergeAndCandidateChecks": "MAIN_OWNER_PENDING",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceBytesAndExactQuoteLines": "PASS: 5 original captures and 532 quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "type": "COUNTYWIDE_COMPOSITE_PRINTED_LOCAL_CANDIDATE_COVERAGE",
+    "sourcePages": "3\u201317 of 23",
+    "localContests": 144,
+    "localCandidacies": 388,
+    "alreadyHeldRetentionContestIds": [
+      "ca-sos-2026-general-retention-kelli-m-evans",
+      "ca-sos-2026-general-retention-joshua-groban",
+      "ca-sos-2026-general-retention-eran-m-bermudez",
+      "ca-sos-2026-general-retention-jose-s-castillo",
+      "ca-sos-2026-general-retention-truc-t-do",
+      "ca-sos-2026-general-retention-lisa-rodriguez",
+      "ca-sos-2026-general-retention-david-m-rubin",
+      "ca-sos-2026-general-retention-william-s-dato",
+      "ca-sos-2026-general-retention-julia-c-kelety",
+      "ca-sos-2026-general-retention-corey-g-lee",
+      "ca-sos-2026-general-retention-michael-j-raphael",
+      "ca-sos-2026-general-retention-joanne-motoike",
+      "ca-sos-2026-general-retention-nathan-r-scott",
+      "ca-sos-2026-general-retention-juliet-o-macaulay",
+      "ca-sos-2026-general-retention-martha-k-gooding",
+      "ca-sos-2026-general-retention-thomas-a-delaney",
+      "ca-sos-2026-general-retention-deborah-c-servino"
+    ],
+    "statement": "Every local candidate contest and printed named candidate in the countywide composite ballot is included. Federal, statewide and legislative offices, all 17 already-held retention contests, and measures are outside this partial input. This is countywide composite coverage, not a single address sample. Later qualified/declared write-ins are not asserted complete.",
+    "declaredWriteIns": {
+      "status": "OPEN",
+      "checkedOfficialPages": [
+        "https://www.sdvote.com/content/rov/en/candidates-campaigns/filing.html",
+        "https://www.sdvote.com/content/rov/en/elections/election-information.html"
+      ],
+      "finding": "These current official discovery pages link the composite and the August 28 candidate listing; neither displayed a separate declared-write-in link in this capture. Additional current declared-write-in acquisition remains with CX-LOCAL."
+    }
+  },
+  "unmatchedReaderGeographyIds": [
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:lakeside",
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:ramona",
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:sweetwater",
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:valley_center",
+    "ocd-division/country:us/state:ca/county:san_diego/council_district:4",
+    "ocd-division/country:us/state:ca/county:san_diego/council_district:5",
+    "ocd-division/country:us/state:ca/county:san_diego/school_board_district:3",
+    "ocd-division/country:us/state:ca/county:san_diego/school_board_district:5",
+    "ocd-division/country:us/state:ca/place:carlsbad/council_district:1",
+    "ocd-division/country:us/state:ca/place:carlsbad/council_district:3",
+    "ocd-division/country:us/state:ca/place:chula_vista/council_district:1",
+    "ocd-division/country:us/state:ca/place:chula_vista/council_district:2",
+    "ocd-division/country:us/state:ca/place:el_cajon/council_district:1",
+    "ocd-division/country:us/state:ca/place:encinitas/council_district:3",
+    "ocd-division/country:us/state:ca/place:encinitas/council_district:4",
+    "ocd-division/country:us/state:ca/place:escondido/council_district:1",
+    "ocd-division/country:us/state:ca/place:escondido/council_district:2",
+    "ocd-division/country:us/state:ca/place:imperial_beach/council_district:1",
+    "ocd-division/country:us/state:ca/place:imperial_beach/council_district:3",
+    "ocd-division/country:us/state:ca/place:national_city/council_district:1",
+    "ocd-division/country:us/state:ca/place:national_city/council_district:3",
+    "ocd-division/country:us/state:ca/place:oceanside/council_district:1",
+    "ocd-division/country:us/state:ca/place:oceanside/council_district:2",
+    "ocd-division/country:us/state:ca/place:poway/council_district:1",
+    "ocd-division/country:us/state:ca/place:poway/council_district:3",
+    "ocd-division/country:us/state:ca/place:san_diego/council_district:2",
+    "ocd-division/country:us/state:ca/place:san_diego/council_district:4",
+    "ocd-division/country:us/state:ca/place:san_diego/council_district:6",
+    "ocd-division/country:us/state:ca/place:san_diego/council_district:8",
+    "ocd-division/country:us/state:ca/place:san_marcos/council_district:1",
+    "ocd-division/country:us/state:ca/place:san_marcos/council_district:2",
+    "ocd-division/country:us/state:ca/place:santee/council_district:1",
+    "ocd-division/country:us/state:ca/place:santee/council_district:2",
+    "ocd-division/country:us/state:ca/place:solana_beach/council_district:2",
+    "ocd-division/country:us/state:ca/place:solana_beach/council_district:4",
+    "ocd-division/country:us/state:ca/place:vista/council_district:1",
+    "ocd-division/country:us/state:ca/place:vista/council_district:4",
+    "ocd-division/country:us/state:ca/school_district:bonsall_unified_school_district/school_board_district:b",
+    "ocd-division/country:us/state:ca/school_district:cajon_valley_union_elementary_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:cajon_valley_union_elementary_school_district/school_board_district:2",
+    "ocd-division/country:us/state:ca/school_district:cajon_valley_union_elementary_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:carlsbad_unified_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:carlsbad_unified_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:carlsbad_unified_school_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:escondido_union_elementary_school_district/school_board_district:2",
+    "ocd-division/country:us/state:ca/school_district:escondido_union_elementary_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:escondido_union_elementary_school_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:escondido_union_high_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:escondido_union_high_school_district/school_board_district:2",
+    "ocd-division/country:us/state:ca/school_district:escondido_union_high_school_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:fallbrook_union_elementary_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:fallbrook_union_high_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:fallbrook_union_high_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:grossmont_cuyamaca_community_college_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:grossmont_union_high_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:grossmont_union_high_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:grossmont_union_high_school_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district/school_board_district:2",
+    "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:national_elementary_school_district/school_board_district:b",
+    "ocd-division/country:us/state:ca/school_district:national_elementary_school_district/school_board_district:c",
+    "ocd-division/country:us/state:ca/school_district:national_elementary_school_district/school_board_district:e",
+    "ocd-division/country:us/state:ca/school_district:oceanside_unified_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:oceanside_unified_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:oceanside_unified_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:palomar_community_college_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:palomar_community_college_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:poway_unified_school_district/school_board_district:b",
+    "ocd-division/country:us/state:ca/school_district:poway_unified_school_district/school_board_district:c",
+    "ocd-division/country:us/state:ca/school_district:poway_unified_school_district/school_board_district:d",
+    "ocd-division/country:us/state:ca/school_district:ramona_city_unified_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:ramona_city_unified_school_district/school_board_district:2",
+    "ocd-division/country:us/state:ca/school_district:ramona_city_unified_school_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:san_diego_city_unified_school_district/school_board_district:b",
+    "ocd-division/country:us/state:ca/school_district:san_diego_city_unified_school_district/school_board_district:c",
+    "ocd-division/country:us/state:ca/school_district:san_diego_community_college_district/school_board_district:a",
+    "ocd-division/country:us/state:ca/school_district:san_diego_community_college_district/school_board_district:c",
+    "ocd-division/country:us/state:ca/school_district:san_dieguito_union_high_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:san_dieguito_union_high_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/school_district:san_dieguito_union_high_school_district/school_board_district:5",
+    "ocd-division/country:us/state:ca/school_district:san_marcos_unified_school_district/school_board_district:e",
+    "ocd-division/country:us/state:ca/school_district:south_bay_union_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:southwestern_community_college_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:southwestern_community_college_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:sweetwater_union_high_school_district/school_board_district:1",
+    "ocd-division/country:us/state:ca/school_district:vallecitos_elementary_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:valley_center_pauma_unified_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/school_district:vista_unified_school_district/school_board_district:3",
+    "ocd-division/country:us/state:ca/special_district:canebrake_county_water_district",
+    "ocd-division/country:us/state:ca/special_district:deer_springs_fire_protection_district",
+    "ocd-division/country:us/state:ca/special_district:fallbrook_public_utility_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:grossmont_healthcare_district/zone:2",
+    "ocd-division/country:us/state:ca/special_district:grossmont_healthcare_district/zone:4",
+    "ocd-division/country:us/state:ca/special_district:helix_water_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:helix_water_district/division:4",
+    "ocd-division/country:us/state:ca/special_district:north_county_fire_protection_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:north_county_fire_protection_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:otay_municipal_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:padre_dam_municipal_water_district/division:1",
+    "ocd-division/country:us/state:ca/special_district:palomar_health_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:palomar_health_district/division:5",
+    "ocd-division/country:us/state:ca/special_district:palomar_health_district/division:7",
+    "ocd-division/country:us/state:ca/special_district:rainbow_municipal_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:ramona_municipal_water_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:rincon_del_diablo_municipal_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:san_miguel_consolidated_fire_protection_district/division:7",
+    "ocd-division/country:us/state:ca/special_district:tri_city_healthcare_district/zone:2",
+    "ocd-division/country:us/state:ca/special_district:valley_center_fire_protection_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:vista_irrigation_district/division:2"
+  ],
+  "unmatchedBaseReaderGeographyIds": [
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:lakeside",
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:ramona",
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:sweetwater",
+    "ocd-division/country:us/state:ca/county:san_diego/community_planning_area:valley_center",
+    "ocd-division/country:us/state:ca/school_district:grossmont_cuyamaca_community_college_district",
+    "ocd-division/country:us/state:ca/school_district:palomar_community_college_district",
+    "ocd-division/country:us/state:ca/school_district:san_diego_community_college_district",
+    "ocd-division/country:us/state:ca/school_district:southwestern_community_college_district",
+    "ocd-division/country:us/state:ca/special_district:canebrake_county_water_district",
+    "ocd-division/country:us/state:ca/special_district:deer_springs_fire_protection_district",
+    "ocd-division/country:us/state:ca/special_district:grossmont_healthcare_district",
+    "ocd-division/country:us/state:ca/special_district:padre_dam_municipal_water_district",
+    "ocd-division/country:us/state:ca/special_district:palomar_health_district",
+    "ocd-division/country:us/state:ca/special_district:rainbow_municipal_water_district",
+    "ocd-division/country:us/state:ca/special_district:ramona_municipal_water_district",
+    "ocd-division/country:us/state:ca/special_district:rincon_del_diablo_municipal_water_district",
+    "ocd-division/country:us/state:ca/special_district:san_miguel_consolidated_fire_protection_district",
+    "ocd-division/country:us/state:ca/special_district:tri_city_healthcare_district",
+    "ocd-division/country:us/state:ca/special_district:valley_center_fire_protection_district"
+  ],
+  "readerBoundaryDependency": "Exact district/area memberships must be acquired before address/ZIP-specific reader coverage can be claimed; no district was mapped to its entire city, school district, or county.",
+  "readerVisibility": "NOT CLAIMED; data preparation only",
+  "nextOwner": "Main: focused offline validation and commit; River: existing data install and live checks. CX-LOCAL geography work: acquire missing division boundaries/memberships and any later qualified write-ins."
+}

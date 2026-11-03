@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T05:32:51.972254+00:00",
+  "preparedAt": "2026-11-03T05:51:04.434205+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -81,10 +81,17 @@
   "costScope": "Uses existing stored-data publication and reader paths. No application query or paid provider call was added. Source captures distinguish native bytes from labeled deterministic source-text extractions.",
   "nextOwner": "River installs each READY explainer packet as data and verifies the live measure, explanation and source link. This lane continues local official-source acquisition.",
   "verification": {
-    "pnpmGates": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
     "dataChecks": "Official source hashes and quotations; existing publication admission; explainer reader attachments; legislative district and candidate reconciliation; voting-source parsers and official-boundary assignment replay.",
     "readerPublication": "Not performed. River installs these packets as data and checks the live pages.",
-    "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained."
+    "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained.",
+    "pnpmGatesBaseline": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
+    "expandedPnpmGates": {
+      "status": "RUNNING",
+      "snapshot": "823a21f5e",
+      "scope": "Isolated checkout of committed expansion; main workspace continues official-source acquisition. Subsequent data-only packets receive focused existing publication, actual reader, source and credential checks.",
+      "completed": "visible-tree, release firewall, preflight, lint, tsc, dead-code, browser contract",
+      "active": "test"
+    }
   },
   "earlierPreparedPackets": [
     {
@@ -666,7 +673,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "823a21f5e4e22b87ca4d6fce9b3a4fe7b718145e",
+  "explainersPreparedThroughCommit": "0dcc7d006e3c63a0add56fab3988b229aa24bc32",
   "states": [
     {
       "state": "AK",
@@ -682,7 +689,7 @@
     },
     {
       "state": "AL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 41,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 43,
       "dataInstalls": [
         {
           "manifest": "AL/explainer-expansion/install.json",
@@ -693,6 +700,12 @@
         {
           "manifest": "AL/explainer-expansion/local-amendments/install.json",
           "preparedExplainers": 32,
+          "contractId": "ballot-contests:AL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "AL/explainer-expansion/tax-district-geography/install.json",
+          "preparedExplainers": 2,
           "contractId": "ballot-contests:AL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -730,8 +743,14 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 46,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 93,
       "dataInstalls": [
+        {
+          "manifest": "CA/explainer-expansion/lemon-grove/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "CA/explainer-expansion/los-angeles-schools/install.json",
           "preparedExplainers": 13,
@@ -745,8 +764,26 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CA/explainer-expansion/san-bernardino/install.json",
+          "preparedExplainers": 16,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CA/explainer-expansion/san-luis-obispo/install.json",
           "preparedExplainers": 6,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/san-mateo/install.json",
+          "preparedExplainers": 29,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/solana-beach/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -766,7 +803,7 @@
     },
     {
       "state": "CO",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 132,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 134,
       "dataInstalls": [
         {
           "manifest": "CO/explainer-expansion/adams/install.json",
@@ -829,6 +866,18 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/sombrero-geography/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/summerlin-geography/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/weld/install.json",
           "preparedExplainers": 10,
           "contractId": "ballot-contests:CO",
@@ -844,8 +893,14 @@
     },
     {
       "state": "CT",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 42,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 43,
       "dataInstalls": [
+        {
+          "manifest": "CT/explainer-expansion/danbury-supplement/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "CT/explainer-expansion/install.json",
           "preparedExplainers": 42,
@@ -868,8 +923,14 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 15,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 28,
       "dataInstalls": [
+        {
+          "manifest": "FL/explainer-expansion/alachua/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "FL/explainer-expansion/hernando-duval-walton/install.json",
           "preparedExplainers": 3,
@@ -878,6 +939,12 @@
         },
         {
           "manifest": "FL/explainer-expansion/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/leon/install.json",
           "preparedExplainers": 8,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
@@ -1210,8 +1277,20 @@
     },
     {
       "state": "OH",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 45,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 48,
       "dataInstalls": [
+        {
+          "manifest": "OH/explainer-expansion/burbank/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:OH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "OH/explainer-expansion/canaan/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:OH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "OH/explainer-expansion/wayne-more/install.json",
           "preparedExplainers": 5,
@@ -1264,8 +1343,14 @@
     },
     {
       "state": "PA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 12,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 14,
       "dataInstalls": [
+        {
+          "manifest": "PA/explainer-expansion/delaware-county-supplement/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:PA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "PA/explainer-expansion/install.json",
           "preparedExplainers": 4,
@@ -1420,14 +1505,16 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 1120,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 1190,
     "statesAndDCWithPreparedChanges": 39,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
     "knownBoundedInventoriesPrepared": {
       "MN": "154/154 questions in current official master list",
       "NH": "299/299 held plus acquired official questions; further municipal/school source sweep continues",
-      "VA": "67/67 current official master-list measures"
+      "VA": "67/67 current official master-list measures",
+      "IN": "41/41 active questions on current official DLGF referendum list; other local categories remain open",
+      "MD": "51/51 current official statewide/local master-list measures have substantive explanations after prepared correction"
     },
     "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer."
   }

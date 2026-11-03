@@ -1,0 +1,26 @@
+{
+  "n": 179,
+  "branch": "release/179",
+  "head_sha": "3c7a4a39386cc4f951d64095de27ae3c2318f5fc",
+  "base_river_sha": "99eac64f7bfd847b4f647642cc959c12382ce549",
+  "main_sha": "cec75661d822020f22cca8d168056937fce96549",
+  "lanes": [
+    {
+      "lane": "map-sprite",
+      "steps": [
+        "MAP-01"
+      ],
+      "ready_sha": "c28a5146ac86170beaf40d79725a43e2ff058c9a",
+      "result_sha": "f716df0dd4881e2a9e074e19ff64e9052b3ba484"
+    }
+  ],
+  "steps": [
+    "MAP-01"
+  ],
+  "pr": {
+    "number": 898,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/898"
+  },
+  "ci": "running",
+  "at": "2026-11-03T16:25:02Z"
+}

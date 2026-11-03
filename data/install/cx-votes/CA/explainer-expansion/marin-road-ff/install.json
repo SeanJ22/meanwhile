@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-marin-ff",
+      "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-upper-bay-permanent-road-division110326"
+    }
+  ],
+  "operation": "Load only the exact official11-footprint union through existing loadStatePlaceMap, then merge this question and explainer through existing runBallotPublication. Preserve other geography and ballot data. No app code or release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Marin",
+    "officialCountyDenominator": 20,
+    "preparedLabels": [
+      "FF"
+    ],
+    "preparedAttached": 1,
+    "scope": "Only measures and exact jurisdictions in this packet. Remaining Marin measures and other local inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "source-reader-check.json and reader-map-check.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "placeMapFile": "map.json",
+  "placeMapSha256": "814c3a868275d452026c5b45e4585f6678498c439bcc88c1eb91ada2d706ba2a",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "completeZctaFeatures": 1,
+  "exactDeclaredParcelFootprints": 11,
+  "sourceNativeCurrentParcels": 10,
+  "sourceNativeHistoricalParents": 1,
+  "unionPolygons": 4,
+  "positiveZctaIntersections": 1,
+  "zipEdges": 1,
+  "zctaEdges": 1,
+  "noUnlistedReplacementParcel": true,
+  "noInferredPerHouseholdForecast": true
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54104236811114,
+      37.87800812272111
+    ],
+    "sourceParcel": "049-134-11",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54132564527904,
+      37.87717378435461
+    ],
+    "sourceParcel": "049-184-04",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54133773925028,
+      37.87675552884916
+    ],
+    "sourceParcel": "049-184-22",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54123278764304,
+      37.87640162569022
+    ],
+    "sourceParcel": "049-184-23",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54076176075705,
+      37.87728326978464
+    ],
+    "sourceParcel": "049-191-14",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54081660151601,
+      37.87693411402219
+    ],
+    "sourceParcel": "049-191-17",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54084538006495,
+      37.876707824260734
+    ],
+    "sourceParcel": "049-191-20",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.5407509731946,
+      37.876557005565125
+    ],
+    "sourceParcel": "049-191-21",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54082507810296,
+      37.877498543635916
+    ],
+    "sourceParcel": "049-191-24",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54095269151605,
+      37.87774754851458
+    ],
+    "sourceParcel": "049-191-25",
+    "historicalParent": false,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+    "point": [
+      -122.54124129950881,
+      37.8766661325002
+    ],
+    "sourceParcel": "049-184-16",
+    "historicalParent": true,
+    "basis": "Deterministic geometric interior; no household, voter, address or owner lookup."
+  }
+]

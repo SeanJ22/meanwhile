@@ -1,0 +1,36 @@
+{
+  "id": "ocd-division/country:us/state:ca/electoral_district:2026_upper_bay_permanent_road_division",
+  "sourceTable": "official-division-parcels.json",
+  "sourceDefinedElectoralIdNotCensusGeography": true,
+  "currentParcelCount": 10,
+  "historicalParentCount": 1,
+  "historicalParent": {
+    "apn": "049-184-16",
+    "sourceLayer": "County Dead Parcel layer19",
+    "sourceEndDate": "2001-01-01",
+    "overlapsListedCurrentParcels": [
+      "049-184-22",
+      "049-184-23"
+    ]
+  },
+  "method": "Exact polygon-clipping union of all11 explicitly listed native footprints:10current parcels and1county-supplied retired parent. No replacement APN inferred. Parent overlap and source projection-scale slivers are retained by union, not rounded/buffered/simplified/repaired. No town, service-area or guessed road corridor added.",
+  "electorateEdition": 2026,
+  "underlyingParcelSources": "Current county Parcel layer35 and explicit historical Dead Parcel layer19; not a claim that retired parcel is currently taxed as a separate parcel.",
+  "nativeCurrentFile": "ca-bcdbb0a2f545.json",
+  "nativeHistoricalFile": "ca-5adb9b26a1f2.json",
+  "completeZctaCount": 1,
+  "envelope": [
+    -122.55,
+    37.87,
+    -122.54,
+    37.88
+  ],
+  "bbox": [
+    -122.54155385475475,
+    37.876279430216314,
+    -122.54052092457587,
+    37.878146410500406
+  ],
+  "overlap": "native-parcel-overlap.json",
+  "privacy": "No owner/contact attributes requested; residential address column omitted from staged source derivative with original native hash preserved."
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "whatItDoes": "Creates a road tax starting in fiscal year 2027–28: $4,350 per improved parcel and $2,175 per unimproved parcel each year for the first ten years. After that, a $455-per-parcel maintenance tax continues with annual inflation adjustments until repealed.",
+    "yesMeans": "Approve the two-stage tax for road improvements and ongoing maintenance within the Upper Bay Permanent Road Division, with proceeds restricted to those purposes.",
+    "noMeans": "Do not authorize this new road-division parcel tax.",
+    "contestId": "ca-2026-marin-ff",
+    "parts": [
+      {
+        "id": "ca-2026-marin-ff#initial",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "First ten years",
+        "what": "The annual rate for the first ten years is $4,350 for each improved parcel and $2,175 for each unimproved parcel, beginning in fiscal year 2027–28. The charge applies only within the Upper Bay Permanent Road Division."
+      },
+      {
+        "id": "ca-2026-marin-ff#maintenance",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Maintenance tax continues afterward",
+        "what": "After the first ten years, the base charge becomes $455 per parcel per year for ongoing road maintenance. It is adjusted each July 1 with the previous calendar year’s Consumer Price Index for all urban consumers in the San Francisco–Oakland–Hayward area. The tax continues until repealed; it does not expire after ten years."
+      },
+      {
+        "id": "ca-2026-marin-ff#estimate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Different official revenue descriptions",
+        "what": "The ballot question describes approximately $456,750 as a total for improvements. The County Counsel analysis describes that figure as annual revenue. Those official descriptions conflict; this explainer does not treat either description as a guaranteed annual collection amount."
+      },
+      {
+        "id": "ca-2026-marin-ff#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Restricted road spending",
+        "what": "Proceeds must be kept in a separate special account and used only for the measure’s stated road purposes: improvements first, then ongoing maintenance of the road within the division."
+      },
+      {
+        "id": "ca-2026-marin-ff#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Start and approval threshold",
+        "what": "The County Counsel analysis says the levy begins in the first full fiscal year after the effective date; the ballot question identifies fiscal year 2027–28. At least two-thirds of votes cast on Measure FF must be yes."
+      }
+    ],
+    "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-upper-bay-permanent-road-division110326",
+    "sourceHash": "9b1ca841aae3b6058e1b13b1fc907d6d81407961079ac4da28ae4d9bc77de012",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T09:46:09.050703+00:00",
+    "citation": "measure-source"
+  }
+]

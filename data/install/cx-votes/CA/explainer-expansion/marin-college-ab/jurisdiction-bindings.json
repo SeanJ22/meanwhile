@@ -1,3 +1,3 @@
 {
-  "ocd-division/country:us/state:ca/electoral_district:2026_sonoma_county_junior_college_district": "map.json; exact current county LAFCO district boundary; source-defined identity, not a claimed Census geographic ID"
+  "ocd-division/country:us/state:ca/electoral_district:2026_sonoma_county_junior_college_district": "map.json; exact legal/voter-precinct college district geometry currently linked by California Department of Technology and FoundationCCC; original feature revision July25,2008 retained; source-defined identity, not a claimed Census geographic ID"
 }

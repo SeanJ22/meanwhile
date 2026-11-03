@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://assets.marincounty.gov/marincounty-prod/public/2025-09/well-drilling-fillable-application-form-and-instructions-rev-Sept-2025.pdf",
+  "nativePdfSha256": "474c9d2e4a757f9ba1bd252e8803ef243c661fd0c9305bdd40bf8616081a2e25",
+  "annotations": [
+    {
+      "page": 2,
+      "uri": "https://gis.marinpublic.com/lookup/zonegplookup/"
+    }
+  ],
+  "method": "PyMuPDF native page.get_links URI annotations; not invented text or fabricated HTML.",
+  "authority": "Original publisher .gov; actual hyperlink to county GIS host."
+}

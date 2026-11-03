@@ -1,0 +1,52 @@
+{
+  "sourceUrl": "https://www.marincounty.gov/departments/elections/november-3-2026-general-election/information-about-measures-110326/list-measures-110326/measure-upper-bay-permanent-road-division110326/measure-upper-bay-permanent-road-division-110326-full-text",
+  "originalNativeSha256": "0b304570935b1ee9bc187824508ced39a444d5db1e6c61ae8f9ea3f546da5210",
+  "rows": [
+    {
+      "apn": "049-134-11",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-191-25",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-191-24",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-191-14",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-184-04",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-184-16",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-191-17",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-184-22",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-184-23",
+      "improvementStatus": "Unimproved"
+    },
+    {
+      "apn": "049-191-20",
+      "improvementStatus": "Improved"
+    },
+    {
+      "apn": "049-191-21",
+      "improvementStatus": "Improved"
+    }
+  ],
+  "addressColumnOmitted": true,
+  "currentAndHistoricalGeographicBinding": "geometry-proof.json"
+}

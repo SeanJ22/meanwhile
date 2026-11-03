@@ -21,9 +21,10 @@ import { neonConfig } from "@neondatabase/serverless";
 import { isCensusPlaceholderDivision } from "../../lib/registry/census-placeholders.ts";
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
+import { PLACE_PAGES_SQL, PLACE_PRINT_SQL } from "../../lib/reader/place.ts";
 import { PLACE_SLICES_SQL } from "../../lib/reader/place-slices.ts";
 import { BALLOT_PLACE_PAGES_SQL } from "../../lib/ballot/place-package-until-nov-4.ts";
-import { slicedAnswer } from "./place-pages-answer.ts";
+import { placePagesAnswer } from "./place-pages-answer.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
@@ -262,14 +263,13 @@ export function activateCanonicalFixture(key: string): void {
     return saved.then(rows=>structuredClone(rows));
   };
   const readFacts: Query = async (sql,params=[]) => {
-    if(sql===PLACE_SLICES_SQL) {
-      const saved=await savedRows({state:String(params[5]),divisionIds:params[0] as string[],bodyIds:params[1] as string[],neighbors:params[2]===true,
-        includeHistory:(params[4] as string[]).includes("history")});
-      return slicedAnswer(saved as never,params);
-    }
-    if(sql===BALLOT_PLACE_PAGES_SQL) {
-      return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
+    // The fixtures hold saved pages, not slices: every selection is answered by the saved pages until slices are built.
+    if(sql===PLACE_SLICES_SQL)return [{read:{unbuilt:true}}];
+    if(sql===PLACE_PRINT_SQL)return [];
+    if(sql===PLACE_PAGES_SQL||sql===BALLOT_PLACE_PAGES_SQL) {
+      const saved=await savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
         namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true});
+      return sql===PLACE_PAGES_SQL?placePagesAnswer(saved as never):saved;
     }
     if(sql.includes("AS registration_held") || sql.includes("WITH RECURSIVE ancestors AS"))return fixturePlaceRow(params);
     const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];

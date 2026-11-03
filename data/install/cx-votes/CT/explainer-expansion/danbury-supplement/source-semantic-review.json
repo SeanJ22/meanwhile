@@ -1,0 +1,17 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedAt": "2026-11-03T05:35:33.264558+00:00",
+  "packetSha256": "d3a99fc995cbd05bfd81c74ca035b477d463d7aa9ddf6ed65d4e43c9cfcf39f0",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "FullcurrentofficialSOSquestionretained, includingallnamedmunicipalofficesandthereferencedBOEsection.",
+    "ExactacceptedBOEtermprovisionreadfromofficialfinalreportPDFpages9-10; nativeblack/blueproposaltextdistinguishedfrompurplestruck-throughdeletionsandbothpagesvisuallychecked.",
+    "Termscheduleprecise:sixmembersfouryearsNov2027,fivememberstwoyearsNov2029,allelevenfouryearsNov2031andquadrenniallythereafter.",
+    "No claimschoolminorityrepresentationproceduresarechangedbythisterm-onlyquestion.",
+    "ExactfreshheldCT:ct-2026-generalidentityandelectionmetadatareused; actualCITYOFDANBURYprimaryPLACE_FIPSbindingreused.",
+    "OrdinaryBallotContestMerge(checkAuthority:true),manualProjectionCandidate,authorityForManualReceipt,actualreaderexpectedrecordPASS; rootfull-priorretentionreplayremainsownedbyroot."
+  ]
+}

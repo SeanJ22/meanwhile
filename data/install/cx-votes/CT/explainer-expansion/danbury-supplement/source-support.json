@@ -1,0 +1,84 @@
+[
+  {
+    "id": "ct-sots-2026:danbury-question-1",
+    "contestId": "ct-sots-2026:danbury-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:danbury",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "excerptFile": "sources/58c452201d7dfd0f8c1ce05f04c1c52b765a3aceb837ade603e107fa362d1110.txt",
+    "excerptSha256": "58c452201d7dfd0f8c1ce05f04c1c52b765a3aceb837ade603e107fa362d1110",
+    "sourceCheckedAt": "2026-11-03T05:34:53.056942+00:00",
+    "questionText": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?",
+        "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years."
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?",
+        "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years."
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?",
+        "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Sets 4-year terms beginning with the November 2027 municipal election for Danbury’s mayor, town clerk, treasurer, City Council, Zoning Commission and its alternates, and constables.",
+        "quote": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The Board of Education would elect 6 members to 4-year terms in November 2027 and 5 members to 2-year terms in November 2029.",
+        "quote": "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years.",
+        "sourceUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+        "jointSupportQuestion": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "In November 2031 and every 4 years afterward, all 11 school-board members would be elected to 4-year terms.",
+        "quote": "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years.",
+        "sourceUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+        "jointSupportQuestion": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the four-year municipal terms and the described school-board transition and election schedule.",
+        "quote": "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years.",
+        "sourceUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+        "jointSupportQuestion": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed change to municipal and school-board terms.",
+        "quote": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+      }
+    ],
+    "additionalOfficialSupport": [
+      {
+        "sourceUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+        "sourceFile": "sources/966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668.source",
+        "sourceHash": "966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668",
+        "sourceTextFile": "sources/ab2654ff2584df19743c16d251a34d38a219435ad99c90c3265fe6c4daa89c91.txt",
+        "sourceTextSha256": "ab2654ff2584df19743c16d251a34d38a219435ad99c90c3265fe6c4daa89c91",
+        "title": "FinalCharterRevisionCommissionreport, printed Sec2-2A(c)(1), PDFpages9-10",
+        "quote": "c. (1) A Board of Education \n         .At the  \n          general City election in      \n         November of 2027 there shall be elected six (6) members,  \n\n         each of whom shall hold office for a term of four (4) years. At  \n         the general election in November 2029, there shall be  \n         elected five (5) members, each of whom shall hold office for  \n         a term of two (2) years. At the general City election to be  \n         held in November 2031 and quadrennially thereafter there  \n         shall be elected eleven (11) members, all of whom shall hold  \n         office for a term of four (4) years.",
+        "sourceExtraction": {
+          "method": "Native PyMuPDF text spans from PDFpages9-10, retaining black/blue accepted text and excluding struck-through purple0x633277 deletion spans. Scopeonlyschool-board-termparagraph; not a claim of the wholecharter. Bothpages visuallycheckedagainstoriginalPDF.",
+          "originalCompletePdfTextPath": "sources/16f7662c20e98eec7a4a5fedeac3613875337d6fa3b586376f85d16258833bf7.txt",
+          "visualCheckPage10Path": "sources/97cd04356633787f6e1f28f69af2a8e2a5635234d00a318cb020fd187ff4f3e1.source"
+        }
+      }
+    ],
+    "independentReviewStatus": "NOT_RUN_SELF_SOURCE_REVIEW_PASSED",
+    "authorityEvidencePath": "authority.json"
+  }
+]

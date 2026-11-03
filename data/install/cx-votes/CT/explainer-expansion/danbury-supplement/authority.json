@@ -1,0 +1,9 @@
+{
+  "scope": "OneDanburyQuestion1supplementtoCT42. ExistingofficialCTAPIcomplete53distinctquestions; thisleaves10verifiedsourcegaps.",
+  "existingConnecticutPortalAuthorityReference": "../authority.json",
+  "officialDanburyReportUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+  "officialDanburyCurrentLinkingPageUrl": "https://www.danbury-ct.gov/164/Charter-Revision-Commission",
+  "danburyOfficialResolutionPath": "sources/fb5b7dd2937d828dc7c7da994c3331dfedf89cd0027d93eff7b6e02703c9cced.source",
+  "danburyOfficialResolutionMetadataPath": "sources/9b3ac4a2b2f6637635fe08e5ec6e51fafca5f79a094a6f558e2af2e026b9d81b.json",
+  "sourceIntegrity": "OriginalJSONandcompleteoriginalPDFbytesavailable. Supplementalacceptedtextonlyexactstruck-deletionfilterofboundedSec2-2A(c)(1); visualcheckoriginalpages9-10. No originaldocumenthashmislabeledastextcapture."
+}

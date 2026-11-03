@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 10,
+    "knownDistinctOfficialQuestions": 53,
+    "knownQuestionsExplainedAfterSupplement": 43
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:danbury-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/place:danbury",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official statewideAPIJSON response bytes plus originalcompleteDanburyfinalreportPDF; acceptedtermparagraphboundedbyPDFpages9-10andvisuallyverified. No sourcehashrepresentationchanges.",
+  "reviewedScratchPacketSha256": "d3a99fc995cbd05bfd81c74ca035b477d463d7aa9ddf6ed65d4e43c9cfcf39f0",
+  "canonicalInputSha256": "ffcb6aa3011f5349a24d53104fcd9559464dd5324bffe820276a651bcbfb4ab4",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "Apply existing CT42base first (alreadyrootpromoted).",
+    "Apply this one-question supplement with ordinary manualpublication, preservingbase42andallunrelatedhelddata."
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

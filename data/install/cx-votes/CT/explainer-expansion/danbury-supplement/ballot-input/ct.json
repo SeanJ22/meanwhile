@@ -1,0 +1,93 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:danbury-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:danbury",
+          "divisionVintage": "2023",
+          "title": "Danbury Question 1 — elected officials’ terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State — complete2026general town-question roster",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T05:34:53.056942+00:00",
+            "quote": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:danbury-question-1#question",
+          "contestId": "ct-sots-2026:danbury-question-1",
+          "questionText": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?",
+          "officialStatement": null,
+          "officialNumber": "1",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State — complete2026general town-question roster",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T05:34:53.056942+00:00",
+            "quote": "Shall the Charter of the City of Danbury be revised, as recommended by the Charter Revision Commission and approved by the City Council, to provide that the terms of office for all municipal elected offices, including Mayor, Town Clerk, Treasurer, City Council, Zoning Commission, Zoning Commission Alternates, and Constable, upon the municipal election to be held November 2027, be four (4) years, and to provide that the terms of office for all Board of Education members be revised according to Section 2.2.A(c)(1) of the proposed revised Charter of the City of Danbury?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:danbury-question-1",
+          "whatItDoes": "Sets 4-year terms beginning with the November 2027 municipal election for Danbury’s mayor, town clerk, treasurer, City Council, Zoning Commission and its alternates, and constables. The Board of Education would elect 6 members to 4-year terms in November 2027 and 5 members to 2-year terms in November 2029. In November 2031 and every 4 years afterward, all 11 school-board members would be elected to 4-year terms.",
+          "yesMeans": "Approve the four-year municipal terms and the described school-board transition and election schedule.",
+          "noMeans": "Reject this proposed change to municipal and school-board terms.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:34:53.056942+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:34:53.056942+00:00",
+    "reviewedBy": "CX-VOTES additionalDanburyQuestion1withfullfinalofficialBOEtermtransition",
+    "sources": [
+      {
+        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official November 3, 2026 referendum inventory retrieved successfully. Original response bytes and exact questions retained. 42 newly sourced question/neutral explainer records prepared; all missing jurisdictions or incorporated omnibus text remain explicit separate gaps. No candidate or polling-place facts added. Independent semantic peer review remains pending."
+      },
+      {
+        "requestedUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+        "finalUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166/Charter-Revision-Commission-FINAL-REPORT-Stamped-with-Town-Clerk-at-1258pm?bidId=",
+        "httpStatus": 200,
+        "rawHash": "966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668",
+        "retrievedAt": "2026-11-03T05:26:24.185646+00:00",
+        "publisher": "City of Danbury Charter Revision Commission — currentfinalreport linkedbyofficialCRCpage",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native complete finalcharterreportPDF. ExactacceptedBoardofEducationtermtransitionSec2-2A(c)(1)readfrompages9-10, distinguishnewblueunderlinedtextfromoldpurplestruck-throughtext; visualcheckconfirmssix4year2027/five2year2029/eleven4year2031andquadrennialthereafter. Currentofficialmunicipalballotresolutionrepeatsquestionreferringthisspecificsection."
+      }
+    ]
+  }
+}

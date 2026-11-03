@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ct-sots-2026:danbury-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:danbury",
+    "registeredDivisionIndex": 220,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:danbury",
+      "place",
+      "0918430",
+      "Danbury city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "161438",
+      "ct:city:city-of-danbury",
+      "CITY OF DANBURY",
+      "MUNICIPAL",
+      220,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing CITY OF DANBURY municipalgovernment primaryPLACE_FIPSbinding; no guessedcity-versustownscope."
+  }
+]

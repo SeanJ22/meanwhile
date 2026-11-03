@@ -1,0 +1,32 @@
+{
+  "packetPath": "ballot-input/ct.json",
+  "sources": [
+    {
+      "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+      "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+      "rawPath": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+      "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+      "textPath": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+      "textSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+      "sourceFormat": "ORIGINAL_JSON_BYTES",
+      "contestIds": [
+        "ct-sots-2026:danbury-question-1"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+      "finalUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166/Charter-Revision-Commission-FINAL-REPORT-Stamped-with-Town-Clerk-at-1258pm?bidId=",
+      "rawPath": "sources/966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668.source",
+      "rawHash": "966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668",
+      "textPath": "sources/ab2654ff2584df19743c16d251a34d38a219435ad99c90c3265fe6c4daa89c91.txt",
+      "textSha256": "ab2654ff2584df19743c16d251a34d38a219435ad99c90c3265fe6c4daa89c91",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:danbury-question-1"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

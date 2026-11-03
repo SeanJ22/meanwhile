@@ -1,0 +1,17 @@
+{
+  "state": "MN",
+  "newMeasures": 1,
+  "newExplanations": 1,
+  "nativeSourceByteHashes": "PASS",
+  "nativeScannedResolutionVisualReview": "PASS",
+  "exactFormalQuestionAndResolutionQuotes": "PASS",
+  "officialSourceAuthorityChain": "PASS",
+  "measureRecordIssue": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "readerAttachmentAndExactTownshipSelection": "PASS",
+  "statewideWidening": "NONE",
+  "sourceConflict": "SOS formal question and signed resolution both specify CLERK. Workbook supplementary sentence says treasurer; omitted from officialStatement and preserved verbatim in source-support.",
+  "verificationScope": "Fresh measure-only published snapshot; parent replays complete state before data installation."
+}

@@ -1,0 +1,597 @@
+{
+  "ballots": {
+    "MN:mn-2026-11-03": {
+      "election": {
+        "id": "mn-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 State General Election",
+        "state": "MN"
+      },
+      "contests": [
+        {
+          "id": "mn-cx-2026-place-lowry-question-1",
+          "electionId": "mn-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mn/place:lowry",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lowry — Plan A city government",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+          "provenance": {
+            "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+            "sourceOrg": "Minnesota Secretary of State",
+            "collectedAt": "2026-11-03T03:48:55.459290+00:00",
+            "verifiedAt": "2026-11-03T04:20:04.300471+00:00",
+            "quote": "Shall the City of Lowry transition to a Plan A Statutory City form of government?"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/412.541/pdf",
+              "sourceOrg": "Minnesota Revisor of Statutes",
+              "collectedAt": "2026-11-03T04:16:41.195957+00:00",
+              "verifiedAt": "2026-11-03T04:20:04.300471+00:00",
+              "quote": "412.541 OPTIONAL PLANS.\nSubdivision 1. Optional Plan A. Any statutory city may provide for the appointment of its clerk and\ntreasurer, or clerk-treasurer and the election of an additional council member as hereinafter provided in this\nchapter. These departures from the standard form of government are referred to hereafter as Optional Plan\nA.\nSubd. 2. Optional Plan B. Any statutory city of more than 1,000 population may provide for the\ncouncil-manager plan of government hereinafter provided in this chapter and referred to as Optional Plan\nB.\nSubd. 3. MS 1965 [Repealed, 1967 c 289 s 18]\nSubd. 4. Adoption or abandonment; standard form. Any one of such plans may be adopted or\nabandoned in a city by following the proceduresset forth in section 412.551. Until the adoption of an optional\nplan, and except as provided in section 412.572, every city shall operate under the standard form of\ngovernment earlier provided in this chapter under which the voters elect the treasurer, if there is one, and a\ncouncil consisting of a mayor, three or five council members, and the clerk or clerk-treasurer.\nHistory: 1949 c 119 s 66; 1965 c 417 s 6,7; 1967 c 289 s 8,9; 1973 c 123 art 2 s 1 subd 2; 1986 c 444;\n1989 c 30 s 6\nOfficial Publication of the State of Minnesota\nRevisor of Statutes\n1MINNESOTA STATUTES 2025412.541\n"
+            },
+            {
+              "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/412.581/pdf",
+              "sourceOrg": "Minnesota Revisor of Statutes",
+              "collectedAt": "2026-11-03T04:16:41.196240+00:00",
+              "verifiedAt": "2026-11-03T04:20:04.300471+00:00",
+              "quote": "412.581 OFFICERS.\nIn any city operating under Optional Plan A except a city having a larger council under Minnesota\nStatutes 1994, section 412.023, subdivision 4, the council shall be composed of five or seven members\nconsisting, except during the initial period of its operation as provided in section 412.571, of the mayor and\nfour or six council members and, except as provided in that section, the clerk and treasurer or clerk-treasurer\nshall be appointed by the council for indefinite terms.\nHistory: 1949 c 119 s 74; 1965 c 417 s 11; 1967 c 289 s 13; 1974 c 337 s 11; 1986 c 444; 1989 c 30 s\n9; 1997 c 7 art 1 s 136; 2016 c 158 art 1 s 183\nOfficial Publication of the State of Minnesota\nRevisor of Statutes\n1MINNESOTA STATUTES 2025412.581\n"
+            },
+            {
+              "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/412.571/pdf",
+              "sourceOrg": "Minnesota Revisor of Statutes",
+              "collectedAt": "2026-11-03T04:16:41.196432+00:00",
+              "verifiedAt": "2026-11-03T04:20:04.300471+00:00",
+              "quote": "412.571 CONTINUANCE IN OFFICE; ELECTIONS.\nSubdivision 1. Composition of council. When an optional plan is first adopted in any statutory city in\nwhich the standard plan of statutory city government is then in operation, the council shall continue as then\nconstituted until the expiration of the term of the incumbent clerk. At the city election preceding expiration\nof the term of the incumbent clerk, one council member shall be elected in addition to the council member\nor council members who would otherwise be chosen at the election. If a minority of the other council members\nis chosen at the election, the term of the additional council member chosen at the election shall be four years,\nbut if a majority of the other council members is chosen at the election, the initial term of the additional\ncouncil member chosen at the election shall be two years. At each regular election thereafter, council members\nshall be elected for four-year terms. If the optional plan is adopted at the regular city election at which the\noffice of clerk is to be filled, the candidate elected to that office at the election shall not assume the office\nof clerk in January, butshall become the additional council member unless appointed clerk under the optional\nplan, in which case the unfilled office of council member shall be considered vacant.\nSubd. 2. Incumbent clerk and treasurer. When an optional plan is first adopted in any city in which\nthe standard plan is then in operation, the incumbent clerk and treasurer, or clerk-treasurer, shall continue\nto serve until the expiration of their respective terms.\nSubd. 3. From one option to another. When an optional plan is abandoned and another optional plan\nis adopted in its place, incumbent members of the council shall continue to serve until the expiration of their\nrespective terms, and the election schedule shall not be affected by the change.\nSubd. 4. From one option to standard plan. When any optional plan is abandoned and the standard\nform of city government is resumed, terms of then incumbent council members shall not be affected by the\nabandonment; but until the first business day of January following the next regular city election, the clerk\nshall not serve as a member of the council. At the city election preceding that date one council member less\nshall be elected.\nSubd. 5. Standard plan restored; clerk, treasurer. When any optional plan is abandoned and the\nstandard form of city government is resumed, the office of clerk, or clerk-treasurer shall remain appointive\nuntil the first business day of January following the next regular city election and the office of treasurer, if\nthere is no clerk-treasurer, shall remain appointive until the first business day of January following the first\nsubsequent city election at which the clerk is not elected; and the successor to the incumbent clerk,\nclerk-treasurer, and treasurer shall be chosen at the regular city election immediately preceding the January\nin which the office becomes elective.\nHistory: 1949 c 119 s 73; 1951 c 378 s 15-17; 1965 c 417 s 9,10; 1967 c 289 s 12; 1973 c 123 art 2 s\n1 subd 2; 1976 c 44 s 28-30; 1986 c 444; 1989 c 30 s 7,8\nOfficial Publication of the State of Minnesota\nRevisor of Statutes\n1MINNESOTA STATUTES 2025412.571\n"
+            },
+            {
+              "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/412.591/pdf",
+              "sourceOrg": "Minnesota Revisor of Statutes",
+              "collectedAt": "2026-11-03T04:18:04.889712+00:00",
+              "verifiedAt": "2026-11-03T04:20:04.300471+00:00",
+              "quote": "412.591 DUTIES OF CLERK AND TREASURER; MAY BE COMBINED.\nSubdivision 1. Clerk not on council; transition. The clerk shall perform all the duties imposed on the\nclerk in cities generally but shall not be a member of the council, except that when Optional Plan A is first\nadopted in any city, the incumbent clerk shall continue to be a member of the council until the expiration\nof the term.\nSubd. 1a. If treasurer, duties unchanged. The duties of the treasurer if that office exists shall not be\naffected by adoption of Optional Plan A.\nSubd. 2. Combining, uncombining clerk-treasurer. Cities operating under Optional Plan A may, by\nan ordinance effective after the expiration of the term of the incumbent treasurer at the date of adoption of\nOptional Plan A, combine the offices of clerk and treasurer in the office of clerk-treasurer and thereafter the\nduties of the treasurer as prescribed by this chapter shall be performed by the clerk-treasurer. The offices of\nclerk and treasurer may be reestablished by ordinance.\nSubd. 3. Auditstandardsif combined. (a) If the offices of clerk and treasurer are combined as provided\nby this section, and the city's annual revenue for all governmental and enterprise funds combined is more\nthan the amount in paragraph (b), the council shall provide for an annual audit of the city's financial affairs\nby the state auditor or a certified public accountant in accordance with minimum procedures prescribed by\nthe state auditor. If the offices of clerk and treasurer are combined and the city's annual revenue for all\ngovernmental and enterprise funds combined isthe amount in paragraph (b), or less, the councilshall provide\nfor an audit of the city's financial affairs by the state auditor or a certified public accountant in accordance\nwith minimum audit procedures prescribed by the state auditor at least once every five years, which audit\nshall be for a one-year period to be determined at random by the person conducting the audit.\n(b) For the purposes of paragraph (a), the amount in 2025 is $1,000,000, and is adjusted annually\nthereafter for inflation using the annual implicit price deflator for state and local expenditures as published\nby the United States Department of Commerce.\nHistory: 1949 c 119 s 75; 1961 c 230 s 4; 1965 c 417 s 12; 1973 c 123 art 2 s 1 subd 2; 1973 c 492 s\n14; 1986 c 444; 1994 c 546 s 2; 1995 c 27 s 3; 2004 c 281 s 3; 2010 c 191 s 9; 2025 c 39 art 6 s 13\nOfficial Publication of the State of Minnesota\nRevisor of Statutes\n1MINNESOTA STATUTES 2025412.591\n"
+            }
+          ]
+        }
+      ],
+      "measures": [
+        {
+          "id": "mn-cx-2026-place-lowry-question-1:measure",
+          "contestId": "mn-cx-2026-place-lowry-question-1",
+          "officialNumber": "CITY QUESTION 1 (Lowry)",
+          "questionText": "Shall the City of Lowry transition to a Plan A Statutory City form of government?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+            "sourceOrg": "Minnesota Secretary of State",
+            "collectedAt": "2026-11-03T03:48:55.459290+00:00",
+            "verifiedAt": "2026-11-03T04:20:04.300471+00:00",
+            "quote": "Shall the City of Lowry transition to a Plan A Statutory City form of government?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mn-cx-2026-place-lowry-question-1",
+          "whatItDoes": "Moves Lowry to Optional Plan A city government. Under that plan, the City Council appoints the clerk and treasurer, or a combined clerk-treasurer. The clerk’s council seat is replaced by an elected council-member seat through the statutory transition process. Incumbent clerk and treasurer terms continue until they expire under the transition rules.",
+          "yesMeans": "Adopt Plan A, with council appointment of the clerk and treasurer and the statutory council-seat transition.",
+          "noMeans": "Do not adopt Plan A through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/412.541/pdf",
+          "sourceHash": "76368aee32a6610b2059294f3b115c6647829f5d138c7ea2312946c04f002681",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:20:04.300471+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "candidacies": [],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:37:10.715476+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651",
+        "finalUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false&bl13=1791954750022338651",
+        "httpStatus": 200,
+        "rawHash": "5c5b9fd60a3da33f5ccc593891ea046bc0695351d4a0f971f494c4c1cd294170",
+        "retrievedAt": "2026-10-14T05:12:30.398Z",
+        "publisher": "Minnesota Secretary of State",
+        "reviewedEvidence": "Official November 3, 2026 election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.state.mn.us/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+        "finalUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+        "httpStatus": 200,
+        "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+        "retrievedAt": "2026-10-14T05:04:22.766Z",
+        "publisher": "Minnesota Secretary of State",
+        "reviewedEvidence": "Official November 3, 2026 election publication converted from the captured response bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.state.mn.us/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+        "finalUrl": "https://www.sos.mn.gov/elections-voting/whats-on-my-ballot/constitutional-amendments/",
+        "httpStatus": 200,
+        "rawHash": "87188089c5277534286799d54b4a13e5965c65b3364d4c4548fe5cb7d224e9ee",
+        "retrievedAt": "2026-10-14T05:04:22.408Z",
+        "publisher": "Minnesota Secretary of State",
+        "reviewedEvidence": "Official November 3, 2026 election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/C40D18F1-2428-4F21-9E8F-7C38BDBC75AD.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/C40D18F1-2428-4F21-9E8F-7C38BDBC75AD.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:58.033598Z",
+        "rawHash": "cdddf850977c20c4cd188c127893859f716d02e6e4edcd79e0df78138aa71535",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-dakota-55124.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=325264",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=325264",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.705525Z",
+        "rawHash": "8401f10064a38e1842a2d302c6573473f7ff32db3a7a3c1e2f6c72913fbd3ac6",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-dakota-55124.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/761C5230-E219-4EB2-9512-E46590D058ED.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/761C5230-E219-4EB2-9512-E46590D058ED.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:58.112200Z",
+        "rawHash": "ce7a6ca5df74c0946eb497ad663bbc0cbeee44a4472aeec877e10eb4f9fa567e",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-scott-55379.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=330942",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=330942",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.800902Z",
+        "rawHash": "8bb6c2fa75393ba4a8590734cc7c39a6a0b7a85bed3ba420509b6d5f441a0b2c",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-scott-55379.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.635280Z",
+        "rawHash": "ab95195dfda401b3813e0561ad87b892efe3e173b79db1cc5ec76cf1b9f1553e",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-sherburne-55330.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2001",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2001",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.211524Z",
+        "rawHash": "3b2484cf9a04ddce06bf15fda5386a6b387799cf814a6672e6d249f4cba45265",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-sherburne-55330.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/5E24B611-A63B-4999-B1E7-545D21C7E8F9.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/5E24B611-A63B-4999-B1E7-545D21C7E8F9.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.792287Z",
+        "rawHash": "ddc4d25aef18e2b5debca25b7e75718021cec41df82e7b1049abf823370b840f",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-washington-55082.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=967",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=967",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.569845Z",
+        "rawHash": "7d2fa3e7a8ece17bc5d3dc4cbc1e176afcb8cdb56af7a39df2d6fdeeb234aa1b",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-washington-55082.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D1ADB14D-BEEE-4185-A519-108D53E16C84.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D1ADB14D-BEEE-4185-A519-108D53E16C84.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.490703Z",
+        "rawHash": "231ecee5511510ca0d818ed4aef4cdd6fc135dcde9cbb60797421036361a69f4",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-wright-55313.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=1913",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=1913",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:59:57.051651Z",
+        "rawHash": "49df0ed659802fccc36f21cb95c1b61152ac487dc04c807c19ed8a1351b9425d",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-county-wright-55313.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BEDD527F-E9CE-46B0-9D27-12F7D7399FCC.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BEDD527F-E9CE-46B0-9D27-12F7D7399FCC.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.937100Z",
+        "rawHash": "8c7bb7cd32875daeb7983398f5d09ed913ffdc649463b600b19d95c8497347b4",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-1-55318.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=13697",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=13697",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.664022Z",
+        "rawHash": "3c8a07b6a842c6c43743eec34cdcbe80b48168fcb82ff766d8447b3613390c11",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-1-55318.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3B5B72C-967A-4CB9-87B0-EC8D2D7EB14A.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3B5B72C-967A-4CB9-87B0-EC8D2D7EB14A.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:11.640976Z",
+        "rawHash": "e7c8f999cb83f5987d24d944552c05659f0a6432f9b57585227afd9172759970",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-10-55303.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=211766",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=211766",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:11.115921Z",
+        "rawHash": "14425b2d3979c9e91a16796ae834891111047033a76ac4572fc1502a96fa8464",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-10-55303.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A01847A9-0649-4CCD-A5F6-3467037D44AA.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A01847A9-0649-4CCD-A5F6-3467037D44AA.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.038724Z",
+        "rawHash": "070cc81f43a0dd3c90e3b2c50fa5ac42750ddc1b0433ef36b521b34572cf8d61",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-2-55102.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245405",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=245405",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.700911Z",
+        "rawHash": "f10ffe9c6bea1880e0918240e5429b3e429918505a99b5e4b5c99559b236c860",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-2-55102.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6E960D4E-A8F8-4BDB-93DB-F59A079A5826.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6E960D4E-A8F8-4BDB-93DB-F59A079A5826.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.035964Z",
+        "rawHash": "0f8b5a1dc544b3a2f684620954ba9af825efd0e81e2aa60236b61305051e9124",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-3-55901.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=224269",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=224269",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.848545Z",
+        "rawHash": "0d238a61361bfdbbdd71144d7a9b6b2a940a6f09ca19d98e64539e5ab8517914",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-3-55901.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AEC6E0DF-A0E8-4D52-A333-D4F7C9FCFE05.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AEC6E0DF-A0E8-4D52-A333-D4F7C9FCFE05.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.159970Z",
+        "rawHash": "bd84880a09cebcb7ea07e49064eed21c8a681258a8c9491eacb99b10325526d9",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-4-55415.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228485",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228485",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.770979Z",
+        "rawHash": "cb0621f68eda4b213f7c1c8bcdfcb5092982dbd05f1337de0a3f325ace24e5f5",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-4-55415.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/86514F35-D4FA-4E42-8658-887379C5D192.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/86514F35-D4FA-4E42-8658-887379C5D192.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.863275Z",
+        "rawHash": "156cb344d710986c421bf1b3dd4c5a9409d3fa0ce3b80afa4b7faf51a750dc74",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-5-56001.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2283",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2283",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:09.017142Z",
+        "rawHash": "5bdffc92ddde9c68ea95f1c32fe8b958a76eeced879a36bc6c5257230397a375",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-5-56001.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/19D5601A-3419-424C-A133-63CB8BE94182.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/19D5601A-3419-424C-A133-63CB8BE94182.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:11.070118Z",
+        "rawHash": "dae11c269a6e78888df280a3dfa1699546fec4e2267a098582b78b0c70469603",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-6-55802.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=56676",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=56676",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.550871Z",
+        "rawHash": "b3a336a28289d941ad1e6c2a2dabe784620bac6f44a9a9c3b810cf583127378f",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-6-55802.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/672D8799-A9CB-4956-A1E2-800E58C53470.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/672D8799-A9CB-4956-A1E2-800E58C53470.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:11.418474Z",
+        "rawHash": "b4b4286019b82dbd5c42d5199751974c390b8ad766282cc9bfcebdafe7ef817a",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-7-56301.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=799",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=799",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.860981Z",
+        "rawHash": "0e6450b5e7ba3e9a649121086a4c1ad8053a708faa50847d46b8d59c519a4229",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-7-56301.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AB3AC7CF-8748-4D48-862D-4E53D5271302.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AB3AC7CF-8748-4D48-862D-4E53D5271302.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.622963Z",
+        "rawHash": "0097c9e438da6a0548308b5ad984e7e17c8095f2bcbc4b6c80073cbcbca60b10",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-8-56201.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=1466",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=1466",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:10.365931Z",
+        "rawHash": "05251c222d655bd3a33578f7fda971272c2cf0446deb8c978d4c4d0739023dad",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-8-56201.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3C6DCC8-B2BA-49EF-AC99-E4FD061F347A.pdf",
+        "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3C6DCC8-B2BA-49EF-AC99-E4FD061F347A.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:11.474939Z",
+        "rawHash": "ce387ddee7465750755e5c36820fdb9d1da74ed13824e138800e9163bf5c9395",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-9-56601.pdf.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2257",
+        "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2257",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:11.098534Z",
+        "rawHash": "627657f038649643b868c65adf482ba05a9ccc88325ef72c28356618140bfcf1",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-district-9-56601.ballot.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://www.revisor.mn.gov/statutes/cite/2.722",
+        "finalUrl": "https://www.revisor.mn.gov/statutes/cite/2.722",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:56:33.795731Z",
+        "rawHash": "b75256389f590be3a846f1eae52a2087ba2f10b4a66faf1091951238380a856d",
+        "publisher": "Minnesota Revisor of Statutes",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-judicial-districts-statute.html.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?geometry=%7B%22x%22%3A-93.262318051568%2C%22y%22%3A44.975370123052%7D&geometryType=esriGeometryPoint&spatialRel=esriSpatialRelIntersects&inSR=4326&outFields=%2A&returnGeometry=false&f=json",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?geometry=%7B%22x%22%3A-93.262318051568%2C%22y%22%3A44.975370123052%7D&geometryType=esriGeometryPoint&spatialRel=esriSpatialRelIntersects&inSR=4326&outFields=%2A&returnGeometry=false&f=json",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:13:42.105947Z",
+        "rawHash": "fc4b75b35641c6307d2e58f6f437e79a731bd1ed98146ee5ad4a3b5fc24c8b40",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-55415-school-census.json.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://vote.minneapolismn.gov/candidates/filing-for-office/offices-on-the-ballot/",
+        "finalUrl": "https://vote.minneapolismn.gov/candidates/filing-for-office/offices-on-the-ballot/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:05:53.059533Z",
+        "rawHash": "771b7341457d8808893a5ab6fafd278541b70694f1b43fda4b27704b0254201b",
+        "publisher": "Minneapolis Elections and Voter Services",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-minneapolis-school-scope.html.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://mn.gov/commerce-stat/pdfs/school-district-list-type-1-3.pdf",
+        "finalUrl": "https://mn.gov/commerce-stat/pdfs/school-district-list-type-1-3.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:47:19.313589Z",
+        "rawHash": "dc062911873d8f88f738b69c037f50573b90ecfa822604910c2ad210839bc35f",
+        "publisher": "Minnesota Department of Commerce",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-commerce-school-numbers.raw.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=STATE%3D%2727%27&outFields=GEOID%2CNAME%2CSDUNI&returnGeometry=false&f=json",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=STATE%3D%2727%27&outFields=GEOID%2CNAME%2CSDUNI&returnGeometry=false&f=json",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:41:13.708111Z",
+        "rawHash": "0a3ada02807b07b488a460ca8474e148cb1a074d2b4acf73ab0b970823158a5d",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-census-unified-schools.raw.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+        "finalUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+        "httpStatus": 200,
+        "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+        "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+        "publisher": "Minnesota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "XLSX",
+        "reviewedEvidence": "Native SOS November3,2026 workbook, lastupdatedSeptember23, supplies the exact Lowry PlanA adoption question. Four complete official Revisor statute captures supply the substantive appointment and council-transition provisions."
+      },
+      {
+        "requestedUrl": "https://www.revisor.mn.gov/statutes/cite/412.541/pdf",
+        "finalUrl": "https://www.revisor.mn.gov/statutes/cite/412.541/pdf",
+        "retrievedAt": "2026-11-03T04:16:41.195957+00:00",
+        "httpStatus": 200,
+        "httpStatusBasis": "successful full-source webconnector capture marker; not observed origin HTTP status",
+        "rawHash": "76368aee32a6610b2059294f3b115c6647829f5d138c7ea2312946c04f002681",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured one-page official statutory PDF extraction and provider metadata; not original PDF bytes",
+        "captureMetadata": {
+          "provider": "webconnector open official PDF",
+          "originHttpStatus": null,
+          "nativeAcquisitionLimitation": "Runtime-wide HTTP proxy outage503; no government-origin failure inferred.",
+          "reportedPdfPages": 1,
+          "reportedSourceLines": 19,
+          "capturedLineRange": [
+            0,
+            18
+          ],
+          "completeDeclaredLinesCaptured": true,
+          "derivedTextMethod": "Remove only provider line/page prefixes from all captured text lines, preserving every declared PDF text line."
+        },
+        "publisher": "Minnesota Revisor of Statutes",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete one-page official statutory PDF captured through independent webconnector while runtime-wide proxy was unavailable. Every declared line is retained; rawHash is SOURCE_TEXT only, not PDF bytes. Read with the exact Lowry ballot question from the native SOS workbook."
+      },
+      {
+        "requestedUrl": "https://www.revisor.mn.gov/statutes/cite/412.581/pdf",
+        "finalUrl": "https://www.revisor.mn.gov/statutes/cite/412.581/pdf",
+        "retrievedAt": "2026-11-03T04:16:41.196240+00:00",
+        "httpStatus": 200,
+        "httpStatusBasis": "successful full-source webconnector capture marker; not observed origin HTTP status",
+        "rawHash": "966ff3c0c88741a3b28b40be6550520f41aef9675fc663938d5a591ebbb83c5c",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured one-page official statutory PDF extraction and provider metadata; not original PDF bytes",
+        "captureMetadata": {
+          "provider": "webconnector open official PDF",
+          "originHttpStatus": null,
+          "nativeAcquisitionLimitation": "Runtime-wide HTTP proxy outage503; no government-origin failure inferred.",
+          "reportedPdfPages": 1,
+          "reportedSourceLines": 11,
+          "capturedLineRange": [
+            0,
+            10
+          ],
+          "completeDeclaredLinesCaptured": true,
+          "derivedTextMethod": "Remove only provider line/page prefixes from all captured text lines, preserving every declared PDF text line."
+        },
+        "publisher": "Minnesota Revisor of Statutes",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete one-page official statutory PDF captured through independent webconnector while runtime-wide proxy was unavailable. Every declared line is retained; rawHash is SOURCE_TEXT only, not PDF bytes. Read with the exact Lowry ballot question from the native SOS workbook."
+      },
+      {
+        "requestedUrl": "https://www.revisor.mn.gov/statutes/cite/412.571/pdf",
+        "finalUrl": "https://www.revisor.mn.gov/statutes/cite/412.571/pdf",
+        "retrievedAt": "2026-11-03T04:16:41.196432+00:00",
+        "httpStatus": 200,
+        "httpStatusBasis": "successful full-source webconnector capture marker; not observed origin HTTP status",
+        "rawHash": "dd01119c62987e80f7929aa75928f1d34c4660b4b51f9cf7833efa44c0285637",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured one-page official statutory PDF extraction and provider metadata; not original PDF bytes",
+        "captureMetadata": {
+          "provider": "webconnector open official PDF",
+          "originHttpStatus": null,
+          "nativeAcquisitionLimitation": "Runtime-wide HTTP proxy outage503; no government-origin failure inferred.",
+          "reportedPdfPages": 1,
+          "reportedSourceLines": 36,
+          "capturedLineRange": [
+            0,
+            35
+          ],
+          "completeDeclaredLinesCaptured": true,
+          "derivedTextMethod": "Remove only provider line/page prefixes from all captured text lines, preserving every declared PDF text line."
+        },
+        "publisher": "Minnesota Revisor of Statutes",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete one-page official statutory PDF captured through independent webconnector while runtime-wide proxy was unavailable. Every declared line is retained; rawHash is SOURCE_TEXT only, not PDF bytes. Read with the exact Lowry ballot question from the native SOS workbook."
+      },
+      {
+        "requestedUrl": "https://www.revisor.mn.gov/statutes/cite/412.591/pdf",
+        "finalUrl": "https://www.revisor.mn.gov/statutes/cite/412.591/pdf",
+        "retrievedAt": "2026-11-03T04:18:04.889712+00:00",
+        "httpStatus": 200,
+        "httpStatusBasis": "successful full-source webconnector capture marker; not observed origin HTTP status",
+        "rawHash": "ef5114ea6244e777903c91daa612f1830ae08508e2a4e5fabd9941b807adba82",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured one-page official statutory PDF extraction and provider metadata; not original PDF bytes",
+        "captureMetadata": {
+          "provider": "webconnector open official PDF",
+          "originHttpStatus": null,
+          "nativeAcquisitionLimitation": "Runtime-wide HTTP proxy outage503; no government-origin failure inferred.",
+          "reportedPdfPages": 1,
+          "reportedSourceLines": 29,
+          "capturedLineRange": [
+            0,
+            28
+          ],
+          "completeDeclaredLinesCaptured": true,
+          "derivedTextMethod": "Remove only provider line/page prefixes from all captured text lines, preserving every declared PDF text line."
+        },
+        "publisher": "Minnesota Revisor of Statutes",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Complete one-page official statutory PDF captured through independent webconnector while runtime-wide proxy was unavailable. Every declared line is retained; rawHash is SOURCE_TEXT only, not PDF bytes. Read with the exact Lowry ballot question from the native SOS workbook."
+      }
+    ]
+  }
+}

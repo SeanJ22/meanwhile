@@ -1,0 +1,1292 @@
+[
+  {
+    "contestId": "mn-cx-2026-isd-12-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 12 (Centennial), Minnesota has proposed to increase the School District's general education revenue by $375 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum revenue authorization proposed by the board of Independent School District No. 12 (Centennial), Minnesota be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 12 (Centennial), Minnesota has proposed to increase the School District's general education revenue by $375 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum revenue authorization proposed by the board of Independent School District No. 12 (Centennial), Minnesota be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 12 (Centennial), Minnesota has proposed to increase the School District's general education revenue by $375 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum revenue authorization proposed by the board of Independent School District No. 12 (Centennial), Minnesota be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      75
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      75
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-13-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 13 (Columbia Heights Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $550 per pupil, subject to an annual increase at the rate of inflation beginning with taxes payable in 2028. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 13 (Columbia Heights Public Schools), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 13 (Columbia Heights Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $550 per pupil, subject to an annual increase at the rate of inflation beginning with taxes payable in 2028. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 13 (Columbia Heights Public Schools), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 13 (Columbia Heights Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $550 per pupil, subject to an annual increase at the rate of inflation beginning with taxes payable in 2028. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 13 (Columbia Heights Public Schools), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      77
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      77
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-23-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 23 (Frazee-Vergas Public Schools) has proposed to increase its general education revenue by $993.83 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 23 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 23 (Frazee-Vergas Public Schools) has proposed to increase its general education revenue by $993.83 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 23 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 23 (Frazee-Vergas Public Schools) has proposed to increase its general education revenue by $993.83 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 23 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      78,
+      79
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      78,
+      79
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-113-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $1,847 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $1,847 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $1,847 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      80,
+      81
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      80,
+      81
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-113-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $553 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  If School District Question 1 is approved, shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE",
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $1,847 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $553 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  If School District Question 1 is approved, shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE",
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $1,847 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $553 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  If School District Question 1 is approved, shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE",
+        "The board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota has proposed to increase the School District's referendum revenue by $1,847 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 113 (Walker-Hackensack-Akeley), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      80,
+      81,
+      82,
+      83
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      82,
+      83
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-118-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 118 (Northland Community Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,780 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 118 (Northland Community Schools), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 118 (Northland Community Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,780 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 118 (Northland Community Schools), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 118 (Northland Community Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,780 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 118 (Northland Community Schools), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      84
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      84
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-181-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 181 (Brainerd Public Schools) has proposed to increase its general education revenue by $865 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 181 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 181 (Brainerd Public Schools) has proposed to increase its general education revenue by $865 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 181 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 181 (Brainerd Public Schools) has proposed to increase its general education revenue by $865 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 181 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      85,
+      86,
+      87
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      85,
+      86,
+      87
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-186-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 186 (Pequot Lakes Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,160 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 186 (Pequot Lakes Public Schools), Minnesota, be approved?   BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 186 (Pequot Lakes Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,160 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 186 (Pequot Lakes Public Schools), Minnesota, be approved?   BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 186 (Pequot Lakes Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,160 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 186 (Pequot Lakes Public Schools), Minnesota, be approved?   BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      88,
+      89
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      88,
+      89
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-195-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of lndependent School District No. 195 (Randolph Public Schools) has proposed to increase its general education revenue by $450 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 195 be approved?     BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of lndependent School District No. 195 (Randolph Public Schools) has proposed to increase its general education revenue by $450 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 195 be approved?     BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of lndependent School District No. 195 (Randolph Public Schools) has proposed to increase its general education revenue by $450 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 195 be approved?     BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      90,
+      91
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      90,
+      91
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-204-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 204 (Kasson-Mantorville), Minnesota has proposed to increase the School District's referendum revenue by $500 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization  would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 204(Kasson-Mantorville), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 204 (Kasson-Mantorville), Minnesota has proposed to increase the School District's referendum revenue by $500 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization  would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 204(Kasson-Mantorville), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 204 (Kasson-Mantorville), Minnesota has proposed to increase the School District's referendum revenue by $500 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization  would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 204(Kasson-Mantorville), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      97,
+      98
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      97,
+      98
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-229-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "School District Question 1   Approval of School District   Referendum Revenue Authorization         The school board of Independent School District No. 229 (Lanesboro Public Schools) has proposed to increase its general education revenue by $850 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.       Shall the increase in the revenue proposed by the school board of Independent School District No. 229 be approved?           BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "School District Question 1   Approval of School District   Referendum Revenue Authorization         The school board of Independent School District No. 229 (Lanesboro Public Schools) has proposed to increase its general education revenue by $850 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.       Shall the increase in the revenue proposed by the school board of Independent School District No. 229 be approved?           BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "School District Question 1   Approval of School District   Referendum Revenue Authorization         The school board of Independent School District No. 229 (Lanesboro Public Schools) has proposed to increase its general education revenue by $850 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.       Shall the increase in the revenue proposed by the school board of Independent School District No. 229 be approved?           BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      101
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      101
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-306-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 306 (Laporte Public School) has proposed to increase its general education revenue by $1,344.85 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.      Shall the increase in the revenue proposed by the school board of Independent School District No. 306 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 306 (Laporte Public School) has proposed to increase its general education revenue by $1,344.85 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.      Shall the increase in the revenue proposed by the school board of Independent School District No. 306 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 306 (Laporte Public School) has proposed to increase its general education revenue by $1,344.85 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.      Shall the increase in the revenue proposed by the school board of Independent School District No. 306 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      115
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      115
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-309-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 309 (Park Rapids Area Schools) has proposed to increase its general education revenue by $1,111.09 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.      Shall the increase in the revenue proposed by the school board of Independent School District No. 309 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 309 (Park Rapids Area Schools) has proposed to increase its general education revenue by $1,111.09 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.      Shall the increase in the revenue proposed by the school board of Independent School District No. 309 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 309 (Park Rapids Area Schools) has proposed to increase its general education revenue by $1,111.09 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.      Shall the increase in the revenue proposed by the school board of Independent School District No. 309 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      119,
+      120
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      119,
+      120
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-345-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 345 (New London-Spicer) has proposed to increase its general education revenue by $1,358.94 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 345 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 345 (New London-Spicer) has proposed to increase its general education revenue by $1,358.94 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 345 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 345 (New London-Spicer) has proposed to increase its general education revenue by $1,358.94 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 345 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      121
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      121
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-415-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 415 (Lynd Public School) has proposed to increase its general education revenue by $700 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.                                                                 Yes                                                           No                                                         Shall the increase in the revenue proposed by the school board of Independent School District No.415 be approved?                             BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 415 (Lynd Public School) has proposed to increase its general education revenue by $700 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.                                                                 Yes                                                           No                                                         Shall the increase in the revenue proposed by the school board of Independent School District No.415 be approved?                             BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 415 (Lynd Public School) has proposed to increase its general education revenue by $700 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.                                                                 Yes                                                           No                                                         Shall the increase in the revenue proposed by the school board of Independent School District No.415 be approved?                             BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      124
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      124
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-423-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 423 (Hutchinson Public Schools) has proposed to increase its general education revenue by $412 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.   Shall the increase in the revenue proposed by the school board of Independent School District No. 423 be approved?"
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 423 (Hutchinson Public Schools) has proposed to increase its general education revenue by $412 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.   Shall the increase in the revenue proposed by the school board of Independent School District No. 423 be approved?"
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 423 (Hutchinson Public Schools) has proposed to increase its general education revenue by $412 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.   Shall the increase in the revenue proposed by the school board of Independent School District No. 423 be approved?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      125,
+      126,
+      127
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      125,
+      126,
+      127
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-447-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 447 (Grygla Public School) has proposed to increase its general education revenue by $665.15 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 447 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 447 (Grygla Public School) has proposed to increase its general education revenue by $665.15 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 447 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 447 (Grygla Public School) has proposed to increase its general education revenue by $665.15 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.    Shall the increase in the revenue proposed by the school board of Independent School District No. 447 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      128,
+      129,
+      130
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      128,
+      129,
+      130
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-465-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 465 (Litchfield Public Schools) has proposed to increase its general education revenue by $415 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 465 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 465 (Litchfield Public Schools) has proposed to increase its general education revenue by $415 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 465 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 465 (Litchfield Public Schools) has proposed to increase its general education revenue by $415 per pupil.  The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 465 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      133,
+      134
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      133,
+      134
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-549-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 549 (Perham-Dent Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,135 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law. Shall the new referendum authorization proposed by the board of Independent School District No. 549 (Perham-Dent Public Schools), Minnesota, be approved? BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 549 (Perham-Dent Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,135 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law. Shall the new referendum authorization proposed by the board of Independent School District No. 549 (Perham-Dent Public Schools), Minnesota, be approved? BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 549 (Perham-Dent Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,135 per pupil. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law. Shall the new referendum authorization proposed by the board of Independent School District No. 549 (Perham-Dent Public Schools), Minnesota, be approved? BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      140,
+      141
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      140,
+      141
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-550-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 550 (Underwood Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,591 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law. Shall the new referendum authorization proposed by the board of Independent School District No. 550 (Underwood Public Schools), Minnesota, be approved? BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 550 (Underwood Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,591 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law. Shall the new referendum authorization proposed by the board of Independent School District No. 550 (Underwood Public Schools), Minnesota, be approved? BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 550 (Underwood Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $1,591 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law. Shall the new referendum authorization proposed by the board of Independent School District No. 550 (Underwood Public Schools), Minnesota, be approved? BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      142
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      142
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-595-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 595 (East Grand Forks) has proposed to increase its general education revenue by $300 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 595 (East Grand Forks) has proposed to increase its general education revenue by $300 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 595 (East Grand Forks) has proposed to increase its general education revenue by $300 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      149
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      149
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-622-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 622 (North St. Paul-Maplewood-Oakdale) has proposed to increase its general education revenue by $800 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law. Shall the increase in the revenue proposed by the school board of Independent School District No. 622 be approved?"
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 622 (North St. Paul-Maplewood-Oakdale) has proposed to increase its general education revenue by $800 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law. Shall the increase in the revenue proposed by the school board of Independent School District No. 622 be approved?"
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 622 (North St. Paul-Maplewood-Oakdale) has proposed to increase its general education revenue by $800 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law. Shall the increase in the revenue proposed by the school board of Independent School District No. 622 be approved?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      154,
+      155
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      154,
+      155
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-709-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The School Board of lndependent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by the following amounts for taxes payable in the years specified:     $438.00 per pupil for taxes payable in 2027; and     $933.00 per pupil, which will replace the $438.00 per pupil for taxes payable in 2028 through 2036, and that amount would increase annually by the rate of inflation commencing with taxes payable in 2029.    The proposed new referendum revenue authorizations would be applicable for a total of ten years, unless otherwise revoked or reduced as provided by law. The additional revenue will be used to fund school operations.    Shall the increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year be approved?    BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The School Board of lndependent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by the following amounts for taxes payable in the years specified:     $438.00 per pupil for taxes payable in 2027; and     $933.00 per pupil, which will replace the $438.00 per pupil for taxes payable in 2028 through 2036, and that amount would increase annually by the rate of inflation commencing with taxes payable in 2029.    The proposed new referendum revenue authorizations would be applicable for a total of ten years, unless otherwise revoked or reduced as provided by law. The additional revenue will be used to fund school operations.    Shall the increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year be approved?    BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The School Board of lndependent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by the following amounts for taxes payable in the years specified:     $438.00 per pupil for taxes payable in 2027; and     $933.00 per pupil, which will replace the $438.00 per pupil for taxes payable in 2028 through 2036, and that amount would increase annually by the rate of inflation commencing with taxes payable in 2029.    The proposed new referendum revenue authorizations would be applicable for a total of ten years, unless otherwise revoked or reduced as provided by law. The additional revenue will be used to fund school operations.    Shall the increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year be approved?    BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      157
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      157
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-709-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The School Board of Independent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by an additional $382.00 per pupil, contingent upon Ballot Question No. 1 being approved. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027, would be applicable for ten (10) years and would be subject to an annual increase at the rate of inflation, unless otherwise revoked or reduced by law. The additional revenue will be used to fund school operations.    If Ballot Question No. 1 is approved, shall the additional new increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year also be approved?     BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE.",
+        "The School Board of lndependent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by the following amounts for taxes payable in the years specified:     $438.00 per pupil for taxes payable in 2027; and     $933.00 per pupil, which will replace the $438.00 per pupil for taxes payable in 2028 through 2036, and that amount would increase annually by the rate of inflation commencing with taxes payable in 2029.    The proposed new referendum revenue authorizations would be applicable for a total of ten years, unless otherwise revoked or reduced as provided by law. The additional revenue will be used to fund school operations.    Shall the increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year be approved?    BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The School Board of Independent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by an additional $382.00 per pupil, contingent upon Ballot Question No. 1 being approved. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027, would be applicable for ten (10) years and would be subject to an annual increase at the rate of inflation, unless otherwise revoked or reduced by law. The additional revenue will be used to fund school operations.    If Ballot Question No. 1 is approved, shall the additional new increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year also be approved?     BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE.",
+        "The School Board of lndependent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by the following amounts for taxes payable in the years specified:     $438.00 per pupil for taxes payable in 2027; and     $933.00 per pupil, which will replace the $438.00 per pupil for taxes payable in 2028 through 2036, and that amount would increase annually by the rate of inflation commencing with taxes payable in 2029.    The proposed new referendum revenue authorizations would be applicable for a total of ten years, unless otherwise revoked or reduced as provided by law. The additional revenue will be used to fund school operations.    Shall the increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year be approved?    BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The School Board of Independent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by an additional $382.00 per pupil, contingent upon Ballot Question No. 1 being approved. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027, would be applicable for ten (10) years and would be subject to an annual increase at the rate of inflation, unless otherwise revoked or reduced by law. The additional revenue will be used to fund school operations.    If Ballot Question No. 1 is approved, shall the additional new increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year also be approved?     BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE.",
+        "The School Board of lndependent School District No. 709 (Duluth Public Schools), Minnesota has proposed to increase its general education revenue by the following amounts for taxes payable in the years specified:     $438.00 per pupil for taxes payable in 2027; and     $933.00 per pupil, which will replace the $438.00 per pupil for taxes payable in 2028 through 2036, and that amount would increase annually by the rate of inflation commencing with taxes payable in 2029.    The proposed new referendum revenue authorizations would be applicable for a total of ten years, unless otherwise revoked or reduced as provided by law. The additional revenue will be used to fund school operations.    Shall the increase in general education revenue proposed by the school board of Independent School District No. 709 (Duluth Public Schools) for each year be approved?    BY VOTING \"YES\" ON THE BALLOT QUESTION, YOU ARE VOTING YES FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      157,
+      158
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      158
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-745-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 745 (Albany), Minnesota has proposedto increase the School District's general education revenue by $1,147 per pupil.  The proposed referendum revenue authorization would be applicable for ten (10) years, beginning with taxes payable in 2027, and would increase each year by the rate of inflation.      Shall the increase in the revenue proposed by the board of Independent School District No. 745 (Albany), Minnesota be approved?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE  PASSAGE OF THIS REFERENDUM WILL RESULT IN AN INCREASE IN YOUR PROPERTY TAXES"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 745 (Albany), Minnesota has proposedto increase the School District's general education revenue by $1,147 per pupil.  The proposed referendum revenue authorization would be applicable for ten (10) years, beginning with taxes payable in 2027, and would increase each year by the rate of inflation.      Shall the increase in the revenue proposed by the board of Independent School District No. 745 (Albany), Minnesota be approved?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE  PASSAGE OF THIS REFERENDUM WILL RESULT IN AN INCREASE IN YOUR PROPERTY TAXES"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 745 (Albany), Minnesota has proposedto increase the School District's general education revenue by $1,147 per pupil.  The proposed referendum revenue authorization would be applicable for ten (10) years, beginning with taxes payable in 2027, and would increase each year by the rate of inflation.      Shall the increase in the revenue proposed by the board of Independent School District No. 745 (Albany), Minnesota be approved?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE  PASSAGE OF THIS REFERENDUM WILL RESULT IN AN INCREASE IN YOUR PROPERTY TAXES"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      171
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      171
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-820-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 820 (Sebeka Public School) has proposed to increase its general education revenue by $842 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.  Shall the increase in the revenue proposed by the school board of Independent School District No. 820 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 820 (Sebeka Public School) has proposed to increase its general education revenue by $842 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.  Shall the increase in the revenue proposed by the school board of Independent School District No. 820 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 820 (Sebeka Public School) has proposed to increase its general education revenue by $842 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027 unless otherwise revoked or reduced as provided by law.  Shall the increase in the revenue proposed by the school board of Independent School District No. 820 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      176,
+      177,
+      178,
+      179
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      176,
+      177,
+      178,
+      179
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-858-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 858 (St. Charles Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $650 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 858 (St. Charles Public Schools), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 858 (St. Charles Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $650 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 858 (St. Charles Public Schools), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 858 (St. Charles Public Schools), Minnesota has proposed to increase the School District's referendum revenue by $650 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.  Shall the new referendum authorization proposed by the board of Independent School District No. 858 (St. Charles Public Schools), Minnesota, be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      188,
+      189,
+      190
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      188,
+      189,
+      190
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2071-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 2071 (Lake Crystal Wellcome Memorial) has proposed to increase its general education revenue by $391 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 2071 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 2071 (Lake Crystal Wellcome Memorial) has proposed to increase its general education revenue by $391 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 2071 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 2071 (Lake Crystal Wellcome Memorial) has proposed to increase its general education revenue by $391 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 2071 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      194
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      194
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2142-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The board of Independent School District No. 2142 (St. Louis County), Minnesota, has proposed to increase the School District's general education revenue by $3,160 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 2142 (St. Louis County), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "The board of Independent School District No. 2142 (St. Louis County), Minnesota, has proposed to increase the School District's general education revenue by $3,160 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 2142 (St. Louis County), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "The board of Independent School District No. 2142 (St. Louis County), Minnesota, has proposed to increase the School District's general education revenue by $3,160 per pupil, subject to an annual increase at the rate of inflation. The proposed new referendum revenue authorization would be first levied in 2026 for taxes payable in 2027 and applicable for ten (10) years unless otherwise revoked or reduced as provided by law.    Shall the new referendum authorization proposed by the board of Independent School District No. 2142 (St. Louis County), Minnesota, be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      198,
+      199
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      198,
+      199
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2164-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 2164 (Dilworth-Glyndon-Felton) has proposed to increase its general education revenue by $500 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.  Shall the increase in the revenue proposed by the school board of Independent School District No. 2164 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 2164 (Dilworth-Glyndon-Felton) has proposed to increase its general education revenue by $500 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.  Shall the increase in the revenue proposed by the school board of Independent School District No. 2164 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 2164 (Dilworth-Glyndon-Felton) has proposed to increase its general education revenue by $500 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, and increase each year by the rate of inflation beginning with taxes payable in 2028, unless otherwise revoked or reduced as provided by law.  Shall the increase in the revenue proposed by the school board of Independent School District No. 2164 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      202
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      202
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2310-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 2310 (Sibley East Public Schools) has proposed to increase its general education revenue by $850 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 2310 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 2310 (Sibley East Public Schools) has proposed to increase its general education revenue by $850 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 2310 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 2310 (Sibley East Public Schools) has proposed to increase its general education revenue by $850 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.     Shall the increase in the revenue proposed by the school board of Independent School District No. 2310 be approved?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      203,
+      204
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      203,
+      204
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2889-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public School) has proposed to revoke the school district's existing referendum revenue authorization of $194.58 per pupil and to replace that authorization with a new authorization of $1,683.10 per pupil.  The proposed referendum revenue authorization would be applicable for ten years commencing with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the school district's existing referendum revenue authorization be revoked, and the increase in the revenue proposed by the school board of Independent School District No. 2889 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public School) has proposed to revoke the school district's existing referendum revenue authorization of $194.58 per pupil and to replace that authorization with a new authorization of $1,683.10 per pupil.  The proposed referendum revenue authorization would be applicable for ten years commencing with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the school district's existing referendum revenue authorization be revoked, and the increase in the revenue proposed by the school board of Independent School District No. 2889 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public School) has proposed to revoke the school district's existing referendum revenue authorization of $194.58 per pupil and to replace that authorization with a new authorization of $1,683.10 per pupil.  The proposed referendum revenue authorization would be applicable for ten years commencing with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the school district's existing referendum revenue authorization be revoked, and the increase in the revenue proposed by the school board of Independent School District No. 2889 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      225,
+      226,
+      227
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      225,
+      226,
+      227
+    ]
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2889-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public Schools) has also proposed to increase its general education revenue by $600 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    If School District Question 1 is approved, shall the increase in the revenue proposed by the school board of Independent School District No. 2889 also be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.",
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public School) has proposed to revoke the school district's existing referendum revenue authorization of $194.58 per pupil and to replace that authorization with a new authorization of $1,683.10 per pupil.  The proposed referendum revenue authorization would be applicable for ten years commencing with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the school district's existing referendum revenue authorization be revoked, and the increase in the revenue proposed by the school board of Independent School District No. 2889 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public Schools) has also proposed to increase its general education revenue by $600 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    If School District Question 1 is approved, shall the increase in the revenue proposed by the school board of Independent School District No. 2889 also be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.",
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public School) has proposed to revoke the school district's existing referendum revenue authorization of $194.58 per pupil and to replace that authorization with a new authorization of $1,683.10 per pupil.  The proposed referendum revenue authorization would be applicable for ten years commencing with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the school district's existing referendum revenue authorization be revoked, and the increase in the revenue proposed by the school board of Independent School District No. 2889 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public Schools) has also proposed to increase its general education revenue by $600 per pupil. The proposed referendum revenue authorization would be applicable for ten years beginning with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    If School District Question 1 is approved, shall the increase in the revenue proposed by the school board of Independent School District No. 2889 also be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.",
+        "The school board of Independent School District No. 2889 (Lake Park Audubon Public School) has proposed to revoke the school district's existing referendum revenue authorization of $194.58 per pupil and to replace that authorization with a new authorization of $1,683.10 per pupil.  The proposed referendum revenue authorization would be applicable for ten years commencing with taxes payable in 2027, unless otherwise revoked or reduced as provided by law.    Shall the school district's existing referendum revenue authorization be revoked, and the increase in the revenue proposed by the school board of Independent School District No. 2889 be approved?  BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      225,
+      226,
+      227,
+      228,
+      229,
+      230
+    ],
+    "sourceColumns": "A:H; questionG,typeH,schoolCodeD",
+    "inventoryVersion": "Lastupdated9/23/2026 as printed inA1",
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "conditionsChecked": [
+      "Dollar amount per pupil is a funding authorization, not a homeowner tax estimate.",
+      "Ten-year duration and first tax-payable year preserved.",
+      "Inflation start year preserved when stated.",
+      "Cross-question dependencies preserved; related Question1 included in same packet.",
+      "Tax increase described only where official question states it."
+    ],
+    "primaryQuestionSourceRows": [
+      228,
+      229,
+      230
+    ]
+  }
+]

@@ -1,0 +1,1091 @@
+[
+  {
+    "contestId": "mn-cx-2026-county-washington-question-1",
+    "officialFipsCode": "no data",
+    "sourceCountyNames": [
+      "Washington"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:washington",
+      "county",
+      "27163",
+      "Washington County"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-anoka-question-1",
+    "officialFipsCode": 1720,
+    "sourceCountyNames": [
+      "Anoka"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:anoka",
+      "place",
+      "2701720",
+      "Anoka city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-bellingham-question-1",
+    "officialFipsCode": 4960,
+    "sourceCountyNames": [
+      "Lac Qui Parle"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:bellingham",
+      "place",
+      "2704960",
+      "Bellingham city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-bowlus-question-1",
+    "officialFipsCode": 7066,
+    "sourceCountyNames": [
+      "Morrison"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:bowlus",
+      "place",
+      "2707066",
+      "Bowlus city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-bricelyn-question-1",
+    "officialFipsCode": 7678,
+    "sourceCountyNames": [
+      "Faribault"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:bricelyn",
+      "place",
+      "2707678",
+      "Bricelyn city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-danube-question-1",
+    "officialFipsCode": 14716,
+    "sourceCountyNames": [
+      "Renville"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:danube",
+      "place",
+      "2714716",
+      "Danube city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-delhi-question-1",
+    "officialFipsCode": 15544,
+    "sourceCountyNames": [
+      "Redwood"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:delhi",
+      "place",
+      "2715544",
+      "Delhi city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-elgin-question-1",
+    "officialFipsCode": 18530,
+    "sourceCountyNames": [
+      "Wabasha"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:elgin",
+      "place",
+      "2718530",
+      "Elgin city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-elrosa-question-1",
+    "officialFipsCode": 19088,
+    "sourceCountyNames": [
+      "Stearns"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:elrosa",
+      "place",
+      "2719088",
+      "Elrosa city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-fairmont-question-1",
+    "officialFipsCode": 20330,
+    "sourceCountyNames": [
+      "Martin"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:fairmont",
+      "place",
+      "2720330",
+      "Fairmont city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-fairmont-question-2",
+    "officialFipsCode": 20330,
+    "sourceCountyNames": [
+      "Martin"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:fairmont",
+      "place",
+      "2720330",
+      "Fairmont city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-fairmont-question-3",
+    "officialFipsCode": 20330,
+    "sourceCountyNames": [
+      "Martin"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:fairmont",
+      "place",
+      "2720330",
+      "Fairmont city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-geneva-question-1",
+    "officialFipsCode": 23354,
+    "sourceCountyNames": [
+      "Freeborn"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:geneva",
+      "place",
+      "2723354",
+      "Geneva city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-hills-question-1",
+    "officialFipsCode": 29204,
+    "sourceCountyNames": [
+      "Rock"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:hills",
+      "place",
+      "2729204",
+      "Hills city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-jasper-question-1",
+    "officialFipsCode": 31760,
+    "sourceCountyNames": [
+      "Pipestone",
+      "Pipestone"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:jasper",
+      "place",
+      "2731760",
+      "Jasper city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-luverne-question-1",
+    "officialFipsCode": 38564,
+    "sourceCountyNames": [
+      "Rock"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:luverne",
+      "place",
+      "2738564",
+      "Luverne city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-marble-question-1",
+    "officialFipsCode": 40418,
+    "sourceCountyNames": [
+      "Itasca"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:marble",
+      "place",
+      "2740418",
+      "Marble city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-mounds_view-question-1",
+    "officialFipsCode": 44530,
+    "sourceCountyNames": [
+      "Ramsey"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:mounds_view",
+      "place",
+      "2744530",
+      "Mounds View city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-mounds_view-question-2",
+    "officialFipsCode": 44530,
+    "sourceCountyNames": [
+      "Ramsey"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:mounds_view",
+      "place",
+      "2744530",
+      "Mounds View city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-ogema-question-1",
+    "officialFipsCode": 48130,
+    "sourceCountyNames": [
+      "Becker"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:ogema",
+      "place",
+      "2748130",
+      "Ogema city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-owatonna-question-1",
+    "officialFipsCode": 49300,
+    "sourceCountyNames": [
+      "Steele"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:owatonna",
+      "place",
+      "2749300",
+      "Owatonna city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-preston-question-1",
+    "officialFipsCode": 52450,
+    "sourceCountyNames": [
+      "Fillmore"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:preston",
+      "place",
+      "2752450",
+      "Preston city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-st_paul-question-1",
+    "officialFipsCode": 58000,
+    "sourceCountyNames": [
+      "Ramsey"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:st_paul",
+      "place",
+      "2758000",
+      "St. Paul city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-twin_lakes_2765920-question-1",
+    "officialFipsCode": 65920,
+    "sourceCountyNames": [
+      "Freeborn"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:twin_lakes_2765920",
+      "place",
+      "2765920",
+      "Twin Lakes city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-place-waite_park-question-1",
+    "officialFipsCode": 67612,
+    "sourceCountyNames": [
+      "Stearns"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:waite_park",
+      "place",
+      "2767612",
+      "Waite Park city"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-marshall-place-alma_township-question-1",
+    "officialFipsCode": 1072,
+    "sourceCountyNames": [
+      "Marshall"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:marshall/place:alma_township",
+      "cousub",
+      "2708901072",
+      "Alma township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-amo_township-question-1",
+    "officialFipsCode": 1441,
+    "sourceCountyNames": [
+      "Cottonwood"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cottonwood/place:amo_township",
+      "cousub",
+      "2703301441",
+      "Amo township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-amo_township-question-2",
+    "officialFipsCode": 1441,
+    "sourceCountyNames": [
+      "Cottonwood"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cottonwood/place:amo_township",
+      "cousub",
+      "2703301441",
+      "Amo township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-nicollet-place-belgrade_township-question-1",
+    "officialFipsCode": 4744,
+    "sourceCountyNames": [
+      "Nicollet"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:nicollet/place:belgrade_township",
+      "cousub",
+      "2710304744",
+      "Belgrade township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-beulah_township-question-1",
+    "officialFipsCode": 5572,
+    "sourceCountyNames": [
+      "Cass"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cass/place:beulah_township",
+      "cousub",
+      "2702105572",
+      "Beulah township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-todd-place-bruce_township-question-1",
+    "officialFipsCode": 8272,
+    "sourceCountyNames": [
+      "Todd"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:todd/place:bruce_township",
+      "cousub",
+      "2715308272",
+      "Bruce township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-kanabec-place-brunswick_township-question-1",
+    "officialFipsCode": 8344,
+    "sourceCountyNames": [
+      "Kanabec"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:kanabec/place:brunswick_township",
+      "cousub",
+      "2706508344",
+      "Brunswick township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-kanabec-place-brunswick_township-question-2",
+    "officialFipsCode": 8344,
+    "sourceCountyNames": [
+      "Kanabec"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:kanabec/place:brunswick_township",
+      "cousub",
+      "2706508344",
+      "Brunswick township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-todd-place-burleene_township-question-1",
+    "officialFipsCode": 8668,
+    "sourceCountyNames": [
+      "Todd"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:todd/place:burleene_township",
+      "cousub",
+      "2715308668",
+      "Burleene township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-todd-place-burleene_township-question-2",
+    "officialFipsCode": 8668,
+    "sourceCountyNames": [
+      "Todd"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:todd/place:burleene_township",
+      "cousub",
+      "2715308668",
+      "Burleene township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-douglas-place-carlos_township-question-1",
+    "officialFipsCode": 9982,
+    "sourceCountyNames": [
+      "Douglas"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:douglas/place:carlos_township",
+      "cousub",
+      "2704109982",
+      "Carlos township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-hubbard-place-clay_township-question-1",
+    "officialFipsCode": 11682,
+    "sourceCountyNames": [
+      "Hubbard"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:hubbard/place:clay_township",
+      "cousub",
+      "2705711682",
+      "Clay township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-hubbard-place-clay_township-question-2",
+    "officialFipsCode": 11682,
+    "sourceCountyNames": [
+      "Hubbard"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:hubbard/place:clay_township",
+      "cousub",
+      "2705711682",
+      "Clay township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-traverse-place-clifton_township-question-1",
+    "officialFipsCode": 11944,
+    "sourceCountyNames": [
+      "Traverse"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:traverse/place:clifton_township",
+      "cousub",
+      "2715511944",
+      "Clifton township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-morrison-place-cushing_township-question-1",
+    "officialFipsCode": 14356,
+    "sourceCountyNames": [
+      "Morrison"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:morrison/place:cushing_township",
+      "cousub",
+      "2709714356",
+      "Cushing township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-dale_township-question-1",
+    "officialFipsCode": 14608,
+    "sourceCountyNames": [
+      "Cottonwood"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cottonwood/place:dale_township",
+      "cousub",
+      "2703314608",
+      "Dale township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-meeker-place-danielson_township-question-1",
+    "officialFipsCode": 14698,
+    "sourceCountyNames": [
+      "Meeker"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:meeker/place:danielson_township",
+      "cousub",
+      "2709314698",
+      "Danielson township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-itasca-place-deer_river_township-question-1",
+    "officialFipsCode": 15328,
+    "sourceCountyNames": [
+      "Itasca"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:itasca/place:deer_river_township",
+      "cousub",
+      "2706115328",
+      "Deer River township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-st_louis-place-eagles_nest_township-question-1",
+    "officialFipsCode": 17440,
+    "sourceCountyNames": [
+      "St. Louis"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:st_louis/place:eagles_nest_township",
+      "cousub",
+      "2713717440",
+      "Eagles Nest township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-marshall-place-fork_township-question-1",
+    "officialFipsCode": 21878,
+    "sourceCountyNames": [
+      "Marshall"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:marshall/place:fork_township",
+      "cousub",
+      "2708921878",
+      "Fork township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-lac_qui_parle-place-hantho_township-question-1",
+    "officialFipsCode": 27044,
+    "sourceCountyNames": [
+      "Lac Qui Parle"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:lac_qui_parle/place:hantho_township",
+      "cousub",
+      "2707327044",
+      "Hantho township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-aitkin-place-hill_lake_township-question-1",
+    "officialFipsCode": 29114,
+    "sourceCountyNames": [
+      "Aitkin"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:aitkin/place:hill_lake_township",
+      "cousub",
+      "2700129114",
+      "Hill Lake township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-swift-place-kerkhoven_township-question-1",
+    "officialFipsCode": 32894,
+    "sourceCountyNames": [
+      "Swift"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:swift/place:kerkhoven_township",
+      "cousub",
+      "2715132894",
+      "Kerkhoven township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-chippewa-place-kragero_township-question-1",
+    "officialFipsCode": 33668,
+    "sourceCountyNames": [
+      "Chippewa"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:chippewa/place:kragero_township",
+      "cousub",
+      "2702333668",
+      "Kragero township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-chippewa-place-kragero_township-question-2",
+    "officialFipsCode": 33668,
+    "sourceCountyNames": [
+      "Chippewa"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:chippewa/place:kragero_township",
+      "cousub",
+      "2702333668",
+      "Kragero township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-may_township-question-1",
+    "officialFipsCode": 41102,
+    "sourceCountyNames": [
+      "Cass"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cass/place:may_township",
+      "cousub",
+      "2702141102",
+      "May township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-aitkin-place-millward_township-question-1",
+    "officialFipsCode": 42300,
+    "sourceCountyNames": [
+      "Aitkin"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:aitkin/place:millward_township",
+      "cousub",
+      "2700142300",
+      "Millward township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-aitkin-place-millward_township-question-2",
+    "officialFipsCode": 42300,
+    "sourceCountyNames": [
+      "Aitkin"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:aitkin/place:millward_township",
+      "cousub",
+      "2700142300",
+      "Millward township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-crow_wing-place-mission_township-question-1",
+    "officialFipsCode": 43468,
+    "sourceCountyNames": [
+      "Crow Wing"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:crow_wing/place:mission_township",
+      "cousub",
+      "2703543468",
+      "Mission township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-stevens-place-moore_township-question-1",
+    "officialFipsCode": 43846,
+    "sourceCountyNames": [
+      "Stevens"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:stevens/place:moore_township",
+      "cousub",
+      "2714943846",
+      "Moore township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-remer_township-question-1",
+    "officialFipsCode": 53800,
+    "sourceCountyNames": [
+      "Cass"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cass/place:remer_township",
+      "cousub",
+      "2702153800",
+      "Remer township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-slater_township-question-1",
+    "officialFipsCode": 60790,
+    "sourceCountyNames": [
+      "Cass"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cass/place:slater_township",
+      "cousub",
+      "2702160790",
+      "Slater township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-slater_township-question-2",
+    "officialFipsCode": 60790,
+    "sourceCountyNames": [
+      "Cass"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cass/place:slater_township",
+      "cousub",
+      "2702160790",
+      "Slater township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-storden_township-question-1",
+    "officialFipsCode": 63040,
+    "sourceCountyNames": [
+      "Cottonwood"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cottonwood/place:storden_township",
+      "cousub",
+      "2703363040",
+      "Storden township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-storden_township-question-2",
+    "officialFipsCode": 63040,
+    "sourceCountyNames": [
+      "Cottonwood"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cottonwood/place:storden_township",
+      "cousub",
+      "2703363040",
+      "Storden township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-kittson-place-svea_township-question-1",
+    "officialFipsCode": 63652,
+    "sourceCountyNames": [
+      "Kittson"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:kittson/place:svea_township",
+      "cousub",
+      "2706963652",
+      "Svea township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-crow_wing-place-timothy_township-question-1",
+    "officialFipsCode": 64930,
+    "sourceCountyNames": [
+      "Crow Wing"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:crow_wing/place:timothy_township",
+      "cousub",
+      "2703564930",
+      "Timothy township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-crow_wing-place-timothy_township-question-2",
+    "officialFipsCode": 64930,
+    "sourceCountyNames": [
+      "Crow Wing"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:crow_wing/place:timothy_township",
+      "cousub",
+      "2703564930",
+      "Timothy township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-trelipe_township-question-1",
+    "officialFipsCode": 65434,
+    "sourceCountyNames": [
+      "Cass"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:cass/place:trelipe_township",
+      "cousub",
+      "2702165434",
+      "Trelipe township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-le_sueur-place-washington_township-question-1",
+    "officialFipsCode": 68350,
+    "sourceCountyNames": [
+      "Le Sueur"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:le_sueur/place:washington_township",
+      "cousub",
+      "2707968350",
+      "Washington township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-pine-place-windemere_township-question-1",
+    "officialFipsCode": 70780,
+    "sourceCountyNames": [
+      "Pine"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:pine/place:windemere_township",
+      "cousub",
+      "2711570780",
+      "Windemere township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-pine-place-windemere_township-question-2",
+    "officialFipsCode": 70780,
+    "sourceCountyNames": [
+      "Pine"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:pine/place:windemere_township",
+      "cousub",
+      "2711570780",
+      "Windemere township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  },
+  {
+    "contestId": "mn-cx-2026-county-itasca-place-wirt_township-question-1",
+    "officialFipsCode": 71194,
+    "sourceCountyNames": [
+      "Itasca"
+    ],
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/county:itasca/place:wirt_township",
+      "cousub",
+      "2706171194",
+      "Wirt township"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "County label for CO; statewide Census place FIPS for CI; county plus Census county-subdivision FIPS for TO. No school-code or name inference."
+  }
+]

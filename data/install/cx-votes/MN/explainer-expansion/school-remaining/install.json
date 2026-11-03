@@ -1,0 +1,339 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MN",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mn-cx-2026-isd-12-question-2",
+      "title": "Centennial Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:centennial_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-197-question-1",
+      "title": "West St. Paul-Mendota Heights-Eagan — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:west_st_paul_mendota_heights_eagan",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-199-question-1",
+      "title": "Inver Grove Heights Schools — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:inver_grove_heights_schools",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-203-question-1",
+      "title": "Hayfield Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:hayfield_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-206-question-1",
+      "title": "Alexandria Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:alexandria_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-242-question-1",
+      "title": "Alden-Conger Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:alden_conger_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-242-question-2",
+      "title": "Alden-Conger Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:alden_conger_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-256-question-1",
+      "title": "Red Wing Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:red_wing_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-264-question-1",
+      "title": "Herman-Norcross School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:herman_norcross_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-281-question-1",
+      "title": "Robbinsdale Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:robbinsdale_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-281-question-2",
+      "title": "Robbinsdale Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:robbinsdale_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-281-question-3",
+      "title": "Robbinsdale Public School District — Question 3",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:robbinsdale_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-299-question-1",
+      "title": "Caledonia Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:caledonia_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-299-question-2",
+      "title": "Caledonia Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:caledonia_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-308-question-1",
+      "title": "Nevis Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:nevis_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-308-question-2",
+      "title": "Nevis Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:nevis_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-308-question-3",
+      "title": "Nevis Public School District — Question 3",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:nevis_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-378-question-1",
+      "title": "Dawson-Boyd Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:dawson_boyd_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-463-question-1",
+      "title": "Eden Valley-Watkins School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:eden_valley_watkins_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-465-question-2",
+      "title": "Litchfield Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:litchfield_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-492-question-1",
+      "title": "Austin Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:austin_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-545-question-1",
+      "title": "Henning Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:henning_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-553-question-1",
+      "title": "New York Mills Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:new_york_mills_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-553-question-2",
+      "title": "New York Mills Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:new_york_mills_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-553-question-3",
+      "title": "New York Mills Public School District — Question 3",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:new_york_mills_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-595-question-2",
+      "title": "East Grand Forks Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:east_grand_forks_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-595-question-3",
+      "title": "East Grand Forks Public School District — Question 3",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:east_grand_forks_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-601-question-1",
+      "title": "Fosston Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:fosston_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-696-question-1",
+      "title": "Ely Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:ely_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-719-question-1",
+      "title": "Prior Lake-Savage Area Schools — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:prior_lake_savage_area_schools",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-719-question-2",
+      "title": "Prior Lake-Savage Area Schools — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:prior_lake_savage_area_schools",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-728-question-1",
+      "title": "Elk River School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:elk_river_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-739-question-1",
+      "title": "Kimball Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:kimball_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-743-question-1",
+      "title": "Sauk Centre Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:sauk_centre_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-750-question-1",
+      "title": "Rocori Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:rocori_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-777-question-1",
+      "title": "Benson Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:benson_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-852-question-1",
+      "title": "Campbell-Tintah Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:campbell_tintah_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-852-question-2",
+      "title": "Campbell-Tintah Public School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:campbell_tintah_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-861-question-1",
+      "title": "Winona Area Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:winona_area_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-881-question-1",
+      "title": "Maple Lake Public School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:maple_lake_public_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2134-question-1",
+      "title": "United South Central School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:united_south_central_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2142-question-2",
+      "title": "St. Louis County School District — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:st_louis_county_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2342-question-1",
+      "title": "West Central Area — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:west_central_area",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2365-question-1",
+      "title": "G.F.W. — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:g_f_w",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2365-question-2",
+      "title": "G.F.W. — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:g_f_w",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2689-question-1",
+      "title": "Pipestone Area School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:pipestone_area_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2859-question-1",
+      "title": "Glencoe-Silver Lake School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:glencoe_silver_lake_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2895-question-1",
+      "title": "Jackson County Central School District — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:jackson_county_central_school_district",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2903-question-1",
+      "title": "Ortonville Public Schools — Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:ortonville_public_schools",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-isd-2903-question-2",
+      "title": "Ortonville Public Schools — Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:ortonville_public_schools",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 50,
+    "newPlainLanguageExplanations": 50,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "MN",
+    "newMeasures": 50,
+    "newExplanations": 50,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS",
+    "actualReaderReplay": "PASS",
+    "cumulativeOfficialMasterReplay": "PASS: all154officialmasterquestions (153newlocal +1heldstatewide)"
+  },
+  "nextOwner": "River: install as data, verify the precise district and explanation with the official source link live."
+}

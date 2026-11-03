@@ -1,0 +1,15 @@
+{
+  "state": "MN",
+  "newMeasures": 1,
+  "newExplanations": 1,
+  "sourceByteHashesAndFullDeclaredStatutoryLines": "PASS",
+  "exactQuestionAndStatuteQuotes": "PASS",
+  "officialSourceAuthority": "PASS",
+  "measureRecordIssue": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "readerAttachmentAndExactCitySelection": "PASS",
+  "statewideWidening": "NONE",
+  "nativeNetworkLimitation": "Runtime-wide proxy unavailable; statutes are honestly captured full SOURCE_TEXT, not native PDF bytes.",
+  "verificationScope": "Fresh measure-only published snapshot. Parent should replay current complete state before data installation."
+}

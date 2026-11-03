@@ -1,0 +1,1852 @@
+[
+  {
+    "contestId": "mn-cx-2026-county-washington-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "To continue to improve the water quality of rivers, lakes, and streams, including the St. Croix and Mississippi Rivers, protect drinking water sources, preserve wetlands and woodlands, protect land along water bodies from development and preserve natural areas, purchase parklands, and protect wildlife habitat, shall Washington County be authorized to issue general obligation bonds in an aggregate amount not to exceed $40,000,000 to acquire and improve land under the Washington County Land and Water Legacy Program with the use of funds limited to these purposes only, full public disclosure of all project spending, and subject to an annual public audit?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.    This proposal would cost approximately $24.60 per year for twenty years on a residential homestead with the median estimated market value of $420,900."
+      ],
+      "yesMeans": [
+        "To continue to improve the water quality of rivers, lakes, and streams, including the St. Croix and Mississippi Rivers, protect drinking water sources, preserve wetlands and woodlands, protect land along water bodies from development and preserve natural areas, purchase parklands, and protect wildlife habitat, shall Washington County be authorized to issue general obligation bonds in an aggregate amount not to exceed $40,000,000 to acquire and improve land under the Washington County Land and Water Legacy Program with the use of funds limited to these purposes only, full public disclosure of all project spending, and subject to an annual public audit?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.    This proposal would cost approximately $24.60 per year for twenty years on a residential homestead with the median estimated market value of $420,900."
+      ],
+      "noMeans": [
+        "To continue to improve the water quality of rivers, lakes, and streams, including the St. Croix and Mississippi Rivers, protect drinking water sources, preserve wetlands and woodlands, protect land along water bodies from development and preserve natural areas, purchase parklands, and protect wildlife habitat, shall Washington County be authorized to issue general obligation bonds in an aggregate amount not to exceed $40,000,000 to acquire and improve land under the Washington County Land and Water Legacy Program with the use of funds limited to these purposes only, full public disclosure of all project spending, and subject to an annual public audit?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.    This proposal would cost approximately $24.60 per year for twenty years on a residential homestead with the median estimated market value of $420,900."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      4
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-anoka-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should an Organized Residential Solid Waste, Recycling, Yardwaste  and Organics Collection System be implemented in the City of  Anoka?    A \"Yes\" vote means that you agree to have an Organized Residential Solid Waste, Recycling, Yardwaste and Organics Collection System implemented in the City of Anoka.    A \"No\" vote means that you do not agree to have an Organized Residential Solid Waste, Recycling, Yardwaste and Organics Collection System implemented in the City of Anoka."
+      ],
+      "yesMeans": [
+        "Should an Organized Residential Solid Waste, Recycling, Yardwaste  and Organics Collection System be implemented in the City of  Anoka?    A \"Yes\" vote means that you agree to have an Organized Residential Solid Waste, Recycling, Yardwaste and Organics Collection System implemented in the City of Anoka.    A \"No\" vote means that you do not agree to have an Organized Residential Solid Waste, Recycling, Yardwaste and Organics Collection System implemented in the City of Anoka."
+      ],
+      "noMeans": [
+        "Should an Organized Residential Solid Waste, Recycling, Yardwaste  and Organics Collection System be implemented in the City of  Anoka?    A \"Yes\" vote means that you agree to have an Organized Residential Solid Waste, Recycling, Yardwaste and Organics Collection System implemented in the City of Anoka.    A \"No\" vote means that you do not agree to have an Organized Residential Solid Waste, Recycling, Yardwaste and Organics Collection System implemented in the City of Anoka."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      5
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-bellingham-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "\"To vote for a question, fill in the oval next to the word \"Yes\" on that question. To vote against a question, fill in the oval next to the word \"No\" on that question.\"     Question to Appoint Clerk and Treasurer    Shall Optional Plan A, modifying the Standard Plan of city government by providing for the appointment by the council of the clerk and treasurer, be adopted for the government of the city?"
+      ],
+      "yesMeans": [
+        "\"To vote for a question, fill in the oval next to the word \"Yes\" on that question. To vote against a question, fill in the oval next to the word \"No\" on that question.\"     Question to Appoint Clerk and Treasurer    Shall Optional Plan A, modifying the Standard Plan of city government by providing for the appointment by the council of the clerk and treasurer, be adopted for the government of the city?"
+      ],
+      "noMeans": [
+        "\"To vote for a question, fill in the oval next to the word \"Yes\" on that question. To vote against a question, fill in the oval next to the word \"No\" on that question.\"     Question to Appoint Clerk and Treasurer    Shall Optional Plan A, modifying the Standard Plan of city government by providing for the appointment by the council of the clerk and treasurer, be adopted for the government of the city?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      6
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-bowlus-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Bowlus adopt Optional Plan A, modifying the standard plan of City government to an elected Mayor and four elected City Council members, with the City Clerk and City Treasurer to be appointed by the City Council?"
+      ],
+      "yesMeans": [
+        "Shall the City of Bowlus adopt Optional Plan A, modifying the standard plan of City government to an elected Mayor and four elected City Council members, with the City Clerk and City Treasurer to be appointed by the City Council?"
+      ],
+      "noMeans": [
+        "Shall the City of Bowlus adopt Optional Plan A, modifying the standard plan of City government to an elected Mayor and four elected City Council members, with the City Clerk and City Treasurer to be appointed by the City Council?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      7
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-bricelyn-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Bricelyn allow the sale of alcoholic beverages for on premises consumption, in a restaurant, club, bowling center or hotel, between the hours of 8:00 AM on Sunday to 2:00 AM Monday, in premises that have obtained a Sunday license.  Sales will only be allowed in properly licensed establishments.  Any violation of the Sunday sales shall be subject to punishment to state law."
+      ],
+      "yesMeans": [
+        "Shall the City of Bricelyn allow the sale of alcoholic beverages for on premises consumption, in a restaurant, club, bowling center or hotel, between the hours of 8:00 AM on Sunday to 2:00 AM Monday, in premises that have obtained a Sunday license.  Sales will only be allowed in properly licensed establishments.  Any violation of the Sunday sales shall be subject to punishment to state law."
+      ],
+      "noMeans": [
+        "Shall the City of Bricelyn allow the sale of alcoholic beverages for on premises consumption, in a restaurant, club, bowling center or hotel, between the hours of 8:00 AM on Sunday to 2:00 AM Monday, in premises that have obtained a Sunday license.  Sales will only be allowed in properly licensed establishments.  Any violation of the Sunday sales shall be subject to punishment to state law."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      8
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-danube-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the city council be allowed to issue on-sale licenses to restaurants, clubs, bowling centers and hotels for the sale of intoxicating liquor at retail on Sundays?"
+      ],
+      "yesMeans": [
+        "Shall the city council be allowed to issue on-sale licenses to restaurants, clubs, bowling centers and hotels for the sale of intoxicating liquor at retail on Sundays?"
+      ],
+      "noMeans": [
+        "Shall the city council be allowed to issue on-sale licenses to restaurants, clubs, bowling centers and hotels for the sale of intoxicating liquor at retail on Sundays?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      9
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-delhi-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Optional Plan A, modifying the Standard Plan of city government by  providing for the appointment by the council of the clerk-treasurer, be adopted for the government of the city?"
+      ],
+      "yesMeans": [
+        "Shall Optional Plan A, modifying the Standard Plan of city government by  providing for the appointment by the council of the clerk-treasurer, be adopted for the government of the city?"
+      ],
+      "noMeans": [
+        "Shall Optional Plan A, modifying the Standard Plan of city government by  providing for the appointment by the council of the clerk-treasurer, be adopted for the government of the city?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      10
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-elgin-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Elgin be authorized to issue general obligation bonds in an amount not to exceed $2,500,000 to finance the acquisition and betterment of an emergency services facility in the City?                                 BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "Shall the City of Elgin be authorized to issue general obligation bonds in an amount not to exceed $2,500,000 to finance the acquisition and betterment of an emergency services facility in the City?                                 BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "Shall the City of Elgin be authorized to issue general obligation bonds in an amount not to exceed $2,500,000 to finance the acquisition and betterment of an emergency services facility in the City?                                 BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      11
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-elrosa-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Optional Plan A, modifying the standard plan of city government by providing for the appointment by the council of the clerk and treasurer for the government of the city?"
+      ],
+      "yesMeans": [
+        "Shall Optional Plan A, modifying the standard plan of city government by providing for the appointment by the council of the clerk and treasurer for the government of the city?"
+      ],
+      "noMeans": [
+        "Shall Optional Plan A, modifying the standard plan of city government by providing for the appointment by the council of the clerk and treasurer for the government of the city?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      12
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-fairmont-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Fairmont City Charter be amended to add a new section making elected or appointed members of the Fairmont City Council ineligible to serve on the Charter Commission concurrent with their term on the Fairmont City Council?"
+      ],
+      "yesMeans": [
+        "Shall the Fairmont City Charter be amended to add a new section making elected or appointed members of the Fairmont City Council ineligible to serve on the Charter Commission concurrent with their term on the Fairmont City Council?"
+      ],
+      "noMeans": [
+        "Shall the Fairmont City Charter be amended to add a new section making elected or appointed members of the Fairmont City Council ineligible to serve on the Charter Commission concurrent with their term on the Fairmont City Council?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      13
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-fairmont-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Fairmont City Charter be amended to add a new section providing an advertisement and application procedure for vacancies on the charter commission and providing that the chairperson for the charter commission shall oversee the process for submitting eligible nominees to the chief judge, who will make the appointment(s)?"
+      ],
+      "yesMeans": [
+        "Shall the Fairmont City Charter be amended to add a new section providing an advertisement and application procedure for vacancies on the charter commission and providing that the chairperson for the charter commission shall oversee the process for submitting eligible nominees to the chief judge, who will make the appointment(s)?"
+      ],
+      "noMeans": [
+        "Shall the Fairmont City Charter be amended to add a new section providing an advertisement and application procedure for vacancies on the charter commission and providing that the chairperson for the charter commission shall oversee the process for submitting eligible nominees to the chief judge, who will make the appointment(s)?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      14
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-fairmont-question-3",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Fairmont City Charter, Section 11.02, be amended to require that all invoices and purchases by the Fairmont Public Utilities Commission be approved by the Fairmont City Council and to provide the Fairmont City Council with the ability to delegate the purchasing authority according to rules determined by the Fairmont City Council?"
+      ],
+      "yesMeans": [
+        "Shall Fairmont City Charter, Section 11.02, be amended to require that all invoices and purchases by the Fairmont Public Utilities Commission be approved by the Fairmont City Council and to provide the Fairmont City Council with the ability to delegate the purchasing authority according to rules determined by the Fairmont City Council?"
+      ],
+      "noMeans": [
+        "Shall Fairmont City Charter, Section 11.02, be amended to require that all invoices and purchases by the Fairmont Public Utilities Commission be approved by the Fairmont City Council and to provide the Fairmont City Council with the ability to delegate the purchasing authority according to rules determined by the Fairmont City Council?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      15
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-geneva-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Geneva, Minnesota be authorized to issue licenses for the sale of intoxicating liquor on Sundays?"
+      ],
+      "yesMeans": [
+        "Shall the City of Geneva, Minnesota be authorized to issue licenses for the sale of intoxicating liquor on Sundays?"
+      ],
+      "noMeans": [
+        "Shall the City of Geneva, Minnesota be authorized to issue licenses for the sale of intoxicating liquor on Sundays?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      16
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-hills-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Hills City Council be allowed to issue on-sale and off-sale licenses to eligible establishments for the sale of intoxicating liquor at retail on Sundays?"
+      ],
+      "yesMeans": [
+        "Shall the Hills City Council be allowed to issue on-sale and off-sale licenses to eligible establishments for the sale of intoxicating liquor at retail on Sundays?"
+      ],
+      "noMeans": [
+        "Shall the Hills City Council be allowed to issue on-sale and off-sale licenses to eligible establishments for the sale of intoxicating liquor at retail on Sundays?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      17
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-jasper-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should the Jasper City Council be allowed to issue on-sale licenses to eligible establishments for the sale of intoxicating liquor at retail on Sundays?"
+      ],
+      "yesMeans": [
+        "Should the Jasper City Council be allowed to issue on-sale licenses to eligible establishments for the sale of intoxicating liquor at retail on Sundays?"
+      ],
+      "noMeans": [
+        "Should the Jasper City Council be allowed to issue on-sale licenses to eligible establishments for the sale of intoxicating liquor at retail on Sundays?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      18,
+      19
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-luverne-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Luverne City Charter be amended to establish a new governing structure with a new layer of city government for the City's electric, water, and wastewater utilities by (1) creating a new five-member independent policymaking body to be called the Municipal Services Commission to consist of three elected members who must be City residents, one appointed representative of a large utility customer who need not be a City resident, and either a sitting Council Member or the City Administrator; (2) creating a new employment structure under which the Commission would employ a General Manager to supervise and manage the Commission's operations and employees and existing City staff with responsibilities for the City's utilities would be transferred to the authority of the Commission; and (3) transferring most of the City Council's existing responsibilities for the management, operation, and supervision of the City's utilities, including the authority to set utility rates, to the new Commission?"
+      ],
+      "yesMeans": [
+        "Shall the Luverne City Charter be amended to establish a new governing structure with a new layer of city government for the City's electric, water, and wastewater utilities by (1) creating a new five-member independent policymaking body to be called the Municipal Services Commission to consist of three elected members who must be City residents, one appointed representative of a large utility customer who need not be a City resident, and either a sitting Council Member or the City Administrator; (2) creating a new employment structure under which the Commission would employ a General Manager to supervise and manage the Commission's operations and employees and existing City staff with responsibilities for the City's utilities would be transferred to the authority of the Commission; and (3) transferring most of the City Council's existing responsibilities for the management, operation, and supervision of the City's utilities, including the authority to set utility rates, to the new Commission?"
+      ],
+      "noMeans": [
+        "Shall the Luverne City Charter be amended to establish a new governing structure with a new layer of city government for the City's electric, water, and wastewater utilities by (1) creating a new five-member independent policymaking body to be called the Municipal Services Commission to consist of three elected members who must be City residents, one appointed representative of a large utility customer who need not be a City resident, and either a sitting Council Member or the City Administrator; (2) creating a new employment structure under which the Commission would employ a General Manager to supervise and manage the Commission's operations and employees and existing City staff with responsibilities for the City's utilities would be transferred to the authority of the Commission; and (3) transferring most of the City Council's existing responsibilities for the management, operation, and supervision of the City's utilities, including the authority to set utility rates, to the new Commission?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      21
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-marble-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Optional Plan A, modifying the standard plan of city government by providing for the appointment by the council of the clerk and treasurer be adopted for the government of the city?"
+      ],
+      "yesMeans": [
+        "Shall Optional Plan A, modifying the standard plan of city government by providing for the appointment by the council of the clerk and treasurer be adopted for the government of the city?"
+      ],
+      "noMeans": [
+        "Shall Optional Plan A, modifying the standard plan of city government by providing for the appointment by the council of the clerk and treasurer be adopted for the government of the city?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      22
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-mounds_view-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Mounds View, Minnesota be authorized to issue its general obligation bonds in an amount not to exceed $15,000,000 to provide funds for the acquisition and betterment of city parks, sites and facilities, including renovations, improvements and updates to Silver View Park and Woodcrest Park, including safety and accessibility improvements at those sites?"
+      ],
+      "yesMeans": [
+        "Shall the City of Mounds View, Minnesota be authorized to issue its general obligation bonds in an amount not to exceed $15,000,000 to provide funds for the acquisition and betterment of city parks, sites and facilities, including renovations, improvements and updates to Silver View Park and Woodcrest Park, including safety and accessibility improvements at those sites?"
+      ],
+      "noMeans": [
+        "Shall the City of Mounds View, Minnesota be authorized to issue its general obligation bonds in an amount not to exceed $15,000,000 to provide funds for the acquisition and betterment of city parks, sites and facilities, including renovations, improvements and updates to Silver View Park and Woodcrest Park, including safety and accessibility improvements at those sites?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      23
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-mounds_view-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Mounds View, Minnesota be authorized to issue its general obligation bonds in an amount not to exceed $5,000,000 to provide funds for the acquisition and betterment of the Community Center, including the construction and equipping of additions to provide indoor athletic courts and a walking track?"
+      ],
+      "yesMeans": [
+        "Shall the City of Mounds View, Minnesota be authorized to issue its general obligation bonds in an amount not to exceed $5,000,000 to provide funds for the acquisition and betterment of the Community Center, including the construction and equipping of additions to provide indoor athletic courts and a walking track?"
+      ],
+      "noMeans": [
+        "Shall the City of Mounds View, Minnesota be authorized to issue its general obligation bonds in an amount not to exceed $5,000,000 to provide funds for the acquisition and betterment of the Community Center, including the construction and equipping of additions to provide indoor athletic courts and a walking track?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      24
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-ogema-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "\"Shall Optional Plan A, modifying the current standard plan of city government by providing for the appointment by the city council of clerk-treasurer be adopted for the city government of City of Ogema?\"  A yes vote will approve the change in the form of government; a no will continue with an elected Clerk and elected Treasurer."
+      ],
+      "yesMeans": [
+        "\"Shall Optional Plan A, modifying the current standard plan of city government by providing for the appointment by the city council of clerk-treasurer be adopted for the city government of City of Ogema?\"  A yes vote will approve the change in the form of government; a no will continue with an elected Clerk and elected Treasurer."
+      ],
+      "noMeans": [
+        "\"Shall Optional Plan A, modifying the current standard plan of city government by providing for the appointment by the city council of clerk-treasurer be adopted for the city government of City of Ogema?\"  A yes vote will approve the change in the form of government; a no will continue with an elected Clerk and elected Treasurer."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      25
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-owatonna-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Owatonna be authorized to issue its general obligation bonds in an amount not to exceed $65,000,000 for the purpose of acquiring, constructing and equipping new public safety facilities for the City's police and fire departmens?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "yesMeans": [
+        "Shall the City of Owatonna be authorized to issue its general obligation bonds in an amount not to exceed $65,000,000 for the purpose of acquiring, constructing and equipping new public safety facilities for the City's police and fire departmens?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ],
+      "noMeans": [
+        "Shall the City of Owatonna be authorized to issue its general obligation bonds in an amount not to exceed $65,000,000 for the purpose of acquiring, constructing and equipping new public safety facilities for the City's police and fire departmens?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      26
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-preston-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Preston be authorized to issue general obligation bonds in an amountt not to exceed $6,000,000 to finance the acquisition and betterment of a municipal swimming pool and related facilities in the City, including demolition costs?         BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "yesMeans": [
+        "Shall the City of Preston be authorized to issue general obligation bonds in an amountt not to exceed $6,000,000 to finance the acquisition and betterment of a municipal swimming pool and related facilities in the City, including demolition costs?         BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ],
+      "noMeans": [
+        "Shall the City of Preston be authorized to issue general obligation bonds in an amountt not to exceed $6,000,000 to finance the acquisition and betterment of a municipal swimming pool and related facilities in the City, including demolition costs?         BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      27
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-st_paul-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should the City adopt the proposed Ordinance pertaining to a  tenants right to repair? The ordinance would allow tenants to make repairs to their  building after written notice to the landlord and deduct an amount not exceeding $500 or  one-half month's rent to pay for the repair.  A \"Yes\" vote amends the City of Saint Paul's Legislative Code to adopt the Proposed  Ordinance pertaining to a tenant's right to repair. A \"No\" vote will result in no changes to  the City's Legislative Code."
+      ],
+      "yesMeans": [
+        "Should the City adopt the proposed Ordinance pertaining to a  tenants right to repair? The ordinance would allow tenants to make repairs to their  building after written notice to the landlord and deduct an amount not exceeding $500 or  one-half month's rent to pay for the repair.  A \"Yes\" vote amends the City of Saint Paul's Legislative Code to adopt the Proposed  Ordinance pertaining to a tenant's right to repair. A \"No\" vote will result in no changes to  the City's Legislative Code."
+      ],
+      "noMeans": [
+        "Should the City adopt the proposed Ordinance pertaining to a  tenants right to repair? The ordinance would allow tenants to make repairs to their  building after written notice to the landlord and deduct an amount not exceeding $500 or  one-half month's rent to pay for the repair.  A \"Yes\" vote amends the City of Saint Paul's Legislative Code to adopt the Proposed  Ordinance pertaining to a tenant's right to repair. A \"No\" vote will result in no changes to  the City's Legislative Code."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      28
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-twin_lakes_2765920-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Twin Lakes be dissolved?"
+      ],
+      "yesMeans": [
+        "Shall the City of Twin Lakes be dissolved?"
+      ],
+      "noMeans": [
+        "Shall the City of Twin Lakes be dissolved?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      29
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-place-waite_park-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "\"Shall the personnel board be abolished?\""
+      ],
+      "yesMeans": [
+        "\"Shall the personnel board be abolished?\""
+      ],
+      "noMeans": [
+        "\"Shall the personnel board be abolished?\""
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      30
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-marshall-place-alma_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Currently, the Alma Township Clerk position is an elected position that is voted on every four years.  The board would like to propose changing the Clerk position from an elected position to an appointed position.  Should the Township Clerk position be an appointed position?"
+      ],
+      "yesMeans": [
+        "Currently, the Alma Township Clerk position is an elected position that is voted on every four years.  The board would like to propose changing the Clerk position from an elected position to an appointed position.  Should the Township Clerk position be an appointed position?"
+      ],
+      "noMeans": [
+        "Currently, the Alma Township Clerk position is an elected position that is voted on every four years.  The board would like to propose changing the Clerk position from an elected position to an appointed position.  Should the Township Clerk position be an appointed position?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      31
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-amo_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should Amo Township Board be allowed to make the town clerk an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN CLERK AN APPOINTED POSITION."
+      ],
+      "yesMeans": [
+        "Should Amo Township Board be allowed to make the town clerk an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN CLERK AN APPOINTED POSITION."
+      ],
+      "noMeans": [
+        "Should Amo Township Board be allowed to make the town clerk an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN CLERK AN APPOINTED POSITION."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      32
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-amo_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should Amo Township Board be allowed to make the treasurer an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN TREASURER AN APPOINTED POSITION."
+      ],
+      "yesMeans": [
+        "Should Amo Township Board be allowed to make the treasurer an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN TREASURER AN APPOINTED POSITION."
+      ],
+      "noMeans": [
+        "Should Amo Township Board be allowed to make the treasurer an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN TREASURER AN APPOINTED POSITION."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      33
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-nicollet-place-belgrade_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      34
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-beulah_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      35
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-todd-place-bruce_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Starting in 2027 shall the Town of Bruce establish 6 year terms for Supervisors?"
+      ],
+      "yesMeans": [
+        "Starting in 2027 shall the Town of Bruce establish 6 year terms for Supervisors?"
+      ],
+      "noMeans": [
+        "Starting in 2027 shall the Town of Bruce establish 6 year terms for Supervisors?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      36
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-kanabec-place-brunswick_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the   appointment of the clerk by the town   board, be adopted for the government   of the Town of Brunswick?    By voting yes, the way in which the   Clerk enters office will change."
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the   appointment of the clerk by the town   board, be adopted for the government   of the Town of Brunswick?    By voting yes, the way in which the   Clerk enters office will change."
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the   appointment of the clerk by the town   board, be adopted for the government   of the Town of Brunswick?    By voting yes, the way in which the   Clerk enters office will change."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      37
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-kanabec-place-brunswick_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the   appointment of the treasurer by the town   board, be adopted for the government  of the Town of Brunswick ?    By voting yes, the way in which the   Treasurer enters office will change."
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the   appointment of the treasurer by the town   board, be adopted for the government  of the Town of Brunswick ?    By voting yes, the way in which the   Treasurer enters office will change."
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the   appointment of the treasurer by the town   board, be adopted for the government  of the Town of Brunswick ?    By voting yes, the way in which the   Treasurer enters office will change."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      38
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-todd-place-burleene_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for combining the offices of clerk/treasurer, be abandoned for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for combining the offices of clerk/treasurer, be abandoned for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option D, providing for combining the offices of clerk/treasurer, be abandoned for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      39
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-todd-place-burleene_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B, providing for the appointment of one clerk and one treasurer by the town board, be adopted for the government of the town?    Note - Approval of the Option B question #2 is contingent on the simultaneous approval of Option D question #1",
+        "Shall option D, providing for combining the offices of clerk/treasurer, be abandoned for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option B, providing for the appointment of one clerk and one treasurer by the town board, be adopted for the government of the town?    Note - Approval of the Option B question #2 is contingent on the simultaneous approval of Option D question #1",
+        "Shall option D, providing for combining the offices of clerk/treasurer, be abandoned for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option B, providing for the appointment of one clerk and one treasurer by the town board, be adopted for the government of the town?    Note - Approval of the Option B question #2 is contingent on the simultaneous approval of Option D question #1",
+        "Shall option D, providing for combining the offices of clerk/treasurer, be abandoned for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      40
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-douglas-place-carlos_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Carlos, Minnesota, be authorized to issue its general obligation bonds, including any bonds issued to refund such bonds, in an amount not-to-exceed $2,800,000, to provide funds for the acquisition, construction, and betterment of a firehall facility?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.  [The City of Carlos, Minnesota (\"Carlos\"), and the Town of Belle River, Minnesota (\"Belle River\"), are obligated to contribute a pro rata share of the costs of the acquisition, construction, and betterment of a firehall facility (the \"Project\"), including, without limitation, a pro rata portion of the debt service on any bonds issued therefor, pursuant to the \"Cost Sharing Formula\" established by the Joint Powers Agreement (the \"Agreement\"), dated June 13, 2024, by and between the Town of Carlos, Minnesota (the \"Town\"), Belle River, and Carlos, as the same may be amended from time to time. Such revenues from Carlos and Belle River shall be a source of payment for the bonds, and the Town's property taxes will only increase in an amount sufficient to pay principal and interest on the bonds when due for the Town's portion, pursuant to the \"Cost Sharing Formula\" in the Agreement.]"
+      ],
+      "yesMeans": [
+        "Shall the Town of Carlos, Minnesota, be authorized to issue its general obligation bonds, including any bonds issued to refund such bonds, in an amount not-to-exceed $2,800,000, to provide funds for the acquisition, construction, and betterment of a firehall facility?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.  [The City of Carlos, Minnesota (\"Carlos\"), and the Town of Belle River, Minnesota (\"Belle River\"), are obligated to contribute a pro rata share of the costs of the acquisition, construction, and betterment of a firehall facility (the \"Project\"), including, without limitation, a pro rata portion of the debt service on any bonds issued therefor, pursuant to the \"Cost Sharing Formula\" established by the Joint Powers Agreement (the \"Agreement\"), dated June 13, 2024, by and between the Town of Carlos, Minnesota (the \"Town\"), Belle River, and Carlos, as the same may be amended from time to time. Such revenues from Carlos and Belle River shall be a source of payment for the bonds, and the Town's property taxes will only increase in an amount sufficient to pay principal and interest on the bonds when due for the Town's portion, pursuant to the \"Cost Sharing Formula\" in the Agreement.]"
+      ],
+      "noMeans": [
+        "Shall the Town of Carlos, Minnesota, be authorized to issue its general obligation bonds, including any bonds issued to refund such bonds, in an amount not-to-exceed $2,800,000, to provide funds for the acquisition, construction, and betterment of a firehall facility?    BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING FOR A PROPERTY TAX INCREASE.  [The City of Carlos, Minnesota (\"Carlos\"), and the Town of Belle River, Minnesota (\"Belle River\"), are obligated to contribute a pro rata share of the costs of the acquisition, construction, and betterment of a firehall facility (the \"Project\"), including, without limitation, a pro rata portion of the debt service on any bonds issued therefor, pursuant to the \"Cost Sharing Formula\" established by the Joint Powers Agreement (the \"Agreement\"), dated June 13, 2024, by and between the Town of Carlos, Minnesota (the \"Town\"), Belle River, and Carlos, as the same may be amended from time to time. Such revenues from Carlos and Belle River shall be a source of payment for the bonds, and the Town's property taxes will only increase in an amount sufficient to pay principal and interest on the bonds when due for the Town's portion, pursuant to the \"Cost Sharing Formula\" in the Agreement.]"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      41
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-hubbard-place-clay_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      42
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-hubbard-place-clay_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      43
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-traverse-place-clifton_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B of MN Statute 367.30, providing for the appointment of the clerk and treasurer by the town board, be adopted for Clifton Township?"
+      ],
+      "yesMeans": [
+        "Shall option B of MN Statute 367.30, providing for the appointment of the clerk and treasurer by the town board, be adopted for Clifton Township?"
+      ],
+      "noMeans": [
+        "Shall option B of MN Statute 367.30, providing for the appointment of the clerk and treasurer by the town board, be adopted for Clifton Township?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      45
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-morrison-place-cushing_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of a town clerk and treasurer by the town board, be adopted for the government of Cushing Township?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of a town clerk and treasurer by the town board, be adopted for the government of Cushing Township?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of a town clerk and treasurer by the town board, be adopted for the government of Cushing Township?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      46
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-dale_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for the combining of the offices of clerk and treasurer as an (elected) position, be abandoned for the government of the town?            By voting Yes on this ballot question, you are voting to separate the Clerk and Treasurer positions"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for the combining of the offices of clerk and treasurer as an (elected) position, be abandoned for the government of the town?            By voting Yes on this ballot question, you are voting to separate the Clerk and Treasurer positions"
+      ],
+      "noMeans": [
+        "Shall option D, providing for the combining of the offices of clerk and treasurer as an (elected) position, be abandoned for the government of the town?            By voting Yes on this ballot question, you are voting to separate the Clerk and Treasurer positions"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      47
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-meeker-place-danielson_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "In the event that no one files for and/or no one accepts an appointment for the position(s) of Township Clerk and/or Township Treasurer from within the Township. We the voters of Danielson Township allow/approve the Township Supervisors to appoint an individual from outside the Township of Danielson to serve in these roles."
+      ],
+      "yesMeans": [
+        "In the event that no one files for and/or no one accepts an appointment for the position(s) of Township Clerk and/or Township Treasurer from within the Township. We the voters of Danielson Township allow/approve the Township Supervisors to appoint an individual from outside the Township of Danielson to serve in these roles."
+      ],
+      "noMeans": [
+        "In the event that no one files for and/or no one accepts an appointment for the position(s) of Township Clerk and/or Township Treasurer from within the Township. We the voters of Danielson Township allow/approve the Township Supervisors to appoint an individual from outside the Township of Danielson to serve in these roles."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      48
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-itasca-place-deer_river_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      49
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-st_louis-place-eagles_nest_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town."
+      ],
+      "yesMeans": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town."
+      ],
+      "noMeans": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      50
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-marshall-place-fork_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Currently, the Fork Township Clerk/Treasurer position is an elected position that is voted on every four years. The board would like to propose changing the Clerk/Treasurer position from an elected position to an appointed position. Should the Township Clerk/Treasurer position be an appointed position?"
+      ],
+      "yesMeans": [
+        "Currently, the Fork Township Clerk/Treasurer position is an elected position that is voted on every four years. The board would like to propose changing the Clerk/Treasurer position from an elected position to an appointed position. Should the Township Clerk/Treasurer position be an appointed position?"
+      ],
+      "noMeans": [
+        "Currently, the Fork Township Clerk/Treasurer position is an elected position that is voted on every four years. The board would like to propose changing the Clerk/Treasurer position from an elected position to an appointed position. Should the Township Clerk/Treasurer position be an appointed position?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      51
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-lac_qui_parle-place-hantho_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "\"To vote for a question, fill in the oval next to the word \"Yes\" on that question. To vote against a question, fill in the oval next to the word \"No\" on that question.\"    Shall Option B, providing for the appointment of the Treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "\"To vote for a question, fill in the oval next to the word \"Yes\" on that question. To vote against a question, fill in the oval next to the word \"No\" on that question.\"    Shall Option B, providing for the appointment of the Treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "\"To vote for a question, fill in the oval next to the word \"Yes\" on that question. To vote against a question, fill in the oval next to the word \"No\" on that question.\"    Shall Option B, providing for the appointment of the Treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      52
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-aitkin-place-hill_lake_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B (M.A. 367.30 Subd. 2), providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B (M.A. 367.30 Subd. 2), providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B (M.A. 367.30 Subd. 2), providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      53
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-swift-place-kerkhoven_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the county be permitted to issue Sunday sale intoxicating liquor licenses to establishments within the township?"
+      ],
+      "yesMeans": [
+        "Shall the county be permitted to issue Sunday sale intoxicating liquor licenses to establishments within the township?"
+      ],
+      "noMeans": [
+        "Shall the county be permitted to issue Sunday sale intoxicating liquor licenses to establishments within the township?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      54
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-chippewa-place-kragero_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      55
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-chippewa-place-kragero_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "If Town Question 1 is approved, shall Option B, providing for the appointment of the clerk-treasurer by the town board, be adopted for the government of the town?    Note: Approval of Option B is contingent on the simultaneous approval of Option D.",
+        "Shall Option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "If Town Question 1 is approved, shall Option B, providing for the appointment of the clerk-treasurer by the town board, be adopted for the government of the town?    Note: Approval of Option B is contingent on the simultaneous approval of Option D.",
+        "Shall Option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "If Town Question 1 is approved, shall Option B, providing for the appointment of the clerk-treasurer by the town board, be adopted for the government of the town?    Note: Approval of Option B is contingent on the simultaneous approval of Option D.",
+        "Shall Option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      56
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-may_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option D, providing for the combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      57
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-aitkin-place-millward_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      58
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-aitkin-place-millward_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the clerk-treasurer by the town board, be adopted for the government of the town?    Note: Approval of the Option B questions is contingent on the simultaneous approval of Option D."
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the clerk-treasurer by the town board, be adopted for the government of the town?    Note: Approval of the Option B questions is contingent on the simultaneous approval of Option D."
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the clerk-treasurer by the town board, be adopted for the government of the town?    Note: Approval of the Option B questions is contingent on the simultaneous approval of Option D."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      59
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-crow_wing-place-mission_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      60
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-stevens-place-moore_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of town clerk and town treasurer by the town board, be adopted by Moore Township?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of town clerk and town treasurer by the town board, be adopted by Moore Township?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of town clerk and town treasurer by the town board, be adopted by Moore Township?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      61
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-remer_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      62
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-slater_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      63
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-slater_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option B, providing for the appointment of the treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      64
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-storden_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should Storden Township Board be allowed to make the town clerk an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN CLERK AN APPOINTED POSITION."
+      ],
+      "yesMeans": [
+        "Should Storden Township Board be allowed to make the town clerk an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN CLERK AN APPOINTED POSITION."
+      ],
+      "noMeans": [
+        "Should Storden Township Board be allowed to make the town clerk an appointed position?      BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN CLERK AN APPOINTED POSITION."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      65
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cottonwood-place-storden_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Should Storden Township Board be allowed to make the treasurer an appointed position?        BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN TREASURER AN APPOINTED POSITION."
+      ],
+      "yesMeans": [
+        "Should Storden Township Board be allowed to make the treasurer an appointed position?        BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN TREASURER AN APPOINTED POSITION."
+      ],
+      "noMeans": [
+        "Should Storden Township Board be allowed to make the treasurer an appointed position?        BY VOTING \"YES\" ON THIS BALLOT QUESTION, YOU ARE VOTING TO ALLOW THE TOWN BOARD TO MAKE THE TOWN TREASURER AN APPOINTED POSITION."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      66
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-kittson-place-svea_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Township of Svea, providing for the combining of the offices of clerk and treasurer as an elected position, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall the Township of Svea, providing for the combining of the offices of clerk and treasurer as an elected position, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall the Township of Svea, providing for the combining of the offices of clerk and treasurer as an elected position, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      67
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-crow_wing-place-timothy_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?",
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D."
+      ],
+      "yesMeans": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?",
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D."
+      ],
+      "noMeans": [
+        "Shall option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?",
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      68,
+      69
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-crow_wing-place-timothy_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D.",
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D."
+      ],
+      "yesMeans": [
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D.",
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D."
+      ],
+      "noMeans": [
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D.",
+        "Shall Option D, providing for the combining of the offices of clerk and treasurer, be adopted for the government of the town?   Approval of the Option B question is contingent on the simultaneous approval of Option D."
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      69
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-cass-place-trelipe_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      70
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-le_sueur-place-washington_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall option D, providing for combining the offices of clerk and treasurer, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      71
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-pine-place-windemere_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option A, providing for a five-member town board of supervisors, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option A, providing for a five-member town board of supervisors, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option A, providing for a five-member town board of supervisors, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      72
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-pine-place-windemere_township-question-2",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the clerk/treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the clerk/treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the clerk/treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      73
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "mn-cx-2026-county-itasca-place-wirt_township-question-1",
+    "state": "MN",
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.source",
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "retrievedAt": "2026-11-03T03:48:55.459290+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall Option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "yesMeans": [
+        "Shall Option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ],
+      "noMeans": [
+        "Shall Option B, providing for the appointment of the clerk and treasurer by the town board, be adopted for the government of the town?"
+      ]
+    },
+    "sourceWorksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      74
+    ],
+    "sourceColumns": "A:H; numberE,titleF,questionG,typeH",
+    "inventoryVersion": "Last updated9/23/2026 as printed in workbookA1",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,78 @@
+{
+  "contestId": "mn-cx-2026-cousub-wright-clearwater-township-question-1",
+  "questionSource": {
+    "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx",
+    "sourceFile": "sources/5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1.xlsx",
+    "rawHash": "5209f5b4c9ea0f7fefb0d7d5ea34a55d01f9dd4437e98b992fe4985e35c58ca1",
+    "excerpt": "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?",
+    "fullSourceCell": "Shall Option B, providing for the appointment of the clerk by the town board, be adopted for the government of the town?    Minnesota Statutes, sections 367.30 and 367.31 provide for optional forms of town government and one of the options (Option B) allows the Town to seek the transition of treasurer position from an elected office to an appointed office",
+    "worksheet": "11-3-26 Ballot Questions",
+    "sourceRows": [
+      44
+    ],
+    "sourceTextFile": "sources/4bd188ec283a35b3cff84bc1af0846cebeee0b231ec46bc5e898a98a45b5609f.txt"
+  },
+  "resolutionSource": {
+    "sourceUrl": "https://cdn.townweb.com/clearwatertownship.org/wp-content/uploads/2026/03/Resolution-NO.-2026-1-Adopt-Appointed-Clerk.pdf",
+    "sourceFile": "sources/0b9cc3ee7adc5fc0357da23b08f1cbaa2acf4bd22931c671a29f79ffe65933dc.pdf",
+    "rawHash": "0b9cc3ee7adc5fc0357da23b08f1cbaa2acf4bd22931c671a29f79ffe65933dc",
+    "sourceTextFile": "sources/d4b010f3355c252c5cddacf331c6fd36a2b0e6058a1e3c366736982310e811b3.txt",
+    "rawOcrFile": "sources/a20a41987d10e9de6d96a2c0db9bb4f377ef77e16e6636a9be8d7a15f7abf943.raw-ocr.txt",
+    "page": 1,
+    "renderCommand": "pdftoppm -png -r180 -singlefile <source.pdf> <render>",
+    "ocrCommand": "tesseract <render.png> <ocr-output>",
+    "visualReview": "Complete page viewed; bounded resolution heading/body/adoption date transcribed, no claim to transcribe handwritten signatures."
+  },
+  "fields": {
+    "whatItDoes": [
+      {
+        "sourceUrl": "https://cdn.townweb.com/clearwatertownship.org/wp-content/uploads/2026/03/Resolution-NO.-2026-1-Adopt-Appointed-Clerk.pdf",
+        "quote": "WHEREAS, Minn. Stat. §367.30 provides towns the option to change from an\nelected Clerk to an appointed Clerk as Option B under such statute; and"
+      },
+      {
+        "sourceUrl": "https://cdn.townweb.com/clearwatertownship.org/wp-content/uploads/2026/03/Resolution-NO.-2026-1-Adopt-Appointed-Clerk.pdf",
+        "quote": "NOW, THEREFORE, BE IT RESOLVED, that the Town Board of Clearwater\nTownship, Wright County, Minnesota does hereby designate that the Township Clerk\nshall hereafter be appointed by the Town Board, provided that the electors vote to\nauthorize the adoption of said Option B at the November 3, 2026 Town election."
+      }
+    ],
+    "yesMeans": [
+      {
+        "sourceUrl": "https://cdn.townweb.com/clearwatertownship.org/wp-content/uploads/2026/03/Resolution-NO.-2026-1-Adopt-Appointed-Clerk.pdf",
+        "quote": "NOW, THEREFORE, BE IT RESOLVED, that the Town Board of Clearwater\nTownship, Wright County, Minnesota does hereby designate that the Township Clerk\nshall hereafter be appointed by the Town Board, provided that the electors vote to\nauthorize the adoption of said Option B at the November 3, 2026 Town election."
+      }
+    ],
+    "noMeans": [
+      {
+        "sourceUrl": "https://cdn.townweb.com/clearwatertownship.org/wp-content/uploads/2026/03/Resolution-NO.-2026-1-Adopt-Appointed-Clerk.pdf",
+        "quote": "WHEREAS, Minn. Stat. §367.30 provides towns the option to change from an\nelected Clerk to an appointed Clerk as Option B under such statute; and"
+      }
+    ]
+  },
+  "sourceConflictResolution": {
+    "conflictingSource": "SOS workbook cellG44 combines a clerk formal question and a treasurer explanatory sentence.",
+    "decision": "Preserve exact formal question as questionText; do not import conflicting supplementary memo as officialStatement. The native signed township resolution agrees with clerk and expressly conditions appointment on November3,2026 voter approval.",
+    "omittedSupplementaryText": "Minnesota Statutes, sections 367.30 and 367.31 provide for optional forms of town government and one of the options (Option B) allows the Town to seek the transition of treasurer position from an elected office to an appointed office",
+    "noAssumptions": [
+      "No claim about the treasurer office, combined offices, immediate effective date, or incumbent removal."
+    ]
+  },
+  "proofScope": "Final missing local question in SOS workbook lastupdatedSeptember23,2026; not a claim about questions omitted or changed after the workbook date.",
+  "officialLinkingPage": {
+    "url": "https://clearwatertownship.org/ordinances-resolutions/?format=html",
+    "file": "sources/084ea6bb9e1e65075fbe9d858bd3f5eff979735485ae2097a8b7760e1912ff0d.html",
+    "sha256": "084ea6bb9e1e65075fbe9d858bd3f5eff979735485ae2097a8b7760e1912ff0d",
+    "originalSourceSha256": "084ea6bb9e1e65075fbe9d858bd3f5eff979735485ae2097a8b7760e1912ff0d",
+    "sourceCheckedAt": "2026-11-03T04:29:25.336640+00:00",
+    "linkingPage": {
+      "url": "https://www.wrightcountymn.gov/250/Cities-Townships",
+      "file": "sources/78d8e59a2210204055e6a8f1764f161722c2ecf391ccad698654f5c8342111bc.html",
+      "sha256": "78d8e59a2210204055e6a8f1764f161722c2ecf391ccad698654f5c8342111bc",
+      "originalSourceSha256": "ac44ea852be1f98b735e1af7ac8e93834faf1627bf9de30ba9ddd4841d84b73d",
+      "sourceCheckedAt": "2026-11-03T04:29:19.039413+00:00",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
+    }
+  }
+}

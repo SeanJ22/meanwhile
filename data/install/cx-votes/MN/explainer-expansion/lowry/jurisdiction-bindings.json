@@ -1,0 +1,17 @@
+[
+  {
+    "contestId": "mn-cx-2026-place-lowry-question-1",
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/place:lowry",
+      "place",
+      "2738366",
+      "Lowry city"
+    ],
+    "officialFipsCode": 38366,
+    "sourceCountyNames": [
+      "Pope"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc"
+  }
+]

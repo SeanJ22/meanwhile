@@ -1,0 +1,44 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MN",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "mn-cx-2026-cousub-wright-clearwater-township-question-1",
+      "ocdId": "ocd-division/country:us/state:mn/county:wright/place:clearwater_township",
+      "sourceUrl": "https://cdn.townweb.com/clearwatertownship.org/wp-content/uploads/2026/03/Resolution-NO.-2026-1-Adopt-Appointed-Clerk.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve unrelated facts. Add formal Clearwater Township question and source-backed appointed-clerk explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "scope": "Clearwater Township, Wright County only",
+    "localInventory": "Final missing question among153local records in Minnesota SOS workbook lastupdatedSeptember23,2026; no claim beyond that dated inventory."
+  },
+  "validation": {
+    "state": "MN",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "nativeSourceByteHashes": "PASS",
+    "nativeScannedResolutionVisualReview": "PASS",
+    "exactFormalQuestionAndResolutionQuotes": "PASS",
+    "officialSourceAuthorityChain": "PASS",
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentAndExactTownshipSelection": "PASS",
+    "statewideWidening": "NONE",
+    "sourceConflict": "SOS formal question and signed resolution both specify CLERK. Workbook supplementary sentence says treasurer; omitted from officialStatement and preserved verbatim in source-support.",
+    "verificationScope": "Fresh measure-only published snapshot; parent replays complete state before data installation.",
+    "parentPublicationAdmission": "PASS",
+    "actualReaderReplay": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS",
+    "cumulativeOfficialMasterReplay": "PASS: all154officialmasterquestions (153newlocal +1heldstatewide)"
+  },
+  "nextOwner": "River: independently review native resolution/contradiction handling, replay complete state, install as data, verify township card and source live."
+}

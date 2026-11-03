@@ -1,0 +1,462 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MN",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mn-cx-2026-county-washington-question-1",
+      "title": "COUNTY QUESTION 1 — PRESERVATION OF WATER QUALITY, WILDLIFE HABITAT, AND NATURAL AREAS",
+      "ocdId": "ocd-division/country:us/state:mn/county:washington",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-anoka-question-1",
+      "title": "CITY QUESTION 1 (Anoka) — Should Anoka Implement An Organized Garbage, Recycling, Yardwaste Collection System",
+      "ocdId": "ocd-division/country:us/state:mn/place:anoka",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-bellingham-question-1",
+      "title": "CITY QUESTION 1 (Bellingham) — Question to Appoint City Clerk And Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/place:bellingham",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-bowlus-question-1",
+      "title": "CITY QUESTION 1 (Bowlus) — Appointment of Town Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/place:bowlus",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-bricelyn-question-1",
+      "title": "CITY QUESTION 1 (Bricelyn) — Referendum",
+      "ocdId": "ocd-division/country:us/state:mn/place:bricelyn",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-danube-question-1",
+      "title": "CITY QUESTION 1 (Danube) — Sunday Liquor",
+      "ocdId": "ocd-division/country:us/state:mn/place:danube",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-delhi-question-1",
+      "title": "CITY QUESTION 1 (Delhi) — Appointment of Combined Clerk-Treasurer Position for the City of Delhi",
+      "ocdId": "ocd-division/country:us/state:mn/place:delhi",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-elgin-question-1",
+      "title": "CITY QUESTION 1 (Elgin) — SHALL THE CITY FINANCE AN EMERGENCY SERVICES FACILITY?",
+      "ocdId": "ocd-division/country:us/state:mn/place:elgin",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-elrosa-question-1",
+      "title": "CITY QUESTION 1 (Elrosa) — City Plan of Government Question",
+      "ocdId": "ocd-division/country:us/state:mn/place:elrosa",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-fairmont-question-1",
+      "title": "CITY QUESTION 1 (Fairmont) — Proposed Charter Amendment Deeming City Council Ineligible for Charter Commission",
+      "ocdId": "ocd-division/country:us/state:mn/place:fairmont",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-fairmont-question-2",
+      "title": "CITY QUESTION 2 (Fairmont) — Proposed Charter Amendment Adding Charter Commission Application Process",
+      "ocdId": "ocd-division/country:us/state:mn/place:fairmont",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-fairmont-question-3",
+      "title": "CITY QUESTION 3 (Fairmont) — Proposed Charter Amendment Requiring Council Approval of Utility Commission Purchases",
+      "ocdId": "ocd-division/country:us/state:mn/place:fairmont",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-geneva-question-1",
+      "title": "CITY QUESTION 1 (Geneva) — Sunday Liquor Sales Ballot Question",
+      "ocdId": "ocd-division/country:us/state:mn/place:geneva",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-hills-question-1",
+      "title": "CITY QUESTION 1 (Hills) — Question to Allow Issuance of Sunday Liquor Licenses to Eligible Establishments",
+      "ocdId": "ocd-division/country:us/state:mn/place:hills",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-jasper-question-1",
+      "title": "CITY QUESTION 1 (Jasper) — ISSUANCE OF SUNDAY ON-SALE LIQUOR LICENSES",
+      "ocdId": "ocd-division/country:us/state:mn/place:jasper",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-luverne-question-1",
+      "title": "CITY QUESTION 1 (Luverne) — Charter Amendment: Create New Independent Commission to Govern City Utilities",
+      "ocdId": "ocd-division/country:us/state:mn/place:luverne",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-marble-question-1",
+      "title": "CITY QUESTION 1 (Marble) — Change to Optional Plan A Appointment of Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/place:marble",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-mounds_view-question-1",
+      "title": "CITY QUESTION 1 (Mounds View) — Approval of City Bond Issue",
+      "ocdId": "ocd-division/country:us/state:mn/place:mounds_view",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-mounds_view-question-2",
+      "title": "CITY QUESTION 2 (Mounds View) — Approval of City Bond Issue for Community Center Improvements",
+      "ocdId": "ocd-division/country:us/state:mn/place:mounds_view",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-ogema-question-1",
+      "title": "CITY QUESTION 1 (Ogema) — ADOPTION OF OPTIONAL PLAN, A",
+      "ocdId": "ocd-division/country:us/state:mn/place:ogema",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-owatonna-question-1",
+      "title": "CITY QUESTION 1 (Owatonna) — ISSUANCE OF BONDS FOR CONSTRUCTION OF NEW PUBLIC SAFETY FACILITIES",
+      "ocdId": "ocd-division/country:us/state:mn/place:owatonna",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-preston-question-1",
+      "title": "CITY QUESTION 1 (Preston) — QUESTION NO. 01 SHALL THE CITY FINANCE A SWIMMING POOL?",
+      "ocdId": "ocd-division/country:us/state:mn/place:preston",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-st_paul-question-1",
+      "title": "CITY QUESTION 1 (St. Paul) — Creating Chapter 34A of the Saint Paul Legislative Code",
+      "ocdId": "ocd-division/country:us/state:mn/place:st_paul",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-twin_lakes_2765920-question-1",
+      "title": "CITY QUESTION 1 (Twin Lakes) — Dissolving the City of Twin Lakes",
+      "ocdId": "ocd-division/country:us/state:mn/place:twin_lakes_2765920",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-place-waite_park-question-1",
+      "title": "CITY QUESTION 1 (Waite Park) — Abolishment of Civil Service Personnel Board",
+      "ocdId": "ocd-division/country:us/state:mn/place:waite_park",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-marshall-place-alma_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Alma Twp) — SHOULD THE CLERK POSITION BE AN APPOINTED POSITION INSTEAD OF AN ELECTED POSITION?",
+      "ocdId": "ocd-division/country:us/state:mn/county:marshall/place:alma_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cottonwood-place-amo_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Amo Twp) — APPOINTING TOWN CLERK",
+      "ocdId": "ocd-division/country:us/state:mn/county:cottonwood/place:amo_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cottonwood-place-amo_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Amo Twp) — APPOINT TOWN TREASURER",
+      "ocdId": "ocd-division/country:us/state:mn/county:cottonwood/place:amo_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-nicollet-place-belgrade_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Belgrade Twp) — Approval to Combine the Offices of Town Clerk and Town Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:nicollet/place:belgrade_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cass-place-beulah_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Beulah Twp) — Combination of Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:cass/place:beulah_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-todd-place-bruce_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Bruce Twp) — Shall Bruce Township Adopt New Terms For Supervisors",
+      "ocdId": "ocd-division/country:us/state:mn/county:todd/place:bruce_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-kanabec-place-brunswick_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Brunswick Twp) — Shall the Board Adopt Option B for   the Clerk position?",
+      "ocdId": "ocd-division/country:us/state:mn/county:kanabec/place:brunswick_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-kanabec-place-brunswick_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Brunswick Twp) — Shall the Board Adopt Option B for  the Treasurer position ?",
+      "ocdId": "ocd-division/country:us/state:mn/county:kanabec/place:brunswick_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-todd-place-burleene_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Burleene Twp) — Option D - Abandon Clerk/Treasurer Position",
+      "ocdId": "ocd-division/country:us/state:mn/county:todd/place:burleene_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-todd-place-burleene_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Burleene Twp) — Option B - Appointment of Clerk and Treasurer Position",
+      "ocdId": "ocd-division/country:us/state:mn/county:todd/place:burleene_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-douglas-place-carlos_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Carlos Twp) — ISSUANCE OF GENERAL OBLIGATION BONDS FOR A FIREHALL",
+      "ocdId": "ocd-division/country:us/state:mn/county:douglas/place:carlos_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-hubbard-place-clay_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Clay Twp) — Appointment of Town Clerk",
+      "ocdId": "ocd-division/country:us/state:mn/county:hubbard/place:clay_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-hubbard-place-clay_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Clay Twp) — Appointment of Town Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:hubbard/place:clay_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-traverse-place-clifton_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Clifton Twp) — Appointment of Township Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:traverse/place:clifton_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-morrison-place-cushing_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Cushing Twp) — Appointment of Town Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:morrison/place:cushing_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cottonwood-place-dale_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Dale Twp) — Dale Township Board requests abandonment of Clerk/Treasurer position",
+      "ocdId": "ocd-division/country:us/state:mn/county:cottonwood/place:dale_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-meeker-place-danielson_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Danielson Twp) — Danielson Township Clerk and/or Treasurer Appointment Process",
+      "ocdId": "ocd-division/country:us/state:mn/county:meeker/place:danielson_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-itasca-place-deer_river_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Deer River Twp) — Change to Optional Plan B Appointment of Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:itasca/place:deer_river_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-st_louis-place-eagles_nest_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Eagles Nest Twp) — Option B",
+      "ocdId": "ocd-division/country:us/state:mn/county:st_louis/place:eagles_nest_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-marshall-place-fork_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Fork Twp) — SHOULD THE CLERK/TREASURER POSITION BE AN APPOINTED POSITION INSTEAD OF AN ELECTED POSITION?",
+      "ocdId": "ocd-division/country:us/state:mn/county:marshall/place:fork_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-lac_qui_parle-place-hantho_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Hantho Twp) — Question to Appoint Town Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:lac_qui_parle/place:hantho_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-aitkin-place-hill_lake_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Hill Lake Twp) — Appointment of the Town Clerk/Treasurer by the Town Board",
+      "ocdId": "ocd-division/country:us/state:mn/county:aitkin/place:hill_lake_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-swift-place-kerkhoven_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Kerkhoven Twp) — Sunday Liquor Sales",
+      "ocdId": "ocd-division/country:us/state:mn/county:swift/place:kerkhoven_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-chippewa-place-kragero_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Kragero Twp) — Town Question 1",
+      "ocdId": "ocd-division/country:us/state:mn/county:chippewa/place:kragero_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-chippewa-place-kragero_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Kragero Twp) — Town Question 2",
+      "ocdId": "ocd-division/country:us/state:mn/county:chippewa/place:kragero_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cass-place-may_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (May Twp) — Combination of Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:cass/place:may_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-aitkin-place-millward_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Millward Twp) — Combining Town Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:aitkin/place:millward_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-aitkin-place-millward_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Millward Twp) — Appointment of Town Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:aitkin/place:millward_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-crow_wing-place-mission_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Mission Twp) — Adopt Form of Government",
+      "ocdId": "ocd-division/country:us/state:mn/county:crow_wing/place:mission_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-stevens-place-moore_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Moore Twp) — Appointment of Town Clerk and Town Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:stevens/place:moore_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cass-place-remer_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Remer Twp) — Combination of Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:cass/place:remer_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cass-place-slater_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Slater Twp) — Appointment of Town Clerk",
+      "ocdId": "ocd-division/country:us/state:mn/county:cass/place:slater_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cass-place-slater_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Slater Twp) — Appointment of Town Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:cass/place:slater_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cottonwood-place-storden_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Storden Twp) — APPOINTING TOWN CLERK",
+      "ocdId": "ocd-division/country:us/state:mn/county:cottonwood/place:storden_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cottonwood-place-storden_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Storden Twp) — APPOINTING TOWN TREASURER",
+      "ocdId": "ocd-division/country:us/state:mn/county:cottonwood/place:storden_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-kittson-place-svea_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Svea Twp) — Combining of Clerk and Treasurer Positions",
+      "ocdId": "ocd-division/country:us/state:mn/county:kittson/place:svea_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-crow_wing-place-timothy_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Timothy Twp) — Adopt Form of Government",
+      "ocdId": "ocd-division/country:us/state:mn/county:crow_wing/place:timothy_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-crow_wing-place-timothy_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Timothy Twp) — Adopt Form of Government",
+      "ocdId": "ocd-division/country:us/state:mn/county:crow_wing/place:timothy_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-cass-place-trelipe_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Trelipe Twp) — Appointment of Town Clerk",
+      "ocdId": "ocd-division/country:us/state:mn/county:cass/place:trelipe_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-le_sueur-place-washington_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Washington Twp) — Whether to Combine the Offices of Town Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:le_sueur/place:washington_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-pine-place-windemere_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Windemere Twp) — Question 1: Five-Member Town Board",
+      "ocdId": "ocd-division/country:us/state:mn/county:pine/place:windemere_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-pine-place-windemere_township-question-2",
+      "title": "TOWNSHIP QUESTION 2 (Windemere Twp) — Question 2: Appointment of Clerk/Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:pine/place:windemere_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    },
+    {
+      "id": "mn-cx-2026-county-itasca-place-wirt_township-question-1",
+      "title": "TOWNSHIP QUESTION 1 (Wirt Twp) — Change to Optional Plan B Appointment of Clerk and Treasurer",
+      "ocdId": "ocd-division/country:us/state:mn/county:itasca/place:wirt_township",
+      "sourceUrl": "https://www.sos.mn.gov/media/0arh1vfa/questions-on-2026-state-general-election-ballot.xlsx"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 68,
+    "newPlainLanguageExplanations": 68,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "MN",
+    "newMeasures": 68,
+    "newExplanations": 68,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplayWithHeldTranslations": "PASS",
+    "parentSourceArtifactHashAndCredentialChecks": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS",
+    "actualReaderReplay": "PASS",
+    "cumulativeOfficialMasterReplay": "PASS: all154officialmasterquestions (153newlocal +1heldstatewide)"
+  },
+  "nextOwner": "River: install as data, verify the precise district and explanation with the official source link live.",
+  "completeMasterBundle": {
+    "officialMeasures": 154,
+    "alreadyHeldStatewide": 1,
+    "newLocalExplainers": 153,
+    "source": "Current official SOS November2026 masterquestion workbook;154distinct questions after cross-county duplicates are removed. This describes the official master source, not unpublished or unlisted measures.",
+    "installDirectories": [
+      "ballot-input",
+      "school-increases/ballot-input",
+      "school-remaining/ballot-input",
+      "lowry/ballot-input",
+      "clearwater/ballot-input"
+    ]
+  }
+}

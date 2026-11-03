@@ -1,0 +1,577 @@
+[
+  {
+    "contestId": "mn-cx-2026-isd-12-question-1",
+    "sourceSchoolDistrictCode": 12,
+    "sourceSchoolNameEvidence": [
+      "Centennial",
+      "Centennial"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:centennial_public_school_district",
+      "unsd",
+      "2708100",
+      "Centennial Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-13-question-1",
+    "sourceSchoolDistrictCode": 13,
+    "sourceSchoolNameEvidence": [
+      "Columbia Heights Public Schools",
+      "Columbia Heights Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:columbia_heights_public_school_district",
+      "unsd",
+      "2709510",
+      "Columbia Heights Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-23-question-1",
+    "sourceSchoolDistrictCode": 23,
+    "sourceSchoolNameEvidence": [
+      "Frazee-Vergas Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:frazee_vergas_public_school_district",
+      "unsd",
+      "2712360",
+      "Frazee-Vergas Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-113-question-1",
+    "sourceSchoolDistrictCode": 113,
+    "sourceSchoolNameEvidence": [
+      "Walker-Hackensack-Akeley",
+      "Walker-Hackensack-Akeley"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:walker_hackensack_akeley_school_district",
+      "unsd",
+      "2702910",
+      "Walker-Hackensack-Akeley School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-113-question-2",
+    "sourceSchoolDistrictCode": 113,
+    "sourceSchoolNameEvidence": [
+      "Walker-Hackensack-Akeley",
+      "Walker-Hackensack-Akeley"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:walker_hackensack_akeley_school_district",
+      "unsd",
+      "2702910",
+      "Walker-Hackensack-Akeley School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-118-question-1",
+    "sourceSchoolDistrictCode": 118,
+    "sourceSchoolNameEvidence": [
+      "Northland Community Schools",
+      "Northland Community Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:northland_community_schools",
+      "unsd",
+      "2730870",
+      "Northland Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-181-question-1",
+    "sourceSchoolDistrictCode": 181,
+    "sourceSchoolNameEvidence": [
+      "Brainerd Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:brainerd_public_school_district",
+      "unsd",
+      "2706090",
+      "Brainerd Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-186-question-1",
+    "sourceSchoolDistrictCode": 186,
+    "sourceSchoolNameEvidence": [
+      "Pequot Lakes Public Schools",
+      "Pequot Lakes Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:pequot_lakes_public_schools",
+      "unsd",
+      "2728200",
+      "Pequot Lakes Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-195-question-1",
+    "sourceSchoolDistrictCode": 195,
+    "sourceSchoolNameEvidence": [
+      "Randolph Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:randolph_public_school_district",
+      "unsd",
+      "2730150",
+      "Randolph Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-204-question-1",
+    "sourceSchoolDistrictCode": 204,
+    "sourceSchoolNameEvidence": [
+      "Kasson-Mantorville",
+      "Kasson-Mantorville"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:kasson_mantorville_school_district",
+      "unsd",
+      "2716980",
+      "Kasson-Mantorville School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-229-question-1",
+    "sourceSchoolDistrictCode": 229,
+    "sourceSchoolNameEvidence": [
+      "Lanesboro Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:lanesboro_public_school_district",
+      "unsd",
+      "2717910",
+      "Lanesboro Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-306-question-1",
+    "sourceSchoolDistrictCode": 306,
+    "sourceSchoolNameEvidence": [
+      "Laporte Public School"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:laporte_public_school_district",
+      "unsd",
+      "2717940",
+      "Laporte Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-309-question-1",
+    "sourceSchoolDistrictCode": 309,
+    "sourceSchoolNameEvidence": [
+      "Park Rapids Area Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:park_rapids_public_school_district",
+      "unsd",
+      "2728080",
+      "Park Rapids Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-345-question-1",
+    "sourceSchoolDistrictCode": 345,
+    "sourceSchoolNameEvidence": [
+      "New London-Spicer"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:new_london_spicer_school_district",
+      "unsd",
+      "2723400",
+      "New London-Spicer School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-415-question-1",
+    "sourceSchoolDistrictCode": 415,
+    "sourceSchoolNameEvidence": [
+      "Lynd Public School"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:lynd_public_school_district",
+      "elsd",
+      "2718390",
+      "Lynd Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-423-question-1",
+    "sourceSchoolDistrictCode": 423,
+    "sourceSchoolNameEvidence": [
+      "Hutchinson Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:hutchinson_public_school_district",
+      "unsd",
+      "2714970",
+      "Hutchinson Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-447-question-1",
+    "sourceSchoolDistrictCode": 447,
+    "sourceSchoolNameEvidence": [
+      "Grygla Public School"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:grygla_public_school_district",
+      "unsd",
+      "2718920",
+      "Grygla Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-465-question-1",
+    "sourceSchoolDistrictCode": 465,
+    "sourceSchoolNameEvidence": [
+      "Litchfield Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:litchfield_public_school_district",
+      "unsd",
+      "2718210",
+      "Litchfield Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-549-question-1",
+    "sourceSchoolDistrictCode": 549,
+    "sourceSchoolNameEvidence": [
+      "Perham-Dent Public Schools",
+      "Perham-Dent Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:perham_dent_public_school_district",
+      "unsd",
+      "2728230",
+      "Perham-Dent Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-550-question-1",
+    "sourceSchoolDistrictCode": 550,
+    "sourceSchoolNameEvidence": [
+      "Underwood Public Schools",
+      "Underwood Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:underwood_public_school_district",
+      "unsd",
+      "2740830",
+      "Underwood Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-595-question-1",
+    "sourceSchoolDistrictCode": 595,
+    "sourceSchoolNameEvidence": [
+      "East Grand Forks"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:east_grand_forks_public_school_district",
+      "unsd",
+      "2711130",
+      "East Grand Forks Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-622-question-1",
+    "sourceSchoolDistrictCode": 622,
+    "sourceSchoolNameEvidence": [
+      "North St. Paul-Maplewood-Oakdale"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:north_st_paul_maplewood_oakdale_school_district",
+      "unsd",
+      "2723850",
+      "North St. Paul-Maplewood-Oakdale School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-709-question-1",
+    "sourceSchoolDistrictCode": 709,
+    "sourceSchoolNameEvidence": [
+      "Duluth Public Schools",
+      "Duluth Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:duluth_public_school_district",
+      "unsd",
+      "2711040",
+      "Duluth Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-709-question-2",
+    "sourceSchoolDistrictCode": 709,
+    "sourceSchoolNameEvidence": [
+      "Duluth Public Schools",
+      "Duluth Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:duluth_public_school_district",
+      "unsd",
+      "2711040",
+      "Duluth Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-745-question-1",
+    "sourceSchoolDistrictCode": 745,
+    "sourceSchoolNameEvidence": [
+      "Albany",
+      "Albany"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:albany_public_school_district",
+      "unsd",
+      "2702930",
+      "Albany Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-820-question-1",
+    "sourceSchoolDistrictCode": 820,
+    "sourceSchoolNameEvidence": [
+      "Sebeka Public School"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:sebeka_public_school_district",
+      "unsd",
+      "2732970",
+      "Sebeka Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-858-question-1",
+    "sourceSchoolDistrictCode": 858,
+    "sourceSchoolNameEvidence": [
+      "St. Charles Public Schools",
+      "St. Charles Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:st_charles_public_school_district",
+      "unsd",
+      "2733450",
+      "St. Charles Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2071-question-1",
+    "sourceSchoolDistrictCode": 2071,
+    "sourceSchoolNameEvidence": [
+      "Lake Crystal Wellcome Memorial"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:lake_crystal_wellcome_memorial",
+      "unsd",
+      "2791445",
+      "Lake Crystal-Wellcome Memorial"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2142-question-1",
+    "sourceSchoolDistrictCode": 2142,
+    "sourceSchoolNameEvidence": [
+      "St. Louis County",
+      "St. Louis County"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:st_louis_county_school_district",
+      "unsd",
+      "2700008",
+      "St. Louis County School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2164-question-1",
+    "sourceSchoolDistrictCode": 2164,
+    "sourceSchoolNameEvidence": [
+      "Dilworth-Glyndon-Felton"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:dilworth_glyndon_felton",
+      "unsd",
+      "2710260",
+      "Dilworth-Glyndon-Felton"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2310-question-1",
+    "sourceSchoolDistrictCode": 2310,
+    "sourceSchoolNameEvidence": [
+      "Sibley East Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:sibley_east_school_district",
+      "unsd",
+      "2700102",
+      "Sibley East School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2889-question-1",
+    "sourceSchoolDistrictCode": 2889,
+    "sourceSchoolNameEvidence": [
+      "Lake Park Audubon Public School"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:lake_park_audubon_school_district",
+      "unsd",
+      "2700162",
+      "Lake Park Audubon School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  },
+  {
+    "contestId": "mn-cx-2026-isd-2889-question-2",
+    "sourceSchoolDistrictCode": 2889,
+    "sourceSchoolNameEvidence": [
+      "Lake Park Audubon Public Schools"
+    ],
+    "governmentBindingEvidence": null,
+    "registryDivision": [
+      "ocd-division/country:us/state:mn/school_district:lake_park_audubon_school_district",
+      "unsd",
+      "2700162",
+      "Lake Park Audubon School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mn.json",
+    "registryFileSha256": "ce4555f2853b8cc88e9c83512f877c6ae2b6cdfc20228c126b2ab871f4eb8cdc",
+    "matchingRule": "Unique school name in the official question matches existing Census district name after removing only generic school/public/community/area terms and punctuation."
+  }
+]

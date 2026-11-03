@@ -1,0 +1,44 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MN",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "mn-cx-2026-place-lowry-question-1",
+      "ocdId": "ocd-division/country:us/state:mn/place:lowry",
+      "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/412.541/pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated measures/candidates/explanations. Adds exact Lowry question and source-backed PlanA explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "scope": "City of Lowry only",
+    "localInventory": "Resolves Lowry PlanA gap in the native Minnesota SOS workbook; Clearwater remains separate."
+  },
+  "validation": {
+    "state": "MN",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "sourceByteHashesAndFullDeclaredStatutoryLines": "PASS",
+    "exactQuestionAndStatuteQuotes": "PASS",
+    "officialSourceAuthority": "PASS",
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerAttachmentAndExactCitySelection": "PASS",
+    "statewideWidening": "NONE",
+    "nativeNetworkLimitation": "Runtime-wide proxy unavailable; statutes are honestly captured full SOURCE_TEXT, not native PDF bytes.",
+    "verificationScope": "Fresh measure-only published snapshot. Parent should replay current complete state before data installation.",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS",
+    "actualReaderReplay": "PASS",
+    "cumulativeOfficialMasterReplay": "PASS: all154officialmasterquestions (153newlocal +1heldstatewide)"
+  },
+  "nextOwner": "River: review the multi-source statutory explanation, install as data, then verify the Lowry card and source links live."
+}

@@ -1,5 +1,6 @@
 import type { Query } from "../facts/publish.ts";
-import { cardsAsBuilt, CHECKED_EVERY_MS } from "../reader/slice-meetings.ts";
+import { CHECKED_EVERY_MS } from "../reader/canonical.ts";
+import { cardsAsBuilt } from "../reader/slice-meetings.ts";
 import { cardsOfKind, MEETING_CARDS, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
 import { controlPlaneQuery, workList, type WorkList } from "./work.ts";
 
@@ -20,7 +21,7 @@ export async function slicesOf(query: Query, entities: readonly string[], places
   return [...marks.values()];
 }
 
-/** Meetings cards whose inputs are those the held card was built from are not marked: a calendar read again, or sittings checked again, with nothing new changes nothing a card shows but when it was last checked, and that moves a card at most once in six hours. */
+/** Meetings cards whose inputs are those the held card was built from are not marked: a calendar read again, or sittings checked again, with nothing new changes nothing a card shows but when it was last checked, and that moves a card at most once a day. */
 async function onlyChanged(query: Query, marks: readonly SliceMark[]): Promise<readonly SliceMark[]> {
   try { const { asBuilt } = await cardsAsBuilt(query, [...new Set(marks.filter(mark => (MEETING_CARDS as readonly string[]).includes(mark.card)).map(mark => mark.placeId))]); return marks.filter(mark => !asBuilt.has(`${mark.placeId}\t${mark.card}`)); } catch { return marks; }
 }
@@ -55,7 +56,7 @@ export function markSlicesOn(next: () => WorkList): void { list = next; unavaila
 
 /**
  * The marks go on the work list as `slice` rows, after the commit. A row already waiting is left as it is, so a burst of facts for one place
- * is one rebuild. Facts only checked again (`rechecked`) wait out the six hours a card's checked time is kept to; a mark that is owed sooner brings the row forward. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
+ * is one rebuild. Facts only checked again (`rechecked`) wait out the day a card's checked time is kept to; a mark that is owed sooner brings the row forward. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
  */
 export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>, rechecked = false): Promise<void> {
   try {

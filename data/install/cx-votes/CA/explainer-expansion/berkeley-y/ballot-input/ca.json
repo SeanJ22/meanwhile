@@ -1,0 +1,152 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-y",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+          "title": "Berkeley — Measure Y",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:51:49.489755+00:00",
+            "quote": "Shall the measure creating a special parcel tax to fund grants for performing arts organizations, art projects, art organization operational and programmatic expenses and capital projects, community festivals, and administrative costs, with oversight by the City’s Civic Arts Commission, at a rate of $0.07 per square foot of improvements, estimated to generate approximately $6,300,000 annually and $84,800,000 over its twelve-year duration, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-y-text",
+          "contestId": "ca-2026-alameda-y",
+          "officialNumber": "Measure Y",
+          "questionText": "Shall the measure creating a special parcel tax to fund grants for performing arts organizations, art projects, art organization operational and programmatic expenses and capital projects, community festivals, and administrative costs, with oversight by the City’s Civic Arts Commission, at a rate of $0.07 per square foot of improvements, estimated to generate approximately $6,300,000 annually and $84,800,000 over its twelve-year duration, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:51:49.489755+00:00",
+            "quote": "Shall the measure creating a special parcel tax to fund grants for performing arts organizations, art projects, art organization operational and programmatic expenses and capital projects, community festivals, and administrative costs, with oversight by the City’s Civic Arts Commission, at a rate of $0.07 per square foot of improvements, estimated to generate approximately $6,300,000 annually and $84,800,000 over its twelve-year duration, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Creates a 12-year property tax starting January 1, 2027 at 7 cents per square foot of improvements, with specified exemptions. Revenue goes into a restricted arts fund: 75% for performing-arts organizations, 5% for other arts organizations and individual artists, 10% for capital projects, 5% for community festivals and 5% for administration. The city estimates $6.3 million in the first year and $84.8 million over twelve years. Grants require public review, Civic Arts Commission and Council approval, and annual audits.",
+          "yesMeans": "Approve this tax and the restricted grant plan, including the eligibility, award limits and oversight rules. A simple majority is required.",
+          "noMeans": "Do not create this parcel tax or grant plan under Measure Y.",
+          "contestId": "ca-2026-alameda-y",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-y#performing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Performing-arts grants:75%",
+              "what": "Applicants need a Berkeley business address, at least three consecutive years of local live-performance operations, and nonprofit status or a qualifying nonprofit fiscal sponsor. Grants run at least two years. Requests may be up to 12.5% of average operating expenses over the prior three fiscal years for organizations below $1 million in expenses, or 10% for larger ones, using a $12.5 million expense ceiling: at most $1.25 million annually. Awards cannot be below half the requested amount; if funds cannot meet that minimum, organizations funded in the first cycle receive priority. Awards over $100,000 require community benefits."
+            },
+            {
+              "id": "ca-2026-alameda-y#performing-limits",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Performing-arts eligibility and spending limits",
+              "what": "Government units, UC Berkeley-controlled entities, colleges, for-profit businesses, individual artists and non-performing-arts nonprofits cannot receive the 75% grants. School districts are excluded except independent schools that qualify as performing-arts organizations. Eligible costs include performers, staff, training, supplies, rentals, utilities and venue fees. Capital work, equipment purchases, debt reduction, fundraising, political advocacy or lobbying, religious projects, startup costs, reserves, expenses outside the grant period and activities primarily for college students are excluded. Final awards depend on Council budget and grant allocations."
+            },
+            {
+              "id": "ca-2026-alameda-y#artists",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Individual artists:part of5%",
+              "what": "Berkeley-resident artists age 18 or older may receive up to $7,500 for a one-year project with a public presentation in Berkeley. Groups or collectives, city employees, full-time students, festival producers and people awarded grants in either of the prior two fiscal-year cycles are ineligible. Funds may cover artist and collaborator fees, equipment rentals, materials and space. They cannot cover work outside Berkeley or the grant period, joint projects combining multiple individual awards, political advocacy or lobbying, or projects mainly for curation, archiving or journalism."
+            },
+            {
+              "id": "ca-2026-alameda-y#organizations",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Other arts organizations:part of5%",
+              "what": "Qualifying Berkeley nonprofit arts organizations, including eligible fiscally sponsored entities, may request up to $25,000 annually for operational and programming costs over grant cycles of at least two years. Organizations with an active performing-arts grant cannot also receive this grant. City departments, for-profit entities, non-arts nonprofits and most school districts are ineligible. Operating costs are eligible; school-hour activities, activities mainly for college students, capital work, equipment purchases, debt reduction, fundraising, political advocacy or lobbying, religious projects, startup costs, reserves and out-of-period expenses are excluded."
+            },
+            {
+              "id": "ca-2026-alameda-y#capital",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Capital projects:10%",
+              "what": "Grants of up to $200,000 per project support acquiring, building, repairing or improving arts facilities and other long-term assets in Berkeley. Applicants need a Berkeley address and their own qualifying arts-nonprofit status; fiscal sponsors, colleges, city departments, for-profit businesses, individuals and most school districts are ineligible. Projects need a budget, public access, documented completion within the agreement period and compliance with accessibility and building laws; construction requires proof of ownership or a long-term lease. Regular programming, unrelated overhead, fundraising, multiple projects in one application, political advocacy or lobbying, startups and reserves are excluded. School grounds are excluded except qualifying independent performing-arts schools. Campus locations must satisfy the public-access rules."
+            },
+            {
+              "id": "ca-2026-alameda-y#festivals",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Festivals:5%",
+              "what": "Eligible nonprofits and qualifying fiscally sponsored nonprofit entities may request up to $25,000 per festival, with a budget. Events must occur in Berkeley within one year, be open and accessible to the public and have a free component. Artist fees, equipment rental, production, materials, venue permits, sanitation and security are eligible. Ongoing programs, capital work, unrelated overhead, school-hour events, student-focused campus events, events mainly for fundraising or sports, political advocacy and lobbying are excluded. City departments, for-profit businesses and individual artists cannot receive these grants."
+            },
+            {
+              "id": "ca-2026-alameda-y#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Property-tax exemptions",
+              "what": "The rate is 7 cents per square foot of improvements for residential and other property, including parking structures. Owner-occupants may apply annually if they are 65 or older and have qualifying low household income, or at any age with qualifying very-low household income. Eligibility uses HUD household-size limits and prior income documentation. Tax-exempt religious or school property is exempt, as is housing with a government agreement restricting rents and occupancy in at least 60% of units, and transitional housing for people leaving homelessness; housing owners apply annually. Legally exempt owners or possessory interests retain applicable exemptions."
+            },
+            {
+              "id": "ca-2026-alameda-y#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Oversight and collection",
+              "what": "A separate Arts Vitality Fund restricts spending to the measure’s purposes and is intended to add to existing arts funding. Grants receive public panel and commission review and final Council approval. The Finance Director reports each January starting in 2028 on collections, spending and project status. An independent or elected auditor audits grant spending annually, and the Civic Arts Commission reviews the audit. Unpaid taxes follow county property-tax penalties and interest and become a property lien and personal debt. Five percent of revenue pays administration."
+            },
+            {
+              "id": "ca-2026-alameda-y#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "City changes and competing measures",
+              "what": "Tax extension or increase and repeal require voter approval. The measure also allows Council-approved changes furthering its purposes, including technical corrections, consistent tax-calculation clarifications and implementing regulations. If approved measures conflict, the one with more yes votes takes effect in full and the other is void; this measure revives if a measure that superseded it is later invalidated."
+            },
+            {
+              "id": "ca-2026-alameda-y#defense",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Legal defense",
+              "what": "If the city fails to defend the measure or appeal an adverse ruling, proponents may defend it as agents of the voters. The city must cover their reasonable expenses and losses for that defense, up to what the city would have spent defending it itself."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:51:49.489755+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:51:49.489755+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+        "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Specific bounded pages include Berkeley Y official question, entire neutral analysis and full legal text; submitted arguments excluded. Source-word-spacing OCR artifacts are not copied into reader prose."
+      }
+    ]
+  }
+}

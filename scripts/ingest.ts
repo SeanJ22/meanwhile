@@ -100,7 +100,6 @@ import { scopedMeetingSource } from "./lib/scoped-meeting-source.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { derivedFamilyReadGroups, readDerivedFamilyMembers } from "../lib/civic-data/derived-meeting-acquisition.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import {
@@ -115,13 +114,12 @@ import {
   buildDerivedFamily,
   derivedFamilyCandidate,
   derivedFamilyFailedCandidate,
-  DERIVED_FAMILY_SOURCE_ID,
   familyMemberReadIssue,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
 import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, bindMeetingSourceObservations, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
-import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
+import { confirmMeetingFactsFromSources } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { withDerivedSourceContent } from "../lib/civic-data/derived-source-hash.ts";
 import { sourceHashReceiptFields, type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
 import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
@@ -692,7 +690,7 @@ async function promoteDerivedMeetingBody(
         vault: facts.vault, bodyIds: heldBodies, responses: [response] }).then(() => {}) : undefined);
     stopWatch=sourceSession.watchTermination();
     const confirmed = await probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: generatedAt, session: sourceSession,
-      workRemains: plan => facts ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+      continueFacts: plan => facts ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
         clocks:factClocks(null),at:generatedAt,meetingIds:plan.meetingIds,bodyIds:[partition.bodyId]})) : Promise.resolve(false) });
     if (confirmed) {
       console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
@@ -741,7 +739,7 @@ async function promoteDerivedMeetingBody(
   })))];
   let complete = reads.length === members.filter(member => member.status === "ACTIVE").length && reads.every(read => familyMemberReadIssue(read) === null);
   const acquiredConfirmation = complete && sourceSession && sourceInputHash ? await confirmAcquiredMeetingSource({ store, partition, session: sourceSession,
-    normalizationInputHash: sourceInputHash, now: new Date().toISOString(), workRemains: plan => facts
+    normalizationInputHash: sourceInputHash, now: new Date().toISOString(), continueFacts: plan => facts
       ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
         clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:[partition.bodyId]})) : Promise.resolve(true) }) : null;
   if (acquiredConfirmation && sourceSession) {
@@ -1088,7 +1086,7 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
       const measurement = diggerMeasurement(partition.bodyId, dryRun);
       measurement.worked();
       const confirmed = sourceSession ? await measurement.read(() => sourceSession.run(() => probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: at, session: sourceSession,
-        workRemains: plan => sourceSession.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession.head,
+        continueFacts: plan => sourceSession.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession.head,
           observations:[...sourceSession.responses.values()],clocks:factClocks(null),at,meetingIds:plan.meetingIds,bodyIds:[...new Set(plan.bodyIds ?? [partition.bodyId])]})) }))) : null;
       if (confirmed && sourceSession) {
         console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
@@ -1177,12 +1175,11 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
     return { measurement: measurement?.result() ?? null, partitions: [{ partition, candidate, outcome }], succeeded: false, sourceSucceeded: false, exitCode: 2, sourceReads };
   }
   if (promotionStore && partitions.length === 1 && options.sourceSession && options.sourceInputHash) {
-    const session = options.sourceSession, partition = partitions[0]!, query = options.facts?.db.query ?? factReader();
+    const session = options.sourceSession, partition = partitions[0]!;
     const compare = () => session.run(() => confirmAcquiredMeetingSource({ store: promotionStore, partition, session,
-      normalizationInputHash: options.sourceInputHash!, now: new Date().toISOString(), workRemains: plan => query
-        ? options.facts ? session.inputs(()=>meetingFactsAfterSourceCheck({facts:options.facts!.db,vault:options.facts!.vault,head:session.head,
-          observations:[...session.responses.values()],clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}))
-          : meetingFactWorkRemains(query, plan.meetingIds, plan.bodyIds, new Date().toISOString()) : Promise.resolve(true) }));
+      normalizationInputHash: options.sourceInputHash!, now: new Date().toISOString(), continueFacts: plan => options.facts
+        ? session.inputs(()=>meetingFactsAfterSourceCheck({facts:options.facts!.db,vault:options.facts!.vault,head:session.head,
+          observations:[...session.responses.values()],clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:plan.bodyIds})) : Promise.resolve(false) }));
     const confirmed = measurement ? await measurement.read(compare) : await compare();
     if (confirmed) {
       console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
@@ -1778,9 +1775,9 @@ export async function promoteMeetingPartition(
   if(facts)await stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope:partition.scope,candidateId:candidate.id,
     meetings:snapshot.meetings.filter(meeting=>!meeting.carried),responses:[...tracedResponses(snapshot.sources,retainedResponses),
       ...retainedResponses.filter(response=>response.source==="census-geocoder")],geocodeAttempts:facts.geocodeAttempts});
-  // An ordinary routine re-check that found nothing new is confirmed on the
+  // A re-check that found nothing new, including one whose same pages failed again, is confirmed on the
   // pointed version, not republished.
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: sourcePlan === undefined });
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: sourcePlan === undefined || !sourcePlan.acquisitionComplete });
   return { candidate, outcome };
 }
 

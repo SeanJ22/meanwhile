@@ -237,7 +237,7 @@ export async function probeMeetingSource(input: {
   readonly normalizationInputHash: string;
   readonly now: string;
   readonly session: Awaited<ReturnType<typeof meetingSourceSession>>;
-  readonly workRemains: (plan: MeetingSourceProbe) => Promise<boolean>;
+  readonly continueFacts: (plan: MeetingSourceProbe) => Promise<unknown>;
 }) {
   const head = input.session.head;
   const plan = head ? await input.store.readCandidatePath<MeetingSourceProbe>(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
@@ -245,7 +245,7 @@ export async function probeMeetingSource(input: {
     !["REQUESTS", "DERIVED_INPUTS"].includes(plan.sourceHashKind) ||
     plan.normalizationInputHash !== input.normalizationInputHash || plan.sourceRawHash !== head.rawHash) return null;
   try {
-    if (!await input.session.probe(plan) || await input.workRemains(plan)) { input.session.responses.clear(); return null; }
+    if (!await input.session.probe(plan)) { input.session.responses.clear(); return null; } else await input.continueFacts(plan);
   } catch (error) { if (!meetingSourceBudgetAvailable()) throw error; input.session.responses.clear(); return null; }
   const pages = [...input.session.responses.values()], first = pages[0]!;
   const rawHash = plan.sourceHashKind === "REQUESTS" ? sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } })),
@@ -295,7 +295,8 @@ export async function confirmAcquiredMeetingSource(input: Parameters<typeof prob
       await input.session.fetch(page.requestedUrl, { method: page.request.method, body: page.request.body, headers: page.request.headers });
     }
     if (!input.session.acquisitionComplete || [...input.session.responses.values()].some(page => !expected.has(identity(page))) ||
-      expected.size !== new Set([...input.session.responses.values()].map(identity)).size || await input.workRemains(plan)) return null;
+      expected.size !== new Set([...input.session.responses.values()].map(identity)).size) return null;
+    await input.continueFacts(plan); // Owed facts finish on this same version; a new one would restart their progress.
   } catch (error) { if (!meetingSourceBudgetAvailable()) throw error; return null; }
   const pages = [...input.session.responses.values()], first = pages[0]!;
   const rawHash = plan.sourceHashKind === "REQUESTS" ? sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } })),

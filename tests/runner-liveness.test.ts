@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { hangShouldTerminate } from "../lib/control-plane/runner-liveness.ts";
@@ -15,7 +16,14 @@ const prev: RunnerHeartbeat = {
   testedSha: "d72f5fc1",
   host: "SeanLenovo",
   intakeRuntime: { observedAt: "2026-09-18T19:15:00.000Z", outcome: "ATTENTION", detail: "1 flag" } as RunnerHeartbeat["intakeRuntime"],
+  jobs: { "platform-census": { everyMs: 600_000, since: "2026-09-18T19:00:00Z", lastStartedAt: "2026-09-18T19:10:00Z",
+    lastFinishedAt: null, lastFailedAt: "2026-09-18T19:11:00Z", lastError: "Platform census stopped: exit 1; source unavailable", heldBy: null } },
 };
+
+test("the research child leaves the runner's heartbeat and cycle fields to the runner", () => {
+  assert.doesNotMatch(readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8"),
+    /\brunnerHeartbeat\b|\blastCycleOk\b|\blastCycleStartedAt\b|\blastCycleFinishedAt\b|\bnextCycleDueAt\b/);
+});
 
 test("a live long-running cycle beats without inventing a finish or new work", () => {
   const beat = liveCycleHeartbeat(prev, { at: "2026-10-02T01:42:00.000Z", startedAt: "2026-10-02T01:02:00.000Z",
@@ -28,6 +36,7 @@ test("a live long-running cycle beats without inventing a finish or new work", (
   assert.equal(beat.cycle.exitCode, null);
   assert.equal(beat.nextCycleDueAt, null);
   assert.equal(beat.intakeRuntime, prev.intakeRuntime);
+  assert.equal(beat.jobs, prev.jobs);
 });
 
 test("a child exit records its actual code, signal and error independently of prior success", () => {
@@ -40,6 +49,7 @@ test("a child exit records its actual code, signal and error independently of pr
   assert.equal(beat.cycle.exitCode, null);
   assert.equal(beat.cycle.signal, "SIGTERM");
   assert.equal(beat.cycle.lastError, "child stopped");
+  assert.equal(beat.jobs, prev.jobs);
 });
 
 test("the first cycle can beat before any finished history exists", () => {

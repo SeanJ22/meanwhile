@@ -871,7 +871,7 @@ function migrations() {
     for (const path of (naming ?? "").split("\n").filter(Boolean)) {
       if (path === JOURNAL) continue;
       const text = readFileSync(join(ROOT, path), "utf8");
-      writeFileSync(join(ROOT, path), text.split(rename.oldTag).join(rename.tag), "utf8");
+      writeFileSync(join(ROOT, path), text.replace(new RegExp(`(?<![\\w-])${rename.oldTag}(?![\\w-])`, "g"), rename.tag), "utf8");
       git(["add", path]);
     }
     console.log(`river migrations: ${rename.from} → ${rename.to} (when ${rename.when})`);

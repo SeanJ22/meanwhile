@@ -1,0 +1,38 @@
+[
+  {
+    "requestedUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "retrievedAt": "2026-11-03T07:00:02.999727+00:00",
+    "finalUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+    "bytes": 135582,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "pitkin-tabor.pdf",
+    "sourceOrg": "Pitkin County Clerk and Recorder",
+    "savedFile": "sources/86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "2c24ba3aa5c5687e5271d2010c438bc5a2468daf1fa0789f405582d259bcce28",
+    "storedBytes": 84204,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_258593275a0a4040a05a9e4ba5b24f11.pdf",
+    "retrievedAt": "2026-11-03T06:43:39.360082+00:00",
+    "finalUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_258593275a0a4040a05a9e4ba5b24f11.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "3475a25dcb5f00284ae4d15fde8e0b6190b346d6f467be188872401d2b357940",
+    "bytes": 1721867,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "pitkin-all-sample.pdf",
+    "sourceOrg": "Pitkin County Clerk and Recorder",
+    "savedFile": "sources/3475a25dcb5f00284ae4d15fde8e0b6190b346d6f467be188872401d2b357940.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "5f5616945f842a2396b971df6f89803c611fbe1f398d41823177dc7ba94002bf",
+    "storedBytes": 1647663,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

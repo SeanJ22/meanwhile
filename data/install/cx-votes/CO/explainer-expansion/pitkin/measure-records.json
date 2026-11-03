@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "co-pitkin-county-2026-ballot-1a",
+    "whatItDoes": "After the current Healthy Community Fund property tax expires in 2027, impose a new 0.853-mill property tax beginning with collections in 2028, for no more than 25 years. The question authorizes $5,266,081 in the first full collection year and whatever the rate generates later. Money would be dedicated to health and human services and community nonprofits, including the purposes listed below. The county could retain and spend this tax and interest above the stated constitutional, statutory and county-charter revenue limits, including other annual limits that might apply or be proposed.",
+    "yesMeans": "Approve the new 0.853-mill levy to continue the fund after the current tax expires, and the proposed revenue-limit exceptions.",
+    "noMeans": "Do not approve this replacement levy or its proposed revenue-limit exceptions; the question states the current property tax expires in 2027.",
+    "parts": [
+      {
+        "id": "co-pitkin-county-2026-ballot-1a#purposes",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Dedicated uses",
+        "what": "Listed uses are protective and supportive services, including food access, for children and adults; healthy-aging services; support for survivors of domestic violence and sexual assault; behavioral-health and substance-use prevention, treatment and aftercare; care for terminally ill people and their families; natural-resource protection and support; preventive and integrated health care for lower-income people; and support for independence for people with developmental disabilities and their families."
+      }
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-aspen-2026-ballot-2a",
+    "whatItDoes": "Allow Aspen to borrow up to $100 million to expand, renovate, improve, remodel and equip its water-treatment facility, with total repayment capped at $255 million. Repayment would come only from the city’s water-enterprise revenue, with no tax increase authorized by this question. The City Council would set the terms and interest rates for revenue bonds or other financial obligations lasting more than one fiscal year. Revenue and interest from these obligations could be collected, retained and spent under the proposed exception to Colorado and other legal revenue limits.",
+    "yesMeans": "Approve the water-facility debt, repayment solely from water-enterprise revenue and the stated revenue-limit exception.",
+    "noMeans": "Do not authorize this debt or its proposed revenue-limit exception through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-snowmass-water-and-sanitation-district-2026-ballot-6a",
+    "whatItDoes": "Allow the district to borrow up to $15 million through general-obligation bonds, with total repayment capped at $22.5 million, and increase property taxes by up to $2 million a year to repay them. Money would expand Ziegler Reservoir to increase municipal water supply, improve raw-water quality and add water for emergency fire suppression. Remaining available funds could pay for water-system improvements. The property-tax rate would have no mill-rate ceiling, but annual taxes would remain subject to the $2 million cap and be limited to amounts needed for principal, any repayment premium and interest.",
+    "yesMeans": "Approve the reservoir and system-improvement bonds and repayment property taxes within the stated limits.",
+    "noMeans": "Do not authorize these bonds or associated repayment property taxes through this measure.",
+    "parts": [
+      {
+        "id": "co-snowmass-water-and-sanitation-district-2026-ballot-6a#bond-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms",
+        "what": "The maximum net effective interest rate would be 5.5% a year. The district board would set issuance dates, prices above, below or equal to the bonds’ principal, and other terms consistent with the question."
+      }
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b",
+    "whatItDoes": "Create a 0.55% district sales tax, or 55 cents per $100, beginning January 1, 2027, on transactions subject to state sales tax, excluding groceries and other exempt items. Money would pay for fire protection and emergency services, including a year-round wildland-fire division, wildfire prevention and fuels reduction, fire suppression, emergency medical and rescue services, equipment and facilities, and related staffing, operating, maintenance and capital costs. All district revenue could be retained and spent despite legal revenue limits. The published first-year dollar wording is described below.",
+    "yesMeans": "Approve the new sales tax for the stated services and the revenue-limit exception for all district revenue.",
+    "noMeans": "Do not approve this additional sales tax or the proposed exception to district revenue limits.",
+    "parts": [
+      {
+        "id": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b#published-dollar-wording",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Published dollar wording",
+        "what": "The question prints the first-year amount as “$2,300,000 MILLION.” The accompanying fiscal estimate lists $2,300,000 for 2027, although that table labels the issue 7A within the section for 6B. The stated sales-tax rate is 0.55% in both the question and sample ballot."
+      }
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,107 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-durango-west-metropolitan-district-1-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:durango_west_metropolitan_district_1",
+          "divisionVintage": "2026",
+          "title": "Durango West Metropolitan District No. 1 Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL DURANGO WEST METROPOLITAN DISTRICT NO. 1 DEBT BE INCREASED $2,000,000, WITH A REPAYMENT COST OF NOT MORE THAN $3,500,000 AND SHALL DURANGO WEST METROPOLITAN DISTRICT NO. 1 TAXES BE INCREASED $210,000 ANNUALLY, OR BY SUCH LESSER ANNUAL AMOUNT AS MAY BE NECESSARY TO PAY THE DISTRICT'S DEBT; SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS OR OTHER OBLIGATIONS, INCLUDING CONTRACTS, ISSUED OR INCURRED FOR THE PURPOSE OF PAYING, REIMBURSING, OR FINANCING ALL OR ANY PART OF THE COSTS OF ACQUIRING, CONSTRUCTING, RELOCATING, INSTALLING, COMPLETING, REPAIRING, REPLACING AND OTHERWISE PROVIDING, WITHIN OR WITHOUT THE BOUNDARIES OF THE DISTRICT, STREET AND ROAD IMPROVEMENTS, TOGETHER WITH ALL NECESSARY, INCIDENTAL, AND APPURTENANT FACILITIES, EQUIPMENT, LAND, AND EASEMENTS, SUCH DEBT TO BEAR INTEREST AT A NET EFFECTIVE INTEREST RATE NOT IN EXCESS OF 6.00% PER ANNUM, SUCH INTEREST TO BE PAYABLE AT SUCH TIME OR TIMES AND WHICH MAY COMPOUND PERIODICALLY AS MAY BE DETERMINED BY THE DISTRICT BOARD, SUCH DEBT TO BE SOLD IN ONE OR MORE SERIES AT A PRICE ABOVE, BELOW OR EQUAL TO THE PRINCIPAL AMOUNT OF SUCH DEBT ON SUCH CONDITIONS AS THE DISTRICT MAY DETERMINE, INCLUDING PROVISIONS FOR REDEMPTION OF THE DEBT PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF PREMIUM IN AN AMOUNT NOT IN EXCESS OF 3% OF THE PRINCIPAL AMOUNT BEING REDEEMED, TO BE PAID FROM ANY LEGALLY AVAILABLE MONEYS OF THE DISTRICT, INCLUDING THE PROCEEDS OF AD VALOREM PROPERTY TAXES; SUCH TAXES TO CONSIST OF AN AD VALOREM MILL LEVY IMPOSED ON ALL TAXABLE PROPERTY WITHIN THE DISTRICT, WITHOUT LIMITATION OF RATE OR WITH SUCH LIMITATIONS AS MAY BE DETERMINED BY THE BOARD, AND IN AMOUNTS SUFFICIENT TO PRODUCE THE ANNUAL INCREASE SET FORTH ABOVE OR SUCH LESSER AMOUNT AS MAY BE NECESSARY, TO BE USED SOLELY FOR THE PURPOSE OF PAYING THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON THE DISTRICT'S DEBT; AND SHALL THE PROCEEDS OF ANY SUCH DEBT AND THE PROCEEDS OF SUCH TAXES, ANY OTHER REVENUE USED TO PAY SUCH DEBT, AND INVESTMENT INCOME THEREON, CONSTITUTE VOTER-APPROVED REVENUE CHANGES AND BE COLLECTED AND SPENT BY THE DISTRICT WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "La Plata County Clerk and Recorder",
+            "sourceUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+            "collectedAt": "2026-11-03T06:43:40.386070+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.404417+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-durango-west-metropolitan-district-1-2026-ballot-6a#question",
+          "contestId": "co-durango-west-metropolitan-district-1-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL DURANGO WEST METROPOLITAN DISTRICT NO. 1 DEBT BE INCREASED $2,000,000, WITH A REPAYMENT COST OF NOT MORE THAN $3,500,000 AND SHALL DURANGO WEST METROPOLITAN DISTRICT NO. 1 TAXES BE INCREASED $210,000 ANNUALLY, OR BY SUCH LESSER ANNUAL AMOUNT AS MAY BE NECESSARY TO PAY THE DISTRICT'S DEBT; SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS OR OTHER OBLIGATIONS, INCLUDING CONTRACTS, ISSUED OR INCURRED FOR THE PURPOSE OF PAYING, REIMBURSING, OR FINANCING ALL OR ANY PART OF THE COSTS OF ACQUIRING, CONSTRUCTING, RELOCATING, INSTALLING, COMPLETING, REPAIRING, REPLACING AND OTHERWISE PROVIDING, WITHIN OR WITHOUT THE BOUNDARIES OF THE DISTRICT, STREET AND ROAD IMPROVEMENTS, TOGETHER WITH ALL NECESSARY, INCIDENTAL, AND APPURTENANT FACILITIES, EQUIPMENT, LAND, AND EASEMENTS, SUCH DEBT TO BEAR INTEREST AT A NET EFFECTIVE INTEREST RATE NOT IN EXCESS OF 6.00% PER ANNUM, SUCH INTEREST TO BE PAYABLE AT SUCH TIME OR TIMES AND WHICH MAY COMPOUND PERIODICALLY AS MAY BE DETERMINED BY THE DISTRICT BOARD, SUCH DEBT TO BE SOLD IN ONE OR MORE SERIES AT A PRICE ABOVE, BELOW OR EQUAL TO THE PRINCIPAL AMOUNT OF SUCH DEBT ON SUCH CONDITIONS AS THE DISTRICT MAY DETERMINE, INCLUDING PROVISIONS FOR REDEMPTION OF THE DEBT PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF PREMIUM IN AN AMOUNT NOT IN EXCESS OF 3% OF THE PRINCIPAL AMOUNT BEING REDEEMED, TO BE PAID FROM ANY LEGALLY AVAILABLE MONEYS OF THE DISTRICT, INCLUDING THE PROCEEDS OF AD VALOREM PROPERTY TAXES; SUCH TAXES TO CONSIST OF AN AD VALOREM MILL LEVY IMPOSED ON ALL TAXABLE PROPERTY WITHIN THE DISTRICT, WITHOUT LIMITATION OF RATE OR WITH SUCH LIMITATIONS AS MAY BE DETERMINED BY THE BOARD, AND IN AMOUNTS SUFFICIENT TO PRODUCE THE ANNUAL INCREASE SET FORTH ABOVE OR SUCH LESSER AMOUNT AS MAY BE NECESSARY, TO BE USED SOLELY FOR THE PURPOSE OF PAYING THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON THE DISTRICT'S DEBT; AND SHALL THE PROCEEDS OF ANY SUCH DEBT AND THE PROCEEDS OF SUCH TAXES, ANY OTHER REVENUE USED TO PAY SUCH DEBT, AND INVESTMENT INCOME THEREON, CONSTITUTE VOTER-APPROVED REVENUE CHANGES AND BE COLLECTED AND SPENT BY THE DISTRICT WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED AND SPENT BY THE DISTRICT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL DURANGO WEST METROPOLITAN DISTRICT NO. 1 DEBT BE INCREASED $2,000,000, WITH A REPAYMENT COST OF NOT MORE THAN $3,500,000 AND SHALL DURANGO WEST METROPOLITAN DISTRICT NO. 1 TAXES BE INCREASED $210,000 ANNUALLY, OR BY SUCH LESSER ANNUAL AMOUNT AS MAY BE NECESSARY TO PAY THE DISTRICT'S DEBT; SUCH DEBT TO CONSIST OF GENERAL OBLIGATION BONDS OR OTHER OBLIGATIONS, INCLUDING CONTRACTS, ISSUED OR INCURRED FOR THE PURPOSE OF PAYING, REIMBURSING, OR FINANCING ALL OR ANY PART OF THE COSTS OF ACQUIRING, CONSTRUCTING, RELOCATING, INSTALLING, COMPLETING, REPAIRING, REPLACING AND OTHERWISE PROVIDING, WITHIN OR WITHOUT THE BOUNDARIES OF THE DISTRICT, STREET AND ROAD IMPROVEMENTS, TOGETHER WITH ALL NECESSARY, INCIDENTAL, AND APPURTENANT FACILITIES, EQUIPMENT, LAND, AND EASEMENTS, SUCH DEBT TO BEAR INTEREST AT A NET EFFECTIVE INTEREST RATE NOT IN EXCESS OF 6.00% PER ANNUM, SUCH INTEREST TO BE PAYABLE AT SUCH TIME OR TIMES AND WHICH MAY COMPOUND PERIODICALLY AS MAY BE DETERMINED BY THE DISTRICT BOARD, SUCH DEBT TO BE SOLD IN ONE OR MORE SERIES AT A PRICE ABOVE, BELOW OR EQUAL TO THE PRINCIPAL AMOUNT OF SUCH DEBT ON SUCH CONDITIONS AS THE DISTRICT MAY DETERMINE, INCLUDING PROVISIONS FOR REDEMPTION OF THE DEBT PRIOR TO MATURITY WITH OR WITHOUT PAYMENT OF PREMIUM IN AN AMOUNT NOT IN EXCESS OF 3% OF THE PRINCIPAL AMOUNT BEING REDEEMED, TO BE PAID FROM ANY LEGALLY AVAILABLE MONEYS OF THE DISTRICT, INCLUDING THE PROCEEDS OF AD VALOREM PROPERTY TAXES; SUCH TAXES TO CONSIST OF AN AD VALOREM MILL LEVY IMPOSED ON ALL TAXABLE PROPERTY WITHIN THE DISTRICT, WITHOUT LIMITATION OF RATE OR WITH SUCH LIMITATIONS AS MAY BE DETERMINED BY THE BOARD, AND IN AMOUNTS SUFFICIENT TO PRODUCE THE ANNUAL INCREASE SET FORTH ABOVE OR SUCH LESSER AMOUNT AS MAY BE NECESSARY, TO BE USED SOLELY FOR THE PURPOSE OF PAYING THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON THE DISTRICT'S DEBT; AND SHALL THE PROCEEDS OF ANY SUCH DEBT AND THE PROCEEDS OF SUCH TAXES, ANY OTHER REVENUE USED TO PAY SUCH DEBT, AND INVESTMENT INCOME THEREON, CONSTITUTE VOTER-APPROVED REVENUE CHANGES AND BE COLLECTED AND SPENT BY THE DISTRICT WITHOUT REGARD TO ANY SPENDING, REVENUE-RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "La Plata County Clerk and Recorder",
+            "sourceUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+            "collectedAt": "2026-11-03T06:43:40.386070+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.404417+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-durango-west-metropolitan-district-1-2026-ballot-6a",
+          "whatItDoes": "Allow the district to borrow $2 million for street and road improvements and related facilities, equipment, land and easements, inside or outside the district. Total repayment would be capped at $3.5 million. Annual property taxes would rise by up to $210,000, or a lower amount needed for the debt. The property-tax rate would have no ceiling unless the district board sets one, while the annual dollar limit would still apply. The new taxes could be used only for debt principal, any early-repayment premium and interest. Legally available district money could also repay the debt.",
+          "yesMeans": "Approve the debt and repayment property taxes within the stated limits, along with the proposed revenue-limit exception.",
+          "noMeans": "Do not authorize this new debt, associated property-tax levy or revenue-limit exception through this measure.",
+          "parts": [
+            {
+              "id": "co-durango-west-metropolitan-district-1-2026-ballot-6a#financing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Debt terms",
+              "what": "Debt could take the form of general-obligation bonds, other obligations or contracts. The maximum net effective interest rate would be 6% a year. The board could set payment dates and periodic compounding, issue debt in one or more series at prices above, below or equal to principal, and allow early repayment with an extra charge capped at 3% of the principal being repaid."
+            },
+            {
+              "id": "co-durango-west-metropolitan-district-1-2026-ballot-6a#revenue-limits",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Revenue-limit exception",
+              "what": "Debt proceeds, the new taxes, other revenue used to repay the debt and their investment income could be retained and spent outside the stated constitutional spending and revenue limits. The question would not limit other district revenue in any year."
+            }
+          ],
+          "sourceUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+          "sourceHash": "64bc349d565ba99ac65a61137b2c4d28978dd0416266f2c52f32194a4ff20ef7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:58:59.404417+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:58:59.404417+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2001.pdf?t=202609241030460",
+        "finalUrl": "https://cms9files.revize.com/laplata/Sample%20Ballot%20Style%2001.pdf?t=202609241030460",
+        "publisher": "La Plata County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:43:39.366125+00:00",
+        "httpStatus": 200,
+        "rawHash": "a799899a52988707c7bf0d7824a1d601d144129d6c40dd1c1b00c6d709e848f2",
+        "reviewedEvidence": "Complete original current November3,2026 sample PDFs. Official county sample index distinguishes the all-county style from DurangoWestMetroNo1 style. Full operative question supplies all borrowing, tax, interest and early-repayment caps. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+        "finalUrl": "https://cms9files.revize.com/laplata/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+        "publisher": "La Plata County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:43:40.386070+00:00",
+        "httpStatus": 200,
+        "rawHash": "64bc349d565ba99ac65a61137b2c4d28978dd0416266f2c52f32194a4ff20ef7",
+        "reviewedEvidence": "Complete original current November3,2026 sample PDFs. Official county sample index distinguishes the all-county style from DurangoWestMetroNo1 style. Full operative question supplies all borrowing, tax, interest and early-repayment caps. No advocacy used."
+      }
+    ]
+  }
+}

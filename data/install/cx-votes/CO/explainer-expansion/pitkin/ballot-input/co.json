@@ -1,0 +1,251 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-pitkin-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:pitkin",
+          "divisionVintage": "2026",
+          "title": "Pitkin County Ballot Issue 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL PITKIN COUNTY TAXES BE INCREASED BY $5,266,081.00 ANNUALLY, BEGINNING IN THE FIRST FULL FISCAL YEAR OF COLLECTION IN 2028, TO CONTINUE FUNDING THE HEALTHY COMMUNITY FUND, WHICH HAS PROVIDED FUNDING FOR HEALTH AND HUMAN SERVICES AND COMMUNITY NON-PROFITS FOR THE PAST TWENTY-FOUR YEARS, AFTER THE CURRENT PROPERTY TAX EXPIRES IN 2027, AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER FOR A PERIOD NOT TO EXCEED TWENTY FIVE YEARS, BY THE IMPOSITION OF A NEW 0.853 MILL LEVY, FOR THE SOLE PURPOSE OF PROVIDING A STABLE FUNDING SOURCE FOR HEALTH AND HUMAN SERVICES AND COMMUNITY NON-PROFITS INCLUDING: • PROTECTIVE AND SUPPORTIVE SERVICES, INCLUDING FOOD ACCESS, FOR CHILDREN AND ADULTS • SERVICES AND ACTIVITIES SUPPORTING HEALTHY AGING FOR OLDER ADULTS • SUPPORTING SURVIVORS OF DOMESTIC VIOLENCE AND SEXUAL ASSAULT • BEHAVIORAL HEALTH AND SUBSTANCE USE PREVENTION, TREATMENT, AND AFTERCARE SERVICES • CARE FOR THE TERMINALLY ILL AND THEIR FAMILIES • PROTECTING AND SUPPORTING NATURAL RESOURCES • PREVENTIVE AND INTEGRATED HEALTH CARE SERVICES FOR LOWER-INCOME INDIVIDUALS • SERVICES SUPPORTING INDEPENDENCE FOR INDIVIDUALS WITH DEVELOPMENTAL DISABILITIES AND THEIR FAMILIES AND SHALL THE COUNTY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AND THE INTEREST EARNINGS THEREON AS A VOTER-APPROVED REVENUE CHANGE ABOVE THE ANNUAL LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ABOVE ANNUAL LIMITS WHICH MIGHT OTHERWISE APPLY OR BE PROPOSED, INCLUDING AS AN APPROVED EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ARTICLE 9 OF THE COUNTY HOME RULE CHARTER?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        },
+        {
+          "id": "co-aspen-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:aspen",
+          "divisionVintage": "2026",
+          "title": "City of Aspen Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT INCREASING ANY TAXES, SHALL THE CITY OF ASPEN DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $100,000,000, WITH A TOTAL REPAYMENT COST NOT TO EXCEED $255,000,000, FOR THE PURPOSE OF FINANCING THE EXPANSION, RENOVATION, IMPROVEMENT, REMODELING AND EQUIPPING OF ITS WATER TREATMENT FACILITY; SUCH DEBT TO BE ISSUED IN THE FORM OF REVENUE BONDS OR OTHER MULTIPLE FISCAL YEAR FINANCIAL OBLIGATION, WITH SUCH TERMS, AND BEARING INTEREST AT SUCH RATES AS MAY BE APPROVED BY CITY COUNCIL, PAYABLE SOLELY FROM THE WATER ACTIVITY ENTERPRISE REVENUE, AND TO COLLECT, RETAIN AND SPEND ALL REVENUE AND INTEREST FROM THESE FINANCIAL OBLIGATIONS AS A VOTER-APPROVED REVENUE CHANGE TO LIMITS UNDER COLORADO LAW, OR ANY OTHER LAW?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        },
+        {
+          "id": "co-snowmass-water-and-sanitation-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:snowmass_water_and_sanitation_district",
+          "divisionVintage": "2026",
+          "title": "Snowmass Water and Sanitation District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL SNOWMASS WATER AND SANITATION DISTRICT DEBT BE INCREASED UP TO $15 MILLION, WITH A MAXIMUM REPAYMENT COST OF NOT MORE THAN $22.5 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $2 MILLION ANNUALLY FOR THE PURPOSE OF FINANCING THE EXPANSION OF ZIEGLER RESERVOIR, TO INCREASE MUNICIPAL WATER SUPPLY, IMPROVE RAW WATER QUALITY AND PROVIDE ADDITIONAL WATER FOR EMERGENCY FIRE SUPPRESSION, AND TO THE EXTENT OF AVAILABLE FUNDS FINANCING SYSTEM IMPROVEMENTS, SUCH DEBT TO CONSIST OF THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS, WHICH BONDS SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED FIVE AND ONE-HALF PERCENT PER ANNUM AND BE ISSUED AT SUCH TIMES AND PRICES (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE AMOUNTS SET FORTH ABOVE, SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON SUCH DEBT?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        },
+        {
+          "id": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:snowmass_wildcat_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Snowmass-Wildcat Fire Protection District Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL SNOWMASS-WILDCAT FIRE PROTECTION DISTRICT TAXES BE INCREASED $2,300,000 MILLION IN THE FIRST FULL FISCAL YEAR BEGINNING JANUARY 1, 2027 AND BY SUCH AMOUNT AS ARE RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.55% (55 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION AND EMERGENCY SERVICES AS SERVICE DEMANDS INCREASE, INCLUDING BUT NOT LIMITED TO: • ESTABLISHMENT, OPERATION, AND MAINTENANCE OF A YEAR-ROUND WILDLAND FIRE DIVISION • IMPLEMENTATION OF HAZARDOUS FUELS REDUCTION AND WILDFIRE MITIGATION PROJECTS • MAINTENANCE AND ENHANCEMENT OF FIRE SUPPRESSION, EMERGENCY MEDICAL, RESCUE, AND EMERGENCY RESPONSE CAPABILITIES • ACQUISITION OF RELATED EQUIPMENT, APPARATUS, AND FACILITIES, AND • PAYMENT OF ASSOCIATED OPERATIONAL, MAINTENANCE, PERSONNEL, AND CAPITAL IMPROVEMENT COSTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-pitkin-county-2026-ballot-1a#question",
+          "contestId": "co-pitkin-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "SHALL PITKIN COUNTY TAXES BE INCREASED BY $5,266,081.00 ANNUALLY, BEGINNING IN THE FIRST FULL FISCAL YEAR OF COLLECTION IN 2028, TO CONTINUE FUNDING THE HEALTHY COMMUNITY FUND, WHICH HAS PROVIDED FUNDING FOR HEALTH AND HUMAN SERVICES AND COMMUNITY NON-PROFITS FOR THE PAST TWENTY-FOUR YEARS, AFTER THE CURRENT PROPERTY TAX EXPIRES IN 2027, AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER FOR A PERIOD NOT TO EXCEED TWENTY FIVE YEARS, BY THE IMPOSITION OF A NEW 0.853 MILL LEVY, FOR THE SOLE PURPOSE OF PROVIDING A STABLE FUNDING SOURCE FOR HEALTH AND HUMAN SERVICES AND COMMUNITY NON-PROFITS INCLUDING: • PROTECTIVE AND SUPPORTIVE SERVICES, INCLUDING FOOD ACCESS, FOR CHILDREN AND ADULTS • SERVICES AND ACTIVITIES SUPPORTING HEALTHY AGING FOR OLDER ADULTS • SUPPORTING SURVIVORS OF DOMESTIC VIOLENCE AND SEXUAL ASSAULT • BEHAVIORAL HEALTH AND SUBSTANCE USE PREVENTION, TREATMENT, AND AFTERCARE SERVICES • CARE FOR THE TERMINALLY ILL AND THEIR FAMILIES • PROTECTING AND SUPPORTING NATURAL RESOURCES • PREVENTIVE AND INTEGRATED HEALTH CARE SERVICES FOR LOWER-INCOME INDIVIDUALS • SERVICES SUPPORTING INDEPENDENCE FOR INDIVIDUALS WITH DEVELOPMENTAL DISABILITIES AND THEIR FAMILIES AND SHALL THE COUNTY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AND THE INTEREST EARNINGS THEREON AS A VOTER-APPROVED REVENUE CHANGE ABOVE THE ANNUAL LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ABOVE ANNUAL LIMITS WHICH MIGHT OTHERWISE APPLY OR BE PROPOSED, INCLUDING AS AN APPROVED EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ARTICLE 9 OF THE COUNTY HOME RULE CHARTER?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL PITKIN COUNTY TAXES BE INCREASED BY $5,266,081.00 ANNUALLY, BEGINNING IN THE FIRST FULL FISCAL YEAR OF COLLECTION IN 2028, TO CONTINUE FUNDING THE HEALTHY COMMUNITY FUND, WHICH HAS PROVIDED FUNDING FOR HEALTH AND HUMAN SERVICES AND COMMUNITY NON-PROFITS FOR THE PAST TWENTY-FOUR YEARS, AFTER THE CURRENT PROPERTY TAX EXPIRES IN 2027, AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER FOR A PERIOD NOT TO EXCEED TWENTY FIVE YEARS, BY THE IMPOSITION OF A NEW 0.853 MILL LEVY, FOR THE SOLE PURPOSE OF PROVIDING A STABLE FUNDING SOURCE FOR HEALTH AND HUMAN SERVICES AND COMMUNITY NON-PROFITS INCLUDING: • PROTECTIVE AND SUPPORTIVE SERVICES, INCLUDING FOOD ACCESS, FOR CHILDREN AND ADULTS • SERVICES AND ACTIVITIES SUPPORTING HEALTHY AGING FOR OLDER ADULTS • SUPPORTING SURVIVORS OF DOMESTIC VIOLENCE AND SEXUAL ASSAULT • BEHAVIORAL HEALTH AND SUBSTANCE USE PREVENTION, TREATMENT, AND AFTERCARE SERVICES • CARE FOR THE TERMINALLY ILL AND THEIR FAMILIES • PROTECTING AND SUPPORTING NATURAL RESOURCES • PREVENTIVE AND INTEGRATED HEALTH CARE SERVICES FOR LOWER-INCOME INDIVIDUALS • SERVICES SUPPORTING INDEPENDENCE FOR INDIVIDUALS WITH DEVELOPMENTAL DISABILITIES AND THEIR FAMILIES AND SHALL THE COUNTY BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AND THE INTEREST EARNINGS THEREON AS A VOTER-APPROVED REVENUE CHANGE ABOVE THE ANNUAL LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ABOVE ANNUAL LIMITS WHICH MIGHT OTHERWISE APPLY OR BE PROPOSED, INCLUDING AS AN APPROVED EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ARTICLE 9 OF THE COUNTY HOME RULE CHARTER?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        },
+        {
+          "id": "co-aspen-2026-ballot-2a#question",
+          "contestId": "co-aspen-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "WITHOUT INCREASING ANY TAXES, SHALL THE CITY OF ASPEN DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $100,000,000, WITH A TOTAL REPAYMENT COST NOT TO EXCEED $255,000,000, FOR THE PURPOSE OF FINANCING THE EXPANSION, RENOVATION, IMPROVEMENT, REMODELING AND EQUIPPING OF ITS WATER TREATMENT FACILITY; SUCH DEBT TO BE ISSUED IN THE FORM OF REVENUE BONDS OR OTHER MULTIPLE FISCAL YEAR FINANCIAL OBLIGATION, WITH SUCH TERMS, AND BEARING INTEREST AT SUCH RATES AS MAY BE APPROVED BY CITY COUNCIL, PAYABLE SOLELY FROM THE WATER ACTIVITY ENTERPRISE REVENUE, AND TO COLLECT, RETAIN AND SPEND ALL REVENUE AND INTEREST FROM THESE FINANCIAL OBLIGATIONS AS A VOTER-APPROVED REVENUE CHANGE TO LIMITS UNDER COLORADO LAW, OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT INCREASING ANY TAXES, SHALL THE CITY OF ASPEN DEBT BE INCREASED BY AN AMOUNT NOT TO EXCEED $100,000,000, WITH A TOTAL REPAYMENT COST NOT TO EXCEED $255,000,000, FOR THE PURPOSE OF FINANCING THE EXPANSION, RENOVATION, IMPROVEMENT, REMODELING AND EQUIPPING OF ITS WATER TREATMENT FACILITY; SUCH DEBT TO BE ISSUED IN THE FORM OF REVENUE BONDS OR OTHER MULTIPLE FISCAL YEAR FINANCIAL OBLIGATION, WITH SUCH TERMS, AND BEARING INTEREST AT SUCH RATES AS MAY BE APPROVED BY CITY COUNCIL, PAYABLE SOLELY FROM THE WATER ACTIVITY ENTERPRISE REVENUE, AND TO COLLECT, RETAIN AND SPEND ALL REVENUE AND INTEREST FROM THESE FINANCIAL OBLIGATIONS AS A VOTER-APPROVED REVENUE CHANGE TO LIMITS UNDER COLORADO LAW, OR ANY OTHER LAW?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        },
+        {
+          "id": "co-snowmass-water-and-sanitation-district-2026-ballot-6a#question",
+          "contestId": "co-snowmass-water-and-sanitation-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL SNOWMASS WATER AND SANITATION DISTRICT DEBT BE INCREASED UP TO $15 MILLION, WITH A MAXIMUM REPAYMENT COST OF NOT MORE THAN $22.5 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $2 MILLION ANNUALLY FOR THE PURPOSE OF FINANCING THE EXPANSION OF ZIEGLER RESERVOIR, TO INCREASE MUNICIPAL WATER SUPPLY, IMPROVE RAW WATER QUALITY AND PROVIDE ADDITIONAL WATER FOR EMERGENCY FIRE SUPPRESSION, AND TO THE EXTENT OF AVAILABLE FUNDS FINANCING SYSTEM IMPROVEMENTS, SUCH DEBT TO CONSIST OF THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS, WHICH BONDS SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED FIVE AND ONE-HALF PERCENT PER ANNUM AND BE ISSUED AT SUCH TIMES AND PRICES (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE AMOUNTS SET FORTH ABOVE, SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON SUCH DEBT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL SNOWMASS WATER AND SANITATION DISTRICT DEBT BE INCREASED UP TO $15 MILLION, WITH A MAXIMUM REPAYMENT COST OF NOT MORE THAN $22.5 MILLION, AND SHALL DISTRICT TAXES BE INCREASED UP TO $2 MILLION ANNUALLY FOR THE PURPOSE OF FINANCING THE EXPANSION OF ZIEGLER RESERVOIR, TO INCREASE MUNICIPAL WATER SUPPLY, IMPROVE RAW WATER QUALITY AND PROVIDE ADDITIONAL WATER FOR EMERGENCY FIRE SUPPRESSION, AND TO THE EXTENT OF AVAILABLE FUNDS FINANCING SYSTEM IMPROVEMENTS, SUCH DEBT TO CONSIST OF THE ISSUANCE AND PAYMENT OF GENERAL OBLIGATION BONDS, WHICH BONDS SHALL BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED FIVE AND ONE-HALF PERCENT PER ANNUM AND BE ISSUED AT SUCH TIMES AND PRICES (AT, ABOVE OR BELOW PAR) AND IN SUCH MANNER AND CONTAINING SUCH TERMS, NOT INCONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND SHALL AD VALOREM PROPERTY TAXES BE LEVIED WITHOUT LIMIT AS TO THE MILL RATE TO GENERATE AMOUNTS, NOT TO EXCEED THE AMOUNTS SET FORTH ABOVE, SUFFICIENT IN EACH YEAR TO PAY THE PRINCIPAL OF, PREMIUM IF ANY, AND INTEREST ON SUCH DEBT?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        },
+        {
+          "id": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b#question",
+          "contestId": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "SHALL SNOWMASS-WILDCAT FIRE PROTECTION DISTRICT TAXES BE INCREASED $2,300,000 MILLION IN THE FIRST FULL FISCAL YEAR BEGINNING JANUARY 1, 2027 AND BY SUCH AMOUNT AS ARE RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.55% (55 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION AND EMERGENCY SERVICES AS SERVICE DEMANDS INCREASE, INCLUDING BUT NOT LIMITED TO: • ESTABLISHMENT, OPERATION, AND MAINTENANCE OF A YEAR-ROUND WILDLAND FIRE DIVISION • IMPLEMENTATION OF HAZARDOUS FUELS REDUCTION AND WILDFIRE MITIGATION PROJECTS • MAINTENANCE AND ENHANCEMENT OF FIRE SUPPRESSION, EMERGENCY MEDICAL, RESCUE, AND EMERGENCY RESPONSE CAPABILITIES • ACQUISITION OF RELATED EQUIPMENT, APPARATUS, AND FACILITIES, AND • PAYMENT OF ASSOCIATED OPERATIONAL, MAINTENANCE, PERSONNEL, AND CAPITAL IMPROVEMENT COSTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL SNOWMASS-WILDCAT FIRE PROTECTION DISTRICT TAXES BE INCREASED $2,300,000 MILLION IN THE FIRST FULL FISCAL YEAR BEGINNING JANUARY 1, 2027 AND BY SUCH AMOUNT AS ARE RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.55% (55 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION AND EMERGENCY SERVICES AS SERVICE DEMANDS INCREASE, INCLUDING BUT NOT LIMITED TO: • ESTABLISHMENT, OPERATION, AND MAINTENANCE OF A YEAR-ROUND WILDLAND FIRE DIVISION • IMPLEMENTATION OF HAZARDOUS FUELS REDUCTION AND WILDFIRE MITIGATION PROJECTS • MAINTENANCE AND ENHANCEMENT OF FIRE SUPPRESSION, EMERGENCY MEDICAL, RESCUE, AND EMERGENCY RESPONSE CAPABILITIES • ACQUISITION OF RELATED EQUIPMENT, APPARATUS, AND FACILITIES, AND • PAYMENT OF ASSOCIATED OPERATIONAL, MAINTENANCE, PERSONNEL, AND CAPITAL IMPROVEMENT COSTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Pitkin County Clerk and Recorder",
+            "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+            "collectedAt": "2026-11-03T07:00:02.999727+00:00",
+            "verifiedAt": "2026-11-03T07:03:11.551371+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-pitkin-county-2026-ballot-1a",
+          "whatItDoes": "After the current Healthy Community Fund property tax expires in 2027, impose a new 0.853-mill property tax beginning with collections in 2028, for no more than 25 years. The question authorizes $5,266,081 in the first full collection year and whatever the rate generates later. Money would be dedicated to health and human services and community nonprofits, including the purposes listed below. The county could retain and spend this tax and interest above the stated constitutional, statutory and county-charter revenue limits, including other annual limits that might apply or be proposed.",
+          "yesMeans": "Approve the new 0.853-mill levy to continue the fund after the current tax expires, and the proposed revenue-limit exceptions.",
+          "noMeans": "Do not approve this replacement levy or its proposed revenue-limit exceptions; the question states the current property tax expires in 2027.",
+          "parts": [
+            {
+              "id": "co-pitkin-county-2026-ballot-1a#purposes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Dedicated uses",
+              "what": "Listed uses are protective and supportive services, including food access, for children and adults; healthy-aging services; support for survivors of domestic violence and sexual assault; behavioral-health and substance-use prevention, treatment and aftercare; care for terminally ill people and their families; natural-resource protection and support; preventive and integrated health care for lower-income people; and support for independence for people with developmental disabilities and their families."
+            }
+          ],
+          "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-aspen-2026-ballot-2a",
+          "whatItDoes": "Allow Aspen to borrow up to $100 million to expand, renovate, improve, remodel and equip its water-treatment facility, with total repayment capped at $255 million. Repayment would come only from the city’s water-enterprise revenue, with no tax increase authorized by this question. The City Council would set the terms and interest rates for revenue bonds or other financial obligations lasting more than one fiscal year. Revenue and interest from these obligations could be collected, retained and spent under the proposed exception to Colorado and other legal revenue limits.",
+          "yesMeans": "Approve the water-facility debt, repayment solely from water-enterprise revenue and the stated revenue-limit exception.",
+          "noMeans": "Do not authorize this debt or its proposed revenue-limit exception through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-snowmass-water-and-sanitation-district-2026-ballot-6a",
+          "whatItDoes": "Allow the district to borrow up to $15 million through general-obligation bonds, with total repayment capped at $22.5 million, and increase property taxes by up to $2 million a year to repay them. Money would expand Ziegler Reservoir to increase municipal water supply, improve raw-water quality and add water for emergency fire suppression. Remaining available funds could pay for water-system improvements. The property-tax rate would have no mill-rate ceiling, but annual taxes would remain subject to the $2 million cap and be limited to amounts needed for principal, any repayment premium and interest.",
+          "yesMeans": "Approve the reservoir and system-improvement bonds and repayment property taxes within the stated limits.",
+          "noMeans": "Do not authorize these bonds or associated repayment property taxes through this measure.",
+          "parts": [
+            {
+              "id": "co-snowmass-water-and-sanitation-district-2026-ballot-6a#bond-terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond terms",
+              "what": "The maximum net effective interest rate would be 5.5% a year. The district board would set issuance dates, prices above, below or equal to the bonds’ principal, and other terms consistent with the question."
+            }
+          ],
+          "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b",
+          "whatItDoes": "Create a 0.55% district sales tax, or 55 cents per $100, beginning January 1, 2027, on transactions subject to state sales tax, excluding groceries and other exempt items. Money would pay for fire protection and emergency services, including a year-round wildland-fire division, wildfire prevention and fuels reduction, fire suppression, emergency medical and rescue services, equipment and facilities, and related staffing, operating, maintenance and capital costs. All district revenue could be retained and spent despite legal revenue limits. The published first-year dollar wording is described below.",
+          "yesMeans": "Approve the new sales tax for the stated services and the revenue-limit exception for all district revenue.",
+          "noMeans": "Do not approve this additional sales tax or the proposed exception to district revenue limits.",
+          "parts": [
+            {
+              "id": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b#published-dollar-wording",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Published dollar wording",
+              "what": "The question prints the first-year amount as “$2,300,000 MILLION.” The accompanying fiscal estimate lists $2,300,000 for 2027, although that table labels the issue 7A within the section for 6B. The stated sales-tax rate is 0.55% in both the question and sample ballot."
+            }
+          ],
+          "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+          "sourceHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:03:11.551371+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:03:11.551371+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+        "finalUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+        "publisher": "Pitkin County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:00:02.999727+00:00",
+        "httpStatus": 200,
+        "rawHash": "86c17b132cf38be9ab93ae74cb104a7b1f7cc29d85de897a03c4122ba1b89dd2",
+        "reviewedEvidence": "Complete native official November3,2026 composite and TABOR notice linked by current county election pages. Full operative questions supply explanations and exact registered scopes. The native sample image was visually checked for local-question identities and typographical conflicts. Advocacy is excluded; Snowmass6B dollar conflict is retained and explained literally."
+      },
+      {
+        "requestedUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_258593275a0a4040a05a9e4ba5b24f11.pdf",
+        "finalUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_258593275a0a4040a05a9e4ba5b24f11.pdf",
+        "publisher": "Pitkin County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:43:39.360082+00:00",
+        "httpStatus": 200,
+        "rawHash": "3475a25dcb5f00284ae4d15fde8e0b6190b346d6f467be188872401d2b357940",
+        "reviewedEvidence": "Complete native official November3,2026 composite and TABOR notice linked by current county election pages. Full operative questions supply explanations and exact registered scopes. The native sample image was visually checked for local-question identities and typographical conflicts. Advocacy is excluded; Snowmass6B dollar conflict is retained and explained literally."
+      }
+    ]
+  }
+}

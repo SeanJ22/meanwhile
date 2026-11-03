@@ -1,0 +1,38 @@
+[
+  {
+    "requestedUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2001.pdf?t=202609241030460",
+    "retrievedAt": "2026-11-03T06:43:39.366125+00:00",
+    "finalUrl": "https://cms9files.revize.com/laplata/Sample%20Ballot%20Style%2001.pdf?t=202609241030460",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "a799899a52988707c7bf0d7824a1d601d144129d6c40dd1c1b00c6d709e848f2",
+    "bytes": 211854,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "laplata-sample1.pdf",
+    "sourceOrg": "La Plata County Clerk and Recorder",
+    "savedFile": "sources/a799899a52988707c7bf0d7824a1d601d144129d6c40dd1c1b00c6d709e848f2.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "632f2b7b3c5a2d99a61f142be0d9d5ce27b598b25f37276f93a20b98e1de0b57",
+    "storedBytes": 174028,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+    "retrievedAt": "2026-11-03T06:43:40.386070+00:00",
+    "finalUrl": "https://cms9files.revize.com/laplata/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "64bc349d565ba99ac65a61137b2c4d28978dd0416266f2c52f32194a4ff20ef7",
+    "bytes": 216940,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "laplata-sample2.pdf",
+    "sourceOrg": "La Plata County Clerk and Recorder",
+    "savedFile": "sources/64bc349d565ba99ac65a61137b2c4d28978dd0416266f2c52f32194a4ff20ef7.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "1452fd8a008fcef78d7527cbdca94fd7904a58a75315e4fa365cb4da22978e19",
+    "storedBytes": 178639,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

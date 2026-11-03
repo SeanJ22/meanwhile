@@ -1,0 +1,26 @@
+{
+  "county": "Eagle",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 5,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 7,
+  "officialIndexPlusSeparateNoticeLocalMeasureCount": 7,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-west-grand-school-district-1jt-2026-ballot-5a",
+      "packet": "../summit/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    },
+    {
+      "contestId": "co-eagle-county-school-district-re50j-2026-ballot-5b",
+      "packet": "../garfield/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Seven distinct current local questions in the complete county composite. Five are new here; WestGrand5A and EagleRE50J5B are already prepared once in Summit and Garfield.",
+    "Explanations use complete operative questions from the clean official TABOR notice and separate Avon notice, excluding advocacy. Composite reading order interleaves columns.",
+    "Original PDF bytes were delivered through the Google Drive connector. Successful artifact delivery was observed; origin HTTP status was not observed."
+  ],
+  "limits": "Current official Eagle composite and notice union only; not statewide local completeness."
+}

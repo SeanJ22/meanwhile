@@ -1,0 +1,88 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.eaglecounty.us/vote",
+      "retrievedAt": "2026-11-03T06:42:17.913287+00:00",
+      "finalUrl": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/index.php",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "06a0180cc9e7b94ae9ab1e78639778f28edc3107eaa4d108a2dba881cbe67a95",
+      "bytes": 168325,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "eagle-elections-index.html",
+      "savedFile": "sources/eagle-elections-index.sanitized.html",
+      "savedSha256": "06a0180cc9e7b94ae9ab1e78639778f28edc3107eaa4d108a2dba881cbe67a95",
+      "sanitization": {
+        "originalSha256": "06a0180cc9e7b94ae9ab1e78639778f28edc3107eaa4d108a2dba881cbe67a95",
+        "savedSha256": "06a0180cc9e7b94ae9ab1e78639778f28edc3107eaa4d108a2dba881cbe67a95",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/general_election.php",
+      "retrievedAt": "2026-11-03T06:42:59.562486+00:00",
+      "finalUrl": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/general_election.php",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "e5c4b0d327a7b34285a4b3cd9ccc953b14bc85c06ab0b36574dc54b2535c8c13",
+      "bytes": 172549,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "eagle-general-index.html",
+      "savedFile": "sources/eagle-general-index.sanitized.html",
+      "savedSha256": "e5c4b0d327a7b34285a4b3cd9ccc953b14bc85c06ab0b36574dc54b2535c8c13",
+      "sanitization": {
+        "originalSha256": "e5c4b0d327a7b34285a4b3cd9ccc953b14bc85c06ab0b36574dc54b2535c8c13",
+        "savedSha256": "e5c4b0d327a7b34285a4b3cd9ccc953b14bc85c06ab0b36574dc54b2535c8c13",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Eagle",
+      "to": "https://www.eaglecounty.us/vote"
+    },
+    {
+      "from": "https://www.eaglecounty.us/vote",
+      "redirectTo": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/index.php"
+    },
+    {
+      "from": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/index.php",
+      "to": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/general_election.php",
+      "linkText": "General Election"
+    },
+    {
+      "from": "https://www.eaglecounty.us/departments___services/clerk___recorder/elections___voter_information/general_election.php",
+      "links": [
+        "https://drive.google.com/file/d/1zU6tXzfx96Py4HwGZpqhWTfL1Q0TJRpL/view",
+        "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+        "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view"
+      ]
+    }
+  ]
+}

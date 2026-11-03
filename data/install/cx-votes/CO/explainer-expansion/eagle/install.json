@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-gypsum-2026-ballot-2a",
+      "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view"
+    },
+    {
+      "id": "co-basalt-2026-ballot-3a",
+      "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view"
+    },
+    {
+      "id": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+      "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view"
+    },
+    {
+      "id": "co-avon-station-metropolitan-district-2026-ballot-6a",
+      "sourceUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view"
+    },
+    {
+      "id": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a",
+      "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view"
+    }
+  ],
+  "operation": "Merge only these 5 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

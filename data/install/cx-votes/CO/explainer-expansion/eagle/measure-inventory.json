@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "co-gypsum-2026-ballot-2a",
+    "officialTitle": "Town of Gypsum Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:gypsum",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:gypsum",
+      "place",
+      "0833695",
+      "Gypsum town"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-basalt-2026-ballot-3a",
+    "officialTitle": "Town of Basalt Ballot Issue 3A",
+    "officialNumber": "3A",
+    "ocdId": "ocd-division/country:us/state:co/place:basalt",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:basalt",
+      "place",
+      "0804935",
+      "Basalt town"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+    "officialTitle": "Roaring Fork School District RE-1 Ballot Issue 5C",
+    "officialNumber": "5C",
+    "ocdId": "ocd-division/country:us/state:co/school_district:roaring_fork_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:roaring_fork_school_district_re_1",
+      "unsd",
+      "0804260",
+      "Roaring Fork School District RE-1"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-avon-station-metropolitan-district-2026-ballot-6a",
+    "officialTitle": "Avon Station Metropolitan District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:avon_station_metropolitan_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:avon_station_metropolitan_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#19062",
+      "Avon Station Metropolitan District",
+      "facilities"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a",
+    "officialTitle": "Basalt and Rural Fire Protection District Ballot Issue 7A",
+    "officialNumber": "7A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:basalt_and_rural_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:basalt_and_rural_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#64013",
+      "Basalt And Rural Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

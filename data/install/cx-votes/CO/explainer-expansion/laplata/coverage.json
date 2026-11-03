@@ -1,0 +1,12 @@
+{
+  "county": "La Plata",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 1,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 1,
+  "currentBallotStylesChecked": 2,
+  "sourceCaveats": [
+    "Official current index lists exactly two ballot styles. Style1 covers all county registered voters and contains no local question. Style2 is for DurangoWestMetropolitanDistrictNo1 and contains one local question,6A."
+  ],
+  "limits": "Two-style current La Plata County source union only; not statewide local completeness."
+}

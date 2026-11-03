@@ -1,0 +1,60 @@
+[
+  {
+    "contestId": "co-pitkin-county-2026-ballot-1a",
+    "officialTitle": "Pitkin County Ballot Issue 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:pitkin",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:pitkin",
+      "county",
+      "08097",
+      "Pitkin County"
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-aspen-2026-ballot-2a",
+    "officialTitle": "City of Aspen Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:aspen",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:aspen",
+      "place",
+      "0803620",
+      "Aspen city"
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-snowmass-water-and-sanitation-district-2026-ballot-6a",
+    "officialTitle": "Snowmass Water and Sanitation District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:snowmass_water_and_sanitation_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:snowmass_water_and_sanitation_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#49013",
+      "Snowmass Water And Sanitation District",
+      "other"
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-snowmass-wildcat-fire-protection-district-2026-ballot-6b",
+    "officialTitle": "Snowmass-Wildcat Fire Protection District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:snowmass_wildcat_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:snowmass_wildcat_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#49014",
+      "Snowmass-Wildcat Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

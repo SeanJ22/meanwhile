@@ -1,0 +1,107 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.pitkinvotes.com/",
+      "retrievedAt": "2026-11-03T06:42:17.884389+00:00",
+      "finalUrl": "https://www.pitkinvotes.com/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "7617cc4f89a67e4f0312c2d022554c4db66342c3da9f0fa74431d2b32e1bd786",
+      "bytes": 418476,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "pitkin-elections-index.html",
+      "savedFile": "sources/pitkin-elections-index.sanitized.html",
+      "savedSha256": "7617cc4f89a67e4f0312c2d022554c4db66342c3da9f0fa74431d2b32e1bd786",
+      "sanitization": {
+        "originalSha256": "7617cc4f89a67e4f0312c2d022554c4db66342c3da9f0fa74431d2b32e1bd786",
+        "savedSha256": "7617cc4f89a67e4f0312c2d022554c4db66342c3da9f0fa74431d2b32e1bd786",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.pitkinvotes.com/2026-sample-ballot",
+      "retrievedAt": "2026-11-03T06:42:59.550073+00:00",
+      "finalUrl": "https://www.pitkinvotes.com/2026-sample-ballot",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "72530ebcb4df3b008c1eab36315d72fe34200e08306f0f012b03a27b7e02d620",
+      "bytes": 385451,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "pitkin-samples-index.html",
+      "savedFile": "sources/pitkin-samples-index.sanitized.html",
+      "savedSha256": "72530ebcb4df3b008c1eab36315d72fe34200e08306f0f012b03a27b7e02d620",
+      "sanitization": {
+        "originalSha256": "72530ebcb4df3b008c1eab36315d72fe34200e08306f0f012b03a27b7e02d620",
+        "savedSha256": "72530ebcb4df3b008c1eab36315d72fe34200e08306f0f012b03a27b7e02d620",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.pitkinvotes.com/2026-general-info",
+      "retrievedAt": "2026-11-03T06:59:54.526089+00:00",
+      "finalUrl": "https://www.pitkinvotes.com/2026-general-info",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "80f412e050a399920a337561e7a3ebb3dc39d2ef81964df2c5a4cf57714677d0",
+      "bytes": 450211,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "pitkin-general-index.html",
+      "savedFile": "sources/pitkin-general-index.sanitized.html",
+      "savedSha256": "80f412e050a399920a337561e7a3ebb3dc39d2ef81964df2c5a4cf57714677d0",
+      "sanitization": {
+        "originalSha256": "80f412e050a399920a337561e7a3ebb3dc39d2ef81964df2c5a4cf57714677d0",
+        "savedSha256": "80f412e050a399920a337561e7a3ebb3dc39d2ef81964df2c5a4cf57714677d0",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Pitkin",
+      "to": "https://www.pitkinvotes.com/"
+    },
+    {
+      "from": "https://www.pitkinvotes.com/",
+      "links": [
+        "https://www.pitkinvotes.com/2026-sample-ballot",
+        "https://www.pitkinvotes.com/2026-general-info"
+      ]
+    },
+    {
+      "from": "https://www.pitkinvotes.com/2026-sample-ballot",
+      "to": "https://www.pitkinvotes.com/_files/ugd/3441d8_258593275a0a4040a05a9e4ba5b24f11.pdf"
+    },
+    {
+      "from": "https://www.pitkinvotes.com/2026-general-info",
+      "linkText": "2026 Tabor Notice",
+      "to": "https://www.pitkinvotes.com/_files/ugd/3441d8_9570908733834c88901048dd19fa4e14.pdf"
+    }
+  ]
+}

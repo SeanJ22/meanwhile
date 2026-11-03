@@ -1,0 +1,31 @@
+{
+  "county": "Pitkin",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 4,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 7,
+  "officialIndexPlusSeparateNoticeLocalMeasureCount": 7,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-basalt-2026-ballot-3a",
+      "packet": "../eagle/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    },
+    {
+      "contestId": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+      "packet": "../eagle/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    },
+    {
+      "contestId": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a",
+      "packet": "../eagle/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Official complete composite explicitly contains all races and measures on any county ballot style. It has seven distinct local questions: four new here and three shared district/town measures prepared once in Eagle.",
+    "Native sample PDF is image-based. All four pages were extracted by local OCR; local questions on pages3/4 were independently inspected visually. Explanations use clean native text from the official current TABOR notice.",
+    "Both sample and TABOR print an extra MILLION after dollar amounts in SnowmassWildcat6B and BasaltFire7A. Snowmass6B draft exposes its mismatch with the fiscal estimate. Basalt7A is attached only in Eagle using the clean official Eagle notice; no duplicate Pitkin contest is created."
+  ],
+  "limits": "Current official Pitkin complete composite and TABOR notice union only; not statewide local completeness."
+}

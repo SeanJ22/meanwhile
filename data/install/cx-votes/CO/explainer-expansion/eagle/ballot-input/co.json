@@ -1,0 +1,288 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-gypsum-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:gypsum",
+          "divisionVintage": "2026",
+          "title": "Town of Gypsum Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF GYPSUM TAXES BE INCREASED $200,000 IN THE FIRST FULL FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER FROM A (4%) LODGING TAX ON THE SHORT- TERM LEASING, RENTAL, SALE, OR FURNISHING OF A ROOM OR ACCOMMODATION FOR FEWER THAN 30 CONSECUTIVE DAYS, AND SHALL SUCH AMOUNTS, CURRENTLY COLLECTED AND USED BY EAGLE COUNTY, INSTEAD BE COLLECTED AND USED BY THE TOWN OF GYPSUM FOR PURPOSES SUCH AS: •CAPITAL COSTS ASSOCIATED WITH ROADS, PARKS, RECREATION FACILITIES, AND OTHER PUBLIC IMPROVEMENTS MAINTAINED BY THE TOWN; AND •SPECIAL EVENTS SPONSORED, FUNDED, OR ASSISTED BY THE TOWN; WITH ALL REVENUES FROM SUCH TAX, AND ANY EARNINGS THEREON, COLLECTED, RETAINED, AND SPENT AS A VOTER- APPROVED REVENUE CHANGE WITHOUT REGARD TO ANY LIMITATION OR CONDITION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-basalt-2026-ballot-3a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:basalt",
+          "divisionVintage": "2026",
+          "title": "Town of Basalt Ballot Issue 3A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF BASALT’S SALES TAXES BE INCREASED BY NOT MORE THAN $1,700,000 IN THE FIRST FULL FISCAL YEAR (2027) AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY INCREASING, FOR A LIMITED PERIOD NOT TO EXCEED TWENTY YEARS, THE TOWN’S SALES TAX BY 0.5% WHICH SHALL TAKE EFFECT JANUARY 1, 2027, AND WHICH REVENUES THEREFROM SHALL BE USED FOR THE ACQUISITION, PLANNING, CONSTRUCTION, OPERATION, MAINTENANCE, REPAIR, AND REPLACEMENT OF PUBLIC SERVICES FACILITIES AND RELATED INFRASTRUCTURE AND EQUIPMENT; AND SHALL THE TOWN BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND SUCH REVENUES, AND ANY INVESTMENT INCOME EARNED FROM SUCH REVENUES, NOTWITHSTANDING ANY APPLICABLE REVENUE OR EXPENDITURE LIMITATION IMPOSED BY ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:roaring_fork_school_district_re_1",
+          "divisionVintage": "2026",
+          "title": "Roaring Fork School District RE-1 Ballot Issue 5C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL ROARING FORK SCHOOL DISTRICT RE-1 TAXES BE INCREASED UP TO $5.6 MILLION IN 2026 (FOR COLLECTION IN 2027) AND IN SUCH AMOUNTS GENERATED ANNUALLY THEREAFTER AS DESCRIBED BELOW FOR EDUCATIONAL PURPOSES, INCLUDING, BUT NOT LIMITED TO: • INCREASING TEACHER AND STAFF PAY; • RETAINING AND RECRUITING HIGH-QUALITY TEACHERS AND STAFF; • STRENGTHENING ACADEMIC OUTCOMES AND ELIMINATING ACHIEVEMENT GAPS; WITH ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT’S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT’S WEBSITE AND REVIEWED BY THE BOARD OF EDUCATION DIRECTORS; BY THE IMPOSITION OF A MILL LEVY THAT, WHEN COMBINED WITH OTHER MILL LEVY OVERRIDES APPROVED BY VOTERS FOR THE DISTRICT’S GENERAL FUND, GENERATES THE MAXIMUM AMOUNT PERMITTED BY SECTION 22-54-108(3)(B) (VI) AS OF JULY 1, 2026, BY THE LEVY OF PROPERTY TAXES AT A RATE SUFFICIENT TO PRODUCE SUCH AMOUNTS; WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND OF THE DISTRICT AND SHALL BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-avon-station-metropolitan-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:avon_station_metropolitan_district",
+          "divisionVintage": "2026",
+          "title": "Avon Station Metropolitan District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL AVON STATION METROPOLITAN DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT IMPOSED ON INCREASES IN PROPERTY TAXATION BY SECTION 29-1-1702, C.R.S., IN ALL FUTURE PROPERTY TAX YEARS AS PROVIDED FOR BY SECTION 29-1-1704, C.R.S., AND BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL TAXES, TAX INCREMENT REVENUES, TAP FEES, PARK FEES, FACILITY FEES, SERVICE CHARGES, INSPECTION CHARGES, ADMINISTRATIVE CHARGES, GIFTS, GRANTS OR ANY OTHER FEE, RATE, TOLL, PENALTY, INCOME OR CHARGE AUTHORIZED BY LAW OR CONTRACT TO BE IMPOSED, COLLECTED OR RECEIVED BY THE DISTRICT IN FISCAL YEAR 2026 AND IN ALL FISCAL YEARS THEREAFTER, SUCH AMOUNTS TO CONSTITUTE A VOTER-APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT WITHOUT REGARD TO ANY SPENDING, REVENUE- RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, THE LIMITS IMPOSED ON INCREASES IN PROPERTY TAXATION BY SECTION 29-1-301, C.R.S. IN ANY SUBSEQUENT YEAR, OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT’S REVENUES OR EXPENDITURES AS IT CURRENTLY EXISTS OR AS IT MAY BE AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+            "collectedAt": "2026-11-03T06:45:48.799563+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:basalt_and_rural_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "Basalt and Rural Fire Protection District Ballot Issue 7A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL BASALT & RURAL FIRE PROTECTION DISTRICT TAXES BE INCREASED $1,518,000 IN THE FIRST FULL FISCAL YEAR BEGINNING JANUARY 1, 2027 AND BY SUCH AMOUNT AS ARE RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.55% (55 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION AND EMERGENCY SERVICES AS SERVICE DEMANDS INCREASE, INCLUDING BUT NOT LIMITED TO: • ESTABLISHMENT, OPERATION, AND MAINTENANCE OF A YEAR-ROUND WILDLAND FIRE DIVISION • IMPLEMENTATION OF HAZARDOUS FUELS REDUCTION AND WILDFIRE MITIGATION PROJECTS • MAINTENANCE AND ENHANCEMENT OF FIRE SUPPRESSION, EMERGENCY MEDICAL, RESCUE, AND EMERGENCY RESPONSE CAPABILITIES • ACQUISITION OF RELATED EQUIPMENT, APPARATUS, AND FACILITIES, AND • PAYMENT OF ASSOCIATED OPERATIONAL, MAINTENANCE, PERSONNEL, AND CAPITAL IMPROVEMENT COSTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-gypsum-2026-ballot-2a#question",
+          "contestId": "co-gypsum-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL TOWN OF GYPSUM TAXES BE INCREASED $200,000 IN THE FIRST FULL FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER FROM A (4%) LODGING TAX ON THE SHORT- TERM LEASING, RENTAL, SALE, OR FURNISHING OF A ROOM OR ACCOMMODATION FOR FEWER THAN 30 CONSECUTIVE DAYS, AND SHALL SUCH AMOUNTS, CURRENTLY COLLECTED AND USED BY EAGLE COUNTY, INSTEAD BE COLLECTED AND USED BY THE TOWN OF GYPSUM FOR PURPOSES SUCH AS: •CAPITAL COSTS ASSOCIATED WITH ROADS, PARKS, RECREATION FACILITIES, AND OTHER PUBLIC IMPROVEMENTS MAINTAINED BY THE TOWN; AND •SPECIAL EVENTS SPONSORED, FUNDED, OR ASSISTED BY THE TOWN; WITH ALL REVENUES FROM SUCH TAX, AND ANY EARNINGS THEREON, COLLECTED, RETAINED, AND SPENT AS A VOTER- APPROVED REVENUE CHANGE WITHOUT REGARD TO ANY LIMITATION OR CONDITION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF GYPSUM TAXES BE INCREASED $200,000 IN THE FIRST FULL FISCAL YEAR, BEGINNING JANUARY 1, 2027, AND BY WHATEVER AMOUNTS ARE RAISED ANNUALLY THEREAFTER FROM A (4%) LODGING TAX ON THE SHORT- TERM LEASING, RENTAL, SALE, OR FURNISHING OF A ROOM OR ACCOMMODATION FOR FEWER THAN 30 CONSECUTIVE DAYS, AND SHALL SUCH AMOUNTS, CURRENTLY COLLECTED AND USED BY EAGLE COUNTY, INSTEAD BE COLLECTED AND USED BY THE TOWN OF GYPSUM FOR PURPOSES SUCH AS: •CAPITAL COSTS ASSOCIATED WITH ROADS, PARKS, RECREATION FACILITIES, AND OTHER PUBLIC IMPROVEMENTS MAINTAINED BY THE TOWN; AND •SPECIAL EVENTS SPONSORED, FUNDED, OR ASSISTED BY THE TOWN; WITH ALL REVENUES FROM SUCH TAX, AND ANY EARNINGS THEREON, COLLECTED, RETAINED, AND SPENT AS A VOTER- APPROVED REVENUE CHANGE WITHOUT REGARD TO ANY LIMITATION OR CONDITION CONTAINED IN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-basalt-2026-ballot-3a#question",
+          "contestId": "co-basalt-2026-ballot-3a",
+          "officialNumber": "3A",
+          "questionText": "SHALL THE TOWN OF BASALT’S SALES TAXES BE INCREASED BY NOT MORE THAN $1,700,000 IN THE FIRST FULL FISCAL YEAR (2027) AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY INCREASING, FOR A LIMITED PERIOD NOT TO EXCEED TWENTY YEARS, THE TOWN’S SALES TAX BY 0.5% WHICH SHALL TAKE EFFECT JANUARY 1, 2027, AND WHICH REVENUES THEREFROM SHALL BE USED FOR THE ACQUISITION, PLANNING, CONSTRUCTION, OPERATION, MAINTENANCE, REPAIR, AND REPLACEMENT OF PUBLIC SERVICES FACILITIES AND RELATED INFRASTRUCTURE AND EQUIPMENT; AND SHALL THE TOWN BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND SUCH REVENUES, AND ANY INVESTMENT INCOME EARNED FROM SUCH REVENUES, NOTWITHSTANDING ANY APPLICABLE REVENUE OR EXPENDITURE LIMITATION IMPOSED BY ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF BASALT’S SALES TAXES BE INCREASED BY NOT MORE THAN $1,700,000 IN THE FIRST FULL FISCAL YEAR (2027) AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER BY INCREASING, FOR A LIMITED PERIOD NOT TO EXCEED TWENTY YEARS, THE TOWN’S SALES TAX BY 0.5% WHICH SHALL TAKE EFFECT JANUARY 1, 2027, AND WHICH REVENUES THEREFROM SHALL BE USED FOR THE ACQUISITION, PLANNING, CONSTRUCTION, OPERATION, MAINTENANCE, REPAIR, AND REPLACEMENT OF PUBLIC SERVICES FACILITIES AND RELATED INFRASTRUCTURE AND EQUIPMENT; AND SHALL THE TOWN BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND SUCH REVENUES, AND ANY INVESTMENT INCOME EARNED FROM SUCH REVENUES, NOTWITHSTANDING ANY APPLICABLE REVENUE OR EXPENDITURE LIMITATION IMPOSED BY ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-roaring-fork-school-district-re1-2026-ballot-5c#question",
+          "contestId": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+          "officialNumber": "5C",
+          "questionText": "SHALL ROARING FORK SCHOOL DISTRICT RE-1 TAXES BE INCREASED UP TO $5.6 MILLION IN 2026 (FOR COLLECTION IN 2027) AND IN SUCH AMOUNTS GENERATED ANNUALLY THEREAFTER AS DESCRIBED BELOW FOR EDUCATIONAL PURPOSES, INCLUDING, BUT NOT LIMITED TO: • INCREASING TEACHER AND STAFF PAY; • RETAINING AND RECRUITING HIGH-QUALITY TEACHERS AND STAFF; • STRENGTHENING ACADEMIC OUTCOMES AND ELIMINATING ACHIEVEMENT GAPS; WITH ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT’S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT’S WEBSITE AND REVIEWED BY THE BOARD OF EDUCATION DIRECTORS; BY THE IMPOSITION OF A MILL LEVY THAT, WHEN COMBINED WITH OTHER MILL LEVY OVERRIDES APPROVED BY VOTERS FOR THE DISTRICT’S GENERAL FUND, GENERATES THE MAXIMUM AMOUNT PERMITTED BY SECTION 22-54-108(3)(B) (VI) AS OF JULY 1, 2026, BY THE LEVY OF PROPERTY TAXES AT A RATE SUFFICIENT TO PRODUCE SUCH AMOUNTS; WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND OF THE DISTRICT AND SHALL BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL ROARING FORK SCHOOL DISTRICT RE-1 TAXES BE INCREASED UP TO $5.6 MILLION IN 2026 (FOR COLLECTION IN 2027) AND IN SUCH AMOUNTS GENERATED ANNUALLY THEREAFTER AS DESCRIBED BELOW FOR EDUCATIONAL PURPOSES, INCLUDING, BUT NOT LIMITED TO: • INCREASING TEACHER AND STAFF PAY; • RETAINING AND RECRUITING HIGH-QUALITY TEACHERS AND STAFF; • STRENGTHENING ACADEMIC OUTCOMES AND ELIMINATING ACHIEVEMENT GAPS; WITH ALL SPENDING OF SUCH REVENUES REPORTED IN THE DISTRICT’S ANNUAL INDEPENDENT AUDIT PUBLISHED ON THE DISTRICT’S WEBSITE AND REVIEWED BY THE BOARD OF EDUCATION DIRECTORS; BY THE IMPOSITION OF A MILL LEVY THAT, WHEN COMBINED WITH OTHER MILL LEVY OVERRIDES APPROVED BY VOTERS FOR THE DISTRICT’S GENERAL FUND, GENERATES THE MAXIMUM AMOUNT PERMITTED BY SECTION 22-54-108(3)(B) (VI) AS OF JULY 1, 2026, BY THE LEVY OF PROPERTY TAXES AT A RATE SUFFICIENT TO PRODUCE SUCH AMOUNTS; WHICH TAXES SHALL BE DEPOSITED INTO THE GENERAL FUND OF THE DISTRICT AND SHALL BE IN ADDITION TO THE PROPERTY TAXES THAT OTHERWISE WOULD BE LEVIED FOR THE GENERAL FUND?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-avon-station-metropolitan-district-2026-ballot-6a#question",
+          "contestId": "co-avon-station-metropolitan-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL AVON STATION METROPOLITAN DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT IMPOSED ON INCREASES IN PROPERTY TAXATION BY SECTION 29-1-1702, C.R.S., IN ALL FUTURE PROPERTY TAX YEARS AS PROVIDED FOR BY SECTION 29-1-1704, C.R.S., AND BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL TAXES, TAX INCREMENT REVENUES, TAP FEES, PARK FEES, FACILITY FEES, SERVICE CHARGES, INSPECTION CHARGES, ADMINISTRATIVE CHARGES, GIFTS, GRANTS OR ANY OTHER FEE, RATE, TOLL, PENALTY, INCOME OR CHARGE AUTHORIZED BY LAW OR CONTRACT TO BE IMPOSED, COLLECTED OR RECEIVED BY THE DISTRICT IN FISCAL YEAR 2026 AND IN ALL FISCAL YEARS THEREAFTER, SUCH AMOUNTS TO CONSTITUTE A VOTER-APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT WITHOUT REGARD TO ANY SPENDING, REVENUE- RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, THE LIMITS IMPOSED ON INCREASES IN PROPERTY TAXATION BY SECTION 29-1-301, C.R.S. IN ANY SUBSEQUENT YEAR, OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT’S REVENUES OR EXPENDITURES AS IT CURRENTLY EXISTS OR AS IT MAY BE AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL AVON STATION METROPOLITAN DISTRICT WAIVE THE 5.25% PROPERTY TAX LIMIT IMPOSED ON INCREASES IN PROPERTY TAXATION BY SECTION 29-1-1702, C.R.S., IN ALL FUTURE PROPERTY TAX YEARS AS PROVIDED FOR BY SECTION 29-1-1704, C.R.S., AND BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL TAXES, TAX INCREMENT REVENUES, TAP FEES, PARK FEES, FACILITY FEES, SERVICE CHARGES, INSPECTION CHARGES, ADMINISTRATIVE CHARGES, GIFTS, GRANTS OR ANY OTHER FEE, RATE, TOLL, PENALTY, INCOME OR CHARGE AUTHORIZED BY LAW OR CONTRACT TO BE IMPOSED, COLLECTED OR RECEIVED BY THE DISTRICT IN FISCAL YEAR 2026 AND IN ALL FISCAL YEARS THEREAFTER, SUCH AMOUNTS TO CONSTITUTE A VOTER-APPROVED REVENUE CHANGE AND BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT WITHOUT REGARD TO ANY SPENDING, REVENUE- RAISING, OR OTHER LIMITATION CONTAINED WITHIN ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION, THE LIMITS IMPOSED ON INCREASES IN PROPERTY TAXATION BY SECTION 29-1-301, C.R.S. IN ANY SUBSEQUENT YEAR, OR ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT’S REVENUES OR EXPENDITURES AS IT CURRENTLY EXISTS OR AS IT MAY BE AMENDED IN THE FUTURE, AND WITHOUT LIMITING IN ANY YEAR THE AMOUNT OF OTHER REVENUES THAT MAY BE COLLECTED, RETAINED AND SPENT BY THE DISTRICT?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+            "collectedAt": "2026-11-03T06:45:48.799563+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        },
+        {
+          "id": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a#question",
+          "contestId": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a",
+          "officialNumber": "7A",
+          "questionText": "SHALL BASALT & RURAL FIRE PROTECTION DISTRICT TAXES BE INCREASED $1,518,000 IN THE FIRST FULL FISCAL YEAR BEGINNING JANUARY 1, 2027 AND BY SUCH AMOUNT AS ARE RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.55% (55 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION AND EMERGENCY SERVICES AS SERVICE DEMANDS INCREASE, INCLUDING BUT NOT LIMITED TO: • ESTABLISHMENT, OPERATION, AND MAINTENANCE OF A YEAR-ROUND WILDLAND FIRE DIVISION • IMPLEMENTATION OF HAZARDOUS FUELS REDUCTION AND WILDFIRE MITIGATION PROJECTS • MAINTENANCE AND ENHANCEMENT OF FIRE SUPPRESSION, EMERGENCY MEDICAL, RESCUE, AND EMERGENCY RESPONSE CAPABILITIES • ACQUISITION OF RELATED EQUIPMENT, APPARATUS, AND FACILITIES, AND • PAYMENT OF ASSOCIATED OPERATIONAL, MAINTENANCE, PERSONNEL, AND CAPITAL IMPROVEMENT COSTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL BASALT & RURAL FIRE PROTECTION DISTRICT TAXES BE INCREASED $1,518,000 IN THE FIRST FULL FISCAL YEAR BEGINNING JANUARY 1, 2027 AND BY SUCH AMOUNT AS ARE RAISED ANNUALLY THEREAFTER BY A SALES TAX OF 0.55% (55 CENTS ON EACH $100) UPON EVERY TRANSACTION IN THE DISTRICT IN WHICH THE STATE IMPOSES A SALES TAX (EXCLUDING GROCERIES AND OTHER EXEMPT ITEMS) FOR THE PURPOSE OF PROVIDING FIRE PROTECTION AND EMERGENCY SERVICES AS SERVICE DEMANDS INCREASE, INCLUDING BUT NOT LIMITED TO: • ESTABLISHMENT, OPERATION, AND MAINTENANCE OF A YEAR-ROUND WILDLAND FIRE DIVISION • IMPLEMENTATION OF HAZARDOUS FUELS REDUCTION AND WILDFIRE MITIGATION PROJECTS • MAINTENANCE AND ENHANCEMENT OF FIRE SUPPRESSION, EMERGENCY MEDICAL, RESCUE, AND EMERGENCY RESPONSE CAPABILITIES • ACQUISITION OF RELATED EQUIPMENT, APPARATUS, AND FACILITIES, AND • PAYMENT OF ASSOCIATED OPERATIONAL, MAINTENANCE, PERSONNEL, AND CAPITAL IMPROVEMENT COSTS; AND SHALL ALL DISTRICT REVENUES BE COLLECTED, RETAINED, AND SPENT NOTWITHSTANDING ANY REVENUE LIMITS PROVIDED BY LAW?",
+            "sourceOrg": "Eagle County Clerk and Recorder",
+            "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+            "collectedAt": "2026-11-03T06:45:48.859995+00:00",
+            "verifiedAt": "2026-11-03T06:58:59.358099+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-gypsum-2026-ballot-2a",
+          "whatItDoes": "Beginning January 1, 2027, let Gypsum collect and use a 4% lodging tax that Eagle County currently collects and uses, instead of the county receiving it. The tax applies to rooms or accommodations provided for fewer than 30 consecutive days. The question authorizes $200,000 in the first full fiscal year and whatever the tax produces later. Uses could include town-maintained roads, parks, recreation facilities and other public improvements, and events the town sponsors, funds or assists. Tax revenue and earnings could be retained and spent outside the stated constitutional and other legal revenue limits.",
+          "yesMeans": "Approve the town’s collection and use of this 4% lodging tax and the proposed revenue-limit exception.",
+          "noMeans": "Do not approve this proposed town lodging tax and transfer of proceeds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "sourceHash": "8a1a80663f4b92c7aad008b9de1d36b1271bb9c525d62f5955bde981b361d92d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:58:59.358099+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-basalt-2026-ballot-3a",
+          "whatItDoes": "Add 0.5 percentage points to Basalt’s sales-tax rate beginning January 1, 2027, for no more than 20 years. The question authorizes up to $1.7 million in the first full fiscal year, 2027, and whatever the tax generates later. Money would pay for acquiring, planning, building, operating, maintaining, repairing and replacing public-services facilities and related infrastructure and equipment. The town could retain and spend this revenue and investment income outside the stated constitutional and other legal revenue and spending limits.",
+          "yesMeans": "Approve the temporary sales-tax increase for the stated facilities and equipment, and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales tax or its revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "sourceHash": "8a1a80663f4b92c7aad008b9de1d36b1271bb9c525d62f5955bde981b361d92d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:58:59.358099+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+          "whatItDoes": "Authorize up to $5.6 million in additional school property taxes in 2026 for collection in 2027. In later years, this levy and other voter-approved general-fund levies together would raise the maximum allowed by the cited state school-funding law as it stood on July 1, 2026. Money would go to the district’s general fund for education, including teacher and staff pay, recruitment and retention, academic results and closing achievement gaps. All spending of the new revenue must appear in the district’s annual independent audit, published on its website and reviewed by its school board. The levy would be additional to existing general-fund property taxes.",
+          "yesMeans": "Approve the additional school property taxes and the required public audit reporting.",
+          "noMeans": "Do not authorize this additional school property-tax levy through this measure.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "sourceHash": "8a1a80663f4b92c7aad008b9de1d36b1271bb9c525d62f5955bde981b361d92d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:58:59.358099+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-avon-station-metropolitan-district-2026-ballot-6a",
+          "whatItDoes": "Waive the district’s 5.25% property-tax growth limit for all future property-tax years. For fiscal year 2026 and later, let the district retain and spend all revenue it is legally authorized by law or contract to receive, including taxes, tax-increment revenue, fees, service charges, gifts and grants. These receipts would be exempt from the stated constitutional spending and revenue limits, the other cited property-tax growth limit in later years, and other current or future laws limiting district revenue or spending. The question sets no new tax rate.",
+          "yesMeans": "Approve the permanent property-tax growth-limit waiver and broader authority to retain and spend legally authorized revenue.",
+          "noMeans": "Do not approve these proposed revenue-limit waivers through this measure.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+          "sourceHash": "936fc42f131d5705ae6da2a50d48de2033782af83d2e6adf5d94013a7dc5ed2e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:58:59.358099+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-basalt-and-rural-fire-protection-district-2026-ballot-7a",
+          "whatItDoes": "Create a 0.55% district sales tax, or 55 cents per $100, beginning January 1, 2027, on transactions subject to state sales tax, excluding groceries and other exempt items. The question authorizes $1,518,000 in the first full fiscal year and whatever the tax raises later. Money would pay for fire protection and emergency services, including a year-round wildland-fire division, wildfire prevention and fuels reduction, fire suppression, emergency medical and rescue services, equipment and facilities, and related staffing, operating, maintenance and capital costs. All district revenue could be retained and spent despite legal revenue limits.",
+          "yesMeans": "Approve the new sales tax for the stated services and the revenue-limit exception for all district revenue.",
+          "noMeans": "Do not approve this additional sales tax or the proposed exception to district revenue limits.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+          "sourceHash": "8a1a80663f4b92c7aad008b9de1d36b1271bb9c525d62f5955bde981b361d92d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:58:59.358099+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:58:59.358099+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+        "finalUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+        "publisher": "Eagle County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:45:48.859995+00:00",
+        "httpStatus": 200,
+        "rawHash": "8a1a80663f4b92c7aad008b9de1d36b1271bb9c525d62f5955bde981b361d92d",
+        "reviewedEvidence": "Complete original PDFs linked by the current official Eagle County general-election page. Full operative questions, exact existing registered districts, and November3,2026 election association verified. Captured bytes are original PDFs delivered by the Google Drive connector; HTTP200 is an artifact-delivery capture marker, not an observed origin HTTP status.",
+        "httpStatusScope": "successful authenticated artifact delivery; origin HTTP status not observed",
+        "originHttpStatus": null
+      },
+      {
+        "requestedUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+        "finalUrl": "https://drive.google.com/file/d/1WPmEqUtHVHep2LqtOsyvdnX7CnHo1R-6/view",
+        "publisher": "Eagle County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:45:48.799563+00:00",
+        "httpStatus": 200,
+        "rawHash": "936fc42f131d5705ae6da2a50d48de2033782af83d2e6adf5d94013a7dc5ed2e",
+        "reviewedEvidence": "Complete original PDFs linked by the current official Eagle County general-election page. Full operative questions, exact existing registered districts, and November3,2026 election association verified. Captured bytes are original PDFs delivered by the Google Drive connector; HTTP200 is an artifact-delivery capture marker, not an observed origin HTTP status.",
+        "httpStatusScope": "successful authenticated artifact delivery; origin HTTP status not observed",
+        "originHttpStatus": null
+      },
+      {
+        "requestedUrl": "https://drive.google.com/file/d/1zU6tXzfx96Py4HwGZpqhWTfL1Q0TJRpL/view",
+        "finalUrl": "https://drive.google.com/file/d/1zU6tXzfx96Py4HwGZpqhWTfL1Q0TJRpL/view",
+        "publisher": "Eagle County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:45:48.855174+00:00",
+        "httpStatus": 200,
+        "rawHash": "f2a2b546baa6c9ec96156bfc642390ac793d62f59277e0ccd46b5810dfff5c4e",
+        "reviewedEvidence": "Complete original PDFs linked by the current official Eagle County general-election page. Full operative questions, exact existing registered districts, and November3,2026 election association verified. Captured bytes are original PDFs delivered by the Google Drive connector; HTTP200 is an artifact-delivery capture marker, not an observed origin HTTP status.",
+        "httpStatusScope": "successful authenticated artifact delivery; origin HTTP status not observed",
+        "originHttpStatus": null
+      }
+    ]
+  }
+}

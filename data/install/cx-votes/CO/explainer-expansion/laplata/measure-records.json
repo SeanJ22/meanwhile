@@ -1,0 +1,29 @@
+[
+  {
+    "contestId": "co-durango-west-metropolitan-district-1-2026-ballot-6a",
+    "whatItDoes": "Allow the district to borrow $2 million for street and road improvements and related facilities, equipment, land and easements, inside or outside the district. Total repayment would be capped at $3.5 million. Annual property taxes would rise by up to $210,000, or a lower amount needed for the debt. The property-tax rate would have no ceiling unless the district board sets one, while the annual dollar limit would still apply. The new taxes could be used only for debt principal, any early-repayment premium and interest. Legally available district money could also repay the debt.",
+    "yesMeans": "Approve the debt and repayment property taxes within the stated limits, along with the proposed revenue-limit exception.",
+    "noMeans": "Do not authorize this new debt, associated property-tax levy or revenue-limit exception through this measure.",
+    "parts": [
+      {
+        "id": "co-durango-west-metropolitan-district-1-2026-ballot-6a#financing",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Debt terms",
+        "what": "Debt could take the form of general-obligation bonds, other obligations or contracts. The maximum net effective interest rate would be 6% a year. The board could set payment dates and periodic compounding, issue debt in one or more series at prices above, below or equal to principal, and allow early repayment with an extra charge capped at 3% of the principal being repaid."
+      },
+      {
+        "id": "co-durango-west-metropolitan-district-1-2026-ballot-6a#revenue-limits",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Revenue-limit exception",
+        "what": "Debt proceeds, the new taxes, other revenue used to repay the debt and their investment income could be retained and spent outside the stated constitutional spending and revenue limits. The question would not limit other district revenue in any year."
+      }
+    ],
+    "sourceUrl": "https://www.lpcgov.org/Sample%20Ballot%20Style%2002.pdf?t=202609241031160",
+    "sourceHash": "64bc349d565ba99ac65a61137b2c4d28978dd0416266f2c52f32194a4ff20ef7",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:58:59.404417+00:00",
+    "citation": "measure-source"
+  }
+]

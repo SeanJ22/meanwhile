@@ -1,0 +1,6 @@
+{
+  "ocd-division/country:us/state:ca/place:oakland": "data/derived/zip-divisions/94.json",
+  "ocd-division/country:us/state:ca/place:piedmont": "data/derived/zip-divisions/94.json",
+  "ocd-division/country:us/state:ca/place:pleasanton": "data/derived/zip-divisions/94.json",
+  "ocd-division/country:us/state:ca/place:union_city": "data/derived/zip-divisions/94.json"
+}

@@ -1,0 +1,282 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-ff",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:oakland",
+          "title": "City of Oakland — Measure FF",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Shall the measure amending Oakland’s Real Property Transfer Tax Ordinance to eliminate the foreclosure exception for all property transfers except transfers converting commercial property to certain housing or healthcare uses, transfers to community banking organizations, and certain transfers of residential properties of four units or less, and allowing the City Council to establish, amend, or remove foreclosure-related exceptions, raising approximately $4-$13 million annually pursuant to tax rates in Oakland Municipal Code section 4.20.020, beginning January 1, 2027 until repealed, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-gg",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:piedmont",
+          "title": "City of Piedmont — Measure GG",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Shall the measure, providing funding for City of Piedmont’s essential city services, such as police, fire, and emergency medical response; and maintenance of aging City buildings, parks, stormwater drains, roads and sidewalks, by increasing the real estate transfer tax from 1.3% to 1.75% to be more in line with neighboring cities and to generate approximately $1,500,000 annually in general tax revenue until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-hh",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:pleasanton",
+          "title": "City of Pleasanton — Measure HH",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Shall a measure be adopted to increase the City’s Uniform Transient Occupancy Tax paid by hotel guests from 8% to 10% on July 1, 2027, and to 12% on July 1, 2028, generating an estimated $1.4 to $2.8 million per year in additional revenue, that can be used to maintain city services, such as: police and fire protection; park and street maintenance; recreation programs; and other general government uses, until ended by voters?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-ii",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:union_city",
+          "title": "City of Union City — Measure II",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Union City Essential Services Extension Measure. To maintain critical city services, including 9-1-1 emergency response/paramedics/fire protection; street/pothole repair; neighborhood police patrols; crime/gun violence prevention programs; youth/senior programs; and other city services, shall the measure extending the City of Union City’s existing voter-approved utility users tax for 9 years at the current 5% rate (no increase), providing $7,000,000 annually, with senior/low-income exemptions, annual audits, and all funds locally controlled, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-ff-text",
+          "contestId": "ca-2026-alameda-ff",
+          "officialNumber": "Measure FF",
+          "questionText": "Shall the measure amending Oakland’s Real Property Transfer Tax Ordinance to eliminate the foreclosure exception for all property transfers except transfers converting commercial property to certain housing or healthcare uses, transfers to community banking organizations, and certain transfers of residential properties of four units or less, and allowing the City Council to establish, amend, or remove foreclosure-related exceptions, raising approximately $4-$13 million annually pursuant to tax rates in Oakland Municipal Code section 4.20.020, beginning January 1, 2027 until repealed, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Shall the measure amending Oakland’s Real Property Transfer Tax Ordinance to eliminate the foreclosure exception for all property transfers except transfers converting commercial property to certain housing or healthcare uses, transfers to community banking organizations, and certain transfers of residential properties of four units or less, and allowing the City Council to establish, amend, or remove foreclosure-related exceptions, raising approximately $4-$13 million annually pursuant to tax rates in Oakland Municipal Code section 4.20.020, beginning January 1, 2027 until repealed, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-gg-text",
+          "contestId": "ca-2026-alameda-gg",
+          "officialNumber": "Measure GG",
+          "questionText": "Shall the measure, providing funding for City of Piedmont’s essential city services, such as police, fire, and emergency medical response; and maintenance of aging City buildings, parks, stormwater drains, roads and sidewalks, by increasing the real estate transfer tax from 1.3% to 1.75% to be more in line with neighboring cities and to generate approximately $1,500,000 annually in general tax revenue until ended by voters, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Shall the measure, providing funding for City of Piedmont’s essential city services, such as police, fire, and emergency medical response; and maintenance of aging City buildings, parks, stormwater drains, roads and sidewalks, by increasing the real estate transfer tax from 1.3% to 1.75% to be more in line with neighboring cities and to generate approximately $1,500,000 annually in general tax revenue until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-hh-text",
+          "contestId": "ca-2026-alameda-hh",
+          "officialNumber": "Measure HH",
+          "questionText": "Shall a measure be adopted to increase the City’s Uniform Transient Occupancy Tax paid by hotel guests from 8% to 10% on July 1, 2027, and to 12% on July 1, 2028, generating an estimated $1.4 to $2.8 million per year in additional revenue, that can be used to maintain city services, such as: police and fire protection; park and street maintenance; recreation programs; and other general government uses, until ended by voters?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Shall a measure be adopted to increase the City’s Uniform Transient Occupancy Tax paid by hotel guests from 8% to 10% on July 1, 2027, and to 12% on July 1, 2028, generating an estimated $1.4 to $2.8 million per year in additional revenue, that can be used to maintain city services, such as: police and fire protection; park and street maintenance; recreation programs; and other general government uses, until ended by voters?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-ii-text",
+          "contestId": "ca-2026-alameda-ii",
+          "officialNumber": "Measure II",
+          "questionText": "Union City Essential Services Extension Measure. To maintain critical city services, including 9-1-1 emergency response/paramedics/fire protection; street/pothole repair; neighborhood police patrols; crime/gun violence prevention programs; youth/senior programs; and other city services, shall the measure extending the City of Union City’s existing voter-approved utility users tax for 9 years at the current 5% rate (no increase), providing $7,000,000 annually, with senior/low-income exemptions, annual audits, and all funds locally controlled, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:09:54.290434+00:00",
+            "quote": "Union City Essential Services Extension Measure. To maintain critical city services, including 9-1-1 emergency response/paramedics/fire protection; street/pothole repair; neighborhood police patrols; crime/gun violence prevention programs; youth/senior programs; and other city services, shall the measure extending the City of Union City’s existing voter-approved utility users tax for 9 years at the current 5% rate (no increase), providing $7,000,000 annually, with senior/low-income exemptions, annual audits, and all funds locally controlled, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Starting January 1, 2027, removes Oakland’s general real-property transfer-tax exemption for foreclosures and transfers in lieu of foreclosure, while keeping specified housing, healthcare, community-bank and small-residential exceptions. Non-exempt foreclosure transfers would pay the existing transfer-tax rates on fair market value, including remaining liens or debt. The council could create, amend or remove foreclosure exceptions by ordinance. The tax is for any lawful city purpose and continues until repealed. It requires majority approval. The ballot estimates $4–$13 million annually; the city auditor separately estimates $10.4–$13.8 million in first-year revenue and $592,900–$651,100 in first-year implementation costs, with actual results depending on market conditions.",
+          "yesMeans": "Apply the existing transfer tax to foreclosure-related transfers unless they qualify for an exception, and allow council changes to those exceptions.",
+          "noMeans": "Keep the current general foreclosure-related transfer-tax exemption.",
+          "contestId": "ca-2026-alameda-ff",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-ff#exceptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Foreclosure exceptions",
+              "what": "Commercial property converted to interim shelter, single-room-occupancy housing, affordable housing, permanent supportive housing or a healthcare facility can qualify by paying the tax on time and applying for a refund within 36 months after recording, with a certificate of occupancy and proof of use. A community banking organization must have less than $10 billion in consolidated assets and certify its latest FDIC-reported assets or provide requested verification. Property with four or fewer residential units can qualify when transferred to an individual or family trust."
+            },
+            {
+              "id": "ca-2026-alameda-ff#rates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Existing rates",
+              "what": "Oakland’s current city transfer-tax bands are 1% for transfers of $300,000 or less; 1.5% from $300,001 through $2 million; 1.75% from $2,000,001 through $5 million; and 2.5% above $5 million, subject to existing code exceptions. Qualifying low- or moderate-income first-time homebuyers have an existing half-percentage-point discount in the first two bands. This measure changes foreclosure exemptions rather than these rates."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:54.290434+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Raises Piedmont’s real-estate transfer tax from $13 to $17.50 for each $1,000, or fraction of $1,000, of the taxable transfer value, effective July 1, 2027. It is estimated to provide about $1.5 million in additional annual revenue for any lawful city expense. The tax applies when consideration exceeds $100; transfers without consideration are exempt. The measure also updates exemptions and tax-redetermination procedures and continues until voters end it. It requires majority approval.",
+          "yesMeans": "Adopt the higher transfer-tax rate and the updated ordinance, beginning July 1, 2027.",
+          "noMeans": "Keep the existing 1.3% transfer tax and current ordinance.",
+          "contestId": "ca-2026-alameda-gg",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-gg#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and taxable value",
+              "what": "The ordinance exempts security instruments, qualifying government acquisitions, certain bankruptcy reorganizations, specified Securities and Exchange Commission-ordered transfers, continuing partnerships and transfers to a beneficiary or mortgagee in lieu of foreclosure. It also exempts qualifying government-to-nonprofit property transfers financed or refinanced through the specified government-purpose bond arrangement. Taxable consideration includes specified secured debt and special assessments assumed with the property; the ordinance provides a fair-market-value method when consideration cannot be determined."
+            },
+            {
+              "id": "ca-2026-alameda-gg#procedures",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Payment and review",
+              "what": "The tax is due when the transfer instrument is delivered and becomes delinquent at recording if unpaid. Late payment carries a 10% penalty, another 10% after 90 days and interest of 0.5% per month or fraction of a month. A person may seek redetermination within 60 days of the tax collector’s deficiency notice and request a hearing with ten days’ notice. Court challenges must be filed within 90 days of the final redetermination."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:54.290434+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Raises Pleasanton’s hotel tax from 8% to 10% for periods of occupancy beginning July 1, 2027 through June 30, 2028, and to 12% for periods beginning July 1, 2028 or later. It applies to guests staying in hotels, motels and other short-term lodging for 30 consecutive days or less. Lodging operators collect and remit the tax. Estimated additional revenue is $1.4 million in the first year and $2.8 million annually after full implementation, available for any lawful city purpose. It continues until ended by voters and requires majority approval.",
+          "yesMeans": "Approve the phased hotel-tax increases to 10% and then 12% on the stated dates.",
+          "noMeans": "Keep the existing 8% hotel-tax rate.",
+          "contestId": "ca-2026-alameda-hh",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-hh#payment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Payment rules",
+              "what": "The applicable rate depends on when the occupancy period begins. Guests pay the tax when rent is paid, with a proportionate share for rent installments. Unpaid tax is due when the stay ends, and the city may require direct payment if the operator does not collect it."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:54.290434+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Extends Union City’s existing 5% utility-users tax for nine more years, from its current December 31, 2028 expiration through December 31, 2037, without raising the rate. It taxes charges for telephone and other telecommunications, video including internet and streaming delivery, electricity and gas services. Estimated revenue is $7 million a year for any lawful city purpose. Approved exemptions continue for residents age 70 or older and qualifying low-income residents of any age, including PG&E CARE participants. Collections and spending remain subject to annual independent audits with public results. It requires majority approval.",
+          "yesMeans": "Continue the 5% utility-users tax through December 31, 2037, with existing eligible exemptions and audit requirements.",
+          "noMeans": "Let the existing tax expire after December 31, 2028.",
+          "contestId": "ca-2026-alameda-ii",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-ii#rules",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Video services and future changes",
+              "what": "The video-tax provision uses the service address when it differs from the billing address and presumes city-billed or city-served video is used at least partly in the city. The ordinance clarifies existing coverage of internet and streaming video. The council may amend or repeal the tax within the ordinance’s authority, but a higher rate requires voters; it may restore a previously reduced rate up to 5%. Taxes on services used before expiration remain payable after expiration."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:54.290434+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:09:54.290434+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+        "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Specific bounded pages include official question, entire neutral analysis, full legal text and K tax-rate statement; submitted arguments excluded. Source-word-spacing OCR artifacts are not copied into reader prose."
+      },
+      {
+        "requestedUrl": "https://www.oaklandca.gov/My-Household/Property-Tax/Real-Estate-Transfer-Tax",
+        "finalUrl": "https://www.oaklandca.gov/My-Household/Property-Tax/Real-Estate-Transfer-Tax",
+        "httpStatus": 200,
+        "rawHash": "9143b75b9d77db5d90a2ebd2e745bd3f0344b5830ecd043060ea527693e4f4fc",
+        "retrievedAt": "2026-11-03T07:06:26.228656+00:00",
+        "publisher": "City of Oakland — current real-property transfer-tax rates",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Fresh government original source. Supplemental current city tax-rate table or final legal ordinance held as native bytes. Exact bounded visible text/OCR retained separately; source display artifacts excluded from reader prose."
+      },
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_pleasanton_tax_measure.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_pleasanton_tax_measure.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "33ff4602d9a48e8a698fffc8aa59dc7b2753656c677e4ccec7b461740741c7b3",
+        "retrievedAt": "2026-11-03T06:42:42.736231+00:00",
+        "publisher": "Alameda County Registrar of Voters — Pleasanton full final proposed ordinance",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh government original source. Supplemental current city tax-rate table or final legal ordinance held as native bytes. Exact bounded visible text/OCR retained separately; source display artifacts excluded from reader prose."
+      }
+    ]
+  }
+}

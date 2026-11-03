@@ -1,0 +1,70 @@
+[
+  {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "httpStatus": 200,
+    "sha256": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "bytes": 11727645,
+    "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+    "savedFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.pdf",
+    "sourceTextFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.selected-measures.txt",
+    "extractedTextSha256": "7cc4d024fbe76e6d7ae68fde1e77d5d1a9a1a5097820fab1fdbdb158bd9b9df8",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "BOUNDED_NATIVE_RENDER_TESSERACT_PSM3_AND_VISUALLY_CHECKED_QUESTION_TRANSCRIPTION",
+    "boundedPdfPages": [
+      947,
+      949,
+      950,
+      952,
+      953,
+      954,
+      955,
+      956,
+      959,
+      962,
+      963
+    ],
+    "publisher": "Alameda County Registrar of Voters",
+    "role": "official-questions-neutral-analyses-full-legal-text-and-tax-statement",
+    "note": "Original PDF includes other contests, measures and arguments. Only specified bounded measure pages support these records; submitted arguments excluded. Derived text is not claimed to be native PDF text."
+  },
+  {
+    "url": "https://www.oaklandca.gov/My-Household/Property-Tax/Real-Estate-Transfer-Tax",
+    "finalUrl": "https://www.oaklandca.gov/My-Household/Property-Tax/Real-Estate-Transfer-Tax",
+    "httpStatus": 200,
+    "sha256": "abfe51aefd7eac68469948fe10b678195ad1804be4320022236f8ce2b8472b1a",
+    "bytes": 208413,
+    "retrievedAt": "2026-11-03T07:06:26.228656+00:00",
+    "savedFile": "sources/abfe51aefd7eac68469948fe10b678195ad1804be4320022236f8ce2b8472b1a.sanitized.html",
+    "sourceTextFile": "sources/9143b75b9d77db5d90a2ebd2e745bd3f0344b5830ecd043060ea527693e4f4fc.txt",
+    "extractedTextSha256": "13edd718a5ae63d63037ab7d9679ffdddc3808ef81354654430285acba9704f3",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "textMethod": "DETERMINISTIC_HTML_VISIBLE_TEXT",
+    "publisher": "City of Oakland — current real-property transfer-tax rates",
+    "role": "City of Oakland — current real-property transfer-tax rates",
+    "originalRawSha256": "9143b75b9d77db5d90a2ebd2e745bd3f0344b5830ecd043060ea527693e4f4fc",
+    "originalRawBytes": 208422,
+    "storedSha256": "abfe51aefd7eac68469948fe10b678195ad1804be4320022236f8ce2b8472b1a",
+    "hashScope": "Exact saved UTF8 HTML after existing fixture credential sanitizer; original native SHA recorded separately. Unmodified original capture remains only in private scratch.",
+    "sanitizer": "fx-cred-v1-2026-08-28"
+  },
+  {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_pleasanton_tax_measure.pdf?download=1",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_pleasanton_tax_measure.pdf?download=1",
+    "httpStatus": 200,
+    "sha256": "33ff4602d9a48e8a698fffc8aa59dc7b2753656c677e4ccec7b461740741c7b3",
+    "bytes": 344404,
+    "retrievedAt": "2026-11-03T06:42:42.736231+00:00",
+    "savedFile": "sources/33ff4602d9a48e8a698fffc8aa59dc7b2753656c677e4ccec7b461740741c7b3.pdf",
+    "sourceTextFile": "sources/33ff4602d9a48e8a698fffc8aa59dc7b2753656c677e4ccec7b461740741c7b3.txt",
+    "extractedTextSha256": "2d24b9df5a1967ace37d359c29ae96eea6904a0b2617c312d96ac41159fd5400",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "BOUNDED_NATIVE_RENDER_TESSERACT_PSM3",
+    "publisher": "Alameda County Registrar of Voters — Pleasanton full final proposed ordinance",
+    "role": "Alameda County Registrar of Voters — Pleasanton full final proposed ordinance",
+    "boundedPdfPages": [
+      5,
+      6
+    ]
+  }
+]

@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-11-03T07:10:54.831Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Oakland FF, Piedmont GG, Pleasanton HH and Union City II only.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland",
+      "contests": [
+        "ca-2026-alameda-ff"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:piedmont",
+      "contests": [
+        "ca-2026-alameda-gg"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:pleasanton",
+      "contests": [
+        "ca-2026-alameda-hh"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:union_city",
+      "contests": [
+        "ca-2026-alameda-ii"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:alameda",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:albany",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:el_cerrito",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

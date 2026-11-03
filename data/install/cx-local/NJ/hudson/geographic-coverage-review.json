@@ -1,0 +1,102 @@
+{
+  "commissionDistricts": {
+    "1": [
+      1,
+      15
+    ],
+    "2": [
+      9,
+      16
+    ],
+    "3": [
+      10,
+      17
+    ],
+    "4": [
+      11,
+      18
+    ],
+    "5": [
+      8,
+      12
+    ],
+    "6": [
+      13,
+      34
+    ],
+    "7": [
+      3,
+      35,
+      36
+    ],
+    "8": [
+      27,
+      28,
+      30,
+      32
+    ],
+    "9": [
+      2,
+      4,
+      5,
+      6,
+      7,
+      14,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      29,
+      33
+    ]
+  },
+  "wholeCommissionMembers": {
+    "1": [
+      "bayonne"
+    ],
+    "5": [
+      "hoboken"
+    ],
+    "6": [
+      "union_city"
+    ],
+    "7": [
+      "guttenberg",
+      "weehawken",
+      "west_new_york"
+    ],
+    "8": [
+      "north_bergen"
+    ],
+    "9": [
+      "east_newark",
+      "harrison",
+      "kearny"
+    ]
+  },
+  "wholeSchoolMembers": {
+    "bayonne": "ocd-division/country:us/state:nj/school_district:bayonne_city_school_district",
+    "east_newark": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+    "guttenberg": "ocd-division/country:us/state:nj/school_district:guttenberg_town_school_district",
+    "hoboken": "ocd-division/country:us/state:nj/school_district:hoboken_city_school_district",
+    "jersey_city": "ocd-division/country:us/state:nj/school_district:jersey_city_school_district",
+    "kearny": "ocd-division/country:us/state:nj/school_district:kearny_town_school_district",
+    "secaucus": "ocd-division/country:us/state:nj/school_district:secaucus_town_school_district"
+  },
+  "unresolvedStyleCountyCommissioner": [
+    {
+      "form": 31,
+      "municipality": "Secaucus",
+      "ward": 2,
+      "electionDistricts": "3,4,5",
+      "catalogCountyCommissionerDistrict": null,
+      "matchingNamedSlate": "ANMOL GOPALAK / ALEX VALDEZ",
+      "action": "Candidateidentitycorroborationonly; do not use matchingnames asboundaryproof. Preciseform31countycommissioncrosswalkremainsopen."
+    }
+  ],
+  "scope": "Onlyexplicitlywholemunicipalcomponentslinked. JerseyCity/Secaucussplitcommissionelectorates remain exactdistrictIDswithreaderjoins; wards neverwidened towholecity. SevenlocalBOEs are exactexistinglocaldistricts, no regionalconstituentseatwidening."
+}

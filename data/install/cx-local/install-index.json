@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:57:43.612763+00:00",
+  "preparedAt": "2026-11-03T10:04:00.642375+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 96,
-    "stateName": "New Jersey",
-    "county": "Hudson County",
-    "fips": "34017",
-    "population": 735033,
+    "rank": 97,
+    "stateName": "Missouri",
+    "county": "Jackson County",
+    "fips": "29095",
+    "population": 732994,
     "populationYear": 2025,
-    "state": "NJ"
+    "state": "MO"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -2591,6 +2591,22 @@
       },
       "censusCounty": "Norfolk County",
       "countyFips": "25021"
+    },
+    {
+      "state": "NJ",
+      "county": "Hudson",
+      "populationRank": 96,
+      "manifest": "NJ/hudson/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 33,
+      "measureContests": 2,
+      "candidacies": 64,
+      "newContests": 35,
+      "refreshedContests": 0,
+      "sourceInputSha256": "2b1314fd835ad630dbda498c008922c94a4b6f3f1704ea2972176de373048b62",
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Hudson County",
+      "countyFips": "34017"
     }
   ],
   "sourceReviewCounties": [
@@ -2649,17 +2665,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 93,
-    "packetsPrepared": 94,
-    "candidateAndRetentionContests": 4483,
-    "measureContests": 115,
-    "candidacyEntries": 10000,
-    "newContestEntriesAgainstCheckedInBaseline": 3735,
-    "distinctPreparedContestIds": 4451,
-    "distinctPreparedCandidateIds": 9731,
-    "distinctNewContestsAgainstCheckedInBaseline": 3658,
+    "countiesPrepared": 94,
+    "packetsPrepared": 95,
+    "candidateAndRetentionContests": 4516,
+    "measureContests": 117,
+    "candidacyEntries": 10064,
+    "newContestEntriesAgainstCheckedInBaseline": 3770,
+    "distinctPreparedContestIds": 4486,
+    "distinctPreparedCandidateIds": 9795,
+    "distinctNewContestsAgainstCheckedInBaseline": 3693,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 95
+    "distinctCountyHandoffs": 96
   },
   "remainingWork": [
     {

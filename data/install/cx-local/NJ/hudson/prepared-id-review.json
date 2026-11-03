@@ -1,0 +1,24 @@
+{
+  "comparison": {
+    "ref": "9e7b47833228f6d03649ad2bed350fcd520661c7",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/NJ/explainer-expansion/ballot-input/nj.json",
+        "sha256": "235ca12b085c29a0cd8ab8773c762d493e41b826e91b7a484901bb5753d7ae4f"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/NJ/explainer-expansion/park-ridge-warren-supplement/ballot-input/nj.json",
+        "sha256": "c76049e53d96ef79104d2f1825a49e0d222810f26a799866a537820e5c39d5b6"
+      }
+    ]
+  },
+  "baselineContests": 109,
+  "baselineCandidacies": 304,
+  "baselineMeasures": 0,
+  "sameStateLocalPackets": [
+    "/workspace/meanwhile/data/install/cx-local/NJ/essex/ballot-input/nj.json",
+    "/workspace/meanwhile/data/install/cx-local/NJ/bergen/ballot-input/nj.json",
+    "/workspace/meanwhile/data/install/cx-local/NJ/middlesex/ballot-input/nj.json"
+  ],
+  "preservation": "BothcurrentrecursivelyenumeratedNJpreparedinputs hashverified andall3same-stateNJlocalpackets checked. No matchingHudsoncandidateidentity/question found. Allfederal/state/legislativeandpriorquestions/explanations stayoutsideincomingIDs. Exactexisting7schooldistrict/12municipalCOUSUBidentities reused."
+}

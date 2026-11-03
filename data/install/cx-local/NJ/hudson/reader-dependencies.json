@@ -1,0 +1,214 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:1",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      1,
+      15
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 1 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:2",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      9,
+      16
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 2 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:3",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      10,
+      17
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 3 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:4",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      11,
+      18
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 4 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:5",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      8,
+      12
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 5 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:6",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      13,
+      34
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 6 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:7",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      3,
+      35,
+      36
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 7 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:8",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      27,
+      28,
+      30,
+      32
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 8 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:9",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      2,
+      4,
+      5,
+      6,
+      7,
+      14,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      29,
+      33
+    ],
+    "readerDependency": "Use only the exact Hudson County Commissioner — District 9 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:1",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      4
+    ],
+    "readerDependency": "Use only the exact Harrison Council — Ward 1 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:2",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      5
+    ],
+    "readerDependency": "Use only the exact Harrison Council — Ward 2 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:3",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      6
+    ],
+    "readerDependency": "Use only the exact Harrison Council — Ward 3 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:4",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      7
+    ],
+    "readerDependency": "Use only the exact Harrison Council — Ward 4 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:1",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      20,
+      21
+    ],
+    "readerDependency": "Use only the exact Kearny Council — Ward 1 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:2",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      22,
+      23
+    ],
+    "readerDependency": "Use only the exact Kearny Council — Ward 2 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:3",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      24
+    ],
+    "readerDependency": "Use only the exact Kearny Council — Ward 3 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:4",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      25,
+      26
+    ],
+    "readerDependency": "Use only the exact Kearny Council — Ward 4 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:secaucus_town/ward:1",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      28,
+      29
+    ],
+    "readerDependency": "Use only the exact Secaucus Council — Ward 1 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:secaucus_town/ward:2",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      30,
+      31
+    ],
+    "readerDependency": "Use only the exact Secaucus Council — Ward 2 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:secaucus_town/ward:3",
+    "status": "EXACT_DISTRICT_ID_READER_REGISTRY_JOIN_PENDING",
+    "officialScopeSourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+    "formNumbers": [
+      32,
+      33
+    ],
+    "readerDependency": "Use only the exact Secaucus Council — Ward 3 electorate and published current form/ward/election-district crosswalk. No county/city fallback. Whole-member links are only corroborated portions; remaining split geography requires the actual district polygon."
+  }
+]

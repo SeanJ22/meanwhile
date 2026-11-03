@@ -1,0 +1,273 @@
+{
+  "declaredWriteInCertification": "NOT_ACQUIRED",
+  "withdrawalCancellationCertification": "NOT_ACQUIRED",
+  "emptyNominationSlots": [
+    {
+      "form": 1,
+      "officeKey": "commission-1",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 2,
+      "officeKey": "east_newark-council-at-large",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 3,
+      "officeKey": "commission-7",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 3,
+      "officeKey": "guttenberg-school-3",
+      "noNominationMadeOccurrences": 0,
+      "noPetitionFiledOccurrences": 2
+    },
+    {
+      "form": 3,
+      "officeKey": "guttenberg-council-at-large",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 4,
+      "officeKey": "harrison-mayor",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 4,
+      "officeKey": "harrison-council-ward-1",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 5,
+      "officeKey": "harrison-mayor",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 5,
+      "officeKey": "harrison-council-ward-2",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 6,
+      "officeKey": "harrison-mayor",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 6,
+      "officeKey": "harrison-council-ward-3",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 7,
+      "officeKey": "harrison-mayor",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 7,
+      "officeKey": "harrison-council-ward-4",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 8,
+      "officeKey": "commission-5",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 9,
+      "officeKey": "commission-2",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 10,
+      "officeKey": "commission-3",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 11,
+      "officeKey": "commission-4",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 12,
+      "officeKey": "commission-5",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 13,
+      "officeKey": "commission-6",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 15,
+      "officeKey": "commission-1",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 16,
+      "officeKey": "commission-2",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 17,
+      "officeKey": "commission-3",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 18,
+      "officeKey": "commission-4",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 20,
+      "officeKey": "kearny-council-ward-1",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 21,
+      "officeKey": "kearny-council-ward-1",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 22,
+      "officeKey": "kearny-council-ward-2",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 23,
+      "officeKey": "kearny-council-ward-2",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 25,
+      "officeKey": "kearny-council-ward-4",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 26,
+      "officeKey": "kearny-council-ward-4",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 27,
+      "officeKey": "commission-8",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 28,
+      "officeKey": "commission-8",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 28,
+      "officeKey": "secaucus-council-ward-1",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 29,
+      "officeKey": "secaucus-council-ward-1",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 30,
+      "officeKey": "commission-8",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 30,
+      "officeKey": "secaucus-council-ward-2",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 31,
+      "officeKey": "secaucus-council-ward-2",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 32,
+      "officeKey": "commission-8",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 32,
+      "officeKey": "secaucus-council-ward-3",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 33,
+      "officeKey": "secaucus-council-ward-3",
+      "noNominationMadeOccurrences": 2,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 34,
+      "officeKey": "commission-6",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 35,
+      "officeKey": "commission-7",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    },
+    {
+      "form": 36,
+      "officeKey": "commission-7",
+      "noNominationMadeOccurrences": 1,
+      "noPetitionFiledOccurrences": 0
+    }
+  ],
+  "note": "Blankpoliticalnomination slots and Guttenberg2schoolpositionswithNO PETITION FILED are not people/cancelledraces. Guttenberg retains its complete1namedchoice/vote3field. E.JuniorMaldonado is signatory, nevercandidate. GenericWrite-Inslots notdeclaredwrite-inpersons.",
+  "reportedWriteInCampaignLeads": [
+    {
+      "name": "David Kraatz",
+      "municipality": "Secaucus",
+      "ward": 2,
+      "contestId": "nj-cx-local-2026-hudson-secaucus-council-ward-2",
+      "reportedStatus": "NEWS_REPORTED_WRITE_IN_CAMPAIGN_NOT_OFFICIALLY_CERTIFIED",
+      "sourceUrl": "https://secaucusscoop.com/2026/10/secaucus-ward-2-election-clancy-kraatz/",
+      "sourceRawSha256": "7b443f0c7df2608d0d37d6dc5655ece7439f0f731dc7edb225e69145a2b81393",
+      "sourcePublicationDate": "2026-10-25",
+      "quote": "While incumbent Councilman James Clancy appears on the official ballot line, resident David Kraatz announced a write-in campaign at the October 13 Town Council meeting.",
+      "action": "Separate standing acquisition lead. Do not add to printed candidacies or assert official filing/qualification without primary intent/status proof. OfficialOctober13minutes/candidateownintent certification not acquired. No unopposed/no-write-in claim."
+    }
+  ]
+}

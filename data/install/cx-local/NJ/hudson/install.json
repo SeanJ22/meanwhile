@@ -1,0 +1,778 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NJ",
+  "county": "Hudson",
+  "countyFips": "34017",
+  "populationRank": 96,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only currentofficialsamplefields fromhonestlylabeledpublicreaderPDFtext. RivermergeslatestNJdataandbindsprecisecommission/ward/schoolapplicability. No productionwrites/publication.",
+  "counts": {
+    "candidateFields": 33,
+    "printedCandidateChoices": 64,
+    "newLocalMeasureFields": 2,
+    "totalChangedContests": 35,
+    "heldFields": 0,
+    "publishedSampleForms": 36,
+    "declaredElectionDistricts": 468,
+    "readerReportedOnePageForms": 36,
+    "nativeSamplePdfFiles": 0,
+    "reader200SampleCaptures": 36,
+    "native403SampleAttempts": 36,
+    "localOfficeBlockOccurrences": 135,
+    "districtMemberships": 17,
+    "wholeCommissionMunicipalityLinks": 10,
+    "wholeSchoolMunicipalityLinks": 7,
+    "readerDistrictDependencies": 20,
+    "catalogStylesWithUnresolvedCommissionHeader": 1,
+    "preparedInputsCompared": 2,
+    "heldContestsPreserved": 109,
+    "heldCandidaciesPreserved": 304,
+    "heldMeasuresPreserved": 0,
+    "sourceCaptures": 88,
+    "separateReportedWriteInCampaignLeads": 1
+  },
+  "subjects": [
+    {
+      "id": "nj-cx-local-2026-hudson-register",
+      "title": "Hudson County Register",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson",
+      "candidates": 2,
+      "primaryForm": 1,
+      "sourceForms": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "scopeConfirmedForms": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-1",
+      "title": "Hudson County Commissioner \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:1",
+      "candidates": 1,
+      "primaryForm": 1,
+      "sourceForms": [
+        1,
+        15
+      ],
+      "scopeConfirmedForms": [
+        1,
+        15
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-2",
+      "title": "Hudson County Commissioner \u2014 District 2",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:2",
+      "candidates": 1,
+      "primaryForm": 9,
+      "sourceForms": [
+        9,
+        16
+      ],
+      "scopeConfirmedForms": [
+        9,
+        16
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-3",
+      "title": "Hudson County Commissioner \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:3",
+      "candidates": 1,
+      "primaryForm": 10,
+      "sourceForms": [
+        10,
+        17
+      ],
+      "scopeConfirmedForms": [
+        10,
+        17
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-4",
+      "title": "Hudson County Commissioner \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:4",
+      "candidates": 2,
+      "primaryForm": 11,
+      "sourceForms": [
+        11,
+        18
+      ],
+      "scopeConfirmedForms": [
+        11,
+        18
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-5",
+      "title": "Hudson County Commissioner \u2014 District 5",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:5",
+      "candidates": 1,
+      "primaryForm": 8,
+      "sourceForms": [
+        8,
+        12
+      ],
+      "scopeConfirmedForms": [
+        8,
+        12
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-6",
+      "title": "Hudson County Commissioner \u2014 District 6",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:6",
+      "candidates": 1,
+      "primaryForm": 13,
+      "sourceForms": [
+        13,
+        34
+      ],
+      "scopeConfirmedForms": [
+        13,
+        34
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-7",
+      "title": "Hudson County Commissioner \u2014 District 7",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:7",
+      "candidates": 1,
+      "primaryForm": 3,
+      "sourceForms": [
+        3,
+        35,
+        36
+      ],
+      "scopeConfirmedForms": [
+        3,
+        35,
+        36
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-8",
+      "title": "Hudson County Commissioner \u2014 District 8",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:8",
+      "candidates": 1,
+      "primaryForm": 27,
+      "sourceForms": [
+        27,
+        28,
+        30,
+        32
+      ],
+      "scopeConfirmedForms": [
+        27,
+        28,
+        30,
+        32
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-commission-9",
+      "title": "Hudson County Commissioner \u2014 District 9",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/commission_district:9",
+      "candidates": 2,
+      "primaryForm": 2,
+      "sourceForms": [
+        2,
+        4,
+        5,
+        6,
+        7,
+        14,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        29,
+        31,
+        33
+      ],
+      "scopeConfirmedForms": [
+        2,
+        4,
+        5,
+        6,
+        7,
+        14,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        29,
+        33
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-bayonne-school-3",
+      "title": "Bayonne Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:bayonne_city_school_district",
+      "candidates": 4,
+      "primaryForm": 1,
+      "sourceForms": [
+        1
+      ],
+      "scopeConfirmedForms": [
+        1
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-bayonne-school-1-unexpired",
+      "title": "Bayonne Board of Education \u2014 1 year unexpired term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:bayonne_city_school_district",
+      "candidates": 2,
+      "primaryForm": 1,
+      "sourceForms": [
+        1
+      ],
+      "scopeConfirmedForms": [
+        1
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-east-newark-school-3",
+      "title": "East Newark Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+      "candidates": 3,
+      "primaryForm": 2,
+      "sourceForms": [
+        2
+      ],
+      "scopeConfirmedForms": [
+        2
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-guttenberg-school-3",
+      "title": "Guttenberg Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:guttenberg_town_school_district",
+      "candidates": 1,
+      "primaryForm": 3,
+      "sourceForms": [
+        3
+      ],
+      "scopeConfirmedForms": [
+        3
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-hoboken-school-3",
+      "title": "Hoboken Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:hoboken_city_school_district",
+      "candidates": 4,
+      "primaryForm": 8,
+      "sourceForms": [
+        8
+      ],
+      "scopeConfirmedForms": [
+        8
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-jersey-city-school-3",
+      "title": "Jersey City Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:jersey_city_school_district",
+      "candidates": 9,
+      "primaryForm": 9,
+      "sourceForms": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "scopeConfirmedForms": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-jersey-city-school-1-unexpired",
+      "title": "Jersey City Board of Education \u2014 1 year unexpired term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:jersey_city_school_district",
+      "candidates": 3,
+      "primaryForm": 9,
+      "sourceForms": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "scopeConfirmedForms": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-kearny-school-3",
+      "title": "Kearny Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:kearny_town_school_district",
+      "candidates": 5,
+      "primaryForm": 20,
+      "sourceForms": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "scopeConfirmedForms": [
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-secaucus-school-3",
+      "title": "Secaucus Board of Education \u2014 3 year term",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:secaucus_town_school_district",
+      "candidates": 3,
+      "primaryForm": 28,
+      "sourceForms": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "scopeConfirmedForms": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "voteFor": 3,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-east-newark-council-at-large",
+      "title": "East Newark Council at-Large",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:east_newark_borough",
+      "candidates": 2,
+      "primaryForm": 2,
+      "sourceForms": [
+        2
+      ],
+      "scopeConfirmedForms": [
+        2
+      ],
+      "voteFor": 2,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-guttenberg-council-at-large",
+      "title": "Guttenberg Council at-Large",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+      "candidates": 2,
+      "primaryForm": 3,
+      "sourceForms": [
+        3
+      ],
+      "scopeConfirmedForms": [
+        3
+      ],
+      "voteFor": 2,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-harrison-mayor",
+      "title": "Harrison Mayor",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town",
+      "candidates": 1,
+      "primaryForm": 4,
+      "sourceForms": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "scopeConfirmedForms": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-harrison-council-ward-1",
+      "title": "Harrison Council \u2014 Ward 1",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:1",
+      "candidates": 1,
+      "primaryForm": 4,
+      "sourceForms": [
+        4
+      ],
+      "scopeConfirmedForms": [
+        4
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-harrison-council-ward-2",
+      "title": "Harrison Council \u2014 Ward 2",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:2",
+      "candidates": 1,
+      "primaryForm": 5,
+      "sourceForms": [
+        5
+      ],
+      "scopeConfirmedForms": [
+        5
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-harrison-council-ward-3",
+      "title": "Harrison Council \u2014 Ward 3",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:3",
+      "candidates": 1,
+      "primaryForm": 6,
+      "sourceForms": [
+        6
+      ],
+      "scopeConfirmedForms": [
+        6
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-harrison-council-ward-4",
+      "title": "Harrison Council \u2014 Ward 4",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:harrison_town/ward:4",
+      "candidates": 1,
+      "primaryForm": 7,
+      "sourceForms": [
+        7
+      ],
+      "scopeConfirmedForms": [
+        7
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-kearny-council-ward-1",
+      "title": "Kearny Council \u2014 Ward 1",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:1",
+      "candidates": 1,
+      "primaryForm": 20,
+      "sourceForms": [
+        20,
+        21
+      ],
+      "scopeConfirmedForms": [
+        20,
+        21
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-kearny-council-ward-2",
+      "title": "Kearny Council \u2014 Ward 2",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:2",
+      "candidates": 1,
+      "primaryForm": 22,
+      "sourceForms": [
+        22,
+        23
+      ],
+      "scopeConfirmedForms": [
+        22,
+        23
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-kearny-council-ward-3",
+      "title": "Kearny Council \u2014 Ward 3",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:3",
+      "candidates": 2,
+      "primaryForm": 24,
+      "sourceForms": [
+        24
+      ],
+      "scopeConfirmedForms": [
+        24
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-kearny-council-ward-4",
+      "title": "Kearny Council \u2014 Ward 4",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:kearny_town/ward:4",
+      "candidates": 1,
+      "primaryForm": 25,
+      "sourceForms": [
+        25,
+        26
+      ],
+      "scopeConfirmedForms": [
+        25,
+        26
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-secaucus-council-ward-1",
+      "title": "Secaucus Council \u2014 Ward 1",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:secaucus_town/ward:1",
+      "candidates": 1,
+      "primaryForm": 28,
+      "sourceForms": [
+        28,
+        29
+      ],
+      "scopeConfirmedForms": [
+        28,
+        29
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-secaucus-council-ward-2",
+      "title": "Secaucus Council \u2014 Ward 2",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:secaucus_town/ward:2",
+      "candidates": 1,
+      "primaryForm": 30,
+      "sourceForms": [
+        30,
+        31
+      ],
+      "scopeConfirmedForms": [
+        30,
+        31
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-secaucus-council-ward-3",
+      "title": "Secaucus Council \u2014 Ward 3",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:secaucus_town/ward:3",
+      "candidates": 1,
+      "primaryForm": 32,
+      "sourceForms": [
+        32,
+        33
+      ],
+      "scopeConfirmedForms": [
+        32,
+        33
+      ],
+      "voteFor": 1,
+      "capture": "READER_PDF_TEXT_NATIVE403"
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-east-newark-board-size",
+      "title": "EAST NEWARK BOARD OF EDUCATION QUESTION",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+      "type": "MEASURE",
+      "primaryForm": 2
+    },
+    {
+      "id": "nj-cx-local-2026-hudson-guttenberg-free-public-library",
+      "title": "TOWN OF GUTTENBERG PUBLIC QUESTION",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+      "type": "MEASURE",
+      "primaryForm": 3
+    }
+  ],
+  "coverageLimitations": [
+    "All36publishedformsacquiredasreadertext; no nativePDFbytesorvisual-layoutverification.",
+    "CatalogForm31omitscountycommissionheader; geographyremainsunresolved ratherthaninferredfrommatchingcandidates.",
+    "Exact9commissiondistricts/11municipalwardsneedreaderjoins;17wholemunicipalitymembershiplinks suppliedwithstyleproof. No county/cityfallback.",
+    "Optionalreader-reorderedschoolsloganassignmentsandSecaucusWard2splitS r.suffixawaitnativeconfirmation; rawsourcefactsretained.",
+    "Namedwrite-in/withdrawn/cancelledcertificationnotacquired; empty/NoNomination/NoPetitionslotsnotpeople.",
+    "NewEastNewarkBOEsizeandGuttenberglibraryquestionsincludeexactEnglishtext/printedinterpretivestatement; allpreviousquestions/explanationspreserved.",
+    "A native-captured October25localnewspaperQandA reports DavidKraatz Ward2write-in campaign; retained as a separate named acquisition lead pending primary intent/status proof, never a printed candidate or unsupported certifiedfiling."
+  ],
+  "sourceSupport": "source-support.json",
+  "readerDependencies": "reader-dependencies.json",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 88 captured sources and 118 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "focusedValidation": "focused-validation.json",
+  "reviewFiles": [
+    "form-inventory.json",
+    "sample-field-review.json",
+    "candidate-status-review.json",
+    "prepared-id-review.json",
+    "geographic-coverage-review.json"
+  ],
+  "validationDescription": "validation.json"
+}

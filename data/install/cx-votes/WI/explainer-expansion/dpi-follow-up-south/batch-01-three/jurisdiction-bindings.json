@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4309",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:pardeeville_area_school_district",
+      "unsd",
+      "5511370",
+      "Pardeeville Area School District"
+    ],
+    "sourceAgencyCode": "4228",
+    "officialQuestion": "Shall the Pardeeville Area School District, Columbia and Marquette Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $13,100,000 for the public purpose of paying the cost of a school facility improvement project consisting of: construction of an addition and renovations at the Middle/High School, including for classrooms and instructional space, restrooms, a cafeteria and a safe and secure entrance; demolition of the Balliet building; renovations at the High School, including to restrooms and for expansion of the existing kitchen/cafeteria; district-wide capital improvement projects identified in the district's capital improvement plan; and acquisition of furnishings, fixtures and equipment?",
+    "basis": "Exact whole named school district already held in the registered Census school geography; no countywide substitute."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4284",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:west_de_pere_school_district",
+      "unsd",
+      "5516320",
+      "West De Pere School District"
+    ],
+    "sourceAgencyCode": "6328",
+    "officialQuestion": "Shall the School District of West De Pere, Brown and Outagamie Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "basis": "Exact whole named school district already held in the registered Census school geography; no countywide substitute."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4295",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:westfield_school_district",
+      "unsd",
+      "5516440",
+      "Westfield School District"
+    ],
+    "sourceAgencyCode": "6335",
+    "officialQuestion": "Shall the School District of Westfield, Marquette, Waushara and Adams Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses related to transportation, staffing, academic programming, curriculum updates, and career/trade pathways?",
+    "basis": "Exact whole named school district already held in the registered Census school geography; no countywide substitute."
+  }
+]

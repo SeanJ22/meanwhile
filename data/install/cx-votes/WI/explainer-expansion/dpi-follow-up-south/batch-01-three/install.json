@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "wi-dpi-2026-referendum-4309",
+      "sourceUrl": "https://neshkorowi.gov/news-and-notices/november-3-2026-general-election-type-b-notice/"
+    },
+    {
+      "id": "wi-dpi-2026-referendum-4284",
+      "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000"
+    },
+    {
+      "id": "wi-dpi-2026-referendum-4295",
+      "sourceUrl": "https://neshkorowi.gov/news-and-notices/november-3-2026-general-election-type-b-notice/"
+    }
+  ],
+  "operation": "Merge these three measure-only questions and source-linked explainers through existing publication. Install the shared DPI and Neshkoro source packets first; preserve unrelated ballot rows. No code release.",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "coverage": {
+    "newSchoolQuestionsAndExplainers": 3,
+    "stateLocalComplete": false
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

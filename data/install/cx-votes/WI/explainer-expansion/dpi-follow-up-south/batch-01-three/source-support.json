@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4309",
+    "agencyCode": "4228",
+    "referendumId": 4309,
+    "sourceUrl": "https://neshkorowi.gov/news-and-notices/november-3-2026-general-election-type-b-notice/",
+    "sourceFile": "../../dpi-follow-up-north/batch-02-neshkoro/sources/a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794.html",
+    "sourceSha256": "a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794",
+    "questionExcerptFile": "sources/8e4c881b506463c65630bbc155def8c5df54fe75641906b2b494f7aa9e2c5991.txt",
+    "questionExcerptSha256": "8e4c881b506463c65630bbc155def8c5df54fe75641906b2b494f7aa9e2c5991",
+    "questionText": "Shall the Pardeeville Area School District, Columbia and Marquette Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $13,100,000 for the public purpose of paying the cost of a school facility improvement project consisting of: construction of an addition and renovations at the Middle/High School, including for classrooms and instructional space, restrooms, a cafeteria and a safe and secure entrance; demolition of the Balliet building; renovations at the High School, including to restrooms and for expansion of the existing kitchen/cafeteria; district-wide capital improvement projects identified in the district's capital improvement plan; and acquisition of furnishings, fixtures and equipment?",
+    "questionRepresentation": "Literal official ballot question. For HTML, entity decoding and rendered whitespace normalization only; no words rewritten.",
+    "supplementalDpiFullDescription": "Capital improvements - remodel high school cafeteria/Kitchen, middle school classroom improvements, demolition of Balliet Building, other long-term facility improvements linked to long-term capital improvement planning.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Pardeeville Area School District, Columbia and Marquette Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $13,100,000 for the public purpose of paying the cost of a school facility improvement project consisting of: construction of an addition and renovations at the Middle/High School, including for classrooms and instructional space, restrooms, a cafeteria and a safe and secure entrance; demolition of the Balliet building; renovations at the High School, including to restrooms and for expansion of the existing kitchen/cafeteria; district-wide capital improvement projects identified in the district's capital improvement plan; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the Pardeeville Area School District, Columbia and Marquette Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $13,100,000 for the public purpose of paying the cost of a school facility improvement project consisting of: construction of an addition and renovations at the Middle/High School, including for classrooms and instructional space, restrooms, a cafeteria and a safe and secure entrance; demolition of the Balliet building; renovations at the High School, including to restrooms and for expansion of the existing kitchen/cafeteria; district-wide capital improvement projects identified in the district's capital improvement plan; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the Pardeeville Area School District, Columbia and Marquette Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $13,100,000 for the public purpose of paying the cost of a school facility improvement project consisting of: construction of an addition and renovations at the Middle/High School, including for classrooms and instructional space, restrooms, a cafeteria and a safe and secure entrance; demolition of the Balliet building; renovations at the High School, including to restrooms and for expansion of the existing kitchen/cafeteria; district-wide capital improvement projects identified in the district's capital improvement plan; and acquisition of furnishings, fixtures and equipment?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4284",
+    "agencyCode": "6328",
+    "referendumId": 4284,
+    "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+    "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+    "sourceSha256": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+    "questionExcerptFile": "sources/44a2f455443c5c47f711d7da27c6f3cd6051b85d4d868e9db6cccb604f7cb962.txt",
+    "questionExcerptSha256": "44a2f455443c5c47f711d7da27c6f3cd6051b85d4d868e9db6cccb604f7cb962",
+    "questionText": "Shall the School District of West De Pere, Brown and Outagamie Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionRepresentation": "Literal official ballot question. For HTML, entity decoding and rendered whitespace normalization only; no words rewritten.",
+    "supplementalDpiFullDescription": "BE IT RESOLVED by the School Board of the School District of West De Pere, Brown and Outagamie Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses.\n\nShall the School District of West De Pere, Brown and Outagamie Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of West De Pere, Brown and Outagamie Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of West De Pere, Brown and Outagamie Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of West De Pere, Brown and Outagamie Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4295",
+    "agencyCode": "6335",
+    "referendumId": 4295,
+    "sourceUrl": "https://neshkorowi.gov/news-and-notices/november-3-2026-general-election-type-b-notice/",
+    "sourceFile": "../../dpi-follow-up-north/batch-02-neshkoro/sources/a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794.html",
+    "sourceSha256": "a41392646639dab5109bebd905c136178dccbb70df45da178390ec3096bc0794",
+    "questionExcerptFile": "sources/209caab7b75cbae2a87a856607eabcbf7048f2ffcf99e355423f337729462a52.txt",
+    "questionExcerptSha256": "209caab7b75cbae2a87a856607eabcbf7048f2ffcf99e355423f337729462a52",
+    "questionText": "Shall the School District of Westfield, Marquette, Waushara and Adams Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses related to transportation, staffing, academic programming, curriculum updates, and career/trade pathways?",
+    "questionRepresentation": "Literal official ballot question. For HTML, entity decoding and rendered whitespace normalization only; no words rewritten.",
+    "supplementalDpiFullDescription": "$1.4 million per year for five years, beginning with the 2026-27 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses related to transportation, staffing, academic programming, curriculum updates and career/trade pathways.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Westfield, Marquette, Waushara and Adams Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses related to transportation, staffing, academic programming, curriculum updates, and career/trade pathways?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Westfield, Marquette, Waushara and Adams Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses related to transportation, staffing, academic programming, curriculum updates, and career/trade pathways?"
+      ],
+      "noMeans": [
+        "Shall the School District of Westfield, Marquette, Waushara and Adams Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,400,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses related to transportation, staffing, academic programming, curriculum updates, and career/trade pathways?"
+      ]
+    }
+  }
+]

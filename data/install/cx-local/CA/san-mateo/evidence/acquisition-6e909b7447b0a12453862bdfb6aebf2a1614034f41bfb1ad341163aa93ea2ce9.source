@@ -1,0 +1,158 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "serviceDescription": "",
+ "mapName": "ElectionPrecinct_NoSplits",
+ "description": "",
+ "copyrightText": "",
+ "supportsDynamicLayers": true,
+ "layers": [
+  {
+   "id": 0,
+   "name": "ElectionPrecinct_NoSplits",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  }
+ ],
+ "tables": [],
+ "spatialReference": {
+  "wkid": 102643,
+  "latestWkid": 2227,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -115860600,
+  "falseY": -93269500,
+  "xyUnits": 3048.006096012192,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "singleFusedMapCache": false,
+ "initialExtent": {
+  "xmin": 5971982.846596636,
+  "ymin": 2069269.8160879004,
+  "xmax": 6009326.047881281,
+  "ymax": 2079385.1842566535,
+  "spatialReference": {
+   "wkid": 102643,
+   "latestWkid": 2227,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -115860600,
+   "falseY": -93269500,
+   "xyUnits": 3048.006096012192,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "fullExtent": {
+  "xmin": 5976136.606879339,
+  "ymin": 1866338.939883843,
+  "xmax": 6103201.477421001,
+  "ymax": 2086507.089441672,
+  "zmin": 0,
+  "zmax": 0,
+  "mmin": null,
+  "mmax": null,
+  "spatialReference": {
+   "wkid": 102643,
+   "latestWkid": 2227,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -115860600,
+   "falseY": -93269500,
+   "xyUnits": 3048.006096012192,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "datesInUnknownTimezone": false,
+ "minScale": 0,
+ "maxScale": 0,
+ "units": "esriFeet",
+ "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+ "documentInfo": {
+  "Title": "ElectionPrecinct_NoSplits",
+  "Author": "",
+  "Comments": "",
+  "Subject": "",
+  "Category": "",
+  "Version": "3.5.0",
+  "AntialiasingMode": "Fast",
+  "TextAntialiasingMode": "Force",
+  "Keywords": ""
+ },
+ "supportsQueryDomains": true,
+ "capabilities": "Map,Query,Data",
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "exportTilesAllowed": false,
+ "referenceScale": 0.0,
+ "datumTransformations": [
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": true,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": false,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": true,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": false,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  }
+ ],
+ "supportsDatumTransformation": true,
+ "archivingInfo": {"supportsHistoricMoment": false},
+ "supportsClipping": true,
+ "supportsSpatialFilter": true,
+ "supportsTimeRelation": true,
+ "supportsQueryDataElements": true,
+ "mapUnits": {"uwkid": 9003},
+ "maxSelectionCount": 2000,
+ "maxRecordCount": 2000,
+ "maxImageHeight": 4096,
+ "maxImageWidth": 4096,
+ "supportedExtensions": ""
+}

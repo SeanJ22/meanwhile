@@ -1,0 +1,763 @@
+[
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3021",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo/school_board_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.smcoe.org/about/board-of-education",
+        "sourceOrg": "San Mateo County Office of Education",
+        "collectedAt": "2026-11-03T09:29:18.242532+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Each member is elected by the registered voters of their trustee area."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": true,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3103",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_county_community_college_district/trustee_area:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.smccd.edu/boardoftrustees/notice-hearing-by-trustee-area-elections.php",
+        "sourceOrg": "San Mateo County Community College District",
+        "collectedAt": "2026-11-03T09:29:17.093218+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "The San Mateo County Community College District Board of Trustees transitioned to a by-trustee-area election system in 2018, with the county divided into distinct areas, each electing one member to the Board of Trustees."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3204",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district/trustee_area:c",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://cabrillousd.ss10.sharpschool.com/about_us/governing_board/elections",
+        "sourceOrg": "Cabrillo Unified School District",
+        "collectedAt": "2026-11-03T09:30:12.996745+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Board members of the Cabrillo Unified School District were previously elected “at-large,” meaning that candidates were required to reside within the attendance areas of the Cabrillo Unified School District and the voters of the entire district elected the candidates to the Board. A “by-trustee area” election, wherein one candidate residing in each trustee area is elected by only the registered voters in that particular trustee area, ensures compliance with the California Voting Rights Act (CVRA). The Board moved to a “by-trustee area” electoral system in 2019, which began with the 2020 Board election.  Please see the relevant information below."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3206",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district/trustee_area:e",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://cabrillousd.ss10.sharpschool.com/about_us/governing_board/elections",
+        "sourceOrg": "Cabrillo Unified School District",
+        "collectedAt": "2026-11-03T09:30:12.996745+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Board members of the Cabrillo Unified School District were previously elected “at-large,” meaning that candidates were required to reside within the attendance areas of the Cabrillo Unified School District and the voters of the entire district elected the candidates to the Board. A “by-trustee area” election, wherein one candidate residing in each trustee area is elected by only the registered voters in that particular trustee area, ensures compliance with the California Voting Rights Act (CVRA). The Board moved to a “by-trustee area” electoral system in 2019, which began with the 2020 Board election.  Please see the relevant information below."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3244",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:south_san_francisco_unified_school_district/trustee_area:c",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.ssfusd.org/about-us/board-of-trustees/trustee-area-map",
+        "sourceOrg": "South San Francisco Unified School District",
+        "collectedAt": "2026-11-03T09:31:17.776117+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "\t\t\tSouth San Francisco Unified School District transitioned to by-trustee area elections beginning in November 2020. This process involved community input, proposed maps, and final approval by the SSFUSD Board of Trustees."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3246",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:south_san_francisco_unified_school_district/trustee_area:e",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.ssfusd.org/about-us/board-of-trustees/trustee-area-map",
+        "sourceOrg": "South San Francisco Unified School District",
+        "collectedAt": "2026-11-03T09:31:17.776117+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "\t\t\tSouth San Francisco Unified School District transitioned to by-trustee area elections beginning in November 2020. This process involved community input, proposed maps, and final approval by the SSFUSD Board of Trustees."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3324",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_union_high_school_district/trustee_area:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.smuhsd.org/our-district/board-of-trustees/cvra-by-trustee-area-election",
+        "sourceOrg": "San Mateo Union High School District",
+        "collectedAt": "2026-11-03T09:29:19.356699+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Board members in the San Mateo Union High School District (SMUHSD) are currently elected in “at-large” elections, where all board members are elected by voters throughout the entire school district. On February 25, 2021, the Board adopted Resolution 20-21-12, in response to a letter threatening to sue the District under the California Voting Rights Act (CVRA). SMUHSD intends to transition from at-large to by-trustee area Board elections, where each Board member must reside within the designated trustee area boundary, and is elected only by the voters in that trustee area. In By-Trustee Area Elections, voters only vote for one seat on the school board."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3326",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_union_high_school_district/trustee_area:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.smuhsd.org/our-district/board-of-trustees/cvra-by-trustee-area-election",
+        "sourceOrg": "San Mateo Union High School District",
+        "collectedAt": "2026-11-03T09:29:19.356699+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Board members in the San Mateo Union High School District (SMUHSD) are currently elected in “at-large” elections, where all board members are elected by voters throughout the entire school district. On February 25, 2021, the Board adopted Resolution 20-21-12, in response to a letter threatening to sue the District under the California Voting Rights Act (CVRA). SMUHSD intends to transition from at-large to by-trustee area Board elections, where each Board member must reside within the designated trustee area boundary, and is elected only by the voters in that trustee area. In By-Trustee Area Elections, voters only vote for one seat on the school board."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3342",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sequoia_union_high_school_district/trustee_area:a",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3345",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sequoia_union_high_school_district/trustee_area:d",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3440",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:brisbane_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3541",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:menlo_park_city_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3580",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pacifica_school_district",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3581",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pacifica_school_district",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-3680",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_carlos_elementary_school_district",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-4050",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": true,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5022",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5023",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5025",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5041",
+    "ocdId": "ocd-division/country:us/state:ca/place:brisbane",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5062",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5064",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5066",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5081",
+    "ocdId": "ocd-division/country:us/state:ca/place:colma",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5100",
+    "ocdId": "ocd-division/country:us/state:ca/place:daly_city",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5121",
+    "ocdId": "ocd-division/country:us/state:ca/place:east_palo_alto",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5142",
+    "ocdId": "ocd-division/country:us/state:ca/place:foster_city/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5143",
+    "ocdId": "ocd-division/country:us/state:ca/place:foster_city/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5163",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5166",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5167",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5202",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5203",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5205",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5223",
+    "ocdId": "ocd-division/country:us/state:ca/place:millbrae/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5224",
+    "ocdId": "ocd-division/country:us/state:ca/place:millbrae/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5225",
+    "ocdId": "ocd-division/country:us/state:ca/place:millbrae/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5243",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5244",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5246",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5260",
+    "ocdId": "ocd-division/country:us/state:ca/place:portola_valley",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5283",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5286",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5287",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city/council_district:6",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5300",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5303",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5306",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5320",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_carlos",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5342",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5344",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5346",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5362",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:1",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5364",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5366",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5370",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5371",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco",
+    "presentInCheckedInRegistry": true,
+    "electorateProvenance": [],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "KNOWN_STATIC_DIVISION"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5381",
+    "ocdId": "ocd-division/country:us/state:ca/place:woodside/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.woodsidetown.org/443/2026-Elections",
+        "sourceOrg": "Town of Woodside",
+        "collectedAt": "2026-11-03T09:28:28.528322+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "The Town of Woodside holds by-district elections for its five Town Council seats in November of even numbered years."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-5382",
+    "ocdId": "ocd-division/country:us/state:ca/place:woodside/council_district:3",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.woodsidetown.org/443/2026-Elections",
+        "sourceOrg": "Town of Woodside",
+        "collectedAt": "2026-11-03T09:28:28.528322+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "The Town of Woodside holds by-district elections for its five Town Council seats in November of even numbered years."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-6046",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:coastside_county_water_district/zone:5",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://coastsidewater.org/board-of-directors/elections/",
+        "sourceOrg": "Coastside County Water District",
+        "collectedAt": "2026-11-03T09:30:13.186464+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Instead of voting for each available open seat on the Board of Directors, you will now vote only for the candidates running within your zone."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-6065",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:coastside_fire_protection_district/district:d",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.coastsidefire.org/files/39b6ada1b/052726%2Btab%2B2%2BRes%2B2026-04%2BCall%2Bfor%2BNov.2026%2BBoard%2BElections.pdf",
+        "sourceOrg": "Coastside Fire Protection District",
+        "collectedAt": "2026-11-03T09:31:17.216978+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Registered voters from Districts C, D, and E, as identified on the District \nBoundary Map adopted by the Board in 2022, shall elect members from their respective \ndistricts during this election cycle."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-6066",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:coastside_fire_protection_district/district:e",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://www.coastsidefire.org/files/39b6ada1b/052726%2Btab%2B2%2BRes%2B2026-04%2BCall%2Bfor%2BNov.2026%2BBoard%2BElections.pdf",
+        "sourceOrg": "Coastside Fire Protection District",
+        "collectedAt": "2026-11-03T09:31:17.216978+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Registered voters from Districts C, D, and E, as identified on the District \nBoundary Map adopted by the Board in 2022, shall elect members from their respective \ndistricts during this election cycle."
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-cx-local-2026-san-mateo-6120",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:granada_community_services_district",
+    "presentInCheckedInRegistry": false,
+    "electorateProvenance": [
+      {
+        "sourceUrl": "https://granada.ca.gov/",
+        "sourceOrg": "Granada Community Services District",
+        "collectedAt": "2026-11-03T09:32:10.249892+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Granada Community Services District (GCSD) 2026 At-Large Candidate Forum: Allen, Dye, Sniecinski and Tierney"
+      }
+    ],
+    "wholeCountyScope": false,
+    "geometryPrepared": false,
+    "readerMappingStatus": "PRECISE_DIVISION_NOT_YET_JOINED"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kelli-m-evans",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-joshua-groban",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-charles-a-smiley",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kathleen-m-banke",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-therese-m-stewart",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tara-m-desautels",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-ioana-petrou",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-victor-a-rodriguez",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tracie-l-brown",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-mark-simons",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-danny-y-chou",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-gordon-burns",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "sharedHeldIdentityPreserved": true,
+    "wholeCountyMembershipPrepared": true
+  }
+]

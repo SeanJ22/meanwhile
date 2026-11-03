@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html id="html_background" lang="en" >
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="MobileOptimized" content="width" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="https://www.cityofepa.org/sites/all/themes/aha_compass/favicon.ico" />
+	
+    <title>City Elections | City of East Palo Alto</title>
+    <meta name="Generator" content="Drupal 7 (http://drupal.org)" />
+<link rel="canonical" href="/clerk/page/city-elections-0" />
+<link rel="shortlink" href="/node/8901" />
+<link rel="shortcut icon" href="https://www.cityofepa.org/sites/all/themes/aha_compass/favicon.ico" type="image/vnd.microsoft.icon" />
+<meta property="og:title" content="City Elections" />
+<meta property="og:image" content="https://www.cityofepa.org/sites/all/themes/aha_compass/logo.png" />
+<meta property="og:site_name" content="City of East Palo Alto" />
+<meta property="og:url" content="https://www.cityofepa.org/clerk/page/city-elections-0" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="Local Ballot Measures
+Election Day is Tuesday, November 3, 2026.
+Register to Vote: You may register at any time, but to be eligible to vote in an upcoming election, your Voter Registration Form must be submitted online by midnight no later than Monday, October 19th, 2026. If you are mailing a Voter Registration Form, it must be postmarked no later than Monday, October 19th, 2026." />
+    <style type="text/css" media="all">
+@import url("https://www.cityofepa.org/modules/system/system.base.css?tknecn");
+@import url("https://www.cityofepa.org/modules/system/system.menus.css?tknecn");
+@import url("https://www.cityofepa.org/modules/system/system.messages.css?tknecn");
+@import url("https://www.cityofepa.org/modules/system/system.theme.css?tknecn");
+</style>
+<style type="text/css" media="all">
+@import url("https://www.cityofepa.org/sites/all/modules/simplenews/simplenews.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/calendar/css/calendar_multiday.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/date/date_api/date.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/date/date_popup/themes/datepicker.1.7.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/date/date_repeat_field/date_repeat_field.css?tknecn");
+@import url("https://www.cityofepa.org/modules/field/theme/field.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/logintoboggan/logintoboggan.css?tknecn");
+@import url("https://www.cityofepa.org/modules/node/node.css?tknecn");
+@import url("https://www.cityofepa.org/modules/search/search.css?tknecn");
+@import url("https://www.cityofepa.org/modules/user/user.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/video_filter/video_filter.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/extlink/extlink.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/views/css/views.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/aha_ada_fixes/aha_ada_fixes.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/aha_csc/aha_csc.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/aha_fasttrack/aha_fasttrack.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/aha_ft_solr/aha_ft_solr.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/mcc_cfgcheck/mcc_cfgcheck.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/lazyloader/lazyloader.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/ckeditor/css/ckeditor.css?tknecn");
+</style>
+<style type="text/css" media="all">
+@import url("https://www.cityofepa.org/sites/all/modules/ctools/css/ctools.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/jquerymenu/jquerymenu.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/lightbox2/css/lightbox.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/taxonomy_access/taxonomy_access.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/openlayers/css/openlayers.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/geofield/includes/behaviors/css/openlayers_behavior_geofield.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/print/print_ui/css/print_ui.theme.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/addtoany/addtoany.css?tknecn");
+@import url("https://www.cityofepa.org/sites/all/modules/aha_simplenews_extras/aha_simplenews_extras.css?tknecn");
+</style>
+<style type="text/css" media="all">
+@import url("https://www.cityofepa.org/sites/all/themes/aha_compass/css/style.css?tknecn");
+</style>
+    <script type="text/javascript" src="https://www.cityofepa.org/sites/default/files/js/js_YD9ro0PAqY25gGWrTki6TjRUG8TdokmmxjfqpNNfzVU.js"></script>
+<script type="text/javascript" src="https://www.cityofepa.org/sites/default/files/js/js_HmB7D9_lfKD5My07y6lycEAsOxxWnRsaxMbmWLQKglc.js"></script>
+<script type="text/javascript" src="https://www.cityofepa.org/sites/default/files/js/js_90XM4_9vl_yyL5y962_0WmQl3dKlova4FHhySupbz1s.js"></script>
+<script type="text/javascript" src="https://www.googletagmanager.com/gtag/js?id=UA-175452695-1"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)};gtag("js", new Date());gtag("config", "UA-175452695-1", {"groups":"default"});
+//--><!]]>
+</script>
+<script type="text/javascript" src="https://www.cityofepa.org/sites/default/files/js/js_QdQiCe2P4lVzEN4dHhwI91GzTrTRl3Az7ht2KcWUEnA.js"></script>
+<script type="text/javascript" src="https://www.cityofepa.org/sites/default/files/js/js_d5dsXYA7qNrhv_gSTe8LCvvQVipKcsy6_T-SMoAy7nw.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","setHasJsCookie":0,"ajaxPageState":{"theme":"aha_compass","theme_token":"xw6LWwPrPJBjIIbs3MnIa4YaDaNQPpxb3ffth0mp4oo","js":{"sites\/all\/themes\/aha_compass\/js\/view\/calendar.js":1,"sites\/all\/modules\/aha_fasttrack\/aha_fasttrack_lightbox.js":1,"misc\/jquery.js":1,"misc\/jquery-extend-3.4.0.js":1,"misc\/jquery-html-prefilter-3.5.0-backport.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"sites\/all\/modules\/aha_ada_fixes\/aha_ada_fixes.js":1,"sites\/all\/modules\/aha_csc\/aha_csc.js":1,"sites\/all\/modules\/aha_simplenews_extras\/aha_simplenews_extras.form.js":1,"sites\/all\/modules\/aha_microsite\/aha_microsite.js":1,"sites\/all\/modules\/lazyloader\/jquery.lazyloader.js":1,"sites\/all\/modules\/extlink\/extlink.js":1,"sites\/all\/modules\/aha_google_ical\/aha_google_ical.js":1,"sites\/all\/modules\/jquerymenu\/jquerymenu.js":1,"sites\/all\/modules\/lightbox2\/js\/lightbox.js":1,"sites\/all\/modules\/google_analytics\/googleanalytics.js":1,"https:\/\/www.googletagmanager.com\/gtag\/js?id=UA-175452695-1":1,"0":1,"sites\/all\/libraries\/quickfit\/jquery.quickfit.js":1,"sites\/all\/themes\/aha_compass\/js\/global-nav-mega-responsive.js":1,"sites\/all\/themes\/aha_compass\/js\/jquery-menu.js":1,"sites\/all\/themes\/aha_compass\/js\/random.js":1,"sites\/all\/themes\/aha_compass\/js\/search-page.js":1,"sites\/all\/themes\/aha_compass\/js\/accessibility-mega-menu.js":1,"sites\/all\/themes\/aha_compass\/js\/min-height.js":1,"sites\/all\/themes\/aha_compass\/js\/table.js":1,"sites\/all\/themes\/aha_compass\/js\/accessibility-expandable-blocks.js":1,"sites\/all\/themes\/aha_compass\/js\/alerts.js":1,"sites\/all\/themes\/aha_compass\/js\/quickfit.js":1,"sites\/all\/themes\/aha_compass\/js\/event-slider.js":1,"sites\/all\/themes\/aha_compass\/js\/respond.min.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"sites\/all\/modules\/simplenews\/simplenews.css":1,"sites\/all\/modules\/calendar\/css\/calendar_multiday.css":1,"sites\/all\/modules\/date\/date_api\/date.css":1,"sites\/all\/modules\/date\/date_popup\/themes\/datepicker.1.7.css":1,"sites\/all\/modules\/date\/date_repeat_field\/date_repeat_field.css":1,"modules\/field\/theme\/field.css":1,"sites\/all\/modules\/logintoboggan\/logintoboggan.css":1,"modules\/node\/node.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/video_filter\/video_filter.css":1,"sites\/all\/modules\/extlink\/extlink.css":1,"sites\/all\/modules\/views\/css\/views.css":1,"sites\/all\/modules\/aha_ada_fixes\/aha_ada_fixes.css":1,"sites\/all\/modules\/aha_csc\/aha_csc.css":1,"sites\/all\/modules\/aha_fasttrack\/aha_fasttrack.css":1,"sites\/all\/modules\/aha_ft_solr\/aha_ft_solr.css":1,"sites\/all\/modules\/mcc_cfgcheck\/mcc_cfgcheck.css":1,"sites\/all\/modules\/lazyloader\/lazyloader.css":1,"sites\/all\/modules\/ckeditor\/css\/ckeditor.css":1,"sites\/all\/modules\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/jquerymenu\/jquerymenu.css":1,"sites\/all\/modules\/lightbox2\/css\/lightbox.css":1,"sites\/all\/modules\/taxonomy_access\/taxonomy_access.css":1,"sites\/all\/modules\/openlayers\/css\/openlayers.css":1,"sites\/all\/modules\/geofield\/includes\/behaviors\/css\/openlayers_behavior_geofield.css":1,"sites\/all\/modules\/print\/print_ui\/css\/print_ui.theme.css":1,"sites\/all\/modules\/addtoany\/addtoany.css":1,"sites\/all\/modules\/aha_simplenews_extras\/aha_simplenews_extras.css":1,"sites\/all\/themes\/aha_compass\/css\/style.css":1}},"jquerymenu":{"hover":0,"animate":1,"edit_link":1},"lightbox2":{"rtl":0,"file_path":"\/(\\w\\w\/)public:\/","default_image":"\/sites\/all\/modules\/lightbox2\/images\/brokenimage.jpg","border_size":10,"font_color":"000","box_color":"fff","top_position":"","overlay_opacity":"0.8","overlay_color":"000","disable_close_click":1,"resize_sequence":0,"resize_speed":400,"fade_in_speed":400,"slide_down_speed":600,"use_alt_layout":0,"disable_resize":0,"disable_zoom":0,"force_show_nav":0,"show_caption":1,"loop_items":1,"node_link_text":"","node_link_target":0,"image_count":"Image !current of !total","video_count":"Video !current of !total","page_count":"Page !current of !total","lite_press_x_close":"press \u003Ca href=\u0022#\u0022 onclick=\u0022hideLightbox(); return FALSE;\u0022\u003E\u003Ckbd\u003Ex\u003C\/kbd\u003E\u003C\/a\u003E to close","download_link_text":"","enable_login":false,"enable_contact":false,"keys_close":"c x 27","keys_previous":"p 37","keys_next":"n 39","keys_zoom":"z","keys_play_pause":"32","display_image_size":"original","image_node_sizes":"()","trigger_lightbox_classes":"","trigger_lightbox_group_classes":"","trigger_slideshow_classes":"","trigger_lightframe_classes":"","trigger_lightframe_group_classes":"","custom_class_handler":0,"custom_trigger_classes":"","disable_for_gallery_lists":true,"disable_for_acidfree_gallery_lists":true,"enable_acidfree_videos":true,"slideshow_interval":5000,"slideshow_automatic_start":true,"slideshow_automatic_exit":true,"show_play_pause":true,"pause_on_next_click":false,"pause_on_previous_click":true,"loop_slides":false,"iframe_width":600,"iframe_height":400,"iframe_border":1,"enable_video":0,"useragent":"Mozilla\/5.0 (X11; Linux x86_64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/138.0.0.0 Safari\/537.36"},"openlayers":{"maps":{"openlayers-map":{"width":"100%","height":"200px","image_path":"sites\/all\/modules\/openlayers\/themes\/default_dark\/img\/","css_path":"sites\/all\/modules\/openlayers\/themes\/default_dark\/style.css","proxy_host":"","hide_empty_map":0,"center":{"initial":{"centerpoint":"0,0","zoom":"13"},"restrict":{"restrictextent":0,"restrictedExtent":""}},"behaviors":{"openlayers_behavior_geofield":{"geofield":""},"openlayers_behavior_navigation":{"zoomWheelEnabled":0,"zoomBoxEnabled":0,"documentDrag":0,"navigation":""},"openlayers_behavior_panzoom":{"panzoom":""},"openlayers_behavior_popup":{"layers":{"geofield_formatter":0},"panMapIfOutOfView":0,"keepInMap":1},"openlayers_behavior_keyboarddefaults":{"keyboarddefaults":""},"openlayers_behavior_attribution":{"separator":""},"openlayers_behavior_zoomtolayer":{"zoomtolayer":{"osm_mapnik":"osm_mapnik","geofield_formatter":"geofield_formatter"},"point_zoom_level":"14","zoomtolayer_scale":"1"}},"default_layer":"osm_mapnik","layers":{"osm_mapnik":{"isBaseLayer":true,"attribution":"\u0026copy;\u003Ca href=\u0022http:\/\/creativecommons.org\/licenses\/by-sa\/2.0\/\u0022\u003ECCBYSA\u003C\/a\u003E \u003Ca href=\u0022http:\/\/www.openstreetmap.org\/copyright\u0022\u003E\u0026copy; OpenStreetMap contributors\u003C\/a\u003E","projection":"EPSG:3857","layer_type":"openlayers_layer_type_xyz","url":"https:\/\/tile.openstreetmap.org\/${z}\/${x}\/${y}.png","wrapDateLine":true,"layer_handler":"xyz","sphericalMercator":true,"zoomOffset":0,"resolutions":[156543.0339,78271.51695,39135.758475,19567.8792375,9783.93961875,4891.969809375,2445.9849046875,1222.99245234375,611.496226171875,305.7481130859375,152.87405654296876,76.43702827148438,38.21851413574219,19.109257067871095,9.554628533935547,4.777314266967774,2.388657133483887,1.1943285667419434],"serverResolutions":[156543.0339,78271.51695,39135.758475,19567.8792375,9783.93961875,4891.969809375,2445.9849046875,1222.99245234375,611.496226171875,305.7481130859375,152.87405654296876,76.43702827148438,38.21851413574219,19.109257067871095,9.554628533935547,4.777314266967774,2.388657133483887,1.1943285667419434,0.5971642833709717,0.29858214169740677,0.14929107084870338,0.07464553542435169],"base_url":null,"transitionEffect":"resize","weight":0,"title":"OSM Mapnik"},"geofield_formatter":{"layer_type":"openlayers_layer_type_raw","projection":"EPSG:900913","features":[],"layer_handler":"openlayers_raw","vector":true,"isBaseLayer":false,"serverResolutions":[156543.0339,78271.51695,39135.758475,19567.8792375,9783.93961875,4891.969809375,2445.9849046875,1222.99245234375,611.496226171875,305.7481130859375,152.87405654296876,76.43702827148438,38.21851413574219,19.109257067871095,9.554628533935547,4.777314266967774,2.388657133483887,1.1943285667419434,0.5971642833709717,0.29858214169740677,0.14929107084870338,0.07464553542435169],"resolutions":[156543.0339,78271.51695,39135.758475,19567.8792375,9783.93961875,4891.969809375,2445.9849046875,1222.99245234375,611.496226171875,305.7481130859375,152.87405654296876,76.43702827148438,38.21851413574219,19.109257067871095,9.554628533935547,4.777314266967774,2.388657133483887,1.1943285667419434,0.5971642833709717,0.29858214169740677,0.14929107084870338,0.07464553542435169],"base_url":null,"transitionEffect":"resize","weight":0,"title":"Placeholder for Geofield Formatter"}},"layer_weight":{"openlayers_kml_example":"0","openlayers_geojson_picture_this":"0","parks_new_openlayers_1":"0","projects_new_openlayers_1":"0","embedded_pages_openlayers_1":"0","embedded_groups_openlayers_1":"0","properties_openlayers_1":"0","business_directory_openlayers_1":"0","geofield_formatter":"0"},"layer_styles":{"openlayers_kml_example":"0","openlayers_geojson_picture_this":"0","parks_new_openlayers_1":"0","projects_new_openlayers_1":"0","embedded_pages_openlayers_1":"0","embedded_groups_openlayers_1":"0","properties_openlayers_1":"0","business_directory_openlayers_1":"0","geofield_formatter":"default_marker_red"},"layer_styles_select":{"openlayers_kml_example":"0","openlayers_geojson_picture_this":"0","parks_new_openlayers_1":"0","projects_new_openlayers_1":"0","embedded_pages_openlayers_1":"0","embedded_groups_openlayers_1":"0","properties_openlayers_1":"0","business_directory_openlayers_1":"0","geofield_formatter":"default_marker_blue"},"layer_activated":{"geofield_formatter":"geofield_formatter","openlayers_kml_example":0,"openlayers_geojson_picture_this":0,"parks_new_openlayers_1":0,"projects_new_openlayers_1":0,"embedded_pages_openlayers_1":0,"embedded_groups_openlayers_1":0,"properties_openlayers_1":0,"business_directory_openlayers_1":0},"layer_switcher":{"geofield_formatter":0,"openlayers_kml_example":0,"openlayers_geojson_picture_this":0,"parks_new_openlayers_1":0,"projects_new_openlayers_1":0,"embedded_pages_openlayers_1":0,"embedded_groups_openlayers_1":0,"properties_openlayers_1":0,"business_directory_openlayers_1":0},"projection":"EPSG:3857","displayProjection":"EPSG:4326","styles":{"default":{"pointRadius":"6","fillColor":"#888888","strokeColor":"#222222","strokeWidth":"4","fillOpacity":"0.5","strokeOpacity":"0.7"},"select":{"pointRadius":"6","fillColor":"#222222","strokeColor":"#888888","strokeWidth":"4","fillOpacity":"0.7","strokeOpacity":"0.8"},"temporary":{"pointRadius":"6","fillColor":"#888888","strokeColor":"#222222","strokeWidth":"4","fillOpacity":"0.5","strokeOpacity":"0.7"},"default_marker_red":{"externalGraphic":"https:\/\/www.cityofepa.org\/sites\/all\/modules\/openlayers\/themes\/default_dark\/img\/marker-red.png","pointRadius":6,"fillColor":"#FFA500","strokeColor":"#FFA500","strokeWidth":3,"fillOpacity":0.25,"strokeOpacity":1,"strokeLinecap":"round","strokeDashstyle":"solid","graphicWidth":21,"graphicHeight":25,"graphicOpacity":1,"graphicXOffset":-10,"graphicYOffset":-25,"labelAlign":"cm"},"default_marker_blue":{"externalGraphic":"https:\/\/www.cityofepa.org\/sites\/all\/modules\/openlayers\/themes\/default_dark\/img\/marker-blue.png","graphicWidth":21,"graphicHeight":25,"graphicXOffset":-10,"graphicYOffset":-25}},"map_name":"page_display_map","id":"openlayers-map","maxExtent":[-20037508.34,-20037508.34,20037508.34,20037508.34],"errors":false}}},"video_filter":{"url":{"ckeditor":"\/video_filter\/dashboard\/ckeditor"},"modulepath":"sites\/all\/modules\/video_filter"},"extlink":{"extTarget":"_blank","extClass":0,"extLabel":"(link is external)","extImgClass":0,"extSubdomains":1,"extExclude":"","extInclude":".*fileattachments.*","extCssExclude":"","extCssExplicit":"","extAlert":0,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","mailtoClass":0,"mailtoLabel":"(link sends e-mail)"},"googleanalytics":{"account":"UA-175452695-1","trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|docx|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|pptx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xlsx|xml|z|zip"},"urlIsAjaxTrusted":{"\/clerk\/page\/city-elections-0":true}});
+//--><!]]>
+</script>
+</head>
+<body id="background" class="html not-front not-logged-in one-sidebar sidebar-first page-node page-node- page-node-8901 node-type-page taxterm-clerk taxterm-name-cityclerk taxterm-tid-481 taxterm-name-webpage taxterm-tid-47 taxterm-name-menusettings taxterm-tid-60 page-clerk-page-city-elections-0" >
+    <div id="skip-link" role="complementary">
+    	<a href="#main-content" class="element-invisible element-focusable">Skip to main content</a>
+    </div>
+          <div id="alerts_wrapper" role="alert">
+    <div class="region region-alerts">
+    <div id="block-block-71" class="block block-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div class="view view-alerts view-id-alerts view-display-id-block_1 view-dom-id-alerts_sitewide">
+            <div class="view-header">
+      <div class="alert-controls">
+<a class="alert-prev"></a>
+<a class="alert-next"></a>
+</div>    </div>
+  
+  
+  
+      <div class="view-content">
+      <div class="item-list">    <ul>          <li class="views-row views-row-1 views-row-odd views-row-first">  
+  <div class="views-field views-field-field-alert-severity">        <div class="field-content"><div class="alert-title-wrapper Red">
+<div class="alert-title"><a href="/ru/page/epa-elections-vote-now-0">EPA Elections: Vote Now!</a></div>
+</div></div>  </div></li>
+          <li class="views-row views-row-2 views-row-even">  
+  <div class="views-field views-field-field-alert-severity">        <div class="field-content"><div class="alert-title-wrapper Orange">
+<div class="alert-title"><a href="/ru/page/epa-elections-vote-now">EPA Elections: Vote Now!</a></div>
+</div></div>  </div></li>
+          <li class="views-row views-row-3 views-row-odd views-row-last">  
+  <div class="views-field views-field-field-alert-severity">        <div class="field-content"><div class="alert-title-wrapper Orange">
+<div class="alert-title"><a href="/manager/page/epa-talks-our-city-our-future-our-east-palo-alto-please-share-your-perspectives-our">EPA TALKS: Our City, Our Future, Our East Palo Alto | Please share your perspectives on our &quot;East Palo Alto Talks&quot; online community survey.  </a></div>
+</div></div>  </div></li>
+      </ul></div>    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+</div>
+  </div>
+  </div>
+
+<div class="image-preloader">
+  <span id="preload-01"></span>
+  <span id="preload-02"></span>
+  <span id="preload-03"></span>
+  <span id="preload-04"></span>
+  <span id="preload-05"></span>
+  <span id="preload-06"></span>
+  <span id="preload-07"></span>
+  <span id="preload-08"></span>
+  <span id="preload-09"></span>
+  <span id="preload-10"></span>
+</div>
+
+<div class="page-outer" role="region" aria-label="Page Content">
+
+  <button class="mobile-nav-toggle" title="Navigation Menu" tabindex="3"><span>Navigation</span></button>
+
+  <!-- START CONTAINER 1-->
+    <div class="container1-wrapper">
+        <div class="container1">
+                            <div class="logo-wrapper">
+                    <a href="/" title="Home" rel="Palo Alto Home Page" id="logo">
+                        <img src="https://www.cityofepa.org/sites/all/themes/aha_compass/logo.png" alt="Home" />
+                        <div class="logo-text-wrapper" role="heading" aria-level="1">
+                          <span class="logo-text logo-text__pretext">City of</span>
+                            <span class="logo-text logo-text__city">East Palo Alto</span>
+                            <span class="logo-text logo-text__state">California</span>
+                        </div>
+                    </a>
+                </div>
+                                                    <div class="global-nav-mega-wrapper">
+                  <!-- Uncomment out the below line to switch to a custom design with mega menus -->
+          <div class="header-wrapper">  <div class="region region-header">
+    <div id="block-block-172" class="block block-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<!-- Google tag (gtag.js) --><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-75VYDLNNJ2"></script><script>
+<!--//--><![CDATA[// ><!--
+ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-75VYDLNNJ2'); 
+//--><!]]>
+</script>    </div>
+</div>
+<div id="block-views-home-page-elements-block-4" class="block block-views">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div class="view view-home-page-elements view-id-home_page_elements view-display-id-block_4 view-dom-id-12ba9b3ca8d22f82ed13f08b67afe8a4">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+  <div class="views-field views-field-path aha_ada_fixes_span">        <div class="field-content aha_ada_fixes_span"><div class="header-link-container">
+<a href="/administration/page/register-vote" class="header-link-wrapper">
+	<span class="spotlight-title">Register to Vote</span>
+</a>
+</div></div>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+</div>
+  </div>
+</div>                      <div class="region region-global-nav-mega">
+    <div id="block-views-mega-menu-node-block" class="block block-views">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div class="view view-mega-menu-node view-id-mega_menu_node view-display-id-block view-dom-id-5692e5fb77cb0a1460de45cadef5d063">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+  <div class="views-field views-field-body">        <div class="field-content"><nav id="mega_menu">
+    <ul id="top_level_mega" class="hover_effect">
+        <li class="mega_link mega_link_1 aha-focus">
+            <a role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="mega-title mega-title-line1">I Want To</span>
+            </a>
+            <div class="hover_effect mega_hover_wrapper">
+                <p class="mega_hide">Column 1</p>
+<ul class="column column_1">
+<li><a href="https://www.calopps.org/city-of-east-palo-alto"><strong>View Job Openings</strong></a></li>
+<li><a href="/communityprograms/page/apply-grant"><strong>Apply for a Grant</strong></a></li>
+<li><a href="http://eastpaloalto.iqm2.com/Citizens/Default.aspx"><strong><strong>View City Meetings</strong></strong></a></li>
+<li><strong>Visit a Park</strong></li>
+<li><a href="/parksites">Parks and Trails Directory</a></li>
+<li><a href="/police/page/anonymous-tip-line"><strong><strong>Report a Crime</strong></strong></a></li>
+<li><a href="https://www.ci.east-palo-alto.ca.us/police/page/parking-complaints"><strong><strong>Report a Parking Complaint</strong></strong></a></li>
+<li><a href="https://www.ci.east-palo-alto.ca.us/manager/page/emergency-preparedness"><strong>Prepare for an Emergency</strong></a></li>
+</ul>
+<p class="mega_hide">Column 2<strong>​</strong></p>
+<ul class="column column_2">
+<li><a href="https://www.cityofepa.org/finance/page/business-license"><strong>Get/Renew My Business License</strong></a></li>
+<li><strong>Start a Development Project</strong></li>
+<li><strong>Make Home Improvements</strong></li>
+<li><strong><strong>Find a Form</strong></strong></li>
+<li>Documents and Reports</li>
+<li>Forms and Applications</li>
+<li><strong>Pay my Water Bill</strong></li>
+<p></p>
+<li> </li>
+</ul>
+<p class="mega_hide">Column 3</p>
+<ul class="column column_3">
+<li><strong><strong>Contact the City</strong></strong></li>
+<li><a href="/directory">Staff Directory</a></li>
+<li><a href="https://lp.constantcontactpages.com/sl/hp5oT2Q"><strong>Subscribe to the City Newsletter</strong></a></li>
+<li><a href="https://www.cityofepa.org/news"><strong><strong>View City News</strong></strong></a></li>
+<li><strong><a href="https://www.cityofepa.org/administration/page/city-hours">View City Hours</a></strong></li>
+<li><a href="https://www.cityofepa.org/clerk/page/city-newsletters"><strong>Read the City Newsletters</strong></a></li>
+</ul>
+            </div>
+        </li>
+        <li class="mega_link mega_link_2 aha-focus">
+            <a role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="mega-title mega-title-line1">Departments</span>
+            </a>
+            <div class="hover_effect mega_hover_wrapper">
+                <p class="mega_hide">Column 1</p>
+<ul class="column column_1">
+<li><a href="/building">Building Services</a></li>
+<li><a href="/attorney">City Attorney</a></li>
+<li><a href="/clerk">City Clerk</a></li>
+<li><a href="/manager">City Manager</a></li>
+<li><a href="/econdev">Community &amp; Economic Development</a></li>
+</ul>
+<p class="mega_hide">Column 2</p>
+<ul class="column column_2">
+<li><a href="/communityprograms">Community Services</a></li>
+<li><a href="/finance">Finance</a></li>
+<li><a href="/fire">Fire (Menlo Park Fire District)</a></li>
+<li><a href="/housing">Housing</a></li>
+<li><a href="/hr">Human Resources</a></li>
+</ul>
+<p class="mega_hide">Column 3</p>
+<ul class="column column_3">
+<li><a href="/parksrec">Parks, Open Spaces &amp; Facilities</a></li>
+<li><a href="/planning">Planning</a></li>
+<li><a href="/police">Police</a></li>
+<li><a href="/publicworks">Public Works</a></li>
+<li><a href="/rent-stabilization/page/rent-stabilization-program">Rent Stabilization</a></li>
+<li><a href="https://www.cityofepa.org/sanitary">Sanitary District</a></li>
+</ul>
+            </div>
+        </li>
+        <li class="mega_link mega_link_3 aha-focus">
+            <a role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="mega-title mega-title-line1">Government</span>
+            </a>
+            <div class="hover_effect mega_hover_wrapper">
+                <p class="mega_hide">Column 1</p>
+<ul class="column column_1">
+<li><strong><a href="/citycouncil">City Council</a></strong></li>
+<li><strong><a href="https://library.municode.com/ca/east_palo_alto/codes/code_of_ordinances">Municipal Code</a></strong></li>
+<li><a href="/communityprograms/page/community-services"><strong>Community Grants</strong></a></li>
+<li><a href="/clerk/page/city-elections-0"><strong>Elections</strong></a></li>
+</ul>
+<p class="mega_hide">Column 2</p>
+<ul class="column column_2">
+<li><strong><a href="/bc">Boards and Commissions</a></strong></li>
+<li><strong><a href="/bc-ob">Oversight Board</a></strong></li>
+<li><strong><a href="/bc-pc">Planning Commission</a></strong></li>
+<li><a href="https://www.cityofepa.org/citycouncil/page/city-meeting-supplemental-documents-and-presentations"><strong>Council Meeting Additional Documents</strong></a></li>
+</ul>
+<p class="mega_hide">Column 3</p>
+<ul class="column column_3">
+<li><strong><a href="/bc-pwtc">Public Works &amp; Transportation Commission</a></strong></li>
+<li><strong><a href="/rent-stabilization">Rent Stabilization Board</a></strong></li>
+<li><strong><a href="/bc-sac">Senior Advisory Committee</a></strong></li>
+</ul>
+            </div>
+        </li>
+        <li class="mega_link mega_link_4 aha-focus">
+            <a role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="mega-title mega-title-line1">Business</span>
+            </a>
+            <div class="hover_effect mega_hover_wrapper">
+                <p class="mega_hide">Column 1</p>
+<ul class="column column_1">
+<li><strong><a href="/rfps">Bids and RFPs</a></strong></li>
+<li><strong><a href="https://www.cityofepa.org/finance/page/business-license">Business Licenses</a></strong></li>
+<li><strong><a href="https://library.municode.com/ca/east_palo_alto/codes/code_of_ordinances">Code of Ordinances</a></strong></li>
+</ul>
+<p class="mega_hide">Column 2</p>
+<ul class="column column_2">
+<li><strong><a href="/forms">Forms and Permits</a></strong></li>
+<li><strong><a href="/econdev/page/information-and-worksheets">Information and Worksheets</a></strong></li>
+<li><strong><a href="/building">Permit Center</a></strong></li>
+</ul>
+<p class="mega_hide">Column 3</p>
+<ul class="column column_3">
+<li><a href="https://www.cityofepa.org/finance/page/comprehensive-fee-schedule"><strong>Comprehensive Fee Schedule</strong></a></li>
+<li><strong>General Plan &amp; Zoning Ordinance</strong></li>
+<li><strong><a href="/projects">Projects and Land Use</a></strong></li>
+</ul>
+            </div>
+        </li>
+    </ul>
+</nav></div>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+</div>
+  </div>
+                </div>
+                    </div>
+    </div>
+  <!-- END CONTAINER 1-->
+
+
+  <!-- START CONTAINER 2-->
+  <div class="container2-wrapper">
+      <div class="search-wrapper">  <div class="region region-search">
+    <div id="block-search-form" class="block block-search">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<form action="/clerk/page/city-elections-0" method="post" id="search-block-form" accept-charset="UTF-8"><div><div class="container-inline">
+     <!-- Aha change 20170911 - replace H2 tag with div tag to fix accessibility error of headers being out of sequence -->
+    <div class="element-invisible">Search form</div>
+    <div class="form-item form-type-textfield form-item-search-block-form">
+  <label class="element-invisible" for="edit-search-block-form--2">Search Website </label>
+ <input title="Enter the terms you wish to search for." placeholder="Search" type="text" id="edit-search-block-form--2" name="search_block_form" value="" size="15" maxlength="128" class="form-text" />
+</div>
+<div class="form-actions form-wrapper" id="edit-actions"><input type="submit" id="edit-submit" name="op" value="Submit Search" class="form-submit" /></div><input type="hidden" name="form_build_id" value="form-gZAXG32TuQUKre9VzpV1SG_y759DWJ8mIP6aykKDS-0" />
+<input type="hidden" name="form_id" value="search_block_form" />
+</div>
+</div></form>    </div>
+</div>
+  </div>
+</div>
+        <div class="container2">
+                    <div class="above-content-wrapper"><div class="mobile-subnav-placeholder"></div>   <div class="region region-above-content">
+    <div id="block-block-13" class="block block-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div class="view view-taxonomy-name-from-synonym view-id-taxonomy_name_from_synonym view-display-id-default view-dom-id-microsite_title">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+  <div class="views-field views-field-name aha_ada_fixes_span">        <div class="field-content aha_ada_fixes_span microsite_name"><a href="/clerk">City Clerk</a></div>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+</div>
+  </div>
+</div>           <div class="content">
+            <div class="main-content-wrapper"><div class="main" role="main">
+                                      <div class="content-outer-border"><div class="content-inner-border">
+                                                                                <a id="main-content"></a>
+                    <div class="title-wrapper"><h1 id="page-title">City Elections</h1></div>                      <div class="region region-content">
+    <div id="block-system-main" class="block block-system">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	
+<div id="node-8901" class="node node-page clearfix" about="/clerk/page/city-elections-0" typeof="sioc:Item foaf:Document">
+
+      <span property="dc:title" content="City Elections" class="rdf-meta element-hidden"></span>
+  
+
+
+<div class="content_main">
+<div class="field field-name-body field-type-text-with-summary field-label-hidden"><div class="field-items"><div class="field-item even" property="content:encoded"><h4>Local Ballot Measures</h4>
+<p><span><span><strong><span><span>Election Day is Tuesday, November 3, 2026.</span></span></strong></span></span></p>
+<p>Register to Vote: You may register at any time, but to be eligible to vote in an upcoming election, your Voter Registration Form must be submitted online by midnight no later than Monday, October 19th, 2026. If you are mailing a Voter Registration Form, it must be postmarked no later than Monday, October 19th, 2026.</p>
+<p><span><span><span>East Palo Alto voters will consider two local ballot measures and elect <strong><span><span>two City Councilmembers</span></span></strong> during the November 3, 2026, General Municipal Election.</span></span></span></p>
+<p><strong>East Palo Alto Community/Water/Public Safety Infrastructure Measure O:</strong> </p>
+<p class="MsoNoSpacing"><span><span><span><span><span><span><span><span><span><span><span>Measure O is the East Palo Alto Community, Water and Public Safety Infrastructure Measure.</span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span><span><span><span><span><span><span><span><span><span><span>If approved by voters, Measure O funding would address community-identified priorities such as providing safe and clean drinking water, replacing deteriorating pipes that distribute drinking water, expanding safe places for children and teens, repairing aging storm drains to prevent flooding on City streets, and establishing an up-to-date Emergency Command Center while addressing earthquake safety needs at public facilities.</span></span></span></span></span></span></span></span></span></span></span></p>
+<p class="isselectedend"><span><span><span><span><span><span><span><span><span><span><span>More than 40 years old, the East Palo Alto Library is outdated, deteriorating, and overcrowded, with wait lists for literacy and children's programming due to a lack of space.  A modern library with up-to-date technology, hands-on learning, and dedicated areas for children and teens so they have somewhere safe to go after school and during the summer is envisioned as an outcome of Measure O.</span></span></span></span></span></span></span></span></span></span></span></p>
+<p class="isselectedend"><img alt="" src="data:image/png;base64,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" style="height:271px; width:578px" /></p>
+<p class="isselectedend"> </p>
+<p><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_resolution_and_full_text.pdf">Resolution and Full Text</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_impartial_analysis.pdf">Impartial Analysis</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_argument_in_favor.pdf">Primary Argument in Favor</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_rebuttal_to_argument_against.pdf">Rebuttal to Argument Against</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_argument_against.pdf">Primary Argument Against</a></p>
+<p><strong>East Palo Alto Term Limits Measure CC</strong></p>
+<p>Measure CC is the East Palo Alto City Council Term Limits Measure. Measure CC allows voters to decide whether to establish City Council term limits. If approved, no person would be eligible to serve more than three consecutive full terms on the East Palo Alto City Council. A partial term of more than two years would count as one full term.</p>
+<table cellspacing="0" style="border-collapse:collapse; width:572px">
+<tbody>
+<tr>
+<td rowspan="2" style="border-bottom:2px double black; border-left:2px double black; border-right:2px double black; border-top:2px double black; height:83px; vertical-align:top; width:501px">
+<p>Shall the measure providing that no person shall be eligible to serve for more than three (3) consecutive full terms on the City Council be adopted, with service of partial terms exceeding two years qualifying as a full term?</p>
+</td>
+<td style="border-bottom:2px double black; border-left:none; border-right:2px double black; border-top:2px double black; height:83px; width:71px">
+<p>YES</p>
+</td>
+</tr>
+<tr>
+<td style="border-bottom:2px double black; border-left:none; border-right:2px double black; border-top:none; height:83px; width:71px">
+<p class="MsoHeading9"><em>NO</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_resolution_and_full_text_2.pdf">Resolution and Full Text</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_impartial_analysis.pdf">Impartial Analysis</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_arguments_in_favor.pdf">Primary Argument in Favor</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_rebuttal_to_argument_in_favor.pdf">Rebuttal to Argument in Favor</a><br />
+<a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_arguments_against.pdf">Primary Argument Against</a></p>
+<p><span><span><span><span><span><span><span><span><span><span><span><span><span><strong>Make sure your vote is counted!</strong></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p class="MsoBodyText"><span><span><span><span><span><span><span><span><span><span><span>Due to recent USPS operational changes, ballots mailed too late may not arrive in time to be counted. If you plan to vote by mail, please return your ballot as early as possible and ideally to an official Vote by Mail Drop Box. Please remember to register to vote by Monday, October 19th, 2026.</span></span></span></span></span></span></span></span></span></span></span></p>
+<p class="MsoBodyText"><span><span><span><span><span><span><span><span><span><span><span><em>*This is for informational purposes only.  The City of East Palo Alto does not advocate for or against any measure.</em></span></span></span></span></span></span></span></span></span></span></span></p>
+<p> </p>
+<h4>November 3, 2026 Election</h4>
+<h2>CANDIDATES RUNNING FOR 2026 CITY COUNCIL</h2>
+<p>The City of East Palo Alto will conduct local elections with the State elections on November 3, 2026. The City will hold an election for two(2) Council Members to four (4) year terms beginning in December 2026. </p>
+<p>The complete San Mateo County November 3, 2026 certified results will be available at the County Elections page within the Statement of the Vote. For full San Mateo County election results, visit: <a href="https://smcacre.gov/elections/november-3-2026-statewide-general-election">San Mateo County Elections Results Page</a>.</p>
+<p>To schedule an appointment to receive your candidate documents, email the City Clerk's office at: <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#105;&#116;&#121;&#99;&#108;&#101;&#114;&#107;&#64;&#99;&#105;&#116;&#121;&#111;&#102;&#101;&#112;&#97;&#46;&#111;&#114;&#103;">&#99;&#105;&#116;&#121;&#99;&#108;&#101;&#114;&#107;&#64;&#99;&#105;&#116;&#121;&#111;&#102;&#101;&#112;&#97;&#46;&#111;&#114;&#103;</a>. The City Clerk will be available Monday-Friday from 8:00 am - 5:00 PM</p>
+<h2><u><strong>The Secretary of State recommends voters do not vote by regular mail anymore, as their ballots may not be registered in time. Please vote at one of the three following voting centers or drop off your ballots at any one of the following locations.</strong></u></h2>
+<table border="1" cellpadding="1" cellspacing="1" style="width:95%">
+<caption>
+<h2><strong>Voting Centers/Drop Off Boxes</strong></h2>
+</caption>
+<tbody>
+<tr>
+<td><strong>Type</strong></td>
+<td><strong>Location</strong></td>
+<td><strong>Address</strong></td>
+<td><strong>Dates</strong></td>
+<td><strong>Hours</strong></td>
+</tr>
+<tr>
+<td>Vote Center</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span><span>Lewis &amp; Joan Platt East Palo Alto Family YMCA, Gymnasium</span></span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span>550 Bell Street</span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span>October 24 to November 2</span></span></span></span></span></span><br />
+			<span><span><span><span><span><span>November 3 (Election Day)</span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span><span>9 a.m. - 5 p.m.</span></span></span></span></span></span><br />
+			<span><span><span><span><span><span>7 a.m. - 8 p.m.</span></span></span></span></span></span></span></span></span></span></span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Vote Center</p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span><span>East Palo Alto Academy Library</span></span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span>1050 Myrtle St</span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span>November 2      </span></span></span></span></span></span></span></span></span></span></p>
+<p><span><span><span><span><span><span><span><span><span><span>November 3 (Election Day)</span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span><span>9 a.m. - 5 p.m.</span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span><span><span><span><span><span><span><span><span><span><span>7 a.m. - 8 p.m.</span></span></span></span></span></span></span></span></span></span></span></p>
+</td>
+</tr>
+<tr>
+<td>Vote Center</td>
+<td><span><span><span><span><span><span><span><span><span><span>University Circle</span></span></span></span></span></span></span></span></span></span></td>
+<td><span><span><span><span><span><span><span><span><span><span>1900 University Ave, </span></span></span></span></span></span><br />
+			<span><span><span><span><span><span>Suite 108</span></span></span></span></span></span></span></span></span></span></td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span>November 2</span></span></span></span></span></span></span></span></span></span></p>
+<p><span><span><span><span><span><span><span><span><span><span>November 3 (Election Day) </span></span></span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span><span><span>9 a.m. - 5 p.m.</span></span></span></span></span></span></span></span></span></span></p>
+<p><span><span><span><span><span><span><span><span><span><span>7 a.m. - 8 p.m.</span></span></span></span></span></span></span></span></span></span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Ballot Drop Box</p>
+<p>(Outdoor)</p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span>Government Center (outside) Walk-Up</span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span>2415 University Avenue</span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p><span><span><span><span><span><span><span><span>Starting October 5</span></span></span></span></span></span></span></span></p>
+<p><span><span><span><span><span><span><span><span>Ending November 3 at 8 p.m.</span></span></span></span></span></span></span></span></p>
+</td>
+<td>
+<p>24hrs </p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p>For more information about ballot box locations and vote centers visit: <a href="https://smcacre.gov/elections/track-your-ballot">https://smcacre.gov/elections/track-your-ballot</a></p>
+<p> </p>
+<p><span><span><span><strong><span><span><span>NOMINEES FOR PUBLIC OFFICE</span></span></span></strong></span></span></span></p>
+<p><span><span><span><span><span><span>NOTICE IS HEREBY GIVEN that the following persons have been nominated for the offices mentioned below to be filled at the general municipal election to be held in the City of East Palo Alto on Tuesday, November 3, 2026.</span></span></span></span></span></span></p>
+<table border="1" cellpadding="1" cellspacing="1" style="width:95%">
+<caption>Council Candidates</caption>
+<tbody>
+<tr>
+<td><strong>Name</strong></td>
+<td><strong>Candidate Statements</strong></td>
+</tr>
+<tr>
+<td>Holifa Windom </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/holifa_windom_candidate_statement.pdf">Yes </a></td>
+</tr>
+<tr>
+<td>Gail Wilkerson Dixon </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/gail.pdf">Yes</a></td>
+</tr>
+<tr>
+<td>Ruben Abrica </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/2026_statement.pdf">Yes</a></td>
+</tr>
+<tr>
+<td>Sam Jimenez </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/sam_jimenez_candidate_statement_.pdf">Yes</a></td>
+</tr>
+<tr>
+<td>Michael Mashack </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/candidate_statement_mmashack_081126.pdf">Yes</a></td>
+</tr>
+<tr>
+<td>Deborah Lewis-Virges </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/dlv_candidiate_statement.pdf">Yes</a></td>
+</tr>
+<tr>
+<td>Ofelia Bello </td>
+<td><a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/ofelia_bello_candidiate_statement.pdf">Yes</a></td>
+</tr>
+</tbody>
+</table>
+<h5> </h5>
+<h5>SAMPLE ballot</h5>
+<p> </p>
+<h2>RESOURCES FOR CANDIDATES</h2>
+<p><a href="https://www.smcacre.org/candidates-campaigns">San Mateo County:  Candidates and Campaigns</a></p>
+<p><a href="http://www.fppc.ca.gov/learn/campaign-rules/candidate-toolkit-getting-started/getting-started.html">Fair Political Practices Commission: Getting Started</a></p>
+<p><a href="http://www.fppc.ca.gov/learn/campaign-rules/candidate-toolkit-getting-started.html">Fair Political Practices Commission: Candidate Toolkit</a></p>
+<p> </p>
+<h2>CANDIDATES &amp; RESOURCE INFORMATION</h2>
+<p> </p>
+<p>Candidates MUST file Form 501 before soliciting or accepting contributions. Candidates MUST deposit funds into the campaign bank account before spending money on the campaign. Candidates who spend money out of pocket for campaign expenses are subject to fines.</p>
+<p>Before beginning your campaign, you must declare which office you are seeking.  You must also set up and register your committee, and disclose information about your personal income and assets. To get your campaign started, complete and submit the forms noted below.  See form instructions for information on how to complete the forms and where to file them.<br />
+                                     </p>
+<p><a href="https://smcacre.gov/elections/november-3-2026-election-calendar">Basic Campaign Filing Deadlines for Candidates</a></p>
+<p><a href="https://www.fppc.ca.gov/siteassets/documents/tad/forms/campaign/501.pdf">Form 501 - Candidate Intention Statement</a></p>
+<p><a href="https://www.fppc.ca.gov/siteassets/documents/tad/forms/campaign/410.pdf">Form 410 - Statement of Organization</a></p>
+<p><a href="https://www.fppc.ca.gov/siteassets/documents/tad/forms/campaign/460.pdf">Form 460 -  Recipient Committee Campaign Statement</a></p>
+<p><a href="https://www.fppc.ca.gov/siteassets/documents/tad/forms/campaign/470.pdf">Form 470 - Officeholder/Candidate Campaign Statement</a></p>
+<p><a href="https://www.fppc.ca.gov/form-700/">Form 700 - Statement of Economic Interests</a></p>
+<p> </p>
+<h2>COMMITTEE ID NUMBER</h2>
+<p> </p>
+<p>Once you have submitted your Form 410 to the Secretary of State (SOS), you can visit their website to find your committee ID number.  Enter the name of your committee in the search bar of the <a href="http://cal-access.sos.ca.gov/">Cal-Access database</a>.  If your ID number has been issued, the search results will show it next to your committee name.  If the system cannot find your ID number, the SOS may not have had time to issue it yet, or there was an error on the Form 410 and they have sent you a letter via USPS asking you to correct the error and re-submit the form.</p>
+<p>If you would like to receive a copy of your approved Form 410 from the Secretary of State, send a self-addressed stamped envelope with your original Form 410.</p>
+<p> </p>
+<h2>FILING DEADLINES</h2>
+<p> </p>
+<p>Throughout the campaign, you must file statements to report contributions and expenditures.<a href="http://www.fppc.ca.gov/content/dam/fppc/NS-Documents/TAD/Filing%20Schedules/2020/2020_01_LCL_Nov_3_Can.pdf"> </a><u><strong><a href="http://www.fppc.ca.gov/learn/campaign-rules/where-and-when-to-file-campaign-statements/when-to-file-campaign-statements-state-local-filing-schedules.html">Find the filing schedule for your campaign on this website.</a></strong></u></p>
+<p>This toolkit provides guidance and a general overview of the rules for campaigns, but it does not replace any requirements under the <a href="http://www.fppc.ca.gov/the-law/the-political-reform-act.html">Political Reform Act</a> or <a href="http://www.fppc.ca.gov/the-law/fppc-regulations.html">Fair Political Practices Commission</a> regulations.  Information here should be used in conjunction with a careful review of the applicable laws.</p>
+<h2> </h2>
+<h2> </h2>
+<p><a> </a></p>
+</div></div></div><div style="clear:both;"></div>
+
+<div class="related_info_block"><div class="related_info related_files"><h2>Supporting Documents</h2><div class="items fileattachments"><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/dlv_candidiate_statement.pdf" type="application/pdf; length=22836" title="dlv_candidiate_statement.pdf">Deborah Lewis-Virges Candidate Statement  </a></span> <span class="filefield file-size">(22 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/gail.pdf" type="application/pdf; length=46662" title="gail.pdf">Gail Dixon Candidate Statement</a></span> <span class="filefield file-size">(46 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/holifa_windom_candidate_statement.pdf" type="application/pdf; length=45808" title="holifa_windom_candidate_statement.pdf">Holifa Windom Candidate Statement</a></span> <span class="filefield file-size">(45 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/ofelia_bello_candidiate_statement.pdf" type="application/pdf; length=65752" title="ofelia_bello_candidiate_statement.pdf">Ofelia Bello Candidate Statement</a></span> <span class="filefield file-size">(64 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/2026_statement.pdf" type="application/pdf; length=35422" title="2026_statement.pdf">Ruben Abrica Candidate Statement</a></span> <span class="filefield file-size">(35 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/sam_jimenez_candidate_statement_.pdf" type="application/pdf; length=28612" title="sam_jimenez_candidate_statement_.pdf">Sam Jimenez Candidate Statement</a></span> <span class="filefield file-size">(28 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/candidate_statement_mmashack_081126.pdf" type="application/pdf; length=50401" title="candidate_statement_mmashack_081126.pdf">Michael Mashack Candidate Statement</a></span> <span class="filefield file-size">(49 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_arguments_against.pdf" type="application/pdf; length=694765" title="measure_cc_-_arguments_against.pdf">Measure CC - Arguments Against</a></span> <span class="filefield file-size">(678 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_arguments_in_favor.pdf" type="application/pdf; length=153122" title="measure_cc_-_arguments_in_favor.pdf">Measure CC - Arguments in Favor</a></span> <span class="filefield file-size">(150 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_impartial_analysis.pdf" type="application/pdf; length=106466" title="measure_cc_-_impartial_analysis.pdf">Measure CC - Impartial Analysis</a></span> <span class="filefield file-size">(104 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_resolution_and_full_text.pdf" type="application/pdf; length=1765100" title="measure_cc_-_resolution_and_full_text.pdf">Measure CC - Resolution and Full Text</a></span> <span class="filefield file-size">(2 MB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_argument_against.pdf" type="application/pdf; length=1072252" title="measure_o_-_argument_against.pdf">Measure O - Argument Against</a></span> <span class="filefield file-size">(1 MB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_argument_in_favor.pdf" type="application/pdf; length=1786500" title="measure_o_-_argument_in_favor.pdf">Measure O - Argument in Favor</a></span> <span class="filefield file-size">(2 MB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_impartial_analysis.pdf" type="application/pdf; length=146494" title="measure_o_-_impartial_analysis.pdf">Measure O - Impartial Analysis</a></span> <span class="filefield file-size">(143 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_rebuttal_to_argument_in_favor.pdf" type="application/pdf; length=1358500" title="measure_cc_-_rebuttal_to_argument_in_favor.pdf">Measure CC - Rebuttal to Argument in Favor</a></span> <span class="filefield file-size">(1 MB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_rebuttal_to_argument_against.pdf" type="application/pdf; length=363728" title="measure_o_-_rebuttal_to_argument_against.pdf">Measure O - Rebuttal to Argument Against</a></span> <span class="filefield file-size">(355 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_o_-_resolution_and_full_text.pdf" type="application/pdf; length=1470709" title="measure_o_-_resolution_and_full_text.pdf">Measure O - Resolution and Full Text</a></span> <span class="filefield file-size">(1 MB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/measure_cc_-_resolution_and_full_text_2.pdf" type="application/pdf; length=1765100" title="measure_cc_-_resolution_and_full_text_2.pdf">Measure CC - Resolution and Full Text (2)</a></span> <span class="filefield file-size">(2 MB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/final_revised_ballot_mailer.pdf" type="application/pdf; length=337914" title="final_revised_ballot_mailer.pdf">Ballot Mailer</a></span> <span class="filefield file-size">(330 KB) </span></div><div class="filefield-file"><span class="file"><img class="file-icon" alt="PDF icon" title="application/pdf" src="/modules/file/icons/application-pdf.png" /> <a href="https://www.cityofepa.org/sites/default/files/fileattachments/city_clerk/page/8901/copy_of_ballot_info_fact_sheet_flyer_10.2026.pdf" type="application/pdf; length=1895065" title="copy_of_ballot_info_fact_sheet_flyer_10.2026.pdf">Information Fact Sheet</a></span> <span class="filefield file-size">(2 MB) </span></div></div></div></div>      <div class="link-wrapper">
+      <ul class="links inline"><li class="print_html first last"><a href="/print/8901" title="Display a printer-friendly version of this page." class="print-page" onclick="window.open(this.href); return false" rel="nofollow"><img class="print-icon" typeof="foaf:Image" src="https://www.cityofepa.org/sites/all/modules/print/icons/print_icon.png" width="16" height="16" alt="Printer-friendly version" title="Printer-friendly version" /></a></li>
+</ul>    </div>
+  
+  
+</div> 
+</div>
+
+    </div>
+</div>
+  </div>
+                </div></div>
+            </div></div>
+            <div class="sidebar-first-wrapper">  <div class="region region-sidebar-first">
+    <div id="block-jquerymenu-71" class="block block-jquerymenu">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<!--[if IE]><div class="ie"><![endif]--><ul class="menu jquerymenu"><li  class="first"><a href="/clerk" title="City Elections">City Clerk</a></li><li  class="parent open active-trail active"><span class="parent open active-trail active"></span><a href="/clerk/page/city-elections-0" title="City Elections" class="active">City Elections</a><ul><li  class="first"><a href="https://public.netfile.com/pub2/?AID=EPA">Campaign Filings</a></li><li  class="last"><a href="/clerk/page/how-file-citizen-initiatives">How to file Citizen Initiatives</a></li></ul></li><li ><a href="/clerk/page/city-newsletters">City Newsletters</a></li><li ><a href="/clerk/page/local-appointments" title="Maddy Act Notice - Local Appointments List">Local Appointments</a></li><li ><a href="/clerk/page/records-requests">Records Requests</a></li><li  class="last"><a href="https://california.ballottrax.net/voter/" title="Where&#039;s My Ballot?">Where&#039;s My Ballot?</a></li></ul><!--[if IE]></div><![endif]-->    </div>
+</div>
+<div id="block-block-3" class="block block-block">
+    <div class='block-header'>
+                            <h2>Contact Information</h2>
+                    </div>
+    <div class="block-content">
+    	<div class="view view-contact-info-block view-id-contact_info_block view-display-id-block view-dom-id-custom_contact">
+        
+  
+  
+      <div class="view-content">
+        <div class="views-row views-row-1 views-row-odd views-row-first views-row-last">
+      
+  <div class="views-field views-field-body">        <div class="field-content"><p>2415 University Avenue<br />
+East Palo Alto, CA 94303</p>
+<p>Phone: 650.853.3100</p>
+<p>Email:   <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#105;&#116;&#121;&#99;&#108;&#101;&#114;&#107;&#64;&#99;&#105;&#116;&#121;&#111;&#102;&#101;&#112;&#97;&#46;&#111;&#114;&#103;">&#99;&#105;&#116;&#121;&#99;&#108;&#101;&#114;&#107;&#64;&#99;&#105;&#116;&#121;&#111;&#102;&#101;&#112;&#97;&#46;&#111;&#114;&#103;</a></p>
+<p>Hours<br />
+Monday - Friday<br />
+8 a.m. - 5 p.m.</p>
+<p> </p>
+</div>  </div>  
+  <div class="views-field views-field-edit-node aha_ada_fixes_span">        <div class="field-content aha_ada_fixes_span"></div>  </div>  
+  <div class="views-field views-field-view-node aha_ada_fixes_span">        <div class="field-content aha_ada_fixes_span"><a href="/clerk/custom-contact-page/city-clerk-contact-information">View Full Contact Details</a></div>  </div>  </div>
+    </div>
+  
+  
+  
+  
+  
+  
+</div>    </div>
+</div>
+  </div>
+</div>           </div>
+      </div>
+  </div>
+  <!-- END CONTAINER 2-->
+
+
+  <!-- START CONTAINER 3-->
+    <div class="container3-wrapper">
+      <div class="container3">
+                <div class="footer-wrapper">  <div class="region region-footer">
+    <div id="block-menu-block-2" class="block block-menu-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div class="menu-block-wrapper menu-block-2 menu-name-menu--utility-links-menu parent-mlid-0 menu-level-1">
+  <ul class="menu"><li class="first leaf menu-mlid-614"><a href="/user/login?current=node/8901">Staff Login</a></li>
+<li class="leaf menu-mlid-613"><a href="/sitemap">Site Map</a></li>
+<li class="leaf menu-mlid-24751"><a href="https://www.cityofepa.org/sites/default/files/fileattachments/community_amp_economic_development/page/9721/east_palo_alto_map.pdf">City Map</a></li>
+<li class="last leaf menu-mlid-24051"><a href="/administration/page/website-accessibility">Accessibility</a></li>
+</ul></div>
+    </div>
+</div>
+<div id="block-block-46" class="block block-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<address>
+      <span class="address-line1">2415 University Avenue,</span><br />
+      <span class="address-line2">East Palo Alto, CA 94303</span><br />
+      <span class="address-line3">650-853-3100</span><br />
+</address>
+    </div>
+</div>
+<div id="block-block-51" class="block block-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div id="google_translate_element"></div><script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'es,sm,zh-CN', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+var t = document.getElementsByClassName('goog-te-menu-frame');
+if(t.length > 0){
+ t.item(0).removeAttribute("frameborder");
+}
+var s = document.querySelectorAll("[href='https://translate.googleapis.com/translate_static/css/translateelement.css']");
+if(s.length > 0){
+ s.item(0).removeAttribute("charset");
+}
+}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>    </div>
+</div>
+<div id="block-block-4" class="block block-block">
+    <div class='block-header'>
+                            </div>
+    <div class="block-content">
+    	<div id="site_credits"><a href="http://www.municodeweb.com" target="_blank">a municode design</a></div>    </div>
+</div>
+  </div>
+</div>      </div>
+    </div>
+  <!-- END CONTAINER 3-->
+
+</div> <!-- page-outer -->
+
+    <script type="text/javascript" src="https://www.cityofepa.org/sites/default/files/js/js_b3TikqP2FA53vFKJanPBzgaFQ71s0l1wz8ZjG3H7BiI.js"></script>
+</body><!-- END OF PAGE -->
+</html>

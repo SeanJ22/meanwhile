@@ -1,0 +1,79 @@
+{
+  "checkedAt": "2026-11-03T09:39:32.503626+00:00",
+  "heldBaselineSha256": "69b913e5515275f07fec6428f4f6459ba58770060673d1771c89f849b49e4f7c",
+  "siblingInputs": [
+    {
+      "sourcePath": "data/install/cx-local/CA/alameda/ballot-input/ca.json",
+      "sha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587",
+      "contests": 95
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/contra-costa/ballot-input/ca.json",
+      "sha256": "223161a10ec755119dfbddc5367ad7fcd7311133cc9ac76db4013e5b3bf8c32d",
+      "contests": 71
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/fresno/ballot-input/ca.json",
+      "sha256": "f3c8eb8fad059a8d25de48bc1b611f74fecb00e79cf022f55b5fde2ccaf75360",
+      "contests": 81
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/kern/ballot-input/ca.json",
+      "sha256": "eb5576c4ab3b3c0c7f6538c61fbf7735ae683cdf4ea5a12a5f5bfc904bea5108",
+      "contests": 88
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+      "sha256": "fb6dfbe9622ea91930e344cda462de383b8236f59345c1de4488c5234d7318f8",
+      "contests": 246
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/orange/ballot-input/ca.json",
+      "sha256": "d5b4fe05c314bb114d2e437b00d3049c2ea839d112dfce2950a4283fad86877c",
+      "contests": 138
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/riverside/ballot-input/ca.json",
+      "sha256": "35f2415ce2ce16c892673c0f057d65b4cadab1991e9a842c919252a219c77fe3",
+      "contests": 7
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/sacramento/ballot-input/ca.json",
+      "sha256": "8e80520c0cc751539bd563ee061508848e3b27daf3853b6593b8510a744d0ab7",
+      "contests": 68
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+      "sha256": "1f22d3116e25c5fdaaff82e93b6d87583fbff764cef89bbe3fca2298e54d0ed4",
+      "contests": 135
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/san-diego/ballot-input/ca.json",
+      "sha256": "53e5dbb4e0bcb8ce84e1131e3c6af9a9dc36bb0b22d1e2c09c9c149b1ff375c2",
+      "contests": 144
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/san-francisco/ballot-input/ca.json",
+      "sha256": "d74fd7237a9376b96f483a368439ebb886e58f4b1930127dabd6fac5f6b00caa",
+      "contests": 24
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/san-joaquin/ballot-input/ca.json",
+      "sha256": "4c03b58c6775f52fbd0efde8cc2fa9c4adad58c770596943cca5dc74cd9ff462",
+      "contests": 46
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/santa-clara/ballot-input/ca.json",
+      "sha256": "948e34f11ad31707cd59ad5953f73aab517ae279da0c6c712c952083c8406c92",
+      "contests": 73
+    },
+    {
+      "sourcePath": "data/install/cx-local/CA/ventura/ballot-input/ca.json",
+      "sha256": "d22a639d37c86d0718648128691e22f660a2ab035522cc042fc358c0ff5ee50f",
+      "contests": 62
+    }
+  ],
+  "localExactOfficeAndElectorateMatches": 0,
+  "sharedRetentionFieldsReused": 13,
+  "sharedCandidateIdsReused": 13
+}

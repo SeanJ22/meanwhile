@@ -1,0 +1,20 @@
+{
+  "captureFormat": "DERIVED_PUBLIC_PORTAL_ACCESS_DIAGNOSTIC_NOT_ORIGINAL_HTML",
+  "sourceUrl": "https://smcacre.gov/elections/my-election-info",
+  "collectedAt": "2026-11-03T09:16:29.477551+00:00",
+  "originalNativeScratchSha256": "dbb3db95e893e59f637e02404bf84e1a52d5b1d16301b3cf5bdaa13d13ec896e",
+  "originalNativeScratchBytes": 460312,
+  "originalPortable": false,
+  "reason": "Generated form fields retained in original scratch only; this derived diagnostic contains public static labels/config.",
+  "requiredFields": [
+    "Your House Number Only *",
+    "Your Zip Code *",
+    "Your Birth Date *"
+  ],
+  "lookupCalled": false,
+  "registeredVoterIdentitySubmitted": false,
+  "prelookupConfigGetCalled": true,
+  "enrollmentOrPreferenceMutationCalled": false,
+  "publicUnsignedPdfPattern": "https://vlu.smcacre.gov/sites/default/files/{electionNumber}/{electionNumber}_{ballotStyle}_N-P_E.PDF",
+  "nativeSamplePdfAcquired": false
+}

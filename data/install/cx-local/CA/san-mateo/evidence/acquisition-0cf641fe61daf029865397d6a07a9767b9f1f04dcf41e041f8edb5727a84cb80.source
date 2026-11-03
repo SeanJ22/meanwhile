@@ -1,0 +1,50 @@
+{
+ "displayFieldName": "PrecinctID",
+ "fieldAliases": {
+  "OBJECTID": "OBJECTID",
+  "PrecinctID": "PrecinctID",
+  "Shape_Leng": "Shape_Leng",
+  "Shape.STArea()": "Shape.STArea()",
+  "Shape.STLength()": "Shape.STLength()"
+ },
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID"
+  },
+  {
+   "name": "PrecinctID",
+   "type": "esriFieldTypeString",
+   "alias": "PrecinctID",
+   "length": 254
+  },
+  {
+   "name": "Shape_Leng",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape_Leng"
+  },
+  {
+   "name": "Shape.STArea()",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.STArea()"
+  },
+  {
+   "name": "Shape.STLength()",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.STLength()"
+  }
+ ],
+ "features": [
+  {
+   "attributes": {
+    "OBJECTID": 1,
+    "PrecinctID": "10001",
+    "Shape_Leng": 34733.0957014,
+    "Shape.STArea()": 41870211.287487745,
+    "Shape.STLength()": 34733.095701436621
+   }
+  }
+ ],
+ "exceededTransferLimit": true
+}

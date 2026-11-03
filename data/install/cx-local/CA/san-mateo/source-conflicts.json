@@ -1,0 +1,25 @@
+{
+  "countyBoardOfEducationElectorate": {
+    "office": "County Board of Education Member, Trustee Area 2",
+    "resolvedOcdId": "ocd-division/country:us/state:ca/county:san_mateo/school_board_district:2",
+    "controllingCurrentSource": {
+      "sourceUrl": "https://www.smcoe.org/about/board-of-education",
+      "sourceOrg": "San Mateo County Office of Education",
+      "collectedAt": "2026-11-03T09:29:18.242532+00:00",
+      "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+      "quote": "Each member is elected by the registered voters of their trustee area."
+    },
+    "contradictoryGuide": {
+      "sourceUrl": "https://smcacre.gov/media/8701/download?attachment",
+      "sourceOrg": "San Mateo County Registration & Elections Division",
+      "collectedAt": "2026-11-03T09:26:44.289658+00:00",
+      "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+      "quote": "In San \nMateo County, trustees shall be elected at large (countywide)."
+    },
+    "decision": "Use current SMCOE area-voter rule and final polygon, not countywide boilerplate."
+  },
+  "unsignedDrafts": {
+    "coastsideFire": "Attached resolution blank votes/signatures; current official staff report page1 supports2026 area-voter rule, no adoption assertion.",
+    "granada": "Unsigned draft resolution supplemental; current official2026 at-large forum and county roster used."
+  }
+}

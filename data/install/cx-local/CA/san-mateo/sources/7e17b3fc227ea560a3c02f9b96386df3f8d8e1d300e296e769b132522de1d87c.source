@@ -1,0 +1,818 @@
+<!DOCTYPE html><html id="ctl00_html" xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head id="ctl00_Head1"><title>
+	Board Elections & Trustee Area - Cabrillo Unified School District
+</title>
+	<style>
+		.cssIESearch {
+			border:dashed !important;
+			border-width:thin !important;
+		}
+	</style>
+	<script>
+		function focusInInput(id) {
+			var ua = window.navigator.userAgent;
+	
+				// IE 10 or older
+				var msie = ua.indexOf('MSIE ');
+				if (msie > 0) {
+						if (parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10) <= 10 )
+							$(id).toggleClass('cssIESearch');
+					}
+
+				// IE 11
+				var trident = ua.indexOf('Trident/');
+				if (trident > 0) {
+					var rv = ua.indexOf('rv:');
+					if (parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10) === 11)
+						$(id).toggleClass('cssIESearch');
+				}
+		};
+
+		function focusOutInput(id) {
+			$(id).removeClass('cssIESearch');
+		}; 
+	</script>
+    <base href="https://cabrillousd.ss10.sharpschool.com/cms/One.aspx?portalId=18665063&amp;pageId=18819679" /><script id="ctl00_00f77616769f0d4f891b41dfda94e8b04f53f1c11d0172b581e651aeac6863a9" src="https://cdnsm1-ss10.sharpschool.com/bundle/js/vendor.cfcd208495d565ef66e7dff9f98764da.js" type="text/javascript"></script><link id="ctl00_c8f4c6c953812b601a957ffb85881e061f80eb01e5e8c670167b133b4d5e4bbf" href="https://cdnsm1-ss10.sharpschool.com/bundle/css/vendor.cfcd208495d565ef66e7dff9f98764da.css" rel="stylesheet" type="text/css" media="all" /><script src="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/scripts/url-script-v4.js" type="text/javascript"></script><meta id="viewport" name="viewport" content="width=320, initial-scale=1, maximum-scale=1, user-scalable=no" /><link type="text/css" rel="stylesheet" media="screen" href="https://cdnsm4-ss10.sharpschool.com/Common/resources/DesignPortfolio/SiteThemes/butterscotch/fix.css" /><script src="https://cdnsm4-ss10.sharpschool.com/common/resources/designportfolio/sitethemes/butterscotch/butterscotch.js" type="text/javascript"></script><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><script id="ctl00_d811866f2347c45bd3a0fe77a237af6a60765b254d2e04324bf23e6319644c76" src="https://cdnsm2-ss10.sharpschool.com/common/JavaScript/resourcelibrary/ReactPortlets/reactPortletLoader.js" type="text/javascript"></script><script id="ctl00_007e1919cd42cdd5583cdcdfaf4437f725a9db464eba46f47def4954760764c0" src="https://cdnsm2-ss10.sharpschool.com/common/JavaScript/resourcelibrary/ReactPortletsInit.js" type="text/javascript"></script><link href="https://cdnsm2-ss10.sharpschool.com/App_Themes/default/merged.css" type="text/css" rel="stylesheet" /><meta property="og:title" content="Board Elections &amp; Trustee Area" /><meta property="og:url" content="https://www.cabrillo.k12.ca.us/about_us/governing_board/elections" /><link id="ctl00_117e4c2bfffec9349c6e4dcfe9c77504c13355106618f660850b57eec74397ff" href="https://cdnsm5-ss10.sharpschool.com/common/resources/shared/controls/FontAwesome/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_402d609248b04b5a10c230d0276e7e53bed0ddef00ad8fa84b7c58b0cc3739ab" href="/common/controls/TabPortlet/bootstrap_tab.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_6247e758d80493562cbf95ef62da2c16995130b8adf19871e6a84df9e2e0e4d2" href="/common/controls/TabPortlet/jquery.scrolling-tabs.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_820791ea8f0513b3d7f06017348ac118288953eac41c8f0a4249784d31f315a0" src="/common/controls/TabPortlet/jquery.scrolling-tabs.js" type="text/javascript"></script><script id="ctl00_0afc5535ac4f6234d4e37b8f13b538bacfbbdf26a53ca7da3685e6ef3e9c4324" src="/common/controls/TabPortlet/tab-portlet-view.js" type="text/javascript"></script><link href="https://www.cabrillo.k12.ca.us/about_us/governing_board/elections" rel="canonical" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-56WPZJ79ZT"></script><script type="text/javascript">
+window.dataLayer = window.dataLayer || []
+function gtag() { dataLayer.push(arguments); }
+gtag('js', new Date());
+gtag('config', 'G-56WPZJ79ZT');
+</script>
+<link id="ctl00_c11ee3292ac9e5a4417635135583c4bbfdb8ea29573b674250c4d49a2a0ace54" href="https://cdnsm2-ss10.sharpschool.com/App_Themes/jquery.mmenu.all.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_c322b83bd68baadb3b50174e9bb777a6e2a207f953b71156195b3059ebbbf2a1" src="https://cdnsm1-ss10.sharpschool.com/javascript/jquery.mmenu.min.all.js" type="text/javascript"></script><link id="ctl00_ecaa77bc459a465ccbf05b1230a7fda7d326ac12b2a6ed8ea34f9b8e8a640bda" href="https://cdnsm2-ss10.sharpschool.com/App_Themes/mobilemenu.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_6954abdda40ad30188b10655e8e3c079ee30c506b42fc79e052476db304c6aed" src="https://cdnsm1-ss10.sharpschool.com/javascript/mobilemenu2019.v2.js" type="text/javascript"></script><link id="ctl00_97824b488cc1cfef3832b711a92519edb6952c87270c11227e7cccbf5055cf6e" href="https://cdnsm5-ss10.sharpschool.com/UserFiles/TemplateStyles/Server_0/189.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_62d5b5acfac205ee192873312c44badb262caa3410605faf69de8c378b5dc098" href="/Common/controls/ContentItemModern/css/common.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_aa2c84a486a375c67d39fbd93850be817996f0bb9ad69c9eae41ab818ce23baf" href="https://cdnsm5-ss10.sharpschool.com/UserFiles/TemplateStyles/Server_18664976/5086.css" rel="stylesheet" type="text/css" media="all" /><link rel="stylesheet" type="text/css" href="/common/RichTextConfig/CustomFCKWebStyle.aspx?portalId=18665063" /><link href="/Telerik.Web.UI.WebResource.axd?d=PMrIT5dOWaVYIcpFWUE4nPnmLmO0BrM2PYzxkd0onrXbUpetimu5wKgzw7EGIxmOOVDwEK6CbI01fyEW3Y62LEDBs-5cgre4MBpJPijaMfuobTlR0&amp;t=639286389108468600&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bTelerik.Web.UI%2c+Version%3d2026.3.812.462%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3aab6aa57e-34e3-4a88-a53e-99567e45582d%3a92753c09%3a91f742eb%3aed2942d4" type="text/css" rel="stylesheet" /></head>
+<body id="ctl00_PageBody" style="margin: 0px">
+    
+
+<div id="mobile_banner"></div>
+
+    <form method="post" action="./One.aspx?portalId=18665063&amp;pageId=18819679" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="ctl00_RadStyleSheetManager1_TSSM" id="ctl00_RadStyleSheetManager1_TSSM" value="" />
+<input type="hidden" name="ctl00_ScriptManager1_TSM" id="ctl00_ScriptManager1_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="https://cdnsm1-ss10.sharpschool.com/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZMiEk64fhiffDz8GGQRHvsfZyYJBOIOV-_a7GJI3OprGKvYnjQ2&amp;t=639286388896668373" type="text/javascript"></script>
+
+
+<script src="https://cdnsm2-ss10.sharpschool.com/common/JavaScript/Json2.js" type="text/javascript"></script>
+<script src="https://cdnsm2-ss10.sharpschool.com/common/JavaScript/JQuery/jquery-cookie.js" type="text/javascript"></script><script type="text/javascript">
+            
+                function OpenNewWindow(url, arguments)
+                {  
+                    return window.open(url, "",arguments);
+                }
+
+                function OpenNewWindowJS(url, ignore, arguments){  
+                    return OpenNewWindow(url, arguments);  
+                }
+
+
+                function OpenNewWindowNoReturn(url, arguments){  
+                    OpenNewWindow(url, arguments);  
+                }
+
+              </script> 
+<script src="https://cdnsm2-ss10.sharpschool.com/common/javascript/SubServerDropDown.js" type="text/javascript"></script>
+<script src="https://cdnsm2-ss10.sharpschool.com/common/javascript/PLMoreDropDown.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+function _search(){var frm=document.forms['aspnetForm'];if(!frm)frm=document.aspnetForm;window.location='/workspaces/Search.aspx?contextId='+frm.ctl00_SearchPlace.value+'&place='+frm.ctl00_SearchOne.value+'&searchTerm='+escape(frm.ctl00_SearchTerm.value).replace(/\+/g, '%2C').replace(/\"/g,'%22').replace(/'/g, '%27');}
+            function clickButton(e, buttonid)
+            { 
+              var bt = document.getElementById(buttonid); 
+              if (typeof bt == 'object')
+		        { 
+
+                    if (navigator.appName.indexOf('Microsoft Internet Explorer')>(-1)){ 
+                          if (event.keyCode == 13){ 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+	    	        else
+			        {
+	                  if (e.keyCode == 13)
+	          	        { 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+              } 
+            } //]]>
+</script>
+
+<script src="https://cdnsm2-ss10.sharpschool.com/Common/JavaScript/Common_Control.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+
+function InputConstraint_OnLoad(textBoxControlId, oRegExp)            
+{
+    oTextBoxControl = document.getElementById(textBoxControlId);
+	if (oTextBoxControl)
+	{
+		if (oRegExp.test(oTextBoxControl.value))
+			oTextBoxControl.OldValue = oTextBoxControl.value;
+		else 
+			oTextBoxControl.value = oTextBoxControl.OldValue = '';
+	}
+}
+function InputConstraint_OnChange(oTextBoxControl, oRegExp)         
+{
+    if (oRegExp.test(oTextBoxControl.value))
+        oTextBoxControl.OldValue = oTextBoxControl.value;
+    else {
+        if (typeof(oTextBoxControl.OldValue) == 'undefined' || oTextBoxControl.value == '') 
+            oTextBoxControl.OldValue = '';
+        oTextBoxControl.value = oTextBoxControl.OldValue;
+    } 
+}
+
+//]]>
+</script>
+
+<script src="https://cdnsm1-ss10.sharpschool.com/javascript/attrchange.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+;$(function() { $('nav#mMenuCMS').mmenu({"slidingSubmenus":false,"position":"left","zposition":"back"}, {"pageNodetype":"form"});});//]]>
+</script>
+
+<script src="https://cdnsm1-ss10.sharpschool.com/ScriptResource.axd?d=qph9tUZ6hGPLbkznkRkqTc6sslt3VBxKsKaOsMkgDhBUIK4VeSNrR567Oujh-9r3p-v83OZlKXS3oddHkUoa3BeagcZ1DHb7zL1wTa7ulWzZJz8E0&amp;t=f2cd5c5" type="text/javascript"></script>
+<script src="https://cdnsm1-ss10.sharpschool.com/ScriptResource.axd?d=TvpD2YGOOsCm1yWcLkKnBWgP4Ytn8mcF-lXE9Rgmm07MeHQWxaABsFDEBrkBz20ctQNWNb2SsW8R5JatTEWe5jI_n38Ai1c37dRjpwryWlgJvlw90&amp;t=f2cd5c5" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Core.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/jQuery.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/jQueryPlugins.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/AnimationFramework/AnimationFramework.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Animation/AnimationScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Popup/PopupScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Helpers/IETouchActionManager.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/TouchScrollExtender.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Widgets/Draggable.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Widgets/Resizable.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/ShortCutManager/ShortCutManagerScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/MaterialRipple/MaterialRippleScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Window/RadWindowScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Window/RadWindowManager.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Scrolling/ScrollingScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Navigation/OData/OData.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Navigation/NavigationScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Common/Navigation/OverlayScript.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Menu/RadMenuScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Menu/MenuItem/RadMenuItem.js" type="text/javascript"></script>
+<script src="https://cdnsm1-ssradscript.sharpschool.com/ajax/2026.3.812/Menu/Views/ClassicView.js" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F495CFC0" />
+</div>
+    
+    
+		
+   
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$ContentPlaceHolder1$ctl20$upPanel',''], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+            
+            
+    
+    
+            
+    
+    
+    
+    
+    
+    
+    
+            
+    
+            
+    
+    
+    
+    
+    
+    
+            
+    
+    
+    
+    
+    
+
+    
+    <div class="responsiveTemplate"><div id="skip"><a href="#page">Skip navigation</a></div><!-- ====== PUB WRAPPER ====== --><link href="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/pub-wrapper/pubWrapper2016.css" type="text/css" rel="stylesheet" media="screen" /><link type="text/css" rel="stylesheet" href="https://cdnsm1-sstemplatefonts.sharpschool.com/common/template-fonts/fontAwesome450/font-awesome.css" /><div id="pubWrapper"><div id="pubWrapper-btn"><a href="javascript:void(0)">More Options <em class="fa fa-cog"></em></a></div><div id="top" class="container clear"><ul class="w-50 pubList"><li id="selectSchool" class="pubDropdown-wrapper"><div class="pubDropdown-btn">Select a School<em class="fa fa-sort"></em></div><?xml version="1.0" encoding="utf-16"?><ul class="schoolDropdown pubDropdown"><style>
+                        #pubWrapper .pubDropdown-wrapper .schoolGroup span {
+                              color: #333;
+                              padding: 0px 15px;
+                              font-size: 16px;
+                              font-weight:bold;
+                        }
+                     </style><li><div class="school-dropdown-row"><div class="school-dropdown-col"><ul class="schoolList"><li class="currentSite districtSite"><a href="https://www.cabrillo.k12.ca.us/" title="Go to Cabrillo Unified School District">Cabrillo Unified School District</a></li><li><a href="https://elgranada.cabrillo.k12.ca.us/" title="Go to El Granada Elementary School">El Granada Elementary School</a></li><li><a href="https://faralloneview.cabrillo.k12.ca.us/" title="Go to Farallone View Elementary School">Farallone View Elementary School</a></li><li><a href="https://hatch.cabrillo.k12.ca.us/" title="Go to Hatch Elementary School">Hatch Elementary School</a></li><li><a href="https://kingsmountain.cabrillo.k12.ca.us/" title="Go to Kings Mountain Elementary School">Kings Mountain Elementary School</a></li><li><a href="https://cunha.cabrillo.k12.ca.us/" title="Go to Cunha Intermediate School">Cunha Intermediate School</a></li><li><a href="https://hmbhs.cabrillo.k12.ca.us/" title="Go to Half Moon Bay High School">Half Moon Bay High School</a></li><li><a href="https://pilarcitos.cabrillo.k12.ca.us/" title="Go to Pilarcitos High School">Pilarcitos High School</a></li><li><a href="https://lcas.cabrillo.k12.ca.us/" title="Go to La Costa Adult School">La Costa Adult School</a></li></ul></div></div></li></ul></li><!-- end #selectSchool --><li id="selectLang" class="pubDropdown-wrapper"><div class="pubDropdown-btn">Language<em class="fa fa-sort"></em></div><ul class="languageDropdown pubDropdown"><li id="gtl_original"><a href="javascript:TranslateTo('original');">View Original</a></li><li><a href="javascript:TranslateTo('es');">Spanish</a></li><li><a href="javascript:TranslateTo('zh-CN');">Cantonese</a></li><li><a href="javascript:TranslateTo('fr');">French</a></li><li><a href="javascript:TranslateTo('de');">German</a></li><li><a href="javascript:TranslateTo('it');">Italian</a></li><li><a href="javascript:TranslateTo('tl');">Tagalog</a></li><li><a href="javascript:TranslateTo('vi');">Vietnamese</a></li><li><a href="javascript:TranslateTo('ko');">Korean</a></li><li><a href="javascript:TranslateTo('ru');">Russian</a></li><li><a href="javascript:TranslateTo('hi');">Hindi</a></li></ul></li><!-- end #selectLang --><li id="pubLinks" class="pubDropdown-wrapper"><div class="pubDropdown-btn"><em class="fa fa-plus-circle"></em></div></li><!-- end #pubLinks --></ul><ul class="w-50 pubList fr"><li id="searchPanel" class="fr"><div class="divSearchBox">
+	<input name="ctl00$SearchTerm" type="text" id="ctl00_SearchTerm" class="SearchTerm" aria-label="Search" onkeypress="return clickButton(event,&#39;ctl00_btnSearch&#39;)" onfocus="focusInInput(&#39;#ctl00_SearchTerm&#39;)" onfocusout="focusOutInput(&#39;#ctl00_SearchTerm&#39;)" /><input type="hidden" name="ctl00$SearchOne" id="ctl00_SearchOne" value="workspaces" /><a id="ctl00_btnSearch" title="Search" title="Search" href="javascript:__doPostBack(&#39;ctl00$btnSearch&#39;,&#39;&#39;)"><img src="https://cdnsm3-ss10.sharpschool.com/common/resources/en_US/default/images/templates/default/header_search_button.gif" id="ctl00_searchImage" alt="Search" class="SearchButton" /></a>
+</div></li><!-- end #searchBox --><li id="loginPanel" class="fr"><a id="ctl00_lnkGateway" class="admin_menu" href="/gateway/Login.aspx?returnUrl=%2fabout_us%2fgoverning_board%2felections">Login</a></li><!-- end #loginPanel --><li id="userPanel" class="fr"><a id="ctl00_lnkUser" class="user_link" href="">Guest</a></li><!-- end #userPanel --></ul></div></div><!-- ====== END PUB WRAPPER ====== --><div class="contentWrapper">
+
+    <style>
+		/* disable CKEditor orignal image & flash manager */
+		.cke_button__image {
+			display:none !important;
+		}
+
+		.cke_button__flash {
+			display:none !important;
+		}
+
+	</style>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#divOverlay').css('width', $(document).width());
+        $('#divOverlay').css('height', $(document).height());
+    });
+    </script>
+
+    <!-- richeditor full screen mode overlay element -->
+    <div id="divOverlay" unselectable="on" class="TelerikModalOverlayFullScreen" style="position: absolute; left: 0px; top: 0px; z-index: 100001; background-color: rgb(170, 170, 170); opacity: 0.5; display: none;"></div>
+    
+        <script type="text/javascript">
+            function setPreventHttpRedirectParam(url) {
+                url = (url || '').trim();
+                if (url === '') return url;
+                var parser = document.createElement('a');
+                parser.href = url;
+                var search = '?preventHttpRedirect=1';
+                if (parser.search.length > 0)
+                    search += '&' + parser.search.substr(1);
+                parser.search = search;
+                return parser.href;
+            }
+
+            function openRadWindowLoadingContentTree(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree");
+                showModal(url, wnd, 750, 630);
+                return false;
+            }
+
+            function openPermissionControlWindow(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowPermissionControl");
+                showModal(url, wnd, 150, 61);
+                return false;
+            }
+
+            function showModal(url, wnd, width, height) {
+                var scheme = window.location.href.split('/')[0] || 'http:';
+                radopen(scheme === 'https:' || $('.secureform').length > 0
+                    ? setPreventHttpRedirectParam(url) : url, wnd, width + 'px', height + 'px').center();
+            }
+
+            function RadWindowLoadFunction(url) {
+                window.location = url;
+            }
+        </script>
+
+        <style type="text/css">
+            /* force to set z-index as max value */
+            .WindowLoadingContentTreeRadWindow {
+                z-index: 53001 !important;
+            }
+        </style>
+        <div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree" class="WindowLoadingContentTreeRadWindow" style="display:none;">
+	<!-- 2026.3.812.462 --><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_alerttemplate" style="display:none;">
+        <div class="rwDialogPopup radalert">
+            <div class="rwDialogText" role="alert">
+            {1}
+            </div>
+
+            <div>
+                <a  onclick="$find('{0}').close(true);"
+                class="rwPopupButton" href="javascript:void(0);">
+                    <span class="rwOuterSpan">
+                        <span class="rwInnerSpan">##LOC[OK]##</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        </div><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_prompttemplate" style="display:none;">&nbsp;</div><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_confirmtemplate" style="display:none;">&nbsp;</div><input id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState" type="hidden" />
+</div><div id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState" type="hidden" />
+</div><div id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState" type="hidden" />
+</div>
+    
+<div id="theme" class="subpage"><div id="menubar"><div class="inside-padding"><div class="row" style="visibility: hidden;"><div class="logo"></div><a href="#mMenuCMS" id="mobile-bar" title="Mobile Menu"><span class="fa fa-bars"></span>Menu</a><div tabindex="0" id="ctl00_ContentPlaceHolder1_ctl01_radmenu" class="RadMenu RadMenu_  wrapword telerik_main_menu NoIcon">
+	<ul class="rmRootGroup rmHorizontal">
+		<li class="rmItem rmFirst"><a class="rmLink rmRootLink" href="/home"><span class="rmText">Home</span></a></li><li class="rmItem "><a class="rmLink rmRootLink rmSelected" href="/about_us"><span class="rmText">About Us</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink rmSelected" href="/about_us/governing_board"><span class="rmText">Governing Board</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/about_us/governing_board/board_meeting_information"><span class="rmText">Board Meeting Information</span></a></li><li class="rmItem "><a class="rmLink" href="/about_us/governing_board/policies"><span class="rmText">Board Policies</span></a></li><li class="rmItem "><a class="rmLink" href="/about_us/governing_board/proclamations_resolutions"><span class="rmText">Proclamations &amp; Resolutions</span></a></li><li class="rmItem "><a class="rmLink rmSelected" href="/about_us/governing_board/elections"><span class="rmText">Board Elections &amp; Trustee Area</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/about_us/governing_board/archives"><span class="rmText">Board Archives</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/about_us/our_superintendent"><span class="rmText">Superintendent</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/about_us/our_superintendent/messages_to_our_community"><span class="rmText">Messages to Our Community</span></a></li><li class="rmItem "><a class="rmLink" href="/about_us/our_superintendent/press_releases"><span class="rmText">Press Releases</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/about_us/our_superintendent/contact_the_superintendent"><span class="rmText">Contact the Superintendent</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/about_us/calendars"><span class="rmText">Calendars</span></a></li><li class="rmItem "><a class="rmLink" href="/about_us/lcap_budget_plan"><span class="rmText">LCAP Budget &amp; Plan</span></a></li><li class="rmItem "><a class="rmLink" href="/about_us/financial_information"><span class="rmText">Financial Information</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/about_us/financial_information/financial_reports"><span class="rmText">Financial Reports</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/about_us/financial_information/school_finance_QA"><span class="rmText">School Finance Q&amp;A</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/about_us/parcel_tax_and_bonds"><span class="rmText">Parcel Tax and Bonds</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/about_us/parcel_tax_and_bonds/parcel_tax_measures"><span class="rmText">Parcel Tax Measures</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/about_us/parcel_tax_and_bonds/bonds"><span class="rmText">Bonds</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/about_us/district_policy"><span class="rmText">Nondiscrimination &amp; Bullying Prevention Policies</span></a></li><li class="rmItem "><a class="rmLink" href="/about_us/suicide_prevention"><span class="rmText">Suicide Prevention</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/about_us/privacypolicy"><span class="rmText">Privacy Policy</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/our_departments"><span class="rmText">Our Departments</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/business_services"><span class="rmText">Business Services</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/business_services/developer_fees"><span class="rmText">Developer Fees</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/business_services/staff_directory"><span class="rmText">Team Members</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/curriculum_instruction"><span class="rmText">Curriculum &amp; Instruction</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/curriculum_instruction/curriculum_materials"><span class="rmText">Curriculum Materials</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/curriculum_instruction/assessments"><span class="rmText">Assessments</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/curriculum_instruction/ca_assessment_programs"><span class="rmText">Professional Development</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/curriculum_instruction/state___federal_programs"><span class="rmText">State &amp; Federal Programs</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/curriculum_instruction/state_federal_reports"><span class="rmText">State &amp; Federal Reports</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/curriculum_instruction/grants"><span class="rmText">Grants</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/curriculum_instruction/about_curriculum_instruction"><span class="rmText">Team Members</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/educational_support"><span class="rmText">Educational Support</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/educational_support/special_education"><span class="rmText">Special Education</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/educational_support/504"><span class="rmText">Section 504</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/educational_support/behavioral_health_services"><span class="rmText">Behavioral Health Services</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/educational_support/staff_directory"><span class="rmText">Team Members</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/facilities"><span class="rmText">Facilities</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/facilities/construction"><span class="rmText">Construction</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/facilities/reports"><span class="rmText">Reports</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/facilities/facilities_permits"><span class="rmText">Facilities Permits</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/facilities/team_members"><span class="rmText">Team Members</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/facilities/notice_to_bidders"><span class="rmText">Notice to Bidders</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/food_services"><span class="rmText">Food Services</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/food_services/menus_benefits"><span class="rmText">Menus &amp; Benefits</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/food_services/food_services_policy"><span class="rmText">Food Services Policy</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/food_services/staff_directory"><span class="rmText">Team Members</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources"><span class="rmText">Human Resources</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/human_resources/team_members"><span class="rmText">Team Members</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/substitute_teachers"><span class="rmText">Substitute Teachers</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/salary_schedules"><span class="rmText">Agreements &amp; Salary Schedules</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/labor_negotiations"><span class="rmText">Labor Negotiations</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/2025-26_c_s_e_a_work_calendars"><span class="rmText">2025-26 CSEA Work Calendars</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/2022-23_c_s_e_a_work_calendars"><span class="rmText">2024-25 CSEA Work Calendars</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/employment_opportunities"><span class="rmText">Employment Opportunities</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/emp_covid_info"><span class="rmText">COVID-19 Employee Information &amp; Resources</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/annual_training"><span class="rmText">Annual Required Employee Training</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/annual_notifications"><span class="rmText">Annual Notifications</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/recruitment_and_retention_plan_2022"><span class="rmText">Recruitment and Retention Plan 2022</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/human_resources/c_s_e_a_summer_assistance_program"><span class="rmText">CSEA Summer Assistance Program</span></a></li><li class="rmItem rmLast"><a class="rmLink" target="_blank" href="/our_departments/human_resources/workplace_violence_prevention_plan"><span class="rmText">Workplace Violence Prevention Plan</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/student_services"><span class="rmText">Student Services</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/student_services/attendance"><span class="rmText">Attendance</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/student_services/elementary_school_boundaries"><span class="rmText">Elementary School Boundaries</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/student_services/staff"><span class="rmText">Team Members</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/health_wellness"><span class="rmText">Health &amp; Wellness</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/health_wellness/medical__nursing_health_for_students"><span class="rmText">Medical/Nursing Health For Students</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/health_wellness/behavioral_health_for_students"><span class="rmText">Behavioral Health For Students</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/health_wellness/mental_health_for_students"><span class="rmText">Mental Health For Students</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/health_wellness/for_parents_and_guardians"><span class="rmText">For Parents &amp; Guardians</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/health_wellness/teacher_staff_wellness"><span class="rmText">Teacher &amp; Staff Wellness</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_departments/technology"><span class="rmText">Technology</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_departments/technology/team_members"><span class="rmText">Team Members</span></a></li><li class="rmItem "><a class="rmLink" href="/our_departments/technology/weather_and_air_quality"><span class="rmText">Weather and Air Quality</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/technology/psdatabreach"><span class="rmText">PowerSchool Data Breach</span></a></li>
+					</ul>
+				</div></li><li class="rmItem rmLast"><a class="rmLink" href="/our_departments/transportation"><span class="rmText">Transportation</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst rmLast"><a class="rmLink" href="/our_departments/transportation/team_members"><span class="rmText">Team Members</span></a></li>
+					</ul>
+				</div></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/our_community"><span class="rmText">Our Community</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/our_community/community_resources"><span class="rmText">Community Resources</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/complaints"><span class="rmText">Complaints</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/covid-19_information"><span class="rmText">COVID-19 Information</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_community/covid-19_information/covid_general_info"><span class="rmText">General Information</span></a></li><li class="rmItem rmLast"><a class="rmLink" target="_blank" href="/our_community/covid-19_information/vaccines"><span class="rmText">Vaccines Are Available!</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_community/delac"><span class="rmText">DELAC</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/district_committees"><span class="rmText">District Committees</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/diversity___equity"><span class="rmText">Diversity &amp; Equity</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_community/diversity___equity/proclamation_African_American_Month"><span class="rmText">Proclamations and Resolutions</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/diversity___equity/events_and_activities___archived_"><span class="rmText">Events and Activities</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_community/diversity___equity/activities_archived"><span class="rmText">Activities Archive</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_community/forms"><span class="rmText">Forms</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/immigration"><span class="rmText">Family Resources</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/public_notices"><span class="rmText">Public Notices</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/safety_emergency"><span class="rmText">Safety &amp; Emergency</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst rmLast"><a class="rmLink" href="/our_community/safety_emergency/workplace_violence_prevention_plan"><span class="rmText">Workplace Violence Prevention Plan</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_community/support_our_schools"><span class="rmText">Support Our Schools</span></a></li><li class="rmItem "><a class="rmLink" href="/our_community/sustainability"><span class="rmText">Sustainability</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_community/quick_links"><span class="rmText">Quick Links</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/enrollment"><span class="rmText">Enrollment</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/enrollment/t_k__k_information"><span class="rmText">TK/K Information</span></a></li><li class="rmItem "><a class="rmLink" href="/enrollment/open_enrollment_process"><span class="rmText">Open Enrollment Process</span></a></li><li class="rmItem "><a class="rmLink" href="/enrollment/immersion_program"><span class="rmText">Immersion Program</span></a></li><li class="rmItem "><a class="rmLink" href="/enrollment/faqs"><span class="rmText">Parent FAQs</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/enrollment/inter_district_transfer_requests"><span class="rmText">InterDistrict Transfer Requests</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/our_programs"><span class="rmText">Our Programs</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/our_programs/adult_school"><span class="rmText">Adult School</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/advanced_placement_and_honors_program"><span class="rmText">Advanced Placement and Honors Program</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/advancement_via_individual_determination_avid"><span class="rmText">Advancement Via Individual Determination (AVID)</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/alternative_education"><span class="rmText">Alternative Education</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/career_technical_education"><span class="rmText">Career &amp; Technical Education</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/elementary"><span class="rmText">Elementary</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/health_environment_learning_heal_project"><span class="rmText">Health Environment Agriculture Learning (HEAL) Project</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/homeless_education"><span class="rmText">Homeless Education</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/kindergarten"><span class="rmText">Kindergarten</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/our_programs/kindergarten/kindergarten_registration"><span class="rmText">General Information</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/kindergarten/coastside_ready_schools_team"><span class="rmText">Schools Visitation Information</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_programs/kindergarten/kindergarten_faqs"><span class="rmText">Kindergarten FAQs</span></a></li>
+					</ul>
+				</div></li><li class="rmItem "><a class="rmLink" href="/our_programs/los_listos_pre_school"><span class="rmText">Los Listos State Pre-School</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/categorical"><span class="rmText">Migrant Education Program</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/safe_routes_to_school"><span class="rmText">Safe Routes to School</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/secondary"><span class="rmText">Secondary</span></a></li><li class="rmItem "><a class="rmLink" href="/our_programs/immersion_program"><span class="rmText">Spanish Immersion Program</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/our_programs/transitional_kindergarten"><span class="rmText">Transitional Kindergarten</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/news"><span class="rmText">News</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst rmLast"><a class="rmLink" href="/news/district_news"><span class="rmText">District News</span></a><div class="rmSlide">
+					<ul class="rmVertical rmGroup rmLevel2">
+						<li class="rmItem rmFirst"><a class="rmLink" href="/news/district_news/replacement_parcel_tax___new_bond_measures"><span class="rmText">Replacement Parcel Tax &amp; New Bond Measures</span></a></li><li class="rmItem "><a class="rmLink" href="/news/district_news/messages_to_our_community"><span class="rmText">Messages to Our Community</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/news/district_news/notice_of_meetings_and_hearings"><span class="rmText">Notice of Meetings and Hearings</span></a></li>
+					</ul>
+				</div></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" href="/contact_us"><span class="rmText">Contact Us</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/contact_us/district_office_directory"><span class="rmText">District Directory</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/contact_us/directions__map"><span class="rmText">Directions/Map</span></a></li>
+			</ul>
+		</div></li><li class="rmItem "><a class="rmLink rmRootLink" target="_blank" href="/EmploymentOpportunities"><span class="rmText">Employment Opportunities</span></a></li><li class="rmItem "><a class="rmLink rmRootLink" href="/c_u_s_d_parent_resources"><span class="rmText">CUSD Parent Resources</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/c_u_s_d_parent_resources/hatch_principal_survey_results"><span class="rmText">Hatch Principal Survey Results</span></a></li><li class="rmItem "><a class="rmLink" href="/c_u_s_d_parent_resources/annual_update_f_a_qs"><span class="rmText">Annual Update FAQs</span></a></li><li class="rmItem "><a class="rmLink" href="/c_u_s_d_parent_resources/volunteers"><span class="rmText">Volunteers</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="/c_u_s_d_parent_resources/parent_portal_resources"><span class="rmText">Parent Portal Resources</span></a></li>
+			</ul>
+		</div></li><li class="rmItem rmLast"><a class="rmLink rmRootLink" href="/c_u_s_d_staff_resources"><span class="rmText">CUSD Staff Resources</span></a><div class="rmSlide">
+			<ul class="rmVertical rmGroup rmLevel1">
+				<li class="rmItem rmFirst"><a class="rmLink" href="/c_u_s_d_staff_resources/staff_quick_links"><span class="rmText">Staff Quick Links</span></a></li><li class="rmItem "><a class="rmLink" href="/c_u_s_d_staff_resources/staff_technology_f_a_q"><span class="rmText">Staff Technology FAQ</span></a></li><li class="rmItem "><a class="rmLink" target="_blank" href="/c_u_s_d_staff_resources/staff_help_desk"><span class="rmText">Staff Help Desk</span></a></li><li class="rmItem rmLast"><a class="rmLink" target="_blank" href="/c_u_s_d_staff_resources/staff-self-service"><span class="rmText">Staff Self Service</span></a></li>
+			</ul>
+		</div></li>
+	</ul><input id="ctl00_ContentPlaceHolder1_ctl01_radmenu_ClientState" name="ctl00_ContentPlaceHolder1_ctl01_radmenu_ClientState" type="hidden" />
+</div>
+
+  <!-- PlaceHolder tag prevents inline radmenu.ClientID code below clashing with Utility.EnsureScriptManager(this); -->
+  <script>
+
+    $(document).ready(function () {
+      giveAllMenuLinksAUniqueIdentifier();
+      $(".rmLink").on("keydown", setSpacebarToOpenMenus);
+    });
+
+    $(window).on("load", function () {
+      var menu = $find("ctl00_ContentPlaceHolder1_ctl01_radmenu");
+      if (menu) {
+        var menuElement = menu.get_element();
+        var attrVal = menuElement.getAttribute("aria-activedescendant");
+        if (!(attrVal && document.getElementById(attrVal))) {
+          menuElement.removeAttribute("aria-activedescendant");
+        }
+      }
+    })
+
+    function giveAllMenuLinksAUniqueIdentifier() {
+      //Give all menu items a unique attribute value so that I can identify them when spacebar is clicked. Same 'menunumber' attribute is set in .aspx code on menu items.
+      var index = 0;
+      $(".telerik_main_menu li.rmItem a.rmLink").each(function (index) {
+        $(this).attr("menunumber", index);
+      });
+    }
+
+    function setSpacebarToOpenMenus(e) {
+      //Open submenus on spacebar press. 
+      var theKey = e.which;
+      if (theKey == 32) { // 32 is keycode for spacebar. 
+        var menuNumber = $(this).attr("menunumber");
+        var menu = $find("ctl00_ContentPlaceHolder1_ctl01_radmenu");
+        var menuItem = menu.findItemByAttribute("menunumber", menuNumber);
+        var submenuItems = menuItem.get_items();
+        if (submenuItems.get_count() > 0) {
+          if (menuItem.get_isOpen() == false) {
+            menuItem.open();
+            e.preventDefault();
+          };
+        };
+      };
+    };
+
+    function ClickItem(menu, args) {
+      //Event set in OnClientItemClicking="ClickItem";
+      //When user clicks (presses Enter key) a menu item, if submenu is not open, then open it; otherwise navigate to the item's link. 
+      var item = args.get_item();
+      var submenuItems = item.get_items();
+      if (submenuItems.get_count() > 0) {
+        //If submenu is closed, then open it; otherwise click the menu item link. 
+        if (item.get_isOpen() == false) {
+          args.set_cancel(true); //Cancel the default click action so that it doesn't trigger the menu item's navigation link.
+          item.open();
+        }
+        else {
+          if (typeof item.redirectToLink == 'undefined') {
+            item.redirectToLink = true;
+            item.click();
+          } else {
+            delete item.redirectToLink;
+          }
+        }
+      }
+    }
+
+  </script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.mm-subopen').each(function (i, item) {
+            setExpandCollapse();
+
+            $(item).click(function () {
+                setExpandCollapse();
+            });
+
+            function setExpandCollapse() {
+                var parent = $(item).parent();
+                var expandCollapse = 'Expand menu item';
+                if (parent !== undefined && parent.length > 0) {
+                    var selected = parent[0].classList.contains("mm-opened");
+                    if (selected !== undefined && selected === true) {
+                        expandCollapse = 'Collapse menu item';;
+                    }
+                    else {
+                        expandCollapse = 'Expand menu item';
+                    }
+                }
+
+                $(item).html("<span class=\"offScreen\">" + expandCollapse + " " + $(item).next().text() + "</span>");
+            }
+        });
+    });
+</script>
+<nav id="mMenuCMS" class="mm-menu, cms-responsive-menu"><ul><li><a href="/home">Home</a></li><li class="mm-selected, mm-opened"><a href="/about_us">About Us</a><ul><li class="mm-opened"><a href="/about_us/governing_board">Governing Board</a><ul><li><a href="/about_us/governing_board/board_meeting_information">Board Meeting Information</a></li><li><a href="/about_us/governing_board/policies">Board Policies</a></li><li><a href="/about_us/governing_board/proclamations_resolutions">Proclamations &amp; Resolutions</a></li><li class="mm-selected"><a href="#">Board Elections &amp; Trustee Area</a></li><li><a href="/about_us/governing_board/archives">Board Archives</a></li></ul></li><li><a href="/about_us/our_superintendent">Superintendent</a><ul><li><a href="/about_us/our_superintendent/messages_to_our_community">Messages to Our Community</a></li><li><a href="/about_us/our_superintendent/press_releases">Press Releases</a></li><li><a href="/about_us/our_superintendent/contact_the_superintendent">Contact the Superintendent</a></li></ul></li><li><a href="/about_us/calendars">Calendars</a></li><li><a href="/about_us/lcap_budget_plan">LCAP Budget &amp; Plan</a></li><li><a href="/about_us/financial_information">Financial Information</a><ul><li><a href="/about_us/financial_information/financial_reports">Financial Reports</a></li><li><a href="/about_us/financial_information/school_finance_QA">School Finance Q&amp;A</a></li></ul></li><li><a href="/about_us/parcel_tax_and_bonds">Parcel Tax and Bonds</a><ul><li><a href="/about_us/parcel_tax_and_bonds/parcel_tax_measures">Parcel Tax Measures</a></li><li><a href="/about_us/parcel_tax_and_bonds/bonds">Bonds</a></li></ul></li><li><a href="/about_us/district_policy">Nondiscrimination &amp; Bullying Prevention Policies</a></li><li><a href="/about_us/suicide_prevention">Suicide Prevention</a></li><li><a href="/about_us/privacypolicy">Privacy Policy</a></li></ul></li><li><a href="/our_departments">Our Departments</a><ul><li><a href="/our_departments/business_services">Business Services</a><ul><li><a href="/our_departments/business_services/developer_fees">Developer Fees</a></li><li><a href="/our_departments/business_services/staff_directory">Team Members</a></li></ul></li><li><a href="/our_departments/curriculum_instruction">Curriculum &amp; Instruction</a><ul><li><a href="/our_departments/curriculum_instruction/curriculum_materials">Curriculum Materials</a></li><li><a href="/our_departments/curriculum_instruction/assessments">Assessments</a></li><li><a href="/our_departments/curriculum_instruction/ca_assessment_programs">Professional Development</a></li><li><a href="/our_departments/curriculum_instruction/state___federal_programs">State &amp; Federal Programs</a></li><li><a href="/our_departments/curriculum_instruction/state_federal_reports">State &amp; Federal Reports</a></li><li><a href="/our_departments/curriculum_instruction/grants">Grants</a></li><li><a href="/our_departments/curriculum_instruction/about_curriculum_instruction">Team Members</a></li></ul></li><li><a href="/our_departments/educational_support">Educational Support</a><ul><li><a href="/our_departments/educational_support/special_education">Special Education</a></li><li><a href="/our_departments/educational_support/504">Section 504</a></li><li><a href="/our_departments/educational_support/behavioral_health_services">Behavioral Health Services</a></li><li><a href="/our_departments/educational_support/staff_directory">Team Members</a></li></ul></li><li><a href="/our_departments/facilities">Facilities</a><ul><li><a href="/our_departments/facilities/construction">Construction</a></li><li><a href="/our_departments/facilities/reports">Reports</a></li><li><a href="/our_departments/facilities/facilities_permits">Facilities Permits</a></li><li><a href="/our_departments/facilities/team_members">Team Members</a></li><li><a href="/our_departments/facilities/notice_to_bidders">Notice to Bidders</a></li></ul></li><li><a href="/our_departments/food_services">Food Services</a><ul><li><a href="/our_departments/food_services/menus_benefits">Menus &amp; Benefits</a></li><li><a href="/our_departments/food_services/food_services_policy">Food Services Policy</a></li><li><a href="/our_departments/food_services/staff_directory">Team Members</a></li></ul></li><li><a href="/our_departments/human_resources">Human Resources</a><ul><li><a href="/our_departments/human_resources/team_members">Team Members</a></li><li><a href="/our_departments/human_resources/substitute_teachers">Substitute Teachers</a></li><li><a href="/our_departments/human_resources/salary_schedules">Agreements &amp; Salary Schedules</a></li><li><a href="/our_departments/human_resources/labor_negotiations">Labor Negotiations</a></li><li><a href="/our_departments/human_resources/2025-26_c_s_e_a_work_calendars">2025-26 CSEA Work Calendars</a></li><li><a href="/our_departments/human_resources/2022-23_c_s_e_a_work_calendars">2024-25 CSEA Work Calendars</a></li><li><a href="/our_departments/human_resources/employment_opportunities">Employment Opportunities</a></li><li><a href="/our_departments/human_resources/emp_covid_info">COVID-19 Employee Information &amp; Resources</a></li><li><a href="/our_departments/human_resources/annual_training">Annual Required Employee Training</a></li><li><a href="/our_departments/human_resources/annual_notifications">Annual Notifications</a></li><li><a href="/our_departments/human_resources/recruitment_and_retention_plan_2022">Recruitment and Retention Plan 2022</a></li><li><a href="/our_departments/human_resources/c_s_e_a_summer_assistance_program">CSEA Summer Assistance Program</a></li><li><a href="/our_departments/human_resources/workplace_violence_prevention_plan" target="_blank">Workplace Violence Prevention Plan</a></li></ul></li><li><a href="/our_departments/student_services">Student Services</a><ul><li><a href="/our_departments/student_services/attendance">Attendance</a></li><li><a href="/our_departments/student_services/elementary_school_boundaries">Elementary School Boundaries</a></li><li><a href="/our_departments/student_services/staff">Team Members</a></li></ul></li><li><a href="/our_departments/health_wellness">Health &amp; Wellness</a><ul><li><a href="/our_departments/health_wellness/medical__nursing_health_for_students">Medical/Nursing Health For Students</a></li><li><a href="/our_departments/health_wellness/behavioral_health_for_students">Behavioral Health For Students</a></li><li><a href="/our_departments/health_wellness/mental_health_for_students">Mental Health For Students</a></li><li><a href="/our_departments/health_wellness/for_parents_and_guardians">For Parents &amp; Guardians</a></li><li><a href="/our_departments/health_wellness/teacher_staff_wellness">Teacher &amp; Staff Wellness</a></li></ul></li><li><a href="/our_departments/technology">Technology</a><ul><li><a href="/our_departments/technology/team_members">Team Members</a></li><li><a href="/our_departments/technology/weather_and_air_quality">Weather and Air Quality</a></li><li><a href="/our_departments/technology/psdatabreach">PowerSchool Data Breach</a></li></ul></li><li><a href="/our_departments/transportation">Transportation</a><ul><li><a href="/our_departments/transportation/team_members">Team Members</a></li></ul></li></ul></li><li><a href="/our_community">Our Community</a><ul><li><a href="/our_community/community_resources">Community Resources</a></li><li><a href="/our_community/complaints">Complaints</a></li><li><a href="/our_community/covid-19_information">COVID-19 Information</a><ul><li><a href="/our_community/covid-19_information/covid_general_info">General Information</a></li><li><a href="/our_community/covid-19_information/vaccines" target="_blank">Vaccines Are Available!</a></li></ul></li><li><a href="/our_community/delac">DELAC</a></li><li><a href="/our_community/district_committees">District Committees</a></li><li><a href="/our_community/diversity___equity">Diversity &amp; Equity</a><ul><li><a href="/our_community/diversity___equity/proclamation_African_American_Month">Proclamations and Resolutions</a></li><li><a href="/our_community/diversity___equity/events_and_activities___archived_">Events and Activities</a></li><li><a href="/our_community/diversity___equity/activities_archived">Activities Archive</a></li></ul></li><li><a href="/our_community/forms">Forms</a></li><li><a href="/our_community/immigration">Family Resources</a></li><li><a href="/our_community/public_notices">Public Notices</a></li><li><a href="/our_community/safety_emergency">Safety &amp; Emergency</a><ul><li><a href="/our_community/safety_emergency/workplace_violence_prevention_plan">Workplace Violence Prevention Plan</a></li></ul></li><li><a href="/our_community/support_our_schools">Support Our Schools</a></li><li><a href="/our_community/sustainability">Sustainability</a></li><li><a href="/our_community/quick_links">Quick Links</a></li></ul></li><li><a href="/enrollment">Enrollment</a><ul><li><a href="/enrollment/t_k__k_information">TK/K Information</a></li><li><a href="/enrollment/open_enrollment_process">Open Enrollment Process</a></li><li><a href="/enrollment/immersion_program">Immersion Program</a></li><li><a href="/enrollment/faqs">Parent FAQs</a></li><li><a href="/enrollment/inter_district_transfer_requests">InterDistrict Transfer Requests</a></li></ul></li><li><a href="/our_programs">Our Programs</a><ul><li><a href="/our_programs/adult_school">Adult School</a></li><li><a href="/our_programs/advanced_placement_and_honors_program">Advanced Placement and Honors Program</a></li><li><a href="/our_programs/advancement_via_individual_determination_avid">Advancement Via Individual Determination (AVID)</a></li><li><a href="/our_programs/alternative_education">Alternative Education</a></li><li><a href="/our_programs/career_technical_education">Career &amp; Technical Education</a></li><li><a href="/our_programs/elementary">Elementary</a></li><li><a href="/our_programs/health_environment_learning_heal_project">Health Environment Agriculture Learning (HEAL) Project</a></li><li><a href="/our_programs/homeless_education">Homeless Education</a></li><li><a href="/our_programs/kindergarten">Kindergarten</a><ul><li><a href="/our_programs/kindergarten/kindergarten_registration">General Information</a></li><li><a href="/our_programs/kindergarten/coastside_ready_schools_team">Schools Visitation Information</a></li><li><a href="/our_programs/kindergarten/kindergarten_faqs">Kindergarten FAQs</a></li></ul></li><li><a href="/our_programs/los_listos_pre_school">Los Listos State Pre-School</a></li><li><a href="/our_programs/categorical">Migrant Education Program</a></li><li><a href="/our_programs/safe_routes_to_school">Safe Routes to School</a></li><li><a href="/our_programs/secondary">Secondary</a></li><li><a href="/our_programs/immersion_program">Spanish Immersion Program</a></li><li><a href="/our_programs/transitional_kindergarten">Transitional Kindergarten</a></li></ul></li><li><a href="/news">News</a><ul><li><a href="/news/district_news">District News</a><ul><li><a href="/news/district_news/replacement_parcel_tax___new_bond_measures">Replacement Parcel Tax &amp; New Bond Measures</a></li><li><a href="/news/district_news/messages_to_our_community">Messages to Our Community</a></li><li><a href="/news/district_news/notice_of_meetings_and_hearings">Notice of Meetings and Hearings</a></li></ul></li></ul></li><li><a href="/contact_us">Contact Us</a><ul><li><a href="/contact_us/district_office_directory">District Directory</a></li><li><a href="/contact_us/directions__map">Directions/Map</a></li></ul></li><li><a href="/EmploymentOpportunities" target="_blank">Employment Opportunities</a></li><li><a href="/c_u_s_d_parent_resources">CUSD Parent Resources</a><ul><li><a href="/c_u_s_d_parent_resources/hatch_principal_survey_results">Hatch Principal Survey Results</a></li><li><a href="/c_u_s_d_parent_resources/annual_update_f_a_qs">Annual Update FAQs</a></li><li><a href="/c_u_s_d_parent_resources/volunteers">Volunteers</a></li><li><a href="/c_u_s_d_parent_resources/parent_portal_resources">Parent Portal Resources</a></li></ul></li><li><a href="/c_u_s_d_staff_resources">CUSD Staff Resources</a><ul><li><a href="/c_u_s_d_staff_resources/staff_quick_links">Staff Quick Links</a></li><li><a href="/c_u_s_d_staff_resources/staff_technology_f_a_q">Staff Technology FAQ</a></li><li><a href="/c_u_s_d_staff_resources/staff_help_desk" target="_blank">Staff Help Desk</a></li><li><a href="/c_u_s_d_staff_resources/staff-self-service" target="_blank">Staff Self Service</a></li></ul></li></ul></nav><div class="clear"></div></div></div></div><div id="page"><div class="inside-padding"><div class="sideBar"><div class="inside-padding"><div class="ptl_col_1"><div class="ptl_portlet_vertical"><div id="ctl00_ContentPlaceHolder1_ctl05_divView">
+	<div class="skip-nav"><a href="#ctl00_ContentPlaceHolder1_ctl05_linkLastNav">Skip Sidebar Navigation</a></div>
+	<style>
+		.skip-nav a {
+			position: absolute;
+			left: -10000px;
+			top: auto;
+			overflow: hidden;
+		}
+
+		.skip-nav a:focus {
+			padding: 0.5em 0.5em 0.4em;
+			font-size: 14px;
+			margin: 0.6em 0;
+			border-radius: 5px;
+			font-weight: 600;
+			color: #654106;
+			background: #ffe1b1;
+			position: fixed;
+			z-index: 9000;
+			left: 10px;
+			top: auto;
+			position:relative;
+		}
+
+		.skip-last-nav {
+			visibility:hidden;
+		}
+	</style>
+	<?xml version="1.0" encoding="utf-16"?><div id="inside-nav"><script>
+                    $(document).ready(function() {
+
+                    if( $('.sitenavl1').length == 0 ){
+                    $('.nav-toggle span').hide();
+                    }
+
+                    $('.nav-toggle span').click(function () {
+                    $(this).toggleClass('open');
+                    $('.sidenav-slide').slideToggle();
+                    });
+                    });
+                </script><div class="current-head"><!--//--><div class="nav-toggle"><a class="topPage" HREF="/about_us/governing_board/elections/" title="Board Elections &amp; Trustee Area">Board Elections &amp; Trustee Area</a><span class="fa fa-plus"><!----></span><div class="clear fix"><span>c</span></div></div></div><div class="sidenav-slide"><!--//--><div class="sitenavl0 navWrp&#xA;                        "><a class="navLink" HREF="/home/" title="Home">Home</a></div><div class="sitenavl0 currentparent navWrp&#xA;                        "><a class="navLink" HREF="/about_us/governing_board/" title="Governing Board">Governing Board</a></div><div class="sitenavl1 currentpage navWrp&#xA;                        "><a class="navLink" HREF="/about_us/governing_board/elections/" title="Board Elections &amp; Trustee Area">Board Elections &amp; Trustee Area</a></div></div></div>
+	<a href="portlets/#" id="ctl00_ContentPlaceHolder1_ctl05_linkLastNav" class="skip-last-nav">Last item for navigation</a>
+	
+</div>
+    
+
+
+</div></div></div></div><div class="mainContent"><div class="inside-padding"><h2 class="pageTitle">Board Elections &amp; Trustee Area</h2><div id="breadcrumbs"><nav aria-label="Breadcrumb" class="portal-breadcrumb"><div><a href="/">Cabrillo Unified School District</a>&nbsp;&raquo;&nbsp;<a href="/about_us/">About Us</a>&nbsp;&raquo;&nbsp;<a href="/about_us/governing_board/">Governing Board</a>&nbsp;&raquo;&nbsp;<span aria-label="Current Page" id="spanBreadcrumbPageId">Board Elections &amp; Trustee Area</span></div></nav></div><div class="pageContent">
+
+<div class="reactComponent unifiedPublishingAlertComponent" data-portlet-instance-id="0"></div>
+<div class="ptl_page"><div class="ptl_col_1"><div class="ptl_portlet_horizontal" style="width:25%;"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl11_divContent"><h2>Terms Of Office</h2>
+<span style="font-size: 16px;">The Governing Board consists of five members whose terms shall be staggered so that, as nearly as practicable, one-half of the members shall be elected in each year in which the Board's elections are regularly held. (Education Code 35012).<br>
+<br>
+The term of office for members elected in regular elections shall be four years, commencing on the second Friday in December next succeeding their election. (Education Code 5017)<br>
+<br>
+Board members whose terms have expired shall continue to discharge the duties of the office until their successors have qualified by taking the oath of office. (Education Code 5017; Government Code 1302, 1360)<br>
+<br>
+If a regularly scheduled Board election date is changed due to consolidation with a statewide or municipal general election, the term of incumbent Board members shall be extended to align with the next applicable election. (Elections Code 10404.5)<br>
+<br>
+<strong style="box-sizing: border-box; font-weight: bold; color: rgb(69, 69, 69); font-family: Lato, sans-serif;"></strong><strong>For more information on the elections process,&nbsp;please visit&nbsp;<a href="https://www.smcacre.org/candidates-campaigns" title="Link">https://www.smcacre.org/candidates-campaigns</a>.</strong><br>
+</span></div>
+</div><div class="ptl_portlet_horizontal" style="width:25%;"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl14_divContent"><h2>District Elections &amp; Trustee Area Maps</h2>
+<p><span style="font-size: 16px;">Board members of the Cabrillo Unified School District were previously elected “at-large,” meaning that candidates were required to reside within the attendance areas of the Cabrillo Unified School District and the voters of the entire district elected the candidates to the Board. A “by-trustee area” election, wherein one candidate residing in each trustee area is elected by only the registered voters in that particular trustee area, ensures compliance with the California Voting Rights Act (CVRA). The Board moved to a “by-trustee area” electoral system in 2019, which began with the 2020 Board election.&nbsp; Please see the relevant information below.</span></p>
+<h3><strong style="">
+<span style="color: rgb(0, 32, 96);">What District Area do I belong to?</span></strong></h3>
+<span style="font-size: 16px;">
+CUSD residents can visit <a href="https://www.google.com/maps/d/u/0/viewer?mid=1MEqmuGwyB68idasUQXJmw_QGjE2TZAE&amp;ll=37.440185553822744%2C-122.40325949999999&amp;z=11" title="Link to interactive By-Trustee Area Map">this map</a> and type in their address to learn which Trustee Area represents them on the CUSD Governing Board.</span>
+<h3><strong style=""><span style="color: rgb(0, 32, 96);">Who is my District Area Representative?</span></strong></h3>
+<span style="font-size: 16px;"><strong>Trustee Area A:&nbsp; </strong>Carmen Daniel&nbsp;(Term expires: 2026)<br>
+<strong>Trustee Area B:&nbsp;</strong>&nbsp;Breanna Lafontaine&nbsp;<span style="letter-spacing: 0.3px;">(Term expires: 2028)</span><br>
+<strong>Trustee Area C:&nbsp;</strong> Lizet Cortes&nbsp;<span style="letter-spacing: 0.3px;">(Term expires: 2026)</span><br>
+<strong>Trustee Area D:&nbsp; </strong>Peter Cerneka (Term expires: 2028)<br>
+<strong style="letter-spacing: 0.3px;">Trustee Area E:&nbsp; </strong><span style="letter-spacing: 0.3px;">Mary Beth Alexander&nbsp;</span><span style="letter-spacing: 0.3px;">(Term expires: 2026)</span></span>
+<p>
+</p></div>
+</div><div class="ptl_portlet_horizontal" style="width:25%;"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl17_divContent"><h3>Timelines</h3></div>
+</div><div class="ptl_portlet_horizontal" style="width:25%;"><div class="ptl_top_portlet" style="display:none;"></div>
+<style type="text/css">
+    .disabledIco {
+        color: lightgrey;
+    }
+</style>
+<div id="tabPortlet_539233" data-clientId="ctl00_ContentPlaceHolder1_ctl20" class="PO-wrapper PO-tabAccordion">
+    
+    
+    <div id="ctl00_ContentPlaceHolder1_ctl20_upPanel">
+	
+            <div id="ctl00_ContentPlaceHolder1_ctl20_divTabs" role="region" style="width:100%;" class="TA-accordionMode" portlet="accordion" aria-label="Accordion Portlet">
+                
+            </div>
+        
+</div>
+    
+    <label for="ctl00_ContentPlaceHolder1_ctl20_divTabEdit" aria-hidden="true"  Style="display: none">tab visible</label>
+    <input name="ctl00$ContentPlaceHolder1$ctl20$divTabEdit" type="text" value="True" id="ctl00_ContentPlaceHolder1_ctl20_divTabEdit" class="divTabEdit" style="display: none" />
+    
+</div>
+
+<script type="text/javascript">
+    
+	$(document).ready(function () {
+		var logConsole = function (str) {
+			console.log(str);
+		};
+		if ($('#tabPortlet_539233 .divTabEdit').val() == "True") {
+			var isModern = ('True');
+			if (isModern.toLowerCase() == "true") {
+				var tabObj = $('#tabPortlet_539233 ');
+				var tabM = $('#ctl00_ContentPlaceHolder1_ctl20_divTabs').attr('portlet') == 'tab';
+
+				function activate() {
+					$(tabObj).scrollingTabs({
+						tabs: [{"paneId":"ctl00_ContentPlaceHolder1_ctl20_divTabs_0","title":"2022 By-Trustee Area Elections Redistricting","content":"<p><span style=\"font-size: 24px;\"><strong><span style=\"color: rgb(0, 32, 96);\">By-Trustee Area Elections Redistricting</span></strong></span></p>\n<p>Based on 2020 Census data, school districts with trustee area systems were required to review and, if necessary, adjust their trustee area map by March 1, 2022, to ensure population balance. This applied to CUSD, which transitioned to a by-trustee area election system in 2019 to ensure compliance with the California Voting Rights Act or \"CVRA\". Please refer to the timeline below:</p>\n<p><strong>April 4, 2022</strong> &ndash; The San Mateo County Committee on School Organization reviewed <a href=\"https://drive.google.com/file/d/1pxe2tEfXsybXsNLpYC0x5T6wwiloyAPV/view?usp=sharing\" title=\"Link\">CUSD's adopted Trustee Area Map</a>.</p>\n<p><strong>February 10, 2022 </strong>- The Governing Board received information from Tom Williams of Enrollment Projection Consultants on the status of and recommendations for redistricting, held a <a href=\"https://app.eduportal.com/documents/view/822275\" title=\"Link\">Public Hearing</a> to receive and consider input regarding the composition of trustee area maps to be used in the adjustment of trustee area boundaries, and approved the proposed&nbsp;<a href=\"https://app.eduportal.com/documents/view/822272\" title=\"Link\">Trustee Area Map Alternative 6</a>.</p>\n<p><strong>January 20, 2022&nbsp;</strong>&ndash;&nbsp;&nbsp;Demographer Thomas Williams of Enrollment Projection Consultants presented the CUSD Governing Board <a href=\"https://app.eduportal.com/documents/view/820282\" title=\"Link\">six potential alternative maps</a>.</p>\n<p><strong>December 14, 2021&nbsp;</strong>&ndash;&nbsp; The Governing Board received information on the impact of the 2020 Census Data on Trustee Area Map Population Balance. Demographer Thomas Williams of Enrollment Projection Consultants presented <a href=\"https://app.eduportal.com/documents/view/817344\" title=\"Link\">preliminary findings and four alternative maps</a> with adjusted Trustee Area boundary lines to balance population across each area to within the permissible 10% variance.</p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl20_divTabs_1","title":"2019 Transition to By-Trustee Area Election System","content":"<p><strong><span style=\"font-size: 24px; color: rgb(0, 32, 96);\">Transition to By-Trustee Area Election System<br>\n</span></strong><br>\n<strong>June 3, 2019</strong> &ndash; The San Mateo County Committee on School Organization took action to approve the proposal from the Cabrillo Unified School District Board to establish trustee areas within the Cabrillo Unified School District and to transition to a by-trustee area voting process.<br>\n<br>\n<strong>April 8, 2019</strong> &ndash; The Governing Board adopted the Resolution 02-19 establishing and implementing the Trustee Area District Election for Board Members, and authorized the District to transmit this resolution and the final trustee area plan adopted (<a href=\"https://drive.google.com/file/d/1KJfXnnOCQ0FfHMXOFyKkjZHE5mG6i_07/view\" title=\"Link\">the Orange map</a>) to the San Mateo County Committee to complete the District's transition to a by-trustee area election system for the 2020 Governing Board elections.<br>\n<br>\n<strong>March 26, 2019 </strong>&ndash; A fourth draft map, (<a href=\"https://drive.google.com/file/d/1KJfXnnOCQ0FfHMXOFyKkjZHE5mG6i_07/view\" title=\"Link\">the Orange map</a>) was posted online and available at the District Office.<br>\n<br>\n<strong>March 14, 2019</strong> &ndash; The Board held its fourth open hearing to solicit and provide input regarding the composition of the potential trustee area draft maps, including reviewing a third draft map, (<a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1g_TmoGRWHMOdnTSodNNprz3pWAwxLmWo/view?usp=sharing\" title=\"Link\">the Purple map</a>) prepared by the demographer.<br>\n<br>\n<strong>February 13, 2019</strong> &ndash;&nbsp; The Board held its third open hearing to solicit and provide input regarding the composition of the potential trustee area draft maps, including reviewing two draft maps, (the <a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1dUoyFD1sBEHbEZ2un8RDzS2rvhzmQyYm/view?usp=sharing\" title=\"Link\">Green</a> and <a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1hyur-T_qMIhbsBea_K65qOzstcHtABzw/view?usp=sharing\" title=\"Link\">Yellow</a> maps) prepared by the demographer.<br>\n<br>\n<strong>November 14, 2018</strong> &ndash; The Board held its second open hearing to solicit and provide input regarding the composition of the potential trustee area draft maps.<br>\n<br>\n<strong>November 5, 2018 </strong>&ndash;&nbsp; The Governing Board held its first open hearing to solicit and provide input regarding the composition of the potential trustee area draft maps.<br>\n<br>\n<strong>October 11, 2018</strong> &ndash; The Board voted to approve the proposal to initiate the process for the District to transition from an &ldquo;At-Large&rdquo; election system to a &ldquo;By-Trustee Area&rdquo; election system commencing with the 2020 Board elections.<br>\n<br>\n<strong><span style=\"font-size: 24px; color: rgb(0, 32, 96);\">Drafts</span></strong><br>\n<br>\nProposed Map <a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1dUoyFD1sBEHbEZ2un8RDzS2rvhzmQyYm/view?usp=sharing\" title=\"Link\">Green</a><br>\nProposed Map <a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1hyur-T_qMIhbsBea_K65qOzstcHtABzw/view?usp=sharing\" title=\"Link\">Yellow</a><br>\nProposed Map <a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1g_TmoGRWHMOdnTSodNNprz3pWAwxLmWo/view?usp=sharing\" title=\"Link\">Purple</a><br>\nProposed Map <a href=\"https://drive.google.com/a/cabrillo.k12.ca.us/file/d/1KJfXnnOCQ0FfHMXOFyKkjZHE5mG6i_07/view?usp=sharing\" title=\"Link\">Orange</a><br>\nInteractive Review <a href=\"https://ndcresearch.maps.arcgis.com/apps/View/index.html?appid=f41e857c7f6444cbb1f5e9f0a1197293\" title=\"Link\">Map</a></p>","active":false,"disabled":false}],// required,
+						propPaneId: 'paneId', // optional - pass in default value for demo purposes
+						propTitle: 'title', // optional - pass in default value for demo purposes
+						propActive: 'active', // optional - pass in default value for demo purposes
+						propDisabled: 'disabled', // optional - pass in default value for demo purposes
+						propContent: 'content', // optional - pass in default value for demo purposes
+						tabMode: tabM,
+						scrollToTabEdge: false, // optional - pass in default value for demo purposes
+						disableScrollArrowsOnFullyScrolled: false // optional- pass in default value for demo purposes
+					}).on('ready.scrtabs', function () {
+						$('#' + this.id + ' .tab-pane').attr('tabindex', 0);
+					});
+				};
+
+				activate();
+
+            }
+        }
+	});
+
+    function OnClientLoad(editor) {
+        editor.attachEventHandler('onkeydown', function () { detectChanges(); });  
+    }
+
+    function OnCommandExecuted(editor) {
+        detectChanges();
+    }
+
+    function OnTabNameChanged() {
+        detectChanges();
+    }
+
+    function detectChanges() {
+        var unsavedChanges = $('.unsaved-changes-row input[type=hidden]');
+        if (unsavedChanges.length > 0) {
+            unsavedChanges.val('True');
+        }
+    }
+</script>
+</div></div><div class="ptl_col_1_3"></div><div class="ptl_col_1_3"></div><div class="ptl_col_1_3"></div></div></div></div></div><div class="clear"></div></div></div></div></div><div id="footer"><div class="inside-padding"><div class="footer-left"><div class="inside"><div class="logo"><img title='Cabrillo Unified School District' alt='Logo for Cabrillo Unified School District' src='https://cdnsm5-ss10.sharpschool.com/UserFiles/Servers/Server_18664976/Image/Copy of cabrillo-logo-100px-circle-high-res.png' /></div><div class="schoolName">Cabrillo<span>Unified School District</span></div></div></div><div class="footer-center"><div style="display: flex; align-items: center; gap: 20px; text-align: left; margin-bottom: 10px;"><a href="https://www.cabrillo.k12.ca.us/about_us/privacypolicy" style="font-size: 14px; color: #000; text-decoration: underline;">
+    Privacy Policy
+  </a><a href="https://www.cabrillo.k12.ca.us/about_us/accessibility" style="font-size: 14px; color: #000; text-decoration: underline;">
+    Accessibility
+  </a></div><div>The Cabrillo Unified School District prohibits discrimination, harassment, intimidation, or bullying based on actual or perceived characteristics of race or ethnicity, color, ancestry, nationality, national origin, immigration status, ethnic group identification, age, religion, marital status, pregnancy, parental status, physical or mental disability, medical condition, sex, sexual orientation, gender, gender identity, gender expression, genetic information, or based on the person's association with a person or group with one or more of these actual or perceived characteristics. For questions or complaints regarding this policy, please contact Bianca Forrester, Director of Personnel and Pupil Services, Equity/ Title IX Compliance Officer at (650) 712-7100.
+</div></div><div class="footer-right"><ul class="socialMedia"><li class="facebook"></li><li class="twitter"></li><li class="youtube"></li><li class="instagram"></li></ul><div class="address">498 Kelly Ave, Half Moon Bay, CA  94019</div><div class="phone">Phone 650-712-7100<span class="fax-n">| Fax <span class="footer-fax">650-638-8447</span></span></div></div></div></div><div class="credits"><div class="inside-padding"><span id="ctl00_lblCompany" class="label_skin_corporation">Website by <a href="http://www.schoolmessenger.com/school-website-design/" target="_blank">SchoolMessenger Presence</a>.  &copy; 2026 SchoolMessenger Corporation. All rights reserved.</span></div></div></div><div class="logoContent" style="display: none;"><a href="/" title=""><div class="logo"><img title='Cabrillo Unified School District' alt='Logo for Cabrillo Unified School District' src='https://cdnsm5-ss10.sharpschool.com/UserFiles/Servers/Server_18664976/Image/Copy of cabrillo-logo-100px-circle-high-res.png' /></div><h1 class="schoolName">Cabrillo<span>Unified School District</span></h1></a></div><div class="motto" style="display: none;"><div class="inside"><div><span>A place for students to dream and achieve</span></div></div></div><link type="text/css" rel="stylesheet" media="screen" href="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/skeletons/sharpschool-skeleton-2016.css" /><link type="text/css" rel="stylesheet" media="screen" href="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/scripts/animate.css" /><script src="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/scripts/breadcrumb-slash.js" type="text/javascript"></script><script src="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/scripts/hide-fax-2016.js" type="text/javascript"></script><script src="https://cdnsm4-ss10.sharpschool.com/common/resources/DesignPortfolio/SiteThemes/CommonLib/scripts/fittext.js" type="text/javascript"></script><script>
+$(document).ready(function(){
+if($('#theme').hasClass('homepage')) {
+  $('.logoContent').appendTo('#menubar .logo').attr('style','');
+  $('.motto').appendTo('#menubar').attr('style','').addClass('animated zoomIn');
+  $('#menubar .row').attr('style','').addClass('animated slideInDown');
+}
+if($('#theme').hasClass('subpage')) {
+  $('.logoContent').appendTo('#menubar .logo').attr('style','');
+  $('#menubar .row').attr('style','').addClass('animated slideInDown');
+}
+
+  $(".motto span").fitText(1.4, { minFontSize: '17px', maxFontSize: '36px' });
+
+});
+</script><script>
+  $('.socialMedia .youtube a').addClass('fa fa-youtube-play');
+  $('.socialMedia .facebook a').addClass('fa fa-facebook');
+  $('.socialMedia .twitter a').addClass('fa fa-twitter');
+  $('.socialMedia .email a').text('').addClass('fa fa-envelope');
+
+$(document).ready(function(){
+	$(window).on("resize", function () {
+		var windowHeight = $(window).height();
+		
+		$('.homepage #menubar').css({
+			height : (windowHeight - 300) + 'px'
+		});
+		
+	}).resize();
+});
+$(window).scroll(function() {
+    var wHeight = $(window).height();
+    var post = ($(window).scrollTop() / 2 );
+    $('.homepage #menubar').css('background-position', 'center ' + post + 'px');
+});
+</script><script type="text/javascript">
+    window._monsido = window._monsido || {
+        token: "e2X8tqsbnLqDAhYT1QAZsA",
+        statistics: {
+            enabled: true,
+            documentTracking: {
+                enabled: true,
+                documentCls: "monsido_download",
+                documentIgnoreCls: "monsido_ignore_download",
+                documentExt: [],
+            },
+        },
+        pageCorrect: {
+            enabled: true,
+        },
+        pageAssistV2: {
+            enabled: true,
+            theme: "light",
+            mainColor: "#783CE2",
+            textColor: "#ffffff",
+            linkColor: "#783CE2",
+            buttonHoverColor: "#783CE2",
+            mainDarkColor: "#052942",
+            textDarkColor: "#ffffff",
+            linkColorDark: "#FFCF4B",
+            buttonHoverDarkColor: "#FFCF4B",
+            greeting: "Discover your personalization options",
+            direction: "leftbottom",
+            coordinates: "undefined undefined undefined undefined",
+            iconShape: "circle",
+            title: "Personalization Options",
+            titleText: "Welcome to PageAssist™ toolbar! Adjust the options below to cater the website to your accessibility needs.",
+            iconPictureUrl: "logo",
+            logoPictureUrl: "",
+            logoPictureBase64: "",
+            languages: [""],
+            defaultLanguage: "",
+            skipTo: false,
+            alwaysOnTop: false,
+        },
+    };
+</script><script type="text/javascript" async="async" src="https://app-script.monsido.com/v2/monsido-script.js"></script>
+
+<script type="text/javascript">
+//<![CDATA[
+window.onhashchange = registerAllTabs;   $(window).load(function() {          locationHashChangedctl00_ContentPlaceHolder1_ctl20();          });function locationHashChangedctl00_ContentPlaceHolder1_ctl20() {   locationHashChanged('ctl00_ContentPlaceHolder1_ctl20','tabPortlet_539233')};window.__TsmHiddenField = $get('ctl00_ScriptManager1_TSM');InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl00_addNewPageModal_txtFriendlyUrl', /^[\w-]*$/);InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl20_tbDefaultWidth', /^\d*$/);;(function() {
+                        function loadHandler() {
+                            var hf = $get('ctl00_RadStyleSheetManager1_TSSM');
+                            if (!hf._RSSM_init) { hf._RSSM_init = true; hf.value = ''; }
+                            hf.value += ';Telerik.Web.UI, Version=2026.3.812.462, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:ab6aa57e-34e3-4a88-a53e-99567e45582d:92753c09:91f742eb:ed2942d4';
+                            Sys.Application.remove_load(loadHandler);
+                        };
+                        Sys.Application.add_load(loadHandler);
+                    })();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindowManager, {"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowManagerLoadingContentTree","skin":"Default","windowControls":"[]"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowLoadingContentTree","showContentDuringLoad":false,"skin":"Default","title":"Content Properties"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowPermissionControl","showContentDuringLoad":false,"skin":"Default","title":"Permission Control"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowPermissionControl"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadMenu, {"_childListElementCssClass":null,"_selectedItemIndex":"1","_selectedValue":"18819663","clientStateFieldID":"ctl00_ContentPlaceHolder1_ctl01_radmenu_ClientState","collapseAnimation":"{\"duration\":450}","defaultGroupSettings":"{\"expandDirection\":0}","enableAriaSupport":true,"expandAnimation":"{\"duration\":450}","itemData":[{"attributes":{"menunumber":"0"},"value":"24892826","navigateUrl":"/home"},{"attributes":{"menunumber":"1"},"items":[{"attributes":{"menunumber":"2"},"items":[{"attributes":{"menunumber":"3"},"value":"18819683","navigateUrl":"/about_us/governing_board/board_meeting_information"},{"attributes":{"menunumber":"4"},"value":"20260590","navigateUrl":"/about_us/governing_board/policies"},{"attributes":{"menunumber":"5"},"value":"24598815","navigateUrl":"/about_us/governing_board/proclamations_resolutions"},{"attributes":{"menunumber":"6"},"value":"18819679","navigateUrl":"/about_us/governing_board/elections","cssClass":"rmSelected"},{"attributes":{"menunumber":"7"},"value":"18819687","navigateUrl":"/about_us/governing_board/archives"}],"value":"18819675","navigateUrl":"/about_us/governing_board","cssClass":"rmSelected"},{"attributes":{"menunumber":"8"},"items":[{"attributes":{"menunumber":"9"},"value":"24601659","navigateUrl":"/about_us/our_superintendent/messages_to_our_community"},{"attributes":{"menunumber":"10"},"value":"24602295","navigateUrl":"/about_us/our_superintendent/press_releases"},{"attributes":{"menunumber":"11"},"value":"22606072","navigateUrl":"/about_us/our_superintendent/contact_the_superintendent"}],"value":"18819671","navigateUrl":"/about_us/our_superintendent"},{"attributes":{"menunumber":"12"},"value":"18819695","navigateUrl":"/about_us/calendars"},{"attributes":{"menunumber":"13"},"value":"18819707","navigateUrl":"/about_us/lcap_budget_plan"},{"attributes":{"menunumber":"14"},"items":[{"attributes":{"menunumber":"15"},"value":"21127709","navigateUrl":"/about_us/financial_information/financial_reports"},{"attributes":{"menunumber":"16"},"value":"24478650","navigateUrl":"/about_us/financial_information/school_finance_QA"}],"value":"22497793","navigateUrl":"/about_us/financial_information"},{"attributes":{"menunumber":"17"},"items":[{"attributes":{"menunumber":"18"},"value":"22498003","navigateUrl":"/about_us/parcel_tax_and_bonds/parcel_tax_measures"},{"attributes":{"menunumber":"19"},"value":"20721933","navigateUrl":"/about_us/parcel_tax_and_bonds/bonds"}],"value":"24862669","navigateUrl":"/about_us/parcel_tax_and_bonds"},{"attributes":{"menunumber":"20"},"value":"21107209","navigateUrl":"/about_us/district_policy"},{"attributes":{"menunumber":"21"},"value":"26047793","navigateUrl":"/about_us/suicide_prevention"},{"attributes":{"menunumber":"22"},"value":"28390450","navigateUrl":"/about_us/privacypolicy"}],"value":"18819663","selected":true,"navigateUrl":"/about_us","cssClass":"rmSelected"},{"attributes":{"menunumber":"23"},"items":[{"attributes":{"menunumber":"24"},"items":[{"attributes":{"menunumber":"25"},"value":"21129091","navigateUrl":"/our_departments/business_services/developer_fees"},{"attributes":{"menunumber":"26"},"value":"18821330","navigateUrl":"/our_departments/business_services/staff_directory"}],"value":"18821326","navigateUrl":"/our_departments/business_services"},{"attributes":{"menunumber":"27"},"items":[{"attributes":{"menunumber":"28"},"value":"18821285","navigateUrl":"/our_departments/curriculum_instruction/curriculum_materials"},{"attributes":{"menunumber":"29"},"value":"18821293","navigateUrl":"/our_departments/curriculum_instruction/assessments"},{"attributes":{"menunumber":"30"},"value":"18821309","navigateUrl":"/our_departments/curriculum_instruction/ca_assessment_programs"},{"attributes":{"menunumber":"31"},"value":"22292923","navigateUrl":"/our_departments/curriculum_instruction/state___federal_programs"},{"attributes":{"menunumber":"32"},"value":"22292703","navigateUrl":"/our_departments/curriculum_instruction/state_federal_reports"},{"attributes":{"menunumber":"33"},"value":"22386617","navigateUrl":"/our_departments/curriculum_instruction/grants"},{"attributes":{"menunumber":"34"},"value":"18821281","navigateUrl":"/our_departments/curriculum_instruction/about_curriculum_instruction"}],"value":"18821277","navigateUrl":"/our_departments/curriculum_instruction"},{"attributes":{"menunumber":"35"},"items":[{"attributes":{"menunumber":"36"},"value":"18821248","navigateUrl":"/our_departments/educational_support/special_education"},{"attributes":{"menunumber":"37"},"value":"18821265","navigateUrl":"/our_departments/educational_support/504"},{"attributes":{"menunumber":"38"},"value":"27179238","navigateUrl":"/our_departments/educational_support/behavioral_health_services"},{"attributes":{"menunumber":"39"},"value":"25159167","navigateUrl":"/our_departments/educational_support/staff_directory"}],"value":"18821244","navigateUrl":"/our_departments/educational_support"},{"attributes":{"menunumber":"40"},"items":[{"attributes":{"menunumber":"41"},"value":"18821346","navigateUrl":"/our_departments/facilities/construction"},{"attributes":{"menunumber":"42"},"value":"21307493","navigateUrl":"/our_departments/facilities/reports"},{"attributes":{"menunumber":"43"},"value":"24810459","navigateUrl":"/our_departments/facilities/facilities_permits"},{"attributes":{"menunumber":"44"},"value":"25159197","navigateUrl":"/our_departments/facilities/team_members"},{"attributes":{"menunumber":"45"},"value":"27575219","navigateUrl":"/our_departments/facilities/notice_to_bidders"}],"value":"18821338","navigateUrl":"/our_departments/facilities"},{"attributes":{"menunumber":"46"},"items":[{"attributes":{"menunumber":"47"},"value":"18821354","navigateUrl":"/our_departments/food_services/menus_benefits"},{"attributes":{"menunumber":"48"},"value":"18821358","navigateUrl":"/our_departments/food_services/food_services_policy"},{"attributes":{"menunumber":"49"},"value":"25159162","navigateUrl":"/our_departments/food_services/staff_directory"}],"value":"20377176","navigateUrl":"/our_departments/food_services"},{"attributes":{"menunumber":"50"},"items":[{"attributes":{"menunumber":"51"},"value":"25159188","navigateUrl":"/our_departments/human_resources/team_members"},{"attributes":{"menunumber":"52"},"value":"26140456","navigateUrl":"/our_departments/human_resources/substitute_teachers"},{"attributes":{"menunumber":"53"},"value":"22747341","navigateUrl":"/our_departments/human_resources/salary_schedules"},{"attributes":{"menunumber":"54"},"value":"27417744","navigateUrl":"/our_departments/human_resources/labor_negotiations"},{"attributes":{"menunumber":"55"},"value":"28510608","navigateUrl":"/our_departments/human_resources/2025-26_c_s_e_a_work_calendars"},{"attributes":{"menunumber":"56"},"value":"26176149","navigateUrl":"/our_departments/human_resources/2022-23_c_s_e_a_work_calendars"},{"attributes":{"menunumber":"57"},"value":"18819777","navigateUrl":"/our_departments/human_resources/employment_opportunities"},{"attributes":{"menunumber":"58"},"value":"26607405","navigateUrl":"/our_departments/human_resources/emp_covid_info"},{"attributes":{"menunumber":"59"},"value":"26468549","navigateUrl":"/our_departments/human_resources/annual_training"},{"attributes":{"menunumber":"60"},"value":"26468285","navigateUrl":"/our_departments/human_resources/annual_notifications"},{"attributes":{"menunumber":"61"},"value":"26159530","navigateUrl":"/our_departments/human_resources/recruitment_and_retention_plan_2022"},{"attributes":{"menunumber":"62"},"value":"26897728","navigateUrl":"/our_departments/human_resources/c_s_e_a_summer_assistance_program"},{"attributes":{"menunumber":"63"},"value":"28355492","navigateUrl":"/our_departments/human_resources/workplace_violence_prevention_plan","target":"_blank"}],"value":"20347027","navigateUrl":"/our_departments/human_resources"},{"attributes":{"menunumber":"64"},"items":[{"attributes":{"menunumber":"65"},"value":"22510115","navigateUrl":"/our_departments/student_services/attendance"},{"attributes":{"menunumber":"66"},"value":"21992498","navigateUrl":"/our_departments/student_services/elementary_school_boundaries"},{"attributes":{"menunumber":"67"},"value":"22497518","navigateUrl":"/our_departments/student_services/staff"}],"value":"18821252","navigateUrl":"/our_departments/student_services"},{"attributes":{"menunumber":"68"},"items":[{"attributes":{"menunumber":"69"},"value":"22452460","navigateUrl":"/our_departments/health_wellness/medical__nursing_health_for_students"},{"attributes":{"menunumber":"70"},"value":"26182742","navigateUrl":"/our_departments/health_wellness/behavioral_health_for_students"},{"attributes":{"menunumber":"71"},"value":"26182722","navigateUrl":"/our_departments/health_wellness/mental_health_for_students"},{"attributes":{"menunumber":"72"},"value":"26182731","navigateUrl":"/our_departments/health_wellness/for_parents_and_guardians"},{"attributes":{"menunumber":"73"},"value":"26182736","navigateUrl":"/our_departments/health_wellness/teacher_staff_wellness"}],"value":"18821232","navigateUrl":"/our_departments/health_wellness"},{"attributes":{"menunumber":"74"},"items":[{"attributes":{"menunumber":"75"},"value":"25159271","navigateUrl":"/our_departments/technology/team_members"},{"attributes":{"menunumber":"76"},"value":"25595218","navigateUrl":"/our_departments/technology/weather_and_air_quality"},{"attributes":{"menunumber":"77"},"value":"28346694","navigateUrl":"/our_departments/technology/psdatabreach"}],"value":"18821236","navigateUrl":"/our_departments/technology"},{"attributes":{"menunumber":"78"},"items":[{"attributes":{"menunumber":"79"},"value":"25159240","navigateUrl":"/our_departments/transportation/team_members"}],"value":"18821342","navigateUrl":"/our_departments/transportation"}],"value":"18821240","navigateUrl":"/our_departments"},{"attributes":{"menunumber":"80"},"items":[{"attributes":{"menunumber":"81"},"value":"27040956","navigateUrl":"/our_community/community_resources"},{"attributes":{"menunumber":"82"},"value":"29013319","navigateUrl":"/our_community/complaints"},{"attributes":{"menunumber":"83"},"items":[{"attributes":{"menunumber":"84"},"value":"26607466","navigateUrl":"/our_community/covid-19_information/covid_general_info"},{"attributes":{"menunumber":"85"},"value":"26607458","navigateUrl":"/our_community/covid-19_information/vaccines","target":"_blank"}],"value":"25863366","navigateUrl":"/our_community/covid-19_information"},{"attributes":{"menunumber":"86"},"value":"18821484","navigateUrl":"/our_community/delac"},{"attributes":{"menunumber":"87"},"value":"20264843","navigateUrl":"/our_community/district_committees"},{"attributes":{"menunumber":"88"},"items":[{"attributes":{"menunumber":"89"},"value":"23120093","navigateUrl":"/our_community/diversity___equity/proclamation_African_American_Month"},{"attributes":{"menunumber":"90"},"value":"26071095","navigateUrl":"/our_community/diversity___equity/events_and_activities___archived_"},{"attributes":{"menunumber":"91"},"value":"26071134","navigateUrl":"/our_community/diversity___equity/activities_archived"}],"value":"22499645","navigateUrl":"/our_community/diversity___equity"},{"attributes":{"menunumber":"92"},"value":"24899504","navigateUrl":"/our_community/forms"},{"attributes":{"menunumber":"93"},"value":"28352939","navigateUrl":"/our_community/immigration"},{"attributes":{"menunumber":"94"},"value":"23873304","navigateUrl":"/our_community/public_notices"},{"attributes":{"menunumber":"95"},"items":[{"attributes":{"menunumber":"96"},"value":"28030967","navigateUrl":"/our_community/safety_emergency/workplace_violence_prevention_plan"}],"value":"18821451","navigateUrl":"/our_community/safety_emergency"},{"attributes":{"menunumber":"97"},"value":"18821480","navigateUrl":"/our_community/support_our_schools"},{"attributes":{"menunumber":"98"},"value":"26203200","navigateUrl":"/our_community/sustainability"},{"attributes":{"menunumber":"99"},"value":"18821443","navigateUrl":"/our_community/quick_links"}],"value":"18821439","navigateUrl":"/our_community"},{"attributes":{"menunumber":"100"},"items":[{"attributes":{"menunumber":"101"},"value":"27430080","navigateUrl":"/enrollment/t_k__k_information"},{"attributes":{"menunumber":"102"},"value":"27429816","navigateUrl":"/enrollment/open_enrollment_process"},{"attributes":{"menunumber":"103"},"value":"27438468","navigateUrl":"/enrollment/immersion_program"},{"attributes":{"menunumber":"104"},"value":"27438483","navigateUrl":"/enrollment/faqs"},{"attributes":{"menunumber":"105"},"value":"27504464","navigateUrl":"/enrollment/inter_district_transfer_requests"}],"value":"22164118","navigateUrl":"/enrollment"},{"attributes":{"menunumber":"106"},"items":[{"attributes":{"menunumber":"107"},"value":"18819795","navigateUrl":"/our_programs/adult_school"},{"attributes":{"menunumber":"108"},"value":"18819828","navigateUrl":"/our_programs/advanced_placement_and_honors_program"},{"attributes":{"menunumber":"109"},"value":"18819800","navigateUrl":"/our_programs/advancement_via_individual_determination_avid"},{"attributes":{"menunumber":"110"},"value":"18819804","navigateUrl":"/our_programs/alternative_education"},{"attributes":{"menunumber":"111"},"value":"18819808","navigateUrl":"/our_programs/career_technical_education"},{"attributes":{"menunumber":"112"},"value":"20846772","navigateUrl":"/our_programs/elementary"},{"attributes":{"menunumber":"113"},"value":"18819824","navigateUrl":"/our_programs/health_environment_learning_heal_project"},{"attributes":{"menunumber":"114"},"value":"25996741","navigateUrl":"/our_programs/homeless_education"},{"attributes":{"menunumber":"115"},"items":[{"attributes":{"menunumber":"116"},"value":"18819860","navigateUrl":"/our_programs/kindergarten/kindergarten_registration"},{"attributes":{"menunumber":"117"},"value":"18819856","navigateUrl":"/our_programs/kindergarten/coastside_ready_schools_team"},{"attributes":{"menunumber":"118"},"value":"18819844","navigateUrl":"/our_programs/kindergarten/kindergarten_faqs"}],"value":"18819836","navigateUrl":"/our_programs/kindergarten"},{"attributes":{"menunumber":"119"},"value":"18819874","navigateUrl":"/our_programs/los_listos_pre_school"},{"attributes":{"menunumber":"120"},"value":"20846780","navigateUrl":"/our_programs/categorical"},{"attributes":{"menunumber":"121"},"value":"26076084","navigateUrl":"/our_programs/safe_routes_to_school"},{"attributes":{"menunumber":"122"},"value":"27375275","navigateUrl":"/our_programs/secondary"},{"attributes":{"menunumber":"123"},"value":"18819832","navigateUrl":"/our_programs/immersion_program"},{"attributes":{"menunumber":"124"},"value":"18819852","navigateUrl":"/our_programs/transitional_kindergarten"}],"value":"18819783","navigateUrl":"/our_programs"},{"attributes":{"menunumber":"125"},"items":[{"attributes":{"menunumber":"126"},"items":[{"attributes":{"menunumber":"127"},"value":"27134414","navigateUrl":"/news/district_news/replacement_parcel_tax___new_bond_measures"},{"attributes":{"menunumber":"128"},"value":"27078470","navigateUrl":"/news/district_news/messages_to_our_community"},{"attributes":{"menunumber":"129"},"value":"27511182","navigateUrl":"/news/district_news/notice_of_meetings_and_hearings"}],"value":"18665080","navigateUrl":"/news/district_news"}],"value":"18665078","navigateUrl":"/news"},{"attributes":{"menunumber":"130"},"items":[{"attributes":{"menunumber":"131"},"value":"18819763","navigateUrl":"/contact_us/district_office_directory"},{"attributes":{"menunumber":"132"},"value":"20846740","navigateUrl":"/contact_us/directions__map"}],"value":"18821521","navigateUrl":"/contact_us"},{"attributes":{"menunumber":"133"},"value":"25863248","navigateUrl":"/EmploymentOpportunities","target":"_blank"},{"attributes":{"menunumber":"134"},"items":[{"attributes":{"menunumber":"135"},"value":"28522816","navigateUrl":"/c_u_s_d_parent_resources/hatch_principal_survey_results"},{"attributes":{"menunumber":"136"},"value":"28073846","navigateUrl":"/c_u_s_d_parent_resources/annual_update_f_a_qs"},{"attributes":{"menunumber":"137"},"value":"27414008","navigateUrl":"/c_u_s_d_parent_resources/volunteers"},{"attributes":{"menunumber":"138"},"value":"28167020","navigateUrl":"/c_u_s_d_parent_resources/parent_portal_resources"}],"value":"28060044","navigateUrl":"/c_u_s_d_parent_resources"},{"attributes":{"menunumber":"139"},"items":[{"attributes":{"menunumber":"140"},"value":"25416363","navigateUrl":"/c_u_s_d_staff_resources/staff_quick_links"},{"attributes":{"menunumber":"141"},"value":"28044448","navigateUrl":"/c_u_s_d_staff_resources/staff_technology_f_a_q"},{"attributes":{"menunumber":"142"},"value":"28052725","navigateUrl":"/c_u_s_d_staff_resources/staff_help_desk","target":"_blank"},{"attributes":{"menunumber":"143"},"value":"24521028","navigateUrl":"/c_u_s_d_staff_resources/staff-self-service","target":"_blank"}],"value":"28052714","navigateUrl":"/c_u_s_d_staff_resources"}]}, {"itemClicking":ClickItem}, null, $get("ctl00_ContentPlaceHolder1_ctl01_radmenu"));
+});
+//]]>
+</script>
+</form>
+    <script type="text/javascript">
+        window.isMobile = 0 == 1;
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"db425491991d400fa7b5aef612539c3e","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
+

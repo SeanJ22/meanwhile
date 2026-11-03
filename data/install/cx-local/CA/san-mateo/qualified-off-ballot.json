@@ -1,0 +1,4588 @@
+{
+  "status": "QUALIFIED_ROSTER_ON_BALLOT_NO_ONLY",
+  "electionId": "ca-2026-11-03-general",
+  "fields": 65,
+  "names": 95,
+  "records": [
+    {
+      "code": "3020",
+      "office": "County Board of Education Member, Trustee Area 1",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SUSAN ALVARO",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              113.8602523803711,
+              180.04798889160156,
+              121.62339782714844
+            ],
+            "text": "SUSAN ALVARO"
+          },
+          "designationCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              127.06949615478516,
+              157.81890869140625,
+              136.1171875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "SUSAN ALVARO\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3020      County Board of Education Member, Trustee Area 1                                                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 4,
+        "bbox": [
+          48.0,
+          100.23125457763672,
+          261.55255126953125,
+          110.0050048828125
+        ],
+        "text": "County Board of Education Member, Trustee Area 1"
+      },
+      "pdfPage": 4,
+      "sourceText": "County Board of Education Member, Trustee Area 1\nVote for 1\nOn Ballot: No\nSUSAN ALVARO\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "County Board of Education Member, Trustee Area 1\nVote for 1\nOn Ballot: No\nSUSAN ALVARO\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3022",
+      "office": "County Board of Education Member, Trustee Area 3",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "JOHN C. BAKER",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              283.2602233886719,
+              180.6248321533203,
+              291.02337646484375
+            ],
+            "text": "JOHN C. BAKER"
+          },
+          "designationCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              296.4695129394531,
+              220.38330078125,
+              305.5172119140625
+            ],
+            "text": "Grant Administrator / Parent"
+          },
+          "ballotDesignation": "Grant Administrator / Parent",
+          "sourceText": "JOHN C. BAKER\nGrant Administrator / Parent"
+        }
+      ],
+      "sourceHeader": "3022      County Board of Education Member, Trustee Area 3                                                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 4,
+        "bbox": [
+          48.0,
+          269.6312561035156,
+          261.55255126953125,
+          279.405029296875
+        ],
+        "text": "County Board of Education Member, Trustee Area 3"
+      },
+      "pdfPage": 4,
+      "sourceText": "County Board of Education Member, Trustee Area 3\nVote for 1\nOn Ballot: No\nJOHN C. BAKER\nGrant Administrator / Parent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "County Board of Education Member, Trustee Area 3\nVote for 1\nOn Ballot: No\nJOHN C. BAKER\nGrant Administrator / Parent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3105",
+      "office": "San Mateo County Community College District Member, Governing Board, Trustee Area 4",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "RICHARD HOLOBER",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              452.6602478027344,
+              194.51788330078125,
+              460.42340087890625
+            ],
+            "text": "RICHARD HOLOBER"
+          },
+          "designationCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              465.8695373535156,
+              226.085693359375,
+              474.917236328125
+            ],
+            "text": "College Board Vice-President"
+          },
+          "ballotDesignation": "College Board Vice-President",
+          "sourceText": "RICHARD HOLOBER\nCollege Board Vice-President"
+        }
+      ],
+      "sourceHeader": "3105      San Mateo County Community College District Member, Governing Board, Trustee Area 4                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 4,
+        "bbox": [
+          48.0,
+          439.03125,
+          418.1161804199219,
+          448.8050231933594
+        ],
+        "text": "San Mateo County Community College District Member, Governing Board, Trustee Area 4"
+      },
+      "pdfPage": 4,
+      "sourceText": "San Mateo County Community College District Member, Governing Board, Trustee Area 4\nVote for 1\nOn Ballot: No\nRICHARD HOLOBER\nCollege Board Vice-President",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo County Community College District Member, Governing Board, Trustee Area 4\nVote for 1\nOn Ballot: No\nRICHARD HOLOBER\nCollege Board Vice-President"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3202",
+      "office": "Cabrillo Unified School District Member, Governing Board, Trustee Area A",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "KYLE EKBERG",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              514.3102416992188,
+              175.9961395263672,
+              522.0733642578125
+            ],
+            "text": "KYLE EKBERG"
+          },
+          "designationCell": {
+            "pdfPage": 4,
+            "bbox": [
+              120.0,
+              527.5194702148438,
+              225.7941131591797,
+              536.5671997070312
+            ],
+            "text": "Father / Regulatory Strategist"
+          },
+          "ballotDesignation": "Father / Regulatory Strategist",
+          "sourceText": "KYLE EKBERG\nFather / Regulatory Strategist"
+        }
+      ],
+      "sourceHeader": "3202      Cabrillo Unified School District Member, Governing Board, Trustee Area A                                                                                                Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 4,
+        "bbox": [
+          48.0,
+          500.6812438964844,
+          354.5649719238281,
+          510.45501708984375
+        ],
+        "text": "Cabrillo Unified School District Member, Governing Board, Trustee Area A"
+      },
+      "pdfPage": 4,
+      "sourceText": "Cabrillo Unified School District Member, Governing Board, Trustee Area A\nVote for 1\nOn Ballot: No\nKYLE EKBERG\nFather / Regulatory Strategist",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Cabrillo Unified School District Member, Governing Board, Trustee Area A\nVote for 1\nOn Ballot: No\nKYLE EKBERG\nFather / Regulatory Strategist"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3221",
+      "office": "La Honda-Pescadero Unified School District Member, Governing Board",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "DEBORAH WALTER-ROSAS",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 5,
+            "bbox": [
+              120.0,
+              261.4602355957031,
+              218.7664337158203,
+              269.223388671875
+            ],
+            "text": "DEBORAH WALTER-ROSAS"
+          },
+          "designationCell": {
+            "pdfPage": 5,
+            "bbox": [
+              120.0,
+              274.6695251464844,
+              206.44320678710938,
+              283.71722412109375
+            ],
+            "text": "Paralegal / Grandparent"
+          },
+          "ballotDesignation": "Paralegal / Grandparent",
+          "sourceText": "DEBORAH WALTER-ROSAS\nParalegal / Grandparent"
+        }
+      ],
+      "sourceHeader": "3221      La Honda-Pescadero Unified School District Member, Governing Board                                                                                                    Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 5,
+        "bbox": [
+          48.0,
+          247.8312530517578,
+          343.1199951171875,
+          257.6050109863281
+        ],
+        "text": "La Honda-Pescadero Unified School District Member, Governing Board"
+      },
+      "pdfPage": 5,
+      "sourceText": "La Honda-Pescadero Unified School District Member, Governing Board\nVote for 2\nOn Ballot: No\nDEBORAH WALTER-ROSAS\nParalegal / Grandparent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "La Honda-Pescadero Unified School District Member, Governing Board\nVote for 2\nOn Ballot: No\nDEBORAH WALTER-ROSAS\nParalegal / Grandparent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3245",
+      "office": "South San Francisco Unified School District Member, Governing Board, Trustee Area D",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "AMANDA ANTHONY",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 5,
+            "bbox": [
+              120.0,
+              430.8602294921875,
+              192.26609802246094,
+              438.6233825683594
+            ],
+            "text": "AMANDA ANTHONY"
+          },
+          "designationCell": {
+            "pdfPage": 5,
+            "bbox": [
+              120.0,
+              444.06951904296875,
+              157.81890869140625,
+              453.1172180175781
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "AMANDA ANTHONY\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3245      South San Francisco Unified School District Member, Governing Board, Trustee Area D                                                                                   Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 5,
+        "bbox": [
+          48.0,
+          417.2312316894531,
+          409.37493896484375,
+          427.0050048828125
+        ],
+        "text": "South San Francisco Unified School District Member, Governing Board, Trustee Area D"
+      },
+      "pdfPage": 5,
+      "sourceText": "South San Francisco Unified School District Member, Governing Board, Trustee Area D\nVote for 1\nOn Ballot: No\nAMANDA ANTHONY\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "South San Francisco Unified School District Member, Governing Board, Trustee Area D\nVote for 1\nOn Ballot: No\nAMANDA ANTHONY\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3300",
+      "office": "Jefferson Union High School District Member, Governing Board (Full Term)",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "LASAUNDRA A. GUTTER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              67.76025390625,
+              208.64028930664062,
+              75.52339935302734
+            ],
+            "text": "LASAUNDRA A. GUTTER"
+          },
+          "designationCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              80.96949768066406,
+              212.29139709472656,
+              90.01719665527344
+            ],
+            "text": "Appointed Board Member"
+          },
+          "ballotDesignation": "Appointed Board Member",
+          "sourceText": "LASAUNDRA A. GUTTER\nAppointed Board Member"
+        },
+        {
+          "name": "ROSIE TEJADA",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              113.86024475097656,
+              176.90658569335938,
+              121.6233901977539
+            ],
+            "text": "ROSIE TEJADA"
+          },
+          "designationCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              127.06949615478516,
+              157.81890869140625,
+              136.1171875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "ROSIE TEJADA\nIncumbent"
+        },
+        {
+          "name": "SHERRETT WALKER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              159.9602508544922,
+              195.33102416992188,
+              167.72340393066406
+            ],
+            "text": "SHERRETT WALKER"
+          },
+          "designationCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              173.16949462890625,
+              157.81890869140625,
+              182.21719360351562
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "SHERRETT WALKER\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3300      Jefferson Union High School District Member, Governing Board (Full Term)                                                                                                         Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 6,
+        "bbox": [
+          48.0,
+          54.131248474121094,
+          359.4737548828125,
+          63.904998779296875
+        ],
+        "text": "Jefferson Union High School District Member, Governing Board (Full Term)"
+      },
+      "pdfPage": 6,
+      "sourceText": "Jefferson Union High School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: No\nLASAUNDRA A. GUTTER\nAppointed Board Member\nROSIE TEJADA\nIncumbent\nSHERRETT WALKER\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Jefferson Union High School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: No\nLASAUNDRA A. GUTTER\nAppointed Board Member\nROSIE TEJADA\nIncumbent\nSHERRETT WALKER\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3301",
+      "office": "Jefferson Union High School District Member, Governing Board (Short Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "JOELLE M. CASTORENO",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              221.61024475097656,
+              208.6680908203125,
+              229.37339782714844
+            ],
+            "text": "JOELLE M. CASTORENO"
+          },
+          "designationCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              234.81948852539062,
+              239.2886962890625,
+              243.8671875
+            ],
+            "text": "Healthcare Administrator / Parent"
+          },
+          "ballotDesignation": "Healthcare Administrator / Parent",
+          "sourceText": "JOELLE M. CASTORENO\nHealthcare Administrator / Parent"
+        }
+      ],
+      "sourceHeader": "3301      Jefferson Union High School District Member, Governing Board (Short Term)                                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 6,
+        "bbox": [
+          48.0,
+          207.98126220703125,
+          366.76251220703125,
+          217.7550048828125
+        ],
+        "text": "Jefferson Union High School District Member, Governing Board (Short Term)"
+      },
+      "pdfPage": 6,
+      "sourceText": "Jefferson Union High School District Member, Governing Board (Short Term)\nVote for 1\nOn Ballot: No\nJOELLE M. CASTORENO\nHealthcare Administrator / Parent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Jefferson Union High School District Member, Governing Board (Short Term)\nVote for 1\nOn Ballot: No\nJOELLE M. CASTORENO\nHealthcare Administrator / Parent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3322",
+      "office": "San Mateo Union High School District Member, Governing Board, Trustee Area 1",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "TERI L. CHAVEZ",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              283.2602233886719,
+              179.74217224121094,
+              291.02337646484375
+            ],
+            "text": "TERI L. CHAVEZ"
+          },
+          "designationCell": {
+            "pdfPage": 6,
+            "bbox": [
+              120.0,
+              296.4695129394531,
+              157.81890869140625,
+              305.5172119140625
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "TERI L. CHAVEZ\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3322      San Mateo Union High School District Member, Governing Board, Trustee Area 1                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 6,
+        "bbox": [
+          48.0,
+          269.6312561035156,
+          381.6549072265625,
+          279.405029296875
+        ],
+        "text": "San Mateo Union High School District Member, Governing Board, Trustee Area 1"
+      },
+      "pdfPage": 6,
+      "sourceText": "San Mateo Union High School District Member, Governing Board, Trustee Area 1\nVote for 1\nOn Ballot: No\nTERI L. CHAVEZ\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo Union High School District Member, Governing Board, Trustee Area 1\nVote for 1\nOn Ballot: No\nTERI L. CHAVEZ\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3400",
+      "office": "Bayshore Elementary School District Member, Governing Board (Full Term)",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "GLORIA KARINA FERRUSCA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              245.91024780273438,
+              221.56727600097656,
+              253.67340087890625
+            ],
+            "text": "GLORIA KARINA FERRUSCA"
+          },
+          "designationCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              259.1194763183594,
+              181.67340087890625,
+              268.16717529296875
+            ],
+            "text": "Mother / Attorney"
+          },
+          "ballotDesignation": "Mother / Attorney",
+          "sourceText": "GLORIA KARINA FERRUSCA\nMother / Attorney"
+        },
+        {
+          "name": "DAVID T. RUDOLPH",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              292.01025390625,
+              190.57028198242188,
+              299.7734069824219
+            ],
+            "text": "DAVID T. RUDOLPH"
+          },
+          "designationCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              305.21954345703125,
+              196.54501342773438,
+              314.2672424316406
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "DAVID T. RUDOLPH\nAppointed Incumbent"
+        },
+        {
+          "name": "JANE W. CAMARCO",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              338.1102600097656,
+              192.6274871826172,
+              345.8734130859375
+            ],
+            "text": "JANE W. CAMARCO"
+          },
+          "designationCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              351.3195495605469,
+              196.54501342773438,
+              360.36724853515625
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "JANE W. CAMARCO\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "3400      Bayshore Elementary School District Member, Governing Board (Full Term)                                                                                               Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 7,
+        "bbox": [
+          48.0,
+          232.28126525878906,
+          360.47125244140625,
+          242.0550079345703
+        ],
+        "text": "Bayshore Elementary School District Member, Governing Board (Full Term)"
+      },
+      "pdfPage": 7,
+      "sourceText": "Bayshore Elementary School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: No\nGLORIA KARINA FERRUSCA\nMother / Attorney\nDAVID T. RUDOLPH\nAppointed Incumbent\nJANE W. CAMARCO\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Bayshore Elementary School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: No\nGLORIA KARINA FERRUSCA\nMother / Attorney\nDAVID T. RUDOLPH\nAppointed Incumbent\nJANE W. CAMARCO\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3422",
+      "office": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 1",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CHARLES SHAGONG",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              399.7602233886719,
+              197.2283935546875,
+              407.52337646484375
+            ],
+            "text": "CHARLES SHAGONG"
+          },
+          "designationCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              412.9695129394531,
+              203.276123046875,
+              422.0172119140625
+            ],
+            "text": "(No Ballot Designation)"
+          },
+          "ballotDesignation": "(No Ballot Designation)",
+          "sourceText": "CHARLES SHAGONG\n(No Ballot Designation)"
+        }
+      ],
+      "sourceHeader": "3422      Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 1                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 7,
+        "bbox": [
+          48.0,
+          386.1312561035156,
+          398.1837158203125,
+          395.905029296875
+        ],
+        "text": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 1"
+      },
+      "pdfPage": 7,
+      "sourceText": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 1\nVote for 1\nOn Ballot: No\nCHARLES SHAGONG\n(No Ballot Designation)",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 1\nVote for 1\nOn Ballot: No\nCHARLES SHAGONG\n(No Ballot Designation)"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3424",
+      "office": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 3",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "DAVID A. KOSS",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              461.4102478027344,
+              177.12899780273438,
+              469.17340087890625
+            ],
+            "text": "DAVID A. KOSS"
+          },
+          "designationCell": {
+            "pdfPage": 7,
+            "bbox": [
+              120.0,
+              474.6195373535156,
+              210.48509216308594,
+              483.667236328125
+            ],
+            "text": "Board President, BRSSD"
+          },
+          "ballotDesignation": "Board President, BRSSD",
+          "sourceText": "DAVID A. KOSS\nBoard President, BRSSD"
+        }
+      ],
+      "sourceHeader": "3424      Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 3                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 7,
+        "bbox": [
+          48.0,
+          447.78125,
+          398.1837158203125,
+          457.5550231933594
+        ],
+        "text": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 3"
+      },
+      "pdfPage": 7,
+      "sourceText": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 3\nVote for 1\nOn Ballot: No\nDAVID A. KOSS\nBoard President, BRSSD",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Belmont-Redwood Shores School District Member, Governing Board, Trustee Area 3\nVote for 1\nOn Ballot: No\nDAVID A. KOSS\nBoard President, BRSSD"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3462",
+      "office": "Burlingame School District Member, Governing Board, Trustee Area 1",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SEMONTI STEPHENS",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              206.0602569580078,
+              196.85308837890625,
+              213.8234100341797
+            ],
+            "text": "SEMONTI STEPHENS"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              219.26950073242188,
+              285.65313720703125,
+              228.31719970703125
+            ],
+            "text": "Appointed Burlingame School District Member"
+          },
+          "ballotDesignation": "Appointed Burlingame School District Member",
+          "sourceText": "SEMONTI STEPHENS\nAppointed Burlingame School District Member"
+        }
+      ],
+      "sourceHeader": "3462      Burlingame School District Member, Governing Board, Trustee Area 1                                                                                                            Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 8,
+        "bbox": [
+          48.0,
+          192.43125915527344,
+          336.9337158203125,
+          202.2050018310547
+        ],
+        "text": "Burlingame School District Member, Governing Board, Trustee Area 1"
+      },
+      "pdfPage": 8,
+      "sourceText": "Burlingame School District Member, Governing Board, Trustee Area 1\nVote for 1\nOn Ballot: No\nSEMONTI STEPHENS\nAppointed Burlingame School District Member",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Burlingame School District Member, Governing Board, Trustee Area 1\nVote for 1\nOn Ballot: No\nSEMONTI STEPHENS\nAppointed Burlingame School District Member"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3465",
+      "office": "Burlingame School District Member, Governing Board, Trustee Area 4",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "LAURA BULL",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              267.7102355957031,
+              170.1720428466797,
+              275.473388671875
+            ],
+            "text": "LAURA BULL"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              280.9195251464844,
+              180.32879638671875,
+              289.96722412109375
+            ],
+            "text": "Parent / Attorney"
+          },
+          "ballotDesignation": "Parent / Attorney",
+          "sourceText": "LAURA BULL\nParent / Attorney"
+        }
+      ],
+      "sourceHeader": "3465      Burlingame School District Member, Governing Board, Trustee Area 4                                                                                                            Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 8,
+        "bbox": [
+          48.0,
+          254.0812530517578,
+          336.9337158203125,
+          263.8550109863281
+        ],
+        "text": "Burlingame School District Member, Governing Board, Trustee Area 4"
+      },
+      "pdfPage": 8,
+      "sourceText": "Burlingame School District Member, Governing Board, Trustee Area 4\nVote for 1\nOn Ballot: No\nLAURA BULL\nParent / Attorney",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Burlingame School District Member, Governing Board, Trustee Area 4\nVote for 1\nOn Ballot: No\nLAURA BULL\nParent / Attorney"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3480",
+      "office": "Hillsborough City School District Member, Governing Board",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "GILBERT WAI",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              329.3602294921875,
+              171.39523315429688,
+              337.1233825683594
+            ],
+            "text": "GILBERT WAI"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              342.56951904296875,
+              157.81890869140625,
+              351.6172180175781
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "GILBERT WAI\nIncumbent"
+        },
+        {
+          "name": "AN HUANG CHEN",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              375.46026611328125,
+              184.8643341064453,
+              383.2234191894531
+            ],
+            "text": "AN HUANG CHEN"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              388.6695556640625,
+              157.81890869140625,
+              397.7172546386719
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "AN HUANG CHEN\nIncumbent"
+        },
+        {
+          "name": "DON GEDDIS",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              421.56024169921875,
+              169.81759643554688,
+              429.3233947753906
+            ],
+            "text": "DON GEDDIS"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              434.76953125,
+              157.81890869140625,
+              443.8172302246094
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "DON GEDDIS\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3480      Hillsborough City School District Member, Governing Board                                                                                                                     Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 8,
+        "bbox": [
+          48.0,
+          315.7312316894531,
+          296.9200134277344,
+          325.5050048828125
+        ],
+        "text": "Hillsborough City School District Member, Governing Board"
+      },
+      "pdfPage": 8,
+      "sourceText": "Hillsborough City School District Member, Governing Board\nVote for 3\nOn Ballot: No\nGILBERT WAI\nIncumbent\nAN HUANG CHEN\nIncumbent\nDON GEDDIS\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Hillsborough City School District Member, Governing Board\nVote for 3\nOn Ballot: No\nGILBERT WAI\nIncumbent\nAN HUANG CHEN\nIncumbent\nDON GEDDIS\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3500",
+      "office": "Jefferson Elementary School District Member, Governing Board (Full Term)",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "AARON RASHBA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              483.2102355957031,
+              182.68203735351562,
+              490.973388671875
+            ],
+            "text": "AARON RASHBA"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              496.4195251464844,
+              157.81890869140625,
+              505.46722412109375
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "AARON RASHBA\nIncumbent"
+        },
+        {
+          "name": "ANTHONY TSUJISAKA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              529.3102416992188,
+              201.0717315673828,
+              537.0733642578125
+            ],
+            "text": "ANTHONY TSUJISAKA"
+          },
+          "designationCell": {
+            "pdfPage": 8,
+            "bbox": [
+              120.0,
+              542.5194702148438,
+              157.81890869140625,
+              551.5671997070312
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "ANTHONY TSUJISAKA\nIncumbent"
+        },
+        {
+          "name": "SHAKEEL ALI",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              52.21025085449219,
+              171.68019104003906,
+              59.9734001159668
+            ],
+            "text": "SHAKEEL ALI"
+          },
+          "designationCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              65.41950225830078,
+              157.81890869140625,
+              74.46720123291016
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "SHAKEEL ALI\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3500      Jefferson Elementary School District Member, Governing Board (Full Term)                                                                                                      Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 8,
+        "bbox": [
+          48.0,
+          469.58123779296875,
+          359.98126220703125,
+          479.3550109863281
+        ],
+        "text": "Jefferson Elementary School District Member, Governing Board (Full Term)"
+      },
+      "pdfPage": 8,
+      "sourceText": "Jefferson Elementary School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: No\nAARON RASHBA\nIncumbent\nANTHONY TSUJISAKA\nIncumbent\nSHAKEEL ALI\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Jefferson Elementary School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: No\nAARON RASHBA\nIncumbent\nANTHONY TSUJISAKA\nIncumbent\nSHAKEEL ALI\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3501",
+      "office": "Jefferson Elementary School District Member, Governing Board (Short Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "EILEEN R. POLICARPIO",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              113.8602523803711,
+              204.96372985839844,
+              121.62339782714844
+            ],
+            "text": "EILEEN R. POLICARPIO"
+          },
+          "designationCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              127.06949615478516,
+              196.54501342773438,
+              136.1171875
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "EILEEN R. POLICARPIO\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "3501      Jefferson Elementary School District Member, Governing Board (Short Term)                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 9,
+        "bbox": [
+          48.0,
+          100.23125457763672,
+          367.27001953125,
+          110.0050048828125
+        ],
+        "text": "Jefferson Elementary School District Member, Governing Board (Short Term)"
+      },
+      "pdfPage": 9,
+      "sourceText": "Jefferson Elementary School District Member, Governing Board (Short Term)\nVote for 1\nOn Ballot: No\nEILEEN R. POLICARPIO\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Jefferson Elementary School District Member, Governing Board (Short Term)\nVote for 1\nOn Ballot: No\nEILEEN R. POLICARPIO\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3520",
+      "office": "Las Lomitas Elementary School District Member, Governing Board",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "GAUTAM NADELLA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              175.51025390625,
+              190.67453002929688,
+              183.27340698242188
+            ],
+            "text": "GAUTAM NADELLA"
+          },
+          "designationCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              188.71949768066406,
+              157.81890869140625,
+              197.76719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "GAUTAM NADELLA\nIncumbent"
+        },
+        {
+          "name": "HEATHER HOPKINS",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              221.61026000976562,
+              192.48153686523438,
+              229.3734130859375
+            ],
+            "text": "HEATHER HOPKINS"
+          },
+          "designationCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              234.8195037841797,
+              157.81890869140625,
+              243.86720275878906
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "HEATHER HOPKINS\nIncumbent"
+        },
+        {
+          "name": "ERIN K. TIEDENS",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              267.7102355957031,
+              183.3353271484375,
+              275.473388671875
+            ],
+            "text": "ERIN K. TIEDENS"
+          },
+          "designationCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              280.9195251464844,
+              217.54830932617188,
+              289.96722412109375
+            ],
+            "text": "Substitute Teacher / Parent"
+          },
+          "ballotDesignation": "Substitute Teacher / Parent",
+          "sourceText": "ERIN K. TIEDENS\nSubstitute Teacher / Parent"
+        }
+      ],
+      "sourceHeader": "3520      Las Lomitas Elementary School District Member, Governing Board                                                                                                                Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 9,
+        "bbox": [
+          48.0,
+          161.88125610351562,
+          324.65753173828125,
+          171.65499877929688
+        ],
+        "text": "Las Lomitas Elementary School District Member, Governing Board"
+      },
+      "pdfPage": 9,
+      "sourceText": "Las Lomitas Elementary School District Member, Governing Board\nVote for 3\nOn Ballot: No\nGAUTAM NADELLA\nIncumbent\nHEATHER HOPKINS\nIncumbent\nERIN K. TIEDENS\nSubstitute Teacher / Parent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Las Lomitas Elementary School District Member, Governing Board\nVote for 3\nOn Ballot: No\nGAUTAM NADELLA\nIncumbent\nHEATHER HOPKINS\nIncumbent\nERIN K. TIEDENS\nSubstitute Teacher / Parent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3561",
+      "office": "Millbrae Elementary School District Member, Governing Board",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CLAIRE BELTRAMI",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              529.3102416992188,
+              188.99957275390625,
+              537.0733642578125
+            ],
+            "text": "CLAIRE BELTRAMI"
+          },
+          "designationCell": {
+            "pdfPage": 9,
+            "bbox": [
+              120.0,
+              542.5194702148438,
+              157.81890869140625,
+              551.5671997070312
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "CLAIRE BELTRAMI\nIncumbent"
+        },
+        {
+          "name": "DENIS FAMA",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 10,
+            "bbox": [
+              120.0,
+              52.21025466918945,
+              168.38587951660156,
+              59.97340393066406
+            ],
+            "text": "DENIS FAMA"
+          },
+          "designationCell": {
+            "pdfPage": 10,
+            "bbox": [
+              120.0,
+              65.41950988769531,
+              197.88961791992188,
+              74.46720886230469
+            ],
+            "text": "Educator / Consultant"
+          },
+          "ballotDesignation": "Educator / Consultant",
+          "sourceText": "DENIS FAMA\nEducator / Consultant"
+        },
+        {
+          "name": "NNENNA C. OKEZIE-SANCHEZ",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 10,
+            "bbox": [
+              120.0,
+              98.31025695800781,
+              227.8639678955078,
+              106.07340240478516
+            ],
+            "text": "NNENNA C. OKEZIE-SANCHEZ"
+          },
+          "designationCell": {
+            "pdfPage": 10,
+            "bbox": [
+              120.0,
+              111.51950073242188,
+              183.03419494628906,
+              120.56719970703125
+            ],
+            "text": "Educator / Parent"
+          },
+          "ballotDesignation": "Educator / Parent",
+          "sourceText": "NNENNA C. OKEZIE-SANCHEZ\nEducator / Parent"
+        }
+      ],
+      "sourceHeader": "3561      Millbrae Elementary School District Member, Governing Board                                                                                                                   Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 9,
+        "bbox": [
+          48.0,
+          515.6812133789062,
+          306.66748046875,
+          525.4549560546875
+        ],
+        "text": "Millbrae Elementary School District Member, Governing Board"
+      },
+      "pdfPage": 9,
+      "sourceText": "Millbrae Elementary School District Member, Governing Board\nVote for 3\nOn Ballot: No\nCLAIRE BELTRAMI\nIncumbent\nDENIS FAMA\nEducator / Consultant\nNNENNA C. OKEZIE-SANCHEZ\nEducator / Parent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Millbrae Elementary School District Member, Governing Board\nVote for 3\nOn Ballot: No\nCLAIRE BELTRAMI\nIncumbent\nDENIS FAMA\nEducator / Consultant\nNNENNA C. OKEZIE-SANCHEZ\nEducator / Parent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3601",
+      "office": "Portola Valley School District Member, Governing Board",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "ROBERT KX JIN",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              123.81025695800781,
+              179.47113037109375,
+              131.5734100341797
+            ],
+            "text": "ROBERT KX JIN"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              137.01950073242188,
+              196.54501342773438,
+              146.06719970703125
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "ROBERT KX JIN\nAppointed Incumbent"
+        },
+        {
+          "name": "AIMEE ARMSBY",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              169.91024780273438,
+              179.4016571044922,
+              177.67340087890625
+            ],
+            "text": "AIMEE ARMSBY"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              183.11949157714844,
+              157.81890869140625,
+              192.1671905517578
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "AIMEE ARMSBY\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3601      Portola Valley School District Member, Governing Board                                                                                                                        Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 11,
+        "bbox": [
+          48.0,
+          110.1812515258789,
+          281.37127685546875,
+          119.95500183105469
+        ],
+        "text": "Portola Valley School District Member, Governing Board"
+      },
+      "pdfPage": 11,
+      "sourceText": "Portola Valley School District Member, Governing Board\nVote for 2\nOn Ballot: No\nROBERT KX JIN\nAppointed Incumbent\nAIMEE ARMSBY\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Portola Valley School District Member, Governing Board\nVote for 2\nOn Ballot: No\nROBERT KX JIN\nAppointed Incumbent\nAIMEE ARMSBY\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3620",
+      "office": "Ravenswood City School District Member, Governing Board",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "LAURA NUNEZ",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              231.5602569580078,
+              175.73204040527344,
+              239.3234100341797
+            ],
+            "text": "LAURA NUNEZ"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              244.76950073242188,
+              157.81890869140625,
+              253.81719970703125
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "LAURA NUNEZ\nIncumbent"
+        },
+        {
+          "name": "MELE KASAVU LATU",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              277.6602478027344,
+              195.83837890625,
+              285.42340087890625
+            ],
+            "text": "MELE KASAVU LATU"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              290.8695373535156,
+              157.81890869140625,
+              299.917236328125
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "MELE KASAVU LATU\nIncumbent"
+        },
+        {
+          "name": "TAMARA SOBOMEHIN",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              323.76025390625,
+              199.94586181640625,
+              331.5234069824219
+            ],
+            "text": "TAMARA SOBOMEHIN"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              336.96954345703125,
+              157.81890869140625,
+              346.0172424316406
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "TAMARA SOBOMEHIN\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3620      Ravenswood City School District Member, Governing Board                                                                                                                       Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 11,
+        "bbox": [
+          48.0,
+          217.93125915527344,
+          296.92877197265625,
+          227.7050018310547
+        ],
+        "text": "Ravenswood City School District Member, Governing Board"
+      },
+      "pdfPage": 11,
+      "sourceText": "Ravenswood City School District Member, Governing Board\nVote for 3\nOn Ballot: No\nLAURA NUNEZ\nIncumbent\nMELE KASAVU LATU\nIncumbent\nTAMARA SOBOMEHIN\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Ravenswood City School District Member, Governing Board\nVote for 3\nOn Ballot: No\nLAURA NUNEZ\nIncumbent\nMELE KASAVU LATU\nIncumbent\nTAMARA SOBOMEHIN\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3643",
+      "office": "Redwood City School District Member, Governing Board, Trustee Area 2",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "DAVID E. WEEKLY",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              385.4102478027344,
+              186.2751922607422,
+              393.17340087890625
+            ],
+            "text": "DAVID E. WEEKLY"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              398.6195373535156,
+              157.81890869140625,
+              407.667236328125
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "DAVID E. WEEKLY\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3643      Redwood City School District Member, Governing Board, Trustee Area 2                                                                                                          Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 11,
+        "bbox": [
+          48.0,
+          371.78125,
+          347.13623046875,
+          381.5550231933594
+        ],
+        "text": "Redwood City School District Member, Governing Board, Trustee Area 2"
+      },
+      "pdfPage": 11,
+      "sourceText": "Redwood City School District Member, Governing Board, Trustee Area 2\nVote for 1\nOn Ballot: No\nDAVID E. WEEKLY\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Redwood City School District Member, Governing Board, Trustee Area 2\nVote for 1\nOn Ballot: No\nDAVID E. WEEKLY\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3646",
+      "office": "Redwood City School District Member, Governing Board, Trustee Area 5",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CECILIA I. MARQUEZ",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              447.06024169921875,
+              196.20672607421875,
+              454.8233947753906
+            ],
+            "text": "CECILIA I. MARQUEZ"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              460.26953125,
+              157.81890869140625,
+              469.3172302246094
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "CECILIA I. MARQUEZ\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3646      Redwood City School District Member, Governing Board, Trustee Area 5                                                                                                          Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 11,
+        "bbox": [
+          48.0,
+          433.4312438964844,
+          347.13623046875,
+          443.20501708984375
+        ],
+        "text": "Redwood City School District Member, Governing Board, Trustee Area 5"
+      },
+      "pdfPage": 11,
+      "sourceText": "Redwood City School District Member, Governing Board, Trustee Area 5\nVote for 1\nOn Ballot: No\nCECILIA I. MARQUEZ\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Redwood City School District Member, Governing Board, Trustee Area 5\nVote for 1\nOn Ballot: No\nCECILIA I. MARQUEZ\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3663",
+      "office": "San Bruno Park School District Member, Governing Board, Trustee Area 2",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "DENISE COOK",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              508.1602478027344,
+              174.4532470703125,
+              515.9234008789062
+            ],
+            "text": "DENISE COOK"
+          },
+          "designationCell": {
+            "pdfPage": 11,
+            "bbox": [
+              120.0,
+              521.3695068359375,
+              143.8625946044922,
+              530.417236328125
+            ],
+            "text": "Parent"
+          },
+          "ballotDesignation": "Parent",
+          "sourceText": "DENISE COOK\nParent"
+        }
+      ],
+      "sourceHeader": "3663      San Bruno Park School District Member, Governing Board, Trustee Area 2                                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 11,
+        "bbox": [
+          48.0,
+          494.53125,
+          354.44244384765625,
+          504.3050231933594
+        ],
+        "text": "San Bruno Park School District Member, Governing Board, Trustee Area 2"
+      },
+      "pdfPage": 11,
+      "sourceText": "San Bruno Park School District Member, Governing Board, Trustee Area 2\nVote for 1\nOn Ballot: No\nDENISE COOK\nParent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Bruno Park School District Member, Governing Board, Trustee Area 2\nVote for 1\nOn Ballot: No\nDENISE COOK\nParent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3664",
+      "office": "San Bruno Park School District Member, Governing Board, Trustee Area 3",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "DUANE BEADLES",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              45.96025085449219,
+              185.64273071289062,
+              53.7234001159668
+            ],
+            "text": "DUANE BEADLES"
+          },
+          "designationCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              59.169498443603516,
+              211.3842010498047,
+              68.21720123291016
+            ],
+            "text": "Union Electrician / Parent"
+          },
+          "ballotDesignation": "Union Electrician / Parent",
+          "sourceText": "DUANE BEADLES\nUnion Electrician / Parent"
+        }
+      ],
+      "sourceHeader": "3664      San Bruno Park School District Member, Governing Board, Trustee Area 3                                                                                                       Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 12,
+        "bbox": [
+          48.0,
+          32.33124923706055,
+          354.44244384765625,
+          42.10499954223633
+        ],
+        "text": "San Bruno Park School District Member, Governing Board, Trustee Area 3"
+      },
+      "pdfPage": 12,
+      "sourceText": "San Bruno Park School District Member, Governing Board, Trustee Area 3\nVote for 1\nOn Ballot: No\nDUANE BEADLES\nUnion Electrician / Parent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Bruno Park School District Member, Governing Board, Trustee Area 3\nVote for 1\nOn Ballot: No\nDUANE BEADLES\nUnion Electrician / Parent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3666",
+      "office": "San Bruno Park School District Member, Governing Board, Trustee Area 5",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "RAYMOND GIUSTI",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              107.6102523803711,
+              186.2056884765625,
+              115.37339782714844
+            ],
+            "text": "RAYMOND GIUSTI"
+          },
+          "designationCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              120.81949615478516,
+              157.81890869140625,
+              129.8671875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "RAYMOND GIUSTI\nIncumbent"
+        }
+      ],
+      "sourceHeader": "3666      San Bruno Park School District Member, Governing Board, Trustee Area 5                                                                                                       Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 12,
+        "bbox": [
+          48.0,
+          93.98125457763672,
+          354.44244384765625,
+          103.7550048828125
+        ],
+        "text": "San Bruno Park School District Member, Governing Board, Trustee Area 5"
+      },
+      "pdfPage": 12,
+      "sourceText": "San Bruno Park School District Member, Governing Board, Trustee Area 5\nVote for 1\nOn Ballot: No\nRAYMOND GIUSTI\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Bruno Park School District Member, Governing Board, Trustee Area 5\nVote for 1\nOn Ballot: No\nRAYMOND GIUSTI\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3702",
+      "office": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 1 (Full Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "ALLYSON CHAN",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              369.2102355957031,
+              180.35377502441406,
+              376.973388671875
+            ],
+            "text": "ALLYSON CHAN"
+          },
+          "designationCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              382.4195251464844,
+              223.97970581054688,
+              391.46722412109375
+            ],
+            "text": "Education Programs Director"
+          },
+          "ballotDesignation": "Education Programs Director",
+          "sourceText": "ALLYSON CHAN\nEducation Programs Director"
+        }
+      ],
+      "sourceHeader": "3702      San Mateo-Foster City School District Member, Governing Board, Trustee Area 1 (Full Term)                                                                                    Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 12,
+        "bbox": [
+          48.0,
+          355.58123779296875,
+          428.169921875,
+          365.3550109863281
+        ],
+        "text": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 1 (Full Term)"
+      },
+      "pdfPage": 12,
+      "sourceText": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 1 (Full Term)\nVote for 1\nOn Ballot: No\nALLYSON CHAN\nEducation Programs Director",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 1 (Full Term)\nVote for 1\nOn Ballot: No\nALLYSON CHAN\nEducation Programs Director"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3703",
+      "office": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 2 (Full Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SABRINA OCAMPO",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              430.8602294921875,
+              190.4104461669922,
+              438.6233825683594
+            ],
+            "text": "SABRINA OCAMPO"
+          },
+          "designationCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              444.06951904296875,
+              216.79501342773438,
+              453.1172180175781
+            ],
+            "text": "Parent / Account Executive"
+          },
+          "ballotDesignation": "Parent / Account Executive",
+          "sourceText": "SABRINA OCAMPO\nParent / Account Executive"
+        }
+      ],
+      "sourceHeader": "3703      San Mateo-Foster City School District Member, Governing Board, Trustee Area 2 (Full Term)                                                                                    Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 12,
+        "bbox": [
+          48.0,
+          417.2312316894531,
+          428.169921875,
+          427.0050048828125
+        ],
+        "text": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 2 (Full Term)"
+      },
+      "pdfPage": 12,
+      "sourceText": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 2 (Full Term)\nVote for 1\nOn Ballot: No\nSABRINA OCAMPO\nParent / Account Executive",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 2 (Full Term)\nVote for 1\nOn Ballot: No\nSABRINA OCAMPO\nParent / Account Executive"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3704",
+      "office": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 3 (Short Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "STACEY HO",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              492.5102233886719,
+              165.68930053710938,
+              500.27337646484375
+            ],
+            "text": "STACEY HO"
+          },
+          "designationCell": {
+            "pdfPage": 12,
+            "bbox": [
+              120.0,
+              505.719482421875,
+              196.54501342773438,
+              514.7672119140625
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "STACEY HO\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "3704      San Mateo-Foster City School District Member, Governing Board, Trustee Area 3 (Short Term)                                                                                   Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 12,
+        "bbox": [
+          48.0,
+          478.8812561035156,
+          435.45867919921875,
+          488.655029296875
+        ],
+        "text": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 3 (Short Term)"
+      },
+      "pdfPage": 12,
+      "sourceText": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 3 (Short Term)\nVote for 1\nOn Ballot: No\nSTACEY HO\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo-Foster City School District Member, Governing Board, Trustee Area 3 (Short Term)\nVote for 1\nOn Ballot: No\nSTACEY HO\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "3720",
+      "office": "Woodside Elementary School District Member, Governing Board",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SUJAY JASWA",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              30.410247802734375,
+              174.64784240722656,
+              38.173397064208984
+            ],
+            "text": "SUJAY JASWA"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              43.6194953918457,
+              217.2485809326172,
+              52.667198181152344
+            ],
+            "text": "Tech Entrepreneur / Parent"
+          },
+          "ballotDesignation": "Tech Entrepreneur / Parent",
+          "sourceText": "SUJAY JASWA\nTech Entrepreneur / Parent"
+        },
+        {
+          "name": "AMANDA PEIFFER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              76.51025390625,
+              187.70687866210938,
+              84.27339935302734
+            ],
+            "text": "AMANDA PEIFFER"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              89.71949768066406,
+              157.81890869140625,
+              98.76719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "AMANDA PEIFFER\nIncumbent"
+        },
+        {
+          "name": "MIA HALL",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              122.61024475097656,
+              158.5933380126953,
+              130.37339782714844
+            ],
+            "text": "MIA HALL"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              135.81948852539062,
+              143.8625946044922,
+              144.8671875
+            ],
+            "text": "Parent"
+          },
+          "ballotDesignation": "Parent",
+          "sourceText": "MIA HALL\nParent"
+        }
+      ],
+      "sourceHeader": "3720      Woodside Elementary School District Member, Governing Board                                                                                                                  Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 12,
+        "bbox": [
+          48.0,
+          540.5311889648438,
+          315.260009765625,
+          550.304931640625
+        ],
+        "text": "Woodside Elementary School District Member, Governing Board"
+      },
+      "pdfPage": 12,
+      "sourceText": "Woodside Elementary School District Member, Governing Board\nVote for 3\nOn Ballot: No\nSUJAY JASWA\nTech Entrepreneur / Parent\nAMANDA PEIFFER\nIncumbent\nMIA HALL\nParent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Woodside Elementary School District Member, Governing Board\nVote for 3\nOn Ballot: No\nSUJAY JASWA\nTech Entrepreneur / Parent\nAMANDA PEIFFER\nIncumbent\nMIA HALL\nParent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "5000",
+      "office": "Town of Atherton Member, City Council (Full Term)",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "RICK DEGOLIA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              292.0102233886719,
+              176.12818908691406,
+              299.77337646484375
+            ],
+            "text": "RICK DEGOLIA"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              305.2195129394531,
+              157.81890869140625,
+              314.2672119140625
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "RICK DEGOLIA\nIncumbent"
+        },
+        {
+          "name": "CHRISTINE DAVID",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              338.1102600097656,
+              186.302978515625,
+              345.8734130859375
+            ],
+            "text": "CHRISTINE DAVID"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              351.3195495605469,
+              183.92518615722656,
+              360.36724853515625
+            ],
+            "text": "Non-Profit Leader"
+          },
+          "ballotDesignation": "Non-Profit Leader",
+          "sourceText": "CHRISTINE DAVID\nNon-Profit Leader"
+        },
+        {
+          "name": "JERRY LEUGERS",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              384.2102355957031,
+              184.0928955078125,
+              391.973388671875
+            ],
+            "text": "JERRY LEUGERS"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              397.4195251464844,
+              205.5198211669922,
+              406.46722412109375
+            ],
+            "text": "Planning Commissioner"
+          },
+          "ballotDesignation": "Planning Commissioner",
+          "sourceText": "JERRY LEUGERS\nPlanning Commissioner"
+        }
+      ],
+      "sourceHeader": "5000      Town of Atherton Member, City Council (Full Term)                                                                                                                  Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 13,
+        "bbox": [
+          48.0,
+          278.3812255859375,
+          257.8162841796875,
+          288.1549987792969
+        ],
+        "text": "Town of Atherton Member, City Council (Full Term)"
+      },
+      "pdfPage": 13,
+      "sourceText": "Town of Atherton Member, City Council (Full Term)\nVote for 3\nOn Ballot: No\nRICK DEGOLIA\nIncumbent\nCHRISTINE DAVID\nNon-Profit Leader\nJERRY LEUGERS\nPlanning Commissioner",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Town of Atherton Member, City Council (Full Term)\nVote for 3\nOn Ballot: No\nRICK DEGOLIA\nIncumbent\nCHRISTINE DAVID\nNon-Profit Leader\nJERRY LEUGERS\nPlanning Commissioner"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "5001",
+      "office": "Town of Atherton Member, City Council (Short Term)",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "BILL WIDMER",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              445.8602294921875,
+              171.9720916748047,
+              453.6233825683594
+            ],
+            "text": "BILL WIDMER"
+          },
+          "designationCell": {
+            "pdfPage": 13,
+            "bbox": [
+              120.0,
+              459.06951904296875,
+              178.95989990234375,
+              468.1172180175781
+            ],
+            "text": "Council Member"
+          },
+          "ballotDesignation": "Council Member",
+          "sourceText": "BILL WIDMER\nCouncil Member"
+        }
+      ],
+      "sourceHeader": "5001      Town of Atherton Member, City Council (Short Term)                                                                                                                 Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 13,
+        "bbox": [
+          48.0,
+          432.2312316894531,
+          265.10504150390625,
+          442.0050048828125
+        ],
+        "text": "Town of Atherton Member, City Council (Short Term)"
+      },
+      "pdfPage": 13,
+      "sourceText": "Town of Atherton Member, City Council (Short Term)\nVote for 2\nOn Ballot: No\nBILL WIDMER\nCouncil Member",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Town of Atherton Member, City Council (Short Term)\nVote for 2\nOn Ballot: No\nBILL WIDMER\nCouncil Member"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "5181",
+      "office": "Town of Hillsborough Member, City Council",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "LESLIE MARDEN RAGSDALE",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 17,
+            "bbox": [
+              120.0,
+              452.6602478027344,
+              223.4854736328125,
+              460.42340087890625
+            ],
+            "text": "LESLIE MARDEN RAGSDALE"
+          },
+          "designationCell": {
+            "pdfPage": 17,
+            "bbox": [
+              120.0,
+              465.8695373535156,
+              157.81890869140625,
+              474.917236328125
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "LESLIE MARDEN RAGSDALE\nIncumbent"
+        },
+        {
+          "name": "JEFF BAXTER",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 17,
+            "bbox": [
+              120.0,
+              498.76025390625,
+              173.29257202148438,
+              506.5234069824219
+            ],
+            "text": "JEFF BAXTER"
+          },
+          "designationCell": {
+            "pdfPage": 17,
+            "bbox": [
+              120.0,
+              511.96954345703125,
+              216.78689575195312,
+              521.0172729492188
+            ],
+            "text": "Retired Accounting Partner"
+          },
+          "ballotDesignation": "Retired Accounting Partner",
+          "sourceText": "JEFF BAXTER\nRetired Accounting Partner"
+        }
+      ],
+      "sourceHeader": "5181      Town of Hillsborough Member, City Council                                                                                                                               Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 17,
+        "bbox": [
+          48.0,
+          439.03125,
+          228.6787872314453,
+          448.8050231933594
+        ],
+        "text": "Town of Hillsborough Member, City Council"
+      },
+      "pdfPage": 17,
+      "sourceText": "Town of Hillsborough Member, City Council\nVote for 2\nOn Ballot: No\nLESLIE MARDEN RAGSDALE\nIncumbent\nJEFF BAXTER\nRetired Accounting Partner",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Town of Hillsborough Member, City Council\nVote for 2\nOn Ballot: No\nLESLIE MARDEN RAGSDALE\nIncumbent\nJEFF BAXTER\nRetired Accounting Partner"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6001",
+      "office": "Bayshore Sanitary District Member, Board of Directors",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "IRIS GALLAGHER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              30.410247802734375,
+              185.26048278808594,
+              38.173397064208984
+            ],
+            "text": "IRIS GALLAGHER"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              43.6194953918457,
+              157.81890869140625,
+              52.667198181152344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "IRIS GALLAGHER\nIncumbent"
+        },
+        {
+          "name": "KENNETH A. TONNA",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              76.51025390625,
+              194.20513916015625,
+              84.27339935302734
+            ],
+            "text": "KENNETH A. TONNA"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              89.71949768066406,
+              157.81890869140625,
+              98.76719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "KENNETH A. TONNA\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6001      Bayshore Sanitary District Member, Board of Directors                                                                                                                     Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 22,
+        "bbox": [
+          48.0,
+          536.6312255859375,
+          274.5725402832031,
+          546.4049682617188
+        ],
+        "text": "Bayshore Sanitary District Member, Board of Directors"
+      },
+      "pdfPage": 22,
+      "sourceText": "Bayshore Sanitary District Member, Board of Directors\nVote for 2\nOn Ballot: No\nIRIS GALLAGHER\nIncumbent\nKENNETH A. TONNA\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Bayshore Sanitary District Member, Board of Directors\nVote for 2\nOn Ballot: No\nIRIS GALLAGHER\nIncumbent\nKENNETH A. TONNA\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6021",
+      "office": "Broadmoor Police Protection District Member, Board of Commissioners",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "JOHN V. AGUERRE",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              138.16024780273438,
+              189.33319091796875,
+              145.92340087890625
+            ],
+            "text": "JOHN V. AGUERRE"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              151.36949157714844,
+              196.54501342773438,
+              160.4171905517578
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "JOHN V. AGUERRE\nAppointed Incumbent"
+        },
+        {
+          "name": "ANNA MARIE BRIZUELA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              184.26025390625,
+              206.75682067871094,
+              192.02340698242188
+            ],
+            "text": "ANNA MARIE BRIZUELA"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              197.46949768066406,
+              230.58123779296875,
+              206.51719665527344
+            ],
+            "text": "Investment Compliance Officer"
+          },
+          "ballotDesignation": "Investment Compliance Officer",
+          "sourceText": "ANNA MARIE BRIZUELA\nInvestment Compliance Officer"
+        }
+      ],
+      "sourceHeader": "6021      Broadmoor Police Protection District Member, Board of Commissioners                                                                                                    Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 23,
+        "bbox": [
+          48.0,
+          124.53125,
+          346.03375244140625,
+          134.30499267578125
+        ],
+        "text": "Broadmoor Police Protection District Member, Board of Commissioners"
+      },
+      "pdfPage": 23,
+      "sourceText": "Broadmoor Police Protection District Member, Board of Commissioners\nVote for 2\nOn Ballot: No\nJOHN V. AGUERRE\nAppointed Incumbent\nANNA MARIE BRIZUELA\nInvestment Compliance Officer",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Broadmoor Police Protection District Member, Board of Commissioners\nVote for 2\nOn Ballot: No\nJOHN V. AGUERRE\nAppointed Incumbent\nANNA MARIE BRIZUELA\nInvestment Compliance Officer"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6042",
+      "office": "Coastside County Water District Member, Board of Directors, Zone 1 (Short Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "DAVID R. DICKSON",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              245.91024780273438,
+              189.77798461914062,
+              253.67340087890625
+            ],
+            "text": "DAVID R. DICKSON"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              259.1194763183594,
+              196.54501342773438,
+              268.16717529296875
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "DAVID R. DICKSON\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "6042      Coastside County Water District Member, Board of Directors, Zone 1 (Short Term)                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 23,
+        "bbox": [
+          48.0,
+          232.28126525878906,
+          385.9162292480469,
+          242.0550079345703
+        ],
+        "text": "Coastside County Water District Member, Board of Directors, Zone 1 (Short Term)"
+      },
+      "pdfPage": 23,
+      "sourceText": "Coastside County Water District Member, Board of Directors, Zone 1 (Short Term)\nVote for 1\nOn Ballot: No\nDAVID R. DICKSON\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Coastside County Water District Member, Board of Directors, Zone 1 (Short Term)\nVote for 1\nOn Ballot: No\nDAVID R. DICKSON\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6043",
+      "office": "Coastside County Water District Member, Board of Directors, Zone 2 (Full Term)",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CHRIS R MICKELSEN",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              307.56024169921875,
+              197.22837829589844,
+              315.3233947753906
+            ],
+            "text": "CHRIS R MICKELSEN"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              320.76953125,
+              157.81890869140625,
+              329.8172302246094
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "CHRIS R MICKELSEN\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6043      Coastside County Water District Member, Board of Directors, Zone 2 (Full Term)                                                                                         Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 23,
+        "bbox": [
+          48.0,
+          293.9312438964844,
+          378.6274719238281,
+          303.70501708984375
+        ],
+        "text": "Coastside County Water District Member, Board of Directors, Zone 2 (Full Term)"
+      },
+      "pdfPage": 23,
+      "sourceText": "Coastside County Water District Member, Board of Directors, Zone 2 (Full Term)\nVote for 1\nOn Ballot: No\nCHRIS R MICKELSEN\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Coastside County Water District Member, Board of Directors, Zone 2 (Full Term)\nVote for 1\nOn Ballot: No\nCHRIS R MICKELSEN\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6064",
+      "office": "Coastside Fire Protection District Member, Board of Directors, District C",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "PATRICK HANNA",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              476.9602355957031,
+              182.40403747558594,
+              484.723388671875
+            ],
+            "text": "PATRICK HANNA"
+          },
+          "designationCell": {
+            "pdfPage": 23,
+            "bbox": [
+              120.0,
+              490.1695251464844,
+              157.81890869140625,
+              499.21722412109375
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "PATRICK HANNA\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6064      Coastside Fire Protection District Member, Board of Directors, District C                                                                                              Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 23,
+        "bbox": [
+          48.0,
+          463.33123779296875,
+          347.4949951171875,
+          473.1050109863281
+        ],
+        "text": "Coastside Fire Protection District Member, Board of Directors, District C"
+      },
+      "pdfPage": 23,
+      "sourceText": "Coastside Fire Protection District Member, Board of Directors, District C\nVote for 1\nOn Ballot: No\nPATRICK HANNA\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Coastside Fire Protection District Member, Board of Directors, District C\nVote for 1\nOn Ballot: No\nPATRICK HANNA\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6140",
+      "office": "Highlands Recreation District Member, Board of Directors",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "GORDON STRAUSE",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 24,
+            "bbox": [
+              120.0,
+              421.56024169921875,
+              192.21047973632812,
+              429.3233947753906
+            ],
+            "text": "GORDON STRAUSE"
+          },
+          "designationCell": {
+            "pdfPage": 24,
+            "bbox": [
+              120.0,
+              434.76953125,
+              203.276123046875,
+              443.8172302246094
+            ],
+            "text": "(No Ballot Designation)"
+          },
+          "ballotDesignation": "(No Ballot Designation)",
+          "sourceText": "GORDON STRAUSE\n(No Ballot Designation)"
+        },
+        {
+          "name": "UY UT",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 24,
+            "bbox": [
+              120.0,
+              467.6602478027344,
+              146.49339294433594,
+              475.42340087890625
+            ],
+            "text": "UY UT"
+          },
+          "designationCell": {
+            "pdfPage": 24,
+            "bbox": [
+              120.0,
+              480.8695373535156,
+              157.81890869140625,
+              489.917236328125
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "UY UT\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6140      Highlands Recreation District Member, Board of Directors                                                                                                                Vote for 3         On Ballot: No",
+      "headerCell": {
+        "pdfPage": 24,
+        "bbox": [
+          48.0,
+          407.9312438964844,
+          287.6887512207031,
+          417.70501708984375
+        ],
+        "text": "Highlands Recreation District Member, Board of Directors"
+      },
+      "pdfPage": 24,
+      "sourceText": "Highlands Recreation District Member, Board of Directors\nVote for 3\nOn Ballot: No\nGORDON STRAUSE\n(No Ballot Designation)\nUY UT\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Highlands Recreation District Member, Board of Directors\nVote for 3\nOn Ballot: No\nGORDON STRAUSE\n(No Ballot Designation)\nUY UT\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6160",
+      "office": "Ladera Recreation District Member, Board of Directors (Full Term)",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SHAWN SALMON",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 24,
+            "bbox": [
+              120.0,
+              528.76025390625,
+              183.74539184570312,
+              536.5233764648438
+            ],
+            "text": "SHAWN SALMON"
+          },
+          "designationCell": {
+            "pdfPage": 24,
+            "bbox": [
+              120.0,
+              541.969482421875,
+              205.9896240234375,
+              551.0172119140625
+            ],
+            "text": "Product Marketing Lead"
+          },
+          "ballotDesignation": "Product Marketing Lead",
+          "sourceText": "SHAWN SALMON\nProduct Marketing Lead"
+        },
+        {
+          "name": "BRIAN WALL",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              52.21025466918945,
+              169.30328369140625,
+              59.97340393066406
+            ],
+            "text": "BRIAN WALL"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              65.41950988769531,
+              157.81890869140625,
+              74.46720886230469
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "BRIAN WALL\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6160      Ladera Recreation District Member, Board of Directors (Full Term)                                                                                                       Vote for 3         On Ballot: No",
+      "headerCell": {
+        "pdfPage": 24,
+        "bbox": [
+          48.0,
+          515.1312255859375,
+          321.0787658691406,
+          524.9049682617188
+        ],
+        "text": "Ladera Recreation District Member, Board of Directors (Full Term)"
+      },
+      "pdfPage": 24,
+      "sourceText": "Ladera Recreation District Member, Board of Directors (Full Term)\nVote for 3\nOn Ballot: No\nSHAWN SALMON\nProduct Marketing Lead\nBRIAN WALL\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Ladera Recreation District Member, Board of Directors (Full Term)\nVote for 3\nOn Ballot: No\nSHAWN SALMON\nProduct Marketing Lead\nBRIAN WALL\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6161",
+      "office": "Ladera Recreation District Member, Board of Directors (Short Term)",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "HELEN WANG",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              113.8602523803711,
+              172.93814086914062,
+              121.62339782714844
+            ],
+            "text": "HELEN WANG"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              127.06949615478516,
+              196.54501342773438,
+              136.1171875
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "HELEN WANG\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "6161      Ladera Recreation District Member, Board of Directors (Short Term)                                                                                                      Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 25,
+        "bbox": [
+          48.0,
+          100.23125457763672,
+          328.3675231933594,
+          110.0050048828125
+        ],
+        "text": "Ladera Recreation District Member, Board of Directors (Short Term)"
+      },
+      "pdfPage": 25,
+      "sourceText": "Ladera Recreation District Member, Board of Directors (Short Term)\nVote for 2\nOn Ballot: No\nHELEN WANG\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Ladera Recreation District Member, Board of Directors (Short Term)\nVote for 2\nOn Ballot: No\nHELEN WANG\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6200",
+      "office": "Menlo Park Fire Protection District Member, Board of Directors",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CHUCK BERNSTEIN",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              175.51025390625,
+              192.9749755859375,
+              183.27340698242188
+            ],
+            "text": "CHUCK BERNSTEIN"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              188.71949768066406,
+              157.81890869140625,
+              197.76719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "CHUCK BERNSTEIN\nIncumbent"
+        },
+        {
+          "name": "GARY L. BLOOM",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              221.61024475097656,
+              181.3824005126953,
+              229.37339782714844
+            ],
+            "text": "GARY L. BLOOM"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              234.81948852539062,
+              157.81890869140625,
+              243.8671875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "GARY L. BLOOM\nIncumbent"
+        },
+        {
+          "name": "ROBERT JONES",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              267.71026611328125,
+              180.6317901611328,
+              275.4734191894531
+            ],
+            "text": "ROBERT JONES"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              280.9195556640625,
+              157.81890869140625,
+              289.9672546386719
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "ROBERT JONES\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6200      Menlo Park Fire Protection District Member, Board of Directors                                                                                                          Vote for 3        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 25,
+        "bbox": [
+          48.0,
+          161.88125610351562,
+          308.6012878417969,
+          171.65499877929688
+        ],
+        "text": "Menlo Park Fire Protection District Member, Board of Directors"
+      },
+      "pdfPage": 25,
+      "sourceText": "Menlo Park Fire Protection District Member, Board of Directors\nVote for 3\nOn Ballot: No\nCHUCK BERNSTEIN\nIncumbent\nGARY L. BLOOM\nIncumbent\nROBERT JONES\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Menlo Park Fire Protection District Member, Board of Directors\nVote for 3\nOn Ballot: No\nCHUCK BERNSTEIN\nIncumbent\nGARY L. BLOOM\nIncumbent\nROBERT JONES\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6224",
+      "office": "Mid-Peninsula Water District Member, Board of Directors, Division 3",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "NEELA PATEL",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              329.3602294921875,
+              172.61148071289062,
+              337.1233825683594
+            ],
+            "text": "NEELA PATEL"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              342.56951904296875,
+              196.54501342773438,
+              351.6172180175781
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "NEELA PATEL\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "6224      Mid-Peninsula Water District Member, Board of Directors, Division 3                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 25,
+        "bbox": [
+          48.0,
+          315.7312316894531,
+          329.6974792480469,
+          325.5050048828125
+        ],
+        "text": "Mid-Peninsula Water District Member, Board of Directors, Division 3"
+      },
+      "pdfPage": 25,
+      "sourceText": "Mid-Peninsula Water District Member, Board of Directors, Division 3\nVote for 1\nOn Ballot: No\nNEELA PATEL\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Mid-Peninsula Water District Member, Board of Directors, Division 3\nVote for 1\nOn Ballot: No\nNEELA PATEL\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6225",
+      "office": "Mid-Peninsula Water District Member, Board of Directors, Division 4",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "JOANN COVINGTON",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              391.0102233886719,
+              193.9897003173828,
+              398.77337646484375
+            ],
+            "text": "JOANN COVINGTON"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              404.2195129394531,
+              246.91891479492188,
+              413.2672119140625
+            ],
+            "text": "Member, MPWD Board of Directors"
+          },
+          "ballotDesignation": "Member, MPWD Board of Directors",
+          "sourceText": "JOANN COVINGTON\nMember, MPWD Board of Directors"
+        }
+      ],
+      "sourceHeader": "6225      Mid-Peninsula Water District Member, Board of Directors, Division 4                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 25,
+        "bbox": [
+          48.0,
+          377.3812561035156,
+          329.6974792480469,
+          387.155029296875
+        ],
+        "text": "Mid-Peninsula Water District Member, Board of Directors, Division 4"
+      },
+      "pdfPage": 25,
+      "sourceText": "Mid-Peninsula Water District Member, Board of Directors, Division 4\nVote for 1\nOn Ballot: No\nJOANN COVINGTON\nMember, MPWD Board of Directors",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Mid-Peninsula Water District Member, Board of Directors, Division 4\nVote for 1\nOn Ballot: No\nJOANN COVINGTON\nMember, MPWD Board of Directors"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6226",
+      "office": "Mid-Peninsula Water District Member, Board of Directors, Division 5",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CHARLES \"CHUCK\" COTTEN",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              452.6602478027344,
+              223.49935913085938,
+              460.42340087890625
+            ],
+            "text": "CHARLES \"CHUCK\" COTTEN"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              465.8695373535156,
+              196.54501342773438,
+              474.917236328125
+            ],
+            "text": "Appointed Incumbent"
+          },
+          "ballotDesignation": "Appointed Incumbent",
+          "sourceText": "CHARLES \"CHUCK\" COTTEN\nAppointed Incumbent"
+        }
+      ],
+      "sourceHeader": "6226      Mid-Peninsula Water District Member, Board of Directors, Division 5                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 25,
+        "bbox": [
+          48.0,
+          439.03125,
+          329.6974792480469,
+          448.8050231933594
+        ],
+        "text": "Mid-Peninsula Water District Member, Board of Directors, Division 5"
+      },
+      "pdfPage": 25,
+      "sourceText": "Mid-Peninsula Water District Member, Board of Directors, Division 5\nVote for 1\nOn Ballot: No\nCHARLES \"CHUCK\" COTTEN\nAppointed Incumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Mid-Peninsula Water District Member, Board of Directors, Division 5\nVote for 1\nOn Ballot: No\nCHARLES \"CHUCK\" COTTEN\nAppointed Incumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6240",
+      "office": "Midcoast Community Council Councilmember",
+      "voteFor": 4,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SCOTT BOLLINGER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              514.3102416992188,
+              192.21047973632812,
+              522.0733642578125
+            ],
+            "text": "SCOTT BOLLINGER"
+          },
+          "designationCell": {
+            "pdfPage": 25,
+            "bbox": [
+              120.0,
+              527.5194702148438,
+              157.81890869140625,
+              536.5671997070312
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "SCOTT BOLLINGER\nIncumbent"
+        },
+        {
+          "name": "JOAN BRENNAN",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              30.410247802734375,
+              181.77853393554688,
+              38.173397064208984
+            ],
+            "text": "JOAN BRENNAN"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              43.6194953918457,
+              181.6734161376953,
+              52.667198181152344
+            ],
+            "text": "Garden Designer"
+          },
+          "ballotDesignation": "Garden Designer",
+          "sourceText": "JOAN BRENNAN\nGarden Designer"
+        }
+      ],
+      "sourceHeader": "6240      Midcoast Community Council Councilmember                                                                                                                                Vote for 4        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 25,
+        "bbox": [
+          48.0,
+          500.6812438964844,
+          239.55502319335938,
+          510.45501708984375
+        ],
+        "text": "Midcoast Community Council Councilmember"
+      },
+      "pdfPage": 25,
+      "sourceText": "Midcoast Community Council Councilmember\nVote for 4\nOn Ballot: No\nSCOTT BOLLINGER\nIncumbent\nJOAN BRENNAN\nGarden Designer",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Midcoast Community Council Councilmember\nVote for 4\nOn Ballot: No\nSCOTT BOLLINGER\nIncumbent\nJOAN BRENNAN\nGarden Designer"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6260",
+      "office": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 5",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "KAREN C. HOLMAN",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              92.06024932861328,
+              191.8143310546875,
+              99.82339477539062
+            ],
+            "text": "KAREN C. HOLMAN"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              105.26949310302734,
+              157.81890869140625,
+              114.31719207763672
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "KAREN C. HOLMAN\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6260      Midpeninsula Regional Open Space District Member, Board of Directors, Ward 5                                                                                                   Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          78.4312515258789,
+          379.7825012207031,
+          88.20500183105469
+        ],
+        "text": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 5"
+      },
+      "pdfPage": 26,
+      "sourceText": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 5\nVote for 1\nOn Ballot: No\nKAREN C. HOLMAN\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 5\nVote for 1\nOn Ballot: No\nKAREN C. HOLMAN\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6261",
+      "office": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 6",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "BRYAN BECK",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              153.7102508544922,
+              171.2214813232422,
+              161.47340393066406
+            ],
+            "text": "BRYAN BECK"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              166.91949462890625,
+              230.2733917236328,
+              175.96719360351562
+            ],
+            "text": "Retired Statistical Programmer"
+          },
+          "ballotDesignation": "Retired Statistical Programmer",
+          "sourceText": "BRYAN BECK\nRetired Statistical Programmer"
+        }
+      ],
+      "sourceHeader": "6261      Midpeninsula Regional Open Space District Member, Board of Directors, Ward 6                                                                                                   Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          140.0812530517578,
+          379.7825012207031,
+          149.85499572753906
+        ],
+        "text": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 6"
+      },
+      "pdfPage": 26,
+      "sourceText": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 6\nVote for 1\nOn Ballot: No\nBRYAN BECK\nRetired Statistical Programmer",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Midpeninsula Regional Open Space District Member, Board of Directors, Ward 6\nVote for 1\nOn Ballot: No\nBRYAN BECK\nRetired Statistical Programmer"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6282",
+      "office": "Montara Water and Sanitary District Member, Board of Directors, Division 1",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "WILLIAM \"BILL\" SOFTKY",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              215.36024475097656,
+              209.4534149169922,
+              223.12339782714844
+            ],
+            "text": "WILLIAM \"BILL\" SOFTKY"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              228.56948852539062,
+              200.1090087890625,
+              237.6171875
+            ],
+            "text": "MWSD Board Director"
+          },
+          "ballotDesignation": "MWSD Board Director",
+          "sourceText": "WILLIAM \"BILL\" SOFTKY\nMWSD Board Director"
+        }
+      ],
+      "sourceHeader": "6282      Montara Water and Sanitary District Member, Board of Directors, Division 1                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          201.73126220703125,
+          359.3599548339844,
+          211.5050048828125
+        ],
+        "text": "Montara Water and Sanitary District Member, Board of Directors, Division 1"
+      },
+      "pdfPage": 26,
+      "sourceText": "Montara Water and Sanitary District Member, Board of Directors, Division 1\nVote for 1\nOn Ballot: No\nWILLIAM \"BILL\" SOFTKY\nMWSD Board Director",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Montara Water and Sanitary District Member, Board of Directors, Division 1\nVote for 1\nOn Ballot: No\nWILLIAM \"BILL\" SOFTKY\nMWSD Board Director"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6284",
+      "office": "Montara Water and Sanitary District Member, Board of Directors, Division 3",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "SCOTT BOYD",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              277.0102233886719,
+              171.36048889160156,
+              284.77337646484375
+            ],
+            "text": "SCOTT BOYD"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              290.2195129394531,
+              272.2799987792969,
+              299.2672119140625
+            ],
+            "text": "Director, Montara Water & Sanitary District"
+          },
+          "ballotDesignation": "Director, Montara Water & Sanitary District",
+          "sourceText": "SCOTT BOYD\nDirector, Montara Water & Sanitary District"
+        }
+      ],
+      "sourceHeader": "6284      Montara Water and Sanitary District Member, Board of Directors, Division 3                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          263.3812561035156,
+          359.3599548339844,
+          273.155029296875
+        ],
+        "text": "Montara Water and Sanitary District Member, Board of Directors, Division 3"
+      },
+      "pdfPage": 26,
+      "sourceText": "Montara Water and Sanitary District Member, Board of Directors, Division 3\nVote for 1\nOn Ballot: No\nSCOTT BOYD\nDirector, Montara Water & Sanitary District",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Montara Water and Sanitary District Member, Board of Directors, Division 3\nVote for 1\nOn Ballot: No\nSCOTT BOYD\nDirector, Montara Water & Sanitary District"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6286",
+      "office": "Montara Water and Sanitary District Member, Board of Directors, Division 5",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "VIRGINIA \"GINNY\" MCSHANE",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              338.6602478027344,
+              224.03453063964844,
+              346.42340087890625
+            ],
+            "text": "VIRGINIA \"GINNY\" MCSHANE"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              351.8695373535156,
+              177.01589965820312,
+              360.917236328125
+            ],
+            "text": "Retired Teacher"
+          },
+          "ballotDesignation": "Retired Teacher",
+          "sourceText": "VIRGINIA \"GINNY\" MCSHANE\nRetired Teacher"
+        }
+      ],
+      "sourceHeader": "6286      Montara Water and Sanitary District Member, Board of Directors, Division 5                                                                                                     Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          325.03125,
+          359.3599548339844,
+          334.8050231933594
+        ],
+        "text": "Montara Water and Sanitary District Member, Board of Directors, Division 5"
+      },
+      "pdfPage": 26,
+      "sourceText": "Montara Water and Sanitary District Member, Board of Directors, Division 5\nVote for 1\nOn Ballot: No\nVIRGINIA \"GINNY\" MCSHANE\nRetired Teacher",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Montara Water and Sanitary District Member, Board of Directors, Division 5\nVote for 1\nOn Ballot: No\nVIRGINIA \"GINNY\" MCSHANE\nRetired Teacher"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6302",
+      "office": "North Coast County Water District Member, Board of Directors, Zone A",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "WILLIAM HAUSER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              400.31024169921875,
+              186.7964324951172,
+              408.0733947753906
+            ],
+            "text": "WILLIAM HAUSER"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              413.51953125,
+              203.276123046875,
+              422.5672302246094
+            ],
+            "text": "(No Ballot Designation)"
+          },
+          "ballotDesignation": "(No Ballot Designation)",
+          "sourceText": "WILLIAM HAUSER\n(No Ballot Designation)"
+        }
+      ],
+      "sourceHeader": "6302      North Coast County Water District Member, Board of Directors, Zone A                                                                                                           Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          386.6812438964844,
+          340.9850158691406,
+          396.45501708984375
+        ],
+        "text": "North Coast County Water District Member, Board of Directors, Zone A"
+      },
+      "pdfPage": 26,
+      "sourceText": "North Coast County Water District Member, Board of Directors, Zone A\nVote for 1\nOn Ballot: No\nWILLIAM HAUSER\n(No Ballot Designation)",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "North Coast County Water District Member, Board of Directors, Zone A\nVote for 1\nOn Ballot: No\nWILLIAM HAUSER\n(No Ballot Designation)"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6303",
+      "office": "North Coast County Water District Member, Board of Directors, Zone B",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "ANNE DEJARNATT",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              461.9602355957031,
+              188.99957275390625,
+              469.723388671875
+            ],
+            "text": "ANNE DEJARNATT"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              475.1695251464844,
+              157.81890869140625,
+              484.21722412109375
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "ANNE DEJARNATT\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6303      North Coast County Water District Member, Board of Directors, Zone B                                                                                                           Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          448.33123779296875,
+          341.33502197265625,
+          458.1050109863281
+        ],
+        "text": "North Coast County Water District Member, Board of Directors, Zone B"
+      },
+      "pdfPage": 26,
+      "sourceText": "North Coast County Water District Member, Board of Directors, Zone B\nVote for 1\nOn Ballot: No\nANNE DEJARNATT\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "North Coast County Water District Member, Board of Directors, Zone B\nVote for 1\nOn Ballot: No\nANNE DEJARNATT\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6306",
+      "office": "North Coast County Water District Member, Board of Directors, Zone E",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "RON ASH",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              523.6102905273438,
+              157.5438995361328,
+              531.3734130859375
+            ],
+            "text": "RON ASH"
+          },
+          "designationCell": {
+            "pdfPage": 26,
+            "bbox": [
+              120.0,
+              536.8195190429688,
+              157.81890869140625,
+              545.8672485351562
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "RON ASH\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6306      North Coast County Water District Member, Board of Directors, Zone E                                                                                                           Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 26,
+        "bbox": [
+          48.0,
+          509.98126220703125,
+          340.853759765625,
+          519.7550048828125
+        ],
+        "text": "North Coast County Water District Member, Board of Directors, Zone E"
+      },
+      "pdfPage": 26,
+      "sourceText": "North Coast County Water District Member, Board of Directors, Zone E\nVote for 1\nOn Ballot: No\nRON ASH\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "North Coast County Water District Member, Board of Directors, Zone E\nVote for 1\nOn Ballot: No\nRON ASH\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6320",
+      "office": "Peninsula Health Care District Member, Board of Directors",
+      "voteFor": 3,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "LAWRENCE WILLIAM CAPPEL",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              67.76025390625,
+              227.22459411621094,
+              75.52339935302734
+            ],
+            "text": "LAWRENCE WILLIAM CAPPEL"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              80.96949768066406,
+              157.81890869140625,
+              90.01719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "LAWRENCE WILLIAM CAPPEL\nIncumbent"
+        },
+        {
+          "name": "DENNIS ZELL",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              113.86024475097656,
+              171.20758056640625,
+              121.6233901977539
+            ],
+            "text": "DENNIS ZELL"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              127.06949615478516,
+              157.81890869140625,
+              136.1171875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "DENNIS ZELL\nIncumbent"
+        },
+        {
+          "name": "HENRY SANCHEZ",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              159.9602508544922,
+              185.23963928222656,
+              167.72340393066406
+            ],
+            "text": "HENRY SANCHEZ"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              173.16949462890625,
+              157.81890869140625,
+              182.21719360351562
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "HENRY SANCHEZ\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6320      Peninsula Health Care District Member, Board of Directors                                                                                                                     Vote for 3           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          54.13125228881836,
+          290.1300048828125,
+          63.90500259399414
+        ],
+        "text": "Peninsula Health Care District Member, Board of Directors"
+      },
+      "pdfPage": 27,
+      "sourceText": "Peninsula Health Care District Member, Board of Directors\nVote for 3\nOn Ballot: No\nLAWRENCE WILLIAM CAPPEL\nIncumbent\nDENNIS ZELL\nIncumbent\nHENRY SANCHEZ\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Peninsula Health Care District Member, Board of Directors\nVote for 3\nOn Ballot: No\nLAWRENCE WILLIAM CAPPEL\nIncumbent\nDENNIS ZELL\nIncumbent\nHENRY SANCHEZ\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6349",
+      "office": "Pescadero Municipal Advisory Council Councilmember",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "CULLEN ROSE",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              221.61024475097656,
+              175.60693359375,
+              229.37339782714844
+            ],
+            "text": "CULLEN ROSE"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              234.81948852539062,
+              157.81890869140625,
+              243.8671875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "CULLEN ROSE\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6349      Pescadero Municipal Advisory Council Councilmember                                                                                                                            Vote for 2           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          207.98126220703125,
+          277.6437683105469,
+          217.7550048828125
+        ],
+        "text": "Pescadero Municipal Advisory Council Councilmember"
+      },
+      "pdfPage": 27,
+      "sourceText": "Pescadero Municipal Advisory Council Councilmember\nVote for 2\nOn Ballot: No\nCULLEN ROSE\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Pescadero Municipal Advisory Council Councilmember\nVote for 2\nOn Ballot: No\nCULLEN ROSE\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6363",
+      "office": "San Mateo County Harbor District Member, Board of Commissioners, District 2",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "GEORGE W. DOMURAT",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              283.2602233886719,
+              203.3304901123047,
+              291.02337646484375
+            ],
+            "text": "GEORGE W. DOMURAT"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              296.4695129394531,
+              157.81890869140625,
+              305.5172119140625
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "GEORGE W. DOMURAT\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6363      San Mateo County Harbor District Member, Board of Commissioners, District 2                                                                                                   Vote for 1           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          269.6312561035156,
+          374.7162170410156,
+          279.405029296875
+        ],
+        "text": "San Mateo County Harbor District Member, Board of Commissioners, District 2"
+      },
+      "pdfPage": 27,
+      "sourceText": "San Mateo County Harbor District Member, Board of Commissioners, District 2\nVote for 1\nOn Ballot: No\nGEORGE W. DOMURAT\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo County Harbor District Member, Board of Commissioners, District 2\nVote for 1\nOn Ballot: No\nGEORGE W. DOMURAT\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6364",
+      "office": "San Mateo County Harbor District Member, Board of Commissioners, District 3",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "KATHRYN SLATER-CARTER",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              344.9102478027344,
+              219.5170135498047,
+              352.67340087890625
+            ],
+            "text": "KATHRYN SLATER-CARTER"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              358.1195373535156,
+              157.81890869140625,
+              367.167236328125
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "KATHRYN SLATER-CARTER\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6364      San Mateo County Harbor District Member, Board of Commissioners, District 3                                                                                                   Vote for 1           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          331.2812194824219,
+          374.7162170410156,
+          341.05499267578125
+        ],
+        "text": "San Mateo County Harbor District Member, Board of Commissioners, District 3"
+      },
+      "pdfPage": 27,
+      "sourceText": "San Mateo County Harbor District Member, Board of Commissioners, District 3\nVote for 1\nOn Ballot: No\nKATHRYN SLATER-CARTER\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "San Mateo County Harbor District Member, Board of Commissioners, District 3\nVote for 1\nOn Ballot: No\nKATHRYN SLATER-CARTER\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6382",
+      "office": "Sequoia Healthcare District Member, Board of Directors, Zone A",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "WILLIAM FONG",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              406.56024169921875,
+              177.53208923339844,
+              414.3233947753906
+            ],
+            "text": "WILLIAM FONG"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              419.76953125,
+              157.81890869140625,
+              428.8172302246094
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "WILLIAM FONG\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6382      Sequoia Healthcare District Member, Board of Directors, Zone A                                                                                                                Vote for 1           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          392.9312438964844,
+          313.1162414550781,
+          402.70501708984375
+        ],
+        "text": "Sequoia Healthcare District Member, Board of Directors, Zone A"
+      },
+      "pdfPage": 27,
+      "sourceText": "Sequoia Healthcare District Member, Board of Directors, Zone A\nVote for 1\nOn Ballot: No\nWILLIAM FONG\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Sequoia Healthcare District Member, Board of Directors, Zone A\nVote for 1\nOn Ballot: No\nWILLIAM FONG\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6384",
+      "office": "Sequoia Healthcare District Member, Board of Directors, Zone C",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "ROSANNE FOUST",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              468.2102355957031,
+              186.0319366455078,
+              475.973388671875
+            ],
+            "text": "ROSANNE FOUST"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              481.4195251464844,
+              358.1319274902344,
+              490.46722412109375
+            ],
+            "text": "Appointed Sequoia Healthcare District Member, Board of Directors"
+          },
+          "ballotDesignation": "Appointed Sequoia Healthcare District Member, Board of Directors",
+          "sourceText": "ROSANNE FOUST\nAppointed Sequoia Healthcare District Member, Board of Directors"
+        }
+      ],
+      "sourceHeader": "6384      Sequoia Healthcare District Member, Board of Directors, Zone C                                                                                                                Vote for 1           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          454.58123779296875,
+          313.46624755859375,
+          464.3550109863281
+        ],
+        "text": "Sequoia Healthcare District Member, Board of Directors, Zone C"
+      },
+      "pdfPage": 27,
+      "sourceText": "Sequoia Healthcare District Member, Board of Directors, Zone C\nVote for 1\nOn Ballot: No\nROSANNE FOUST\nAppointed Sequoia Healthcare District Member, Board of Directors",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Sequoia Healthcare District Member, Board of Directors, Zone C\nVote for 1\nOn Ballot: No\nROSANNE FOUST\nAppointed Sequoia Healthcare District Member, Board of Directors"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6386",
+      "office": "Sequoia Healthcare District Member, Board of Directors, Zone E",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "BRIAN GREENBERG",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              529.8602905273438,
+              194.52484130859375,
+              537.6234130859375
+            ],
+            "text": "BRIAN GREENBERG"
+          },
+          "designationCell": {
+            "pdfPage": 27,
+            "bbox": [
+              120.0,
+              543.0695190429688,
+              231.19683837890625,
+              552.1172485351562
+            ],
+            "text": "Psychologist / Health Advocate"
+          },
+          "ballotDesignation": "Psychologist / Health Advocate",
+          "sourceText": "BRIAN GREENBERG\nPsychologist / Health Advocate"
+        }
+      ],
+      "sourceHeader": "6386      Sequoia Healthcare District Member, Board of Directors, Zone E                                                                                                                Vote for 1           On Ballot: No",
+      "headerCell": {
+        "pdfPage": 27,
+        "bbox": [
+          48.0,
+          516.2312622070312,
+          312.9849853515625,
+          526.0050048828125
+        ],
+        "text": "Sequoia Healthcare District Member, Board of Directors, Zone E"
+      },
+      "pdfPage": 27,
+      "sourceText": "Sequoia Healthcare District Member, Board of Directors, Zone E\nVote for 1\nOn Ballot: No\nBRIAN GREENBERG\nPsychologist / Health Advocate",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Sequoia Healthcare District Member, Board of Directors, Zone E\nVote for 1\nOn Ballot: No\nBRIAN GREENBERG\nPsychologist / Health Advocate"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6401",
+      "office": "West Bay Sanitary District Member, Board of Directors",
+      "voteFor": 2,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "EDWARD MORITZ",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              67.76025390625,
+              185.2882843017578,
+              75.52339935302734
+            ],
+            "text": "EDWARD MORITZ"
+          },
+          "designationCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              80.96949768066406,
+              157.81890869140625,
+              90.01719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "EDWARD MORITZ\nIncumbent"
+        },
+        {
+          "name": "ROY THIELE-SARDINA",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              113.86024475097656,
+              201.0717315673828,
+              121.6233901977539
+            ],
+            "text": "ROY THIELE-SARDINA"
+          },
+          "designationCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              127.06949615478516,
+              157.81890869140625,
+              136.1171875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "ROY THIELE-SARDINA\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6401      West Bay Sanitary District Member, Board of Directors                                                                                                                Vote for 2        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 28,
+        "bbox": [
+          48.0,
+          54.13125228881836,
+          273.93377685546875,
+          63.90500259399414
+        ],
+        "text": "West Bay Sanitary District Member, Board of Directors"
+      },
+      "pdfPage": 28,
+      "sourceText": "West Bay Sanitary District Member, Board of Directors\nVote for 2\nOn Ballot: No\nEDWARD MORITZ\nIncumbent\nROY THIELE-SARDINA\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "West Bay Sanitary District Member, Board of Directors\nVote for 2\nOn Ballot: No\nEDWARD MORITZ\nIncumbent\nROY THIELE-SARDINA\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6423",
+      "office": "Westborough Water District Member, Board of Directors, Zone 2",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "THOMAS CHAMBERS",
+          "statement": "Yes",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              175.51025390625,
+              197.99290466308594,
+              183.27340698242188
+            ],
+            "text": "THOMAS CHAMBERS"
+          },
+          "designationCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              188.71949768066406,
+              157.81890869140625,
+              197.76719665527344
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "THOMAS CHAMBERS\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6423      Westborough Water District Member, Board of Directors, Zone 2                                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 28,
+        "bbox": [
+          48.0,
+          161.88125610351562,
+          313.4837646484375,
+          171.65499877929688
+        ],
+        "text": "Westborough Water District Member, Board of Directors, Zone 2"
+      },
+      "pdfPage": 28,
+      "sourceText": "Westborough Water District Member, Board of Directors, Zone 2\nVote for 1\nOn Ballot: No\nTHOMAS CHAMBERS\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Westborough Water District Member, Board of Directors, Zone 2\nVote for 1\nOn Ballot: No\nTHOMAS CHAMBERS\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6425",
+      "office": "Westborough Water District Member, Board of Directors, Zone 4",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "PERRY BAUTISTA",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              237.16024780273438,
+              185.64968872070312,
+              244.92340087890625
+            ],
+            "text": "PERRY BAUTISTA"
+          },
+          "designationCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              250.36947631835938,
+              157.81890869140625,
+              259.41717529296875
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "PERRY BAUTISTA\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6425      Westborough Water District Member, Board of Directors, Zone 4                                                                                                        Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 28,
+        "bbox": [
+          48.0,
+          223.53126525878906,
+          313.4837646484375,
+          233.3050079345703
+        ],
+        "text": "Westborough Water District Member, Board of Directors, Zone 4"
+      },
+      "pdfPage": 28,
+      "sourceText": "Westborough Water District Member, Board of Directors, Zone 4\nVote for 1\nOn Ballot: No\nPERRY BAUTISTA\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Westborough Water District Member, Board of Directors, Zone 4\nVote for 1\nOn Ballot: No\nPERRY BAUTISTA\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    },
+    {
+      "code": "6441",
+      "office": "Woodside Fire Protection District Member, Board of Directors",
+      "voteFor": 1,
+      "onBallot": "No",
+      "candidates": [
+        {
+          "name": "MATT MILLER",
+          "statement": "No",
+          "partyCode": null,
+          "nameCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              298.81024169921875,
+              172.39602661132812,
+              306.5733947753906
+            ],
+            "text": "MATT MILLER"
+          },
+          "designationCell": {
+            "pdfPage": 28,
+            "bbox": [
+              120.0,
+              312.01953125,
+              157.81890869140625,
+              321.0672302246094
+            ],
+            "text": "Incumbent"
+          },
+          "ballotDesignation": "Incumbent",
+          "sourceText": "MATT MILLER\nIncumbent"
+        }
+      ],
+      "sourceHeader": "6441      Woodside Fire Protection District Member, Board of Directors                                                                                                         Vote for 1        On Ballot: No",
+      "headerCell": {
+        "pdfPage": 28,
+        "bbox": [
+          48.0,
+          285.1812438964844,
+          303.5787658691406,
+          294.95501708984375
+        ],
+        "text": "Woodside Fire Protection District Member, Board of Directors"
+      },
+      "pdfPage": 28,
+      "sourceText": "Woodside Fire Protection District Member, Board of Directors\nVote for 1\nOn Ballot: No\nMATT MILLER\nIncumbent",
+      "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_NO",
+      "nativeSanMateoSampleBlockAcquired": false,
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-09/52_candidateroster0903.pdf",
+        "sourceOrg": "San Mateo County Registration & Elections Division",
+        "collectedAt": "2026-11-03T09:13:06.359709+00:00",
+        "verifiedAt": "2026-11-03T09:39:32.503626+00:00",
+        "quote": "Woodside Fire Protection District Member, Board of Directors\nVote for 1\nOn Ballot: No\nMATT MILLER\nIncumbent"
+      },
+      "interpretation": "Explicit On Ballot: No; not inferred cancelled/declared-elected/withdrawn."
+    }
+  ]
+}

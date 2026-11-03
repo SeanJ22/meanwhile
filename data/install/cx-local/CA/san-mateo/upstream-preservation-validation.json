@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-03T09:41:19.719Z",
+  "upstreamRef": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+  "exactInputs": 34,
+  "measureContestsUnchanged": 160,
+  "measureQuestionsUnchanged": 160,
+  "measureExplanationRecordsUnchanged": 160,
+  "checkAuthority": true,
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "productionWrites": false
+}

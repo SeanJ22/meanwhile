@@ -1,0 +1,373 @@
+{
+  "nativeSanMateoSampleBlocksAcquired": 0,
+  "localOfficialInventorySupplementFields": 62,
+  "localOfficialInventorySupplementNames": 140,
+  "sharedJudicialWorksheetFields": 13,
+  "sharedJudicialNames": 13,
+  "sampleGapsAllLocalFields": [
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3021",
+      "office": "County Board of Education Member, Trustee Area 2",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3103",
+      "office": "San Mateo County Community College District Member, Governing Board, Trustee Area 2",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3204",
+      "office": "Cabrillo Unified School District Member, Governing Board, Trustee Area C",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3206",
+      "office": "Cabrillo Unified School District Member, Governing Board, Trustee Area E",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3244",
+      "office": "South San Francisco Unified School District Member, Governing Board, Trustee Area C",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3246",
+      "office": "South San Francisco Unified School District Member, Governing Board, Trustee Area E",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3324",
+      "office": "San Mateo Union High School District Member, Governing Board, Trustee Area 3",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3326",
+      "office": "San Mateo Union High School District Member, Governing Board, Trustee Area 5",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3342",
+      "office": "Sequoia Union High School District Member, Governing Board, Trustee Area A",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3345",
+      "office": "Sequoia Union High School District Member, Governing Board, Trustee Area D",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3440",
+      "office": "Brisbane School District Member, Governing Board",
+      "names": 4
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3541",
+      "office": "Menlo Park City School District Member, Governing Board",
+      "names": 4
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3580",
+      "office": "Pacifica School District Member, Governing Board (Full Term)",
+      "names": 7
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3581",
+      "office": "Pacifica School District Member, Governing Board (Short Term)",
+      "names": 3
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-3680",
+      "office": "San Carlos School District Member, Governing Board",
+      "names": 4
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-4050",
+      "office": "Member, Board of Supervisors, District 5 (Short Term)",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5022",
+      "office": "City of Belmont Mayor",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5023",
+      "office": "City of Belmont Member, City Council, District 1",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5025",
+      "office": "City of Belmont Member, City Council, District 3",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5041",
+      "office": "City of Brisbane Member, City Council",
+      "names": 5
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5062",
+      "office": "City of Burlingame Member, City Council, District 1",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5064",
+      "office": "City of Burlingame Member, City Council, District 3",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5066",
+      "office": "City of Burlingame Member, City Council, District 5",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5081",
+      "office": "Town of Colma Member, City Council",
+      "names": 4
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5100",
+      "office": "City of Daly City Member, City Council",
+      "names": 7
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5121",
+      "office": "City of East Palo Alto Member, City Council",
+      "names": 7
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5142",
+      "office": "City of Foster City Member, City Council, District 1",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5143",
+      "office": "City of Foster City Member, City Council, District 2",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5163",
+      "office": "City of Half Moon Bay Member, City Council, District 1",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5166",
+      "office": "City of Half Moon Bay Member, City Council, District 4",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5167",
+      "office": "City of Half Moon Bay Member, City Council, District 5",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5202",
+      "office": "City of Menlo Park Member, City Council, District 1",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5203",
+      "office": "City of Menlo Park Member, City Council, District 2",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5205",
+      "office": "City of Menlo Park Member, City Council, District 4",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5223",
+      "office": "City of Millbrae Member, City Council, District 2 (Full Term)",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5224",
+      "office": "City of Millbrae Member, City Council, District 3 (Short Term)",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5225",
+      "office": "City of Millbrae Member, City Council, District 4 (Full Term)",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5243",
+      "office": "City of Pacifica Member, City Council, District 2",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5244",
+      "office": "City of Pacifica Member, City Council, District 3",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5246",
+      "office": "City of Pacifica Member, City Council, District 5",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5260",
+      "office": "Town of Portola Valley Member, Town Council",
+      "names": 3
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5283",
+      "office": "City of Redwood City Member, City Council, District 2",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5286",
+      "office": "City of Redwood City Member, City Council, District 5",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5287",
+      "office": "City of Redwood City Member, City Council, District 6",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5300",
+      "office": "City of San Bruno Mayor",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5303",
+      "office": "City of San Bruno Member, City Council, District 1",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5306",
+      "office": "City of San Bruno Member, City Council, District 4",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5320",
+      "office": "City of San Carlos Member, City Council",
+      "names": 4
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5342",
+      "office": "City of San Mateo Member, City Council, District 1",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5344",
+      "office": "City of San Mateo Member, City Council, District 3",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5346",
+      "office": "City of San Mateo Member, City Council, District 5",
+      "names": 3
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5362",
+      "office": "City of South San Francisco Member, City Council, District 1",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5364",
+      "office": "City of South San Francisco Member, City Council, District 3",
+      "names": 3
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5366",
+      "office": "City of South San Francisco Member, City Council, District 5",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5370",
+      "office": "City of South San Francisco City Clerk",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5371",
+      "office": "City of South San Francisco City Treasurer",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5381",
+      "office": "Town of Woodside Member, Town Council, District 2",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-5382",
+      "office": "Town of Woodside Member, Town Council, District 3",
+      "names": 1
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-6046",
+      "office": "Coastside County Water District Member, Board of Directors, Zone 5",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-6065",
+      "office": "Coastside Fire Protection District Member, Board of Directors, District D",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-6066",
+      "office": "Coastside Fire Protection District Member, Board of Directors, District E",
+      "names": 2
+    },
+    {
+      "contestId": "ca-cx-local-2026-san-mateo-6120",
+      "office": "Granada Community Services District Member, Board of Directors",
+      "names": 4
+    }
+  ],
+  "precinctStyleCoverage": "NOT_ESTABLISHED",
+  "actualSampleNamesAndRandomizedOrder": "PENDING",
+  "additionalLocalSuperiorCourtOrSpecialDistrictSampleCoverage": "PENDING_NO_ABSENCE_INFERRED",
+  "offBallotStatusDisposition": "65 fields95 qualified names explicitly No; legal cancellation/elected status not independently asserted.",
+  "readerDivisions": [
+    "ocd-division/country:us/state:ca/county:san_mateo/council_district:5",
+    "ocd-division/country:us/state:ca/county:san_mateo/school_board_district:2",
+    "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "ocd-division/country:us/state:ca/place:belmont/council_district:1",
+    "ocd-division/country:us/state:ca/place:belmont/council_district:3",
+    "ocd-division/country:us/state:ca/place:burlingame/council_district:1",
+    "ocd-division/country:us/state:ca/place:burlingame/council_district:3",
+    "ocd-division/country:us/state:ca/place:burlingame/council_district:5",
+    "ocd-division/country:us/state:ca/place:foster_city/council_district:1",
+    "ocd-division/country:us/state:ca/place:foster_city/council_district:2",
+    "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:1",
+    "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:4",
+    "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:5",
+    "ocd-division/country:us/state:ca/place:menlo_park/council_district:1",
+    "ocd-division/country:us/state:ca/place:menlo_park/council_district:2",
+    "ocd-division/country:us/state:ca/place:menlo_park/council_district:4",
+    "ocd-division/country:us/state:ca/place:millbrae/council_district:2",
+    "ocd-division/country:us/state:ca/place:millbrae/council_district:3",
+    "ocd-division/country:us/state:ca/place:millbrae/council_district:4",
+    "ocd-division/country:us/state:ca/place:pacifica/council_district:2",
+    "ocd-division/country:us/state:ca/place:pacifica/council_district:3",
+    "ocd-division/country:us/state:ca/place:pacifica/council_district:5",
+    "ocd-division/country:us/state:ca/place:redwood_city/council_district:2",
+    "ocd-division/country:us/state:ca/place:redwood_city/council_district:5",
+    "ocd-division/country:us/state:ca/place:redwood_city/council_district:6",
+    "ocd-division/country:us/state:ca/place:san_bruno/council_district:1",
+    "ocd-division/country:us/state:ca/place:san_bruno/council_district:4",
+    "ocd-division/country:us/state:ca/place:san_mateo/council_district:1",
+    "ocd-division/country:us/state:ca/place:san_mateo/council_district:3",
+    "ocd-division/country:us/state:ca/place:san_mateo/council_district:5",
+    "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:1",
+    "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:3",
+    "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:5",
+    "ocd-division/country:us/state:ca/place:woodside/council_district:2",
+    "ocd-division/country:us/state:ca/place:woodside/council_district:3",
+    "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district/trustee_area:c",
+    "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district/trustee_area:e",
+    "ocd-division/country:us/state:ca/school_district:san_mateo_county_community_college_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:san_mateo_union_high_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:san_mateo_union_high_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:sequoia_union_high_school_district/trustee_area:a",
+    "ocd-division/country:us/state:ca/school_district:sequoia_union_high_school_district/trustee_area:d",
+    "ocd-division/country:us/state:ca/school_district:south_san_francisco_unified_school_district/trustee_area:c",
+    "ocd-division/country:us/state:ca/school_district:south_san_francisco_unified_school_district/trustee_area:e",
+    "ocd-division/country:us/state:ca/special_district:coastside_county_water_district/zone:5",
+    "ocd-division/country:us/state:ca/special_district:coastside_fire_protection_district/district:d",
+    "ocd-division/country:us/state:ca/special_district:coastside_fire_protection_district/district:e",
+    "ocd-division/country:us/state:ca/special_district:granada_community_services_district"
+  ]
+}

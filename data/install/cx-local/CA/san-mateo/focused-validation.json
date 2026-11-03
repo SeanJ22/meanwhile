@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T09:40:55.322010+00:00",
+  "nativeSourceHashes": 33,
+  "exactQuotesChecked": 452,
+  "nativeQualifiedCellReplay": "PASS_141_FIELDS263_NAMES_62_LOCAL_ON_BALLOT_YES140_NAMES_65_NO95_NAMES",
+  "completeLocalInventoryFields": 62,
+  "ordinaryLocalNames": 140,
+  "sharedJudicialWorksheetRetentions": 13,
+  "heldContestCandidateIdsAndCoreFields": "PASS_13_SHARED_FIELDS13_NAMES",
+  "countyBOEElectorate": "PASS_CURRENT_SMCOE_TRUSTEE_AREA_RULE_CONTRARY_GUIDE_PRESERVED",
+  "fullOfficialElectoralGeometryFeatures": 2,
+  "qualifiedOffBallotStatus": "PASS_65_FIELDS95_NAMES_SEPARATE_NO_LEGAL_STATUS_INVENTED",
+  "certifiedWriteIns": "OFFICIAL_ZERO_CERTIFICATION",
+  "upstreamReferenceInputsVerified": 34,
+  "upstreamMeasureFieldsOutsideIncoming": 160,
+  "unresolvedReaderDivisions": 48,
+  "nativeSanMateoSamplesAcquired": 0,
+  "sampleGap": "EXPLICIT_ALL62_LOCAL_FIELDS",
+  "privateAddressCellsInReaderQuotes": false,
+  "productionWrites": false
+}

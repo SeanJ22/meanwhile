@@ -1,0 +1,5472 @@
+[
+  {
+    "code": "3021",
+    "office": "County Board of Education Member, Trustee Area 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "BEVERLY GERARD",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            175.51025390625,
+            189.86138916015625,
+            183.27340698242188
+          ],
+          "text": "BEVERLY GERARD"
+        },
+        "designationCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            188.71949768066406,
+            157.81890869140625,
+            197.76719665527344
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "BEVERLY GERARD\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3021-beverly-gerard"
+      },
+      {
+        "name": "DANA JOHNSON",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            221.61026000976562,
+            181.91754150390625,
+            229.3734130859375
+          ],
+          "text": "DANA JOHNSON"
+        },
+        "designationCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            234.8195037841797,
+            240.1635284423828,
+            243.86720275878906
+          ],
+          "text": "Program Director / Commissioner"
+        },
+        "ballotDesignation": "Program Director / Commissioner",
+        "sourceText": "DANA JOHNSON\nProgram Director / Commissioner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3021-dana-johnson"
+      }
+    ],
+    "sourceHeader": "3021      County Board of Education Member, Trustee Area 2                                                                                                                        Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 4,
+      "bbox": [
+        48.0,
+        161.88125610351562,
+        261.55255126953125,
+        171.65499877929688
+      ],
+      "text": "County Board of Education Member, Trustee Area 2"
+    },
+    "pdfPage": 4,
+    "sourceText": "County Board of Education Member, Trustee Area 2\nVote for 1\nOn Ballot: Yes\nBEVERLY GERARD\nIncumbent\nDANA JOHNSON\nProgram Director / Commissioner",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3021",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo/school_board_district:2"
+  },
+  {
+    "code": "3103",
+    "office": "San Mateo County Community College District Member, Governing Board, Trustee Area 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MIKE GUINGONA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            344.9102478027344,
+            183.0782012939453,
+            352.67340087890625
+          ],
+          "text": "MIKE GUINGONA"
+        },
+        "designationCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            358.1195373535156,
+            157.81890869140625,
+            367.167236328125
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "MIKE GUINGONA\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3103-mike-guingona"
+      },
+      {
+        "name": "JASON HOLT",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            391.01025390625,
+            170.08863830566406,
+            398.7734069824219
+          ],
+          "text": "JASON HOLT"
+        },
+        "designationCell": {
+          "pdfPage": 4,
+          "bbox": [
+            120.0,
+            404.21954345703125,
+            217.24859619140625,
+            413.2672424316406
+          ],
+          "text": "Software Engineer / Parent"
+        },
+        "ballotDesignation": "Software Engineer / Parent",
+        "sourceText": "JASON HOLT\nSoftware Engineer / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3103-jason-holt"
+      }
+    ],
+    "sourceHeader": "3103      San Mateo County Community College District Member, Governing Board, Trustee Area 2                                                                                     Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 4,
+      "bbox": [
+        48.0,
+        331.28125,
+        418.1161804199219,
+        341.0550231933594
+      ],
+      "text": "San Mateo County Community College District Member, Governing Board, Trustee Area 2"
+    },
+    "pdfPage": 4,
+    "sourceText": "San Mateo County Community College District Member, Governing Board, Trustee Area 2\nVote for 1\nOn Ballot: Yes\nMIKE GUINGONA\nIncumbent\nJASON HOLT\nSoftware Engineer / Parent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3103",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_county_community_college_district/trustee_area:2"
+  },
+  {
+    "code": "3204",
+    "office": "Cabrillo Unified School District Member, Governing Board, Trustee Area C",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "PETER TOKOFSKY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            45.96025085449219,
+            189.20809936523438,
+            53.7234001159668
+          ],
+          "text": "PETER TOKOFSKY"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            59.169498443603516,
+            211.8378143310547,
+            68.21720123291016
+          ],
+          "text": "Teacher / Dad / Journalist"
+        },
+        "ballotDesignation": "Teacher / Dad / Journalist",
+        "sourceText": "PETER TOKOFSKY\nTeacher / Dad / Journalist",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3204-peter-tokofsky"
+      },
+      {
+        "name": "LIZET CORTES-RONQUILLO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            92.06025695800781,
+            220.01048278808594,
+            99.82340240478516
+          ],
+          "text": "LIZET CORTES-RONQUILLO"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            105.26950073242188,
+            157.81890869140625,
+            114.31719970703125
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "LIZET CORTES-RONQUILLO\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3204-lizet-cortes-ronquillo"
+      }
+    ],
+    "sourceHeader": "3204      Cabrillo Unified School District Member, Governing Board, Trustee Area C                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 5,
+      "bbox": [
+        48.0,
+        32.33124923706055,
+        354.91497802734375,
+        42.10499954223633
+      ],
+      "text": "Cabrillo Unified School District Member, Governing Board, Trustee Area C"
+    },
+    "pdfPage": 5,
+    "sourceText": "Cabrillo Unified School District Member, Governing Board, Trustee Area C\nVote for 1\nOn Ballot: Yes\nPETER TOKOFSKY\nTeacher / Dad / Journalist\nLIZET CORTES-RONQUILLO\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3204",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district/trustee_area:c"
+  },
+  {
+    "code": "3206",
+    "office": "Cabrillo Unified School District Member, Governing Board, Trustee Area E",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MARY BETH ALEXANDER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            153.7102508544922,
+            211.58013916015625,
+            161.47340393066406
+          ],
+          "text": "MARY BETH ALEXANDER"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            166.91949462890625,
+            157.81890869140625,
+            175.96719360351562
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "MARY BETH ALEXANDER\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3206-mary-beth-alexander"
+      },
+      {
+        "name": "ANDREA ROSENTHAL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            199.8102569580078,
+            200.2933349609375,
+            207.5734100341797
+          ],
+          "text": "ANDREA ROSENTHAL"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            213.01950073242188,
+            179.4296875,
+            222.06719970703125
+          ],
+          "text": "Teacher / Parent"
+        },
+        "ballotDesignation": "Teacher / Parent",
+        "sourceText": "ANDREA ROSENTHAL\nTeacher / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3206-andrea-rosenthal"
+      }
+    ],
+    "sourceHeader": "3206      Cabrillo Unified School District Member, Governing Board, Trustee Area E                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 5,
+      "bbox": [
+        48.0,
+        140.0812530517578,
+        354.4337158203125,
+        149.85499572753906
+      ],
+      "text": "Cabrillo Unified School District Member, Governing Board, Trustee Area E"
+    },
+    "pdfPage": 5,
+    "sourceText": "Cabrillo Unified School District Member, Governing Board, Trustee Area E\nVote for 1\nOn Ballot: Yes\nMARY BETH ALEXANDER\nIncumbent\nANDREA ROSENTHAL\nTeacher / Parent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3206",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district/trustee_area:e"
+  },
+  {
+    "code": "3244",
+    "office": "South San Francisco Unified School District Member, Governing Board, Trustee Area C",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "CHIALIN HSIEH",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            323.1102294921875,
+            177.1498260498047,
+            330.8733825683594
+          ],
+          "text": "CHIALIN HSIEH"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            336.31951904296875,
+            157.81890869140625,
+            345.3672180175781
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "CHIALIN HSIEH\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3244-chialin-hsieh"
+      },
+      {
+        "name": "AVIN SHARMA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            369.21026611328125,
+            174.07794189453125,
+            376.9734191894531
+          ],
+          "text": "AVIN SHARMA"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            382.4195556640625,
+            228.93690490722656,
+            391.4672546386719
+          ],
+          "text": "Parent / Finance Administrator"
+        },
+        "ballotDesignation": "Parent / Finance Administrator",
+        "sourceText": "AVIN SHARMA\nParent / Finance Administrator",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3244-avin-sharma"
+      }
+    ],
+    "sourceHeader": "3244      South San Francisco Unified School District Member, Governing Board, Trustee Area C                                                                                   Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 5,
+      "bbox": [
+        48.0,
+        309.4812316894531,
+        409.37493896484375,
+        319.2550048828125
+      ],
+      "text": "South San Francisco Unified School District Member, Governing Board, Trustee Area C"
+    },
+    "pdfPage": 5,
+    "sourceText": "South San Francisco Unified School District Member, Governing Board, Trustee Area C\nVote for 1\nOn Ballot: Yes\nCHIALIN HSIEH\nIncumbent\nAVIN SHARMA\nParent / Finance Administrator",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3244",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:south_san_francisco_unified_school_district/trustee_area:c"
+  },
+  {
+    "code": "3246",
+    "office": "South San Francisco Unified School District Member, Governing Board, Trustee Area E",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "FRANK LARA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            492.5102233886719,
+            171.0963897705078,
+            500.27337646484375
+          ],
+          "text": "FRANK LARA"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            505.719482421875,
+            204.19140625,
+            514.7672119140625
+          ],
+          "text": "Teacher / Union Leader"
+        },
+        "ballotDesignation": "Teacher / Union Leader",
+        "sourceText": "FRANK LARA\nTeacher / Union Leader",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3246-frank-lara"
+      },
+      {
+        "name": "MINA A. RICHARDSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            538.6102294921875,
+            200.91883850097656,
+            546.3733520507812
+          ],
+          "text": "MINA A. RICHARDSON"
+        },
+        "designationCell": {
+          "pdfPage": 5,
+          "bbox": [
+            120.0,
+            551.8194580078125,
+            182.11080932617188,
+            560.8671875
+          ],
+          "text": "SSFUSD Trustee"
+        },
+        "ballotDesignation": "SSFUSD Trustee",
+        "sourceText": "MINA A. RICHARDSON\nSSFUSD Trustee",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3246-mina-a-richardson"
+      }
+    ],
+    "sourceHeader": "3246      South San Francisco Unified School District Member, Governing Board, Trustee Area E                                                                                   Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 5,
+      "bbox": [
+        48.0,
+        478.8812255859375,
+        408.8936767578125,
+        488.6549987792969
+      ],
+      "text": "South San Francisco Unified School District Member, Governing Board, Trustee Area E"
+    },
+    "pdfPage": 5,
+    "sourceText": "South San Francisco Unified School District Member, Governing Board, Trustee Area E\nVote for 1\nOn Ballot: Yes\nFRANK LARA\nTeacher / Union Leader\nMINA A. RICHARDSON\nSSFUSD Trustee",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3246",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:south_san_francisco_unified_school_district/trustee_area:e"
+  },
+  {
+    "code": "3324",
+    "office": "San Mateo Union High School District Member, Governing Board, Trustee Area 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "DIANA HARRIS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            344.9102478027344,
+            176.12123107910156,
+            352.67340087890625
+          ],
+          "text": "DIANA HARRIS"
+        },
+        "designationCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            358.1195373535156,
+            180.7742919921875,
+            367.167236328125
+          ],
+          "text": "Teacher / Mother"
+        },
+        "ballotDesignation": "Teacher / Mother",
+        "sourceText": "DIANA HARRIS\nTeacher / Mother",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3324-diana-harris"
+      },
+      {
+        "name": "JENNIFER JACOBSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            391.01025390625,
+            201.48178100585938,
+            398.7734069824219
+          ],
+          "text": "JENNIFER JACOBSON"
+        },
+        "designationCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            404.21954345703125,
+            157.81890869140625,
+            413.2672424316406
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "JENNIFER JACOBSON\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3324-jennifer-jacobson"
+      }
+    ],
+    "sourceHeader": "3324      San Mateo Union High School District Member, Governing Board, Trustee Area 3                                                                                                     Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 6,
+      "bbox": [
+        48.0,
+        331.28125,
+        381.6549072265625,
+        341.0550231933594
+      ],
+      "text": "San Mateo Union High School District Member, Governing Board, Trustee Area 3"
+    },
+    "pdfPage": 6,
+    "sourceText": "San Mateo Union High School District Member, Governing Board, Trustee Area 3\nVote for 1\nOn Ballot: Yes\nDIANA HARRIS\nTeacher / Mother\nJENNIFER JACOBSON\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3324",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_union_high_school_district/trustee_area:3"
+  },
+  {
+    "code": "3326",
+    "office": "San Mateo Union High School District Member, Governing Board, Trustee Area 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "KIMO ROSENBAUM",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            452.6602478027344,
+            191.43209838867188,
+            460.42340087890625
+          ],
+          "text": "KIMO ROSENBAUM"
+        },
+        "designationCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            465.8695373535156,
+            217.24859619140625,
+            474.917236328125
+          ],
+          "text": "Parent / Software Engineer"
+        },
+        "ballotDesignation": "Parent / Software Engineer",
+        "sourceText": "KIMO ROSENBAUM\nParent / Software Engineer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3326-kimo-rosenbaum"
+      },
+      {
+        "name": "ALISON PROCTOR",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            498.76025390625,
+            188.5825958251953,
+            506.5234069824219
+          ],
+          "text": "ALISON PROCTOR"
+        },
+        "designationCell": {
+          "pdfPage": 6,
+          "bbox": [
+            120.0,
+            511.96954345703125,
+            284.29229736328125,
+            521.0172729492188
+          ],
+          "text": "San Mateo-Foster City School District Trustee"
+        },
+        "ballotDesignation": "San Mateo-Foster City School District Trustee",
+        "sourceText": "ALISON PROCTOR\nSan Mateo-Foster City School District Trustee",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3326-alison-proctor"
+      }
+    ],
+    "sourceHeader": "3326      San Mateo Union High School District Member, Governing Board, Trustee Area 5                                                                                                     Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 6,
+      "bbox": [
+        48.0,
+        439.03125,
+        381.6549072265625,
+        448.8050231933594
+      ],
+      "text": "San Mateo Union High School District Member, Governing Board, Trustee Area 5"
+    },
+    "pdfPage": 6,
+    "sourceText": "San Mateo Union High School District Member, Governing Board, Trustee Area 5\nVote for 1\nOn Ballot: Yes\nKIMO ROSENBAUM\nParent / Software Engineer\nALISON PROCTOR\nSan Mateo-Foster City School District Trustee",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3326",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_union_high_school_district/trustee_area:5"
+  },
+  {
+    "code": "3342",
+    "office": "Sequoia Union High School District Member, Governing Board, Trustee Area A",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "AMY KOO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            30.410247802734375,
+            158.8505096435547,
+            38.173397064208984
+          ],
+          "text": "AMY KOO"
+        },
+        "designationCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            43.6194953918457,
+            157.81890869140625,
+            52.667198181152344
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "AMY KOO\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3342-amy-koo"
+      },
+      {
+        "name": "ALON SHIRAN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            76.51025390625,
+            174.0570831298828,
+            84.27339935302734
+          ],
+          "text": "ALON SHIRAN"
+        },
+        "designationCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            89.71949768066406,
+            215.8959197998047,
+            98.76719665527344
+          ],
+          "text": "Product Executive / Parent"
+        },
+        "ballotDesignation": "Product Executive / Parent",
+        "sourceText": "ALON SHIRAN\nProduct Executive / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3342-alon-shiran"
+      }
+    ],
+    "sourceHeader": "3342      Sequoia Union High School District Member, Governing Board, Trustee Area A                                                                                                       Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 6,
+      "bbox": [
+        48.0,
+        546.7811889648438,
+        373.0362243652344,
+        556.554931640625
+      ],
+      "text": "Sequoia Union High School District Member, Governing Board, Trustee Area A"
+    },
+    "pdfPage": 6,
+    "sourceText": "Sequoia Union High School District Member, Governing Board, Trustee Area A\nVote for 1\nOn Ballot: Yes\nAMY KOO\nIncumbent\nALON SHIRAN\nProduct Executive / Parent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3342",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sequoia_union_high_school_district/trustee_area:a"
+  },
+  {
+    "code": "3345",
+    "office": "Sequoia Union High School District Member, Governing Board, Trustee Area D",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MICHAEL DEKSHENIEKS",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            138.16024780273438,
+            209.43258666992188,
+            145.92340087890625
+          ],
+          "text": "MICHAEL DEKSHENIEKS"
+        },
+        "designationCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            151.36949157714844,
+            235.25491333007812,
+            160.4171905517578
+          ],
+          "text": "Management Executive / Parent"
+        },
+        "ballotDesignation": "Management Executive / Parent",
+        "sourceText": "MICHAEL DEKSHENIEKS\nManagement Executive / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3345-michael-dekshenieks"
+      },
+      {
+        "name": "SATHVIK NORI",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            184.26025390625,
+            175.10653686523438,
+            192.02340698242188
+          ],
+          "text": "SATHVIK NORI"
+        },
+        "designationCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            197.46949768066406,
+            203.276123046875,
+            206.51719665527344
+          ],
+          "text": "(No Ballot Designation)"
+        },
+        "ballotDesignation": "(No Ballot Designation)",
+        "sourceText": "SATHVIK NORI\n(No Ballot Designation)",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3345-sathvik-nori"
+      }
+    ],
+    "sourceHeader": "3345      Sequoia Union High School District Member, Governing Board, Trustee Area D                                                                                            Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 7,
+      "bbox": [
+        48.0,
+        124.53125,
+        373.38623046875,
+        134.30499267578125
+      ],
+      "text": "Sequoia Union High School District Member, Governing Board, Trustee Area D"
+    },
+    "pdfPage": 7,
+    "sourceText": "Sequoia Union High School District Member, Governing Board, Trustee Area D\nVote for 1\nOn Ballot: Yes\nMICHAEL DEKSHENIEKS\nManagement Executive / Parent\nSATHVIK NORI\n(No Ballot Designation)",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3345",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sequoia_union_high_school_district/trustee_area:d"
+  },
+  {
+    "code": "3440",
+    "office": "Brisbane School District Member, Governing Board",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "CHARLENE LARSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            523.0602416992188,
+            195.67852783203125,
+            530.8233642578125
+          ],
+          "text": "CHARLENE LARSON"
+        },
+        "designationCell": {
+          "pdfPage": 7,
+          "bbox": [
+            120.0,
+            536.2694702148438,
+            214.0814971923828,
+            545.3171997070312
+          ],
+          "text": "Retired Federal Employee"
+        },
+        "ballotDesignation": "Retired Federal Employee",
+        "sourceText": "CHARLENE LARSON\nRetired Federal Employee",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3440-charlene-larson"
+      },
+      {
+        "name": "MORGAN FINLAY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 8,
+          "bbox": [
+            120.0,
+            52.21025466918945,
+            183.7314910888672,
+            59.97340393066406
+          ],
+          "text": "MORGAN FINLAY"
+        },
+        "designationCell": {
+          "pdfPage": 8,
+          "bbox": [
+            120.0,
+            65.41950988769531,
+            196.54501342773438,
+            74.46720886230469
+          ],
+          "text": "Appointed Incumbent"
+        },
+        "ballotDesignation": "Appointed Incumbent",
+        "sourceText": "MORGAN FINLAY\nAppointed Incumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3440-morgan-finlay"
+      },
+      {
+        "name": "EMILY WIROWEK",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 8,
+          "bbox": [
+            120.0,
+            98.31025695800781,
+            183.2936553955078,
+            106.07340240478516
+          ],
+          "text": "EMILY WIROWEK"
+        },
+        "designationCell": {
+          "pdfPage": 8,
+          "bbox": [
+            120.0,
+            111.51950073242188,
+            180.32879638671875,
+            120.56719970703125
+          ],
+          "text": "Parent / Attorney"
+        },
+        "ballotDesignation": "Parent / Attorney",
+        "sourceText": "EMILY WIROWEK\nParent / Attorney",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3440-emily-wirowek"
+      },
+      {
+        "name": "SARAH DUFFY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 8,
+          "bbox": [
+            120.0,
+            144.41024780273438,
+            175.44708251953125,
+            152.17340087890625
+          ],
+          "text": "SARAH DUFFY"
+        },
+        "designationCell": {
+          "pdfPage": 8,
+          "bbox": [
+            120.0,
+            157.61949157714844,
+            157.81890869140625,
+            166.6671905517578
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "SARAH DUFFY\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3440-sarah-duffy"
+      }
+    ],
+    "sourceHeader": "3440      Brisbane School District Member, Governing Board                                                                                                                      Vote for 3        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 7,
+      "bbox": [
+        48.0,
+        509.43121337890625,
+        261.4388122558594,
+        519.2049560546875
+      ],
+      "text": "Brisbane School District Member, Governing Board"
+    },
+    "pdfPage": 7,
+    "sourceText": "Brisbane School District Member, Governing Board\nVote for 3\nOn Ballot: Yes\nCHARLENE LARSON\nRetired Federal Employee\nMORGAN FINLAY\nAppointed Incumbent\nEMILY WIROWEK\nParent / Attorney\nSARAH DUFFY\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3440",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:brisbane_elementary_school_district"
+  },
+  {
+    "code": "3541",
+    "office": "Menlo Park City School District Member, Governing Board",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JED SCOLNICK",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            329.3602294921875,
+            177.53903198242188,
+            337.1233825683594
+          ],
+          "text": "JED SCOLNICK"
+        },
+        "designationCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            342.56951904296875,
+            157.81890869140625,
+            351.6172180175781
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "JED SCOLNICK\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3541-jed-scolnick"
+      },
+      {
+        "name": "MAYA HERSTEIN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            375.46026611328125,
+            181.82717895507812,
+            383.2234191894531
+          ],
+          "text": "MAYA HERSTEIN"
+        },
+        "designationCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            388.6695556640625,
+            143.8625946044922,
+            397.7172546386719
+          ],
+          "text": "Parent"
+        },
+        "ballotDesignation": "Parent",
+        "sourceText": "MAYA HERSTEIN\nParent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3541-maya-herstein"
+      },
+      {
+        "name": "SHERWIN CHEN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            421.56024169921875,
+            180.13833618164062,
+            429.3233947753906
+          ],
+          "text": "SHERWIN CHEN"
+        },
+        "designationCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            434.76953125,
+            157.81890869140625,
+            443.8172302246094
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "SHERWIN CHEN\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3541-sherwin-chen"
+      },
+      {
+        "name": "ANDREW BARNES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            467.6602478027344,
+            188.33934020996094,
+            475.42340087890625
+          ],
+          "text": "ANDREW BARNES"
+        },
+        "designationCell": {
+          "pdfPage": 9,
+          "bbox": [
+            120.0,
+            480.8695373535156,
+            280.25848388671875,
+            489.917236328125
+          ],
+          "text": "County of Santa Clara Facilities Professional"
+        },
+        "ballotDesignation": "County of Santa Clara Facilities Professional",
+        "sourceText": "ANDREW BARNES\nCounty of Santa Clara Facilities Professional",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3541-andrew-barnes"
+      }
+    ],
+    "sourceHeader": "3541      Menlo Park City School District Member, Governing Board                                                                                                                       Vote for 3        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 9,
+      "bbox": [
+        48.0,
+        315.7312316894531,
+        289.6400146484375,
+        325.5050048828125
+      ],
+      "text": "Menlo Park City School District Member, Governing Board"
+    },
+    "pdfPage": 9,
+    "sourceText": "Menlo Park City School District Member, Governing Board\nVote for 3\nOn Ballot: Yes\nJED SCOLNICK\nIncumbent\nMAYA HERSTEIN\nParent\nSHERWIN CHEN\nIncumbent\nANDREW BARNES\nCounty of Santa Clara Facilities Professional",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3541",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:menlo_park_city_elementary_school_district"
+  },
+  {
+    "code": "3580",
+    "office": "Pacifica School District Member, Governing Board (Full Term)",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "BRIDGET HARDT",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            159.9602508544922,
+            183.32142639160156,
+            167.72340393066406
+          ],
+          "text": "BRIDGET HARDT"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            173.16949462890625,
+            196.54501342773438,
+            182.21719360351562
+          ],
+          "text": "Appointed Incumbent"
+        },
+        "ballotDesignation": "Appointed Incumbent",
+        "sourceText": "BRIDGET HARDT\nAppointed Incumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-bridget-hardt"
+      },
+      {
+        "name": "RACHEL DURKIN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            206.0602569580078,
+            183.55078125,
+            213.8234100341797
+          ],
+          "text": "RACHEL DURKIN"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            219.26950073242188,
+            176.7242889404297,
+            228.31719970703125
+          ],
+          "text": "Realtor / Parent"
+        },
+        "ballotDesignation": "Realtor / Parent",
+        "sourceText": "RACHEL DURKIN\nRealtor / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-rachel-durkin"
+      },
+      {
+        "name": "GRACE SOBIESKI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            252.16026306152344,
+            186.0388946533203,
+            259.92340087890625
+          ],
+          "text": "GRACE SOBIESKI"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            265.3695373535156,
+            183.03419494628906,
+            274.417236328125
+          ],
+          "text": "Parent / Educator"
+        },
+        "ballotDesignation": "Parent / Educator",
+        "sourceText": "GRACE SOBIESKI\nParent / Educator",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-grace-sobieski"
+      },
+      {
+        "name": "TIFFANY BUTTON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            298.26025390625,
+            185.3160858154297,
+            306.0234069824219
+          ],
+          "text": "TIFFANY BUTTON"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            311.46954345703125,
+            206.42701721191406,
+            320.5172424316406
+          ],
+          "text": "Quality Director / Parent"
+        },
+        "ballotDesignation": "Quality Director / Parent",
+        "sourceText": "TIFFANY BUTTON\nQuality Director / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-tiffany-button"
+      },
+      {
+        "name": "CHRISTOPHER SWIEDLER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            344.3602600097656,
+            214.83969116210938,
+            352.1234130859375
+          ],
+          "text": "CHRISTOPHER SWIEDLER"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            357.5695495605469,
+            217.24859619140625,
+            366.61724853515625
+          ],
+          "text": "Parent / Software Engineer"
+        },
+        "ballotDesignation": "Parent / Software Engineer",
+        "sourceText": "CHRISTOPHER SWIEDLER\nParent / Software Engineer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-christopher-swiedler"
+      },
+      {
+        "name": "KATY BRADLEY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            390.46026611328125,
+            179.429443359375,
+            398.2234191894531
+          ],
+          "text": "KATY BRADLEY"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            403.6695556640625,
+            209.58599853515625,
+            412.7172546386719
+          ],
+          "text": "Union Organizer / Parent"
+        },
+        "ballotDesignation": "Union Organizer / Parent",
+        "sourceText": "KATY BRADLEY\nUnion Organizer / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-katy-bradley"
+      },
+      {
+        "name": "LAVERNE R VILLALOBOS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            436.56024169921875,
+            212.17784118652344,
+            444.3233947753906
+          ],
+          "text": "LAVERNE R VILLALOBOS"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            449.76953125,
+            157.81890869140625,
+            458.8172302246094
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "LAVERNE R VILLALOBOS\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3580-laverne-r-villalobos"
+      }
+    ],
+    "sourceHeader": "3580      Pacifica School District Member, Governing Board (Full Term)                                                                                                          Vote for 3        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 10,
+      "bbox": [
+        48.0,
+        146.3312530517578,
+        304.06878662109375,
+        156.10499572753906
+      ],
+      "text": "Pacifica School District Member, Governing Board (Full Term)"
+    },
+    "pdfPage": 10,
+    "sourceText": "Pacifica School District Member, Governing Board (Full Term)\nVote for 3\nOn Ballot: Yes\nBRIDGET HARDT\nAppointed Incumbent\nRACHEL DURKIN\nRealtor / Parent\nGRACE SOBIESKI\nParent / Educator\nTIFFANY BUTTON\nQuality Director / Parent\nCHRISTOPHER SWIEDLER\nParent / Software Engineer\nKATY BRADLEY\nUnion Organizer / Parent\nLAVERNE R VILLALOBOS\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3580",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pacifica_school_district"
+  },
+  {
+    "code": "3581",
+    "office": "Pacifica School District Member, Governing Board (Short Term)",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "KELLY MENDOZA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            498.2102355957031,
+            184.58633422851562,
+            505.973388671875
+          ],
+          "text": "KELLY MENDOZA"
+        },
+        "designationCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            511.41949462890625,
+            220.84500122070312,
+            520.4672241210938
+          ],
+          "text": "Education Programs Leader"
+        },
+        "ballotDesignation": "Education Programs Leader",
+        "sourceText": "KELLY MENDOZA\nEducation Programs Leader",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3581-kelly-mendoza"
+      },
+      {
+        "name": "TRACEY SIMMONS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 10,
+          "bbox": [
+            120.0,
+            544.3102416992188,
+            189.35406494140625,
+            552.0733642578125
+          ],
+          "text": "TRACEY SIMMONS"
+        },
+        "designationCell": {
+          "pdfPage": 11,
+          "bbox": [
+            120.0,
+            29.269498825073242,
+            175.81712341308594,
+            38.31719970703125
+          ],
+          "text": "Artist / Biologist"
+        },
+        "ballotDesignation": "Artist / Biologist",
+        "sourceText": "TRACEY SIMMONS\nArtist / Biologist",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3581-tracey-simmons"
+      },
+      {
+        "name": "ELIZABETH A. BREDALL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 11,
+          "bbox": [
+            120.0,
+            62.160247802734375,
+            208.35531616210938,
+            69.92339324951172
+          ],
+          "text": "ELIZABETH A. BREDALL"
+        },
+        "designationCell": {
+          "pdfPage": 11,
+          "bbox": [
+            120.0,
+            75.36949157714844,
+            247.8585205078125,
+            84.41719055175781
+          ],
+          "text": "Special Education Paraprofessional"
+        },
+        "ballotDesignation": "Special Education Paraprofessional",
+        "sourceText": "ELIZABETH A. BREDALL\nSpecial Education Paraprofessional",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3581-elizabeth-a-bredall"
+      }
+    ],
+    "sourceHeader": "3581      Pacifica School District Member, Governing Board (Short Term)                                                                                                         Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 10,
+      "bbox": [
+        48.0,
+        484.58123779296875,
+        311.3575439453125,
+        494.3550109863281
+      ],
+      "text": "Pacifica School District Member, Governing Board (Short Term)"
+    },
+    "pdfPage": 10,
+    "sourceText": "Pacifica School District Member, Governing Board (Short Term)\nVote for 1\nOn Ballot: Yes\nKELLY MENDOZA\nEducation Programs Leader\nTRACEY SIMMONS\nArtist / Biologist\nELIZABETH A. BREDALL\nSpecial Education Paraprofessional",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3581",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pacifica_school_district"
+  },
+  {
+    "code": "3680",
+    "office": "San Carlos School District Member, Governing Board",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "BORIS LIPKIN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            169.26025390625,
+            172.52113342285156,
+            177.02340698242188
+          ],
+          "text": "BORIS LIPKIN"
+        },
+        "designationCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            182.46949768066406,
+            350.03192138671875,
+            191.51719665527344
+          ],
+          "text": "Appointed San Carlos School District Member, Governing Board"
+        },
+        "ballotDesignation": "Appointed San Carlos School District Member, Governing Board",
+        "sourceText": "BORIS LIPKIN\nAppointed San Carlos School District Member, Governing Board",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3680-boris-lipkin"
+      },
+      {
+        "name": "RICHARD F. WAHL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            215.36024475097656,
+            187.4705810546875,
+            223.12339782714844
+          ],
+          "text": "RICHARD F. WAHL"
+        },
+        "designationCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            228.56948852539062,
+            180.3288116455078,
+            237.6171875
+          ],
+          "text": "Optician / Parent"
+        },
+        "ballotDesignation": "Optician / Parent",
+        "sourceText": "RICHARD F. WAHL\nOptician / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3680-richard-f-wahl"
+      },
+      {
+        "name": "MEGHA CHAWLA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            261.4602355957031,
+            183.6272430419922,
+            269.223388671875
+          ],
+          "text": "MEGHA CHAWLA"
+        },
+        "designationCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            274.6695251464844,
+            206.4351043701172,
+            283.71722412109375
+          ],
+          "text": "Tech Executive / Mother"
+        },
+        "ballotDesignation": "Tech Executive / Mother",
+        "sourceText": "MEGHA CHAWLA\nTech Executive / Mother",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3680-megha-chawla"
+      },
+      {
+        "name": "SHIVANI TRIPATHI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            307.56024169921875,
+            186.36550903320312,
+            315.3233947753906
+          ],
+          "text": "SHIVANI TRIPATHI"
+        },
+        "designationCell": {
+          "pdfPage": 12,
+          "bbox": [
+            120.0,
+            320.76953125,
+            197.4197998046875,
+            329.8172302246094
+          ],
+          "text": "Community Volunteer"
+        },
+        "ballotDesignation": "Community Volunteer",
+        "sourceText": "SHIVANI TRIPATHI\nCommunity Volunteer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-3680-shivani-tripathi"
+      }
+    ],
+    "sourceHeader": "3680      San Carlos School District Member, Governing Board                                                                                                                           Vote for 3        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 12,
+      "bbox": [
+        48.0,
+        155.63125610351562,
+        269.70751953125,
+        165.40499877929688
+      ],
+      "text": "San Carlos School District Member, Governing Board"
+    },
+    "pdfPage": 12,
+    "sourceText": "San Carlos School District Member, Governing Board\nVote for 3\nOn Ballot: Yes\nBORIS LIPKIN\nAppointed San Carlos School District Member, Governing Board\nRICHARD F. WAHL\nOptician / Parent\nMEGHA CHAWLA\nTech Executive / Mother\nSHIVANI TRIPATHI\nCommunity Volunteer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-3680",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_carlos_elementary_school_district"
+  },
+  {
+    "code": "4050",
+    "office": "Member, Board of Supervisors, District 5 (Short Term)",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MARK NAGALES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 13,
+          "bbox": [
+            120.0,
+            184.26025390625,
+            182.54998779296875,
+            192.02340698242188
+          ],
+          "text": "MARK NAGALES"
+        },
+        "designationCell": {
+          "pdfPage": 13,
+          "bbox": [
+            120.0,
+            197.46949768066406,
+            160.3542022705078,
+            206.51719665527344
+          ],
+          "text": "Vice Mayor"
+        },
+        "ballotDesignation": "Vice Mayor",
+        "sourceText": "MARK NAGALES\nVice Mayor",
+        "candidacyId": "ca-cx-local-2026-san-mateo-4050-mark-nagales"
+      },
+      {
+        "name": "JUSLYN CABRERA MANALO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 13,
+          "bbox": [
+            120.0,
+            230.36024475097656,
+            221.41436767578125,
+            238.12339782714844
+          ],
+          "text": "JUSLYN CABRERA MANALO"
+        },
+        "designationCell": {
+          "pdfPage": 13,
+          "bbox": [
+            120.0,
+            243.56948852539062,
+            211.35992431640625,
+            252.6171875
+          ],
+          "text": "Daly City Councilmember"
+        },
+        "ballotDesignation": "Daly City Councilmember",
+        "sourceText": "JUSLYN CABRERA MANALO\nDaly City Councilmember",
+        "candidacyId": "ca-cx-local-2026-san-mateo-4050-juslyn-cabrera-manalo"
+      }
+    ],
+    "sourceHeader": "4050      Member, Board of Supervisors, District 5 (Short Term)                                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 13,
+      "bbox": [
+        48.0,
+        170.63125610351562,
+        271.4837951660156,
+        180.40499877929688
+      ],
+      "text": "Member, Board of Supervisors, District 5 (Short Term)"
+    },
+    "pdfPage": 13,
+    "sourceText": "Member, Board of Supervisors, District 5 (Short Term)\nVote for 1\nOn Ballot: Yes\nMARK NAGALES\nVice Mayor\nJUSLYN CABRERA MANALO\nDaly City Councilmember",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-4050",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo/council_district:5"
+  },
+  {
+    "code": "5022",
+    "office": "City of Belmont Mayor",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JULIA MATES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 13,
+          "bbox": [
+            120.0,
+            507.5102233886719,
+            171.38133239746094,
+            515.2733764648438
+          ],
+          "text": "JULIA MATES"
+        },
+        "designationCell": {
+          "pdfPage": 13,
+          "bbox": [
+            120.0,
+            520.719482421875,
+            183.4716033935547,
+            529.7672119140625
+          ],
+          "text": "Mayor of Belmont"
+        },
+        "ballotDesignation": "Mayor of Belmont",
+        "sourceText": "JULIA MATES\nMayor of Belmont",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5022-julia-mates"
+      }
+    ],
+    "sourceHeader": "5022      City of Belmont Mayor                                                                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 13,
+      "bbox": [
+        48.0,
+        493.8812255859375,
+        140.85501098632812,
+        503.6549987792969
+      ],
+      "text": "City of Belmont Mayor"
+    },
+    "pdfPage": 13,
+    "sourceText": "City of Belmont Mayor\nVote for 1\nOn Ballot: Yes\nJULIA MATES\nMayor of Belmont",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5022",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont"
+  },
+  {
+    "code": "5023",
+    "office": "City of Belmont Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "GINA LATIMERLO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            45.96025085449219,
+            184.8921356201172,
+            53.7234001159668
+          ],
+          "text": "GINA LATIMERLO"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            59.169498443603516,
+            157.81890869140625,
+            68.21720123291016
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "GINA LATIMERLO\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5023-gina-latimerlo"
+      }
+    ],
+    "sourceHeader": "5023      City of Belmont Member, City Council, District 1                                                                                                                      Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 14,
+      "bbox": [
+        48.0,
+        32.33124923706055,
+        246.35377502441406,
+        42.10499954223633
+      ],
+      "text": "City of Belmont Member, City Council, District 1"
+    },
+    "pdfPage": 14,
+    "sourceText": "City of Belmont Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nGINA LATIMERLO\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5023",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont/council_district:1"
+  },
+  {
+    "code": "5025",
+    "office": "City of Belmont Member, City Council, District 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "SARAH K.M. DELISLE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            107.6102523803711,
+            198.38902282714844,
+            115.37339782714844
+          ],
+          "text": "SARAH K.M. DELISLE"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            120.81949615478516,
+            210.9306182861328,
+            129.8671875
+          ],
+          "text": "Mother / Business Owner"
+        },
+        "ballotDesignation": "Mother / Business Owner",
+        "sourceText": "SARAH K.M. DELISLE\nMother / Business Owner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5025-sarah-k-m-delisle"
+      }
+    ],
+    "sourceHeader": "5025      City of Belmont Member, City Council, District 3                                                                                                                      Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 14,
+      "bbox": [
+        48.0,
+        93.98125457763672,
+        246.35377502441406,
+        103.7550048828125
+      ],
+      "text": "City of Belmont Member, City Council, District 3"
+    },
+    "pdfPage": 14,
+    "sourceText": "City of Belmont Member, City Council, District 3\nVote for 1\nOn Ballot: Yes\nSARAH K.M. DELISLE\nMother / Business Owner",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5025",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont/council_district:3"
+  },
+  {
+    "code": "5041",
+    "office": "City of Brisbane Member, City Council",
+    "voteFor": 2,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JULIE SIMS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            169.26025390625,
+            164.4174346923828,
+            177.02340698242188
+          ],
+          "text": "JULIE SIMS"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            182.46949768066406,
+            201.46983337402344,
+            191.51719665527344
+          ],
+          "text": "Small Business Owner"
+        },
+        "ballotDesignation": "Small Business Owner",
+        "sourceText": "JULIE SIMS\nSmall Business Owner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5041-julie-sims"
+      },
+      {
+        "name": "CHARLES SPENCER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            215.36024475097656,
+            194.91403198242188,
+            223.12339782714844
+          ],
+          "text": "CHARLES SPENCER"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            228.56948852539062,
+            201.46983337402344,
+            237.6171875
+          ],
+          "text": "Small Business Owner"
+        },
+        "ballotDesignation": "Small Business Owner",
+        "sourceText": "CHARLES SPENCER\nSmall Business Owner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5041-charles-spencer"
+      },
+      {
+        "name": "MADISON DAVIS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            261.4602355957031,
+            181.28509521484375,
+            269.223388671875
+          ],
+          "text": "MADISON DAVIS"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            274.6695251464844,
+            157.81890869140625,
+            283.71722412109375
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "MADISON DAVIS\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5041-madison-davis"
+      },
+      {
+        "name": "CHAYA-BELLA DAVID",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            307.56024169921875,
+            197.53416442871094,
+            315.3233947753906
+          ],
+          "text": "CHAYA-BELLA DAVID"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            320.76953125,
+            197.4197998046875,
+            329.8172302246094
+          ],
+          "text": "Community Volunteer"
+        },
+        "ballotDesignation": "Community Volunteer",
+        "sourceText": "CHAYA-BELLA DAVID\nCommunity Volunteer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5041-chaya-bella-david"
+      },
+      {
+        "name": "CHRISTOPHER HORNICK",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            353.6602478027344,
+            210.58628845214844,
+            361.42340087890625
+          ],
+          "text": "CHRISTOPHER HORNICK"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            366.8695373535156,
+            222.64320373535156,
+            375.917236328125
+          ],
+          "text": "Businessman / Entrepreneur"
+        },
+        "ballotDesignation": "Businessman / Entrepreneur",
+        "sourceText": "CHRISTOPHER HORNICK\nBusinessman / Entrepreneur",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5041-christopher-hornick"
+      }
+    ],
+    "sourceHeader": "5041      City of Brisbane Member, City Council                                                                                                                                 Vote for 2        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 14,
+      "bbox": [
+        48.0,
+        155.63125610351562,
+        206.48876953125,
+        165.40499877929688
+      ],
+      "text": "City of Brisbane Member, City Council"
+    },
+    "pdfPage": 14,
+    "sourceText": "City of Brisbane Member, City Council\nVote for 2\nOn Ballot: Yes\nJULIE SIMS\nSmall Business Owner\nCHARLES SPENCER\nSmall Business Owner\nMADISON DAVIS\nIncumbent\nCHAYA-BELLA DAVID\nCommunity Volunteer\nCHRISTOPHER HORNICK\nBusinessman / Entrepreneur",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5041",
+    "ocdId": "ocd-division/country:us/state:ca/place:brisbane"
+  },
+  {
+    "code": "5062",
+    "office": "City of Burlingame Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "ANDREA PAPPAJOHN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            415.31024169921875,
+            199.35507202148438,
+            423.0733947753906
+          ],
+          "text": "ANDREA PAPPAJOHN"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            428.51953125,
+            203.5677032470703,
+            437.5672302246094
+          ],
+          "text": "Burlingame Vice Mayor"
+        },
+        "ballotDesignation": "Burlingame Vice Mayor",
+        "sourceText": "ANDREA PAPPAJOHN\nBurlingame Vice Mayor",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5062-andrea-pappajohn"
+      }
+    ],
+    "sourceHeader": "5062      City of Burlingame Member, City Council, District 1                                                                                                                   Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 14,
+      "bbox": [
+        48.0,
+        401.6812438964844,
+        259.4875183105469,
+        411.45501708984375
+      ],
+      "text": "City of Burlingame Member, City Council, District 1"
+    },
+    "pdfPage": 14,
+    "sourceText": "City of Burlingame Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nANDREA PAPPAJOHN\nBurlingame Vice Mayor",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5062",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame/council_district:1"
+  },
+  {
+    "code": "5064",
+    "office": "City of Burlingame Member, City Council, District 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JEN FABER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            476.9602355957031,
+            164.77882385253906,
+            484.723388671875
+          ],
+          "text": "JEN FABER"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            490.1695251464844,
+            229.39862060546875,
+            499.21722412109375
+          ],
+          "text": "Education Foundation Director"
+        },
+        "ballotDesignation": "Education Foundation Director",
+        "sourceText": "JEN FABER\nEducation Foundation Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5064-jen-faber"
+      },
+      {
+        "name": "HOWARD WETTAN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            523.0602416992188,
+            188.6451416015625,
+            530.8233642578125
+          ],
+          "text": "HOWARD WETTAN"
+        },
+        "designationCell": {
+          "pdfPage": 14,
+          "bbox": [
+            120.0,
+            536.2694702148438,
+            224.4171142578125,
+            545.3171997070312
+          ],
+          "text": "City Commissioner / Attorney"
+        },
+        "ballotDesignation": "City Commissioner / Attorney",
+        "sourceText": "HOWARD WETTAN\nCity Commissioner / Attorney",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5064-howard-wettan"
+      }
+    ],
+    "sourceHeader": "5064      City of Burlingame Member, City Council, District 3                                                                                                                   Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 14,
+      "bbox": [
+        48.0,
+        463.33123779296875,
+        259.4875183105469,
+        473.1050109863281
+      ],
+      "text": "City of Burlingame Member, City Council, District 3"
+    },
+    "pdfPage": 14,
+    "sourceText": "City of Burlingame Member, City Council, District 3\nVote for 1\nOn Ballot: Yes\nJEN FABER\nEducation Foundation Director\nHOWARD WETTAN\nCity Commissioner / Attorney",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5064",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame/council_district:3"
+  },
+  {
+    "code": "5066",
+    "office": "City of Burlingame Member, City Council, District 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "PETER W. STEVENSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            67.76025390625,
+            203.84478759765625,
+            75.52339935302734
+          ],
+          "text": "PETER W. STEVENSON"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            80.96949768066406,
+            157.81890869140625,
+            90.01719665527344
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "PETER W. STEVENSON\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5066-peter-w-stevenson"
+      }
+    ],
+    "sourceHeader": "5066      City of Burlingame Member, City Council, District 5                                                                                                                       Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 15,
+      "bbox": [
+        48.0,
+        54.13125228881836,
+        259.4875183105469,
+        63.90500259399414
+      ],
+      "text": "City of Burlingame Member, City Council, District 5"
+    },
+    "pdfPage": 15,
+    "sourceText": "City of Burlingame Member, City Council, District 5\nVote for 1\nOn Ballot: Yes\nPETER W. STEVENSON\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5066",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame/council_district:5"
+  },
+  {
+    "code": "5081",
+    "office": "Town of Colma Member, City Council",
+    "voteFor": 2,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "HELEN FISICARO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            129.41024780273438,
+            184.48902893066406,
+            137.17340087890625
+          ],
+          "text": "HELEN FISICARO"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            142.61949157714844,
+            157.81890869140625,
+            151.6671905517578
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "HELEN FISICARO\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5081-helen-fisicaro"
+      },
+      {
+        "name": "LAURA M WALSH",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            175.51025390625,
+            184.64889526367188,
+            183.27340698242188
+          ],
+          "text": "LAURA M WALSH"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            188.71949768066406,
+            182.56442260742188,
+            197.76719665527344
+          ],
+          "text": "Medical Assistant"
+        },
+        "ballotDesignation": "Medical Assistant",
+        "sourceText": "LAURA M WALSH\nMedical Assistant",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5081-laura-m-walsh"
+      },
+      {
+        "name": "JOANNE F. DEL ROSARIO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            221.61026000976562,
+            212.1639404296875,
+            229.3734130859375
+          ],
+          "text": "JOANNE F. DEL ROSARIO"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            234.8195037841797,
+            157.81890869140625,
+            243.86720275878906
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "JOANNE F. DEL ROSARIO\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5081-joanne-f-del-rosario"
+      },
+      {
+        "name": "ELISABETH AURORA JENSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            267.71026611328125,
+            227.57208251953125,
+            275.4734191894531
+          ],
+          "text": "ELISABETH AURORA JENSON"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            280.9195556640625,
+            192.0251922607422,
+            289.9672546386719
+          ],
+          "text": "Entrepreneur / Artist"
+        },
+        "ballotDesignation": "Entrepreneur / Artist",
+        "sourceText": "ELISABETH AURORA JENSON\nEntrepreneur / Artist",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5081-elisabeth-aurora-jenson"
+      }
+    ],
+    "sourceHeader": "5081      Town of Colma Member, City Council                                                                                                                                        Vote for 2        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 15,
+      "bbox": [
+        48.0,
+        115.78125,
+        201.45751953125,
+        125.55500030517578
+      ],
+      "text": "Town of Colma Member, City Council"
+    },
+    "pdfPage": 15,
+    "sourceText": "Town of Colma Member, City Council\nVote for 2\nOn Ballot: Yes\nHELEN FISICARO\nIncumbent\nLAURA M WALSH\nMedical Assistant\nJOANNE F. DEL ROSARIO\nIncumbent\nELISABETH AURORA JENSON\nEntrepreneur / Artist",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5081",
+    "ocdId": "ocd-division/country:us/state:ca/place:colma"
+  },
+  {
+    "code": "5100",
+    "office": "City of Daly City Member, City Council",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "THOMAS A. NURIS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            329.3602294921875,
+            188.04745483398438,
+            337.1233825683594
+          ],
+          "text": "THOMAS A. NURIS"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            342.56951904296875,
+            150.16439819335938,
+            351.6172180175781
+          ],
+          "text": "Attorney"
+        },
+        "ballotDesignation": "Attorney",
+        "sourceText": "THOMAS A. NURIS\nAttorney",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-thomas-a-nuris"
+      },
+      {
+        "name": "PAMELA DIGIOVANNI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            375.4602355957031,
+            197.04074096679688,
+            383.223388671875
+          ],
+          "text": "PAMELA DIGIOVANNI"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            388.6695251464844,
+            211.35992431640625,
+            397.71722412109375
+          ],
+          "text": "Daly City Councilmember"
+        },
+        "ballotDesignation": "Daly City Councilmember",
+        "sourceText": "PAMELA DIGIOVANNI\nDaly City Councilmember",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-pamela-digiovanni"
+      },
+      {
+        "name": "TERESA PROAÑO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            421.56024169921875,
+            186.1709442138672,
+            429.3233947753906
+          ],
+          "text": "TERESA PROAÑO"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            434.76953125,
+            258.63153076171875,
+            443.8172302246094
+          ],
+          "text": "City Councilmember / Businesswoman"
+        },
+        "ballotDesignation": "City Councilmember / Businesswoman",
+        "sourceText": "TERESA PROAÑO\nCity Councilmember / Businesswoman",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-teresa-proano"
+      },
+      {
+        "name": "TONY BAYUDAN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            467.6602478027344,
+            180.8750457763672,
+            475.42340087890625
+          ],
+          "text": "TONY BAYUDAN"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            480.8695373535156,
+            166.6721954345703,
+            489.917236328125
+          ],
+          "text": "Chief of Staff"
+        },
+        "ballotDesignation": "Chief of Staff",
+        "sourceText": "TONY BAYUDAN\nChief of Staff",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-tony-bayudan"
+      },
+      {
+        "name": "ROD DAUS-MAGBUAL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            513.76025390625,
+            200.53659057617188,
+            521.5233764648438
+          ],
+          "text": "ROD DAUS-MAGBUAL"
+        },
+        "designationCell": {
+          "pdfPage": 15,
+          "bbox": [
+            120.0,
+            526.969482421875,
+            239.28060913085938,
+            536.0172119140625
+          ],
+          "text": "Councilman / Professor / Director"
+        },
+        "ballotDesignation": "Councilman / Professor / Director",
+        "sourceText": "ROD DAUS-MAGBUAL\nCouncilman / Professor / Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-rod-daus-magbual"
+      },
+      {
+        "name": "ASIA SU",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            30.410247802734375,
+            153.73529052734375,
+            38.173397064208984
+          ],
+          "text": "ASIA SU"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            43.6194953918457,
+            201.46983337402344,
+            52.667198181152344
+          ],
+          "text": "Small Business Owner"
+        },
+        "ballotDesignation": "Small Business Owner",
+        "sourceText": "ASIA SU\nSmall Business Owner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-asia-su"
+      },
+      {
+        "name": "BARRY RODRIGUEZ",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            76.51025390625,
+            193.7325439453125,
+            84.27339935302734
+          ],
+          "text": "BARRY RODRIGUEZ"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            89.71949768066406,
+            203.276123046875,
+            98.76719665527344
+          ],
+          "text": "(No Ballot Designation)"
+        },
+        "ballotDesignation": "(No Ballot Designation)",
+        "sourceText": "BARRY RODRIGUEZ\n(No Ballot Designation)",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5100-barry-rodriguez"
+      }
+    ],
+    "sourceHeader": "5100      City of Daly City Member, City Council                                                                                                                                    Vote for 3        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 15,
+      "bbox": [
+        48.0,
+        315.7312316894531,
+        206.48876953125,
+        325.5050048828125
+      ],
+      "text": "City of Daly City Member, City Council"
+    },
+    "pdfPage": 15,
+    "sourceText": "City of Daly City Member, City Council\nVote for 3\nOn Ballot: Yes\nTHOMAS A. NURIS\nAttorney\nPAMELA DIGIOVANNI\nDaly City Councilmember\nTERESA PROAÑO\nCity Councilmember / Businesswoman\nTONY BAYUDAN\nChief of Staff\nROD DAUS-MAGBUAL\nCouncilman / Professor / Director\nASIA SU\nSmall Business Owner\nBARRY RODRIGUEZ\n(No Ballot Designation)",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5100",
+    "ocdId": "ocd-division/country:us/state:ca/place:daly_city"
+  },
+  {
+    "code": "5121",
+    "office": "City of East Palo Alto Member, City Council",
+    "voteFor": 2,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "HOLIFA WINDOM",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            138.16024780273438,
+            182.6681365966797,
+            145.92340087890625
+          ],
+          "text": "HOLIFA WINDOM"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            151.36949157714844,
+            178.968017578125,
+            160.4171905517578
+          ],
+          "text": "Businesswoman"
+        },
+        "ballotDesignation": "Businesswoman",
+        "sourceText": "HOLIFA WINDOM\nBusinesswoman",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-holifa-windom"
+      },
+      {
+        "name": "GAIL WILK DIXON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            184.26025390625,
+            185.87904357910156,
+            192.02340698242188
+          ],
+          "text": "GAIL WILK DIXON"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            197.46949768066406,
+            183.93331909179688,
+            206.51719665527344
+          ],
+          "text": "Legal Investigator"
+        },
+        "ballotDesignation": "Legal Investigator",
+        "sourceText": "GAIL WILK DIXON\nLegal Investigator",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-gail-wilk-dixon"
+      },
+      {
+        "name": "RUBEN ABRICA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            230.36026000976562,
+            178.90818786621094,
+            238.1234130859375
+          ],
+          "text": "RUBEN ABRICA"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            243.5695037841797,
+            186.93031311035156,
+            252.61720275878906
+          ],
+          "text": "Substitute Teacher"
+        },
+        "ballotDesignation": "Substitute Teacher",
+        "sourceText": "RUBEN ABRICA\nSubstitute Teacher",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-ruben-abrica"
+      },
+      {
+        "name": "SAM JIMENEZ",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            276.4602355957031,
+            173.29258728027344,
+            284.223388671875
+          ],
+          "text": "SAM JIMENEZ"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            289.6695251464844,
+            214.98062133789062,
+            298.71722412109375
+          ],
+          "text": "Plumbing Business Owner"
+        },
+        "ballotDesignation": "Plumbing Business Owner",
+        "sourceText": "SAM JIMENEZ\nPlumbing Business Owner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-sam-jimenez"
+      },
+      {
+        "name": "OFELIA BELLO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            322.56024169921875,
+            176.5173797607422,
+            330.3233947753906
+          ],
+          "text": "OFELIA BELLO"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            335.76953125,
+            220.8288116455078,
+            344.8172302246094
+          ],
+          "text": "Nonprofit Executive Director"
+        },
+        "ballotDesignation": "Nonprofit Executive Director",
+        "sourceText": "OFELIA BELLO\nNonprofit Executive Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-ofelia-bello"
+      },
+      {
+        "name": "DEBORAH LEWIS-VIRGES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            368.6602478027344,
+            213.44969177246094,
+            376.42340087890625
+          ],
+          "text": "DEBORAH LEWIS-VIRGES"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            381.8695373535156,
+            226.68511962890625,
+            390.917236328125
+          ],
+          "text": "Pastor / Community Advocate"
+        },
+        "ballotDesignation": "Pastor / Community Advocate",
+        "sourceText": "DEBORAH LEWIS-VIRGES\nPastor / Community Advocate",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-deborah-lewis-virges"
+      },
+      {
+        "name": "MICHAEL MASHACK",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            414.76025390625,
+            194.7472381591797,
+            422.5234069824219
+          ],
+          "text": "MICHAEL MASHACK"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            427.96954345703125,
+            205.5198211669922,
+            437.0172424316406
+          ],
+          "text": "Planning Commissioner"
+        },
+        "ballotDesignation": "Planning Commissioner",
+        "sourceText": "MICHAEL MASHACK\nPlanning Commissioner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5121-michael-mashack"
+      }
+    ],
+    "sourceHeader": "5121      City of East Palo Alto Member, City Council                                                                                                                                 Vote for 2        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 16,
+      "bbox": [
+        48.0,
+        124.53125,
+        227.53253173828125,
+        134.30499267578125
+      ],
+      "text": "City of East Palo Alto Member, City Council"
+    },
+    "pdfPage": 16,
+    "sourceText": "City of East Palo Alto Member, City Council\nVote for 2\nOn Ballot: Yes\nHOLIFA WINDOM\nBusinesswoman\nGAIL WILK DIXON\nLegal Investigator\nRUBEN ABRICA\nSubstitute Teacher\nSAM JIMENEZ\nPlumbing Business Owner\nOFELIA BELLO\nNonprofit Executive Director\nDEBORAH LEWIS-VIRGES\nPastor / Community Advocate\nMICHAEL MASHACK\nPlanning Commissioner",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5121",
+    "ocdId": "ocd-division/country:us/state:ca/place:east_palo_alto"
+  },
+  {
+    "code": "5142",
+    "office": "City of Foster City Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "ART KIESEL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            476.4102478027344,
+            166.9611358642578,
+            484.17340087890625
+          ],
+          "text": "ART KIESEL"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            489.6195373535156,
+            142.50180053710938,
+            498.667236328125
+          ],
+          "text": "Mayor"
+        },
+        "ballotDesignation": "Mayor",
+        "sourceText": "ART KIESEL\nMayor",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5142-art-kiesel"
+      },
+      {
+        "name": "PHOEBE SHIN VENKAT",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            522.51025390625,
+            203.6849365234375,
+            530.2733764648438
+          ],
+          "text": "PHOEBE SHIN VENKAT"
+        },
+        "designationCell": {
+          "pdfPage": 16,
+          "bbox": [
+            120.0,
+            535.719482421875,
+            253.69052124023438,
+            544.7672119140625
+          ],
+          "text": "Nonprofit Executive / Councilmember"
+        },
+        "ballotDesignation": "Nonprofit Executive / Councilmember",
+        "sourceText": "PHOEBE SHIN VENKAT\nNonprofit Executive / Councilmember",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5142-phoebe-shin-venkat"
+      }
+    ],
+    "sourceHeader": "5142      City of Foster City Member, City Council, District 1                                                                                                                        Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 16,
+      "bbox": [
+        48.0,
+        462.7812194824219,
+        257.0550231933594,
+        472.55499267578125
+      ],
+      "text": "City of Foster City Member, City Council, District 1"
+    },
+    "pdfPage": 16,
+    "sourceText": "City of Foster City Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nART KIESEL\nMayor\nPHOEBE SHIN VENKAT\nNonprofit Executive / Councilmember",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5142",
+    "ocdId": "ocd-division/country:us/state:ca/place:foster_city/council_district:1"
+  },
+  {
+    "code": "5143",
+    "office": "City of Foster City Member, City Council, District 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "STACY JIMENEZ",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            67.76025390625,
+            180.74993896484375,
+            75.52339935302734
+          ],
+          "text": "STACY JIMENEZ"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            80.96949768066406,
+            213.17430114746094,
+            90.01719665527344
+          ],
+          "text": "Councilmember / Attorney"
+        },
+        "ballotDesignation": "Councilmember / Attorney",
+        "sourceText": "STACY JIMENEZ\nCouncilmember / Attorney",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5143-stacy-jimenez"
+      }
+    ],
+    "sourceHeader": "5143      City of Foster City Member, City Council, District 2                                                                                                                    Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 17,
+      "bbox": [
+        48.0,
+        54.131248474121094,
+        257.0550231933594,
+        63.904998779296875
+      ],
+      "text": "City of Foster City Member, City Council, District 2"
+    },
+    "pdfPage": 17,
+    "sourceText": "City of Foster City Member, City Council, District 2\nVote for 1\nOn Ballot: Yes\nSTACY JIMENEZ\nCouncilmember / Attorney",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5143",
+    "ocdId": "ocd-division/country:us/state:ca/place:foster_city/council_district:2"
+  },
+  {
+    "code": "5163",
+    "office": "City of Half Moon Bay Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "ROBERT BROWNSTONE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            129.41024780273438,
+            207.88275146484375,
+            137.17340087890625
+          ],
+          "text": "ROBERT BROWNSTONE"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            142.61949157714844,
+            157.81890869140625,
+            151.6671905517578
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "ROBERT BROWNSTONE\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5163-robert-brownstone"
+      },
+      {
+        "name": "DAVID GORN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            175.51025390625,
+            169.69944763183594,
+            183.27340698242188
+          ],
+          "text": "DAVID GORN"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            188.71949768066406,
+            227.12252807617188,
+            197.76719665527344
+          ],
+          "text": "Planning Commissioner Chair"
+        },
+        "ballotDesignation": "Planning Commissioner Chair",
+        "sourceText": "DAVID GORN\nPlanning Commissioner Chair",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5163-david-gorn"
+      }
+    ],
+    "sourceHeader": "5163      City of Half Moon Bay Member, City Council, District 1                                                                                                                  Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 17,
+      "bbox": [
+        48.0,
+        115.78125,
+        272.1225280761719,
+        125.55500030517578
+      ],
+      "text": "City of Half Moon Bay Member, City Council, District 1"
+    },
+    "pdfPage": 17,
+    "sourceText": "City of Half Moon Bay Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nROBERT BROWNSTONE\nIncumbent\nDAVID GORN\nPlanning Commissioner Chair",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5163",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:1"
+  },
+  {
+    "code": "5166",
+    "office": "City of Half Moon Bay Member, City Council, District 4",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "RON KIES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            237.16024780273438,
+            159.39259338378906,
+            244.92340087890625
+          ],
+          "text": "RON KIES"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            250.36947631835938,
+            154.21441650390625,
+            259.41717529296875
+          ],
+          "text": "Geologist"
+        },
+        "ballotDesignation": "Geologist",
+        "sourceText": "RON KIES\nGeologist",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5166-ron-kies"
+      },
+      {
+        "name": "DEBBIE RUDDOCK",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            283.26025390625,
+            189.49998474121094,
+            291.0234069824219
+          ],
+          "text": "DEBBIE RUDDOCK"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            296.46954345703125,
+            214.98062133789062,
+            305.5172424316406
+          ],
+          "text": "Retired Legislative Analyst"
+        },
+        "ballotDesignation": "Retired Legislative Analyst",
+        "sourceText": "DEBBIE RUDDOCK\nRetired Legislative Analyst",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5166-debbie-ruddock"
+      }
+    ],
+    "sourceHeader": "5166      City of Half Moon Bay Member, City Council, District 4                                                                                                                  Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 17,
+      "bbox": [
+        48.0,
+        223.53126525878906,
+        272.1225280761719,
+        233.3050079345703
+      ],
+      "text": "City of Half Moon Bay Member, City Council, District 4"
+    },
+    "pdfPage": 17,
+    "sourceText": "City of Half Moon Bay Member, City Council, District 4\nVote for 1\nOn Ballot: Yes\nRON KIES\nGeologist\nDEBBIE RUDDOCK\nRetired Legislative Analyst",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5166",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:4"
+  },
+  {
+    "code": "5167",
+    "office": "City of Half Moon Bay Member, City Council, District 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "SUSIE MORASCI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            344.9102478027344,
+            181.4032440185547,
+            352.67340087890625
+          ],
+          "text": "SUSIE MORASCI"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            358.1195373535156,
+            154.2144012451172,
+            367.167236328125
+          ],
+          "text": "Paralegal"
+        },
+        "ballotDesignation": "Paralegal",
+        "sourceText": "SUSIE MORASCI\nParalegal",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5167-susie-morasci"
+      },
+      {
+        "name": "STEVEN R. BOOKER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            391.01025390625,
+            194.92098999023438,
+            398.7734069824219
+          ],
+          "text": "STEVEN R. BOOKER"
+        },
+        "designationCell": {
+          "pdfPage": 17,
+          "bbox": [
+            120.0,
+            404.21954345703125,
+            157.35720825195312,
+            413.2672424316406
+          ],
+          "text": "Electrician"
+        },
+        "ballotDesignation": "Electrician",
+        "sourceText": "STEVEN R. BOOKER\nElectrician",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5167-steven-r-booker"
+      }
+    ],
+    "sourceHeader": "5167      City of Half Moon Bay Member, City Council, District 5                                                                                                                  Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 17,
+      "bbox": [
+        48.0,
+        331.28125,
+        272.1225280761719,
+        341.0550231933594
+      ],
+      "text": "City of Half Moon Bay Member, City Council, District 5"
+    },
+    "pdfPage": 17,
+    "sourceText": "City of Half Moon Bay Member, City Council, District 5\nVote for 1\nOn Ballot: Yes\nSUSIE MORASCI\nParalegal\nSTEVEN R. BOOKER\nElectrician",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5167",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay/council_district:5"
+  },
+  {
+    "code": "5202",
+    "office": "City of Menlo Park Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JAMES ROHR",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            30.410247802734375,
+            172.13194274902344,
+            38.173397064208984
+          ],
+          "text": "JAMES ROHR"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            43.6194953918457,
+            203.276123046875,
+            52.667198181152344
+          ],
+          "text": "(No Ballot Designation)"
+        },
+        "ballotDesignation": "(No Ballot Designation)",
+        "sourceText": "JAMES ROHR\n(No Ballot Designation)",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5202-james-rohr"
+      },
+      {
+        "name": "WONMAN LEE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            76.51025390625,
+            174.0570831298828,
+            84.27339935302734
+          ],
+          "text": "WONMAN LEE"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            89.71949768066406,
+            186.63059997558594,
+            98.76719665527344
+          ],
+          "text": "Software Engineer"
+        },
+        "ballotDesignation": "Software Engineer",
+        "sourceText": "WONMAN LEE\nSoftware Engineer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5202-wonman-lee"
+      }
+    ],
+    "sourceHeader": "5202      City of Menlo Park Member, City Council, District 1                                                                                                                     Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 17,
+      "bbox": [
+        48.0,
+        546.7811889648438,
+        258.0350341796875,
+        556.554931640625
+      ],
+      "text": "City of Menlo Park Member, City Council, District 1"
+    },
+    "pdfPage": 17,
+    "sourceText": "City of Menlo Park Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nJAMES ROHR\n(No Ballot Designation)\nWONMAN LEE\nSoftware Engineer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5202",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park/council_district:1"
+  },
+  {
+    "code": "5203",
+    "office": "City of Menlo Park Member, City Council, District 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "DREW COMBS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            138.16024780273438,
+            174.82855224609375,
+            145.92340087890625
+          ],
+          "text": "DREW COMBS"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            151.36949157714844,
+            236.1216278076172,
+            160.4171905517578
+          ],
+          "text": "Menlo Park City Councilmember"
+        },
+        "ballotDesignation": "Menlo Park City Councilmember",
+        "sourceText": "DREW COMBS\nMenlo Park City Councilmember",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5203-drew-combs"
+      },
+      {
+        "name": "VAMSI VELAGAPUDI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            184.26025390625,
+            194.7541961669922,
+            192.02340698242188
+          ],
+          "text": "VAMSI VELAGAPUDI"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            197.46949768066406,
+            197.4197998046875,
+            206.51719665527344
+          ],
+          "text": "Community Volunteer"
+        },
+        "ballotDesignation": "Community Volunteer",
+        "sourceText": "VAMSI VELAGAPUDI\nCommunity Volunteer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5203-vamsi-velagapudi"
+      }
+    ],
+    "sourceHeader": "5203      City of Menlo Park Member, City Council, District 2                                                                                                                          Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 18,
+      "bbox": [
+        48.0,
+        124.53125,
+        258.0350341796875,
+        134.30499267578125
+      ],
+      "text": "City of Menlo Park Member, City Council, District 2"
+    },
+    "pdfPage": 18,
+    "sourceText": "City of Menlo Park Member, City Council, District 2\nVote for 1\nOn Ballot: Yes\nDREW COMBS\nMenlo Park City Councilmember\nVAMSI VELAGAPUDI\nCommunity Volunteer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5203",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park/council_district:2"
+  },
+  {
+    "code": "5205",
+    "office": "City of Menlo Park Member, City Council, District 4",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "CHARLOTTE REED",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            245.91024780273438,
+            189.88917541503906,
+            253.67340087890625
+          ],
+          "text": "CHARLOTTE REED"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            259.1194763183594,
+            257.2950134277344,
+            268.16717529296875
+          ],
+          "text": "Communications Professional / Singer"
+        },
+        "ballotDesignation": "Communications Professional / Singer",
+        "sourceText": "CHARLOTTE REED\nCommunications Professional / Singer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5205-charlotte-reed"
+      },
+      {
+        "name": "LAURA MELAHN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            292.01025390625,
+            181.52139282226562,
+            299.7734069824219
+          ],
+          "text": "LAURA MELAHN"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            305.21954345703125,
+            237.49050903320312,
+            314.2672424316406
+          ],
+          "text": "Entrepreneur / Nonprofit Director"
+        },
+        "ballotDesignation": "Entrepreneur / Nonprofit Director",
+        "sourceText": "LAURA MELAHN\nEntrepreneur / Nonprofit Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5205-laura-melahn"
+      }
+    ],
+    "sourceHeader": "5205      City of Menlo Park Member, City Council, District 4                                                                                                                          Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 18,
+      "bbox": [
+        48.0,
+        232.28125,
+        258.0350341796875,
+        242.05499267578125
+      ],
+      "text": "City of Menlo Park Member, City Council, District 4"
+    },
+    "pdfPage": 18,
+    "sourceText": "City of Menlo Park Member, City Council, District 4\nVote for 1\nOn Ballot: Yes\nCHARLOTTE REED\nCommunications Professional / Singer\nLAURA MELAHN\nEntrepreneur / Nonprofit Director",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5205",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park/council_district:4"
+  },
+  {
+    "code": "5223",
+    "office": "City of Millbrae Member, City Council, District 2 (Full Term)",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "SISSY RILEY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            353.6602478027344,
+            168.36505126953125,
+            361.42340087890625
+          ],
+          "text": "SISSY RILEY"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            366.8695373535156,
+            196.54501342773438,
+            375.917236328125
+          ],
+          "text": "Appointed Incumbent"
+        },
+        "ballotDesignation": "Appointed Incumbent",
+        "sourceText": "SISSY RILEY\nAppointed Incumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5223-sissy-riley"
+      }
+    ],
+    "sourceHeader": "5223      City of Millbrae Member, City Council, District 2 (Full Term)                                                                                                                Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 18,
+      "bbox": [
+        48.0,
+        340.03125,
+        291.416259765625,
+        349.8050231933594
+      ],
+      "text": "City of Millbrae Member, City Council, District 2 (Full Term)"
+    },
+    "pdfPage": 18,
+    "sourceText": "City of Millbrae Member, City Council, District 2 (Full Term)\nVote for 1\nOn Ballot: Yes\nSISSY RILEY\nAppointed Incumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5223",
+    "ocdId": "ocd-division/country:us/state:ca/place:millbrae/council_district:2"
+  },
+  {
+    "code": "5224",
+    "office": "City of Millbrae Member, City Council, District 3 (Short Term)",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JUAN GÁMEZ",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            415.31024169921875,
+            171.74273681640625,
+            423.0733947753906
+          ],
+          "text": "JUAN GÁMEZ"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            428.51953125,
+            224.44952392578125,
+            437.5672302246094
+          ],
+          "text": "Business Consultant / Parent"
+        },
+        "ballotDesignation": "Business Consultant / Parent",
+        "sourceText": "JUAN GÁMEZ\nBusiness Consultant / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5224-juan-gamez"
+      },
+      {
+        "name": "ANN SCHNEIDER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            461.4102478027344,
+            183.71063232421875,
+            469.17340087890625
+          ],
+          "text": "ANN SCHNEIDER"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            474.6195373535156,
+            197.4197998046875,
+            483.667236328125
+          ],
+          "text": "Community Volunteer"
+        },
+        "ballotDesignation": "Community Volunteer",
+        "sourceText": "ANN SCHNEIDER\nCommunity Volunteer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5224-ann-schneider"
+      }
+    ],
+    "sourceHeader": "5224      City of Millbrae Member, City Council, District 3 (Short Term)                                                                                                               Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 18,
+      "bbox": [
+        48.0,
+        401.6812438964844,
+        298.7050476074219,
+        411.45501708984375
+      ],
+      "text": "City of Millbrae Member, City Council, District 3 (Short Term)"
+    },
+    "pdfPage": 18,
+    "sourceText": "City of Millbrae Member, City Council, District 3 (Short Term)\nVote for 1\nOn Ballot: Yes\nJUAN GÁMEZ\nBusiness Consultant / Parent\nANN SCHNEIDER\nCommunity Volunteer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5224",
+    "ocdId": "ocd-division/country:us/state:ca/place:millbrae/council_district:3"
+  },
+  {
+    "code": "5225",
+    "office": "City of Millbrae Member, City Council, District 4 (Full Term)",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "ALBERT YAM",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            523.0602416992188,
+            170.54733276367188,
+            530.8233642578125
+          ],
+          "text": "ALBERT YAM"
+        },
+        "designationCell": {
+          "pdfPage": 18,
+          "bbox": [
+            120.0,
+            536.2694702148438,
+            203.2680206298828,
+            545.3171997070312
+          ],
+          "text": "University Data Analyst"
+        },
+        "ballotDesignation": "University Data Analyst",
+        "sourceText": "ALBERT YAM\nUniversity Data Analyst",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5225-albert-yam"
+      },
+      {
+        "name": "BOB NGUYEN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            52.21025085449219,
+            172.9033966064453,
+            59.9734001159668
+          ],
+          "text": "BOB NGUYEN"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            65.41950225830078,
+            201.46983337402344,
+            74.46720123291016
+          ],
+          "text": "Small Business Owner"
+        },
+        "ballotDesignation": "Small Business Owner",
+        "sourceText": "BOB NGUYEN\nSmall Business Owner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5225-bob-nguyen"
+      }
+    ],
+    "sourceHeader": "5225      City of Millbrae Member, City Council, District 4 (Full Term)                                                                                                                Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 18,
+      "bbox": [
+        48.0,
+        509.43121337890625,
+        291.416259765625,
+        519.2049560546875
+      ],
+      "text": "City of Millbrae Member, City Council, District 4 (Full Term)"
+    },
+    "pdfPage": 18,
+    "sourceText": "City of Millbrae Member, City Council, District 4 (Full Term)\nVote for 1\nOn Ballot: Yes\nALBERT YAM\nUniversity Data Analyst\nBOB NGUYEN\nSmall Business Owner",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5225",
+    "ocdId": "ocd-division/country:us/state:ca/place:millbrae/council_district:4"
+  },
+  {
+    "code": "5243",
+    "office": "City of Pacifica Member, City Council, District 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "CHRISTINE BOLES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            113.8602523803711,
+            189.1246795654297,
+            121.62339782714844
+          ],
+          "text": "CHRISTINE BOLES"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            127.06949615478516,
+            280.69598388671875,
+            136.1171875
+          ],
+          "text": "Architect / Businesswoman / Councilmember"
+        },
+        "ballotDesignation": "Architect / Businesswoman / Councilmember",
+        "sourceText": "CHRISTINE BOLES\nArchitect / Businesswoman / Councilmember",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5243-christine-boles"
+      },
+      {
+        "name": "DAN URBAN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            159.9602508544922,
+            167.87158203125,
+            167.72340393066406
+          ],
+          "text": "DAN URBAN"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            173.16949462890625,
+            210.92251586914062,
+            182.21719360351562
+          ],
+          "text": "Retired Regional Director"
+        },
+        "ballotDesignation": "Retired Regional Director",
+        "sourceText": "DAN URBAN\nRetired Regional Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5243-dan-urban"
+      }
+    ],
+    "sourceHeader": "5243      City of Pacifica Member, City Council, District 2                                                                                                                            Vote for 1         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 19,
+      "bbox": [
+        48.0,
+        100.23125457763672,
+        244.42877197265625,
+        110.0050048828125
+      ],
+      "text": "City of Pacifica Member, City Council, District 2"
+    },
+    "pdfPage": 19,
+    "sourceText": "City of Pacifica Member, City Council, District 2\nVote for 1\nOn Ballot: Yes\nCHRISTINE BOLES\nArchitect / Businesswoman / Councilmember\nDAN URBAN\nRetired Regional Director",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5243",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica/council_district:2"
+  },
+  {
+    "code": "5244",
+    "office": "City of Pacifica Member, City Council, District 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "CINDY ABBOTT",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            221.61024475097656,
+            177.85179138183594,
+            229.37339782714844
+          ],
+          "text": "CINDY ABBOTT"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            234.81948852539062,
+            183.4635009765625,
+            243.8671875
+          ],
+          "text": "Nonprofit Director"
+        },
+        "ballotDesignation": "Nonprofit Director",
+        "sourceText": "CINDY ABBOTT\nNonprofit Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5244-cindy-abbott"
+      }
+    ],
+    "sourceHeader": "5244      City of Pacifica Member, City Council, District 3                                                                                                                            Vote for 1         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 19,
+      "bbox": [
+        48.0,
+        207.9812469482422,
+        244.42877197265625,
+        217.75498962402344
+      ],
+      "text": "City of Pacifica Member, City Council, District 3"
+    },
+    "pdfPage": 19,
+    "sourceText": "City of Pacifica Member, City Council, District 3\nVote for 1\nOn Ballot: Yes\nCINDY ABBOTT\nNonprofit Director",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5244",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica/council_district:3"
+  },
+  {
+    "code": "5246",
+    "office": "City of Pacifica Member, City Council, District 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MARGO MEIMAN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            283.2602233886719,
+            182.5500030517578,
+            291.02337646484375
+          ],
+          "text": "MARGO MEIMAN"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            296.4695129394531,
+            177.01589965820312,
+            305.5172119140625
+          ],
+          "text": "Retired Teacher"
+        },
+        "ballotDesignation": "Retired Teacher",
+        "sourceText": "MARGO MEIMAN\nRetired Teacher",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5246-margo-meiman"
+      },
+      {
+        "name": "SAM CASILLAS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            329.3602600097656,
+            177.92127990722656,
+            337.1234130859375
+          ],
+          "text": "SAM CASILLAS"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            342.5695495605469,
+            220.8207244873047,
+            351.61724853515625
+          ],
+          "text": "Climate Resiliency Manager"
+        },
+        "ballotDesignation": "Climate Resiliency Manager",
+        "sourceText": "SAM CASILLAS\nClimate Resiliency Manager",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5246-sam-casillas"
+      }
+    ],
+    "sourceHeader": "5246      City of Pacifica Member, City Council, District 5                                                                                                                            Vote for 1         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 19,
+      "bbox": [
+        48.0,
+        269.6312561035156,
+        244.42877197265625,
+        279.405029296875
+      ],
+      "text": "City of Pacifica Member, City Council, District 5"
+    },
+    "pdfPage": 19,
+    "sourceText": "City of Pacifica Member, City Council, District 5\nVote for 1\nOn Ballot: Yes\nMARGO MEIMAN\nRetired Teacher\nSAM CASILLAS\nClimate Resiliency Manager",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5246",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica/council_district:5"
+  },
+  {
+    "code": "5260",
+    "office": "Town of Portola Valley Member, Town Council",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MARY HUFTY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            391.0102233886719,
+            170.79754638671875,
+            398.77337646484375
+          ],
+          "text": "MARY HUFTY"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            404.2195129394531,
+            211.9755096435547,
+            413.2672119140625
+          ],
+          "text": "Portola Valley Vice Mayor"
+        },
+        "ballotDesignation": "Portola Valley Vice Mayor",
+        "sourceText": "MARY HUFTY\nPortola Valley Vice Mayor",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5260-mary-hufty"
+      },
+      {
+        "name": "CRAIG S TAYLOR",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            437.1102600097656,
+            184.16238403320312,
+            444.8734130859375
+          ],
+          "text": "CRAIG S TAYLOR"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            450.3195495605469,
+            200.1171112060547,
+            459.36724853515625
+          ],
+          "text": "Town Council Member"
+        },
+        "ballotDesignation": "Town Council Member",
+        "sourceText": "CRAIG S TAYLOR\nTown Council Member",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5260-craig-s-taylor"
+      },
+      {
+        "name": "JUDITH A. HASKO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            483.2102355957031,
+            186.50453186035156,
+            490.973388671875
+          ],
+          "text": "JUDITH A. HASKO"
+        },
+        "designationCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            496.4195251464844,
+            200.1171112060547,
+            505.46722412109375
+          ],
+          "text": "Town Council Member"
+        },
+        "ballotDesignation": "Town Council Member",
+        "sourceText": "JUDITH A. HASKO\nTown Council Member",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5260-judith-a-hasko"
+      }
+    ],
+    "sourceHeader": "5260      Town of Portola Valley Member, Town Council                                                                                                                                  Vote for 3         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 19,
+      "bbox": [
+        48.0,
+        377.3812255859375,
+        237.7612762451172,
+        387.1549987792969
+      ],
+      "text": "Town of Portola Valley Member, Town Council"
+    },
+    "pdfPage": 19,
+    "sourceText": "Town of Portola Valley Member, Town Council\nVote for 3\nOn Ballot: Yes\nMARY HUFTY\nPortola Valley Vice Mayor\nCRAIG S TAYLOR\nTown Council Member\nJUDITH A. HASKO\nTown Council Member",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5260",
+    "ocdId": "ocd-division/country:us/state:ca/place:portola_valley"
+  },
+  {
+    "code": "5283",
+    "office": "City of Redwood City Member, City Council, District 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "CHRIS STURKEN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 19,
+          "bbox": [
+            120.0,
+            544.8602905273438,
+            182.93917846679688,
+            552.6234130859375
+          ],
+          "text": "CHRIS STURKEN"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            29.269498825073242,
+            195.159912109375,
+            38.31719970703125
+          ],
+          "text": "City Council Member"
+        },
+        "ballotDesignation": "City Council Member",
+        "sourceText": "CHRIS STURKEN\nCity Council Member",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5283-chris-sturken"
+      }
+    ],
+    "sourceHeader": "5283      City of Redwood City Member, City Council, District 2                                                                                                                        Vote for 1         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 19,
+      "bbox": [
+        48.0,
+        531.231201171875,
+        269.6900329589844,
+        541.0049438476562
+      ],
+      "text": "City of Redwood City Member, City Council, District 2"
+    },
+    "pdfPage": 19,
+    "sourceText": "City of Redwood City Member, City Council, District 2\nVote for 1\nOn Ballot: Yes\nCHRIS STURKEN\nCity Council Member",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5283",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city/council_district:2"
+  },
+  {
+    "code": "5286",
+    "office": "City of Redwood City Member, City Council, District 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "KAIA EAKIN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            77.71025085449219,
+            166.08543395996094,
+            85.47339630126953
+          ],
+          "text": "KAIA EAKIN"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            90.91949462890625,
+            157.81890869140625,
+            99.96719360351562
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "KAIA EAKIN\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5286-kaia-eakin"
+      }
+    ],
+    "sourceHeader": "5286      City of Redwood City Member, City Council, District 5                                                                                                                       Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 20,
+      "bbox": [
+        48.0,
+        64.08125305175781,
+        269.6900329589844,
+        73.8550033569336
+      ],
+      "text": "City of Redwood City Member, City Council, District 5"
+    },
+    "pdfPage": 20,
+    "sourceText": "City of Redwood City Member, City Council, District 5\nVote for 1\nOn Ballot: Yes\nKAIA EAKIN\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5286",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city/council_district:5"
+  },
+  {
+    "code": "5287",
+    "office": "City of Redwood City Member, City Council, District 6",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "DIANE HOWARD",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            139.36024475097656,
+            181.04183959960938,
+            147.12339782714844
+          ],
+          "text": "DIANE HOWARD"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            152.56948852539062,
+            221.26622009277344,
+            161.6171875
+          ],
+          "text": "City Councilmember / Nurse"
+        },
+        "ballotDesignation": "City Councilmember / Nurse",
+        "sourceText": "DIANE HOWARD\nCity Councilmember / Nurse",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5287-diane-howard"
+      }
+    ],
+    "sourceHeader": "5287      City of Redwood City Member, City Council, District 6                                                                                                                       Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 20,
+      "bbox": [
+        48.0,
+        125.73124694824219,
+        269.6900329589844,
+        135.50498962402344
+      ],
+      "text": "City of Redwood City Member, City Council, District 6"
+    },
+    "pdfPage": 20,
+    "sourceText": "City of Redwood City Member, City Council, District 6\nVote for 1\nOn Ballot: Yes\nDIANE HOWARD\nCity Councilmember / Nurse",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5287",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city/council_district:6"
+  },
+  {
+    "code": "5300",
+    "office": "City of San Bruno Mayor",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "RICO E. MEDINA",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            201.01025390625,
+            180.7638397216797,
+            208.77340698242188
+          ],
+          "text": "RICO E. MEDINA"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            214.21949768066406,
+            210.03150939941406,
+            223.26719665527344
+          ],
+          "text": "Mayor, City of San Bruno"
+        },
+        "ballotDesignation": "Mayor, City of San Bruno",
+        "sourceText": "RICO E. MEDINA\nMayor, City of San Bruno",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5300-rico-e-medina"
+      }
+    ],
+    "sourceHeader": "5300      City of San Bruno Mayor                                                                                                                                                     Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 20,
+      "bbox": [
+        48.0,
+        187.38125610351562,
+        150.09503173828125,
+        197.15499877929688
+      ],
+      "text": "City of San Bruno Mayor"
+    },
+    "pdfPage": 20,
+    "sourceText": "City of San Bruno Mayor\nVote for 1\nOn Ballot: Yes\nRICO E. MEDINA\nMayor, City of San Bruno",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5300",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno"
+  },
+  {
+    "code": "5303",
+    "office": "City of San Bruno Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "JENNIFER M. BLANCO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            262.6602478027344,
+            201.47482299804688,
+            270.42340087890625
+          ],
+          "text": "JENNIFER M. BLANCO"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            275.8695373535156,
+            231.17254638671875,
+            284.917236328125
+          ],
+          "text": "Juvenile Justice Commissioner"
+        },
+        "ballotDesignation": "Juvenile Justice Commissioner",
+        "sourceText": "JENNIFER M. BLANCO\nJuvenile Justice Commissioner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5303-jennifer-m-blanco"
+      },
+      {
+        "name": "KINGSLEY MA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            308.76025390625,
+            173.66094970703125,
+            316.5234069824219
+          ],
+          "text": "KINGSLEY MA"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            321.96954345703125,
+            205.0904998779297,
+            331.0172424316406
+          ],
+          "text": "School Board President"
+        },
+        "ballotDesignation": "School Board President",
+        "sourceText": "KINGSLEY MA\nSchool Board President",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5303-kingsley-ma"
+      }
+    ],
+    "sourceHeader": "5303      City of San Bruno Member, City Council, District 1                                                                                                                          Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 20,
+      "bbox": [
+        48.0,
+        249.03126525878906,
+        255.5937957763672,
+        258.8050231933594
+      ],
+      "text": "City of San Bruno Member, City Council, District 1"
+    },
+    "pdfPage": 20,
+    "sourceText": "City of San Bruno Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nJENNIFER M. BLANCO\nJuvenile Justice Commissioner\nKINGSLEY MA\nSchool Board President",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5303",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno/council_district:1"
+  },
+  {
+    "code": "5306",
+    "office": "City of San Bruno Member, City Council, District 4",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "MARTY P. MEDINA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            370.4102478027344,
+            187.04664611816406,
+            378.17340087890625
+          ],
+          "text": "MARTY P. MEDINA"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            383.6195373535156,
+            267.18511962890625,
+            392.667236328125
+          ],
+          "text": "San Bruno City Councilmember District 4"
+        },
+        "ballotDesignation": "San Bruno City Councilmember District 4",
+        "sourceText": "MARTY P. MEDINA\nSan Bruno City Councilmember District 4",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5306-marty-p-medina"
+      },
+      {
+        "name": "AUROS HARMAN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            416.51025390625,
+            183.7036895751953,
+            424.2734069824219
+          ],
+          "text": "AUROS HARMAN"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            429.71954345703125,
+            244.69142150878906,
+            438.7672424316406
+          ],
+          "text": "Planning Commissioner / Engineer"
+        },
+        "ballotDesignation": "Planning Commissioner / Engineer",
+        "sourceText": "AUROS HARMAN\nPlanning Commissioner / Engineer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5306-auros-harman"
+      }
+    ],
+    "sourceHeader": "5306      City of San Bruno Member, City Council, District 4                                                                                                                          Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 20,
+      "bbox": [
+        48.0,
+        356.78125,
+        255.5937957763672,
+        366.5550231933594
+      ],
+      "text": "City of San Bruno Member, City Council, District 4"
+    },
+    "pdfPage": 20,
+    "sourceText": "City of San Bruno Member, City Council, District 4\nVote for 1\nOn Ballot: Yes\nMARTY P. MEDINA\nSan Bruno City Councilmember District 4\nAUROS HARMAN\nPlanning Commissioner / Engineer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5306",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno/council_district:4"
+  },
+  {
+    "code": "5320",
+    "office": "City of San Carlos Member, City Council",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "PRANITA VENKATESH",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            478.1602478027344,
+            200.2238311767578,
+            485.92340087890625
+          ],
+          "text": "PRANITA VENKATESH"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            491.3695373535156,
+            215.87969970703125,
+            500.417236328125
+          ],
+          "text": "Councilmember / Educator"
+        },
+        "ballotDesignation": "Councilmember / Educator",
+        "sourceText": "PRANITA VENKATESH\nCouncilmember / Educator",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5320-pranita-venkatesh"
+      },
+      {
+        "name": "SARA MCDOWELL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            524.26025390625,
+            187.93624877929688,
+            532.0233764648438
+          ],
+          "text": "SARA MCDOWELL"
+        },
+        "designationCell": {
+          "pdfPage": 20,
+          "bbox": [
+            120.0,
+            537.469482421875,
+            224.87071228027344,
+            546.5172119140625
+          ],
+          "text": "City Councilmember / Mother"
+        },
+        "ballotDesignation": "City Councilmember / Mother",
+        "sourceText": "SARA MCDOWELL\nCity Councilmember / Mother",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5320-sara-mcdowell"
+      },
+      {
+        "name": "ADAM RAK",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            52.21025085449219,
+            163.62513732910156,
+            59.9734001159668
+          ],
+          "text": "ADAM RAK"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            65.41950225830078,
+            235.2225341796875,
+            74.46720123291016
+          ],
+          "text": "San Carlos City Councilmember"
+        },
+        "ballotDesignation": "San Carlos City Councilmember",
+        "sourceText": "ADAM RAK\nSan Carlos City Councilmember",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5320-adam-rak"
+      },
+      {
+        "name": "MARK D. IWANOWSKI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            98.31025695800781,
+            199.18829345703125,
+            106.07340240478516
+          ],
+          "text": "MARK D. IWANOWSKI"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            111.51950073242188,
+            232.99501037597656,
+            120.56719970703125
+          ],
+          "text": "Business Owner / Entrepreneur"
+        },
+        "ballotDesignation": "Business Owner / Entrepreneur",
+        "sourceText": "MARK D. IWANOWSKI\nBusiness Owner / Entrepreneur",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5320-mark-d-iwanowski"
+      }
+    ],
+    "sourceHeader": "5320      City of San Carlos Member, City Council                                                                                                                                     Vote for 3        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 20,
+      "bbox": [
+        48.0,
+        464.53125,
+        214.7575225830078,
+        474.3050231933594
+      ],
+      "text": "City of San Carlos Member, City Council"
+    },
+    "pdfPage": 20,
+    "sourceText": "City of San Carlos Member, City Council\nVote for 3\nOn Ballot: Yes\nPRANITA VENKATESH\nCouncilmember / Educator\nSARA MCDOWELL\nCity Councilmember / Mother\nADAM RAK\nSan Carlos City Councilmember\nMARK D. IWANOWSKI\nBusiness Owner / Entrepreneur",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5320",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_carlos"
+  },
+  {
+    "code": "5342",
+    "office": "City of San Mateo Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "TASO ZOGRAFOS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            159.9602508544922,
+            185.92076110839844,
+            167.72340393066406
+          ],
+          "text": "TASO ZOGRAFOS"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            173.16949462890625,
+            229.39862060546875,
+            182.21719360351562
+          ],
+          "text": "Business Executive / Engineer"
+        },
+        "ballotDesignation": "Business Executive / Engineer",
+        "sourceText": "TASO ZOGRAFOS\nBusiness Executive / Engineer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5342-taso-zografos"
+      },
+      {
+        "name": "LISA DIAZ NASH",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            206.06024169921875,
+            181.1460723876953,
+            213.82339477539062
+          ],
+          "text": "LISA DIAZ NASH"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            219.2694854736328,
+            253.68243408203125,
+            228.3171844482422
+          ],
+          "text": "San Mateo Councilmember, District 1"
+        },
+        "ballotDesignation": "San Mateo Councilmember, District 1",
+        "sourceText": "LISA DIAZ NASH\nSan Mateo Councilmember, District 1",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5342-lisa-diaz-nash"
+      }
+    ],
+    "sourceHeader": "5342      City of San Mateo Member, City Council, District 1                                                                                                                           Vote for 1       On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 21,
+      "bbox": [
+        48.0,
+        146.33126831054688,
+        255.11253356933594,
+        156.10501098632812
+      ],
+      "text": "City of San Mateo Member, City Council, District 1"
+    },
+    "pdfPage": 21,
+    "sourceText": "City of San Mateo Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nTASO ZOGRAFOS\nBusiness Executive / Engineer\nLISA DIAZ NASH\nSan Mateo Councilmember, District 1",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5342",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo/council_district:1"
+  },
+  {
+    "code": "5344",
+    "office": "City of San Mateo Member, City Council, District 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "SEEMA PATEL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            267.7102355957031,
+            173.7721405029297,
+            275.473388671875
+          ],
+          "text": "SEEMA PATEL"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            280.9195251464844,
+            205.5198211669922,
+            289.96722412109375
+          ],
+          "text": "Planning Commissioner"
+        },
+        "ballotDesignation": "Planning Commissioner",
+        "sourceText": "SEEMA PATEL\nPlanning Commissioner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5344-seema-patel"
+      },
+      {
+        "name": "ROBERT G. NEWSOM JR.",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            313.81024169921875,
+            211.13534545898438,
+            321.5733947753906
+          ],
+          "text": "ROBERT G. NEWSOM JR."
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            327.01953125,
+            262.2441101074219,
+            336.0672302246094
+          ],
+          "text": "Councilmember / Businessman / Father"
+        },
+        "ballotDesignation": "Councilmember / Businessman / Father",
+        "sourceText": "ROBERT G. NEWSOM JR.\nCouncilmember / Businessman / Father",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5344-robert-g-newsom-jr"
+      }
+    ],
+    "sourceHeader": "5344      City of San Mateo Member, City Council, District 3                                                                                                                           Vote for 1       On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 21,
+      "bbox": [
+        48.0,
+        254.0812530517578,
+        255.11253356933594,
+        263.8550109863281
+      ],
+      "text": "City of San Mateo Member, City Council, District 3"
+    },
+    "pdfPage": 21,
+    "sourceText": "City of San Mateo Member, City Council, District 3\nVote for 1\nOn Ballot: Yes\nSEEMA PATEL\nPlanning Commissioner\nROBERT G. NEWSOM JR.\nCouncilmember / Businessman / Father",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5344",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo/council_district:3"
+  },
+  {
+    "code": "5346",
+    "office": "City of San Mateo Member, City Council, District 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "DAVE JOHNSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            375.4602355957031,
+            180.90284729003906,
+            383.223388671875
+          ],
+          "text": "DAVE JOHNSON"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            388.6695251464844,
+            173.5734100341797,
+            397.71722412109375
+          ],
+          "text": "Pastor / Coach"
+        },
+        "ballotDesignation": "Pastor / Coach",
+        "sourceText": "DAVE JOHNSON\nPastor / Coach",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5346-dave-johnson"
+      },
+      {
+        "name": "DANA YATES SAHAE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            421.56024169921875,
+            195.6715850830078,
+            429.3233947753906
+          ],
+          "text": "DANA YATES SAHAE"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            434.76953125,
+            227.13870239257812,
+            443.8172302246094
+          ],
+          "text": "Community Advocate / Parent"
+        },
+        "ballotDesignation": "Community Advocate / Parent",
+        "sourceText": "DANA YATES SAHAE\nCommunity Advocate / Parent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5346-dana-yates-sahae"
+      },
+      {
+        "name": "ADAM LORAINE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            467.6602478027344,
+            179.846435546875,
+            475.42340087890625
+          ],
+          "text": "ADAM LORAINE"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            480.8695373535156,
+            157.81890869140625,
+            489.917236328125
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "ADAM LORAINE\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5346-adam-loraine"
+      }
+    ],
+    "sourceHeader": "5346      City of San Mateo Member, City Council, District 5                                                                                                                           Vote for 1       On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 21,
+      "bbox": [
+        48.0,
+        361.83123779296875,
+        255.11253356933594,
+        371.6050109863281
+      ],
+      "text": "City of San Mateo Member, City Council, District 5"
+    },
+    "pdfPage": 21,
+    "sourceText": "City of San Mateo Member, City Council, District 5\nVote for 1\nOn Ballot: Yes\nDAVE JOHNSON\nPastor / Coach\nDANA YATES SAHAE\nCommunity Advocate / Parent\nADAM LORAINE\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5346",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo/council_district:5"
+  },
+  {
+    "code": "5362",
+    "office": "City of South San Francisco Member, City Council, District 1",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "AYSHA DOMINGUEZ PAMUKCU",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            529.3102416992188,
+            230.57447814941406,
+            537.0733642578125
+          ],
+          "text": "AYSHA DOMINGUEZ PAMUKCU"
+        },
+        "designationCell": {
+          "pdfPage": 21,
+          "bbox": [
+            120.0,
+            542.5194702148438,
+            192.9162139892578,
+            551.5671997070312
+          ],
+          "text": "Policy Fund Director"
+        },
+        "ballotDesignation": "Policy Fund Director",
+        "sourceText": "AYSHA DOMINGUEZ PAMUKCU\nPolicy Fund Director",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5362-aysha-dominguez-pamukcu"
+      }
+    ],
+    "sourceHeader": "5362      City of South San Francisco Member, City Council, District 1                                                                                                                 Vote for 1       On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 21,
+      "bbox": [
+        48.0,
+        515.6812133789062,
+        298.3900146484375,
+        525.4549560546875
+      ],
+      "text": "City of South San Francisco Member, City Council, District 1"
+    },
+    "pdfPage": 21,
+    "sourceText": "City of South San Francisco Member, City Council, District 1\nVote for 1\nOn Ballot: Yes\nAYSHA DOMINGUEZ PAMUKCU\nPolicy Fund Director",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5362",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:1"
+  },
+  {
+    "code": "5364",
+    "office": "City of South San Francisco Member, City Council, District 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "BUENAFLOR (FLOR) NICOLAS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            67.76025390625,
+            228.10720825195312,
+            75.52339935302734
+          ],
+          "text": "BUENAFLOR (FLOR) NICOLAS"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            80.96949768066406,
+            157.81890869140625,
+            90.01719665527344
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "BUENAFLOR (FLOR) NICOLAS\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5364-buenaflor-flor-nicolas"
+      },
+      {
+        "name": "SOPHIA CYRIS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            113.86024475097656,
+            175.3636932373047,
+            121.6233901977539
+          ],
+          "text": "SOPHIA CYRIS"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            127.06949615478516,
+            203.276123046875,
+            136.1171875
+          ],
+          "text": "(No Ballot Designation)"
+        },
+        "ballotDesignation": "(No Ballot Designation)",
+        "sourceText": "SOPHIA CYRIS\n(No Ballot Designation)",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5364-sophia-cyris"
+      },
+      {
+        "name": "MELANIE OLSON",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            159.9602508544922,
+            183.71759033203125,
+            167.72340393066406
+          ],
+          "text": "MELANIE OLSON"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            173.16949462890625,
+            185.2779083251953,
+            182.21719360351562
+          ],
+          "text": "Associate Planner"
+        },
+        "ballotDesignation": "Associate Planner",
+        "sourceText": "MELANIE OLSON\nAssociate Planner",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5364-melanie-olson"
+      }
+    ],
+    "sourceHeader": "5364      City of South San Francisco Member, City Council, District 3                                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 22,
+      "bbox": [
+        48.0,
+        54.131248474121094,
+        298.3900146484375,
+        63.904998779296875
+      ],
+      "text": "City of South San Francisco Member, City Council, District 3"
+    },
+    "pdfPage": 22,
+    "sourceText": "City of South San Francisco Member, City Council, District 3\nVote for 1\nOn Ballot: Yes\nBUENAFLOR (FLOR) NICOLAS\nIncumbent\nSOPHIA CYRIS\n(No Ballot Designation)\nMELANIE OLSON\nAssociate Planner",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5364",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:3"
+  },
+  {
+    "code": "5366",
+    "office": "City of South San Francisco Member, City Council, District 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "EDDIE FLORES",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            221.61024475097656,
+            177.1567840576172,
+            229.37339782714844
+          ],
+          "text": "EDDIE FLORES"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            234.81948852539062,
+            289.6949768066406,
+            243.8671875
+          ],
+          "text": "South San Francisco Councilmember, District 5"
+        },
+        "ballotDesignation": "South San Francisco Councilmember, District 5",
+        "sourceText": "EDDIE FLORES\nSouth San Francisco Councilmember, District 5",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5366-eddie-flores"
+      }
+    ],
+    "sourceHeader": "5366      City of South San Francisco Member, City Council, District 5                                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 22,
+      "bbox": [
+        48.0,
+        207.9812469482422,
+        298.3900146484375,
+        217.75498962402344
+      ],
+      "text": "City of South San Francisco Member, City Council, District 5"
+    },
+    "pdfPage": 22,
+    "sourceText": "City of South San Francisco Member, City Council, District 5\nVote for 1\nOn Ballot: Yes\nEDDIE FLORES\nSouth San Francisco Councilmember, District 5",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5366",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco/council_district:5"
+  },
+  {
+    "code": "5370",
+    "office": "City of South San Francisco City Clerk",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "ROSA GOVEA ACOSTA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            283.2602233886719,
+            202.63551330566406,
+            291.02337646484375
+          ],
+          "text": "ROSA GOVEA ACOSTA"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            296.4695129394531,
+            155.09730529785156,
+            305.5172119140625
+          ],
+          "text": "City Clerk"
+        },
+        "ballotDesignation": "City Clerk",
+        "sourceText": "ROSA GOVEA ACOSTA\nCity Clerk",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5370-rosa-govea-acosta"
+      }
+    ],
+    "sourceHeader": "5370      City of South San Francisco City Clerk                                                                                                                                    Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 22,
+      "bbox": [
+        48.0,
+        269.6312255859375,
+        207.96754455566406,
+        279.4049987792969
+      ],
+      "text": "City of South San Francisco City Clerk"
+    },
+    "pdfPage": 22,
+    "sourceText": "City of South San Francisco City Clerk\nVote for 1\nOn Ballot: Yes\nROSA GOVEA ACOSTA\nCity Clerk",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5370",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco"
+  },
+  {
+    "code": "5371",
+    "office": "City of South San Francisco City Treasurer",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "FRANK RISSO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            344.9102478027344,
+            173.6748504638672,
+            352.67340087890625
+          ],
+          "text": "FRANK RISSO"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            358.1195373535156,
+            170.85179138183594,
+            367.167236328125
+          ],
+          "text": "City Treasurer"
+        },
+        "ballotDesignation": "City Treasurer",
+        "sourceText": "FRANK RISSO\nCity Treasurer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5371-frank-risso"
+      }
+    ],
+    "sourceHeader": "5371      City of South San Francisco City Treasurer                                                                                                                                Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 22,
+      "bbox": [
+        48.0,
+        331.2812194824219,
+        225.9488067626953,
+        341.05499267578125
+      ],
+      "text": "City of South San Francisco City Treasurer"
+    },
+    "pdfPage": 22,
+    "sourceText": "City of South San Francisco City Treasurer\nVote for 1\nOn Ballot: Yes\nFRANK RISSO\nCity Treasurer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5371",
+    "ocdId": "ocd-division/country:us/state:ca/place:south_san_francisco"
+  },
+  {
+    "code": "5381",
+    "office": "Town of Woodside Member, Town Council, District 2",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "LYLE WEAVER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            416.7602233886719,
+            174.8424530029297,
+            424.52337646484375
+          ],
+          "text": "LYLE WEAVER"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            429.9695129394531,
+            180.7742919921875,
+            439.0172119140625
+          ],
+          "text": "Retired Engineer"
+        },
+        "ballotDesignation": "Retired Engineer",
+        "sourceText": "LYLE WEAVER\nRetired Engineer",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5381-lyle-weaver"
+      }
+    ],
+    "sourceHeader": "5381      Town of Woodside Member, Town Council, District 2                                                                                                                         Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 22,
+      "bbox": [
+        48.0,
+        403.13128662109375,
+        264.3525085449219,
+        412.9050598144531
+      ],
+      "text": "Town of Woodside Member, Town Council, District 2"
+    },
+    "pdfPage": 22,
+    "sourceText": "Town of Woodside Member, Town Council, District 2\nVote for 1\nOn Ballot: Yes\nLYLE WEAVER\nRetired Engineer",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5381",
+    "ocdId": "ocd-division/country:us/state:ca/place:woodside/council_district:2"
+  },
+  {
+    "code": "5382",
+    "office": "Town of Woodside Member, Town Council, District 3",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "DANIEL DRUKER",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            488.6102294921875,
+            183.1685333251953,
+            496.3733825683594
+          ],
+          "text": "DANIEL DRUKER"
+        },
+        "designationCell": {
+          "pdfPage": 22,
+          "bbox": [
+            120.0,
+            501.81951904296875,
+            226.53932189941406,
+            510.8672180175781
+          ],
+          "text": "Retired Technology Executive"
+        },
+        "ballotDesignation": "Retired Technology Executive",
+        "sourceText": "DANIEL DRUKER\nRetired Technology Executive",
+        "candidacyId": "ca-cx-local-2026-san-mateo-5382-daniel-druker"
+      }
+    ],
+    "sourceHeader": "5382      Town of Woodside Member, Town Council, District 3                                                                                                                         Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 22,
+      "bbox": [
+        48.0,
+        474.98126220703125,
+        264.3525085449219,
+        484.7550354003906
+      ],
+      "text": "Town of Woodside Member, Town Council, District 3"
+    },
+    "pdfPage": 22,
+    "sourceText": "Town of Woodside Member, Town Council, District 3\nVote for 1\nOn Ballot: Yes\nDANIEL DRUKER\nRetired Technology Executive",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-5382",
+    "ocdId": "ocd-division/country:us/state:ca/place:woodside/council_district:3"
+  },
+  {
+    "code": "6046",
+    "office": "Coastside County Water District Member, Board of Directors, Zone 5",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "NANCY ELEANORA POSS",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 23,
+          "bbox": [
+            120.0,
+            369.2102355957031,
+            212.275146484375,
+            376.973388671875
+          ],
+          "text": "NANCY ELEANORA POSS"
+        },
+        "designationCell": {
+          "pdfPage": 23,
+          "bbox": [
+            120.0,
+            382.4195251464844,
+            203.276123046875,
+            391.46722412109375
+          ],
+          "text": "(No Ballot Designation)"
+        },
+        "ballotDesignation": "(No Ballot Designation)",
+        "sourceText": "NANCY ELEANORA POSS\n(No Ballot Designation)",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6046-nancy-eleanora-poss"
+      },
+      {
+        "name": "JOEY P. SILVA",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 23,
+          "bbox": [
+            120.0,
+            415.31024169921875,
+            172.88949584960938,
+            423.0733947753906
+          ],
+          "text": "JOEY P. SILVA"
+        },
+        "designationCell": {
+          "pdfPage": 23,
+          "bbox": [
+            120.0,
+            428.51953125,
+            235.6923065185547,
+            437.5672302246094
+          ],
+          "text": "Retired Maintenance Supervisor"
+        },
+        "ballotDesignation": "Retired Maintenance Supervisor",
+        "sourceText": "JOEY P. SILVA\nRetired Maintenance Supervisor",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6046-joey-p-silva"
+      }
+    ],
+    "sourceHeader": "6046      Coastside County Water District Member, Board of Directors, Zone 5                                                                                                     Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 23,
+      "bbox": [
+        48.0,
+        355.58123779296875,
+        331.6312255859375,
+        365.3550109863281
+      ],
+      "text": "Coastside County Water District Member, Board of Directors, Zone 5"
+    },
+    "pdfPage": 23,
+    "sourceText": "Coastside County Water District Member, Board of Directors, Zone 5\nVote for 1\nOn Ballot: Yes\nNANCY ELEANORA POSS\n(No Ballot Designation)\nJOEY P. SILVA\nRetired Maintenance Supervisor",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-6046",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:coastside_county_water_district/zone:5"
+  },
+  {
+    "code": "6065",
+    "office": "Coastside Fire Protection District Member, Board of Directors, District D",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "RYAN MCGRAW",
+        "statement": "No",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 23,
+          "bbox": [
+            120.0,
+            538.6102905273438,
+            178.97769165039062,
+            546.3734130859375
+          ],
+          "text": "RYAN MCGRAW"
+        },
+        "designationCell": {
+          "pdfPage": 23,
+          "bbox": [
+            120.0,
+            551.8195190429688,
+            192.91619873046875,
+            560.8672485351562
+          ],
+          "text": "Deputy Fire Marshal"
+        },
+        "ballotDesignation": "Deputy Fire Marshal",
+        "sourceText": "RYAN MCGRAW\nDeputy Fire Marshal",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6065-ryan-mcgraw"
+      },
+      {
+        "name": "CYNTHIA SHERRILL",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            52.21025466918945,
+            192.96107482910156,
+            59.97340393066406
+          ],
+          "text": "CYNTHIA SHERRILL"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            65.41950988769531,
+            157.81890869140625,
+            74.46720886230469
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "CYNTHIA SHERRILL\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6065-cynthia-sherrill"
+      }
+    ],
+    "sourceHeader": "6065      Coastside Fire Protection District Member, Board of Directors, District D                                                                                              Vote for 1        On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 23,
+      "bbox": [
+        48.0,
+        524.9812622070312,
+        347.4949951171875,
+        534.7550048828125
+      ],
+      "text": "Coastside Fire Protection District Member, Board of Directors, District D"
+    },
+    "pdfPage": 23,
+    "sourceText": "Coastside Fire Protection District Member, Board of Directors, District D\nVote for 1\nOn Ballot: Yes\nRYAN MCGRAW\nDeputy Fire Marshal\nCYNTHIA SHERRILL\nIncumbent",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-6065",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:coastside_fire_protection_district/district:d"
+  },
+  {
+    "code": "6066",
+    "office": "Coastside Fire Protection District Member, Board of Directors, District E",
+    "voteFor": 1,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "GARY BURKE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            113.8602523803711,
+            172.11109924316406,
+            121.62339782714844
+          ],
+          "text": "GARY BURKE"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            127.06949615478516,
+            157.81890869140625,
+            136.1171875
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "GARY BURKE\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6066-gary-burke"
+      },
+      {
+        "name": "ALEX CARRILLO",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            159.9602508544922,
+            182.167724609375,
+            167.72340393066406
+          ],
+          "text": "ALEX CARRILLO"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            173.16949462890625,
+            236.5833282470703,
+            182.21719360351562
+          ],
+          "text": "Crisis Management Professional"
+        },
+        "ballotDesignation": "Crisis Management Professional",
+        "sourceText": "ALEX CARRILLO\nCrisis Management Professional",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6066-alex-carrillo"
+      }
+    ],
+    "sourceHeader": "6066      Coastside Fire Protection District Member, Board of Directors, District E                                                                                               Vote for 1         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 24,
+      "bbox": [
+        48.0,
+        100.23125457763672,
+        347.01373291015625,
+        110.0050048828125
+      ],
+      "text": "Coastside Fire Protection District Member, Board of Directors, District E"
+    },
+    "pdfPage": 24,
+    "sourceText": "Coastside Fire Protection District Member, Board of Directors, District E\nVote for 1\nOn Ballot: Yes\nGARY BURKE\nIncumbent\nALEX CARRILLO\nCrisis Management Professional",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-6066",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:coastside_fire_protection_district/district:e"
+  },
+  {
+    "code": "6120",
+    "office": "Granada Community Services District Member, Board of Directors",
+    "voteFor": 3,
+    "onBallot": "Yes",
+    "candidates": [
+      {
+        "name": "BARBARA DYE",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            221.61024475097656,
+            176.89268493652344,
+            229.37339782714844
+          ],
+          "text": "BARBARA DYE"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            234.81948852539062,
+            157.81890869140625,
+            243.8671875
+          ],
+          "text": "Incumbent"
+        },
+        "ballotDesignation": "Incumbent",
+        "sourceText": "BARBARA DYE\nIncumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6120-barbara-dye"
+      },
+      {
+        "name": "KEVIN W. SNIECINSKI",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            267.71026611328125,
+            198.81993103027344,
+            275.4734191894531
+          ],
+          "text": "KEVIN W. SNIECINSKI"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            280.9195556640625,
+            245.1369171142578,
+            289.9672546386719
+          ],
+          "text": "Researcher / Community Advocate"
+        },
+        "ballotDesignation": "Researcher / Community Advocate",
+        "sourceText": "KEVIN W. SNIECINSKI\nResearcher / Community Advocate",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6120-kevin-w-sniecinski"
+      },
+      {
+        "name": "MATT ALLEN",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            313.81024169921875,
+            169.3936309814453,
+            321.5733947753906
+          ],
+          "text": "MATT ALLEN"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            327.01953125,
+            196.54501342773438,
+            336.0672302246094
+          ],
+          "text": "Appointed Incumbent"
+        },
+        "ballotDesignation": "Appointed Incumbent",
+        "sourceText": "MATT ALLEN\nAppointed Incumbent",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6120-matt-allen"
+      },
+      {
+        "name": "PATRICK TIERNEY",
+        "statement": "Yes",
+        "partyCode": null,
+        "nameCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            359.9102478027344,
+            187.53314208984375,
+            367.67340087890625
+          ],
+          "text": "PATRICK TIERNEY"
+        },
+        "designationCell": {
+          "pdfPage": 24,
+          "bbox": [
+            120.0,
+            373.1195373535156,
+            183.0179901123047,
+            382.167236328125
+          ],
+          "text": "Retired Professor"
+        },
+        "ballotDesignation": "Retired Professor",
+        "sourceText": "PATRICK TIERNEY\nRetired Professor",
+        "candidacyId": "ca-cx-local-2026-san-mateo-6120-patrick-tierney"
+      }
+    ],
+    "sourceHeader": "6120      Granada Community Services District Member, Board of Directors                                                                                                          Vote for 3         On Ballot: Yes",
+    "headerCell": {
+      "pdfPage": 24,
+      "bbox": [
+        48.0,
+        207.98126220703125,
+        322.2250061035156,
+        217.7550048828125
+      ],
+      "text": "Granada Community Services District Member, Board of Directors"
+    },
+    "pdfPage": 24,
+    "sourceText": "Granada Community Services District Member, Board of Directors\nVote for 3\nOn Ballot: Yes\nBARBARA DYE\nIncumbent\nKEVIN W. SNIECINSKI\nResearcher / Community Advocate\nMATT ALLEN\nAppointed Incumbent\nPATRICK TIERNEY\nRetired Professor",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_ROSTER_ON_BALLOT_YES",
+    "nativeSanMateoSampleBlockAcquired": false,
+    "contestId": "ca-cx-local-2026-san-mateo-6120",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:granada_community_services_district"
+  }
+]

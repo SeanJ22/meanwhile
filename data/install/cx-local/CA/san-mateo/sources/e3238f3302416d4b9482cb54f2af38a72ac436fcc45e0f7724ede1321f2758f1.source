@@ -1,0 +1,475 @@
+{
+  "currentVersion" : 12, 
+  "id" : 0, 
+  "name" : "San Mateo County Office of Education Trustee Areas", 
+  "type" : "Feature Layer", 
+  "serviceItemId" : "2304271815b2438b8637b36304fe80d1", 
+  "cacheMaxAge" : 30, 
+  "displayField" : "Area", 
+  "description" : "", 
+  "copyrightText" : "", 
+  "defaultVisibility" : true, 
+  "editingInfo" : {
+    "lastEditDate" : 1648134457594, 
+    "schemaLastEditDate" : 1648134457594, 
+    "dataLastEditDate" : 1648134457594
+  }, 
+  "relationships" : [], 
+  "isDataVersioned" : false, 
+  "hasContingentValuesDefinition" : false, 
+  "supportsAppend" : true, 
+  "supportsCalculate" : true, 
+  "supportsASyncCalculate" : true, 
+  "supportsTruncate" : true, 
+  "supportsAttachmentsByUploadId" : true, 
+  "supportsAttachmentsResizing" : true, 
+  "supportsRollbackOnFailureParameter" : true, 
+  "supportsStatistics" : true, 
+  "supportsExceedsLimitStatistics" : true, 
+  "supportsAdvancedQueries" : true, 
+  "supportsValidateSql" : true, 
+  "supportsCoordinatesQuantization" : true, 
+  "supportsLayerOverrides" : true, 
+  "supportsTilesAndBasicQueriesMode" : true, 
+  "supportsFieldDescriptionProperty" : true, 
+  "supportsQuantizationEditMode" : true, 
+  "supportsColumnStoreIndex" : true, 
+  "supportsApplyEditsWithGlobalIds" : false, 
+  "supportsMultiScaleGeometry" : true, 
+  "supportsReturningQueryGeometry" : true, 
+  "enableNullGeometry" : false, 
+  "hasGeometryProperties" : true, 
+  "geometryProperties" : 
+  {
+    "shapeAreaFieldName" : "Shape__Area", 
+    "shapeLengthFieldName" : "Shape__Length", 
+    "units" : "esriMeters"
+  }, 
+  "advancedQueryCapabilities" : {
+    "supportsPagination" : true, 
+    "supportsPaginationOnAggregatedQueries" : true, 
+    "supportsQueryRelatedPagination" : true, 
+    "supportsQueryWithDistance" : true, 
+    "supportsOutDistance" : true, 
+    "supportsReturningQueryExtent" : true, 
+    "supportsStatistics" : true, 
+    "supportsOrderBy" : true, 
+    "supportsDistinct" : true, 
+    "supportsQueryWithResultType" : true, 
+    "supportsSqlExpression" : true, 
+    "supportsTimeRelation" : true, 
+    "supportsAdvancedQueryRelated" : true, 
+    "supportsCountDistinct" : true, 
+    "supportsPercentileStatistics" : true, 
+    "supportsApproxPercentileStatistics" : true, 
+    "supportsSpatialAggregationStatistics" : true, 
+    "supportsTrueCurve" : true, 
+    "supportedSpatialAggregationStatistics" : [
+      "EnvelopeAggregate", 
+      "CentroidAggregate", 
+      "ConvexHullAggregate"
+    ], 
+    "supportsLod" : true, 
+    "supportsQueryWithLodSR" : false, 
+    "supportedLodTypes" : [
+      "geohash"
+    ], 
+    "supportsReturningGeometryCentroid" : true, 
+    "supportsReturningGeometryEnvelope" : true, 
+    "supportsReturningGeometryProperties" : true, 
+    "supportsQueryWithDatumTransformation" : true, 
+    "supportsCurrentUserQueries" : true, 
+    "supportsHavingClause" : true, 
+    "supportsOutFieldSQLExpression" : true, 
+    "supportsMaxRecordCountFactor" : true, 
+    "supportsTopFeaturesQuery" : true, 
+    "supportsDisjointSpatialRel" : true, 
+    "supportsQueryWithCacheHint" : true, 
+    "supportedOperationsWithCacheHint" : [
+      "query", 
+      "queryTopFilter", 
+      "queryAnalytics", 
+      "queryAttachments", 
+      "queryRelated", 
+      "queryBins", 
+      "queryPivot"
+    ], 
+    "supportsQueryAnalytic" : true, 
+    "supportsQueryPivot" : true, 
+    "supportsQueryBins" : true, 
+    "supportsDefaultSR" : true, 
+    "supportsTranslations" : false, 
+    "supportsAggIds" : true, 
+    "supportsQueryWithCollation" : true, 
+    "supportsISODOW" : true, 
+    "supportsISOWeek" : true, 
+    "supportsFullTextSearch" : true, 
+    "fullTextSearchCapabilities" : {
+      "supportsAccentSensitivity" : true, 
+      "supportsStopWords" : true, 
+      "supportsSearchOperator" : true, 
+      "supportsOperator" : true
+    }
+  }, 
+  "advancedQueryAnalyticCapabilities" : {
+    "supportsLinearRegression" : true, 
+    "supportsTrendlineRegression" : true, 
+    "supportsAsync" : true, 
+    "supportsPercentileAnalytic" : true
+  }, 
+  "queryBinsCapabilities" : {
+    "supportsAsync" : true, 
+    "supportsAutoIntervalBin" : true, 
+    "supportsFixedIntervalBin" : true, 
+    "supportsFixedBoundariesBin" : true, 
+    "supportsDateBin" : true, 
+    "supportsClassificationBin" : true, 
+    "supportsStackBy" : true, 
+    "supportsSplitBy" : true, 
+    "supportsFirstDayOfWeek" : true, 
+    "supportsSnapToData" : true, 
+    "supportsReturnFullIntervalBin" : true, 
+    "supportsReturnStackValueRange" : true, 
+    "supportsNormalization" : true, 
+    "supportedStatisticTypes" : [
+      "COUNT", 
+      "SUM", 
+      "AVG", 
+      "VAR", 
+      "STDDEV", 
+      "MIN", 
+      "MAX", 
+      "PERCENTILE_CONT", 
+      "PERCENTILE_DISC", 
+      "APPROX_PERCENTILE_CONT", 
+      "APPROX_PERCENTILE_DISC", 
+      "CentroidAggregate", 
+      "EnvelopeAggregate", 
+      "ConvexHullAggregate"
+    ], 
+    "supportedNormalizationTypes" : [
+      "boxCox", 
+      "field", 
+      "inverse", 
+      "log", 
+      "naturalLog", 
+      "percentOfTotal", 
+      "squareRoot"
+    ]
+  }, 
+  "supportedOperationsWithCollation" : "query,addField,updateField", 
+  "advancedEditingCapabilities" : {
+    "supportedSqlFormatsInCalculate" : [
+      "standard"
+    ], 
+    "supportsAsyncApplyEdits" : true, 
+    "supportsReturnEditResults" : true, 
+    "supportsApplyEditsbyUploadID" : true, 
+    "supportedApplyEditsUploadIDFormats" : "JSON,PBF", 
+    "supportsTranslation" : false, 
+    "supportsMaxTranslations" : 10
+  }, 
+  "infoInEstimates" : [
+    "extent", 
+    "count"
+  ], 
+  "useStandardizedQueries" : true, 
+  "geometryType" : "esriGeometryPolygon", 
+  "minScale" : 0, 
+  "maxScale" : 0, 
+  "extent" : {
+    "xmin" : -13639336.494978758, 
+    "ymin" : 4453505.0798480082, 
+    "xmax" : -13589023.8207179, 
+    "ymax" : 4539171.82412195, 
+    "spatialReference" : {
+      "wkid" : 102100, 
+      "latestWkid" : 3857
+    }
+  }, 
+  "spatialReference" : {
+    "wkid" : 102100, 
+    "latestWkid" : 3857
+  }, 
+  "drawingInfo":{"renderer":{"type":"uniqueValue","field1":"Area","uniqueValueInfos":[{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[56,168,0,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 1","label":"Area 1"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[255,255,0,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 2","label":"Area 2"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[169,0,230,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 3","label":"Area 3"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[230,0,0,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 4","label":"Area 4"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[156,156,156,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 5","label":"Area 5"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[0,92,230,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 6","label":"Area 6"},{"symbol":{"type":"esriSFS","style":"esriSFSSolid","color":[255,0,197,127],"outline":{"type":"esriSLS","style":"esriSLSSolid","color":[0,0,0,255],"width":2}},"value":"Area 7","label":"Area 7"}],"fieldDelimiter":",","authoringInfo":{"colorRamp":{"type":"multipart","colorRamps":[{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[194,252,212,255],"toColor":[194,252,212,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[235,179,252,255],"toColor":[235,179,252,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[252,196,179,255],"toColor":[252,196,179,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[187,222,252,255],"toColor":[187,222,252,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[252,240,179,255],"toColor":[252,240,179,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[252,199,224,255],"toColor":[252,199,224,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[182,252,251,255],"toColor":[182,252,251,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[179,188,252,255],"toColor":[179,188,252,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[216,252,179,255],"toColor":[216,252,179,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[218,212,252,255],"toColor":[218,212,252,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[252,244,215,255],"toColor":[252,244,215,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[252,217,212,255],"toColor":[252,217,212,255]},{"type":"algorithmic","algorithm":"esriCIELabAlgorithm","fromColor":[239,197,252,255],"toColor":[239,197,252,255]}]}}},"scaleSymbols":true,"transparency":0,"labelingInfo":[{"labelExpressionInfo":{"expression":"$feature.Area","title":"Custom"},"labelPlacement":"esriServerPolygonPlacementAlwaysHorizontal","multiPart":"labelLargest","allowOverrun":true,"deconflictionStrategy":"dynamic","repeatLabel":false,"stackLabel":true,"stackRowLength":24,"stackAlignment":"dynamic","removeDuplicates":"none","useCodedValues":true,"maxScale":0,"minScale":0,"name":"Class 1","priority":-1,"symbol":{"type":"esriTS","color":[0,0,0,255],"backgroundColor":null,"borderLineColor":null,"borderLineSize":null,"verticalAlignment":"bottom","horizontalAlignment":"left","rightToLeft":false,"angle":0,"xoffset":0,"yoffset":0,"kerning":true,"haloColor":null,"haloSize":null,"font":{"family":"Tahoma","size":14,"style":"normal","weight":"normal","decoration":"none"}}}]}, 
+  "allowGeometryUpdates" : true, 
+  "trueCurveSupportMode" : "OGC", 
+  "supportedCurveTypes" : [
+    "esriGeometryCircularArc"
+  ], 
+  "supportedTrueCurvePbfFeatureEncodings" : [
+    "esriCompressedShapeBuffer", 
+    "esriDefault"
+  ], 
+  "allowTrueCurvesUpdates" : true, 
+  "onlyAllowTrueCurveUpdatesByTrueCurveClients" : false, 
+  "hasAttachments" : false, 
+  "htmlPopupType" : "esriServerHTMLPopupTypeAsHTMLText", 
+  "hasMetadata" : true, 
+  "hasM" : false, 
+  "hasZ" : false, 
+  "objectIdField" : "FID", 
+  "uniqueIdField" : 
+  {
+    "name" : "FID", 
+    "isSystemMaintained" : true
+  }, 
+  "globalIdField" : "", 
+  "typeIdField" : "Area", 
+  "collation" : {
+    "locale" : "neutral", 
+    "caseSensitive" : false, 
+    "accentSensitive" : true
+  }, 
+  "fields" : [
+    {
+      "name" : "FID", 
+      "type" : "esriFieldTypeOID", 
+      "alias" : "FID", 
+      "sqlType" : "sqlTypeOther", 
+      "nullable" : false, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Area", 
+      "type" : "esriFieldTypeString", 
+      "alias" : "Area", 
+      "sqlType" : "sqlTypeOther", 
+      "length" : 254, 
+      "nullable" : true, 
+      "editable" : true, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Area", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Area", 
+      "sqlType" : "sqlTypeDouble", 
+      "nullable" : true, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }, 
+    {
+      "name" : "Shape__Length", 
+      "type" : "esriFieldTypeDouble", 
+      "alias" : "Shape__Length", 
+      "sqlType" : "sqlTypeDouble", 
+      "nullable" : true, 
+      "editable" : false, 
+      "domain" : null, 
+      "defaultValue" : null
+    }
+  ], 
+  "indexes" : [
+    {
+      "name" : "PK__SAN_MATE__C1BEA5A2D7E93C5E", 
+      "fields" : "FID", 
+      "isAscending" : true, 
+      "isUnique" : true, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "user_61713.SAN_MATEO_COUNTY_OFFICE_OF_EDUCATION_TRUSTEE_AREAS_WFL1_SAN_MATEO_COUNTY_OFFICE_OF_EDUCATION_TRUSTEE_AREAS_Shape_sidx", 
+      "fields" : "Shape", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Spatial"
+    }, 
+    {
+      "name" : "Shape__Area_Index", 
+      "fields" : "Shape__Area", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }, 
+    {
+      "name" : "Shape__Length_Index", 
+      "fields" : "Shape__Length", 
+      "isAscending" : true, 
+      "isUnique" : false, 
+      "description" : "", 
+      "indexType" : "Attribute"
+    }
+  ], 
+  "dateFieldsTimeReference" : {
+    "timeZone" : "UTC", 
+    "timeZoneIANA" : "Etc/UTC", 
+    "respectsDaylightSaving" : false
+  }, 
+  "preferredTimeReference" : null, 
+  "types" : [
+    {
+      "id" : "Area 1", 
+      "name" : "Area 1", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 1", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 1"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "Area 2", 
+      "name" : "Area 2", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 2", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 2"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "Area 3", 
+      "name" : "Area 3", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 3", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 3"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "Area 4", 
+      "name" : "Area 4", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 4", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 4"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "Area 5", 
+      "name" : "Area 5", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 5", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 5"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "Area 6", 
+      "name" : "Area 6", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 6", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 6"
+            }
+          }
+        }
+      ]
+    }, 
+    {
+      "id" : "Area 7", 
+      "name" : "Area 7", 
+      "domains" : 
+      {
+      }, 
+      "templates" : [
+        {
+          "name" : "Area 7", 
+          "description" : "", 
+          "drawingTool" : "esriFeatureEditToolPolygon", 
+          "prototype" : {
+            "attributes" : {
+              "Area" : "Area 7"
+            }
+          }
+        }
+      ]
+    }
+  ], 
+  "templates" : [], 
+  "supportedQueryFormats" : "JSON, geoJSON, PBF", 
+  "supportedAppendFormats" : "sqlite,geoPackage,shapefile,filegdb,featureCollection,geojson,csv,excel,jsonl,featureService,pbf", 
+  "supportedAppendSourceFilterFormats" : "sqlite,geoPackage,shapefile,filegdb,featureService", 
+  "supportedExportFormats" : "csv,shapefile,sqlite,geoPackage,filegdb,featureCollection,geojson,kml,excel,parquet", 
+  "supportedConvertFileFormats" : "JSON,PBF,Parquet", 
+  "supportedConvertContentFormats" : "LayerEditCollection,FeatureCollection", 
+  "supportedSpatialRelationships" : [
+    "esriSpatialRelIntersects", 
+    "esriSpatialRelContains", 
+    "esriSpatialRelCrosses", 
+    "esriSpatialRelEnvelopeIntersects", 
+    "esriSpatialRelIndexIntersects", 
+    "esriSpatialRelOverlaps", 
+    "esriSpatialRelTouches", 
+    "esriSpatialRelWithin", 
+    "esriSpatialRelDisjoint", 
+    "esriSpatialRelRelation"
+  ], 
+  "guidFormat" : "", 
+  "supportsContingentValues" : true, 
+  "supportsEditingContingentValues" : true, 
+  "supportedContingentValuesFormats" : "JSON, PBF", 
+  "supportsFieldGroups" : true, 
+  "supportedSyncDataOptions" : 260, 
+  "hasStaticData" : false, 
+  "maxRecordCount" : 2000, 
+  "standardMaxRecordCount" : 2000, 
+  "maxIdsCount" : 1000000, 
+  "standardMaxRecordCountNoGeometry" : 32000, 
+  "tileMaxRecordCount" : 4000, 
+  "maxRecordCountFactor" : 1, 
+  "capabilities" : "Query"
+}

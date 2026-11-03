@@ -1,0 +1,18 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo/school_board_district:2",
+    "officialName": "San Mateo County Board of Education Trustee Area 2",
+    "sourceUrl": "https://services8.arcgis.com/O1R9chPCxI4ORdX1/arcgis/rest/services/San_Mateo_County_Office_of_Education_Trustee_Areas_WFL1/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4b039c040a30b011ed8f90fea6eba8ea4b8ea0ece922ac74ff0a4775e19e2533",
+    "geometryStatus": "FULL_CURRENT_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo/council_district:5",
+    "officialName": "San Mateo County Supervisorial District 5",
+    "sourceUrl": "https://services.arcgis.com/yq3FgOI44hYHAFVZ/arcgis/rest/services/State_BOS_Feb2022_Modified/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "f8b5c84cda8e41cdb99cd2b5391cb60f2c113701bdc9e5b923f7fff4c3fc62b1",
+    "geometryStatus": "FULL_CURRENT_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  }
+]

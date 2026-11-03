@@ -1,0 +1,1425 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#" class="hide-until-hydrated">
+  <head>
+    <meta charset="utf-8" />
+<meta name="geo.region" content="US-CA" />
+<link rel="canonical" href="https://www.smcgov.org/tsd/gis-data-download" />
+<meta property="og:site_name" content="County of San Mateo, CA" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.smcgov.org/tsd/gis-data-download" />
+<meta property="og:title" content="GIS Data Download" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="GIS Data Download" />
+<meta name="twitter:site" content="@sanmateoco" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta class="swiftype" name="page-type" data-type="string" content="General Information" />
+<meta class="swiftype" name="machine-type" data-type="string" content="flexible_page" />
+<meta class="swiftype" name="title" data-type="string" content="GIS Data Download" />
+<meta class="swiftype" name="created" data-type="date" content="2022-03-11 12:41:46" />
+<meta class="swiftype" name="department" data-type="enum" content="Technology Services Department" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="icon" href="/sites/default/files/favicon.png" type="image/png" />
+
+    <title>GIS Data Download | County of San Mateo, CA</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_RgjSQDzD2p6AvZmBg7Ib-5ABPM1z1D_AMkbkmc_T4Hw.css?delta=0&amp;language=en&amp;theme=outline_frontend&amp;include=eJxlzUFuwzAMRNELKdGRBFoauQwo0SCpuL59iwRZZTPAm82vasjN1kFypwf9pl11F5Qwmi4UarmxVyEesMS9-Mk9rgPFQDXyhzdaoVXHIQgkXSE8UbrpDMyWG5z3-f0P4pkMfuh0fv5naRN46SwBy2_ReXs7OQdObigksMg8OZKPWqgNnmVx1t65ovzoMi_Cm5FdyS8PjLyRIz0Zp-fX3oe2JfgDmfNmOw" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_QCwg1mBcnF4ObbGpsYX0QwpcnOYEbTrng9q0X2W-oPw.css?delta=1&amp;language=en&amp;theme=outline_frontend&amp;include=eJxlzUFuwzAMRNELKdGRBFoauQwo0SCpuL59iwRZZTPAm82vasjN1kFypwf9pl11F5Qwmi4UarmxVyEesMS9-Mk9rgPFQDXyhzdaoVXHIQgkXSE8UbrpDMyWG5z3-f0P4pkMfuh0fv5naRN46SwBy2_ReXs7OQdObigksMg8OZKPWqgNnmVx1t65ovzoMi_Cm5FdyS8PjLyRIz0Zp-fX3oe2JfgDmfNmOw" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/265536","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","gtag":{"tagId":"","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"suppressDeprecationErrors":true,"ajaxPageState":{"libraries":"eJxtzltuwzAMRNENKdGSCFqiVBaUaJCUHe--j6AFgvZngHO_pqt2IQjsuX9O6q--4zs-XuP4peF0wVDLlb0I8iBL3MBPbnHtBEZYIv_whiu06NiFgpKuEJ4EzXQGzZorOff5tw_kf-qhj2Tku07n4-vaJuTQWIIsP4Xn7enkHHRyJUAhi8yTI_kogHXwhMVZW-NC8KbLHIQ3Q7uSXx408oZO6WA6PX_vfWhdQh_h83wN","theme":"outline_frontend","theme_token":null},"ajaxTrustedUrl":{"form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM":true},"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_environment":false},"tagIds":["GTM-MFLR4Q8"]},"smcEditorSlices":{"cropTypes":{"1_1":"1:1 (square)","2_1":"2:1","3_1":"3:1","5_3":"5:3","6_1":"6:1","9_7":"9:7"}},"googleTranslatorDisclaimer":{"selector":".google-translator-switch","displayMode":"HORIZONTAL","disclaimerTitle":"Automatic translation disclaimer","disclaimer":"The County of San Mateo has added a translation feature developed by Google Translate to assist web visitors in understanding information on this website in a variety of foreign languages. Please be aware that Google Translate, a free third party service which the County does not control, provides automated computer translations that may not give you an exact translation. The County cannot guarantee the accuracy of translations through Google Translate so translations should not be considered exact and only used as a rough guide. Anyone relying on information obtained from Google Translate does so at his or her own risk. The County disclaims and will not accept any liability for damages or losses of any kind caused by the use of the Google Translate feature.","acceptText":"Accept","dontAcceptText":"Do Not Accept","element":"\u003Cspan id=\u0022google_translator_element\u0022\u003E\u003C\/span\u003E\n\u003Cscript src=\u0022\/\/translate.google.com\/translate_a\/element.js?cb=Drupal.behaviors.googleTranslatorElement.init\u0022\u003E\u003C\/script\u003E\n"},"googleTranslatorElement":{"id":"google_translator_element","langcode":"en","languages":"af,sq,ar,be,bg,ca,zh-CN,zh-TW,hr,cs,da,nl,en,eo,et,tl,fi,fr,gl,de,el,ht,iw,hi,hu,is,id,ga,it,ja,ko,lv,lt,mk,ms,mt,no,fa,pl,pt,ro,ru,sr,sk,sl,es,sw,sv,th,tr,uk,vi,cy,yi","displayMode":"HORIZONTAL"},"sitewideAlert":{"refreshInterval":15000,"automaticRefresh":false},"user":{"uid":0,"permissionsHash":"421840ca5828aebd19c2b39414ef3486fc05e39b06052bbdb4332b6d07683ede"}}</script>
+<script src="/sites/default/files/js/js_N8c2NoqkmZ_MTrHS4WgIfQtSvb3XG_Wmr68bOf8hQD4.js?scope=header&amp;delta=0&amp;language=en&amp;theme=outline_frontend&amp;include=eJxlztEKwjAMheEX6uwjlbimJZImJcmcvr3KUBjeHPj-q9NVO2MJ6Lm_J_WzL3CDxzmOHw3EGUItV_KVgQZaolZ8pxbPicUQ1shfLrCFrjomY2DSLZgESzOVQKm5olOX_z6AJBn6VHG6f15cGb004kDLh2BfDienwJ0qFmC0yCQUL9P6Wf0"></script>
+<script src="/modules/contrib/google_tag/js/gtag.js?tn9n8d"></script>
+<script src="/modules/contrib/google_tag/js/gtm.js?tn9n8d"></script>
+<script src="/themes/custom/outline_frontend/dist/smc-design/dist/outline.js?tn9n8d" type="module" weight="100"></script>
+<script src="/sites/default/files/js/js_r7JvB3AvrlK9woLAK0T6cAB1K3XrEkaporl6UhXzaBI.js?scope=header&amp;delta=4&amp;language=en&amp;theme=outline_frontend&amp;include=eJxlztEKwjAMheEX6uwjlbimJZImJcmcvr3KUBjeHPj-q9NVO2MJ6Lm_J_WzL3CDxzmOHw3EGUItV_KVgQZaolZ8pxbPicUQ1shfLrCFrjomY2DSLZgESzOVQKm5olOX_z6AJBn6VHG6f15cGb004kDLh2BfDienwJ0qFmC0yCQUL9P6Wf0"></script>
+
+    <noscript>
+      <style>body{opacity:1}</style>
+    </noscript>
+  </head>
+  <body>
+        <div role="navigation" aria-labelledby="skip-to-main">
+      <a id="skip-to-main" href="#main-content" class="visually-hidden focusable">
+        Skip to main content
+      </a>
+    </div>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFLR4Q8"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<div data-sitewide-alert></div>
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+      <div class="relative region--administrative__page_top">
+    <div id="block-content-moderation-block">
+      
+        
+        <form class="content-moderation-entity-moderation-form" data-drupal-selector="content-moderation-entity-moderation-form" action="/tsd/gis-data-download" method="post" id="content-moderation-entity-moderation-form" accept-charset="UTF-8" novalidate>
+  <input autocomplete="off" data-drupal-selector="form-udynjdqfkqhd6mo1-hmduuhplakf2ilzveghqttygpo" type="hidden" name="form_build_id" value="form-uDYNjDqfkqhd6mo1_HmduUhPLAkf2ILzvEghQttYgPo" />
+<input data-drupal-selector="edit-content-moderation-entity-moderation-form" type="hidden" name="form_id" value="content_moderation_entity_moderation_form" />
+
+</form>
+
+  </div>
+
+  </div>
+
+<header>
+  
+<smc-main-header>
+  <div slot="utility">  <div class="relative region--header__top_nav">
+    <div id="block-utilitymenu">
+      
+        
+    <smc-utility-nav>
+    <nav class="util-nav" role="navigation" aria-label="Utility Menu">
+              
+        <ul  class="utility-nav--list-main" role="menubar" aria-label="Utility Menu">
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link utility icon="news" color="currentColor" size='18px' mobile-size='0px' decorative>
+            <a href="/ceo/newsroom" icon_name="news" role="menuitem" aria-label="News" data-drupal-link-system-path="node/29101">News</a>
+          </smc-link>
+                  </li>
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link utility icon="calendar" color="currentColor" size='18px' mobile-size='0px' decorative>
+            <a href="/events" role="menuitem" aria-label="Events" data-drupal-link-system-path="events">Events</a>
+          </smc-link>
+                  </li>
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link utility icon="people" color="currentColor" size='18px' mobile-size='0px' decorative>
+            <a href="/bos" role="menuitem" aria-label="Board of Supervisors" data-drupal-link-system-path="node/41">Board of Supervisors</a>
+          </smc-link>
+                  </li>
+          </ul>
+  
+
+
+          </nav>
+  </smc-utility-nav>
+</div>
+
+  </div>
+</div>
+  <div slot="translate">  <div class="relative region--header__translate">
+    <div id="block-outline-translation">
+      
+        
+      <div class="translate-wrapper">
+      <a href="#" class="notranslate google-translator-switch">Translate</a>
+
+  </div>
+</div>
+
+  </div>
+</div>
+  <div slot="main-nav">  <div class="relative region--header__main_menu">
+    <smc-main-nav>
+  <nav role="navigation" aria-label="San Mateo County"  id="block-outline-frontend-main-menu">
+          
+              <ul  data-region="header__main_menu" class="main-nav--list-main" role="menubar" aria-label="San Mateo County">
+                      <li class="main-nav--list-item-main" role="menuitem">
+                       <h5 class="h5">Residents</h5>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" role="menu" aria-label=Residents>
+                      <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Find</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Find>
+                      <li>
+                                                        <a href="https://www.smchealth.org/coronavirus" role="menuitem">COVID-19 Information</a>
+                      </li>
+                  <li>
+                                                        <a href="/agwm/find-certified-farmers-market" role="menuitem" data-drupal-link-system-path="node/381906">Farmers&#039; Markets</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/smmc-services" target="_blank" role="menuitem">Hospitals</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcl.org/" target="_blank" role="menuitem">Libraries</a>
+                      </li>
+                  <li>
+                                                        <a href="/bos/supervisorial-districts" target="_blank" role="menuitem" data-drupal-link-system-path="node/355176">My Supervisorial District</a>
+                      </li>
+                  <li>
+                                                        <a href="/parks" target="_self" role="menuitem" data-drupal-link-system-path="node/101">Parks</a>
+                      </li>
+                  <li>
+                                                        <a href="/tsd/san-mateo-county-digital-equity-portal" role="menuitem" data-drupal-link-system-path="node/196">Public WiFi Locations</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsustainability.org/waste-reduction/reduce-reuse-recycle/" target="_blank" role="menuitem">Recycling Drop-Off</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smc-connect.org/" target="_blank" role="menuitem">Services Near Me (SMC Connect)</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/elections/voting" target="_blank" role="menuitem">Voting Information</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Pay</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Pay>
+                      <li>
+                                                        <a href="https://childsupport.ca.gov/payment-options/" target="_blank" role="menuitem">Child Support</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.sanmateo.courts.ca.gov/divisions/traffic" target="_blank" role="menuitem">Parking/Traffic Ticket</a>
+                      </li>
+                  <li>
+                                                        <a href="https://county-taxes.net/ca-sanmateo/services/property-tax" target="_blank" role="menuitem">Property Taxes</a>
+                      </li>
+                  <li>
+                                                        <a href="https://sanmateo-ca.county-taxes.com/public" target="_blank" role="menuitem">Tax Lien</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax/unsecured-property-taxes" target="_blank" role="menuitem" data-drupal-link-system-path="node/367671">Unsecured Taxes</a>
+                      </li>
+                  <li>
+                                                        <a href="/publicworks/utilities" role="menuitem" data-drupal-link-system-path="node/28736">Utility Bills</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Report</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Report>
+                      <li>
+                                                        <a href="/hsa/faqs-about-cps" role="menuitem" data-drupal-link-system-path="node/252566">Child Abuse and Neglect</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsheriff.com/online-crime-reporting" target="_blank" role="menuitem">Crime</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/elderabuse" target="_blank" role="menuitem">Elder or Dependent Adult Abuse</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/housing" target="_blank" role="menuitem">Housing Complaint</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.planenoise.com/sanmateo/tY5Ru4wa/" target="_blank" role="menuitem">Noise Complaint</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/node/1240" target="_blank" role="menuitem">Pests &amp; Wildlife Complaint</a>
+                      </li>
+                  <li>
+                                                        <a href="/publicworks/road-surface-maintenance" role="menuitem" data-drupal-link-system-path="node/25436">Pothole</a>
+                      </li>
+                  <li>
+                                                        <a href="/publicworks/storm-drains" role="menuitem" data-drupal-link-system-path="node/25441">Storm Drain Overflow</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Check Status</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Check Status>
+                      <li>
+                                                        <a href="https://childsupport.ca.gov/payment-options/" target="_blank" role="menuitem">Child Support Payments</a>
+                      </li>
+                  <li>
+                                                        <a href="/ceo/project-development-unit" role="menuitem" data-drupal-link-system-path="node/28751">County Projects</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.sanmateo.courts.ca.gov/divisions/juror-services" target="_blank" role="menuitem">Jury Duty</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.arcgis.com/apps/webappviewer/index.html?id=c7075a28b298498c93a311b7af9a3ae7" target="_blank" role="menuitem">Road Closures</a>
+                      </li>
+                  <li>
+                                                        <a href="https://sanmateo-ca.county-taxes.com/public" target="_blank" role="menuitem">Tax Payment</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Register</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Register>
+                      <li>
+                                                        <a href="https://smchealth.org/services/smch-services/animal-services-licensing-rabies-community-safety/licensing-and-pet-services/" target="_blank" role="menuitem">Pet License</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/elections" target="_blank" role="menuitem">To Vote</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Apply For</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Apply For>
+                      <li>
+                                                        <a href="/dcss/open-case" target="_blank" role="menuitem" data-drupal-link-system-path="node/381071">Child Support</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/financial-assistance" role="menuitem" data-drupal-link-system-path="node/252516">Financial Assistance</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/food-assistance" role="menuitem" data-drupal-link-system-path="node/28846">Food Assistance</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/health-coverage" target="_self" role="menuitem" data-drupal-link-system-path="node/251996">Health Insurance</a>
+                      </li>
+                  <li>
+                                                        <a href="/hr" target="_blank" role="menuitem" data-drupal-link-system-path="node/76">Jobs &amp; Internships</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/marriage-licenses-ceremonies" target="_blank" role="menuitem">Marriage License</a>
+                      </li>
+                  <li>
+                                                        <a href="https://aca-prod.accela.com/smcgov/Welcome.aspx" target="_blank" role="menuitem">Permits</a>
+                      </li>
+                  <li>
+                                                        <a href="/housing/section-8-housing-voucher-program-guide" role="menuitem" data-drupal-link-system-path="node/18211">Section 8 Housing</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Request a Copy Of</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Request a Copy Of>
+                      <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/birth-certificates" target="_blank" role="menuitem">Birth Certificate</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/death-certificates" target="_blank" role="menuitem">Death Certificate</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/marriage-certificates" target="_blank" role="menuitem">Marriage Certificate</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax" target="_blank" role="menuitem" data-drupal-link-system-path="node/126">Property Tax History</a>
+                      </li>
+                  <li>
+                                                        <a href="/ceo/public-records-act-request-form" role="menuitem" data-drupal-link-system-path="node/8036">Public Records</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">For Youth</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=For Youth>
+                      <li>
+                                                        <a href="https://youth.smcgov.org/education-mentoring/" target="_blank" role="menuitem">Educational Programs</a>
+                      </li>
+                  <li>
+                                                        <a href="https://jobsforyouth.org/" target="_blank" role="menuitem">Jobs for Youth</a>
+                      </li>
+                  <li>
+                                                        <a href="https://youth.smcgov.org/" target="_blank" role="menuitem">Youth Resource Hub</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">For Seniors</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=For Seniors>
+                      <li>
+                                                        <a href="https://smchealth.org/division/divisions/aging-and-disability-services/" target="_blank" role="menuitem">Aging &amp; Disability Services</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/health-coverage" target="_blank" role="menuitem" data-drupal-link-system-path="node/251996">Health Insurance</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">For Veterans</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=For Veterans>
+                      <li>
+                                                        <a href="/hsa/veterans-employment" role="menuitem" data-drupal-link-system-path="node/19221">Career Transitions</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/veterans-employment" role="menuitem" data-drupal-link-system-path="node/19221">Employment Opportunities</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/veterans-office" role="menuitem" data-drupal-link-system-path="node/252806">Navigating Benefits</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa/veterans-employment" role="menuitem" data-drupal-link-system-path="node/19221">Unemployment Assistance</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.veteranscrisisline.net/" target="_blank" role="menuitem">Veterans Crisis Line</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      <div class="main-nav--services"><a href="/services">View More Services</a> </div>
+              </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main" role="menuitem">
+                       <h5 class="h5">Business</h5>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" role="menu" aria-label=Business>
+                      <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Find</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Find>
+                      <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/fictitious-business-names-fbn" target="_blank" role="menuitem">Business Owner Information</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/fictitious-business-names-fbn" target="_blank" role="menuitem">Fictitious Business Name </a>
+                      </li>
+                  <li>
+                                                        <a href="https://gis.smcgov.org/Html5Viewer/?viewer=raster" target="_blank" role="menuitem">Recorded Property Maps</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax" target="_blank" role="menuitem" data-drupal-link-system-path="node/126">Tax Laws</a>
+                      </li>
+                  <li>
+                                                        <a href="/planning/water-efficient-landscape-ordinance-welo" target="_blank" role="menuitem" data-drupal-link-system-path="node/361531">Water Efficient Landscape Ordinance (WELO)</a>
+                      </li>
+                  <li>
+                                                        <a href="/planning/gis-map-zoning-and-other-info-0" target="_blank" role="menuitem" data-drupal-link-system-path="node/360911">Zoning District</a>
+                      </li>
+                  <li>
+                                                        <a href="/planning/zoning-regulations" target="_blank" role="menuitem" data-drupal-link-system-path="node/360546">Zoning Regulations</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Pay</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Pay>
+                      <li>
+                                                        <a href="/tax/business-licenses" target="_blank" role="menuitem" data-drupal-link-system-path="node/360236">Business License Fee</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax/transient-occupancy-tax-0" target="_blank" role="menuitem" data-drupal-link-system-path="node/360226">Transient Occupancy Tax</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax/unsecured-property-taxes" target="_blank" role="menuitem" data-drupal-link-system-path="node/367671">Unsecured Property Tax</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax/vehicle-rental" target="_blank" role="menuitem" data-drupal-link-system-path="node/360231">Vehicle Rental License Fee</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Check Status</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Check Status>
+                      <li>
+                                                        <a href="https://aca-prod.accela.com/smcgov/Welcome.aspx" target="_blank" role="menuitem">Permits</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsheriff.com/support-services/civil-enforcement-bureau" target="_blank" role="menuitem">Subpoenas</a>
+                      </li>
+                  <li>
+                                                        <a href="/ceo/invoice-status-tracking" role="menuitem" data-drupal-link-system-path="node/5801">Vendor Payment</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Register</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Register>
+                      <li>
+                                                        <a href="/planning/accessory-dwelling-units-adus" target="_blank" role="menuitem" data-drupal-link-system-path="node/361591">Accessory Dwelling Unit (ADU)</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/fictitious-business-names-fbn" target="_blank" role="menuitem">Fictitious Business Name </a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.cslb.ca.gov/" target="_blank" role="menuitem">Licensed Contractor</a>
+                      </li>
+                  <li>
+                                                        <a href="/agwm/pest-control-registration" role="menuitem" data-drupal-link-system-path="node/3366">Pest Control Business Registration</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/process-server" target="_blank" role="menuitem">Process Server</a>
+                      </li>
+                  <li>
+                                                        <a href="/housing/section-8-housing-voucher-program-guide" role="menuitem" data-drupal-link-system-path="node/18211">Section 8 Housing Provider</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Apply For</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Apply For>
+                      <li>
+                                                        <a href="/tax/business-licenses" target="_blank" role="menuitem" data-drupal-link-system-path="node/360236">Business License</a>
+                      </li>
+                  <li>
+                                                        <a href="/agwm/certified-producers-old" role="menuitem" data-drupal-link-system-path="node/3401">Certified Producer&#039;s Certificate (CPC)</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Request</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Request>
+                      <li>
+                                                        <a href="/planning/how-schedule-inspection-0" target="_blank" role="menuitem" data-drupal-link-system-path="node/343551">Construction Project Inspection</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax" target="_blank" role="menuitem" data-drupal-link-system-path="node/126">Property Tax History</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/county-clerk-recorder/process-server" target="_blank" role="menuitem">Real Estate Records</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      <div class="main-nav--services"><a href="/services">View More Services</a> </div>
+              </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main" role="menuitem">
+                       <h5 class="h5">County Government</h5>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" role="menu" aria-label=County Government>
+                      <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Elected Officials</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Elected Officials>
+                      <li>
+                                                        <a href="https://smcacre.gov/" target="_blank" role="menuitem">Assessor - County Clerk - Recorder</a>
+                      </li>
+                  <li>
+                                                        <a href="/bos" target="_self" role="menuitem" data-drupal-link-system-path="node/41">Board of Supervisors</a>
+                      </li>
+                  <li>
+                                                        <a href="/controller" role="menuitem" data-drupal-link-system-path="node/31">Controller</a>
+                      </li>
+                  <li>
+                                                        <a href="/coroner" role="menuitem" data-drupal-link-system-path="node/36">Coroner</a>
+                      </li>
+                  <li>
+                                                        <a href="/da" role="menuitem" data-drupal-link-system-path="node/56">District Attorney</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsheriff.com/" target="_blank" role="menuitem">Sheriff</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax" target="_blank" role="menuitem" data-drupal-link-system-path="node/126">Tax Collector - Treasurer</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Boards &amp; Commissions</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Boards &amp; Commissions>
+                      <li>
+                                                        <a href="/bnc" target="_blank" role="menuitem" data-drupal-link-system-path="node/16">All Boards &amp; Commissions</a>
+                      </li>
+                  <li>
+                                                        <a href="/bnc/vacancies" role="menuitem" data-drupal-link-system-path="node/556">Vacancies and Apply Online</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Projects</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Projects>
+                      <li>
+                                                        <a href="/publicworks/projects-out-bid" role="menuitem" data-drupal-link-system-path="node/24681">Open to Bid</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Departments</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Departments>
+                      <li>
+                                                        <a href="/agwm" role="menuitem" data-drupal-link-system-path="node/11">Agriculture / Weights and Measures</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcacre.gov/" target="_self" role="menuitem">Assessor - County Clerk - Recorder &amp; Elections</a>
+                      </li>
+                  <li>
+                                                        <a href="/bos" target="_self" role="menuitem" data-drupal-link-system-path="node/41">Board of Supervisors</a>
+                      </li>
+                  <li>
+                                                        <a href="/dcss" role="menuitem" data-drupal-link-system-path="node/61">Child Support Services</a>
+                      </li>
+                  <li>
+                                                        <a href="/controller" role="menuitem" data-drupal-link-system-path="node/31">Controller</a>
+                      </li>
+                  <li>
+                                                        <a href="/coroner" role="menuitem" data-drupal-link-system-path="node/36">Coroner</a>
+                      </li>
+                  <li>
+                                                        <a href="/countyattorney" role="menuitem" data-drupal-link-system-path="node/46">County Attorney&#039;s Office</a>
+                      </li>
+                  <li>
+                                                        <a href="/ceo" role="menuitem" data-drupal-link-system-path="node/26">County Executive’s Office</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.sanmateo.courts.ca.gov/" target="_blank" role="menuitem">Court</a>
+                      </li>
+                  <li>
+                                                        <a href="/da" role="menuitem" data-drupal-link-system-path="node/56">District Attorney</a>
+                      </li>
+                  <li>
+                                                        <a href="/dem" role="menuitem" data-drupal-link-system-path="node/388760">Emergency Management</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/" target="_blank" role="menuitem">Health (San Mateo County Health)</a>
+                      </li>
+                  <li>
+                                                        <a href="/housing" role="menuitem" data-drupal-link-system-path="node/71">Housing (Department of Housing)</a>
+                      </li>
+                  <li>
+                                                        <a href="/hr" target="_self" role="menuitem" data-drupal-link-system-path="node/76">Human Resources Department</a>
+                      </li>
+                  <li>
+                                                        <a href="/hsa" role="menuitem" data-drupal-link-system-path="node/81">Human Services Agency</a>
+                      </li>
+                  <li>
+                                                        <a href="https://smcl.org/" target="_blank" role="menuitem">Libraries (San Mateo County Library)</a>
+                      </li>
+                  <li>
+                                                        <a href="/parks" target="_self" role="menuitem" data-drupal-link-system-path="node/101">Parks Department</a>
+                      </li>
+                  <li>
+                                                        <a href="/planning" target="_self" role="menuitem" data-drupal-link-system-path="node/106">Planning and Building</a>
+                      </li>
+                  <li>
+                                                        <a href="/probation" role="menuitem" data-drupal-link-system-path="node/111">Probation</a>
+                      </li>
+                  <li>
+                                                        <a href="/911dispatch" role="menuitem" data-drupal-link-system-path="node/6">Public Safety Communications</a>
+                      </li>
+                  <li>
+                                                        <a href="/publicworks" role="menuitem" data-drupal-link-system-path="node/116">Public Works</a>
+                      </li>
+                  <li>
+                                                        <a href="/revenueservices" role="menuitem" data-drupal-link-system-path="node/121">Revenue Services</a>
+                      </li>
+                  <li>
+                                                        <a href="https://samcera.gov/" target="_blank" role="menuitem">SamCERA (Retirement)</a>
+                      </li>
+                  <li>
+                                                        <a href="/san-mateo-county-fire" role="menuitem" data-drupal-link-system-path="node/388638">San Mateo County Fire</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsheriff.com/" target="_blank" role="menuitem">Sheriff&#039;s Office</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsustainability.org/" target="_blank" title="Sustainability Department" role="menuitem">Sustainability Department</a>
+                      </li>
+                  <li>
+                                                        <a href="/tax" target="_self" role="menuitem" data-drupal-link-system-path="node/126">Tax Collector</a>
+                      </li>
+                  <li>
+                                                        <a href="/tsd" role="menuitem" data-drupal-link-system-path="node/86">Technology Services Department</a>
+                      </li>
+                  <li>
+                                                        <a href="/treasurer" target="_self" role="menuitem" data-drupal-link-system-path="node/131">Treasurer</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">About SMC</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=About SMC>
+                      <li>
+                                                        <a href="/fast-facts" role="menuitem" data-drupal-link-system-path="node/866">Fast Facts</a>
+                      </li>
+                  <li>
+                                                        <a href="/finding-county-center" role="menuitem" data-drupal-link-system-path="node/241">Finding County Center</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Contact Us</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Contact Us>
+                      <li>
+                                                        <a href="/departments" role="menuitem" data-drupal-link-system-path="node/28196">Department Directory</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Maps &amp; Data</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Maps &amp; Data>
+                      <li>
+                                                        <a href="/ceo/office-budget-policy-and-performance" role="menuitem" data-drupal-link-system-path="node/29091">County Budget</a>
+                      </li>
+                  <li>
+                                                        <a href="/tsd/gis" role="menuitem" data-drupal-link-system-path="node/265541">County GIS &amp; Maps</a>
+                      </li>
+                  <li>
+                                                        <a href="https://data.smcgov.org/" target="_blank" role="menuitem">Open Data</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main" role="menuitem">
+                       <h5 class="h5">Emergency Services</h5>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" role="menu" aria-label=Emergency Services>
+                      <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Emergency Assistance</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Emergency Assistance>
+                      <li>
+                                                        <a href="/911dispatch" role="menuitem" data-drupal-link-system-path="node/6">911 / Public Safety Communications</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/animalcontrol" target="_blank" role="menuitem">Animal Control</a>
+                      </li>
+                  <li>
+                                                        <a href="/coroner" role="menuitem" data-drupal-link-system-path="node/36">Coroner</a>
+                      </li>
+                  <li>
+                                                        <a href="/san-mateo-county-fire" target="_blank" role="menuitem" data-drupal-link-system-path="node/388638">Fire Protection Services</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smchealth.org/" target="_blank" role="menuitem">Health (San Mateo County Health)</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.smcsheriff.com/" target="_blank" role="menuitem">Sheriff&#039;s Office</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Preparedness</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Preparedness>
+                      <li>
+                                                        <a href="/dem" role="menuitem" data-drupal-link-system-path="node/388760">SMC Emergency Management</a>
+                      </li>
+                  <li>
+                                                        <a href="/publicworks/storm-preparedness" role="menuitem" data-drupal-link-system-path="node/25706">Storms (Sandbag Pickup)</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub" role="menuitem" aria-haspopup="true" aria-expanded="false">
+                       <h5 class="h5">Stay Informed</h5>
+                                        <ul  data-region="header__main_menu" role="menu" aria-label=Stay Informed>
+                      <li>
+                                                        <a href="https://public.govdelivery.com/accounts/CASMATEO/subscriber/new" target="_blank" role="menuitem">County Email Updates</a>
+                      </li>
+                  <li>
+                                                        <a href="/ceo/newsroom" role="menuitem" data-drupal-link-system-path="node/29101">Newsroom</a>
+                      </li>
+                  <li>
+                                                        <a href="/dem/smc-alert" role="menuitem" data-drupal-link-system-path="node/28421">SMC Alert System</a>
+                      </li>
+                  <li>
+                                                        <a href="https://visitor.r20.constantcontact.com/manage/optin?v=001YwBuX0JTuQnxXeJoxC6jYy88PRocmOLs7CBTLlVxxPzYEHU5HrNrp6zT5SKCKNb4J8YEBzQZA30AaqBmmjraDqcTxeZyXodtwtGXGsfYqBvfIQfdNgkUvEtFD-bSNcNSlU8KKw7Ek5uuVJSbRNtwFsw7h7ssEHSg" target="_blank" role="menuitem">Water Quality Notifications (Beach/Creek)</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      </ul>
+  
+              </li>
+            </ul>
+  
+
+  <div role="navigation" aria-labelledby="skip-to-search">
+    <a id="skip-to-search" href="#downshift-0-input" class="visually-hidden focusable">
+      Skip to search
+    </a>
+  </div>
+ 
+      </nav>
+</smc-main-nav>
+
+  </div>
+</div>
+  <div slot="search">    <div id="swiftype-autocomplete"></div>
+  </div>
+</smc-main-header>
+
+<div class="sub-header-region">
+  <smc-sub-header>
+    <div class="sub-heading">
+        <div>
+          <outline-container>
+<div class="sub-heading--dept">
+  <div class="sub-heading--title"><a href="/tsd">Technology Services Department</a></div>
+</div>
+</outline-container>
+<style>
+  .sub-header-region, .region--hero {
+    --page-color: blue;
+  }
+</style>
+
+
+
+
+
+<div class="sub-heading--menu">
+  <div class="sub-heading--control mobile">
+    <outline-button variant="simple" icon="menu" class="sub-heading--control-button">Department Menu
+    </outline-button>
+  </div>
+  <div class="sub-heading--nav">
+    <smc-sub-nav>
+      <outline-container mobile-hide>
+        <nav
+          class="sub-nav" role="navigation" aria-label="Department menu">
+                                  
+
+                  <ul  class="sub-nav--list-main" role="menubar" aria-label="Department Menu">
+    
+              <li class="sub-nav--list-main-item hide-mobile" role="none">
+                <a href="/tsd">
+          <span>Home</span>
+        </a>
+      </li>
+
+      <li class="hidden lg:block" role="none">
+                <outline-button url="/tsd" variant="simple" class="pt-2 pl-4">
+          <outline-icon aria-label="Link to department homepage" name="home" size="20px"></outline-icon>
+        </outline-button>
+      </li>
+                      <li class="sub-nav--list-main-item" role="none">
+                                                        <a href="/tsd/major-initiatives" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Major Initiatives" data-drupal-link-system-path="node/22021">Major Initiatives</a>
+                          
+                  <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  class="sub-nav--list-secondary" role="menu" aria-label="Major Initiatives">
+    
+                          <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/tsd/awards-and-it-trends" role="menuitem" aria-label="Awards and IT Trends" data-drupal-link-system-path="node/22096">Awards and IT Trends</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/isd/gis" role="menuitem" aria-label="GIS">GIS</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/tsd/innovation-program" role="menuitem" aria-label="Innovation Program" data-drupal-link-system-path="node/388540">Innovation Program</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/tsd/open-government" role="menuitem" aria-label="Open Government" data-drupal-link-system-path="node/22051">Open Government</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/tsd/network-and-infrastructure" role="menuitem" aria-label="Network/Infrastructure" data-drupal-link-system-path="node/22091">Network/Infrastructure</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/isd/public-safety" role="menuitem" aria-label="Public Safety">Public Safety</a>
+                      </li>
+        </ul>
+  
+              </li>
+                  <li class="sub-nav--list-main-item" role="none">
+                                                        <a href="/isd/public-programs" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Public Programs">Public Programs</a>
+                          
+                  <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  class="sub-nav--list-secondary" role="menu" aria-label="Public Programs">
+    
+                          <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="https://data.smcgov.org/" target="_blank" role="menuitem" aria-label="Open Data">Open Data</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/isd/gis" role="menuitem" aria-label="GIS">GIS</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/tsd/san-mateo-county-digital-equity-portal" role="menuitem" aria-label="SMC Public WiFi" data-drupal-link-system-path="node/196">SMC Public WiFi</a>
+                      </li>
+        </ul>
+  
+              </li>
+                  <li class="sub-nav--list-main-item" role="none">
+                                                        <a href="https://hr.smcgov.org/RFP" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="RFP">RFP</a>
+                      </li>
+                  <li class="sub-nav--list-main-item" role="none">
+                                                        <a href="/isd/news" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="News &amp; Events">News &amp; Events</a>
+                      </li>
+                  <li class="sub-nav--list-main-item" role="none">
+                                                        <a href="/isd/about-us" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="About Us">About Us</a>
+                          
+                  <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  class="sub-nav--list-secondary" role="menu" aria-label="About Us">
+    
+                          <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/tsd/mission-vision" role="menuitem" aria-label="Mission &amp; Vision" data-drupal-link-system-path="node/22066">Mission &amp; Vision</a>
+                      </li>
+                  <li class="sub-nav--list-secondary-item" role="none">
+                                                        <a href="/isd/strategic-plan" role="menuitem" aria-label="Strategic Plan">Strategic Plan</a>
+                      </li>
+        </ul>
+  
+              </li>
+        </ul>
+  
+
+
+                  </nav>
+      </outline-container>
+    </smc-sub-nav>
+  </div>
+</div>
+
+  </div>
+
+    </div>
+  </smc-sub-header>
+</div>
+
+</header>
+
+
+
+<div  class="outline-none">
+  <outline-container align="center">
+    <outline-container align="left" is-nested="true">
+      
+    </outline-container>
+  </outline-container>
+  <outline-container align="center">
+    <outline-container align="left" is-nested="true">
+        <div class="relative region--highlighted">
+    <div data-drupal-messages-fallback class="hidden"></div>
+
+  </div>
+
+    </outline-container>
+  </outline-container>
+    <div class="relative region--sub_header_alerts">
+          
+
+
+
+
+
+<div class="views-element-container" id="block-views-block-division-alerts-block-parks-alerts">
+      
+        
+        <div><div class="js-view-dom-id-a6d6f8a013a75bd5de3200fa3ed8444df4a08b1948dab95380aaff166c67d3a2">
+  
+  
+  
+
+  
+  
+  
+
+    
+
+  
+  
+
+  
+  
+</div>
+</div>
+
+  </div>
+
+  </div>
+
+  <outline-container align="center">
+    <outline-container align="left" is-nested="true">
+        <div class="relative region--breadcrumb">
+    <div id="block-outline-frontend-breadcrumbs">
+      
+        
+          <nav role="navigation" aria-label="breadcrumb" class="breadcrumb pt-5">
+                  <a href="/tsd">Technology Services Department</a>
+            </nav>
+  <smc-horizontal-rule class="pb-5"></smc-horizontal-rule>
+
+  </div>
+
+  </div>
+
+    </outline-container>
+  </outline-container>
+
+  
+      <section class="content_above">
+      <outline-container align="center">
+        <outline-container align="left" is-nested="true">
+            <div class="relative region--content_above">
+    <div id="block-outline-frontend-page-title">
+      
+        
+        <outline-container
+  container-align="center"
+  
+  is-nested
+>
+    <outline-heading
+      level="h1"
+      level-size="main-title"
+      level-style="semibold"
+      role="region"
+      aria-label="title"
+      accented
+      accent-color="orange"
+    >
+        GIS Data Download
+    </outline-heading>
+</outline-container>
+
+  </div>
+
+  </div>
+
+        </outline-container>
+      </outline-container>
+    </section>
+  
+  
+      <section aria-label="Administrative actions">
+      <outline-container align="center">
+        <outline-container align="left" is-nested="true">
+            <div class="relative region--administrative">
+    
+  </div>
+
+        </outline-container>
+      </outline-container>
+    </section>
+  
+
+            <main role="main" aria-label="Main site content" data-swiftype-index="true">
+        <a id="main-content" tabindex="-1"></a>
+          <div class="relative region--content">
+    <div id="block-outline-frontend-content">
+      
+        
+        <article>
+
+  
+      
+
+  <div>
+    
+            <div class="field--name-field-enhanced-body field--type-json-native">  <div class="slices" >
+  <smc-alert link="{&quot;embed&quot;:{&quot;text&quot;:&quot;Learn More&quot;,&quot;embedHTML&quot;:&quot;&lt;a href=\&quot;\&quot;&gt;Learn More&lt;\/a&gt;&quot;,&quot;attributes&quot;:{&quot;href&quot;:&quot;&quot;}}}" content="The information provided here are meant for general planning and reference purposes only, and are provided on an &quot;AS IS” basis. The County of San Mateo makes no warranties, expressed or implied, as to the accuracy or veracity of anything displayed or made available here. For precise details and information, users should refer to the authoritative source materials and consult with the stewards of the datasets provided. No decisions on legal or cadastral purposes should be made based solely on this information. Distributions of this data for resale or informational uses outside of the context outlined here is prohibited. The County of San Mateo reserves the right to modify or alter these Terms and Conditions of Use at any time without notice, and your use of this data constitutes an acknowledgment of these Terms and Conditions." heading="DISCLAIMER" alert-type="success"></smc-alert>
+<smc-two-column remove-padding-top header="" gutters bg-color="teal" background column-one="[{&quot;id&quot;:&quot;b793e26f-9c81-48e9-a14b-5d60d90f3459&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;Supervisor District Boundaries 2022&amp;nbsp;&lt;\/h5&gt;\n\n&lt;p&gt;&lt;a class=\&quot;link\&quot; href=\&quot;https:\/\/gis-data-downloads.s3.us-west-1.amazonaws.com\/Supervisor+District+Boundaries.zip\&quot; title=\&quot;Supervisor District Boundaries 2022 Download\&quot;&gt;Supervisor District Boundaries 2022 Download&lt;\/a&gt;&lt;\/p&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" column-two="[]">  <div class="slices" slot="column-one">
+  <outline-container><div class="ck-content"><h5>Supervisor District Boundaries 2022&nbsp;</h5>
+
+<p><a class="link" href="https://gis-data-downloads.s3.us-west-1.amazonaws.com/Supervisor+District+Boundaries.zip" title="Supervisor District Boundaries 2022 Download">Supervisor District Boundaries 2022 Download</a></p></div>
+</outline-container>
+  </div>
+  <div class="slices" slot="column-two">
+    </div>
+</smc-two-column>
+<smc-two-column remove-padding-bottom header="" bg-wave="blue" gutters bg-color="blue" column-one="[{&quot;id&quot;:&quot;4d089b92-ae93-4532-b9b8-e0d224624819&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;Building Footprints&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&lt;\/strong&gt;&amp;nbsp;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;Available Formats&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&amp;nbsp;&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/BUILDING_FOOTPRINTS.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download Shapefile\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/BUILDING_FOOTPRINTS_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download FGDB\&quot;&gt;Download FGDB&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/BUILDING_FOOTPRINTS_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/BUILDING_FOOTPRINTS_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download KML File\&quot;&gt;Download KML File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;Download GeoJson File\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" column-two="[{&quot;id&quot;:&quot;fa952ca2-8dd0-4c4b-a420-5248bbca87d5&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;Natural Features&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&lt;\/strong&gt;&amp;nbsp;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Available Formats&lt;\/strong&gt;&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/NATURAL_FEATURES.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Dowload Shapefile\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/NATURAL_FEATURES_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download FGDB\&quot;&gt;Download FGDB&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/NATURAL_FEATURES_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/NATURAL_FEATURES_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download KML File\&quot;&gt;Download KML File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/NATURAL_FEATURES_GEOJSON.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n\n&lt;p&gt;&lt;strong&gt;Data Layers Included&lt;\/strong&gt;&lt;\/p&gt;\n\n&lt;ul&gt;\n\t&lt;li&gt;Contours&lt;\/li&gt;\n\t&lt;li&gt;Lakes&lt;\/li&gt;\n\t&lt;li&gt;Streams&lt;\/li&gt;\n\t&lt;li&gt;Ocean\/Bay&lt;\/li&gt;\n&lt;\/ul&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" columns-reverse>  <div class="slices" slot="column-one">
+  <outline-container><div class="ck-content"><h5>Building Footprints</h5>
+
+<p><strong>Exported:</strong> Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p>Available Formats</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp) </td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/BUILDING_FOOTPRINTS.zip" rel="noopener" target="_blank" title="Download Shapefile">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/BUILDING_FOOTPRINTS_FGDB.zip" rel="noopener" target="_blank" title="Download FGDB">Download FGDB</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/BUILDING_FOOTPRINTS_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/BUILDING_FOOTPRINTS_KML.zip" rel="noopener" target="_blank" title="Download KML File">Download KML File</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="Download%20GeoJson%20File" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table></div>
+</outline-container>
+  </div>
+  <div class="slices" slot="column-two">
+  <outline-container><div class="ck-content"><h5>Natural Features</h5>
+
+<p><strong>Exported:</strong> Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p><strong>Available Formats</strong></p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/NATURAL_FEATURES.zip" rel="noopener" target="_blank" title="Dowload Shapefile">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/NATURAL_FEATURES_FGDB.zip" rel="noopener" target="_blank" title="Download FGDB">Download FGDB</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/NATURAL_FEATURES_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/NATURAL_FEATURES_KML.zip" rel="noopener" target="_blank" title="Download KML File">Download KML File</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/NATURAL_FEATURES_GEOJSON.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Data Layers Included</strong></p>
+
+<ul>
+	<li>Contours</li>
+	<li>Lakes</li>
+	<li>Streams</li>
+	<li>Ocean/Bay</li>
+</ul></div>
+</outline-container>
+  </div>
+</smc-two-column>
+<smc-horizontal-rule></smc-horizontal-rule>
+<smc-two-column remove-padding-top remove-padding-bottom header="" gutters bg-color="blue" column-one="[{&quot;id&quot;:&quot;a8fee06b-8245-4282-b263-15dc2fcdf7d8&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;Landmark Features&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&amp;nbsp;&lt;\/strong&gt;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;Available Formats&amp;nbsp;&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&amp;nbsp;&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/LANDMARK_FEATURES.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download Shapefile\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/LANDMARK_FEATURES_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download FGDB\&quot;&gt;Download FGDB&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/LANDMARK_FEATURES_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/LANDMARK_FEATURES_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download KML File\&quot;&gt;Download KML File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/LANDMARK_FEATURES_GEOJSON.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" column-two="[{&quot;id&quot;:&quot;4ef5ce9c-1f88-4514-b846-066c6605e84a&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;San Mateo County Streets&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&lt;\/strong&gt;&amp;nbsp;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;Available Formats&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_STREETS.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download Shapefile\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_STREETS_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;File Geodatabase (.gdb)\&quot;&gt;File Geodatabase (.gdb)&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_STREETS_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_STREETS_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download KML File\&quot;&gt;Download KML File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_STREETS_GEOJSON.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n\n&lt;p&gt;&lt;strong&gt;Data Layers Included&lt;\/strong&gt;&lt;\/p&gt;\n\n&lt;ul&gt;\n\t&lt;li&gt;Streets&lt;\/li&gt;\n&lt;\/ul&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]">  <div class="slices" slot="column-one">
+  <outline-container><div class="ck-content"><h5>Landmark Features</h5>
+
+<p><strong>Exported: </strong>Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p>Available Formats </p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp) </td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/LANDMARK_FEATURES.zip" rel="noopener" target="_blank" title="Download Shapefile">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/LANDMARK_FEATURES_FGDB.zip" rel="noopener" target="_blank" title="Download FGDB">Download FGDB</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/LANDMARK_FEATURES_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/LANDMARK_FEATURES_KML.zip" rel="noopener" target="_blank" title="Download KML File">Download KML File</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/LANDMARK_FEATURES_GEOJSON.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table></div>
+</outline-container>
+  </div>
+  <div class="slices" slot="column-two">
+  <outline-container><div class="ck-content"><h5>San Mateo County Streets</h5>
+
+<p><strong>Exported:</strong> Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p>Available Formats</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_STREETS.zip" rel="noopener" target="_blank" title="Download Shapefile">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_STREETS_FGDB.zip" rel="noopener" target="_blank" title="File Geodatabase (.gdb)">File Geodatabase (.gdb)</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_STREETS_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_STREETS_KML.zip" rel="noopener" target="_blank" title="Download KML File">Download KML File</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_STREETS_GEOJSON.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Data Layers Included</strong></p>
+
+<ul>
+	<li>Streets</li>
+</ul></div>
+</outline-container>
+  </div>
+</smc-two-column>
+<smc-horizontal-rule></smc-horizontal-rule>
+<smc-two-column remove-padding-top remove-padding-bottom header="" gutters bg-color="blue" column-one="[{&quot;id&quot;:&quot;e81357fe-45dc-4e36-8549-3554e11a0ded&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;San Mateo County Active Parcels&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&lt;\/strong&gt;&amp;nbsp;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;Available Formats&amp;nbsp;&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&amp;nbsp;&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_ACTIVE_PARCELS.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_ACTIVE_PARCELS_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download FGDB\&quot;&gt;Download FGDB&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_ACTIVE_PARCELS_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_ACTIVE_PARCELS_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Google KML (.kml)\&quot;&gt;Google KML (.kml)&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/SAN_MATEO_COUNTY_ACTIVE_PARCELS_GEOJSON.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n\n&lt;p&gt;&lt;strong&gt;Data Layers Included&lt;\/strong&gt;&lt;\/p&gt;\n\n&lt;ul&gt;\n\t&lt;li&gt;Parcels&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;\/li&gt;\n&lt;\/ul&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" column-two="[{&quot;id&quot;:&quot;35db2994-86fc-42bf-8290-4cf1b460e9c6&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;Jurisdictional Boundaries&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&lt;\/strong&gt;&amp;nbsp;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;Available Formats&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/JURISDICTIONAL_BOUNDARIES.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download Shapefile\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/JURISDICTIONAL_BOUNDARIES_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download FGDB\&quot;&gt;Download FGDB&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/JURISDICTIONAL_BOUNDARIES_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/JURISDICTIONAL_BOUNDARIES_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download KML File\&quot;&gt;Download KML File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/JURISDICTIONAL_BOUNDARIES_GEOJSON.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n\n&lt;p&gt;&lt;strong&gt;Data Layers Included&lt;\/strong&gt;&lt;\/p&gt;\n\n&lt;ul&gt;\n\t&lt;li&gt;City Boundaries&lt;\/li&gt;\n\t&lt;li&gt;County Boundary&lt;\/li&gt;\n\t&lt;li&gt;Election Precinct Boundary&lt;\/li&gt;\n&lt;\/ul&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]">  <div class="slices" slot="column-one">
+  <outline-container><div class="ck-content"><h5>San Mateo County Active Parcels</h5>
+
+<p><strong>Exported:</strong> Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p>Available Formats </p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp) </td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_ACTIVE_PARCELS.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_ACTIVE_PARCELS_FGDB.zip" rel="noopener" target="_blank" title="Download FGDB">Download FGDB</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_ACTIVE_PARCELS_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_ACTIVE_PARCELS_KML.zip" rel="noopener" target="_blank" title="Google KML (.kml)">Google KML (.kml)</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/SAN_MATEO_COUNTY_ACTIVE_PARCELS_GEOJSON.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Data Layers Included</strong></p>
+
+<ul>
+	<li>Parcels          </li>
+</ul></div>
+</outline-container>
+  </div>
+  <div class="slices" slot="column-two">
+  <outline-container><div class="ck-content"><h5>Jurisdictional Boundaries</h5>
+
+<p><strong>Exported:</strong> Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p>Available Formats</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/JURISDICTIONAL_BOUNDARIES.zip" rel="noopener" target="_blank" title="Download Shapefile">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/JURISDICTIONAL_BOUNDARIES_FGDB.zip" rel="noopener" target="_blank" title="Download FGDB">Download FGDB</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/JURISDICTIONAL_BOUNDARIES_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/JURISDICTIONAL_BOUNDARIES_KML.zip" rel="noopener" target="_blank" title="Download KML File">Download KML File</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/JURISDICTIONAL_BOUNDARIES_GEOJSON.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Data Layers Included</strong></p>
+
+<ul>
+	<li>City Boundaries</li>
+	<li>County Boundary</li>
+	<li>Election Precinct Boundary</li>
+</ul></div>
+</outline-container>
+  </div>
+</smc-two-column>
+<smc-horizontal-rule></smc-horizontal-rule>
+<smc-two-column header="" gutters bg-color="blue" column-one="[{&quot;id&quot;:&quot;ad778db5-a0e9-4e05-b31b-5469f2633d31&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;GRID Boundaries&lt;\/h5&gt;\n\n&lt;p&gt;&lt;strong&gt;Exported:&lt;\/strong&gt;&amp;nbsp;Daily&lt;\/p&gt;\n\n&lt;p&gt;&lt;strong&gt;Source:&lt;\/strong&gt;&amp;nbsp;San Mateo County GIS Enterprise Data&lt;\/p&gt;\n\n&lt;p&gt;Available Formats&lt;\/p&gt;\n\n&lt;table&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Shapefile (.shp)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/GRID_BOUNDARIES.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download Shapefile\&quot;&gt;Download Shapefile&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;File Geodatabase (.gdb)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/GRID_BOUNDARIES_FGDB.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download FGDB\&quot;&gt;Download FGDB&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;AutoCAD (.dxf\/.dwg)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/GRID_BOUNDARIES_ACAD.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download CAD File\&quot;&gt;Download CAD File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Google KML (.kml)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/GRID_BOUNDARIES_KML.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download KML File\&quot;&gt;Download KML File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;GeoJSON (.json)&lt;\/td&gt;\n\t\t\t&lt;td&gt;&lt;a href=\&quot;https:\/\/gis-data-downloads.s3-us-west-1.amazonaws.com\/GRID_BOUNDARIES_GEOJSON.zip\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;Download GeoJson File\&quot;&gt;Download GeoJson File&lt;\/a&gt;&lt;\/td&gt;\n\t\t&lt;\/tr&gt;\n\t&lt;\/tbody&gt;\n&lt;\/table&gt;\n\n&lt;p&gt;&lt;strong&gt;Data Layers Included&lt;\/strong&gt;&lt;\/p&gt;\n\n&lt;ul&gt;\n\t&lt;li&gt;G200&lt;\/li&gt;\n\t&lt;li&gt;G400&lt;\/li&gt;\n\t&lt;li&gt;G800&amp;nbsp; &amp;nbsp;&lt;\/li&gt;\n&lt;\/ul&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" column-two="[]">  <div class="slices" slot="column-one">
+  <outline-container><div class="ck-content"><h5>GRID Boundaries</h5>
+
+<p><strong>Exported:</strong> Daily</p>
+
+<p><strong>Source:</strong> San Mateo County GIS Enterprise Data</p>
+
+<p>Available Formats</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>Shapefile (.shp)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/GRID_BOUNDARIES.zip" rel="noopener" target="_blank" title="Download Shapefile">Download Shapefile</a></td>
+		</tr>
+		<tr>
+			<td>File Geodatabase (.gdb)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/GRID_BOUNDARIES_FGDB.zip" rel="noopener" target="_blank" title="Download FGDB">Download FGDB</a></td>
+		</tr>
+		<tr>
+			<td>AutoCAD (.dxf/.dwg)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/GRID_BOUNDARIES_ACAD.zip" rel="noopener" target="_blank" title="Download CAD File">Download CAD File</a></td>
+		</tr>
+		<tr>
+			<td>Google KML (.kml)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/GRID_BOUNDARIES_KML.zip" rel="noopener" target="_blank" title="Download KML File">Download KML File</a></td>
+		</tr>
+		<tr>
+			<td>GeoJSON (.json)</td>
+			<td><a href="https://gis-data-downloads.s3-us-west-1.amazonaws.com/GRID_BOUNDARIES_GEOJSON.zip" rel="noopener" target="_blank" title="Download GeoJson File">Download GeoJson File</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<p><strong>Data Layers Included</strong></p>
+
+<ul>
+	<li>G200</li>
+	<li>G400</li>
+	<li>G800   </li>
+</ul></div>
+</outline-container>
+  </div>
+  <div class="slices" slot="column-two">
+    </div>
+</smc-two-column>
+<smc-two-column remove-padding-top remove-padding-bottom header="" gutters bg-color="blue" background column-one="[{&quot;id&quot;:&quot;3c050b4e-5db5-49ca-931c-5b15b2a9c241&quot;,&quot;data&quot;:{&quot;content&quot;:{&quot;text&quot;:&quot;&lt;h5&gt;Didn\u2019t find the data you were looking for?&lt;\/h5&gt;\n\n&lt;p&gt;Didn\u2019t find the data you were looking for?&amp;nbsp; Visit our GIS Data Portal Here:&amp;nbsp;&lt;a href=\&quot;http:\/\/data-smcmaps.opendata.arcgis.com\/\&quot; rel=\&quot;noopener\&quot; target=\&quot;_blank\&quot; title=\&quot;http:\/\/data-smcmaps.opendata.arcgis.com\/\&quot;&gt;http:\/\/data-smcmaps.opendata.arcgis.com\/&lt;\/a&gt;&lt;\/p&gt;\n&quot;,&quot;textFormat&quot;:&quot;full_html&quot;},&quot;padding&quot;:false},&quot;type&quot;:&quot;wysiwyg&quot;}]" column-two="[]">  <div class="slices" slot="column-one">
+  <outline-container><div class="ck-content"><h5>Didn’t find the data you were looking for?</h5>
+
+<p>Didn’t find the data you were looking for?&nbsp; Visit our GIS Data Portal Here:&nbsp;<a href="http://data-smcmaps.opendata.arcgis.com/" rel="noopener" target="_blank" title="http://data-smcmaps.opendata.arcgis.com/">http://data-smcmaps.opendata.arcgis.com/</a></p></div>
+</outline-container>
+  </div>
+  <div class="slices" slot="column-two">
+    </div>
+</smc-two-column>
+  </div>
+</div>
+      
+  </div>
+
+</article>
+
+  </div>
+
+  </div>
+
+      </main>
+      
+  
+      <section class="content_below">
+      <outline-container align="center">
+        <outline-container align="left" is-nested="true" data-swiftype-index="true">
+            <div class="relative region--content_below">
+        <aside class="mb-10 pt-px pb-5">
+  
+  
+  <outline-container  container-align="center" align="left" is-nested="true" narrow="narrow">
+    <div>
+      
+    </div>
+  </outline-container>
+</aside>
+
+
+  </div>
+
+        </outline-container>
+      </outline-container>
+    </section>
+  
+
+</div>
+
+<footer>
+  
+    <div class="relative region--footer_bottom">
+    <div id="block-smcfooter">
+      
+        
+        <smc-footer>
+  <outline-list slot="footer-nav-main" list-type="ul" divider="blue" nav-label="footer main nav" orientation="mobile-col">
+          <li class="w-full md:w-auto"><smc-link footer><a href="/newsroom">News</a></smc-link></li>
+          <li class="w-full md:w-auto"><smc-link footer><a href="/events">Events</a></smc-link></li>
+          <li class="w-full md:w-auto"><smc-link footer><a href="https://jobs.smcgov.org/">Jobs</a></smc-link></li>
+          <li class="w-full md:w-auto"><smc-link footer><a href="/hr/employee-resources">For Employees</a></smc-link></li>
+          <li class="w-full md:w-auto"><smc-link footer><a href="/finding-county-center">Office Locations</a></smc-link></li>
+      </outline-list>
+  <outline-list slot="footer-nav-social" list-type="ul" nav-label="footer social nav" orientation="row">
+          <li>
+        <smc-social-link
+          dark
+          footer
+          url='https://www.linkedin.com/company/county-of-san-mateo/'
+        >
+        </smc-social-link>
+      </li>
+          <li>
+        <smc-social-link
+          dark
+          footer
+          url='https://www.facebook.com/CountyofSanMateo/'
+        >
+        </smc-social-link>
+      </li>
+          <li>
+        <smc-social-link
+          dark
+          footer
+          url='https://nextdoor.com/agency-detail/ca/san-mateo-county/county-of-san-mateo/'
+        >
+        </smc-social-link>
+      </li>
+          <li>
+        <smc-social-link
+          dark
+          footer
+          url='https://www.instagram.com/sanmateocounty/?hl=en'
+        >
+        </smc-social-link>
+      </li>
+          <li>
+        <smc-social-link
+          dark
+          footer
+          url='https://www.youtube.com/channel/UC2bWDXcW6FfdxVyR-V34oag'
+        >
+        </smc-social-link>
+      </li>
+          <li>
+        <smc-social-link
+          dark
+          footer
+          url='https://twitter.com/sanmateoco'
+        >
+        </smc-social-link>
+      </li>
+      </outline-list>
+  <outline-list slot="footer-nav-legal" nav-label="legal-nav" list-type="ul" orientation="mobile-col-center">
+          <li><a href="/accessibility">Accessibility</a></li>
+          <li><a href="/sitemap.xml">Site Map</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/endorsement-disclaimers">Endorsement Disclaimers</a></li>
+      </outline-list>
+  <span slot="copyright">
+      Copyright &#169; 2026 County of San Mateo. All rights reserved.
+  </span>
+</smc-footer>
+
+  </div>
+
+  </div>
+
+</footer>
+
+  </div>
+
+    
+    <div role="navigation" aria-labelledby="skip-to-top">
+      <a id="skip-to-top" href="#main-content" class="visually-hidden focusable">
+        Jump back to top
+      </a>
+    </div>
+    <script src="/sites/default/files/js/js_5zm2F4YIGKy-PhQKDY3MQC8tthHyR4rz7ZeUtdgKUu0.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=outline_frontend&amp;include=eJxlztEKwjAMheEX6uwjlbimJZImJcmcvr3KUBjeHPj-q9NVO2MJ6Lm_J_WzL3CDxzmOHw3EGUItV_KVgQZaolZ8pxbPicUQ1shfLrCFrjomY2DSLZgESzOVQKm5olOX_z6AJBn6VHG6f15cGb004kDLh2BfDienwJ0qFmC0yCQUL9P6Wf0"></script>
+
+  </body>
+</html>

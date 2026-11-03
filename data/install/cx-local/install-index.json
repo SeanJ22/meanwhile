@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:45:49.979685+00:00",
+  "preparedAt": "2026-11-03T09:47:22.159714+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2471,6 +2471,31 @@
       "countyFips": "47037"
     },
     {
+      "state": "CA",
+      "county": "San Mateo",
+      "populationRank": 93,
+      "manifest": "CA/san-mateo/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 75,
+      "measureContests": 0,
+      "candidacies": 153,
+      "newContests": 62,
+      "refreshedContests": 13,
+      "sourceInputSha256": "617cb4e973c6dd402ef3e5e2765e65d2594fc0b3d106bcf141b3f114f0c5fc90",
+      "coverage": [
+        "Current official county Sept3 qualified roster supplies62 complete local On Ballot Yes fields140 ordinary names. Explicit official-inventory supplement; no native populated SanMateo sample acquired. Actual sample spelling/order and county style completeness remain gaps.",
+        "All65 local On Ballot No fields95 qualified names stay separate. No cancellation, declared-elected, withdrawal or vacancy inferred solely from No cell or candidate-to-seat ratio. Single-candidate Yes fields remain ordinary.",
+        "Current official certified write-in list expressly states no certified write-in candidates for November3,2026. No blank Write-in/Yes/No line becomes a person.",
+        "Thirteen shared held Supreme/FirstAppellate retention fields13 exact candidate IDs/core names reused and verified against current native SF official worksheet. Held wholeSanMateoCounty-to-FirstAppellate member ID refreshed from current court county list and district-only electoral rule. Not claimed SanMateo sample images.",
+        "CountyBOE Area2 uses only trustee-area voters per current SMCOE governing-board page. Contrary countywide guide sentence retained as conflict. Full final official Area2 polygon and current2022 Supervisor5 polygon prepared; no historic2013 layer.",
+        "Every municipal council district, school/college trustee area, CoastsideWaterZone5 and CoastsideFireDistrictD/E retains exact electorate. At-large school/municipal/Granada fields use true district/place, never county or customer-service fallback. Other boundary/reader joins pending.",
+        "MyElectionInfo requires house number, ZIP and full birth date. No voter lookup, identity submission, GoGreen enrollment or preference mutation. Public prelookup config and unsigned computed PDF paths inspected, initial patterns404; municipal public routes searched. Portal form original stays scratch; portable diagnostic explicitly derived.",
+        "Partial candidate-only merge. Preserve all held legislative fields, questions/explanations and all34 exact CA CX-VOTES inputs. No county sample-completeness claim, no production write/publication."
+      ],
+      "censusCounty": "San Mateo County",
+      "countyFips": "06081"
+    },
+    {
       "state": "MA",
       "county": "Norfolk County",
       "populationRank": 95,
@@ -2556,17 +2581,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 90,
-    "packetsPrepared": 91,
-    "candidateAndRetentionContests": 4345,
+    "countiesPrepared": 91,
+    "packetsPrepared": 92,
+    "candidateAndRetentionContests": 4420,
     "measureContests": 115,
-    "candidacyEntries": 9748,
-    "newContestEntriesAgainstCheckedInBaseline": 3627,
-    "distinctPreparedContestIds": 4326,
-    "distinctPreparedCandidateIds": 9492,
-    "distinctNewContestsAgainstCheckedInBaseline": 3550,
+    "candidacyEntries": 9901,
+    "newContestEntriesAgainstCheckedInBaseline": 3689,
+    "distinctPreparedContestIds": 4388,
+    "distinctPreparedCandidateIds": 9632,
+    "distinctNewContestsAgainstCheckedInBaseline": 3612,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 92
+    "distinctCountyHandoffs": 93
   },
   "remainingWork": [
     {

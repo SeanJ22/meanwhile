@@ -1,0 +1,1424 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#" class="hide-until-hydrated">
+  <head>
+    <meta name="google-site-verification" content="1CplRQRbHErhcpoJD2DZ_VADje7X1oonfNkq8caZ82k" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "San Mateo County Assessor-County Clerk-Recorder & Elections - ACRE",
+        "url": "https://smcacre.gov/"
+      }
+    </script>
+    <meta charset="utf-8" />
+<meta name="description" content="Precincts maps for cities in the county in PDF format." />
+<meta name="geo.region" content="US-CA" />
+<link rel="canonical" href="https://smcacre.gov/elections/precinct-maps-pdf" />
+<link rel="image_src" href="/themes/custom/outline_frontend/assets/images/acrelogo.png" />
+<meta property="og:site_name" content="San Mateo County Assessor-County Clerk-Recorder &amp; Elections - ACRE" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://smcacre.gov/elections/precinct-maps-pdf" />
+<meta property="og:title" content="Precinct Maps in PDF" />
+<meta property="og:description" content="Precincts maps for cities in the county in PDF format." />
+<meta property="og:image" content="https://smcacre.gov/themes/custom/outline_frontend/assets/images/acrelogo.png" />
+<meta property="og:image:width" content="1437" />
+<meta property="og:image:height" content="426" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@sanmateoco" />
+<meta name="twitter:title" content="Precinct Maps in PDF" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script type="text/javascript">var mixpanel_init_variables = {"project_token":"399f65cae006f75fec1b47bfc20f78d8","host":null,"debug":"0"}</script>
+<script type="text/javascript">var mixpanel_page_variables = {"page_title":"Precinct Maps in PDF","last_updated":"2026-08-17T12:24:31-07:00","page_type":"flexible_page","node_id":"2468","Division":["Elections"]}</script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="icon" href="/sites/default/files/favicon.png" type="image/png" />
+<script>(function(w,d,s,l,i){
+  w[l]=w[l]||[];
+  w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+  var f=d.getElementsByTagName(s)[0];
+  var j=d.createElement(s);
+  var dl=l!='dataLayer'?'&l='+l:'';
+  j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl+'';
+  j.async=true;
+  f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P23HSRB');</script>
+<style>
+      @media all and (min-width: 0px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_3x1_008000_320x107_100/public/2022-02/many_flags_black_opacity.jpg?h=74bd6f6a&itok=J1ih1J-W);
+        }
+      }
+      @media all and (min-width: 320px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_3x1_013000_520x173_100/public/2022-02/many_flags_black_opacity.jpg?h=74bd6f6a&itok=AS6wxJVg);
+        }
+      }
+      @media all and (min-width: 520px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_3x1_021000_840x280_100/public/2022-02/many_flags_black_opacity.jpg?h=74bd6f6a&itok=ETZe1nWE);
+        }
+      }
+      @media all and (min-width: 840px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_6x1_024000_960x160_100/public/2022-02/many_flags_black_opacity.jpg?h=91b2f944&itok=s3rh5RKw);
+        }
+      }
+      @media all and (min-width: 960px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_6x1_036000_1440x240_100/public/2022-02/many_flags_black_opacity.jpg?h=91b2f944&itok=JZD1Usrw);
+        }
+      }
+      @media all and (min-width: 1440px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_6x1_055000_2200x367_100/public/2022-02/many_flags_black_opacity.jpg?h=91b2f944&itok=DejKhiSd);
+        }
+      }
+      @media all and (min-width: 2200px) {
+        .sub-header-region .sub-heading {
+          background-image: url(https://smcacre.gov/sites/default/files/styles/landscape_6x1_065000_2600x433_100/public/2022-02/many_flags_black_opacity.jpg?h=91b2f944&itok=k7xFVxZR);
+        }
+      }</style>
+
+    <title>Precinct Maps in PDF | San Mateo County Assessor-County Clerk-Recorder &amp; Elections - ACRE</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_HQMrwVmc-afqt6SlS2n74Tme7vm-kaass9_H0Go6qH8.css?delta=0&amp;language=en&amp;theme=outline_frontend&amp;include=eJxty0EKwzAMBdELmfhIRo1-jKgsBUkh7e1L6bbLeTB4lYo9O8d1km74ZZvuUzEqyFKpPDpL7kqyEG2BhfohWohtp7PErfn1PTGOcCsYd0bK_OOLxFpK4RbGIEVUF5Nq-c7C6g9KfACNTjtR" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_Ebdbe26MLoVyuba3nZONS2HUHJBRjT4RJteziLzq9iI.css?delta=1&amp;language=en&amp;theme=outline_frontend&amp;include=eJxty0EKwzAMBdELmfhIRo1-jKgsBUkh7e1L6bbLeTB4lYo9O8d1km74ZZvuUzEqyFKpPDpL7kqyEG2BhfohWohtp7PErfn1PTGOcCsYd0bK_OOLxFpK4RbGIEVUF5Nq-c7C6g9KfACNTjtR" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/2468","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ckeditorheight":{"offset":1,"line_height":1.5,"unit":"em","disable_autogrow":false},"data":{"extlink":{"extTarget":true,"extTargetAppendNewWindowDisplay":true,"extTargetAppendNewWindowLabel":"(opens in a new window)","extTargetNoOverride":false,"extNofollow":false,"extTitleNoOverride":false,"extNoreferrer":true,"extFollowNoOverride":false,"extClass":"ext","extLabel":"(link is external)","extImgClass":false,"extSubdomains":true,"extExclude":"","extInclude":"","extCssExclude":"","extCssInclude":"","extCssExplicit":"","extAlert":false,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","extHideIcons":false,"mailtoClass":"mailto","telClass":"tel","mailtoLabel":"(link sends email)","telLabel":"(link is a phone number)","extUseFontAwesome":true,"extIconPlacement":"append","extPreventOrphan":true,"extFaLinkClasses":"fa fa-external-link","extFaMailtoClasses":"fa fa-envelope-o","extAdditionalLinkClasses":"","extAdditionalMailtoClasses":"","extAdditionalTelClasses":"","extFaTelClasses":"fa fa-phone","allowedDomains":[],"extExcludeNoreferrer":""}},"ajaxTrustedUrl":{"\/search":true,"form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM":true},"googleTranslatorDisclaimer":{"selector":".google-translator-switch","displayMode":"HORIZONTAL","disclaimerTitle":"Automatic translation disclaimer","disclaimer":"The County of San Mateo has added a translation feature developed by Google Translate to assist web visitors in understanding information on this website in a variety of foreign languages. Please be aware that Google Translate, a free third party service which the County does not control, provides automated computer translations that may not give you an exact translation. The County cannot guarantee the accuracy of translations through Google Translate so translations should not be considered exact and only used as a rough guide. Anyone relying on information obtained from Google Translate does so at his or her own risk. The County disclaims and will not accept any liability for damages or losses of any kind caused by the use of the Google Translate feature.","acceptText":"Accept","dontAcceptText":"Do Not Accept","element":"\u003Cspan id=\u0022google_translator_element\u0022\u003E\u003C\/span\u003E\n\u003Cscript src=\u0022\/\/translate.google.com\/translate_a\/element.js?cb=Drupal.behaviors.googleTranslatorElement.init\u0022\u003E\u003C\/script\u003E\n"},"googleTranslatorElement":{"id":"google_translator_element","langcode":"en","languages":"af,sq,ar,be,bg,ca,zh-CN,zh-TW,hr,cs,da,nl,en,eo,et,tl,fi,fr,gl,de,el,ht,iw,hi,hu,is,id,ga,it,ja,ko,lv,lt,mk,ms,mt,no,fa,pl,pt,ro,ru,sr,sk,sl,es,sw,sv,th,tr,uk,vi,cy,yi","displayMode":"HORIZONTAL"},"sitewideAlert":{"refreshInterval":15000,"automaticRefresh":false,"showCount":false,"serverSideRender":false},"user":{"uid":0,"permissionsHash":"a600813f90716ab916895ce7723d1d1fe3fca487b960b3eced5c8f891a1dfe20"}}</script>
+<script src="/themes/custom/outline_frontend/dist/smc-design/dist/outline.js?tnpp2u" type="module"></script>
+<script src="/sites/default/files/js/js_O1gSGJ7SJnnm9eYE6c5Y3gLqJ9geJhGpEGVXJeVsvwo.js?scope=header&amp;delta=1&amp;language=en&amp;theme=outline_frontend&amp;include=eJxtjlEOwyAMQy_ExpFQBC6KGhIE6cbx121fU_dpy882lgvrHss4OskdXxmqWRUkH6RTyG3EwjMLccMIvKXGq5NCIiv7j3EieWetwY53FdI2TB1aYsHkqlcfguxsenO0fo7hGmnEf8CHrTDZ8eSCRILhnzsvwytT-w"></script>
+<script src="/themes/custom/outline_frontend/js/election-template.js?tnpp2u" weight="101"></script>
+<script src="/sites/default/files/js/js_fWS_xuXSJrOVKKUPpCLGMdrLXjAiCmZMlohwdpjLQ4U.js?scope=header&amp;delta=3&amp;language=en&amp;theme=outline_frontend&amp;include=eJxtjlEOwyAMQy_ExpFQBC6KGhIE6cbx121fU_dpy882lgvrHss4OskdXxmqWRUkH6RTyG3EwjMLccMIvKXGq5NCIiv7j3EieWetwY53FdI2TB1aYsHkqlcfguxsenO0fo7hGmnEf8CHrTDZ8eSCRILhnzsvwytT-w"></script>
+
+    <noscript>
+      <style>body{opacity:1}</style>
+    </noscript>
+  </head>
+  <body class="acre-theme">
+        <div role="navigation" aria-labelledby="skip-to-main">
+      <a id="skip-to-main" href="#main-content" class="visually-hidden focusable">
+        Skip to main content
+      </a>
+    </div>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P23HSRB"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><div data-sitewide-alert aria-live="polite"></div>
+
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+      <div class="relative region--administrative__page_top">
+    <div id="block-content-moderation-block">
+      
+        
+        <form class="content-moderation-entity-moderation-form" data-drupal-selector="content-moderation-entity-moderation-form" action="/elections/precinct-maps-pdf" method="post" id="content-moderation-entity-moderation-form" accept-charset="UTF-8" novalidate>
+  <input autocomplete="off" data-drupal-selector="form-al4k5zytvu21q7fdi8w4txul9qnx39vdr-lod528rz8" type="hidden" name="form_build_id" value="form-AL4k5ZyTVU21Q7FDI8w4TxUl9Qnx39vDr_lod528rz8" />
+<input data-drupal-selector="edit-content-moderation-entity-moderation-form" type="hidden" name="form_id" value="content_moderation_entity_moderation_form" />
+
+</form>
+
+  </div>
+
+  </div>
+
+  <header>
+    
+  <smc-main-header is-acre>
+    <div slot="utility">  <div class="relative region--header__top_nav">
+    <div id="block-utilitymenu">
+      
+        
+    <smc-utility-nav>
+    <nav class="util-nav" role="navigation" aria-label="Utility Menu">
+              
+        <ul  class="utility-nav--list-main" role="menubar" aria-label="Utility Menu">
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link
+            utility
+            icon="clipboard-check"
+            icon-position="left"
+            color="currentColor"
+            size='18px'
+            mobile-size='18px'
+            target="_blank"
+            decorative
+          >
+            <a href="https://appts.smcacre.org/qmaticwebbooking/#/" target="_blank" role="menuitem" aria-label="Appointments (Walk-ins are welcome)">Appointments (Walk-ins are welcome)</a>
+          </smc-link>
+                  </li>
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link
+            utility
+            icon="news"
+            icon-position="left"
+            color="currentColor"
+            size='18px'
+            mobile-size='18px'
+            target=""
+            decorative
+          >
+            <a href="/news" role="menuitem" aria-label="Press Releases" data-drupal-link-system-path="news">Press Releases</a>
+          </smc-link>
+                  </li>
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link
+            utility
+            icon="calendar"
+            icon-position="left"
+            color="currentColor"
+            size='18px'
+            mobile-size='18px'
+            target=""
+            decorative
+          >
+            <a href="/events" role="menuitem" aria-label="Events" data-drupal-link-system-path="events">Events</a>
+          </smc-link>
+                  </li>
+              <li  class="utility-nav--list-item" role="none">
+          <smc-link
+            utility
+            icon="new-window"
+            icon-position="left"
+            color="currentColor"
+            size='18px'
+            mobile-size='18px'
+            target="_blank"
+            decorative
+          >
+            <a href="https://www.smcgov.org/" target="_blank" role="menuitem" aria-label="County of San Mateo">County of San Mateo</a>
+          </smc-link>
+                  </li>
+          </ul>
+  
+
+
+          </nav>
+  </smc-utility-nav>
+</div>
+
+  </div>
+</div>
+    <div slot="translate">  <div class="relative region--header__translate">
+    <div id="block-outline-translation">
+      
+        
+      <div class="translate-wrapper">
+      <a href="#" class="notranslate google-translator-switch">Translate</a>
+
+  </div>
+</div>
+
+  </div>
+</div>
+    <div slot="main-nav">  <div class="relative region--header__main_menu">
+    <smc-main-nav>
+  <nav role="navigation" aria-label="San Mateo County"  id="block-outline-frontend-main-menu">
+          
+              <ul  data-region="header__main_menu" class="acre-main-nav--list-main" aria-label="San Mateo County">
+                      <li class="main-nav--list-item-main">
+                                                        <a href="/assessor" title="Assessor" class="main-nav--menu-link main-nav--menu-link-top" data-drupal-link-system-path="node/1">Assessor</a>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" aria-label="Assessor">
+                      <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/parcel-information" title="Parcel Information" class="main-nav--menu-link" data-drupal-link-system-path="node/2369">Parcel Information</a>
+                                        <ul  data-region="header__main_menu" aria-label="Parcel Information">
+                      <li>
+                                                        <a href="/assessor/assessor-maps" title="Parcel/Assessor Maps" class="main-nav--menu-link" data-drupal-link-system-path="node/46">Parcel/Assessor Maps</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/residential-commercial-property" title="Residential &amp; Commercial Property" class="main-nav--menu-link" data-drupal-link-system-path="node/18">Residential &amp; Commercial Property</a>
+                                        <ul  data-region="header__main_menu" aria-label="Residential &amp; Commercial Property">
+                      <li>
+                                                        <a href="/assessor/how-we-assess-value-your-property" title="How Property Value is Determined" class="main-nav--menu-link" data-drupal-link-system-path="node/2391">How Property Value is Determined</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/how-construction-affects-taxable-value" title="How Construction Affects Taxable Value" class="main-nav--menu-link" data-drupal-link-system-path="node/2387">How Construction Affects Taxable Value</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/notices-valuation" title="Notices of Valuation" class="main-nav--menu-link" data-drupal-link-system-path="node/2426">Notices of Valuation</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/appeal-assessment" title="Appeal an Assessment" class="main-nav--menu-link" data-drupal-link-system-path="node/2378">Appeal an Assessment</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/business-personal-property" title="Business Personal Property" class="main-nav--menu-link" data-drupal-link-system-path="node/19">Business Personal Property</a>
+                                        <ul  data-region="header__main_menu" aria-label="Business Personal Property">
+                      <li>
+                                                        <a href="/assessor/business-boat-aircraft-owner-assessment-information" class="main-nav--menu-link" data-drupal-link-system-path="node/2382">Business, Boat &amp; Aircraft Owner Assessment Information</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/how-file-571-l" title="How to File Form 571-L Business Property Statements" class="main-nav--menu-link" data-drupal-link-system-path="node/2307">How to File Form 571-L Business Property Statements</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/business-personal-property-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2381">Business Personal Property Forms</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/valuation-factors" title="Valuation Factors" class="main-nav--menu-link" data-drupal-link-system-path="node/2371">Valuation Factors</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/appeal-assessment" class="main-nav--menu-link" data-drupal-link-system-path="node/2378">Appeal an Assessment</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/property-tax-related" title="Property Tax Related" class="main-nav--menu-link" data-drupal-link-system-path="node/2372">Property Tax Related</a>
+                                        <ul  data-region="header__main_menu" aria-label="Property Tax Related">
+                      <li>
+                                                        <a href="/assessor/change-mailing-address" class="main-nav--menu-link" data-drupal-link-system-path="node/2383">Change of Mailing Address</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/property-tax-look" title="Property Tax Lookup" class="main-nav--menu-link" data-drupal-link-system-path="node/2389">Property Tax Look-up</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/tax-saving-programs" title="Tax Saving Programs" class="main-nav--menu-link" data-drupal-link-system-path="node/20">Tax Saving Programs</a>
+                                        <ul  data-region="header__main_menu" aria-label="Tax Saving Programs">
+                      <li>
+                                                        <a href="/assessor/builders-exclusion-single-family-residential-properties-only" title="Builder&#039;s Exclusion" class="main-nav--menu-link" data-drupal-link-system-path="node/2238">Builder&#039;s Exclusion</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/calamity-relief-filing" class="main-nav--menu-link" title="Calamity Relief" data-drupal-link-system-path="node/2207">Calamity Relief</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/disabled-veterans-exemption" title="Disabled Veterans&#039; Exemption" class="main-nav--menu-link" data-drupal-link-system-path="node/43">Disabled Veterans&#039; Exemption</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/property-tax-relief" title="Decline in Assessed Value" class="main-nav--menu-link" data-drupal-link-system-path="node/2397">Decline in Market Value</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/homeowners-exemption" class="main-nav--menu-link" title="Homeowners&#039; Exemption" data-drupal-link-system-path="node/44">Homeowners&#039; Exemption</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/property-tax-postponement-senior-citizens-blind-or-disabled-persons" title="Postponement" class="main-nav--menu-link" data-drupal-link-system-path="node/2392">Postponement</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/tax-saving-programs" class="main-nav--menu-link" title="More Tax Savings Programs" data-drupal-link-system-path="node/20">More Tax Savings Programs</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/change-ownership" title="Change in Ownership" class="main-nav--menu-link" data-drupal-link-system-path="node/2356">Change in Ownership</a>
+                                        <ul  data-region="header__main_menu" aria-label="Change in Ownership">
+                      <li>
+                                                        <a href="/assessor/change-ownership-faqs" title="Change in Ownership FAQs" class="main-nav--menu-link" data-drupal-link-system-path="node/1391">Change in Ownership FAQs</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/parent-child-andor-grandparent-grandchild-reassessment-exclusion" class="main-nav--menu-link" data-drupal-link-system-path="node/2269">Intergenerational Exclusions</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/proposition-19" class="main-nav--menu-link" data-drupal-link-system-path="node/2303">Proposition 19 Information</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/reports-data" title="Reports &amp; Data" class="main-nav--menu-link" data-drupal-link-system-path="node/2373">Reports &amp; Data</a>
+                                        <ul  data-region="header__main_menu" aria-label="Reports &amp; Data">
+                      <li>
+                                                        <a href="/assessor/assessment-roll-summaries" class="main-nav--menu-link" data-drupal-link-system-path="node/2379">Assessment Roll Summaries</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/assessors-annual-report" title="Annual Report" class="main-nav--menu-link" data-drupal-link-system-path="node/2837">Annual Report PDF</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/assessors-facts-and-figures" class="main-nav--menu-link" data-drupal-link-system-path="node/2380">Assessor&#039;s Facts and Figures</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/assessor/resources-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/2374">Resources &amp; FAQs</a>
+                                        <ul  data-region="header__main_menu" aria-label="Resources &amp; FAQs">
+                      <li>
+                                                        <a href="/assessor/assessor-videos" class="main-nav--menu-link" data-drupal-link-system-path="node/2234">Assessor Videos</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/assessor-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2233">Forms</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/assessment-data-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2184">Fees</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/glossary-terms" title="Glossary" class="main-nav--menu-link" data-drupal-link-system-path="node/2385">Glossary</a>
+                      </li>
+                  <li>
+                                                        <a href="/assessor/assessor-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/21">Frequently Asked Questions</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      <div class="main-nav--services"><a href="/assessor">View More Assessor Services</a> </div>
+              </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main">
+                                                        <a href="/county-clerk-recorder" title="County Clerk - Recorder" class="main-nav--menu-link main-nav--menu-link-top" data-drupal-link-system-path="node/2">County Clerk - Recorder</a>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" aria-label="County Clerk - Recorder">
+                      <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/marriage-licenses-ceremonies" class="main-nav--menu-link" data-drupal-link-system-path="node/12">Marriage &amp; Civil Ceremonies</a>
+                                        <ul  data-region="header__main_menu" aria-label="Marriage &amp; Civil Ceremonies">
+                      <li>
+                                                        <a href="/county-clerk-recorder/how-get-married-california" title="How to get Married in California?" class="main-nav--menu-link" data-drupal-link-system-path="node/2384">How to get Married in California?</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/what-difference-between-confidential-and-public-marriage-license" title="What is the difference between a confidential and a public marriage license?" class="main-nav--menu-link" data-drupal-link-system-path="node/2386">Confidential vs. Public Marriage License</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/applying-marriage-license" class="main-nav--menu-link" data-drupal-link-system-path="node/2168">Apply for a Marriage License</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/civil-wedding-ceremonies" class="main-nav--menu-link" data-drupal-link-system-path="node/2174">Civil Wedding Ceremonies</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/marriage-certificates" class="main-nav--menu-link" data-drupal-link-system-path="node/2173">Request a Copy of a Marriage Certificate</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/divorce-records" class="main-nav--menu-link" data-drupal-link-system-path="node/2182">Divorce Records &amp; Getting Divorced</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/certificates-and-vital-records" class="main-nav--menu-link" data-drupal-link-system-path="node/11">Birth &amp; Death Certificates</a>
+                                        <ul  data-region="header__main_menu" aria-label="Birth &amp; Death Certificates">
+                      <li>
+                                                        <a href="/county-clerk-recorder/birth-certificates" class="main-nav--menu-link" data-drupal-link-system-path="node/2198">Birth Certificates</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/death-certificates" class="main-nav--menu-link" data-drupal-link-system-path="node/2362">Death Certificates</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/apostille-information" title="Apostille Information" class="main-nav--menu-link" data-drupal-link-system-path="node/2390">Apostille Information</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/fictitious-business-names-fbn" class="main-nav--menu-link" data-drupal-link-system-path="node/13">Fictitious Business Names / DBA</a>
+                                        <ul  data-region="header__main_menu" aria-label="Fictitious Business Names / DBA">
+                      <li>
+                                                        <a href="/county-clerk-recorder/how-register-or-renew-name" title="Register or Renew a FBN" class="main-nav--menu-link" data-drupal-link-system-path="node/2403">Register or Renew a FBN</a>
+                      </li>
+                  <li>
+                                                        <a href="https://apps.smcacre.org/efbn/" class="main-nav--menu-link" target="_blank">Fictitious Business Name Search</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/request-fbn-certified-or-non-certified-copies" title="Request FBN Statement Copies" class="main-nav--menu-link" data-drupal-link-system-path="node/2415">Request FBN Statement Copies</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/how-withdraw" title="How to Withdraw from a Partnership" class="main-nav--menu-link" data-drupal-link-system-path="node/2404">How to Withdraw from a Partnership</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/how-abandon" title="How to Abandon the use of a FBN" class="main-nav--menu-link" data-drupal-link-system-path="node/2401">How to Abandon the Use of a FBN</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/business-license" target="_self" class="main-nav--menu-link" data-drupal-link-system-path="node/2418">Business License</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/records-documents" class="main-nav--menu-link" data-drupal-link-system-path="node/2375">Records &amp; Documents</a>
+                                        <ul  data-region="header__main_menu" aria-label="Records &amp; Documents">
+                      <li>
+                                                        <a href="/county-clerk-recorder/search-grantor-grantee-information" title="Search the Grantee-Grantor Database" class="main-nav--menu-link" data-drupal-link-system-path="node/2417">Search the Grantee-Grantor Database</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/obtain-copy-recorded-documents" class="main-nav--menu-link" data-drupal-link-system-path="node/2178">Obtain a Copy of Recorded Documents</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/recorder-services" class="main-nav--menu-link" data-drupal-link-system-path="node/15">Recorder Services</a>
+                                        <ul  data-region="header__main_menu" aria-label="Recorder Services">
+                      <li>
+                                                        <a href="/county-clerk-recorder/how-record-document" title="How to Record a Document" class="main-nav--menu-link" data-drupal-link-system-path="node/2402">How to Record a Document</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/recording-requirements" class="main-nav--menu-link" data-drupal-link-system-path="node/26">Recording Requirements</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/restrictive-covenant-modifications" title="Restrictive Covenant Modifications" class="main-nav--menu-link" data-drupal-link-system-path="node/2416">Restrictive Covenant Modifications</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/documentary-transfer-tax" class="main-nav--menu-link" data-drupal-link-system-path="node/2199">Documentary Transfer Tax</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/preliminary-change-ownership-report-pcor" title="Preliminary Change of Ownership (PCOR)" class="main-nav--menu-link" data-drupal-link-system-path="node/2414">Preliminary Change of Ownership (PCOR)</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/notary-oath-and-bond" class="main-nav--menu-link" data-drupal-link-system-path="node/2169">Notary Oath and Bond</a>
+                                        <ul  data-region="header__main_menu" aria-label="Notary Oath and Bond">
+                      <li>
+                                                        <a href="/county-clerk-recorder/notary-public-oath-and-bond-filing" title="Notary Public Oath and Bond Filing" class="main-nav--menu-link" data-drupal-link-system-path="node/2410">Notary Public Oath and Bond Filing</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/notary-signature-verification" title="Signature Verification of a Notary Public" class="main-nav--menu-link" data-drupal-link-system-path="node/2411">Signature Verification of a Notary Public</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/notary-journal-return" title="Return of Notary Journal" class="main-nav--menu-link" data-drupal-link-system-path="node/2408">Return of Notary Journal</a>
+                      </li>
+                  <li>
+                                                        <a href="https://www.sos.ca.gov/notary/" class="main-nav--menu-link" target="_blank">Search for Notary Journal Entries</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/additional-clerk-services" class="main-nav--menu-link" data-drupal-link-system-path="node/14">Additional Services</a>
+                                        <ul  data-region="header__main_menu" aria-label="Additional Services">
+                      <li>
+                                                        <a href="/county-clerk-recorder/passport-applications" class="main-nav--menu-link" data-drupal-link-system-path="node/17">Passport Services (Temporarily Inactive)</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/translation-certification-documents" title="Translation Certification Documents" class="main-nav--menu-link" data-drupal-link-system-path="node/2420">Translation Certification Documents</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/paraprofessional-registration" title="Paraprofessional Registration" class="main-nav--menu-link" data-drupal-link-system-path="node/2413">Paraprofessional Registration</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/environmental-impact-reports" class="main-nav--menu-link" data-drupal-link-system-path="node/31">Environmental Impact Reports</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/financial-disclosures" class="main-nav--menu-link" data-drupal-link-system-path="node/2246">Financial Disclosures</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/coroners-report" title="Coroner’s Report" class="main-nav--menu-link" data-drupal-link-system-path="node/2400">Coroner’s Report</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/naturalization-index" title="Naturalization Index" class="main-nav--menu-link" data-drupal-link-system-path="node/2407">Naturalization Index</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/military-discharge" class="main-nav--menu-link" data-drupal-link-system-path="node/2405">Military Discharge - DD214</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/county-clerk-recorder/resources-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/2376">Resources &amp; FAQs</a>
+                                        <ul  data-region="header__main_menu" aria-label="Resources &amp; FAQs">
+                      <li>
+                                                        <a href="/county-clerk-recorder/county-clerk-recorder-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2183">Forms</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/county-clerk-recorder-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2335">Fees</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/clerk-recorder-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/16">Frequently Asked Questions</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      <div class="main-nav--services"><a href="/county-clerk-recorder">View More County Clerk - Recorder Services</a> </div>
+              </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main">
+                                                        <a href="/elections" title="Elections" class="main-nav--menu-link main-nav--menu-link-top" data-drupal-link-system-path="node/3">Elections</a>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" aria-label="Elections">
+                      <li class="main-nav--list-item-sub">
+                                                        <a href="/elections" title="Elections" class="main-nav--menu-link" data-drupal-link-system-path="node/3">Elections</a>
+                                        <ul  data-region="header__main_menu" aria-label="Elections">
+                      <li>
+                                                        <a href="/elections/current-election" title="Current Election" class="main-nav--menu-link" data-drupal-link-system-path="node/2310">Current Election</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/regularly-scheduled-elections" title="Regularly Scheduled Elections" class="main-nav--menu-link" data-drupal-link-system-path="node/2345">Regularly Scheduled Elections</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/past-elections-results" title="Past Elections &amp; Results" class="main-nav--menu-link" data-drupal-link-system-path="node/2228">Past Elections &amp; Results</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/election-security-and-accuracy" title="Election Security &amp; Accuracy" class="main-nav--menu-link" data-drupal-link-system-path="node/2435">Election Security &amp; Accuracy</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/ballots" title="Ballots" class="main-nav--menu-link" data-drupal-link-system-path="node/2424">Ballots</a>
+                                        <ul  data-region="header__main_menu" aria-label="Ballots">
+                      <li>
+                                                        <a href="/elections/track-your-ballot" title="Where&#039;s My Ballot? / Ballot Tracking" class="main-nav--menu-link" data-drupal-link-system-path="node/2436">Where&#039;s My Ballot? / Ballot Tracking</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/request-replacement-ballot" title="Request a Replacement Ballot" class="main-nav--menu-link" data-drupal-link-system-path="node/2437">Request a Replacement Ballot</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/go-green" title="Paperless Sample Ballot (Go Green!)" class="main-nav--menu-link" data-drupal-link-system-path="node/2438">Paperless Sample Ballot (Go Green!)</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/voting" title="Voting" class="main-nav--menu-link" data-drupal-link-system-path="node/2425">Voting</a>
+                                        <ul  data-region="header__main_menu" aria-label="Voting">
+                      <li>
+                                                        <a href="/elections/vote-centers" title="Vote Centers / In-Person Voting" class="main-nav--menu-link" data-drupal-link-system-path="node/2267">Vote Centers / In-Person Voting</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/vote-maildrop-box" title="Vote by Mail / Drop Box" class="main-nav--menu-link" data-drupal-link-system-path="node/2268">Vote by Mail / Drop Box</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/first-time-voters" title="First Time Voters" class="main-nav--menu-link" data-drupal-link-system-path="node/2442">First Time Voters</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/assistance-voters-disabilities" class="main-nav--menu-link" data-drupal-link-system-path="node/2235">Assistance for Voters with Disabilities</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/uniformed-and-overseas-voters" class="main-nav--menu-link" data-drupal-link-system-path="node/2495">Uniformed and Overseas Voters</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/conditional-voter-registration" class="main-nav--menu-link" data-drupal-link-system-path="node/2496">Conditional (Same-Day) Voter Registration</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/voter-registration" title="Voter Registration" class="main-nav--menu-link" data-drupal-link-system-path="node/4">Voter Registration</a>
+                                        <ul  data-region="header__main_menu" aria-label="Voter Registration">
+                      <li>
+                                                        <a href="/my-election-info" class="main-nav--menu-link">Am I Registered? / Voter Lookup</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/registerre-register-vote" class="main-nav--menu-link" data-drupal-link-system-path="node/47">Register/Re-Register to Vote</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/change-mailing-address" title="Change of Mailing Address" class="main-nav--menu-link" data-drupal-link-system-path="node/2446">Change of Mailing Address</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/proof-registration-certificate-registration" class="main-nav--menu-link" data-drupal-link-system-path="node/2497">Proof of Registration</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/canceling-your-voter-registration" title="Cancel Your Registration" class="main-nav--menu-link" data-drupal-link-system-path="node/2451">Cancel Your Registration</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/jury-duty" target="_self" class="main-nav--menu-link" data-drupal-link-system-path="node/2498">Jury Duty</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/candidates-and-measures" title="Candidates &amp; Measures" class="main-nav--menu-link" data-drupal-link-system-path="node/2241">Candidates &amp; Measures</a>
+                                        <ul  data-region="header__main_menu" aria-label="Candidates &amp; Measures">
+                      <li>
+                                                        <a href="/elections/Running-for-Office" class="main-nav--menu-link" data-drupal-link-system-path="node/2454">Running for Office - Where, When, and How</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/instructions-filing-arguments-and-rebuttals" class="main-nav--menu-link" data-drupal-link-system-path="node/2455">Instructions for Measure Resolutions and Arguments</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/campaign-finance-information" class="main-nav--menu-link" data-drupal-link-system-path="node/2208">FPPC Campaign Finance Filings</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/information-requesting-local-recount" class="main-nav--menu-link" data-drupal-link-system-path="node/2456">Information on Requesting a Local Recount</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/information-recalls-elected-officials" class="main-nav--menu-link" data-drupal-link-system-path="node/2981">Information on Recalls of Elected Officials</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/employment-volunteer" title="Employment &amp; Volunteer" class="main-nav--menu-link" data-drupal-link-system-path="node/2318">Employment &amp; Volunteer</a>
+                                        <ul  data-region="header__main_menu" aria-label="Employment &amp; Volunteer">
+                      <li>
+                                                        <a href="/elections/employment-opportunities" class="main-nav--menu-link" data-drupal-link-system-path="node/2315">Employment Opportunities</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/student-democracy-program" class="main-nav--menu-link" data-drupal-link-system-path="node/2458">Student Democracy Program</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/advisory-committees" class="main-nav--menu-link" data-drupal-link-system-path="node/2423">Advisory Committees</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/espanol-zhongwen-filipino" title="Translations" class="main-nav--menu-link" data-drupal-link-system-path="node/2282">Translations</a>
+                                        <ul  data-region="header__main_menu" aria-label="Translations">
+                      <li>
+                                                        <a href="/elections/espanol" class="main-nav--menu-link" data-drupal-link-system-path="node/2283">Español</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/zhongwen" class="main-nav--menu-link" data-drupal-link-system-path="node/2284">中文</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/filipino" target="_self" class="main-nav--menu-link" data-drupal-link-system-path="node/2658">Filipino</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/elections/resources-faqs" title="Resources &amp; FAQs" class="main-nav--menu-link" data-drupal-link-system-path="node/2422">Resources &amp; FAQs</a>
+                                        <ul  data-region="header__main_menu" aria-label="Resources &amp; FAQs">
+                      <li>
+                                                        <a href="/elections/california-voters-choice-act" class="main-nav--menu-link" data-drupal-link-system-path="node/2240">California Voter&#039;s Choice Act</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/election-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2316">Forms</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/elections-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2185">Fees</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/elections-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/25">Frequently Asked Questions</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/precinct-and-district-information" class="main-nav--menu-link" data-drupal-link-system-path="node/2328">Precinct and District Information</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/find-your-elected-representatives" class="main-nav--menu-link" data-drupal-link-system-path="node/30">Find Your Elected Representatives</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/voter-file-information" class="main-nav--menu-link" data-drupal-link-system-path="node/2344">Voter Data</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/san-mateo-county-election-costs" class="main-nav--menu-link" data-drupal-link-system-path="node/3154">San Mateo County Election Costs</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      <div class="main-nav--services"><a href="/elections">View More Elections Services</a> </div>
+              </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main">
+                                                        <a href="/resources" title="Resources" class="main-nav--menu-link main-nav--menu-link-top" data-drupal-link-system-path="node/2393">Resources</a>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" aria-label="Resources">
+                      <li class="main-nav--list-item-sub">
+                                                        <a href="/forms" title="All Forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2341">Forms</a>
+                                        <ul  data-region="header__main_menu" aria-label="Forms">
+                      <li>
+                                                        <a href="/assessor/assessor-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2233">Assessor</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/county-clerk-recorder-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2183">County Clerk - Recorder</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/election-forms" class="main-nav--menu-link" data-drupal-link-system-path="node/2316">Elections</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/frequently-asked-questions" class="main-nav--menu-link" data-drupal-link-system-path="node/2396">FAQs</a>
+                                        <ul  data-region="header__main_menu" aria-label="FAQs">
+                      <li>
+                                                        <a href="/assessor/assessor-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/21">Assessor</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/clerk-recorder-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/16">County Clerk-Recorder</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/elections-faqs" class="main-nav--menu-link" data-drupal-link-system-path="node/25">Elections</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/videos" class="main-nav--menu-link" data-drupal-link-system-path="node/2398">Videos</a>
+                                        <ul  data-region="header__main_menu" aria-label="Videos">
+                      <li>
+                                                        <a href="/assessor/assessor-videos" class="main-nav--menu-link" data-drupal-link-system-path="node/2234">Assessor</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/elections-division-videos" class="main-nav--menu-link" data-drupal-link-system-path="node/2271">Elections</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/registry-public-agencies" class="main-nav--menu-link" data-drupal-link-system-path="node/2735">Registry of Public Agencies</a>
+                      </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/schedule-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2175">Fees</a>
+                                        <ul  data-region="header__main_menu" aria-label="Fees">
+                      <li>
+                                                        <a href="/assessor/assessment-data-fees" class="main-nav--menu-link" title="Assessment Data" data-drupal-link-system-path="node/2184">Assessment Data</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/elections-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2185">Elections</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/environmental-impact-report-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2186">Environmental Impact Report</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/fictitious-business-names-fbn-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2187">Fictitious Business Names (FBN)</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/marriage-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2188">Marriage</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/notary-service-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2189">Notary Oath and Bond</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/paraprofessional-registration-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2190">Paraprofessional Registrations</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/recording-fees" class="main-nav--menu-link" data-drupal-link-system-path="node/2192">Recording</a>
+                      </li>
+                  <li>
+                                                        <a href="/county-clerk-recorder/translation-certificate-fee" class="main-nav--menu-link" data-drupal-link-system-path="node/2193">Translation Certificate</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/partner-organizations" class="main-nav--menu-link" data-drupal-link-system-path="node/28">Partner Organizations</a>
+                                        <ul  data-region="header__main_menu" aria-label="Partner Organizations">
+                      <li>
+                                                        <a href="/bay-area" class="main-nav--menu-link" data-drupal-link-system-path="node/1406">Bay Area</a>
+                      </li>
+                  <li>
+                                                        <a href="/business-resources" class="main-nav--menu-link" data-drupal-link-system-path="node/1402">Business Resources</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/california-state-government" title="California State Government" class="main-nav--menu-link" data-drupal-link-system-path="node/1405">California State Government</a>
+                      </li>
+                  <li>
+                                                        <a href="/city-or-town-hall-locations-san-mateo-county" class="main-nav--menu-link" data-drupal-link-system-path="node/1341">City or Town Hall Locations</a>
+                      </li>
+                  <li>
+                                                        <a href="/homeowner-resources" class="main-nav--menu-link" data-drupal-link-system-path="node/1401">Homeowner Resources</a>
+                      </li>
+                  <li>
+                                                        <a href="/life-events" class="main-nav--menu-link" data-drupal-link-system-path="node/1403">Life Events</a>
+                      </li>
+                  <li>
+                                                        <a href="/san-mateo-county-education" class="main-nav--menu-link" data-drupal-link-system-path="node/1404">San Mateo County Education</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      <div class="main-nav--services"><a href="/additional-acre-resources">ACRE Quick Links</a> </div>
+              </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main">
+                                                        <a href="/about-us" title="About Us" class="main-nav--menu-link main-nav--menu-link-top" data-drupal-link-system-path="node/2394">About Us</a>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" aria-label="About Us">
+                      <li class="main-nav--list-item-sub">
+                                                        <a href="/about-acre" class="main-nav--menu-link" data-drupal-link-system-path="node/2395">About ACRE</a>
+                                        <ul  data-region="header__main_menu" aria-label="About ACRE">
+                      <li>
+                                                        <a href="/acre-achievements" class="main-nav--menu-link" data-drupal-link-system-path="node/2304">Achievements</a>
+                      </li>
+                  <li>
+                                                        <a href="/profile/mark-church" title="Meet Mark Church" class="main-nav--menu-link" data-drupal-link-system-path="node/2202">Meet Mark Church</a>
+                      </li>
+                  <li>
+                                                        <a href="/strategic-plan" class="main-nav--menu-link" data-drupal-link-system-path="node/1360">Strategic Plan</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/acre-career-opportunities" title="ACRE Career Opportunities" class="main-nav--menu-link" data-drupal-link-system-path="node/2230">Jobs</a>
+                                        <ul  data-region="header__main_menu" aria-label="Jobs">
+                      <li>
+                                                        <a href="/acre-career-opportunities" class="main-nav--menu-link" data-drupal-link-system-path="node/2230">Careers at ACRE</a>
+                      </li>
+            </ul>
+  
+              </li>
+                      </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-main">
+                                                        <a href="/contact" title="Contact Us" class="main-nav--menu-link main-nav--menu-link-top" data-drupal-link-system-path="node/2340">Contact Us</a>
+                                        <ul  data-region="header__main_menu" class="main-nav--list-panel" aria-label="Contact Us">
+                      <li class="main-nav--list-item-sub">
+                                                        <a href="/contact" title="Locations &amp; Hours" class="main-nav--menu-link" data-drupal-link-system-path="node/2340">Locations &amp; Hours</a>
+                                        <ul  data-region="header__main_menu" aria-label="Locations &amp; Hours">
+                      <li>
+                                                        <a href="/contact" title="ACRE Offices" class="main-nav--menu-link" data-drupal-link-system-path="node/2340">ACRE Offices</a>
+                      </li>
+                  <li>
+                                                        <a href="/city-or-town-hall-locations-san-mateo-county" class="main-nav--menu-link" data-drupal-link-system-path="node/1341">City/Town Hall Locations</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/vote-center-and-ballot-drop-box-lookup" class="main-nav--menu-link" data-drupal-link-system-path="node/2249">Vote Centers</a>
+                      </li>
+                  <li>
+                                                        <a href="/elections/vote-center-and-ballot-drop-box-lookup" class="main-nav--menu-link" data-drupal-link-system-path="node/2249">Ballot Drop Boxes</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/appointments" class="main-nav--menu-link" data-drupal-link-system-path="node/2427">Appointments</a>
+                                        <ul  data-region="header__main_menu" aria-label="Appointments">
+                      <li>
+                                                        <a href="https://appts.smcacre.org/qmaticwebbooking/#/" class="main-nav--menu-link" target="_blank">Book an Appointment for an ACRE Service</a>
+                      </li>
+                  <li>
+                                                        <a href="https://apps.smcacre.org/marsched/schedule.aspx" class="main-nav--menu-link" target="_blank">Schedule a Ceremony in the County Chapel</a>
+                      </li>
+            </ul>
+  
+              </li>
+                  <li class="main-nav--list-item-sub">
+                                                        <a href="/acre-website-feedback" class="main-nav--menu-link" data-drupal-link-system-path="node/1721">Feedback</a>
+                      </li>
+                      </ul>
+  
+              </li>
+            </ul>
+  
+
+
+      </nav>
+</smc-main-nav>
+
+  </div>
+</div>
+    <div slot="search">  <div class="relative region--header__search">
+    <div class="views-exposed-form" data-drupal-selector="views-exposed-form-solr-search-solr-search-page-global" id="block-outline-solr-search-global">
+      
+        
+        <outline-container is-nested>
+  <smc-site-search hidePlaceHolderBelow="xxl" altPlaceholder="Search" button-text="">
+    <form action="/search" method="get" id="views-exposed-form-solr-search-solr-search-page-global" accept-charset="UTF-8" novalidate slot="form" role="search" class="mx-auto">
+      <div class="js-form-item form-item js-form-type-textfield form-item-search-api-fulltext js-form-item-search-api-fulltext">
+      <label for="edit-search-api-fulltext" class="font-body"></label>
+            <input placeholder="What can we help you find?" data-drupal-selector="edit-search-api-fulltext" type="text" id="edit-search-api-fulltext" name="search_api_fulltext" value="" size="30" maxlength="128" class="form-text" />
+
+
+          </div>
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><input aria-label="Search" data-drupal-selector="edit-submit-solr-search" type="submit" id="edit-submit-solr-search" value="Update Search" class="button js-form-submit form-submit" />
+</div>
+
+
+    </form>
+  </smc-site-search>
+</outline-container>
+
+  </div>
+
+  </div>
+</div>
+  </smc-main-header>
+
+  <div class="sub-header-region">
+    <smc-sub-header>
+      <div class="sub-heading">
+          <div>
+          <outline-container>
+  <div class="sub-heading--dept">
+    <div class="sub-heading--title"><span>Elections</span>
+</div>
+  </div>
+</outline-container>
+<style>
+  .sub-header-region, .region--hero {
+    --page-color: blue;
+  }
+</style>
+
+
+
+
+
+<div class="sub-heading--menu">
+  <div class="sub-heading--control mobile">
+    <outline-button variant="simple" icon="menu" class="sub-heading--control-button">
+      Elections Menu
+    </outline-button>
+  </div>
+  <div class="sub-heading--nav">
+    <smc-sub-nav is-acre="true">
+      <outline-container mobile-hide>
+        <nav
+          class="sub-nav" role="navigation" aria-label="Department menu">
+                                
+                  <ul  data-region="sub_header" class="sub-nav--list-main" aria-label="Department Menu">
+                    <li class="sub-nav--list-main-item">
+                                              <a href="/elections" title="Elections" aria-expanded="false" aria-label="Elections" data-drupal-link-system-path="node/3">Elections</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Elections">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/current-election" title="Current Election" aria-label="Current Election" data-drupal-link-system-path="node/2310">Current Election</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/regularly-scheduled-elections" title="Regularly Scheduled Elections" aria-label="Regularly Scheduled Elections" data-drupal-link-system-path="node/2345">Regularly Scheduled Elections</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/past-elections-results" title="Past Elections &amp; Results" aria-label="Past Elections &amp; Results" data-drupal-link-system-path="node/2228">Past Elections &amp; Results</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/election-security-and-accuracy" title="Election Security &amp; Accuracy" aria-label="Election Security &amp; Accuracy" data-drupal-link-system-path="node/2435">Election Security &amp; Accuracy</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/ballots" title="Ballots" aria-expanded="false" aria-label="Ballots" data-drupal-link-system-path="node/2424">Ballots</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Ballots">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/track-your-ballot" title="Where&#039;s My Ballot? / Ballot Tracking" aria-label="Where&#039;s My Ballot? / Ballot Tracking" data-drupal-link-system-path="node/2436">Where&#039;s My Ballot? / Ballot Tracking</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/request-replacement-ballot" title="Request a Replacement Ballot" aria-label="Request a Replacement Ballot" data-drupal-link-system-path="node/2437">Request a Replacement Ballot</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/go-green" title="Paperless Sample Ballot (Go Green!)" aria-label="Paperless Sample Ballot (Go Green!)" data-drupal-link-system-path="node/2438">Paperless Sample Ballot (Go Green!)</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/voting" title="Voting" aria-expanded="false" aria-label="Voting" data-drupal-link-system-path="node/2425">Voting</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Voting">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/vote-centers" title="Vote Centers / In-Person Voting" aria-label="Vote Centers / In-Person Voting" data-drupal-link-system-path="node/2267">Vote Centers / In-Person Voting</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/vote-maildrop-box" title="Vote by Mail / Drop Box" aria-label="Vote by Mail / Drop Box" data-drupal-link-system-path="node/2268">Vote by Mail / Drop Box</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/first-time-voters" title="First Time Voters" aria-label="First Time Voters" data-drupal-link-system-path="node/2442">First Time Voters</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/assistance-voters-disabilities" aria-label="Assistance for Voters with Disabilities" data-drupal-link-system-path="node/2235">Assistance for Voters with Disabilities</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/uniformed-and-overseas-voters" aria-label="Uniformed and Overseas Voters" data-drupal-link-system-path="node/2495">Uniformed and Overseas Voters</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/conditional-voter-registration" aria-label="Conditional (Same-Day) Voter Registration" data-drupal-link-system-path="node/2496">Conditional (Same-Day) Voter Registration</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/voter-registration" title="Voter Registration" aria-expanded="false" aria-label="Voter Registration" data-drupal-link-system-path="node/4">Voter Registration</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Voter Registration">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/my-election-info" aria-label="Am I Registered? / Voter Lookup">Am I Registered? / Voter Lookup</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/registerre-register-vote" aria-label="Register/Re-Register to Vote" data-drupal-link-system-path="node/47">Register/Re-Register to Vote</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/change-mailing-address" title="Change of Mailing Address" aria-label="Change of Mailing Address" data-drupal-link-system-path="node/2446">Change of Mailing Address</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/proof-registration-certificate-registration" aria-label="Proof of Registration" data-drupal-link-system-path="node/2497">Proof of Registration</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/canceling-your-voter-registration" title="Cancel Your Registration" aria-label="Cancel Your Registration" data-drupal-link-system-path="node/2451">Cancel Your Registration</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/jury-duty" target="_self" aria-label="Jury Duty" data-drupal-link-system-path="node/2498">Jury Duty</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/candidates-and-measures" title="Candidates &amp; Measures" aria-expanded="false" aria-label="Candidates &amp; Measures" data-drupal-link-system-path="node/2241">Candidates &amp; Measures</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Candidates &amp; Measures">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/Running-for-Office" aria-label="Running for Office - Where, When, and How" data-drupal-link-system-path="node/2454">Running for Office - Where, When, and How</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/instructions-filing-arguments-and-rebuttals" aria-label="Instructions for Measure Resolutions and Arguments" data-drupal-link-system-path="node/2455">Instructions for Measure Resolutions and Arguments</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/campaign-finance-information" aria-label="FPPC Campaign Finance Filings" data-drupal-link-system-path="node/2208">FPPC Campaign Finance Filings</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/information-requesting-local-recount" aria-label="Information on Requesting a Local Recount" data-drupal-link-system-path="node/2456">Information on Requesting a Local Recount</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/information-recalls-elected-officials" aria-label="Information on Recalls of Elected Officials" data-drupal-link-system-path="node/2981">Information on Recalls of Elected Officials</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/employment-volunteer" title="Employment &amp; Volunteer" aria-expanded="false" aria-label="Employment &amp; Volunteer" data-drupal-link-system-path="node/2318">Employment &amp; Volunteer</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Employment &amp; Volunteer">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/employment-opportunities" aria-label="Employment Opportunities" data-drupal-link-system-path="node/2315">Employment Opportunities</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/student-democracy-program" aria-label="Student Democracy Program" data-drupal-link-system-path="node/2458">Student Democracy Program</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/advisory-committees" aria-label="Advisory Committees" data-drupal-link-system-path="node/2423">Advisory Committees</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/espanol-zhongwen-filipino" title="Translations" aria-expanded="false" aria-label="Translations" data-drupal-link-system-path="node/2282">Translations</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Translations">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/espanol" aria-label="Español" data-drupal-link-system-path="node/2283">Español</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/zhongwen" aria-label="中文" data-drupal-link-system-path="node/2284">中文</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/filipino" target="_self" aria-label="Filipino" data-drupal-link-system-path="node/2658">Filipino</a>
+                  </li>
+        </ul>
+  
+            </li>
+                <li class="sub-nav--list-main-item">
+                                              <a href="/elections/resources-faqs" title="Resources &amp; FAQs" aria-expanded="false" aria-label="Resources &amp; FAQs" data-drupal-link-system-path="node/2422">Resources &amp; FAQs</a>
+                                      <button class="menu-button" aria-haspopup="true" aria-expanded="false"></button>
+      <ul  data-region="sub_header" class="sub-nav--list-secondary" aria-label="Resources &amp; FAQs">
+                    <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/california-voters-choice-act" aria-label="California Voter&#039;s Choice Act" data-drupal-link-system-path="node/2240">California Voter&#039;s Choice Act</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/election-forms" aria-label="Forms" data-drupal-link-system-path="node/2316">Forms</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/elections-fees" aria-label="Fees" data-drupal-link-system-path="node/2185">Fees</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/elections-faqs" aria-label="Frequently Asked Questions" data-drupal-link-system-path="node/25">Frequently Asked Questions</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/precinct-and-district-information" aria-label="Precinct and District Information" data-drupal-link-system-path="node/2328">Precinct and District Information</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/find-your-elected-representatives" aria-label="Find Your Elected Representatives" data-drupal-link-system-path="node/30">Find Your Elected Representatives</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/voter-file-information" aria-label="Voter Data" data-drupal-link-system-path="node/2344">Voter Data</a>
+                  </li>
+                <li class="sub-nav--list-secondary-item">
+                                              <a href="/elections/san-mateo-county-election-costs" aria-label="San Mateo County Election Costs" data-drupal-link-system-path="node/3154">San Mateo County Election Costs</a>
+                  </li>
+        </ul>
+  
+            </li>
+        </ul>
+  
+
+
+                  </nav>
+      </outline-container>
+    </smc-sub-nav>
+  </div>
+</div>
+
+  </div>
+
+      </div>
+    </smc-sub-header>
+    <style>
+      .sub-header-region, .region--hero {
+        --page-color: blue;
+      }
+    </style>
+  </div>
+
+  </header>
+
+  
+
+<div  class="outline-none">
+  <outline-container align="center">
+    <outline-container align="left" is-nested="true">
+      
+    </outline-container>
+  </outline-container>
+  <outline-container align="center">
+    <outline-container align="left" is-nested="true">
+        <div class="relative region--highlighted">
+    <div data-drupal-messages-fallback class="hidden"></div>
+
+  </div>
+
+    </outline-container>
+  </outline-container>
+    <div class="relative region--sub_header_alerts">
+          
+            <div>  <div class="slices" >
+    </div>
+</div>
+      
+
+
+
+
+
+
+  </div>
+
+      <outline-container align="center">
+      <outline-container align="left" is-nested="true">
+          <div class="relative region--breadcrumb">
+    <div id="block-outline-frontend-breadcrumbs">
+      
+        
+          <nav role="navigation" aria-label="breadcrumb" class="breadcrumb pt-5">
+                  <a href="/">Home</a>
+                        <a href="/elections">Elections</a>
+            </nav>
+  <smc-horizontal-rule class="pb-5"></smc-horizontal-rule>
+
+  </div>
+
+  </div>
+
+      </outline-container>
+    </outline-container>
+  
+  
+      <section class="content_above">
+      <outline-container align="center">
+        <outline-container align="left" is-nested="true">
+            <div class="relative region--content_above">
+    <div id="block-outline-frontend-page-title">
+      
+        
+        <outline-container
+  container-align="center"
+  
+  is-nested
+>
+    <outline-heading
+      level="h1"
+      level-size="main-title"
+      level-style="semibold"
+      accented
+      accent-color="orange"
+    >
+        <span>Precinct Maps in PDF</span>
+
+    </outline-heading>
+</outline-container>
+
+  </div>
+
+  </div>
+
+        </outline-container>
+      </outline-container>
+    </section>
+  
+  
+      <section aria-label="Administrative actions">
+      <outline-container align="center">
+        <outline-container align="left" is-nested="true">
+            <div class="relative region--administrative">
+    
+  </div>
+
+        </outline-container>
+      </outline-container>
+    </section>
+  
+            <main role="main" aria-label="Main site content">
+        <a id="main-content" tabindex="-1"></a>
+          <div class="relative region--content">
+    <div id="block-outline-frontend-content">
+      
+        
+        <article>
+
+  
+      
+
+  <div>
+    
+            <div>  <div class="slices" >
+  <outline-container><div class="wysiwyg wysiwyg--acre">  <div class="align-right p-4 w-full sm:w-1/2">
+    
+          <picture>
+                  <source srcset="/sites/default/files/styles/original_scaled_008000_320x_100/public/migrated/acre/magnifyingmap.webp?itok=xmnd2hcM 320w, /sites/default/files/styles/original_scaled_065000_2600x_100/public/migrated/acre/magnifyingmap.webp?itok=fThkE8y0 367w" type="image/webp" sizes="(min-width:1024px) 412px, (min-width:640px) 50vw, 100vw" width="367" height="545">
+              <source srcset="/sites/default/files/styles/original_scaled_008000_320x_100/public/migrated/acre/magnifyingmap.jpg?itok=xmnd2hcM 320w, /sites/default/files/styles/original_scaled_065000_2600x_100/public/migrated/acre/magnifyingmap.jpg?itok=fThkE8y0 367w" type="image/jpeg" sizes="(min-width:1024px) 412px, (min-width:640px) 50vw, 100vw" width="367" height="545">
+                  
+<img loading="eager" srcset="/sites/default/files/styles/original_scaled_008000_320x_100/public/migrated/acre/magnifyingmap.jpg?itok=xmnd2hcM 320w, /sites/default/files/styles/original_scaled_065000_2600x_100/public/migrated/acre/magnifyingmap.jpg?itok=fThkE8y0 367w" sizes="(min-width:1024px) 412px, (min-width:640px) 50vw, 100vw" width="160" height="238" class="rounded-md w-full" src="/sites/default/files/styles/original_scaled_004000_160x_100/public/migrated/acre/magnifyingmap.jpg?itok=toc_jjfB" alt="magnifyingmap">
+
+  </source></source></picture>
+
+
+
+  </div>
+
+
+<p>The <a aria-label="Precinct/District Lookup Map (link is external) Opens in new tab" href="https://apps.smcacre.org/PrecinctLookup/PrecinctWebApp_Secured.html" rel="noopener" target="_blank" title="Precinct/District Lookup Map">Precinct/District Lookup Map</a> is also available to locate precincts. See <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="14bf67c0-ebbb-40a6-bd88-2b49bf1f6b6f" href="/elections/precinctlookup" title="Precinct/District Lookup">Precinct/District Lookup</a> for information on how to search.</p>
+
+<p>During an election, precincts can be consolidated and all results are shown under the consolidated precinct. For example, precincts 10001, 10002, and 10003 may all be consolidated and referred to only as precinct 10001. Consolidation is an election-specific process and is not permanent. If you don't see a specific precinct in the results, please review the precinct consolidation list under election results for that election.</p>
+
+<p><em>Last updated August 2026.</em></p>
+
+<p>Click on the name of an area to view the precinct map:</p>
+
+<p><a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="556e4b39-1df6-4921-ab77-dd1f2e7d098b" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FCity_Atherton.pdf&amp;title=Town+of+Atherton+Precinct+Map" title="Archival document: Town of Atherton Precinct Map" aria-label="Archival document: Town of Atherton Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Atherton</a> <em>(Updated August 2024)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="723518a5-e8ce-4dad-8f2f-dbf4eea05550" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_Belmont_April2026.pdf&amp;title=City+of+Belmont+Precinct+Map" title="Archival document: City of Belmont Precinct Map" aria-label="Archival document: City of Belmont Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Belmont</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="7c93aa32-a7db-457d-b658-e46923502817" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FCity_Brisbane.pdf&amp;title=City+of+Brisbane+Precinct+Map" title="Archival document: City of Brisbane Precinct Map" aria-label="Archival document: City of Brisbane Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Brisbane</a> <em>(Updated August 2024)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="a7bae47e-8da5-4196-8291-d072ede245e1" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_Burlingame_April2026.pdf&amp;title=City+of+Burlingame+Precinct+Map" title="Archival document: City of Burlingame Precinct Map" aria-label="Archival document: City of Burlingame Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Burlingame</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="543695e3-bc93-4feb-8565-8013d3b3a539" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_DalyCityColma_April2026.pdf&amp;title=City+of+Daly+City+and+Town+of+Colma+Precinct+Map" title="Archival document: City of Daly City and Town of Colma Precinct Map" aria-label="Archival document: City of Daly City and Town of Colma Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Daly City Colma</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="e0e696cb-50b3-4b9f-a7af-a2dfe71c6842" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FCity_EastPaloAlto.pdf&amp;title=City+of+East+Palo+Alto+Precinct+Map" title="Archival document: City of East Palo Alto Precinct Map" aria-label="Archival document: City of East Palo Alto Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>East Palo Alto</a> <em>(Updated August 2024)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="cf0ce892-1222-4cfa-8c25-e44f7a5e179e" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_FosterCity_April2026.pdf&amp;title=City+of+Foster+City+Precinct+Map" title="Archival document: City of Foster City Precinct Map" aria-label="Archival document: City of Foster City Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Foster City</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="01bd811c-a21e-46b2-bca9-b13bd9177eac" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_HMB_April2026.pdf&amp;title=City+of+Half+Moon+Bay+Precinct+Map" title="Archival document: City of Half Moon Bay Precinct Map" aria-label="Archival document: City of Half Moon Bay Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Half Moon Bay</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="b9cdc1c6-1d18-4aeb-b3ff-d3678f14eb50" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FCity_Hillsborough.pdf&amp;title=Town+of+Hillsborough+Precinct+Map" title="Archival document: Town of Hillsborough Precinct Map" aria-label="Archival document: Town of Hillsborough Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Hillsborough</a> <em>(Updated August 2024)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="02f010db-070e-4fef-9ea2-42e3e774b868" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-08%2FPrecinctMap_City_Menlo_Aug2026.pdf&amp;title=City+of+Menlo+Park+Precinct+Map" title="Archival document: City of Menlo Park Precinct Map" aria-label="Archival document: City of Menlo Park Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Menlo Park</a> <em>(Updated August 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="663f50c6-d79a-4957-987f-83107a06876d" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_Millbrae_April2026.pdf&amp;title=City+of+Millbrae+Precinct+Map" title="Archival document: City of Millbrae Precinct Map" aria-label="Archival document: City of Millbrae Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Millbrae</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="f7da78d3-af2d-4195-98cf-e4ca35c10ec8" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FCity_Pacifica.pdf&amp;title=City+of+Pacifica+Precinct+Map" title="Archival document: City of Pacifica Precinct Map" aria-label="Archival document: City of Pacifica Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Pacifica</a> <em>(Updated August 2024)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="f6228a37-211e-41d0-8b60-62919ad53964" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_Portola%2520Valley_April2026.pdf&amp;title=Town+of+Portola+Valley+Precinct+Map" title="Archival document: Town of Portola Valley Precinct Map" aria-label="Archival document: Town of Portola Valley Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Portola Valley</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="49ac9424-f90d-40c9-9658-d3b92fb38c4c" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_RWC_April2026.pdf&amp;title=City+of+Redwood+City+Precinct+Map" title="Archival document: City of Redwood City Precinct Map" aria-label="Archival document: City of Redwood City Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Redwood City</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="e9d2c7bd-fdca-4af3-9b29-1476abe69172" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_RedwoodShores_April2026.pdf&amp;title=Redwood+Shores+Precinct+Map" title="Archival document: Redwood Shores Precinct Map" aria-label="Archival document: Redwood Shores Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Redwood Shores</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="265cad70-ad8a-4b87-a545-e266eab05d8f" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_SanBruno_April2026.pdf&amp;title=City+of+San+Bruno+Precinct+Map" title="Archival document: City of San Bruno Precinct Map" aria-label="Archival document: City of San Bruno Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>San Bruno</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="8809fe9d-36c6-41d1-967d-4bc6d0528bb0" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_SanCarlos_April2026.pdf&amp;title=City+of+San+Carlos+Precinct+Map" title="Archival document: City of San Carlos Precinct Map" aria-label="Archival document: City of San Carlos Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>San Carlos</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="e329a3f6-d6c7-4f05-9544-a868b8a1bd6e" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_SanMateo_April2026.pdf&amp;title=City+of+San+Mateo+Precinct+Map" title="Archival document: City of San Mateo Precinct Map" aria-label="Archival document: City of San Mateo Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>San Mateo</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="0c956a9d-59f2-4ab2-af67-eb52fdd5520c" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_City_SSF_April2026.pdf&amp;title=City+of+South+San+Francisco+Precinct+Map" title="Archival document: City of South San Francisco Precinct Map" aria-label="Archival document: City of South San Francisco Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>South San Francisco</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="1320bffc-99aa-43ed-875a-b3f4fe5497ae" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FUnincorporated%2520Coastside.pdf&amp;title=Unincorporated+Coastside+Precinct+Map" title="Archival document: Unincorporated Coastside Precinct Map" aria-label="Archival document: Unincorporated Coastside Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Unincorporated Coastside</a> <em>(Updated August 2024)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="bafe3883-f63e-4860-bad3-30a68f7c5e9b" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_Uninc_La%2520Honda%2520Pescadero_April2026.pdf&amp;title=Unincorporated+La+Honda-Pescadero+Precinct+Map" title="Archival document: Unincorporated La Honda-Pescadero Precinct Map" aria-label="Archival document: Unincorporated La Honda-Pescadero Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Unincorporated La Honda-Pescadero</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="b848e90f-e6ed-44e6-a72e-dde1b8680acd" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2026-04%2FPrecinctMap_Uninc_Skyline_April2026.pdf&amp;title=Unincorporated+Skyline+San+Gregorio+Precinct+Map" title="Archival document: Unincorporated Skyline San Gregorio Precinct Map" aria-label="Archival document: Unincorporated Skyline San Gregorio Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Unincorporated Skyline San Gregorio</a> <em>(Updated April 2026)</em><br>
+<a class="icon-pdf document-link document-link--archival fa-ext" data-entity-substitution="media_download" data-entity-type="media" data-entity-uuid="5c7b11e1-5f60-4107-8d32-928bd724fd2a" href="/archival-document?document=https%3A%2F%2Fsmcacre.gov%2Fsystem%2Ffiles%2F2024-08%2FCity_Woodside.pdf&amp;title=Town+of+Woodside+Precinct+Map" title="Archival document: Town of Woodside Precinct Map" aria-label="Archival document: Town of Woodside Precinct Map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1em; height: 1em; display: inline-block; margin-right: 0.5em; vertical-align: middle;" class="svg-inline--fa fa-archive" role="presentation" aria-hidden="true" focusable="false" data-prefix="far" data-icon="archive"><path fill="currentColor" d="M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zM0 160H512V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V160zm48 48V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V208H48zM208 240c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H224c-8.8 0-16-7.2-16-16z"></path></svg>Woodside</a> <em>(Updated August 2024)</em></p>
+
+<p> </p></div></outline-container>
+  </div>
+</div>
+      
+  </div>
+
+</article>
+
+  </div>
+
+  </div>
+
+      </main>
+      
+  
+      <section class="content_below">
+      <outline-container align="center">
+        <outline-container align="left" is-nested="true">
+            <div class="relative region--content_below">
+      
+
+  </div>
+
+        </outline-container>
+      </outline-container>
+    </section>
+  
+
+</div>
+
+<footer>
+  
+    <div class="relative region--footer_bottom">
+    <div id="block-smcfooter">
+      
+        
+        <acre-footer>
+  <outline-list
+    list-type="ul"
+    nav-label="footer social nav"
+    orientation="column"
+    slot="social"
+    un-padded
+    remove-padding-top
+  >
+                <li class='py-2 text-neutral-white'>
+        <smc-link
+          icon="send"
+          size='16px'
+          color='white'
+        >
+          <a href="/contact" class="social-link" target="_blank">Email</a>
+        </smc-link>
+      </li>
+                <li class='py-2 text-neutral-white'>
+        <smc-link
+          icon="twitter"
+          size='16px'
+          color='white'
+        >
+          <a href="https://x.com/smcacre" class="social-link" target="_blank">@SMCACRE</a>
+        </smc-link>
+      </li>
+                <li class='py-2 text-neutral-white'>
+        <smc-link
+          icon="twitter"
+          size='16px'
+          color='white'
+        >
+          <a href="https://x.com/smcvote" class="social-link" target="_blank">@SMCVOTE</a>
+        </smc-link>
+      </li>
+      </outline-list>
+
+  <div slot="partners">
+    <span class="flex pb-4 text-2xl">Partner Links</span>
+      <ul>
+                                                            <li><a href="https://www.smcgov.org/" class="block py-1 text-base" target="_blank">County of San Mateo</a></li>
+                                                            <li><a href="http://sanmateocountytaxcollector.org/" class="block py-1 text-base" target="_blank">Pay Property Tax</a></li>
+                                                            <li><a href="http://cmo.smcgov.org/assessment-appeals-board" class="block py-1 text-base" target="_blank">Assessment Appeals Board</a></li>
+              </ul>
+  </div>
+
+  <div slot="resources">
+    <span class="flex pb-4 text-2xl">Resources</span>
+    <ul>
+                              <li><a href="/assessor" class="block py-1 text-base">Assessor Division</a></li>
+                              <li><a href="/county-clerk-recorder" class="block py-1 text-base">County Clerk-Recorder Division</a></li>
+                              <li><a href="/elections" class="block py-1 text-base">Registration &amp; Elections Division</a></li>
+                                                <li><a href="https://www.smcgov.org/endorsement-disclaimers" class="block py-1 text-base" target="_blank">Endorsement Disclaimers</a></li>
+                              <li><a href="/ACRE-Accessibility" class="block py-1 text-base">Accessibility Policy</a></li>
+                              <li><a href="/acre-career-opportunities" class="block py-1 text-base">ACRE Career Opportunities</a></li>
+                              <li><a href="/privacy-policy" class="block py-1 text-base">Privacy Policy</a></li>
+          </ul>
+  </div>
+
+  <outline-list slot="footer-nav-legal" nav-label="Legal Nav" list-type="ul" orientation="mobile-col" un-padded>
+          <li class="py-1 pr-2">
+        <a href="/ACRE-Accessibility" class="block underline lg:pr-4 lg:py-1 text-sm">Accessibility</a>
+      </li>
+          <li class="py-1 pr-2">
+        <a href="https://www.smcgov.org/endorsement-disclaimers" class="block underline lg:pr-4 lg:py-1 text-sm">Endorsement Disclaimers</a>
+      </li>
+      </outline-list>
+
+  <span slot="copyright">
+    Copyright &#169; 2026 County of San Mateo. All rights reserved.
+  </span>
+</acre-footer>
+
+  </div>
+
+  </div>
+
+</footer>
+
+  </div>
+
+    
+    <div role="navigation" aria-labelledby="skip-to-top">
+      <a id="skip-to-top" href="#main-content" class="visually-hidden focusable">
+        Jump back to top
+      </a>
+    </div>
+    <script src="/sites/default/files/js/js_x3-VeSymjtMcUJvKy43kwDnBgfa1UsgnyZ7ENEWGkD0.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=outline_frontend&amp;include=eJxtjlEOwyAMQy_ExpFQBC6KGhIE6cbx121fU_dpy882lgvrHss4OskdXxmqWRUkH6RTyG3EwjMLccMIvKXGq5NCIiv7j3EieWetwY53FdI2TB1aYsHkqlcfguxsenO0fo7hGmnEf8CHrTDZ8eSCRILhnzsvwytT-w"></script>
+
+  </body>
+</html>

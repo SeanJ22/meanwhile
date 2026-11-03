@@ -1,0 +1,2509 @@
+[
+  {
+    "contestId": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+    "title": "Chief Justice, 15th Court of Appeals",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-sos-2026-chief-justice-15th-court-of-appeals-district-4310ef83b86221b7",
+      "tx-sos-2026-chief-justice-15th-court-of-appeals-district-06fafee156b18590"
+    ],
+    "preservedCandidateIds": [
+      "tx-sos-2026-chief-justice-15th-court-of-appeals-district-06fafee156b18590",
+      "tx-sos-2026-chief-justice-15th-court-of-appeals-district-4310ef83b86221b7"
+    ],
+    "oldNames": [
+      "SCOTT BRISTER",
+      "JERRY ZIMMERER"
+    ],
+    "sourceNames": [
+      "SCOTT BRISTER",
+      "JERRY ZIMMERER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+    "title": "Justice, 15th Court of Appeals District, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-2131bb5fe87bbd88",
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-7f28261b02fdeb12"
+    ],
+    "preservedCandidateIds": [
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-2131bb5fe87bbd88",
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-7f28261b02fdeb12"
+    ],
+    "oldNames": [
+      "SCOTT K. FIELD",
+      "TOM BAKER"
+    ],
+    "sourceNames": [
+      "SCOTT K. FIELD",
+      "TOM BAKER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+    "title": "Justice, 15th Court of Appeals District, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-b6279ba07fd6c7d2",
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-bd0ccb1334c491ae"
+    ],
+    "preservedCandidateIds": [
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-b6279ba07fd6c7d2",
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-bd0ccb1334c491ae"
+    ],
+    "oldNames": [
+      "APRIL FARRIS",
+      "MARC M. MEYER"
+    ],
+    "sourceNames": [
+      "APRIL FARRIS",
+      "MARC M. MEYER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+    "title": "Chief Justice, 14th Court of Appeals",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "sourcePage": 3,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "KEVIN JEWELL",
+      "SARAH BETH LANDAU"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+    "title": "Justice, 1st Court of Appeals District, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "sourcePage": 3,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "TODD FRANKFORT",
+      "VERONICA RIVAS-MOLLOY"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+    "title": "Justice, 1st Court of Appeals District, Place 4 - Unexpired Term",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "sourcePage": 3,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "DAVID GUNN",
+      "JULIE COUNTISS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+    "title": "Justice, 1st Court of Appeals District, Place 5",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "sourcePage": 3,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JESSICA CAIRD",
+      "AMY GUERRA"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7",
+    "title": "Justice, 14th Court of Appeals District, Place 7",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "sourcePage": 3,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "KEN WISE",
+      "WILLIAM DEMOND"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-55",
+    "title": "Civil District Judge, 55th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:55",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-55:nile_copeland",
+      "tx-ba01-2026-district-judge-55:latosha_lewis_payne"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-55:latosha_lewis_payne",
+      "tx-ba01-2026-district-judge-55:nile_copeland"
+    ],
+    "oldNames": [
+      "NILE COPELAND",
+      "LATOSHA LEWIS PAYNE"
+    ],
+    "sourceNames": [
+      "NILE COPELAND",
+      "LATOSHA LEWIS PAYNE"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-113",
+    "title": "Civil District Judge, 113th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:113",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-113:paul_m_sullivan",
+      "tx-ba01-2026-district-judge-113:rabeea_collier"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-113:paul_m_sullivan",
+      "tx-ba01-2026-district-judge-113:rabeea_collier"
+    ],
+    "oldNames": [
+      "PAUL M. SULLIVAN",
+      "RABEEA COLLIER"
+    ],
+    "sourceNames": [
+      "PAUL M. SULLIVAN",
+      "RABEEA COLLIER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-157",
+    "title": "Civil District Judge, 157th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:157",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-157:gerald_fowler",
+      "tx-ba01-2026-district-judge-157:tanya_garrison"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-157:gerald_fowler",
+      "tx-ba01-2026-district-judge-157:tanya_garrison"
+    ],
+    "oldNames": [
+      "GERALD FOWLER",
+      "TANYA GARRISON"
+    ],
+    "sourceNames": [
+      "GERALD FOWLER",
+      "TANYA GARRISON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-189",
+    "title": "Civil District Judge, 189th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:189",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-189:vance_christopher",
+      "tx-ba01-2026-district-judge-189:tamika_tami_craft"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-189:tamika_tami_craft",
+      "tx-ba01-2026-district-judge-189:vance_christopher"
+    ],
+    "oldNames": [
+      "VANCE CHRISTOPHER",
+      "TAMIKA \"TAMI\" CRAFT"
+    ],
+    "sourceNames": [
+      "VANCE CHRISTOPHER",
+      "TAMIKA \"TAMI\" CRAFT"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-190",
+    "title": "Civil District Judge, 190th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:190",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-190:aaron_adams",
+      "tx-ba01-2026-district-judge-190:beau_miller"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-190:aaron_adams",
+      "tx-ba01-2026-district-judge-190:beau_miller"
+    ],
+    "oldNames": [
+      "AARON ADAMS",
+      "BEAU MILLER"
+    ],
+    "sourceNames": [
+      "AARON ADAMS",
+      "BEAU MILLER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-234",
+    "title": "Civil District Judge, 234th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:234",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-234:david_dave_harvey",
+      "tx-ba01-2026-district-judge-234:lauren_reeder"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-234:david_dave_harvey",
+      "tx-ba01-2026-district-judge-234:lauren_reeder"
+    ],
+    "oldNames": [
+      "DAVID \"DAVE\" HARVEY",
+      "LAUREN REEDER"
+    ],
+    "sourceNames": [
+      "DAVID \"DAVE\" HARVEY",
+      "LAUREN REEDER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-269",
+    "title": "Civil District Judge, 269th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:269",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-269:celena_guerra_pawlak",
+      "tx-ba01-2026-district-judge-269:cory_don_sepolio"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-269:celena_guerra_pawlak",
+      "tx-ba01-2026-district-judge-269:cory_don_sepolio"
+    ],
+    "oldNames": [
+      "CELENA GUERRA PAWLAK",
+      "CORY DON SEPOLIO"
+    ],
+    "sourceNames": [
+      "CELENA GUERRA PAWLAK",
+      "CORY DON SEPOLIO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-270",
+    "title": "Civil District Judge, 270th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:270",
+    "sourcePage": 3,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-270:brian_staley",
+      "tx-ba01-2026-district-judge-270:dedra_davis"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-270:brian_staley",
+      "tx-ba01-2026-district-judge-270:dedra_davis"
+    ],
+    "oldNames": [
+      "BRIAN STALEY",
+      "DEDRA DAVIS"
+    ],
+    "sourceNames": [
+      "BRIAN STALEY",
+      "DEDRA DAVIS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-281",
+    "title": "Civil District Judge, 281st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:281",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-281:chris_carmona",
+      "tx-ba01-2026-district-judge-281:christine_weems"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-281:chris_carmona",
+      "tx-ba01-2026-district-judge-281:christine_weems"
+    ],
+    "oldNames": [
+      "CHRIS CARMONA",
+      "CHRISTINE WEEMS"
+    ],
+    "sourceNames": [
+      "CHRIS CARMONA",
+      "CHRISTINE WEEMS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-295",
+    "title": "Civil District Judge, 295th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:295",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-295:greg_travis",
+      "tx-ba01-2026-district-judge-295:donna_roth"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-295:donna_roth",
+      "tx-ba01-2026-district-judge-295:greg_travis"
+    ],
+    "oldNames": [
+      "GREG TRAVIS",
+      "DONNA ROTH"
+    ],
+    "sourceNames": [
+      "GREG TRAVIS",
+      "DONNA ROTH"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-313",
+    "title": "Juvenile District Judge, 313th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:313",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-313:amy_strickling",
+      "tx-ba01-2026-district-judge-313:samantha_y_davis"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-313:amy_strickling",
+      "tx-ba01-2026-district-judge-313:samantha_y_davis"
+    ],
+    "oldNames": [
+      "AMY STRICKLING",
+      "SAMANTHA Y. DAVIS"
+    ],
+    "sourceNames": [
+      "AMY STRICKLING",
+      "SAMANTHA Y. DAVIS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-314",
+    "title": "Juvenile District Judge, 314th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:314",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-314:michelle_moore"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-314:michelle_moore"
+    ],
+    "oldNames": [
+      "MICHELLE MOORE"
+    ],
+    "sourceNames": [
+      "MICHELLE MOORE"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-315",
+    "title": "Juvenile District Judge, 315th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:315",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-315:maria_valeria_brock",
+      "tx-ba01-2026-district-judge-315:leah_shapiro"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-315:leah_shapiro",
+      "tx-ba01-2026-district-judge-315:maria_valeria_brock"
+    ],
+    "oldNames": [
+      "MARIA VALERIA BROCK",
+      "LEAH SHAPIRO"
+    ],
+    "sourceNames": [
+      "MARIA VALERIA BROCK",
+      "LEAH SHAPIRO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-180",
+    "title": "Criminal District Judge, 180th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:180",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-180:tami_c_pierce",
+      "tx-ba01-2026-district-judge-180:stephanie_morales"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-180:stephanie_morales",
+      "tx-ba01-2026-district-judge-180:tami_c_pierce"
+    ],
+    "oldNames": [
+      "TAMI C. PIERCE",
+      "STEPHANIE MORALES"
+    ],
+    "sourceNames": [
+      "TAMI C. PIERCE",
+      "STEPHANIE MORALES"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-182",
+    "title": "Criminal District Judge, 182nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:182",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-182:brent_haynes",
+      "tx-ba01-2026-district-judge-182:danilo_danny_lacayo"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-182:brent_haynes",
+      "tx-ba01-2026-district-judge-182:danilo_danny_lacayo"
+    ],
+    "oldNames": [
+      "BRENT HAYNES",
+      "DANILO \"DANNY\" LACAYO"
+    ],
+    "sourceNames": [
+      "BRENT HAYNES",
+      "DANILO \"DANNY\" LACAYO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-183",
+    "title": "Criminal District Judge, 183rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:183",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-183:lance_long",
+      "tx-ba01-2026-district-judge-183:julia_maldonado"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-183:julia_maldonado",
+      "tx-ba01-2026-district-judge-183:lance_long"
+    ],
+    "oldNames": [
+      "LANCE LONG",
+      "JULIA MALDONADO"
+    ],
+    "sourceNames": [
+      "LANCE LONG",
+      "JULIA MALDONADO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-184",
+    "title": "Criminal District Judge, 184th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:184",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-184:heather_hudson",
+      "tx-ba01-2026-district-judge-184:katherine_kat_thomas"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-184:heather_hudson",
+      "tx-ba01-2026-district-judge-184:katherine_kat_thomas"
+    ],
+    "oldNames": [
+      "HEATHER HUDSON",
+      "KATHERINE \"KAT\" THOMAS"
+    ],
+    "sourceNames": [
+      "HEATHER HUDSON",
+      "KATHERINE \"KAT\" THOMAS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-185",
+    "title": "Criminal District Judge, 185th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:185",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-185:mark_goldberg",
+      "tx-ba01-2026-district-judge-185:andrea_beall"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-185:andrea_beall",
+      "tx-ba01-2026-district-judge-185:mark_goldberg"
+    ],
+    "oldNames": [
+      "MARK GOLDBERG",
+      "ANDREA BEALL"
+    ],
+    "sourceNames": [
+      "MARK GOLDBERG",
+      "ANDREA BEALL"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-208",
+    "title": "Criminal District Judge, 208th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:208",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-208:stephen_f_driver",
+      "tx-ba01-2026-district-judge-208:beverly_d_armstrong"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-208:beverly_d_armstrong",
+      "tx-ba01-2026-district-judge-208:stephen_f_driver"
+    ],
+    "oldNames": [
+      "STEPHEN F. DRIVER",
+      "BEVERLY D. ARMSTRONG"
+    ],
+    "sourceNames": [
+      "STEPHEN F. DRIVER",
+      "BEVERLY D. ARMSTRONG"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-209",
+    "title": "Criminal District Judge, 209th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:209",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-209:tony_coveny",
+      "tx-ba01-2026-district-judge-209:brian_edward_warren"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-209:brian_edward_warren",
+      "tx-ba01-2026-district-judge-209:tony_coveny"
+    ],
+    "oldNames": [
+      "TONY COVENY",
+      "BRIAN EDWARD WARREN"
+    ],
+    "sourceNames": [
+      "TONY COVENY",
+      "BRIAN EDWARD WARREN"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-228",
+    "title": "Criminal District Judge, 228th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:228",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-228:caroline_dozier",
+      "tx-ba01-2026-district-judge-228:alyson_almaguer"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-228:alyson_almaguer",
+      "tx-ba01-2026-district-judge-228:caroline_dozier"
+    ],
+    "oldNames": [
+      "CAROLINE DOZIER",
+      "ALYSON ALMAGUER"
+    ],
+    "sourceNames": [
+      "CAROLINE DOZIER",
+      "ALYSON ALMAGUER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-230",
+    "title": "Criminal District Judge, 230th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:230",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-230:megan_long",
+      "tx-ba01-2026-district-judge-230:chris_morton"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-230:chris_morton",
+      "tx-ba01-2026-district-judge-230:megan_long"
+    ],
+    "oldNames": [
+      "MEGAN LONG",
+      "CHRIS MORTON"
+    ],
+    "sourceNames": [
+      "MEGAN LONG",
+      "CHRIS MORTON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-232",
+    "title": "Criminal District Judge, 232nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:232",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-232:chuck_silverman",
+      "tx-ba01-2026-district-judge-232:josh_hill"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-232:chuck_silverman",
+      "tx-ba01-2026-district-judge-232:josh_hill"
+    ],
+    "oldNames": [
+      "CHUCK SILVERMAN",
+      "JOSH HILL"
+    ],
+    "sourceNames": [
+      "CHUCK SILVERMAN",
+      "JOSH HILL"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-248",
+    "title": "Criminal District Judge, 248th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:248",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-248:david_w_overhuls",
+      "tx-ba01-2026-district-judge-248:hilary_unger"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-248:david_w_overhuls",
+      "tx-ba01-2026-district-judge-248:hilary_unger"
+    ],
+    "oldNames": [
+      "DAVID W. OVERHULS",
+      "HILARY UNGER"
+    ],
+    "sourceNames": [
+      "DAVID W. OVERHULS",
+      "HILARY UNGER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-262",
+    "title": "Criminal District Judge, 262nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:262",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-262:nathan_moss",
+      "tx-ba01-2026-district-judge-262:lori_chambers_gray"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-262:lori_chambers_gray",
+      "tx-ba01-2026-district-judge-262:nathan_moss"
+    ],
+    "oldNames": [
+      "NATHAN MOSS",
+      "LORI CHAMBERS GRAY"
+    ],
+    "sourceNames": [
+      "NATHAN MOSS",
+      "LORI CHAMBERS GRAY"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-263",
+    "title": "Criminal District Judge, 263rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:263",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-263:jason_a_campo",
+      "tx-ba01-2026-district-judge-263:melissa_marie_morris"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-263:jason_a_campo",
+      "tx-ba01-2026-district-judge-263:melissa_marie_morris"
+    ],
+    "oldNames": [
+      "JASON A. CAMPO",
+      "MELISSA MARIE MORRIS"
+    ],
+    "sourceNames": [
+      "JASON A. CAMPO",
+      "MELISSA MARIE MORRIS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-482",
+    "title": "Criminal District Judge, 482nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:482",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-482:bryan_honeycutt",
+      "tx-ba01-2026-district-judge-482:veronica_m_nelson"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-482:bryan_honeycutt",
+      "tx-ba01-2026-district-judge-482:veronica_m_nelson"
+    ],
+    "oldNames": [
+      "BRYAN HONEYCUTT",
+      "VERONICA M. NELSON"
+    ],
+    "sourceNames": [
+      "BRYAN HONEYCUTT",
+      "VERONICA M. NELSON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-486",
+    "title": "Criminal District Judge, 486th Judicial District - Unexpired Term",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:486",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-486:vanessa_velasquez"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-486:vanessa_velasquez"
+    ],
+    "oldNames": [
+      "VANESSA VELASQUEZ"
+    ],
+    "sourceNames": [
+      "VANESSA VELASQUEZ",
+      "KATHRYN \"KATIE\" WILSON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-495",
+    "title": "Criminal District Judge, 495th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:495",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-495:lori_ann_deangelo",
+      "tx-ba01-2026-district-judge-495:tiffany_m_hill"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-495:lori_ann_deangelo",
+      "tx-ba01-2026-district-judge-495:tiffany_m_hill"
+    ],
+    "oldNames": [
+      "LORI ANN DEANGELO",
+      "TIFFANY M. HILL"
+    ],
+    "sourceNames": [
+      "LORI ANN DEANGELO",
+      "TIFFANY M. HILL"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-496",
+    "title": "Criminal District Judge, 496th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:496",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-496:dan_simons",
+      "tx-ba01-2026-district-judge-496:ramona_franklin"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-496:dan_simons",
+      "tx-ba01-2026-district-judge-496:ramona_franklin"
+    ],
+    "oldNames": [
+      "DAN SIMONS",
+      "RAMONA FRANKLIN"
+    ],
+    "sourceNames": [
+      "DAN SIMONS",
+      "RAMONA FRANKLIN"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-497",
+    "title": "Criminal District Judge, 497th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:497",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-497:peyton_peebles",
+      "tx-ba01-2026-district-judge-497:breanna_schwartz"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-497:breanna_schwartz",
+      "tx-ba01-2026-district-judge-497:peyton_peebles"
+    ],
+    "oldNames": [
+      "PEYTON PEEBLES",
+      "BREANNA SCHWARTZ"
+    ],
+    "sourceNames": [
+      "PEYTON PEEBLES",
+      "BREANNA SCHWARTZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-245",
+    "title": "Family District Judge, 245th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:245",
+    "sourcePage": 4,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-245:paula_vlahakos",
+      "tx-ba01-2026-district-judge-245:angela_m_lancelin"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-245:angela_m_lancelin",
+      "tx-ba01-2026-district-judge-245:paula_vlahakos"
+    ],
+    "oldNames": [
+      "PAULA VLAHAKOS",
+      "ANGELA M LANCELIN"
+    ],
+    "sourceNames": [
+      "PAULA VLAHAKOS",
+      "ANGELA M LANCELIN"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-246",
+    "title": "Family District Judge, 246th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:246",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-246:angela_graves_harrington"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-246:angela_graves_harrington"
+    ],
+    "oldNames": [
+      "ANGELA GRAVES-HARRINGTON"
+    ],
+    "sourceNames": [
+      "ANGELA GRAVES-HARRINGTON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-247",
+    "title": "Family District Judge, 247th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:247",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-247:janice_berg"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-247:janice_berg"
+    ],
+    "oldNames": [
+      "JANICE BERG"
+    ],
+    "sourceNames": [
+      "JANICE BERG"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-257",
+    "title": "Family District Judge, 257th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:257",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-257:sandra_peake"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-257:sandra_peake"
+    ],
+    "oldNames": [
+      "SANDRA PEAKE"
+    ],
+    "sourceNames": [
+      "SANDRA PEAKE"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-280",
+    "title": "Family District Judge, 280th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:280",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-280:rose_cardenas",
+      "tx-ba01-2026-district-judge-280:damiane_dianne_curvey"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-280:damiane_dianne_curvey",
+      "tx-ba01-2026-district-judge-280:rose_cardenas"
+    ],
+    "oldNames": [
+      "ROSE CARDENAS",
+      "DAMIANE DIANNE CURVEY"
+    ],
+    "sourceNames": [
+      "ROSE CARDENAS",
+      "DAMIANE DIANNE CURVEY"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-308",
+    "title": "Family District Judge, 308th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:308",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-308:gloria_lopez"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-308:gloria_lopez"
+    ],
+    "oldNames": [
+      "GLORIA LOPEZ"
+    ],
+    "sourceNames": [
+      "GLORIA LOPEZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-309",
+    "title": "Family District Judge, 309th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:309",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-309:melissa_fertel",
+      "tx-ba01-2026-district-judge-309:linda_marie_dunson"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-309:linda_marie_dunson",
+      "tx-ba01-2026-district-judge-309:melissa_fertel"
+    ],
+    "oldNames": [
+      "MELISSA FERTEL",
+      "LINDA MARIE DUNSON"
+    ],
+    "sourceNames": [
+      "MELISSA FERTEL",
+      "LINDA MARIE DUNSON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-310",
+    "title": "Family District Judge, 310th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:310",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-310:sonya_l_heath"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-310:sonya_l_heath"
+    ],
+    "oldNames": [
+      "SONYA L. HEATH"
+    ],
+    "sourceNames": [
+      "SONYA L. HEATH"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-311",
+    "title": "Family District Judge, 311th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:311",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-311:joe_radler",
+      "tx-ba01-2026-district-judge-311:germaine_janet_tanner"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-311:germaine_janet_tanner",
+      "tx-ba01-2026-district-judge-311:joe_radler"
+    ],
+    "oldNames": [
+      "JOE RADLER",
+      "GERMAINE JANET TANNER"
+    ],
+    "sourceNames": [
+      "JOE RADLER",
+      "GERMAINE JANET TANNER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-312",
+    "title": "Family District Judge, 312th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:312",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-district-judge-312:jesus_guillen",
+      "tx-ba01-2026-district-judge-312:teresa_waldrop"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-312:jesus_guillen",
+      "tx-ba01-2026-district-judge-312:teresa_waldrop"
+    ],
+    "oldNames": [
+      "JESUS GUILLEN",
+      "TERESA WALDROP"
+    ],
+    "sourceNames": [
+      "JESUS GUILLEN",
+      "TERESA WALDROP"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_judge",
+    "title": "County Judge",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-county_judge:orlando_sanchez",
+      "tx-ba01-2026-county-48201-county_judge:letitia_plummer"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-county_judge:letitia_plummer",
+      "tx-ba01-2026-county-48201-county_judge:orlando_sanchez"
+    ],
+    "oldNames": [
+      "ORLANDO SANCHEZ",
+      "LETITIA PLUMMER"
+    ],
+    "sourceNames": [
+      "ORLANDO SANCHEZ",
+      "LETITIA PLUMMER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-1",
+    "title": "Judge, County Civil Court at Law No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JAMIE KING",
+      "SONIA LOPEZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-2",
+    "title": "Judge, County Civil Court at Law No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "MARK MONTGOMERY",
+      "EBONY N. WILLIAMS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-3",
+    "title": "Judge, County Civil Court at Law No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "ISRAEL GARCIA",
+      "LASHAWN A. WILLIAMS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-4",
+    "title": "Judge, County Civil Court at Law No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JOHN DONOVAN",
+      "M. MONICA SINGH"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-5-unexpired-term",
+    "title": "Judge, County Civil Court at Law No. 5 - Unexpired Term",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "RICHARD LANIER FASON",
+      "JERMAINE THOMAS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-1",
+    "title": "Judge, County Criminal Court at Law No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "ERIN SWANSON",
+      "ALEX SALGADO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-2",
+    "title": "Judge, County Criminal Court at Law No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "MATT ALFORD",
+      "MATTHEW RUBEN PEREZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-3",
+    "title": "Judge, County Criminal Court at Law No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "LESLIE R. JOHNSON",
+      "CARLOS ALBERTO AGUAYO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-4",
+    "title": "Judge, County Criminal Court at Law No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "REBECCA PHILIPS ACETO",
+      "SHANNON B. BALDWIN"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-5",
+    "title": "Judge, County Criminal Court at Law No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "STELLA STEVENS",
+      "DAVID M. FLEISCHER"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-6",
+    "title": "Judge, County Criminal Court at Law No. 6",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JOSHUA NORMAND",
+      "KELLEY ANDREWS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-7",
+    "title": "Judge, County Criminal Court at Law No. 7",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "THOMAS ADAM BRODRICK",
+      "ANDREW A. WRIGHT"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-8",
+    "title": "Judge, County Criminal Court at Law No. 8",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "VICTOR FLORES",
+      "ERIKA RAMIREZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-9",
+    "title": "Judge, County Criminal Court at Law No. 9",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "XAVIER ALFARO",
+      "TORIA J. FINCH"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-10",
+    "title": "Judge, County Criminal Court at Law No. 10",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 5,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "BAO HOANG",
+      "JUANITA A. JACKSON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-11",
+    "title": "Judge, County Criminal Court at Law No. 11",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "ELIZABETH BUSS",
+      "SEDRICK T. WALKER II"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-12",
+    "title": "Judge, County Criminal Court at Law No. 12",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "ANNA EMMONS",
+      "ASHLEY MAYES GUICE"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-13",
+    "title": "Judge, County Criminal Court at Law No. 13",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "AMBER COX",
+      "RAUL RODRIGUEZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-14",
+    "title": "Judge, County Criminal Court at Law No. 14",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JESSICA N. PADILLA",
+      "YAHAIRA QUEZADA"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-15",
+    "title": "Judge, County Criminal Court at Law No. 15",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "STEPHEN C. ST. MARTIN",
+      "TONYA JONES"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_1",
+    "title": "Judge, County Probate Court No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_1:loyd_h_wright",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_1:jerry_simoneaux"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_1:jerry_simoneaux",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_1:loyd_h_wright"
+    ],
+    "oldNames": [
+      "LOYD H. WRIGHT",
+      "JERRY SIMONEAUX"
+    ],
+    "sourceNames": [
+      "LOYD H. WRIGHT",
+      "JERRY SIMONEAUX"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_2",
+    "title": "Judge, County Probate Court No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_2:paul_shanklin",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_2:pamela_medina"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_2:pamela_medina",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_2:paul_shanklin"
+    ],
+    "oldNames": [
+      "PAUL SHANKLIN",
+      "PAMELA MEDINA"
+    ],
+    "sourceNames": [
+      "PAUL SHANKLIN",
+      "PAMELA MEDINA"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_3",
+    "title": "Judge, County Probate Court No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_3:ronald_schramm",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_3:jason_cox"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_3:jason_cox",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_3:ronald_schramm"
+    ],
+    "oldNames": [
+      "RONALD SCHRAMM",
+      "JASON COX"
+    ],
+    "sourceNames": [
+      "RONALD SCHRAMM",
+      "JASON COX"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_4",
+    "title": "Judge, County Probate Court No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_4:kevin_fulton",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_4:james_s_horwitz"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-judge_probate_court_no_4:james_s_horwitz",
+      "tx-ba01-2026-county-48201-judge_probate_court_no_4:kevin_fulton"
+    ],
+    "oldNames": [
+      "KEVIN FULTON",
+      "JAMES S. HORWITZ"
+    ],
+    "sourceNames": [
+      "KEVIN FULTON",
+      "JAMES S. HORWITZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_attorney_unexpired_term",
+    "title": "County Attorney - Unexpired Term",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-county_attorney_unexpired_term:jacqueline_lucci_smith",
+      "tx-ba01-2026-county-48201-county_attorney_unexpired_term:abbie_kamin"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-county_attorney_unexpired_term:abbie_kamin",
+      "tx-ba01-2026-county-48201-county_attorney_unexpired_term:jacqueline_lucci_smith"
+    ],
+    "oldNames": [
+      "JACQUELINE LUCCI SMITH",
+      "ABBIE KAMIN"
+    ],
+    "sourceNames": [
+      "JACQUELINE LUCCI SMITH",
+      "ABBIE KAMIN"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-district_clerk",
+    "title": "District Clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-district_clerk:chris_daniel",
+      "tx-ba01-2026-county-48201-district_clerk:darrell_jordan_jr"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-district_clerk:chris_daniel",
+      "tx-ba01-2026-county-48201-district_clerk:darrell_jordan_jr"
+    ],
+    "oldNames": [
+      "CHRIS DANIEL",
+      "DARRELL JORDAN, JR"
+    ],
+    "sourceNames": [
+      "CHRIS DANIEL",
+      "DARRELL JORDAN, JR"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_clerk",
+    "title": "County Clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-county_clerk:mike_wolfe",
+      "tx-ba01-2026-county-48201-county_clerk:teneshia_hudspeth"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-county_clerk:mike_wolfe",
+      "tx-ba01-2026-county-48201-county_clerk:teneshia_hudspeth"
+    ],
+    "oldNames": [
+      "MIKE WOLFE",
+      "TENESHIA HUDSPETH"
+    ],
+    "sourceNames": [
+      "MIKE WOLFE",
+      "TENESHIA HUDSPETH"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_treasurer",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": true,
+    "oldCandidateIds": [
+      "tx-ba01-2026-county-48201-county_treasurer:marc_cowart",
+      "tx-ba01-2026-county-48201-county_treasurer:carla_l_wyatt"
+    ],
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48201-county_treasurer:carla_l_wyatt",
+      "tx-ba01-2026-county-48201-county_treasurer:marc_cowart"
+    ],
+    "oldNames": [
+      "MARC COWART",
+      "CARLA L. WYATT"
+    ],
+    "sourceNames": [
+      "MARC COWART",
+      "CARLA L. WYATT"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-school-trustee-position-5-at-large",
+    "title": "County School Trustee, Position 5, At Large",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "SARTAJ BAL",
+      "ERICA DAVIS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-school-trustee-position-7-at-large",
+    "title": "County School Trustee, Position 7, At Large",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "DENISE DICK",
+      "SILKY JOSHI MALIK"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-commissioner-precinct-2",
+    "title": "County Commissioner, Precinct 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:2",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "RICHARD VEGA",
+      "ADRIAN GARCIA"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-commissioner-precinct-4",
+    "title": "County Commissioner, Precinct 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:4",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "STEVE RADACK",
+      "LESLEY BRIONES"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-1-place-2",
+    "title": "Justice of the Peace, Precinct 1, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:1",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "STEVE DUBLE"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-2-place-2",
+    "title": "Justice of the Peace, Precinct 2, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:2",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JACK EZELL",
+      "DOLORES LOZANO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-3-place-2",
+    "title": "Justice of the Peace, Precinct 3, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:3",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "LUCIA BATES"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-4-place-2",
+    "title": "Justice of the Peace, Precinct 4, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:4",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "LARYSSA KORDUBA",
+      "SEAN SIMON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-5-place-2",
+    "title": "Justice of the Peace, Precinct 5, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:5",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "MARK FURY",
+      "LISA JEFFERSON"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-6-place-2",
+    "title": "Justice of the Peace, Precinct 6, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:6",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "ANGELA D. RODRIGUEZ"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-7-place-2",
+    "title": "Justice of the Peace, Precinct 7, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:7",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "MELANIE MILES"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-8-place-2",
+    "title": "Justice of the Peace, Precinct 8, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:8",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "LOUIE DITTA",
+      "NICOLAS JUAN"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hcad-director-at-large-place-1",
+    "title": "HCAD, Director, At-Large, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Kathy Blueford-Daniels",
+      "Beverly Barrett"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hcad-director-at-large-place-2",
+    "title": "HCAD, Director, At-Large, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "sourcePage": 6,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Chris Ehlinger",
+      "Jourdyn Wilson",
+      "Claudio Gutierrez"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hcad-director-at-large-place-3",
+    "title": "HCAD, Director, At-Large, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Cris Moses",
+      "Ericka McCrutcheon",
+      "Jesus Nieto"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-4",
+    "title": "City of Baytown, Council Member District No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:4",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "James Franco",
+      "Jamari Gilbert"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-5",
+    "title": "City of Baytown, Council Member District No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:5",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "John Farris",
+      "Kelly R. Laird"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-6",
+    "title": "City of Baytown, Council Member District No. 6",
+    "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:6",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Joseph Chapa",
+      "Mike A. Lester"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-mayor-four-year-term",
+    "title": "City of League City, Mayor (Four Year Term)",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Nick Long",
+      "Tom Crews"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-1-four-year-term",
+    "title": "City of League City, Council, Position 1 (Four Year Term)",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Gordon Bethel",
+      "Dinah Carpenter",
+      "Dina DuBose Driskill"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-2-four-year-term",
+    "title": "City of League City, Council, Position 2 (Four Year Term)",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Tommy Cones",
+      "Gregory Van Etten"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-3-unexpired-term",
+    "title": "City of League City, Council, Position 3 (Unexpired Term)",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Robert Bruce",
+      "Julius Segelquist",
+      "Seth Rowlands"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-6-four-year-term",
+    "title": "City of League City, Council, Position 6 (Four Year Term)",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Sean Doyle",
+      "Lisa Welty"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-7-four-year-term",
+    "title": "City of League City, Council, Position 7 (Four Year Term)",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Sean Saunders",
+      "Teresa Potter"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-4",
+    "title": "Channelview ISD, Trustee, Position 4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "RAMIRO GRANADOS",
+      "KAREN BRYANT"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-5",
+    "title": "Channelview ISD, Trustee, Position 5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "STEVE DENNIS"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-6",
+    "title": "Channelview ISD, Trustee, Position 6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "LYNETTE BREEDLOVE",
+      "VERONICA TORRES GARCIA"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-7",
+    "title": "Channelview ISD, Trustee, Position 7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "sourcePage": 7,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "JACQUELINE \"JACKIE\" MORENO",
+      "DENNIS CEDILLO"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-1",
+    "title": "Huffman ISD, School Trustee, Position #1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "sourcePage": 9,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Lori Freshour",
+      "Vernon Reed"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-2",
+    "title": "Huffman ISD, School Trustee, Position #2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "sourcePage": 9,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Luke Hight"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-3",
+    "title": "Huffman ISD, School Trustee, Position #3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "sourcePage": 9,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Ray Burt"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-klein-isd-position-1",
+    "title": "Klein ISD, Position 1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:klein_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Linda Ford",
+      "Dustin Qualls"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-klein-isd-position-2",
+    "title": "Klein ISD, Position 2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:klein_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Doug James"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+    "title": "New Caney Independent School District, Trustee, Position 1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Elizabeth Rhoden Harrell"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+    "title": "New Caney Independent School District, Trustee, Position 2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Ryan Schurdell",
+      "Kevin D. Jensen II",
+      "Chad Turner",
+      "Kristina Haggard"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-4",
+    "title": "Sheldon ISD, Trustee Position 4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Tiffany Lockett",
+      "Fred Rivas"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-5",
+    "title": "Sheldon ISD, Trustee Position 5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Pamela Smith Robinson",
+      "Kevin Gaines",
+      "Bethel Nwachukwu",
+      "Kristin Williams-White"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-6",
+    "title": "Sheldon ISD, Trustee Position 6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Devora Myles"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-7",
+    "title": "Sheldon ISD, Trustee Position 7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Erika Martinez",
+      "Nora Banks Willis"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-spring-isd-trustee-election-position-4",
+    "title": "Spring ISD, Trustee Election, Position 4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Winford Adams, Jr."
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-spring-isd-trustee-election-position-5",
+    "title": "Spring ISD, Trustee Election, Position 5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Rhonda Newhouse",
+      "Kenneth Williams Jr."
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+    "title": "Tomball Independent School District, Position 1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Lacey Derrington",
+      "Patrick Beecher"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+    "title": "Tomball Independent School District, Position 2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Michael Pratt"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+    "title": "Tomball Independent School District, Position 3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Joseph Ferguson",
+      "John E. McStravick"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+    "title": "Tomball Independent School District, Position 4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "sourcePage": 10,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Mark Lewandowski"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-esd-9-board-of-emergency-services-commissioners",
+    "title": "HC ESD 9, Board of Emergency Services Commissioners",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_emergency_services_district_9",
+    "sourcePage": 11,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Daniel Arizpe",
+      "Naressa MacKinnon",
+      "Cameron Dickey",
+      "Deborah Shepler"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-50-director-position-1",
+    "title": "HC MUD 50, Director Position 1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_050_water",
+    "sourcePage": 11,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Cassandra Clark",
+      "Fred E Barrett"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-50-director-position-3",
+    "title": "HC MUD 50, Director Position 3",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_050_water",
+    "sourcePage": 11,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Bobby Durst",
+      "Daryl Johnson"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-127-directors",
+    "title": "HC MUD 127, Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_127",
+    "sourcePage": 11,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Donna Finkbeiner",
+      "Rhonda Shivok",
+      "Maureen Herzog"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-553-directors",
+    "title": "HC MUD 553, DIRECTORS",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "sourcePage": 11,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Audrey Hall",
+      "Elizabeth Lee",
+      "Alexandra Pappas",
+      "Katherine Taylor",
+      "Paige Underbrink"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-directors",
+    "title": "Harris County Municipal Utility District No. 585, Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "sourcePage": 12,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Robin Humphrey",
+      "Wes Christensen",
+      "John Elston",
+      "Jessica Phillip",
+      "Jack Terry"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-wcid-89-directors",
+    "title": "HC WCID 89, Directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_water_control_and_improvement_district_89",
+    "sourcePage": 13,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Mike Smith",
+      "Tahir H. Charles",
+      "Tashia Coleman"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-n-harris-county-reg-wa-pos-1-director-district-1",
+    "title": "N HARRIS COUNTY REG WA POS 1, Director, District 1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:north_harris_county_regional_water_authority/director_district:1",
+    "sourcePage": 13,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Richard Manning",
+      "Catherine E. Shook"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-ots-id-director-position-4-resident-of-the-district",
+    "title": "OTS ID, Director, Position 4, Resident of the District",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+    "sourcePage": 13,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Pamela Reeves"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-ots-id-director-position-5-owner-of-real-property-or-lessee-of-a-retail-store-in-the-district",
+    "title": "OTS ID, Director, Position 5, Owner of Real Property or Lessee of A Retail Store in the District",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+    "sourcePage": 13,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Anne Morrow",
+      "Clarence Williams"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+    "title": "The Woodlands Township, Position No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "sourcePage": 14,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Lee Wilson"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+    "title": "The Woodlands Township, Position No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "sourcePage": 14,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Linda Nelson"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+    "title": "The Woodlands Township, Position No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "sourcePage": 14,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Priscila Young",
+      "Nick Tran",
+      "Lisa Gilmore"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+    "title": "The Woodlands Township, Position No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "sourcePage": 14,
+    "heldContest": false,
+    "oldCandidateIds": [],
+    "preservedCandidateIds": [],
+    "oldNames": [],
+    "sourceNames": [
+      "Craig Eissler"
+    ],
+    "unmatchedOldCandidateIds": []
+  }
+]

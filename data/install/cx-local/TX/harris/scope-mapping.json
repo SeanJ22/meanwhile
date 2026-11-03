@@ -1,0 +1,1227 @@
+[
+  {
+    "contestId": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Chief Justice, 15th Court of Appeals",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Justice, 15th Court of Appeals District, Place 2",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Justice, 15th Court of Appeals District, Place 3",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Chief Justice, 14th Court of Appeals",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice, 1st Court of Appeals District, Place 3",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice, 1st Court of Appeals District, Place 4 - Unexpired Term",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice, 1st Court of Appeals District, Place 5",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice, 14th Court of Appeals District, Place 7",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-55",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:55",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 55th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-113",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:113",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 113th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-157",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:157",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 157th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-189",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:189",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 189th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-190",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:190",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 190th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-234",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:234",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 234th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-269",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:269",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 269th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-270",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:270",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 270th Judicial District",
+    "sourcePage": 3
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-281",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:281",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 281st Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-295",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:295",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Civil District Judge, 295th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-313",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:313",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Juvenile District Judge, 313th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-314",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:314",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Juvenile District Judge, 314th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-315",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:315",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Juvenile District Judge, 315th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-180",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:180",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 180th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-182",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:182",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 182nd Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-183",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:183",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 183rd Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-184",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:184",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 184th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-185",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:185",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 185th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-208",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:208",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 208th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-209",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:209",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 209th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-228",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:228",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 228th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-230",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:230",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 230th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-232",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:232",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 232nd Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-248",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:248",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 248th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-262",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:262",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 262nd Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-263",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:263",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 263rd Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-482",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:482",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 482nd Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-486",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:486",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 486th Judicial District - Unexpired Term",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-495",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:495",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 495th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-496",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:496",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 496th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-497",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:497",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Criminal District Judge, 497th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-245",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:245",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 245th Judicial District",
+    "sourcePage": 4
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-246",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:246",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 246th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-247",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:247",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 247th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-257",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:257",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 257th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-280",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:280",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 280th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-308",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:308",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 308th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-309",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:309",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 309th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-310",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:310",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 310th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-311",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:311",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 311th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-312",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:312",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Family District Judge, 312th Judicial District",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_judge",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "County Judge",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Civil Court at Law No. 1",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Civil Court at Law No. 2",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-3",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Civil Court at Law No. 3",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Civil Court at Law No. 4",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-5-unexpired-term",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Civil Court at Law No. 5 - Unexpired Term",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 1",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 2",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-3",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 3",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 4",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-5",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 5",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-6",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 6",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-7",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 7",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-8",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 8",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-9",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 9",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-10",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 10",
+    "sourcePage": 5
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-11",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 11",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-12",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 12",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-13",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 13",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-14",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 14",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-15",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Criminal Court at Law No. 15",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_1",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Probate Court No. 1",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Probate Court No. 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_3",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Probate Court No. 3",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-judge_probate_court_no_4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Judge, County Probate Court No. 4",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_attorney_unexpired_term",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "County Attorney - Unexpired Term",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-district_clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "District Clerk",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "County Clerk",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48201-county_treasurer",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "County Treasurer",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-school-trustee-position-5-at-large",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "County School Trustee, Position 5, At Large",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-school-trustee-position-7-at-large",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "County School Trustee, Position 7, At Large",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-commissioner-precinct-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:2",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "County Commissioner, Precinct 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-county-commissioner-precinct-4",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:4",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "County Commissioner, Precinct 4",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-1-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:1",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 1, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-2-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:2",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 2, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-3-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:3",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 3, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-4-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:4",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 4, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-5-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:5",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 5, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-6-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:6",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 6, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-7-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:7",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 7, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-8-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:8",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Justice of the Peace, Precinct 8, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hcad-director-at-large-place-1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HCAD, Director, At-Large, Place 1",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hcad-director-at-large-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HCAD, Director, At-Large, Place 2",
+    "sourcePage": 6
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hcad-director-at-large-place-3",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HCAD, Director, At-Large, Place 3",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "City of Baytown, Council Member District No. 4",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-5",
+    "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:5",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "City of Baytown, Council Member District No. 5",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-6",
+    "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:6",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "City of Baytown, Council Member District No. 6",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-mayor-four-year-term",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "City of League City, Mayor (Four Year Term)",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-1-four-year-term",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "City of League City, Council, Position 1 (Four Year Term)",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-2-four-year-term",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "City of League City, Council, Position 2 (Four Year Term)",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-3-unexpired-term",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "City of League City, Council, Position 3 (Unexpired Term)",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-6-four-year-term",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "City of League City, Council, Position 6 (Four Year Term)",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-council-position-7-four-year-term",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "City of League City, Council, Position 7 (Four Year Term)",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Channelview ISD, Trustee, Position 4",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Channelview ISD, Trustee, Position 5",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Channelview ISD, Trustee, Position 6",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-isd-trustee-position-7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Channelview ISD, Trustee, Position 7",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Huffman ISD, School Trustee, Position #1",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Huffman ISD, School Trustee, Position #2",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Huffman ISD, School Trustee, Position #3",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-klein-isd-position-1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:klein_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Klein ISD, Position 1",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-klein-isd-position-2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:klein_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Klein ISD, Position 2",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "New Caney Independent School District, Trustee, Position 1",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "New Caney Independent School District, Trustee, Position 2",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Sheldon ISD, Trustee Position 4",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Sheldon ISD, Trustee Position 5",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-6",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Sheldon ISD, Trustee Position 6",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-7",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Sheldon ISD, Trustee Position 7",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-spring-isd-trustee-election-position-4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Spring ISD, Trustee Election, Position 4",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-spring-isd-trustee-election-position-5",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Spring ISD, Trustee Election, Position 5",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Tomball Independent School District, Position 1",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Tomball Independent School District, Position 2",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Tomball Independent School District, Position 3",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "Tomball Independent School District, Position 4",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-esd-9-board-of-emergency-services-commissioners",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_emergency_services_district_9",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HC ESD 9, Board of Emergency Services Commissioners",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-50-director-position-1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_050_water",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HC MUD 50, Director Position 1",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-50-director-position-3",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_050_water",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HC MUD 50, Director Position 3",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-127-directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_127",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HC MUD 127, Directors",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-553-directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HC MUD 553, DIRECTORS",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "Harris County Municipal Utility District No. 585, Directors",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-wcid-89-directors",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_water_control_and_improvement_district_89",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HC WCID 89, Directors",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-n-harris-county-reg-wa-pos-1-director-district-1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:north_harris_county_regional_water_authority/director_district:1",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "N HARRIS COUNTY REG WA POS 1, Director, District 1",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-ots-id-director-position-4-resident-of-the-district",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "OTS ID, Director, Position 4, Resident of the District",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-ots-id-director-position-5-owner-of-real-property-or-lessee-of-a-retail-store-in-the-district",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "OTS ID, Director, Position 5, Owner of Real Property or Lessee of A Retail Store in the District",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "The Woodlands Township, Position No. 1",
+    "sourcePage": 14
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "The Woodlands Township, Position No. 2",
+    "sourcePage": 14
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "The Woodlands Township, Position No. 3",
+    "sourcePage": 14
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "The Woodlands Township, Position No. 4",
+    "sourcePage": 14
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-houston-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/place:houston",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CITY OF HOUSTON, PROPOSITION A",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-city-of-league-city-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CITY OF LEAGUE CITY, PROPOSITION A",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION A",
+    "sourcePage": 7
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-b",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION B",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-c",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION C",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-d",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION D",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-e",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION E",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-crosby-independent-school-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:crosby_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CROSBY INDEPENDENT SCHOOL DISTRICT PROPOSITION A",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-crosby-independent-school-district-proposition-b",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:crosby_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CROSBY INDEPENDENT SCHOOL DISTRICT PROPOSITION B",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CYPRESS-FAIRBANKS ISD, PROPOSITION A",
+    "sourcePage": 8
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-b",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CYPRESS-FAIRBANKS ISD, PROPOSITION B",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-c",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CYPRESS-FAIRBANKS ISD, PROPOSITION C",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-d",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CYPRESS-FAIRBANKS ISD, PROPOSITION D",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-e",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "CYPRESS-FAIRBANKS ISD, PROPOSITION E",
+    "sourcePage": 9
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-huffman-independent-school-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HUFFMAN INDEPENDENT SCHOOL DISTRICT, PROPOSITION A",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-la-porte-independent-school-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:la_porte_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "LA PORTE INDEPENDENT SCHOOL DISTRICT, PROPOSITION A",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-spring-isd-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "SPRING ISD, PROPOSITION A",
+    "sourcePage": 10
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-fresh-water-supply-district-no-1a-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_fresh_water_supply_district_1a",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY FRESH WATER SUPPLY DISTRICT NO. 1A, PROPOSITION A",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-hc-mud-130-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_130",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HC MUD 130, PROPOSITION A",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-189-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_189",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 189, PROPOSITION A",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION A",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-b",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION B",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-c",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION C",
+    "sourcePage": 11
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-d",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION D",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-e",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION E",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION A",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-b",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION B",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-c",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION C",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-d",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION D",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-e",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION E",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-f",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION F",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-g",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION G",
+    "sourcePage": 12
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-h",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "presentInCheckedInRegistry": false,
+    "sourceTitle": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION H",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-intercontinental-crossing-municipal-utility-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:intercontinental_crossing_mud",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "INTERCONTINENTAL CROSSING MUNICIPAL UTILITY DISTRICT, PROPOSITION A",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-intercontinental-crossing-municipal-utility-district-proposition-b",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:intercontinental_crossing_mud",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "INTERCONTINENTAL CROSSING MUNICIPAL UTILITY DISTRICT, PROPOSITION B",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-spanish-cove-public-utility-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:spanish_cove_public_utility_district",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "SPANISH COVE PUBLIC UTILITY DISTRICT, PROPOSITION A",
+    "sourcePage": 13
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-west-hc-mud-15-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:west_harris_county_mud_15",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "WEST HC MUD 15, PROPOSITION A",
+    "sourcePage": 14
+  },
+  {
+    "contestId": "tx-cx-local-2026-harris-weston-municipal-utility-district-proposition-a",
+    "ocdId": "ocd-division/country:us/state:tx/special_district:weston_mud",
+    "presentInCheckedInRegistry": true,
+    "sourceTitle": "WESTON MUNICIPAL UTILITY DISTRICT, PROPOSITION A",
+    "sourcePage": 14
+  }
+]

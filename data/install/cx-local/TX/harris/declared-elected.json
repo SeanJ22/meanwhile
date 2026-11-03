@@ -1,0 +1,31 @@
+{
+  "electionDate": "2026-11-03",
+  "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+  "status": "UNOPPOSED_CANDIDATE_DECLARED_ELECTED_NOT_A_VOTING_CONTEST",
+  "seats": [
+    {
+      "title": "Crosby Independent School District, District 1",
+      "name": "Karen St. Julian-Thomas"
+    },
+    {
+      "title": "Crosby Independent School District, District 3",
+      "name": "Viviana Killion"
+    },
+    {
+      "title": "Crosby Independent School District, District 4",
+      "name": "Lisa Kallies"
+    },
+    {
+      "title": "Crosby Independent School District, District 5",
+      "name": "Heather Barrett"
+    },
+    {
+      "title": "North Harris County Regional Water Authority, District 2",
+      "name": "David Barker"
+    },
+    {
+      "title": "North Harris County Regional Water Authority, District 3",
+      "name": "Melissa L. Rowell"
+    }
+  ]
+}

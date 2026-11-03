@@ -1,0 +1,41 @@
+[
+  {
+    "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+    "finalUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+    "sourceCheckedAt": "2026-11-03T03:41:04.383830+00:00",
+    "sha256": "0b35cb063ef0cb82001e2fb79141e259b95c330cd0d10ad7b2575e34d611e1ed",
+    "sourceFile": "sources/0b35cb063ef0cb82001e2fb79141e259b95c330cd0d10ad7b2575e34d611e1ed.source",
+    "excerptFile": "sources/9b4a9b9bbe83c4ae9ef723a14fdb4e6759f629907429a613104d251d9df9028f.txt",
+    "excerptSha256": "9b4a9b9bbe83c4ae9ef723a14fdb4e6759f629907429a613104d251d9df9028f",
+    "evidence": "Official 14-page November 3, 2026 Harris County composite sample; every included office, vote limit, printed named candidate, printed party and local measure is replayed from native-PDF text blocks. The sample and write-in list are linked by the official What's on my Ballot page; the unsigned files.harrisvotes.com public county route supplied actual PDF bytes after the linked Azure-hosted route was unavailable. Source authority rests on county publication, current election date, exact county name and official linking-page evidence retained in research. No result data or residential addresses are projected.",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "original PDF bytes",
+    "pages": 14
+  },
+  {
+    "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/Write-Ins/2026/1126_Write-In_for_BBM.pdf",
+    "finalUrl": "https://files.harrisvotes.com/harrisvotes/prd/Write-Ins/2026/1126_Write-In_for_BBM.pdf",
+    "sourceCheckedAt": "2026-11-03T03:41:04.522646+00:00",
+    "sha256": "2056f6a21f8c89f769971bf5ccbc7373160d657f93971128e18fb30513e250a4",
+    "sourceFile": "sources/2056f6a21f8c89f769971bf5ccbc7373160d657f93971128e18fb30513e250a4.source",
+    "excerptFile": "sources/5eb5f7e24ce53ba721c4d45b72ecb8eb34d6a51e64c45c0bce15b1df0d06ffe6.txt",
+    "excerptSha256": "5eb5f7e24ce53ba721c4d45b72ecb8eb34d6a51e64c45c0bce15b1df0d06ffe6",
+    "evidence": "Official current Harris County November 3, 2026 declared write-in list, preserved separately pending reader representation.",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "original PDF bytes",
+    "pages": 1
+  },
+  {
+    "sourceUrl": "https://www.harrisvotes.com/Portals/harrisvotes/Documents/2026/Reports/1126%20Notice%20of%20Cancellations.pdf?ver=Wpds5K2Ox8RGkTljel1l4g%3d%3d",
+    "finalUrl": "https://www.harrisvotes.com/Portals/harrisvotes/Documents/2026/Reports/1126%20Notice%20of%20Cancellations.pdf?ver=Wpds5K2Ox8RGkTljel1l4g%3d%3d",
+    "sourceCheckedAt": "2026-11-03T03:39:39.362126+00:00",
+    "sha256": "ad983ea7ceed0708bd7761a6c5e800c38eb798b1549ac4d82b6658b240120677",
+    "sourceFile": "sources/ad983ea7ceed0708bd7761a6c5e800c38eb798b1549ac4d82b6658b240120677.source",
+    "excerptFile": "sources/9385b74c02f7a06a67577cce4fa04fd8dd25399fceb0a45d40fe1b2902dc8cf3.txt",
+    "excerptSha256": "9385b74c02f7a06a67577cce4fa04fd8dd25399fceb0a45d40fe1b2902dc8cf3",
+    "evidence": "Official current Harris County November 3, 2026 notice of 31 cancelled elections, preserved to distinguish cancelled seats from printed voting contests.",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "original PDF bytes",
+    "pages": 3
+  }
+]

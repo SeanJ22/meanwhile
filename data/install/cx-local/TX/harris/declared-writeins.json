@@ -1,0 +1,53 @@
+{
+  "electionDate": "2026-11-03",
+  "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/Write-Ins/2026/1126_Write-In_for_BBM.pdf",
+  "rawHash": "2056f6a21f8c89f769971bf5ccbc7373160d657f93971128e18fb30513e250a4",
+  "fetchedAt": "2026-11-03T03:41:04.522646+00:00",
+  "status": "PRESERVED_SEPARATELY_PENDING_READER_REPRESENTATION",
+  "offices": [
+    {
+      "title": "United States Senator",
+      "names": [
+        "Avery Ayers",
+        "Bradford \u201cBrad\u201d Hall",
+        "Zul Mohamed",
+        "Jade Simmons"
+      ]
+    },
+    {
+      "title": "Governor",
+      "names": [
+        "Edward Earl Giles",
+        "Jenn Mack",
+        "Jinghpaw Majoishingra",
+        "Mike Miller"
+      ]
+    },
+    {
+      "title": "Lieutenant Governor",
+      "names": [
+        "Arturo Espinosa",
+        "Stephen Samuelson"
+      ]
+    },
+    {
+      "title": "Member, State Board of Education, District 6",
+      "names": [
+        "Margo Jordan"
+      ]
+    },
+    {
+      "title": "County Judge",
+      "names": [
+        "Vince Duncan",
+        "Marianne \u201cYan\u201d Hess"
+      ]
+    },
+    {
+      "title": "County Commissioner, Precinct 4",
+      "names": [
+        "Michelle Gwinn"
+      ]
+    }
+  ]
+}

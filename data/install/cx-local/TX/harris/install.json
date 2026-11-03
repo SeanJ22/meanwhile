@@ -1,0 +1,1511 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Harris",
+  "countyFips": "48201",
+  "populationRank": 3,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+      "title": "Chief Justice, 15th Court of Appeals",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+      "title": "Justice, 15th Court of Appeals District, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+      "title": "Justice, 15th Court of Appeals District, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+      "title": "Chief Justice, 14th Court of Appeals",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+      "title": "Justice, 1st Court of Appeals District, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+      "title": "Justice, 1st Court of Appeals District, Place 4 - Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+      "title": "Justice, 1st Court of Appeals District, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7",
+      "title": "Justice, 14th Court of Appeals District, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-55",
+      "title": "Civil District Judge, 55th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:55",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-113",
+      "title": "Civil District Judge, 113th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:113",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-157",
+      "title": "Civil District Judge, 157th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:157",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-189",
+      "title": "Civil District Judge, 189th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:189",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-190",
+      "title": "Civil District Judge, 190th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:190",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-234",
+      "title": "Civil District Judge, 234th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:234",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-269",
+      "title": "Civil District Judge, 269th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:269",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-270",
+      "title": "Civil District Judge, 270th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:270",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-281",
+      "title": "Civil District Judge, 281st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:281",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-295",
+      "title": "Civil District Judge, 295th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:295",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-313",
+      "title": "Juvenile District Judge, 313th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:313",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-314",
+      "title": "Juvenile District Judge, 314th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:314",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-315",
+      "title": "Juvenile District Judge, 315th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:315",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-180",
+      "title": "Criminal District Judge, 180th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:180",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-182",
+      "title": "Criminal District Judge, 182nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:182",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-183",
+      "title": "Criminal District Judge, 183rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:183",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-184",
+      "title": "Criminal District Judge, 184th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:184",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-185",
+      "title": "Criminal District Judge, 185th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:185",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-208",
+      "title": "Criminal District Judge, 208th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:208",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-209",
+      "title": "Criminal District Judge, 209th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:209",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-228",
+      "title": "Criminal District Judge, 228th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:228",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-230",
+      "title": "Criminal District Judge, 230th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:230",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-232",
+      "title": "Criminal District Judge, 232nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:232",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-248",
+      "title": "Criminal District Judge, 248th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:248",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-262",
+      "title": "Criminal District Judge, 262nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:262",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-263",
+      "title": "Criminal District Judge, 263rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:263",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-482",
+      "title": "Criminal District Judge, 482nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:482",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-486",
+      "title": "Criminal District Judge, 486th Judicial District - Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:486",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-495",
+      "title": "Criminal District Judge, 495th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:495",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-496",
+      "title": "Criminal District Judge, 496th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:496",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-497",
+      "title": "Criminal District Judge, 497th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:497",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-245",
+      "title": "Family District Judge, 245th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:245",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-246",
+      "title": "Family District Judge, 246th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:246",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-247",
+      "title": "Family District Judge, 247th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:247",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-257",
+      "title": "Family District Judge, 257th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:257",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-280",
+      "title": "Family District Judge, 280th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:280",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-308",
+      "title": "Family District Judge, 308th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:308",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-309",
+      "title": "Family District Judge, 309th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:309",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-310",
+      "title": "Family District Judge, 310th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:310",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-311",
+      "title": "Family District Judge, 311th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:311",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-312",
+      "title": "Family District Judge, 312th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:312",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-county_judge",
+      "title": "County Judge",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-1",
+      "title": "Judge, County Civil Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-2",
+      "title": "Judge, County Civil Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-3",
+      "title": "Judge, County Civil Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-4",
+      "title": "Judge, County Civil Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-civil-court-at-law-no-5-unexpired-term",
+      "title": "Judge, County Civil Court at Law No. 5 - Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-1",
+      "title": "Judge, County Criminal Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-2",
+      "title": "Judge, County Criminal Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-3",
+      "title": "Judge, County Criminal Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-4",
+      "title": "Judge, County Criminal Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-5",
+      "title": "Judge, County Criminal Court at Law No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-6",
+      "title": "Judge, County Criminal Court at Law No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-7",
+      "title": "Judge, County Criminal Court at Law No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-8",
+      "title": "Judge, County Criminal Court at Law No. 8",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-9",
+      "title": "Judge, County Criminal Court at Law No. 9",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-10",
+      "title": "Judge, County Criminal Court at Law No. 10",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-11",
+      "title": "Judge, County Criminal Court at Law No. 11",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-12",
+      "title": "Judge, County Criminal Court at Law No. 12",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-13",
+      "title": "Judge, County Criminal Court at Law No. 13",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-14",
+      "title": "Judge, County Criminal Court at Law No. 14",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-judge-county-criminal-court-at-law-no-15",
+      "title": "Judge, County Criminal Court at Law No. 15",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-judge_probate_court_no_1",
+      "title": "Judge, County Probate Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-judge_probate_court_no_2",
+      "title": "Judge, County Probate Court No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-judge_probate_court_no_3",
+      "title": "Judge, County Probate Court No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-judge_probate_court_no_4",
+      "title": "Judge, County Probate Court No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-county_attorney_unexpired_term",
+      "title": "County Attorney - Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-district_clerk",
+      "title": "District Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-county_clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48201-county_treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-county-school-trustee-position-5-at-large",
+      "title": "County School Trustee, Position 5, At Large",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-county-school-trustee-position-7-at-large",
+      "title": "County School Trustee, Position 7, At Large",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-county-commissioner-precinct-2",
+      "title": "County Commissioner, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-county-commissioner-precinct-4",
+      "title": "County Commissioner, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:4",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-1-place-2",
+      "title": "Justice of the Peace, Precinct 1, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-2-place-2",
+      "title": "Justice of the Peace, Precinct 2, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-3-place-2",
+      "title": "Justice of the Peace, Precinct 3, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:3",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-4-place-2",
+      "title": "Justice of the Peace, Precinct 4, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:4",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-5-place-2",
+      "title": "Justice of the Peace, Precinct 5, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:5",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-6-place-2",
+      "title": "Justice of the Peace, Precinct 6, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:6",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-7-place-2",
+      "title": "Justice of the Peace, Precinct 7, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:7",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-of-the-peace-precinct-8-place-2",
+      "title": "Justice of the Peace, Precinct 8, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:harris/justice_precinct:8",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hcad-director-at-large-place-1",
+      "title": "HCAD, Director, At-Large, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hcad-director-at-large-place-2",
+      "title": "HCAD, Director, At-Large, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hcad-director-at-large-place-3",
+      "title": "HCAD, Director, At-Large, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-4",
+      "title": "City of Baytown, Council Member District No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-5",
+      "title": "City of Baytown, Council Member District No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-baytown-council-member-district-no-6",
+      "title": "City of Baytown, Council Member District No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:baytown/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-mayor-four-year-term",
+      "title": "City of League City, Mayor (Four Year Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-council-position-1-four-year-term",
+      "title": "City of League City, Council, Position 1 (Four Year Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-council-position-2-four-year-term",
+      "title": "City of League City, Council, Position 2 (Four Year Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-council-position-3-unexpired-term",
+      "title": "City of League City, Council, Position 3 (Unexpired Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-council-position-6-four-year-term",
+      "title": "City of League City, Council, Position 6 (Four Year Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-council-position-7-four-year-term",
+      "title": "City of League City, Council, Position 7 (Four Year Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-isd-trustee-position-4",
+      "title": "Channelview ISD, Trustee, Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-isd-trustee-position-5",
+      "title": "Channelview ISD, Trustee, Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-isd-trustee-position-6",
+      "title": "Channelview ISD, Trustee, Position 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-isd-trustee-position-7",
+      "title": "Channelview ISD, Trustee, Position 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-1",
+      "title": "Huffman ISD, School Trustee, Position #1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-2",
+      "title": "Huffman ISD, School Trustee, Position #2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-huffman-isd-school-trustee-position-3",
+      "title": "Huffman ISD, School Trustee, Position #3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-klein-isd-position-1",
+      "title": "Klein ISD, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:klein_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-klein-isd-position-2",
+      "title": "Klein ISD, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:klein_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+      "title": "New Caney Independent School District, Trustee, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+      "title": "New Caney Independent School District, Trustee, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-4",
+      "title": "Sheldon ISD, Trustee Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-5",
+      "title": "Sheldon ISD, Trustee Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-6",
+      "title": "Sheldon ISD, Trustee Position 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-sheldon-isd-trustee-position-7",
+      "title": "Sheldon ISD, Trustee Position 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:sheldon_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-spring-isd-trustee-election-position-4",
+      "title": "Spring ISD, Trustee Election, Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-spring-isd-trustee-election-position-5",
+      "title": "Spring ISD, Trustee Election, Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+      "title": "Tomball Independent School District, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+      "title": "Tomball Independent School District, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+      "title": "Tomball Independent School District, Position 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+      "title": "Tomball Independent School District, Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-esd-9-board-of-emergency-services-commissioners",
+      "title": "HC ESD 9, Board of Emergency Services Commissioners",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_emergency_services_district_9",
+      "candidates": 4,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-mud-50-director-position-1",
+      "title": "HC MUD 50, Director Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_050_water",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-mud-50-director-position-3",
+      "title": "HC MUD 50, Director Position 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_050_water",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-mud-127-directors",
+      "title": "HC MUD 127, Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_127",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-mud-553-directors",
+      "title": "HC MUD 553, DIRECTORS",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+      "candidates": 5,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-directors",
+      "title": "Harris County Municipal Utility District No. 585, Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 5,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-wcid-89-directors",
+      "title": "HC WCID 89, Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_water_control_and_improvement_district_89",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-n-harris-county-reg-wa-pos-1-director-district-1",
+      "title": "N HARRIS COUNTY REG WA POS 1, Director, District 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:north_harris_county_regional_water_authority/director_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-ots-id-director-position-4-resident-of-the-district",
+      "title": "OTS ID, Director, Position 4, Resident of the District",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-ots-id-director-position-5-owner-of-real-property-or-lessee-of-a-retail-store-in-the-district",
+      "title": "OTS ID, Director, Position 5, Owner of Real Property or Lessee of A Retail Store in the District",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+      "candidates": 2,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+      "title": "The Woodlands Township, Position No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 14
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+      "title": "The Woodlands Township, Position No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 14
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+      "title": "The Woodlands Township, Position No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 3,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 14
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+      "title": "The Woodlands Township, Position No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 1,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 14
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-houston-proposition-a",
+      "title": "CITY OF HOUSTON, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/place:houston",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-city-of-league-city-proposition-a",
+      "title": "CITY OF LEAGUE CITY, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/place:league_city",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-a",
+      "title": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-b",
+      "title": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-c",
+      "title": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION C",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-d",
+      "title": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION D",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-channelview-independent-school-district-proposition-e",
+      "title": "CHANNELVIEW INDEPENDENT SCHOOL DISTRICT, PROPOSITION E",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:channelview_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-crosby-independent-school-district-proposition-a",
+      "title": "CROSBY INDEPENDENT SCHOOL DISTRICT PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:crosby_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-crosby-independent-school-district-proposition-b",
+      "title": "CROSBY INDEPENDENT SCHOOL DISTRICT PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:crosby_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-a",
+      "title": "CYPRESS-FAIRBANKS ISD, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 8
+    },
+    {
+      "id": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-b",
+      "title": "CYPRESS-FAIRBANKS ISD, PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-c",
+      "title": "CYPRESS-FAIRBANKS ISD, PROPOSITION C",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-d",
+      "title": "CYPRESS-FAIRBANKS ISD, PROPOSITION D",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-cypress-fairbanks-isd-proposition-e",
+      "title": "CYPRESS-FAIRBANKS ISD, PROPOSITION E",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:cypress_fairbanks_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 9
+    },
+    {
+      "id": "tx-cx-local-2026-harris-huffman-independent-school-district-proposition-a",
+      "title": "HUFFMAN INDEPENDENT SCHOOL DISTRICT, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:huffman_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-la-porte-independent-school-district-proposition-a",
+      "title": "LA PORTE INDEPENDENT SCHOOL DISTRICT, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_porte_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-spring-isd-proposition-a",
+      "title": "SPRING ISD, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:spring_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 10
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-fresh-water-supply-district-no-1a-proposition-a",
+      "title": "HARRIS COUNTY FRESH WATER SUPPLY DISTRICT NO. 1A, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_fresh_water_supply_district_1a",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-hc-mud-130-proposition-a",
+      "title": "HC MUD 130, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_130",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-189-proposition-a",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 189, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_189",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-a",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-b",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-c",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION C",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 11
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-d",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION D",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-553-proposition-e",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 553, PROPOSITION E",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-a",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-b",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-c",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION C",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-d",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION D",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-e",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION E",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-f",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION F",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-g",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION G",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 12
+    },
+    {
+      "id": "tx-cx-local-2026-harris-harris-county-municipal-utility-district-no-585-proposition-h",
+      "title": "HARRIS COUNTY MUNICIPAL UTILITY DISTRICT NO. 585, PROPOSITION H",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-intercontinental-crossing-municipal-utility-district-proposition-a",
+      "title": "INTERCONTINENTAL CROSSING MUNICIPAL UTILITY DISTRICT, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:intercontinental_crossing_mud",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-intercontinental-crossing-municipal-utility-district-proposition-b",
+      "title": "INTERCONTINENTAL CROSSING MUNICIPAL UTILITY DISTRICT, PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:intercontinental_crossing_mud",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-spanish-cove-public-utility-district-proposition-a",
+      "title": "SPANISH COVE PUBLIC UTILITY DISTRICT, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:spanish_cove_public_utility_district",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 13
+    },
+    {
+      "id": "tx-cx-local-2026-harris-west-hc-mud-15-proposition-a",
+      "title": "WEST HC MUD 15, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:west_harris_county_mud_15",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 14
+    },
+    {
+      "id": "tx-cx-local-2026-harris-weston-municipal-utility-district-proposition-a",
+      "title": "WESTON MUNICIPAL UTILITY DISTRICT, PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:weston_mud",
+      "candidates": 0,
+      "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+      "sourcePage": 14
+    }
+  ],
+  "operation": "River may merge this partial data through the existing ballot publication path with the latest held state, preserving unrelated contests, candidate facts and explanations. This preparation performs no production writes.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_NATIVE_PDF_BLOCK_REPLAY",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "unrelatedContestsCandidateFactsAndExplanations": "PRESERVED_BY_PARTIAL_MERGE"
+  },
+  "coverage": [
+    "All 14 pages of Harris County's official November 3, 2026 General and Special Elections composite sample were acquired and parsed. This packet covers 137 judicial/local candidate contests (270 printed named choices) and all 38 printed local measure questions. Federal, statewide executive, statewide Supreme Court/Criminal Appeals, State Board of Education, and legislative fields are preserved in parsed-all.json and are outside this local install.",
+    "Six unopposed seats declared elected (Crosby ISD districts 1/3/4/5 and North Harris County Regional Water Authority districts 2/3) are recorded in declared-elected.json rather than fabricated voting contests. The separate official notice names 31 cancelled elections.",
+    "The official declared-write-in list is preserved separately: 14 names across six office fields, including County Judge (2) and County Commissioner Precinct 4 (1). Blank Write-in spaces are excluded from printed candidate totals. Reader representation of declared write-ins remains open.",
+    "Composite coverage describes only elections administered and printed by Harris County. It does not prove every independent jurisdiction touching Harris County contracted with the county or held an election. No whole-county completeness is asserted.",
+    "Every source-printed electorate is retained separately. The checked-in reader registry does not resolve the precise IDs listed in unresolved-reader-divisions.json; the live registry has not been checked here. Reader division or boundary links remain open until resolved. No precinct, council district, water-authority director district, township, or special district is widened to the county or a CDP."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:harris/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:5",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:6",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:7",
+    "ocd-division/country:us/state:tx/county:harris/justice_precinct:8",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "ocd-division/country:us/state:tx/judicial_district:113",
+    "ocd-division/country:us/state:tx/judicial_district:157",
+    "ocd-division/country:us/state:tx/judicial_district:180",
+    "ocd-division/country:us/state:tx/judicial_district:182",
+    "ocd-division/country:us/state:tx/judicial_district:183",
+    "ocd-division/country:us/state:tx/judicial_district:184",
+    "ocd-division/country:us/state:tx/judicial_district:185",
+    "ocd-division/country:us/state:tx/judicial_district:189",
+    "ocd-division/country:us/state:tx/judicial_district:190",
+    "ocd-division/country:us/state:tx/judicial_district:208",
+    "ocd-division/country:us/state:tx/judicial_district:209",
+    "ocd-division/country:us/state:tx/judicial_district:228",
+    "ocd-division/country:us/state:tx/judicial_district:230",
+    "ocd-division/country:us/state:tx/judicial_district:232",
+    "ocd-division/country:us/state:tx/judicial_district:234",
+    "ocd-division/country:us/state:tx/judicial_district:245",
+    "ocd-division/country:us/state:tx/judicial_district:246",
+    "ocd-division/country:us/state:tx/judicial_district:247",
+    "ocd-division/country:us/state:tx/judicial_district:248",
+    "ocd-division/country:us/state:tx/judicial_district:257",
+    "ocd-division/country:us/state:tx/judicial_district:262",
+    "ocd-division/country:us/state:tx/judicial_district:263",
+    "ocd-division/country:us/state:tx/judicial_district:269",
+    "ocd-division/country:us/state:tx/judicial_district:270",
+    "ocd-division/country:us/state:tx/judicial_district:280",
+    "ocd-division/country:us/state:tx/judicial_district:281",
+    "ocd-division/country:us/state:tx/judicial_district:295",
+    "ocd-division/country:us/state:tx/judicial_district:308",
+    "ocd-division/country:us/state:tx/judicial_district:309",
+    "ocd-division/country:us/state:tx/judicial_district:310",
+    "ocd-division/country:us/state:tx/judicial_district:311",
+    "ocd-division/country:us/state:tx/judicial_district:312",
+    "ocd-division/country:us/state:tx/judicial_district:313",
+    "ocd-division/country:us/state:tx/judicial_district:314",
+    "ocd-division/country:us/state:tx/judicial_district:315",
+    "ocd-division/country:us/state:tx/judicial_district:482",
+    "ocd-division/country:us/state:tx/judicial_district:486",
+    "ocd-division/country:us/state:tx/judicial_district:495",
+    "ocd-division/country:us/state:tx/judicial_district:496",
+    "ocd-division/country:us/state:tx/judicial_district:497",
+    "ocd-division/country:us/state:tx/judicial_district:55",
+    "ocd-division/country:us/state:tx/place:baytown/council_district:4",
+    "ocd-division/country:us/state:tx/place:baytown/council_district:5",
+    "ocd-division/country:us/state:tx/place:baytown/council_district:6",
+    "ocd-division/country:us/state:tx/special_district:harris_central_appraisal_district",
+    "ocd-division/country:us/state:tx/special_district:harris_county_emergency_services_district_9",
+    "ocd-division/country:us/state:tx/special_district:harris_county_fresh_water_supply_district_1a",
+    "ocd-division/country:us/state:tx/special_district:harris_county_mud_553",
+    "ocd-division/country:us/state:tx/special_district:harris_county_mud_585",
+    "ocd-division/country:us/state:tx/special_district:north_harris_county_regional_water_authority/director_district:1",
+    "ocd-division/country:us/state:tx/special_district:old_town_spring_improvement_district",
+    "ocd-division/country:us/state:tx/special_district:the_woodlands_township"
+  ],
+  "counts": {
+    "samplePages": 14,
+    "candidateContests": 137,
+    "printedNamedCandidates": 270,
+    "measureContests": 38,
+    "fullCompositeCandidateContests": 193,
+    "fullCompositePrintedNamedCandidates": 394,
+    "declaredWriteInNamesHeldSeparately": 14,
+    "unopposedDeclaredElectedSeats": 6,
+    "cancelledElections": 31,
+    "existingContestsCompared": 53,
+    "newCandidateContests": 84
+  },
+  "nextOwner": "River: merge into latest held TX data, resolve precise reader divisions and boundaries, verify the source facts reach the correct reader locations. Declared write-in display remains open."
+}

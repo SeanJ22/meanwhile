@@ -1,0 +1,23 @@
+{
+  "path": "ballot-input/ct.json",
+  "state": "CT",
+  "priorBasis": "FRESH_MEASURE_ONLY_HELD_SNAPSHOT; fullcandidate-retentioncheckremainsrootowned",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "CT:ct-2026-general",
+      "expected": 1,
+      "usableExpectedRecords": 1,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0
+}

@@ -1,0 +1,32 @@
+{
+  "packetPath": "ballot-input/ct.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.simsbury-ct.gov/DocumentCenter/View/31677/Explanatory-Text-for-November-3-2026-Ballot-Question",
+      "finalUrl": "https://www.simsbury-ct.gov/DocumentCenter/View/31677/Explanatory-Text-for-November-3-2026-Ballot-Question",
+      "rawPath": "sources/71ca43eb4e6e98ae25098d44d6c19abbb4cde022a811e448e4d270cb94b197ee.source",
+      "rawHash": "71ca43eb4e6e98ae25098d44d6c19abbb4cde022a811e448e4d270cb94b197ee",
+      "textPath": "sources/81a84f8e6eb364e29b7d341cba2dfd0e37ac44d330ab6742b60a42862df89715.txt",
+      "textSha256": "81a84f8e6eb364e29b7d341cba2dfd0e37ac44d330ab6742b60a42862df89715",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:simsbury-question-1"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.simsbury-ct.gov/DocumentCenter/View/27773/Town-of-Simsbury-2025-Charter-Revision-Commission-Final-Report-04-06-2026",
+      "finalUrl": "https://www.simsbury-ct.gov/DocumentCenter/View/27773/Town-of-Simsbury-2025-Charter-Revision-Commission-Final-Report-04-06-2026",
+      "rawPath": "sources/28dda70e758d80d0dfab4f7969c29dcf2d6639d3a2bb78b76217b0d4057773eb.source",
+      "rawHash": "28dda70e758d80d0dfab4f7969c29dcf2d6639d3a2bb78b76217b0d4057773eb",
+      "textPath": "sources/36f50b25e0886c54bba0dfe7b0344744bcf53842483a188240286f43fa2139d5.txt",
+      "textSha256": "36f50b25e0886c54bba0dfe7b0344744bcf53842483a188240286f43fa2139d5",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:simsbury-question-1"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

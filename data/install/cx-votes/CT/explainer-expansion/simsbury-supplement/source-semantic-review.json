@@ -1,0 +1,19 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedAt": "2026-11-03T05:55:48.092311+00:00",
+  "packetSha256": "b2c40ce9fb94721ccff882d041a4cf7519309cd49a0a7b9f81db517fee9e7285",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "UsescompletecurrentTownClerk/TownAttorney4pageofficialneutralexplanatorytextissuedforNov3,2026,notanuninformativegenericcharterplaceholder. Fullprintedquestionandcompleteintro/chapter-by-chapterofficialstatementareattached.",
+    "Explicitconditionsretained:effectiveDec7,2026;alternatessamepartywhenavailable;3consecutivemeetingabsenceprocess;regularappointedboardpublicaudience;annualmanagerreviewadministeredbyFirst;ordinancereviewatleast4years;managerjobdescriptionssubjectSelectmenapproval;consultationsbeforenegotiationsandstaffreview;5yearcapitalplan.",
+    "Allmajorstatedtopicsincluded:Selectmen/First/managerroles,grantdelegation,administrativeappointments/removals/contracts/managerabsence,PoliceCommissioncomplaintpolicy/union/budgetroles,Financeauthority/auditor/transfers/retirement/publicreports/budget/borrowing/capitalreferendumclarifications,organization/obsoletewelfarelanguage.",
+    "ManagernegotiationconferencesexplicitlylimitedtoemployeeunionnegotiationsusingofficialfinalreportPDFpage24,visuallyverified; preventsincorrectextensiontoallnegotiationtypes.",
+    "No unpublishedborrowing/transfer/referendumdollarthresholdintroduced;fullcurrentofficialexplanationincludesallprovidedclausesandreaderlink.",
+    "ExactregisteredTOWNOFSIMSBURYCensusjurisdictionandfreshheldCTGeneralElectionidentityused.",
+    "OriginalcompletePDFbytesretainedforbothofficialdocuments; no text-capturehashmislabeledasPDFbytes.",
+    "NormalmergewithcheckAuthority,authorityForManualReceipt,manualProjectionCandidate,quote/hashchecksandexpectedreaderrecordallPASS;rootfull-priorreplayremainsnext."
+  ]
+}

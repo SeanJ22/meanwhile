@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 9,
+    "knownDistinctOfficialQuestions": 53,
+    "knownQuestionsExplainedAfterSupplement": 44
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:simsbury-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:simsbury_town",
+      "sourceUrl": "https://www.simsbury-ct.gov/DocumentCenter/View/31677/Explanatory-Text-for-November-3-2026-Ballot-Question"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "TwooriginalcompleteofficialPDFs:current4pageTownClerk/attorneyneutralexplanatorytextandfinal192pagereport. Fulloperativequestionandentiresubstantiveofficialexplanatorystatementattached; reportpage24verifiedtranscriptsupportsnarrowemployeeunionnegotiationsscope. OriginalPDFhashesarebytehashes.",
+  "reviewedScratchPacketSha256": "b2c40ce9fb94721ccff882d041a4cf7519309cd49a0a7b9f81db517fee9e7285",
+  "canonicalInputSha256": "4ecf759db0989ff712cfd590a70406d7fc91a97efe54b3bd0ebafe30d5c2e993",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "CT42base andDanburyQ1alreadyrootpromoted.",
+    "ApplythisoneSimsburyQuestionsupplementwithordinarymanualpublication,preservingallheldfacts."
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

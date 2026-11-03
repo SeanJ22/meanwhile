@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ct-sots-2026:simsbury-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:simsbury_town",
+    "registeredDivisionIndex": 27,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:simsbury_town",
+      "cousub",
+      "0911068940",
+      "Simsbury town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "183950",
+      "ct:city:town-of-simsbury",
+      "TOWN OF SIMSBURY",
+      "TOWNSHIP",
+      27,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "ExactexistingTOWN OF SIMSBURYgovernmentprimaryCensuscounty-subdivisionbinding; no smallerCDPornewIDguess."
+  }
+]

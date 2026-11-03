@@ -1,0 +1,18 @@
+{
+  "state": "CA",
+  "county": "San Diego",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureDenominator": 20,
+  "preparedAttached": 1,
+  "scope": "Grossmont-Cuyamaca G fully explained. Exact official district boundary page establishes four complete city memberships: El Cajon, La Mesa, Lemon Grove, Santee. Coverage is partial: unincorporated and partly included postal areas remain standing geography work, with no countywide or whole-school-district substitution.",
+  "sourceNotes": [
+    "Signed full resolution and taxstatement match current officialVIG001 G analysis and taxstatement: $24.67 average/$24.98 peak/$1,246,250,216 debt service, fiscal 2058\u201359.",
+    "District\u2019s current native boundary page explicitly names four whole cities and separately lists entirely and partly included postal areas; no postal or unincorporated service-list name is treated as a full geographic division without further proof.",
+    "Electoral district ID is an explicitly source-bound project election alias, not a claimed Census or NCES geographic identifier."
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "fullElectorateCoverage": false,
+  "sourceBackedWholeCityMemberships": 4,
+  "remaining": "Unincorporated/partial-postal district territory remains unassigned. SanDiego P/Q/T have separate source/geography work."
+}

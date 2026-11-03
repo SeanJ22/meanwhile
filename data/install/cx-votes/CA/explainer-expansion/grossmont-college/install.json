@@ -1,0 +1,52 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-diego-g",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and other county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "San Diego",
+    "electionDate": "2026-11-03",
+    "officialCompositeLocalMeasureDenominator": 20,
+    "preparedAttached": 1,
+    "scope": "Grossmont-Cuyamaca G fully explained. Exact official district boundary page establishes four complete city memberships: El Cajon, La Mesa, Lemon Grove, Santee. Coverage is partial: unincorporated and partly included postal areas remain standing geography work, with no countywide or whole-school-district substitution.",
+    "sourceNotes": [
+      "Signed full resolution and taxstatement match current officialVIG001 G analysis and taxstatement: $24.67 average/$24.98 peak/$1,246,250,216 debt service, fiscal 2058–59.",
+      "District’s current native boundary page explicitly names four whole cities and separately lists entirely and partly included postal areas; no postal or unincorporated service-list name is treated as a full geographic division without further proof.",
+      "Electoral district ID is an explicitly source-bound project election alias, not a claimed Census or NCES geographic identifier."
+    ],
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "fullElectorateCoverage": false,
+    "sourceBackedWholeCityMemberships": 4,
+    "remaining": "Unincorporated and partial-postal territory remains standing work."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "nativeSourceHashes": "PASS",
+    "questionAndExactSupport": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "existingOfficialSourceAuthorityChain": "PASS",
+    "actualReader": "PASS",
+    "fourWholeCitySelections": "PASS",
+    "fourOutsideSelectionsExcluded": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

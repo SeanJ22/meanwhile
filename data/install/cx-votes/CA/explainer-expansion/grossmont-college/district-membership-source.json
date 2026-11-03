@@ -1,0 +1,86 @@
+{
+  "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+  "aliasKind": "PROJECT_ELECTION_ALIAS",
+  "actualDistrictName": "Grossmont-Cuyamaca Community College District",
+  "authorityChain": [
+    {
+      "role": "district-boundary",
+      "url": "https://www.gcccd.edu/about/district-boundaries.php",
+      "savedFile": "sources/73b6ca903b63e31f6fefbb4ceaf42aefec9b8947a3f25ed36275067a8df4ff54.html",
+      "rawHash": "73b6ca903b63e31f6fefbb4ceaf42aefec9b8947a3f25ed36275067a8df4ff54",
+      "retrievedAt": "2026-11-03T06:19:02.956797+00:00"
+    },
+    {
+      "role": "state-district-directory",
+      "url": "https://www.cccco.edu/students/find-a-college/community-college-districts/",
+      "savedFile": "sources/acf526275012205911ad93644ac478e238146b5e750806652fcf712acf1b4750.html",
+      "rawHash": "acf526275012205911ad93644ac478e238146b5e750806652fcf712acf1b4750",
+      "retrievedAt": "2026-11-03T05:19:10.414723+00:00"
+    },
+    {
+      "role": "government-delegation",
+      "url": "https://calcareers.ca.gov/CalHrPublic/Jobs/JobPostingPrint.aspx?jcid=486992",
+      "savedFile": "sources/164997e4c0eda213a627893312e7e6ea61dcc56fe0f953bb882e7a1225b40f47.html",
+      "rawHash": "164997e4c0eda213a627893312e7e6ea61dcc56fe0f953bb882e7a1225b40f47",
+      "retrievedAt": "2026-11-03T06:19:03.238824+00:00"
+    }
+  ],
+  "exactWholeCityStatement": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:",
+  "members": [
+    {
+      "id": "ca-2026-membership:place:el_cajon->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/place:el_cajon",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "provenance": {
+        "sourceOrg": "Grossmont-Cuyamaca Community College District",
+        "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+        "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+        "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+        "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+      }
+    },
+    {
+      "id": "ca-2026-membership:place:la_mesa->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/place:la_mesa",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "provenance": {
+        "sourceOrg": "Grossmont-Cuyamaca Community College District",
+        "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+        "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+        "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+        "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+      }
+    },
+    {
+      "id": "ca-2026-membership:place:lemon_grove->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/place:lemon_grove",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "provenance": {
+        "sourceOrg": "Grossmont-Cuyamaca Community College District",
+        "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+        "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+        "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+        "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+      }
+    },
+    {
+      "id": "ca-2026-membership:place:santee->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/place:santee",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+      "provenance": {
+        "sourceOrg": "Grossmont-Cuyamaca Community College District",
+        "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+        "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+        "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+        "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+      }
+    }
+  ],
+  "coverage": "PARTIAL: four whole cities only. Unincorporated communities, partial ZIPs and remaining district territory are not assumed to be exact held divisions.",
+  "excludedAsGeographyProof": [
+    "school campus/service lists",
+    "2016CAEP boundaries claim",
+    "countywide substitution",
+    "partial ZIPs"
+  ]
+}

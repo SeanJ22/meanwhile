@@ -1,0 +1,10 @@
+{
+  "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district": {
+    "kind": "PROJECT_ELECTION_ALIAS",
+    "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf"
+  },
+  "ocd-division/country:us/state:ca/place:el_cajon": "data/derived/zip-divisions/92.json",
+  "ocd-division/country:us/state:ca/place:la_mesa": "data/derived/zip-divisions/91.json",
+  "ocd-division/country:us/state:ca/place:lemon_grove": "data/derived/zip-divisions/91.json",
+  "ocd-division/country:us/state:ca/place:santee": "data/derived/zip-divisions/92.json"
+}

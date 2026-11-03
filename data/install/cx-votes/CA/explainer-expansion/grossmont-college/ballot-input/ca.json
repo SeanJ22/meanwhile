@@ -1,0 +1,171 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-diego-g",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "title": "Grossmont-Cuyamaca Community College District — Measure G",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:21:17.463301+00:00",
+            "quote": "Grossmont-Cuyamaca Community College District Fire Safety, Job Training, College Affordability, No Tax Rate Increase With funds that cannot be taken by the State and spent elsewhere and NO tax rate increase, shall Grossmont-Cuyamaca Community College District’s measure to · improve/expand career training classrooms · remove asbestos/mold · reduce wildfire threats · maintain college affordability be adopted, authorizing $624 million of bonds with legal rates, levies below $25/$100,000 assessed valuation while outstanding ($45 million annually), audits, taxpayer oversight, full disclosure of all spending?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-diego-g-text",
+          "contestId": "ca-2026-san-diego-g",
+          "officialNumber": "Measure G",
+          "questionText": "Grossmont-Cuyamaca Community College District Fire Safety, Job Training, College Affordability, No Tax Rate Increase With funds that cannot be taken by the State and spent elsewhere and NO tax rate increase, shall Grossmont-Cuyamaca Community College District’s measure to · improve/expand career training classrooms · remove asbestos/mold · reduce wildfire threats · maintain college affordability be adopted, authorizing $624 million of bonds with legal rates, levies below $25/$100,000 assessed valuation while outstanding ($45 million annually), audits, taxpayer oversight, full disclosure of all spending?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:21:17.463301+00:00",
+            "quote": "Grossmont-Cuyamaca Community College District Fire Safety, Job Training, College Affordability, No Tax Rate Increase With funds that cannot be taken by the State and spent elsewhere and NO tax rate increase, shall Grossmont-Cuyamaca Community College District’s measure to · improve/expand career training classrooms · remove asbestos/mold · reduce wildfire threats · maintain college affordability be adopted, authorizing $624 million of bonds with legal rates, levies below $25/$100,000 assessed valuation while outstanding ($45 million annually), audits, taxpayer oversight, full disclosure of all spending?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-diego-g",
+          "whatItDoes": "Authorize up to $624 million in bonds for listed Grossmont and Cuyamaca college facilities, including career-training classrooms, asbestos and mold removal, wildfire and campus safety, building repairs, technology and other capital projects. Property taxes would repay principal and interest. The district estimates $45 million annually, an average rate of $24.67 and highest rate of $24.98 per $100,000 of assessed value, collection through fiscal 2058–59, and approximately $1,246,250,216 total repayment. It does not expect the new bonds to increase the overall $37.52 rate levied in fiscal 2025–26, but the estimates are not legal tax caps or binding repayment promises. Interest rates must stay within legal limits. Money must stay local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual financial and performance audits and public reports are required. State matching funds and completion of every listed project are not guaranteed. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $624 million for the listed college facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf",
+          "sourceHash": "eed5aeb9a7fb8bb55d1bd1497effd274bf054e2d0bac43225dceaa64669b5540",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:21:17.463301+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "ca-2026-membership:place:el_cajon->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "memberOcdId": "ocd-division/country:us/state:ca/place:el_cajon",
+          "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "provenance": {
+            "sourceOrg": "Grossmont-Cuyamaca Community College District",
+            "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+            "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+            "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+            "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+          }
+        },
+        {
+          "id": "ca-2026-membership:place:la_mesa->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "memberOcdId": "ocd-division/country:us/state:ca/place:la_mesa",
+          "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "provenance": {
+            "sourceOrg": "Grossmont-Cuyamaca Community College District",
+            "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+            "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+            "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+            "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+          }
+        },
+        {
+          "id": "ca-2026-membership:place:lemon_grove->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "memberOcdId": "ocd-division/country:us/state:ca/place:lemon_grove",
+          "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "provenance": {
+            "sourceOrg": "Grossmont-Cuyamaca Community College District",
+            "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+            "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+            "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+            "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+          }
+        },
+        {
+          "id": "ca-2026-membership:place:santee->electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "memberOcdId": "ocd-division/country:us/state:ca/place:santee",
+          "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_grossmont_cuyamaca_community_college_district",
+          "provenance": {
+            "sourceOrg": "Grossmont-Cuyamaca Community College District",
+            "sourceUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+            "collectedAt": "2026-11-03T06:19:02.956797+00:00",
+            "verifiedAt": "2026-11-03T06:21:55.596427+00:00",
+            "quote": "The primary boundary includes the cities of El Cajon, La Mesa, Lemon Grove and Santee, and the following unincorporated communities:"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:21:17.463301+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+        "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/grossmont-cuyamaca-ccd.pdf",
+        "httpStatus": 200,
+        "rawHash": "eed5aeb9a7fb8bb55d1bd1497effd274bf054e2d0bac43225dceaa64669b5540",
+        "retrievedAt": "2026-11-03T05:49:47.385315+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+        "finalUrl": "https://www.gcccd.edu/about/district-boundaries.php",
+        "httpStatus": 200,
+        "rawHash": "73b6ca903b63e31f6fefbb4ceaf42aefec9b8947a3f25ed36275067a8df4ff54",
+        "retrievedAt": "2026-11-03T06:19:02.956797+00:00",
+        "publisher": "Grossmont-Cuyamaca Community College District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native current official district boundary and identity proof. Authority chain: government CalCareers .gov page links cccco.edu; the Chancellor’s district directory links gcccd.edu; district boundary page explicitly places the four complete cities inside its boundary. Other territory remains unassigned."
+      },
+      {
+        "requestedUrl": "https://www.cccco.edu/students/find-a-college/community-college-districts/",
+        "finalUrl": "https://www.cccco.edu/students/find-a-college/community-college-districts/",
+        "httpStatus": 200,
+        "rawHash": "acf526275012205911ad93644ac478e238146b5e750806652fcf712acf1b4750",
+        "retrievedAt": "2026-11-03T05:19:10.414723+00:00",
+        "publisher": "California Community Colleges Chancellor’s Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native current official district boundary and identity proof. Authority chain: government CalCareers .gov page links cccco.edu; the Chancellor’s district directory links gcccd.edu; district boundary page explicitly places the four complete cities inside its boundary. Other territory remains unassigned."
+      },
+      {
+        "requestedUrl": "https://calcareers.ca.gov/CalHrPublic/Jobs/JobPostingPrint.aspx?jcid=486992",
+        "finalUrl": "https://calcareers.ca.gov/CalHrPublic/Jobs/JobPostingPrint.aspx?jcid=486992",
+        "httpStatus": 200,
+        "rawHash": "164997e4c0eda213a627893312e7e6ea61dcc56fe0f953bb882e7a1225b40f47",
+        "retrievedAt": "2026-11-03T06:19:03.238824+00:00",
+        "publisher": "State of California CalCareers",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native current official district boundary and identity proof. Authority chain: government CalCareers .gov page links cccco.edu; the Chancellor’s district directory links gcccd.edu; district boundary page explicitly places the four complete cities inside its boundary. Other territory remains unassigned."
+      }
+    ]
+  }
+}

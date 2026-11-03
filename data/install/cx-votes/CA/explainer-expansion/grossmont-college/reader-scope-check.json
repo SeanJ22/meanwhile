@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-11-03T06:22:30.501Z",
+  "status": "PASS",
+  "existingOfficialSourceHelper": "PASS",
+  "exactWholeCityReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "fullElectorateCoverage": false,
+  "standingWork": "Unincorporated and partial-postal territory remains unassigned until source-backed exact divisions or supported boundaries are established.",
+  "checks": [
+    {
+      "place": "ocd-division/country:us/state:ca/place:el_cajon",
+      "contest": true,
+      "exactExplainer": true,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/place:la_mesa",
+      "contest": true,
+      "exactExplainer": true,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/place:lemon_grove",
+      "contest": true,
+      "exactExplainer": true,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/place:santee",
+      "contest": true,
+      "exactExplainer": true,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/county:san_diego",
+      "contest": false,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/place:poway",
+      "contest": false,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/place:san_diego",
+      "contest": false,
+      "status": "PASS"
+    },
+    {
+      "place": "ocd-division/country:us/state:ca/place:carlsbad",
+      "contest": false,
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

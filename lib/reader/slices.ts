@@ -132,7 +132,7 @@ async function buildEntitySlices(query: Query, wanted: ReadonlyMap<string, Reado
     boardIds.length ? query("SELECT entity_id,place_id,placement_basis FROM entity_place WHERE entity_id=ANY($1::text[]) ORDER BY entity_id,place_id", [boardIds]) : [],
     boardIds.length ? query("SELECT entity_id,value FROM entity_external_id WHERE scheme='body-alias' AND entity_id=ANY($1::text[]) ORDER BY entity_id,value", [boardIds]) : [],
     bodiesAsked.length ? registrationOf(query, bodiesAsked) : new Map<string, PlaceRegistration>(),
-    personIds.length ? query("SELECT entity_id,min(value) AS value FROM entity_external_id WHERE scheme='roster-member' AND entity_id=ANY($1::text[]) GROUP BY entity_id", [personIds]) : [],
+    personIds.length ? query("SELECT entity_id,(array_agg(value ORDER BY length(value) DESC, value DESC))[1] AS value FROM entity_external_id WHERE scheme='roster-member' AND entity_id=ANY($1::text[]) GROUP BY entity_id", [personIds]) : [],
   ]);
   const copies = new Map(copyRows.map(row => [String(row.id), String(row.url)])), shown = new Map(shownRows.map(row => [String(row.entity_id), String(row.value)]));
   const factsOf = groupedBy(facts, "entity_id"), at = groupedBy(filed, "place_id"), served = groupedBy(placesOf, "entity_id"), known = groupedBy(aliasesOf, "entity_id");

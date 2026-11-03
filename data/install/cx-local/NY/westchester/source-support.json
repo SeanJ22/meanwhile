@@ -880,5 +880,44 @@
     "excerptSha256": "ba25a340f2077719aa20b3bd4340180b1e1c55a4c5082745d47c4abb9cbc3674",
     "evidence": "Standing bylaws linked by the current official library Board page identify the municipal Mount Kisco Public Library and election of trustees at general town elections. Its exact library-district applicability remains an explicit division dependency; no whole-town or whole-village membership is invented.",
     "sourceKind": "OFFICIAL_STANDING_LIBRARY_BYLAWS"
+  },
+  {
+    "role": "OFFICIAL_GEOGRAPHY",
+    "sourceUrl": "https://giswww.westchestergov.com/arcgis/rest/services/FindElectedOfficials/MapServer/36/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://giswww.westchestergov.com/arcgis/rest/services/FindElectedOfficials/MapServer/36/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T06:06:26.055164+00:00",
+    "sha256": "eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c",
+    "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+    "excerptFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.txt",
+    "excerptSha256": "eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c",
+    "captureFormat": "NATIVE_HTML_OR_JSON",
+    "textExtraction": "Identical original JSON/GeoJSON bytes; no words or coordinates altered",
+    "evidence": "Native official current source for exact adopted district polygons and identity mapping. Geometry authority only; source representative names/contact attributes are not imported as candidate/profile facts."
+  },
+  {
+    "role": "OFFICIAL_ELECTORATE_AUTHORITY",
+    "sourceUrl": "https://giswww.westchestergov.com/arcgis/rest/services/FindElectedOfficials/MapServer/36?f=pjson",
+    "finalUrl": "https://giswww.westchestergov.com/arcgis/rest/services/FindElectedOfficials/MapServer/36?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:06:24.944349+00:00",
+    "sha256": "a41c17914041ab76fff405fb099e4ebeba051576a7c9f29717f081ec21ad88d1",
+    "sourceFile": "sources/a41c17914041ab76fff405fb099e4ebeba051576a7c9f29717f081ec21ad88d1.source",
+    "excerptFile": "sources/a41c17914041ab76fff405fb099e4ebeba051576a7c9f29717f081ec21ad88d1.txt",
+    "excerptSha256": "a41c17914041ab76fff405fb099e4ebeba051576a7c9f29717f081ec21ad88d1",
+    "captureFormat": "NATIVE_HTML_OR_JSON",
+    "textExtraction": "Identical original JSON/GeoJSON bytes; no words or coordinates altered",
+    "evidence": "Native official current source for exact adopted district polygons and identity mapping. Geometry authority only; source representative names/contact attributes are not imported as candidate/profile facts."
+  },
+  {
+    "role": "OFFICIAL_ELECTORATE_AUTHORITY",
+    "sourceUrl": "https://www.westchesterlegislatorsny.gov/interactive-maps",
+    "finalUrl": "https://www.westchesterlegislatorsny.gov/interactive-maps",
+    "sourceCheckedAt": "2026-11-03T06:06:25.983489+00:00",
+    "sha256": "f28642b5ee5579713703683a22fd7a875a5d16a350bbf680af49d177ace2fdbc",
+    "sourceFile": "sources/f28642b5ee5579713703683a22fd7a875a5d16a350bbf680af49d177ace2fdbc.source",
+    "excerptFile": "sources/f28642b5ee5579713703683a22fd7a875a5d16a350bbf680af49d177ace2fdbc.txt",
+    "excerptSha256": "34d6ee4b0f2819a6248e99d8c7381b445ac568ce61a9c1eb0f580587811afd25",
+    "captureFormat": "NATIVE_HTML_OR_JSON",
+    "textExtraction": "HTMLParser text nodes in document order, excluding scripts and styles",
+    "evidence": "Native official current source for exact adopted district polygons and identity mapping. Geometry authority only; source representative names/contact attributes are not imported as candidate/profile facts."
   }
 ]

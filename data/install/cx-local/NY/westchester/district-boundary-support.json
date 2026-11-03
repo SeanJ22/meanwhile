@@ -1,0 +1,145 @@
+{
+  "kind": "EXACT_OFFICIAL_BOUNDARY_SUPPLEMENT",
+  "status": "SOURCE_READY_REGISTRY_INSTALL_NOT_PERFORMED",
+  "districtMappings": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:1",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "1",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:2",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "2",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:3",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "3",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:4",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "4",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:5",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "5",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:6",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "6",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:7",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "7",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:8",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "8",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:9",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "9",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:10",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "10",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:11",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "11",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:12",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "12",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:13",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "13",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:14",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "14",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:15",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "15",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:16",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "16",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:17",
+      "sourceFile": "sources/eaebb1a4a3ddbd81660acf165c4def70801e092202b09e765fcfd5e4f24eb91c.source",
+      "property": "DISTRICTID",
+      "propertyValue": "17",
+      "originalFeatureCoordinatesUnchanged": true,
+      "installStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_READER_CHECK"
+    }
+  ],
+  "geometryProjection": "Native output WGS84 EPSG4326, coordinates checked in legal longitude/latitude ranges",
+  "sourceCandidateProfilesImported": false,
+  "productionWrites": false
+}

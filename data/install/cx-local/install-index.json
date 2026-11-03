@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:17:14.885084+00:00",
+  "preparedAt": "2026-11-03T06:21:45.408246+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1243,7 +1243,7 @@
       "candidacies": 130,
       "newContests": 68,
       "refreshedContests": 1,
-      "sourceInputSha256": "29361caa41462c4b5fa933132c5dd7835b51f8fabc3347ec7d7a55062bed3294",
+      "sourceInputSha256": "0d0f578946a6e63f9a1804ab21facd40826333176b9dca1756835728c28dbb99",
       "coverage": {
         "individuallyCompleteCandidateOffices": 69,
         "allPrintedNamesInEachImportedOffice": true,
@@ -1259,7 +1259,8 @@
           "Exact Mount Kisco Public Library district applicability and 17 county legislative district boundaries require installation/review.",
           "Any additional independently administered school or special election fields not represented in acquired samples remain an open acquisition gap.",
           "Existing measures are preserved, with no new measure or absence assertion from this candidate-office packet."
-        ]
+        ],
+        "boundarySupplement": "Exact adopted native official polygons supplied for 17 currently prepared district IDs. Registry joins and live reader verification remain River work; no electorate widened."
       }
     },
     {

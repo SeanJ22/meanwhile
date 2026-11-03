@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Westchester County Legislative District Maps </title>
+	<link href="https://www.westchesterlegislatorsny.gov/component/finder/search?format=opensearch" rel="search" title="OpenSearch Board of Legislators" type="application/opensearchdescription+xml">
+	<link href="/images/BOL-seal-color.png" rel="icon" sizes="any">
+	<link href="/images/BOL-seal-color.png#2" rel="apple-touch-icon">
+
+        <link href="/plugins/system/screenreader/screenreader/libraries/controller/css/accessible.css?1792436216" rel="stylesheet">
+	<link href="/plugins/system/screenreader/screenreader/libraries/controller/css/extras.css?1792436216" rel="stylesheet">
+	<link href="/media/vendor/bootstrap/css/bootstrap.min.css?5.3.8" rel="stylesheet">
+	<link href="/media/vendor/joomla-custom-elements/css/joomla-alert.min.css?0.4.1" rel="stylesheet">
+	<link href="/media/system/css/joomla-fontawesome.min.css?5.0.53" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<link href="/templates/yootheme/css/theme.12.css?1793034621" rel="stylesheet">
+	<link href="/templates/yootheme/css/theme.update.css?5.0.53" rel="stylesheet">
+	<link href="/templates/yootheme/css/custom.css?5.0.53" rel="stylesheet">
+	<link href="/media/plg_system_jcepro/site/css/content.min.css?86aa0286b6232c4a5b58f892ce080277" rel="stylesheet">
+	<style>#accessibility-links #text_plugin{width:80px;}</style>
+	<style>:focus{outline: 2px solid #9e615f !important;}</style>
+	<style>div.gpt_float_switcher .gt-selected,div.gpt_float_switcher,div.gpt_options{background-color:#ffffff}div.gpt_float_switcher,div.gpt_float_switcher div.gt-selected div.gpt-current-lang,div.gpt_float_switcher, div.gpt_float_switcher div.gpt_options a{color:#000000;font-size: 20px}div.gpt_float_switcher{border-radius:0px}div.gpt_float_switcher img,svg.svg-inline--fa{box-sizing:border-box;width:32px}</style>
+
+        <script src="/media/vendor/jquery/js/jquery.min.js?3.7.1"></script>
+	<script src="/media/legacy/js/jquery-noconflict.min.js?504da4"></script>
+	<script src="/plugins/system/screenreader/screenreader/languages/en-GB.js?1792436216"></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/tts/soundmanager/soundmanager2.js?1bc200"></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/tts/responsivevoice.js?1bc200" defer></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/tts/tts.js?1792436216" defer></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/controller/controller.js?1792436216" defer></script>
+	<script src="/media/mod_gptranslate/js/responsivevoice.js?1bc200" defer></script>
+	<script src="/media/mod_gptranslate/js/jsonrepair/index.js?1bc200" type="module"></script>
+	<script src="/media/mod_gptranslate/js/gptranslate.js?1bc200" data-gt-orig-url="/interactive-maps" data-gt-orig-domain="www.westchesterlegislatorsny.gov" data-gt-widget-id="115" type="module"></script>
+	<script src="/media/vendor/awesomplete/js/awesomplete.min.js?1.1.7" defer></script>
+	<script type="application/json" class="joomla-script-options new">{"joomla.jtext":{"JLIB_JS_AJAX_ERROR_OTHER":"An error has occurred while fetching the JSON data: HTTP %s status code.","JLIB_JS_AJAX_ERROR_PARSE":"A parse error has occurred while processing the following JSON data:<br><code style=\"color:inherit;white-space:pre-wrap;padding:0;margin:0;border:0;background:inherit;\">%s<\/code>","ERROR":"Error","MESSAGE":"Message","NOTICE":"Notice","WARNING":"Warning","SUCCESS":"Success","JCLOSE":"Close","JOK":"OK","JOPEN":"Open"},"finder-search":{"url":"\/component\/finder?task=suggestions.suggest&amp;format=json&amp;tmpl=component"},"system.paths":{"root":"","rootFull":"https:\/\/www.westchesterlegislatorsny.gov\/","base":"","baseFull":"https:\/\/www.westchesterlegislatorsny.gov\/"},"csrf.token":"8c8b4446509a2791755ed414c6257f1d"}</script>
+	<script src="/media/system/js/core.min.js?a3d8f8"></script>
+	<script src="/media/vendor/bootstrap/js/toast.min.js?5.3.8" type="module"></script>
+	<script src="/media/com_finder/js/finder.min.js?755761" type="module"></script>
+	<script src="/media/system/js/messages.min.js?9a4811" type="module"></script>
+	<script src="/templates/yootheme/vendor/assets/uikit/dist/js/uikit.min.js?5.0.53"></script>
+	<script src="/templates/yootheme/vendor/assets/uikit/dist/js/uikit-icons-fuse.min.js?5.0.53"></script>
+	<script src="/templates/yootheme/assets/site/js/theme.js?5.0.53"></script>
+	<script>window.soundManager.url = "https://www.westchesterlegislatorsny.gov/plugins/system/screenreader/screenreader/libraries/tts/soundmanager/swf/";
+window.soundManager.debugMode = false;
+window.soundManager.defaultOptions.volume = 80;
+var screenReaderConfigOptions = {"screenReaderVolume":"80","screenReaderVoiceSpeed":"normal","chunkLength":300,"position":"bottomleft","template":"accessible.css","templateOrientation":"vertical","templateVariant":"standard","scrolling":"fixed","targetAppendto":"html","targetAppendMode":"bottom","enableDarkMode":1,"enableAccessibilityStatement":0,"hideOnMobile":0,"useMinimizedToolbar":1,"statusMinimizedToolbar":"closed","minimizedToolbarOnlyMobile":0,"fontsizeMinimizedToolbar":0,"fontsizeRestoreOnClose":0,"hoverMinimizedToolbar":1,"preload":1,"preloadTimeout":3000,"autoBackgroundColor":1,"readPage":1,"readChildNodes":1,"excludeScripts":1,"ieHighContrast":1,"ieHighContrastAdvanced":1,"selectedStorage":"session","gtranslateIntegration":0,"selectMainpageareaText":0,"resetButtonBehavior":"fontsize","readElementsHovering":0,"elementsHoveringSelector":"p","elementsToexcludeCustom":"","readImages":0,"readImagesAttribute":"alt","readImagesOrdering":"before","readImagesHovering":0,"mainpageSelector":"*[name*=main], *[class*=main], *[id*=main], *[id*=container], *[class*=container]","showlabel":1,"screenreaderIcon":"audio","screenreader":1,"highcontrast":1,"highcontrastAlternate":1,"colorHue":180,"colorBrightness":6,"rootTarget":1,"dyslexicFont":1,"grayHues":1,"spacingSize":1,"spacingSizeMin":0,"spacingSizeMax":10,"pageZoom":1,"bigCursor":1,"readingGuides":1,"readability":1,"readabilitySelector":"div.item-page,#content,div[itemprop=articleBody],div.item-content","hideImages":1,"hideAlsoVideosIframes":1,"customColors":1,"customColorsCssSelectors":"","fontsize":1,"fontsizeDefault":100,"fontsizeMin":50,"fontsizeMax":200,"fontsizeSelector":"","fontSizeHeadersIncrement":20,"preserveOriginalSpacing":0,"toolbarBgcolor":"#7994ba","volumeGradientColorStart":"#dae8fe","volumeGradientColorEnd":"#f2f7fa","highlightLinks":0,"stopAnimations":0,"respectReducedMotion":0,"readingMask":0,"colorOverlay":0,"presets":0,"presetVision":1,"presetDyslexia":1,"presetFocus":1,"presetMotor":1,"presetSeizure":1,"webSpeechRate":"0.9","webSpeechPitch":"1","webSpeechVoiceSelector":1,"webSpeechPreferQuality":1,"readerEngine":"proxy_responsive","useMobileReaderEngine":0,"mobileReaderEngine":"proxy_responsive","proxyResponsiveApikey":"kWyXm5dC","proxyResponsiveLanguageGender":"auto","proxyResponsiveReadingMode":"native","generateMissingImagesAlt":0,"fixHeadingsStructure":0,"fixLowContrastText":0,"fixMissingAriaRoles":0,"fixMissingFormLabels":0,"validateAndFixFocusOrder":0,"showSkipToContents":0,"skipToContentsSelector":"","removeLinksTarget":0,"volume_accesskeys":1,"accesskey_play":"P","accesskey_pause":"E","accesskey_stop":"S","accesskey_increase":"O","accesskey_decrease":"U","accesskey_reset":"R","accesskey_highcontrast":"H","accesskey_highcontrast2":"J","accesskey_highcontrast3":"K","accesskey_dyslexic":"D","accesskey_grayhues":"G","accesskey_spacingsize_increase":"M","accesskey_spacingsize_decrease":"N","accesskey_pagezoomsize_increase":"X","accesskey_pagezoomsize_decrease":"Y","accesskey_pagezoomsize_reset":"Z","accesskey_skiptocontents":"C","accesskey_bigcursor":"W","accesskey_reading_guides":"V","accesskey_readability":"Q","accesskey_hideimages":"F","accesskey_minimized":"L","accesskey_increase_volume":"+","accesskey_decrease_volume":"-","accesskey_change_text_color":"I","accesskey_change_background_color":"B","accesskey_highlight_links":"A","accesskey_stop_animations":"T","accesskey_reading_mask":"6","accesskey_color_overlay":"7","baseURI":"https://www.westchesterlegislatorsny.gov/","proxyBaseURI":"https://www.westchesterlegislatorsny.gov/plugins/system/screenreader/screenreader/libraries/tts/","assetsBaseURI":"https://www.westchesterlegislatorsny.gov/plugins/system/screenreader/screenreader/libraries/controller/css/images/","token":"56f65fca60fc8b1549ea5831a899d8786d51805d016e25a003a3bebb91d60162","langCode":"en","labeltext":"Accessibility Customization","enableAccessibilityStatementText":"Accessibility statement","enableAccessibilityStatementIsFile":0,"enableAccessibilityStatementLink":"","aiAltEndpoint":""};</script>
+	<script>var gptServerSideLink = "https://www.westchesterlegislatorsny.gov/index.php?option=com_ajax&plugin=gptranslate&format=json";var gptFormToken = "c741a067e9b77e21ffdbe036847fca17";var gptLiveSite = "https://www.westchesterlegislatorsny.gov/";var gptStorage = window.sessionStorage;var gptMaxTranslationsPerRequest = 100;var maxCharactersPerRequest = 2048;var gptRewriteLanguageUrl = 0;var gptRewriteLanguageAlias = 0;var gptRewriteLanguageAliasOriginalLanguage = 0;var gptExcludedAliasSlugs = "";var gptAutoSetLanguageDirection = 0;var gptServersideTranslations = 0;var gptLanguageSwitchRedirect = 0;var gptServersideTranslationsLanguageSwitchingMode = "url";var gptServersideTranslationsMatchquotes = 1;var gptRewriteDefaultLanguageUrl = 0;var gptRewritePageLinks = 0;var gptRewritePageLinksExclusions = "";var gptRewriteFormActions = 0;var gptTransliterateUrls = 0;var gptForceAsciiUrlAliases = 0;var gptTranslateMetadata = 0;var gptTranslatePlaceholders = 0;var gptTranslateAltImages = 0;var chatgptClassesAltimagesExcluded = "";var gptTranslateSrcImages = 0;var gptTranslateSrcIframes = 0;var gptTranslateSrcVideos = 0;var gptTranslateIframeLocale = 0;var gptTranslateTitles = 0;var gptTranslateValues = 0;var gptMetadataChosenEngine = 0;var gptSetHtmlLang = 0;var gptAddCanonical = 0;var gptAddAlternate = 0;var gptSubfolderInstallation = 0;var gptIgnoreQuerystring = 0;var gptChatgptGtranslateRequestDelay = 0;var gptInitialTranslationDelay = 0;var gptCssSelectorRealtimeTranslationsRetrigger = "";var gptRealtimeTranslationsRetriggerEvents = "['click']";var gptRealtimeTranslationsRetriggerEventsDelay = 200;var gptRealtimeTranslationsRetriggerForceGoogle = 0;var gptRealtimeTranslationsRetriggerDoNotRevert = 0;var gptRealtimeTranslationsRetriggerScopeSelector = "";var chatgptApiKey = [];var chatgptApiModel = "gpt-3.5-turbo";var chatgptTranslationMode = "client";var chatgptRequestMessage = "Compile this JSON object key-value pairs adding the translation into '{{target}}' language to the empty value from the original '{{source}}' language of the key and return me only a parsable JSON object without any surrounding characters, preserve and return in the JSON object the key in the original '{{source}}' language within double quotes: '{{translations}}'. Pay attention to not skip any key and translate all keys. Return only a parsable JSON object with no surrounding text, explanations, or markdown formatting. Ensure the response is valid JSON and can be parsed directly.";var chatgptRequestConversationMode = "user";var chatgptEnableReader = 1;var chatgptResponsivevoiceLanguageGender = "auto";var chatgptResponsivevoiceReadingMode = "native";var chatgptResponsivevoiceApiKey = "WLXcRhDN";var chatgptChunksize = "200";var chatgptCssSelectorLeafnodesExcluded = "a.nturl";var chatgptWordsLeafnodesExcluded = "";var chatgptMetadataWordsLeafnodesExcluded = "";var chatgptWordsMinLength = "0";var chatgptFlattenInnerFormattingTags = 0;var chatgptFlattenInnerFormattingTagsToRemove = "strong,em,u,b,i";var chatgptWrapExcludedWords = 0;var gptApplyDictionaryToAliases = 0;var chatgptMainpageSelector = "*[name*=main], *[class*=main], *[id*=main], *[id*=container], *[class*=container]";var chatgptElementsToExcludeCustom = "";var chatgptPopupFontsize = 20;var chatgptDraggableWidget = 0;var gptAudioVolume = 100;var gptVoiceSpeed = "normal";var gTranslateEngine = 1;var gTranslateMethod = 0;var translateEngineValue = "1";var gptPopupShadow = 1;var gptDisableControl = 0;var svgIconArrow = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 285 285"><path d="M282 76.5l-14.2-14.3a9 9 0 0 0-13.1 0L142.5 174.4 30.3 62.2a9 9 0 0 0-13.2 0L3 76.5a9 9 0 0 0 0 13.1l133 133a9 9 0 0 0 13.1 0l133-133a9 9 0 0 0 0-13z" style="fill:%23000000"/></svg>';</script>
+	<script>var MOD_GPTRANSLATE_TRANSLATING="Page translation in progress";var MOD_GPTRANSLATE_TRANSLATING_WAIT="Please wait...";var MOD_GPTRANSLATE_TRANSLATING_COMPLETE="Page translation completed";var MOD_GPTRANSLATE_READING_INPROGRESS="Text reading in progress";var MOD_GPTRANSLATE_READING_END="Text reading completed";var MOD_GPTRANSLATE_READING_EMPTY="No text to read on this page";var MOD_GPTRANSLATE_CHOOSE_LANGUAGE="Choose your language";var MOD_GPTRANSLATE_LANGUAGE_NAME_AF="Afrikaans";var MOD_GPTRANSLATE_LANGUAGE_NAME_SQ="Albanian";var MOD_GPTRANSLATE_LANGUAGE_NAME_AM="Amharic";var MOD_GPTRANSLATE_LANGUAGE_NAME_AR="Arabic";var MOD_GPTRANSLATE_LANGUAGE_NAME_HY="Armenian";var MOD_GPTRANSLATE_LANGUAGE_NAME_AZ="Azerbaijani";var MOD_GPTRANSLATE_LANGUAGE_NAME_EU="Basque";var MOD_GPTRANSLATE_LANGUAGE_NAME_BE="Belarusian";var MOD_GPTRANSLATE_LANGUAGE_NAME_BN="Bengali";var MOD_GPTRANSLATE_LANGUAGE_NAME_BS="Bosnian";var MOD_GPTRANSLATE_LANGUAGE_NAME_BG="Bulgarian";var MOD_GPTRANSLATE_LANGUAGE_NAME_CA="Catalan";var MOD_GPTRANSLATE_LANGUAGE_NAME_CEB="Cebuano";var MOD_GPTRANSLATE_LANGUAGE_NAME_NY="Chichewa";var MOD_GPTRANSLATE_LANGUAGE_NAME_ZH_CN="Chinese";var MOD_GPTRANSLATE_LANGUAGE_NAME_ZH_TW="Chinese (Traditional)";var MOD_GPTRANSLATE_LANGUAGE_NAME_CO="Corsican";var MOD_GPTRANSLATE_LANGUAGE_NAME_HR="Croatian";var MOD_GPTRANSLATE_LANGUAGE_NAME_CS="Czech";var MOD_GPTRANSLATE_LANGUAGE_NAME_DA="Danish";var MOD_GPTRANSLATE_LANGUAGE_NAME_NL="Dutch";var MOD_GPTRANSLATE_LANGUAGE_NAME_EN="English";var MOD_GPTRANSLATE_LANGUAGE_NAME_EO="Esperanto";var MOD_GPTRANSLATE_LANGUAGE_NAME_ET="Estonian";var MOD_GPTRANSLATE_LANGUAGE_NAME_TL="Filipino";var MOD_GPTRANSLATE_LANGUAGE_NAME_FI="Finnish";var MOD_GPTRANSLATE_LANGUAGE_NAME_FR="French";var MOD_GPTRANSLATE_LANGUAGE_NAME_FY="Frisian";var MOD_GPTRANSLATE_LANGUAGE_NAME_GL="Galician";var MOD_GPTRANSLATE_LANGUAGE_NAME_KA="Georgian";var MOD_GPTRANSLATE_LANGUAGE_NAME_DE="German";var MOD_GPTRANSLATE_LANGUAGE_NAME_EL="Greek";var MOD_GPTRANSLATE_LANGUAGE_NAME_GU="Gujarati";var MOD_GPTRANSLATE_LANGUAGE_NAME_HT="Haitian Creole";var MOD_GPTRANSLATE_LANGUAGE_NAME_HA="Hausa";var MOD_GPTRANSLATE_LANGUAGE_NAME_HAW="Hawaiian";var MOD_GPTRANSLATE_LANGUAGE_NAME_IW="Hebrew";var MOD_GPTRANSLATE_LANGUAGE_NAME_HI="Hindi";var MOD_GPTRANSLATE_LANGUAGE_NAME_HMN="Hmong";var MOD_GPTRANSLATE_LANGUAGE_NAME_HU="Hungarian";var MOD_GPTRANSLATE_LANGUAGE_NAME_IS="Icelandic";var MOD_GPTRANSLATE_LANGUAGE_NAME_IG="Igbo";var MOD_GPTRANSLATE_LANGUAGE_NAME_ID="Indonesian";var MOD_GPTRANSLATE_LANGUAGE_NAME_GA="Irish";var MOD_GPTRANSLATE_LANGUAGE_NAME_IT="Italian";var MOD_GPTRANSLATE_LANGUAGE_NAME_JA="Japanese";var MOD_GPTRANSLATE_LANGUAGE_NAME_JW="Javanese";var MOD_GPTRANSLATE_LANGUAGE_NAME_KN="Kannada";var MOD_GPTRANSLATE_LANGUAGE_NAME_KK="Kazakh";var MOD_GPTRANSLATE_LANGUAGE_NAME_KL="Kalaallisut";var MOD_GPTRANSLATE_LANGUAGE_NAME_KM="Khmer";var MOD_GPTRANSLATE_LANGUAGE_NAME_KO="Korean";var MOD_GPTRANSLATE_LANGUAGE_NAME_KU="Kurdish (Kurmanji)";var MOD_GPTRANSLATE_LANGUAGE_NAME_KY="Kyrgyz";var MOD_GPTRANSLATE_LANGUAGE_NAME_LO="Lao";var MOD_GPTRANSLATE_LANGUAGE_NAME_LA="Latin";var MOD_GPTRANSLATE_LANGUAGE_NAME_LV="Latvian";var MOD_GPTRANSLATE_LANGUAGE_NAME_LT="Lithuanian";var MOD_GPTRANSLATE_LANGUAGE_NAME_LB="Luxembourgish";var MOD_GPTRANSLATE_LANGUAGE_NAME_MK="Macedonian";var MOD_GPTRANSLATE_LANGUAGE_NAME_MG="Malagasy";var MOD_GPTRANSLATE_LANGUAGE_NAME_MS="Malay";var MOD_GPTRANSLATE_LANGUAGE_NAME_ML="Malayalam";var MOD_GPTRANSLATE_LANGUAGE_NAME_MT="Maltese";var MOD_GPTRANSLATE_LANGUAGE_NAME_MI="Maori";var MOD_GPTRANSLATE_LANGUAGE_NAME_MR="Marathi";var MOD_GPTRANSLATE_LANGUAGE_NAME_MN="Mongolian";var MOD_GPTRANSLATE_LANGUAGE_NAME_MY="Myanmar (Burmese)";var MOD_GPTRANSLATE_LANGUAGE_NAME_NE="Nepali";var MOD_GPTRANSLATE_LANGUAGE_NAME_NO="Norwegian";var MOD_GPTRANSLATE_LANGUAGE_NAME_PS="Pashto";var MOD_GPTRANSLATE_LANGUAGE_NAME_FA="Persian";var MOD_GPTRANSLATE_LANGUAGE_NAME_PL="Polish";var MOD_GPTRANSLATE_LANGUAGE_NAME_PT="Portuguese";var MOD_GPTRANSLATE_LANGUAGE_NAME_PA="Punjabi";var MOD_GPTRANSLATE_LANGUAGE_NAME_RO="Romanian";var MOD_GPTRANSLATE_LANGUAGE_NAME_RU="Russian";var MOD_GPTRANSLATE_LANGUAGE_NAME_SM="Samoan";var MOD_GPTRANSLATE_LANGUAGE_NAME_GD="Scottish Gaelic";var MOD_GPTRANSLATE_LANGUAGE_NAME_SR="Serbian";var MOD_GPTRANSLATE_LANGUAGE_NAME_ST="Sesotho";var MOD_GPTRANSLATE_LANGUAGE_NAME_SN="Shona";var MOD_GPTRANSLATE_LANGUAGE_NAME_SD="Sindhi";var MOD_GPTRANSLATE_LANGUAGE_NAME_SI="Sinhala";var MOD_GPTRANSLATE_LANGUAGE_NAME_SK="Slovak";var MOD_GPTRANSLATE_LANGUAGE_NAME_SL="Slovenian";var MOD_GPTRANSLATE_LANGUAGE_NAME_SO="Somali";var MOD_GPTRANSLATE_LANGUAGE_NAME_ES="Spanish";var MOD_GPTRANSLATE_LANGUAGE_NAME_SU="Sundanese";var MOD_GPTRANSLATE_LANGUAGE_NAME_SW="Swahili";var MOD_GPTRANSLATE_LANGUAGE_NAME_SV="Swedish";var MOD_GPTRANSLATE_LANGUAGE_NAME_TG="Tajik";var MOD_GPTRANSLATE_LANGUAGE_NAME_TA="Tamil";var MOD_GPTRANSLATE_LANGUAGE_NAME_TE="Telugu";var MOD_GPTRANSLATE_LANGUAGE_NAME_TH="Thai";var MOD_GPTRANSLATE_LANGUAGE_NAME_TR="Turkish";var MOD_GPTRANSLATE_LANGUAGE_NAME_UK="Ukrainian";var MOD_GPTRANSLATE_LANGUAGE_NAME_UR="Urdu";var MOD_GPTRANSLATE_LANGUAGE_NAME_UZ="Uzbek";var MOD_GPTRANSLATE_LANGUAGE_NAME_VI="Vietnamese";var MOD_GPTRANSLATE_LANGUAGE_NAME_CY="Welsh";var MOD_GPTRANSLATE_LANGUAGE_NAME_XH="Xhosa";var MOD_GPTRANSLATE_LANGUAGE_NAME_YI="Yiddish";var MOD_GPTRANSLATE_LANGUAGE_NAME_YO="Yoruba";var MOD_GPTRANSLATE_LANGUAGE_NAME_ZU="Zulu";</script>
+	<script>window.gptranslateSettings = window.gptranslateSettings || {};window.gptranslateSettings['115'] = {"default_language":"en","languages":["af","sq","am","ar","hy","az","eu","be","bn","bs","bg","ca","ceb","ny","zh","co","hr","cs","da","nl","en","eo","et","tl","fi","fr","fy","gl","ka","de","el","gu","ht","ha","haw","iw","hi","hmn","hu","is","ig","id","ga","it","ja","jw","kn","kk","km","ko","ku","ky","lo","la","lv","lt","lb","mk","mg","ms","ml","mt","mi","mr","mn","my","ne","no","ps","fa","pl","pt","pa","ro","ru","sm","gd","sr","st","sn","sd","si","sk","sl","so","es","su","sw","sv","tg","ta","te","th","tr","uk","ur","uz","vi","cy","xh","yi","yo","zu"],"wrapper_selector":"#gpt-wrapper-115","float_switcher_open_direction":"top","detect_browser_language":"0","detect_current_language":"0","detect_default_language":"0","autotranslate_detected_language":"0","always_detect_autotranslated_language":"0","widget_text_color":"#000000","show_language_titles":"1","enable_dropdown":"1","enable_modal":"0","equal_widths":"0","reader_button_position":"top","custom_css":"","alt_flags":{"en":"usa","es":"mexico"},"switcher_horizontal_position":"right","switcher_vertical_position":"bottom","flags_location":"https:\/\/www.westchesterlegislatorsny.gov\/media\/mod_gptranslate\/flags\/","flag_loading":"local","flag_style":"2d","hide_flags":0,"widget_max_height":"260","incremental_enabled":0,"incremental_show_progress_popup":0,"incremental_caseinsensitive":0,"incremental_filter_excluded_words":0,"incremental_filter_dictionary_keys":0,"incremental_excluded_css_selectors":".hits,.item-page-hits,.article-hits,.modified-date,.modified,.created-date,.created,.article-info,.item-info,.print-icon,.email-icon,.pdf-icon,.datetime,.date-time,.numarticoli,.numarticles,.item-meta,.article-meta,.copyrights,.copyright-notice,.powered-by,.powered,.footer-text,.footer-info,.counter,.visit-counter,.meta-info,.visually-hidden,[role=tooltip]","incremental_excluded_text_patterns":"","incremental_preserve_new_texts":1};</script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.westchesterlegislatorsny.gov/#/schema/Organization/base","name":"Board of Legislators","url":"https://www.westchesterlegislatorsny.gov/"},{"@type":"WebSite","@id":"https://www.westchesterlegislatorsny.gov/#/schema/WebSite/base","url":"https://www.westchesterlegislatorsny.gov/","name":"Board of Legislators","publisher":{"@id":"https://www.westchesterlegislatorsny.gov/#/schema/Organization/base"},"potentialAction":{"@type":"SearchAction","target":"https://www.westchesterlegislatorsny.gov/component/finder/search?q={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"WebPage","@id":"https://www.westchesterlegislatorsny.gov/#/schema/WebPage/base","url":"https://www.westchesterlegislatorsny.gov/interactive-maps","name":"Westchester County Legislative District Maps ","isPartOf":{"@id":"https://www.westchesterlegislatorsny.gov/#/schema/WebSite/base"},"about":{"@id":"https://www.westchesterlegislatorsny.gov/#/schema/Organization/base"},"inLanguage":"en-GB"},{"@type":"Article","@id":"https://www.westchesterlegislatorsny.gov/#/schema/com_content/article/64","name":"Westchester County Legislative District Maps ","headline":"Westchester County Legislative District Maps ","inLanguage":"en-GB","isPartOf":{"@id":"https://www.westchesterlegislatorsny.gov/#/schema/WebPage/base"}}]}</script>
+	<script>window.yootheme ||= {}; yootheme.theme = {"i18n":{"close":{"label":"Close"},"totop":{"label":"Back to top"},"marker":{"label":"Open"},"navbarToggleIcon":{"label":"Open Menu"},"paginationPrevious":{"label":"Previous page"},"paginationNext":{"label":"Next Page"},"searchIcon":{"toggle":"Open Search","submit":"Submit Search"},"slider":{"next":"Next slide","previous":"Previous slide","slideX":"Slide %s","slideLabel":"%s of %s"},"slideshow":{"next":"Next slide","previous":"Previous slide","slideX":"Slide %s","slideLabel":"%s of %s"},"lightboxPanel":{"next":"Next slide","previous":"Previous slide","slideLabel":"%s of %s","close":"Close"}}};</script>
+	<script defer src="https://www.westchestercountyny.gov/ExternalLinkWarning.js"></script>
+	<script async src="https://docaccess.com/docbox.js"></script>
+	<script async src="https://siteimproveanalytics.com/js/siteanalyze_1302966.js"></script>
+
+    </head>
+    <body class="">
+
+        <div class="uk-hidden-visually uk-notification uk-notification-top-left uk-width-auto">
+            <div class="uk-notification-message">
+                <a href="#tm-main" class="uk-link-reset">Skip to main content</a>
+            </div>
+        </div>
+
+        
+        
+        <div class="tm-page">
+
+                        
+
+
+<header class="tm-header-mobile uk-hidden@m">
+
+
+        <div uk-sticky cls-active="uk-navbar-sticky" sel-target=".uk-navbar-container">
+    
+        <div class="uk-navbar-container">
+
+            <div class="uk-container uk-container-expand">
+                <nav class="uk-navbar uk-navbar-justify" uk-navbar="{&quot;align&quot;:&quot;center&quot;,&quot;container&quot;:&quot;.tm-header-mobile &gt; [uk-sticky]&quot;,&quot;boundary&quot;:&quot;.tm-header-mobile .uk-navbar-container&quot;}">
+
+                                        <div class="uk-navbar-left ">
+
+                                                    <a href="https://www.westchesterlegislatorsny.gov/" aria-label="Back to home" class="uk-logo uk-navbar-item">
+    <picture><source type="image/webp" srcset="/media/yootheme/cache/fb/BOL_seal-fbd1a201.webp 160w" sizes="(min-width: 80px) 80px"><img src="/component/ajax?p=cache/8e/BOL_seal-8eb629ee.png&amp;src=images/BOL_seal.png&amp;thumbnail=80,77,&amp;hash=e96d915c" width="80" height="77" alt="Westchester County BOL"></picture></a>
+                        
+                                                    
+                        
+                                                    <a uk-toggle href="#tm-dialog-mobile" class="uk-navbar-toggle" aria-controls="tm-dialog-mobile">
+
+        
+        <div uk-navbar-toggle-icon></div>
+
+        
+    </a>
+                        
+                    </div>
+                    
+                    
+                    
+                </nav>
+            </div>
+
+        </div>
+
+        </div>
+    
+
+
+
+        <div id="tm-dialog-mobile" uk-offcanvas="container: true; overlay: true" mode="slide" flip>
+        <div class="uk-offcanvas-bar uk-flex uk-flex-column" aria-label="Menu">
+
+                        <button class="uk-offcanvas-close uk-close-large" type="button" uk-close uk-toggle="cls: uk-close-large; mode: media; media: @s"></button>
+            
+                        <div class="uk-margin-auto-bottom">
+                
+<div class="uk-grid uk-child-width-1-1" uk-grid>    <div>
+<div class="uk-panel" id="module-tm-4">
+
+    
+    
+
+    <form action="/component/finder/search" method="get" role="search" class="uk-search js-finder-searchform uk-search-default uk-width-1-1"><span uk-search-icon></span><input name="q" class="js-finder-search-query uk-search-input" placeholder="Search" required aria-label="Search" type="search"></form>
+    
+
+</div>
+</div>    <div>
+<div class="uk-panel" id="module-10192">
+
+    
+    
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div id="wrap_js-2" class="jp-ce-accordion-wrapper">
+
+
+<div uk-accordion="collapsible: true;" id="js-2" class="custom_acc_6ae979e171b60">        <div id="js-2_0" class="el-item ">
+        <a class="uk-accordion-title" href="#">
+            <h3 class="el-accordion-title uk-h5 uk-margin-remove-bottom">
+                About            </h3>
+                            <span uk-accordion-icon></span>
+                    </a>
+
+        <div class="uk-accordion-content uk-margin-remove-first-child">            <div id="jp_accordation_section_6ae979e171d47" class="jp_section_content">
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div>
+    
+    
+        
+        <ul class="uk-margin-remove-bottom uk-nav uk-navbar-dropdown-nav">                                <li class="el-item ">
+<a class="el-link" href="/about">
+    
+        
+                    About        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/about/history-of-the-board">
+    
+        
+                    History of the Board        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/westchesterlegislatorsny.gov/images/pdf/role-of-county-government.pdf">
+    
+        
+                    Role of the County        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/about/student-legislature">
+    
+        
+                    Student Legislature        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/about/herman-s-geist-fellowship-program">
+    
+        
+                    Herman S. Geist Fellowship Program        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/about/meet-our-staff">
+    
+        
+                    Meet Our Staff        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/about/contact-us">
+    
+        
+                    Contact Us        
+    
+</a></li>
+                            </ul>
+        
+    
+    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div></div>        </div>    </div>
+        <div id="js-2_1" class="el-item ">
+        <a class="uk-accordion-title" href="#">
+            <h3 class="el-accordion-title uk-h5 uk-margin-remove-bottom">
+                Legislators            </h3>
+                            <span uk-accordion-icon></span>
+                    </a>
+
+        <div class="uk-accordion-content uk-margin-remove-first-child">            <div id="jp_accordation_section_6ae979e171f87" class="jp_section_content">
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div>
+    
+    
+        
+        <ul class="uk-margin-remove-bottom uk-nav uk-navbar-dropdown-nav">                                <li class="el-item ">
+<a class="el-link" href="https://experience.arcgis.com/experience/c25f0c6de5bc458d9ad66340fa15e392">
+    
+        
+                    Find Your Legislator        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-1">
+    
+        
+                    D1 - Colin Smith        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-2">
+    
+        
+                    D2 - Erika Pierce        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-3">
+    
+        
+                    D3 - Margaret Cunzio        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-4">
+    
+        
+                    D4 - Vedat Gashi        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-5">
+    
+        
+                    D5 - Jenn Puja        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-6">
+    
+        
+                    D6 - Nancy Barr        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-7">
+    
+        
+                    D7 - Anant Nambiar        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-8">
+    
+        
+                    D8 - Jewel Williams Johnson        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-9">
+    
+        
+                    D9 - Emiljana Ulaj        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-10">
+    
+        
+                    D10 - Judah Holstein        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-11">
+    
+        
+                    D11 - Terry Clements        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-12">
+    
+        
+                    D12 - David Imamura        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-13">
+    
+        
+                    D13 - Tyrae Woodson-Samuels        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-14">
+    
+        
+                    D14 - David Tubiolo        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-15">
+    
+        
+                    D15 - James Nolan        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-16">
+    
+        
+                    D16 - Shanae Williams        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislators/district-17">
+    
+        
+                    D17 - José Alvarado        
+    
+</a></li>
+                            </ul>
+        
+    
+    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div></div>        </div>    </div>
+        <div id="js-2_2" class="el-item ">
+        <a class="uk-accordion-title" href="#">
+            <h3 class="el-accordion-title uk-h5 uk-margin-remove-bottom">
+                Committees            </h3>
+                            <span uk-accordion-icon></span>
+                    </a>
+
+        <div class="uk-accordion-content uk-margin-remove-first-child">            <div id="jp_accordation_section_6ae979e1721bd" class="jp_section_content">
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div>
+    
+    
+        
+        <ul class="uk-margin-remove-bottom uk-nav uk-navbar-dropdown-nav">                                <li class="el-item ">
+<a class="el-link" href="/committees-sp-436">
+    
+        
+                    Committees        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/appointments">
+    
+        
+                    Appointments        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/budget-and-appropriations">
+    
+        
+                    Budget & Appropriations        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/health-2026">
+    
+        
+                    Health        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/infrastructure-housing">
+    
+        
+                    Infrastructure & Housing        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/intergovernmental-affairs">
+    
+        
+                    Intergovernmental Affairs        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/labor">
+    
+        
+                    Labor        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/legislation">
+    
+        
+                    Legislation        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/lit">
+    
+        
+                    Litigation        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/parks-environment">
+    
+        
+                    Parks & Environment        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/public-safety-veterans">
+    
+        
+                    Public Safety & Veterans        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/rules">
+    
+        
+                    Rules        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/sy">
+    
+        
+                    Seniors & Youth        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/small-business">
+    
+        
+                    Small Business        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/ssdhr">
+    
+        
+                    Social Services, Disabilities & Human Rights        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/affordability-economic-development-task-force">
+    
+        
+                    Affordability & Economic Development Task Force        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/cultural-affairs-task-force">
+    
+        
+                    Cultural Affairs Task Force        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/ftf">
+    
+        
+                    Families Task Force        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="/non-profit-task-force">
+    
+        
+                    Non-Profit Task Force        
+    
+</a></li>
+                            </ul>
+        
+    
+    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div></div>        </div>    </div>
+        <div id="js-2_3" class="el-item ">
+        <a class="uk-accordion-title" href="#">
+            <h3 class="el-accordion-title uk-h5 uk-margin-remove-bottom">
+                News            </h3>
+                            <span uk-accordion-icon></span>
+                    </a>
+
+        <div class="uk-accordion-content uk-margin-remove-first-child">            
+
+            
+<div class="uk-margin-top"><a class="el-link uk-button uk-button-default" href="/component/content/article/latest-news?catid=136">View Latest News</a></div>    
+        </div>    </div>
+        <div id="js-2_4" class="el-item ">
+        <a class="uk-accordion-title" href="#">
+            <h3 class="el-accordion-title uk-h5 uk-margin-remove-bottom">
+                Meetings            </h3>
+                            <span uk-accordion-icon></span>
+                    </a>
+
+        <div class="uk-accordion-content uk-margin-remove-first-child">            <div id="jp_accordation_section_6ae979e172313" class="jp_section_content">
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div>
+    
+    
+        
+        <ul class="uk-margin-remove-bottom uk-nav uk-navbar-dropdown-nav">                                <li class="el-item ">
+<a class="el-link" href="/?Itemid=1640">
+    
+        
+                    How to Participate        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="https://westchestercountyny.legistar.com/Calendar.aspx">
+    
+        
+                    Current/On-Demand Meetings        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="https://westchestercountyny.granicus.com/ViewPublisher.php?view_id=01">
+    
+        
+                    Meetings From 9/6/19 - 1/12/21        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="https://westchestercountyny.iqm2.com/Citizens/Default.aspx">
+    
+        
+                    Meetings prior to 09/05/19        
+    
+</a></li>
+                            </ul>
+        
+    
+    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div></div>        </div>    </div>
+        <div id="js-2_5" class="el-item ">
+        <a class="uk-accordion-title" href="#">
+            <h3 class="el-accordion-title uk-h5 uk-margin-remove-bottom">
+                Legislation            </h3>
+                            <span uk-accordion-icon></span>
+                    </a>
+
+        <div class="uk-accordion-content uk-margin-remove-first-child">            <div id="jp_accordation_section_6ae979e1723b9" class="jp_section_content">
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div>
+    
+    
+        
+        <ul class="uk-margin-remove-bottom uk-nav uk-navbar-dropdown-nav">                                <li class="el-item ">
+<a class="el-link" href="https://westchestercountyny.legistar.com/Legislation.aspx">
+    
+        
+                    Current Legislation        
+    
+</a></li>
+                                            <li class="el-item ">
+<a class="el-link" href="https://westchestercountyny.iqm2.com/Citizens/Search.aspx#SearchText=" uk-scroll>
+    
+        
+                    Legislation prior to 1/1/21        
+    
+</a></li>
+                            </ul>
+        
+    
+    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div></div>        </div>    </div>
+    </div>
+</div>
+
+<style>
+.custom_acc_6ae979e171b60 .uk-accordion-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.custom_acc_6ae979e171b60 .uk-accordion-title > :first-child {
+  flex: 1 1 auto;
+  margin: 0;
+}
+.custom_acc_6ae979e171b60 .uk-accordion-title > [uk-accordion-icon] {
+  flex: none;
+  margin-left: auto;
+}
+</style>
+
+<style>
+.custom_acc_6ae979e171b60 .uk-accordion-title * {
+    color: #E3EFF6 !important;
+}
+.custom_acc_6ae979e171b60 .uk-accordion-title {
+    padding: 5px !important;
+    color: #E3EFF6 !important;
+    background: #254A77 !important;
+    border: 1px solid rgba(0, 159, 227, 0) !important;
+    position: relative;
+        display: flex;
+    align-items: center;
+    gap: 10px;
+        }
+.custom_acc_6ae979e171b60 .uk-accordion-title > :first-child {
+    flex: 1 1 auto;
+    margin: 0;
+}
+.custom_acc_6ae979e171b60 .uk-accordion-title > [uk-accordion-icon] {
+    flex: none;
+    margin-left: auto;
+}
+.custom_acc_6ae979e171b60 .uk-accordion-content {
+    border: 1px solid rgba(227, 239, 246, 0) !important;
+    background: rgba(255, 255, 255, 0) !important;
+        padding: 15px !important;
+    margin-top: 15px !important;
+}
+.custom_acc_6ae979e171b60 .uk-accordion-content * {
+    color: ;
+}
+.custom_acc_6ae979e171b60 > :nth-child(n+2) {
+    border: unset !important;
+    box-shadow: unset !important;
+}
+</style>
+
+<style>
+.jp-accordion-search-clear {
+    color: #999;
+    cursor: pointer;
+    transition: color 0.15s ease-in-out;
+}
+.jp-accordion-search-clear:hover {
+    color: #333;
+}
+</style>
+
+<script>
+(function() {
+    'use strict';
+
+    function initAccordion() {
+        const wrapper = document.getElementById("wrap_js-2");
+        if (!wrapper) return;
+
+        const accEl = wrapper.querySelector('[uk-accordion]') || wrapper.querySelector('.uk-accordion') || document.getElementById("js-2");
+        if (!accEl) return;
+
+        const uniqueId = "js-2";
+        const rememberTab = false;
+        const rememberMode = "local";
+        const enableUrl = false;
+        const scrollToUrl = false;
+        const scrollToOnLoad = false;
+        const scrollOffset = -100;
+        const scrollOffsetUrl = -100;
+        const scrollDuration = "smooth";
+        const scrollDurationUrl = "smooth";
+        const serverActiveTab = "";
+        const searchAutoOpen = true;
+
+        function getDirectItems() {
+            return Array.from(accEl.children).filter(function(el) {
+                return el.classList.contains('el-item');
+            });
+        }
+
+        let activeSetFromHash = false;
+
+        // 1. URL Hash Deep Linking
+        const rawHash = (window.location.hash || '').replace('#', '');
+        const cleanHash = rawHash.replace(/[^a-zA-Z0-9_\-]/g, '');
+        if (cleanHash) {
+            const target = accEl.querySelector('.jp_' + CSS.escape(cleanHash));
+            if (target) {
+                const targetId = target.id;
+                const itemIndexStr = targetId.replace(uniqueId + '_', '');
+                const itemIndex = parseInt(itemIndexStr, 10);
+                if (!isNaN(itemIndex)) {
+                    if (window.UIkit && UIkit.accordion) {
+                        UIkit.accordion(accEl).toggle(itemIndex, true);
+                    }
+                    activeSetFromHash = true;
+
+                    if (scrollToUrl) {
+                        setTimeout(function() {
+                            const rect = target.getBoundingClientRect();
+                            window.scrollTo({
+                                top: window.pageYOffset + rect.top + (scrollOffsetUrl),
+                                left: 0,
+                                behavior: scrollDurationUrl
+                            });
+                        }, 400);
+                    }
+                }
+            }
+        }
+
+        // 2. State Persistence (if hash not matched)
+        if (!activeSetFromHash && rememberTab) {
+            let savedActive = null;
+            if (rememberMode === 'local') {
+                try { savedActive = localStorage.getItem('jp_acc_' + uniqueId); } catch(e) {}
+            } else if (rememberMode === 'session') {
+                try { savedActive = sessionStorage.getItem('jp_acc_' + uniqueId); } catch(e) {}
+            } else if (rememberMode === 'server') {
+                savedActive = serverActiveTab;
+            }
+
+            if (savedActive) {
+                const cleanActive = savedActive.replace(uniqueId + '_', '');
+                const activeIdx = parseInt(cleanActive, 10);
+                if (!isNaN(activeIdx) && window.UIkit && UIkit.accordion) {
+                    UIkit.accordion(accEl).toggle(activeIdx, true);
+                }
+            }
+        }
+
+        // 3. Scroll to Accordion on Load (if not handled by Hash)
+        if (!activeSetFromHash && scrollToOnLoad) {
+            setTimeout(function() {
+                const rect = accEl.getBoundingClientRect();
+                window.scrollTo({
+                    top: window.pageYOffset + rect.top + (scrollOffset),
+                    left: 0,
+                    behavior: scrollDuration
+                });
+            }, 400);
+        }
+
+        // 4. Listen for tab open events to persist state and update URL
+        if (window.UIkit && UIkit.util) {
+            UIkit.util.on(accEl, 'shown', function (ev) {
+                let activeItem = null;
+                const items = getDirectItems();
+                items.forEach(function (item) {
+                    if (item.classList.contains('uk-open')) {
+                        activeItem = item;
+                    }
+                });
+
+                if (activeItem) {
+                    const activeId = activeItem.id;
+                    const linkEl = activeItem.querySelector('a.uk-accordion-title');
+
+                    // Update URL if enabled
+                    if (enableUrl && linkEl && linkEl.href && linkEl.href !== '#' && !linkEl.href.endsWith('#')) {
+                        window.history.replaceState(null, '', linkEl.href);
+                    }
+
+                    // Persist state
+                    if (rememberTab && activeId) {
+                        if (rememberMode === 'local') {
+                            try { localStorage.setItem('jp_acc_' + uniqueId, activeId); } catch(e) {}
+                        } else if (rememberMode === 'session') {
+                            try { sessionStorage.setItem('jp_acc_' + uniqueId, activeId); } catch(e) {}
+                        } else if (rememberMode === 'server') {
+                            const token = (typeof Joomla !== 'undefined' && Joomla.getOptions) ? Joomla.getOptions('csrf.token', '') : '';
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', 'https://www.westchesterlegislatorsny.gov/index.php?task=jp_accordion_save&id=' + encodeURIComponent(uniqueId) + '&active=' + encodeURIComponent(activeId), true);
+                            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                            xhr.send(token ? token + '=1' : '');
+                        }
+                    }
+                }
+            });
+        }
+
+        // 5. Expand All / Collapse All functionality
+        function expandAll() {
+            const acc = (window.UIkit && UIkit.accordion) ? UIkit.accordion(accEl) : null;
+            const items = getDirectItems();
+
+            if (acc) {
+                acc.multiple = true;
+                items.forEach(function (item) {
+                    if (!item.classList.contains(acc.clsOpen || 'uk-open')) {
+                        acc.toggle(item, false);
+                    }
+                });
+            }
+
+            // Direct DOM sync ensures all items are visibly expanded and accessible
+            items.forEach(function (item) {
+                item.classList.add('uk-open');
+                const titleLink = item.querySelector('.uk-accordion-title');
+                if (titleLink) {
+                    titleLink.setAttribute('aria-expanded', 'true');
+                }
+                const content = item.querySelector('.uk-accordion-content');
+                if (content) {
+                    content.hidden = false;
+                    content.style.display = '';
+                }
+            });
+        }
+
+        function collapseAll() {
+            const acc = (window.UIkit && UIkit.accordion) ? UIkit.accordion(accEl) : null;
+            const items = getDirectItems();
+
+            if (acc) {
+                acc.collapsible = true;
+                items.forEach(function (item) {
+                    if (item.classList.contains(acc.clsOpen || 'uk-open')) {
+                        acc.toggle(item, false);
+                    }
+                });
+            }
+
+            // Direct DOM sync ensures all items are closed
+            items.forEach(function (item) {
+                item.classList.remove('uk-open');
+                const titleLink = item.querySelector('.uk-accordion-title');
+                if (titleLink) {
+                    titleLink.setAttribute('aria-expanded', 'false');
+                }
+                const content = item.querySelector('.uk-accordion-content');
+                if (content) {
+                    content.hidden = true;
+                }
+            });
+        }
+
+        const expBtn = wrapper.querySelector('.jp-acc-expand-all');
+        const colBtn = wrapper.querySelector('.jp-acc-collapse-all');
+        if (expBtn) {
+            expBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                expandAll();
+            });
+        }
+        if (colBtn) {
+            colBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                collapseAll();
+            });
+        }
+
+        // 6. Live Search Filter & Clear Button
+        const searchInput = wrapper.querySelector('.jp-accordion-search');
+        const clearBtn = wrapper.querySelector('.jp-accordion-search-clear');
+
+        function applySearch(q) {
+            const acc = (window.UIkit && UIkit.accordion) ? UIkit.accordion(accEl) : null;
+            const items = getDirectItems();
+
+            if (clearBtn) {
+                clearBtn.style.display = q ? '' : 'none';
+            }
+
+            if (q) {
+                if (acc && searchAutoOpen) {
+                    acc.multiple = true;
+                }
+                items.forEach(function (item) {
+                    const titleEl = item.querySelector('.uk-accordion-title');
+                    const contentEl = item.querySelector('.uk-accordion-content');
+                    const titleText = titleEl ? titleEl.textContent.toLowerCase() : '';
+                    const contentText = contentEl ? contentEl.textContent.toLowerCase() : '';
+                    const match = titleText.includes(q) || contentText.includes(q);
+
+                    if (match) {
+                        item.style.display = '';
+                        if (searchAutoOpen) {
+                            item.classList.add('uk-open');
+                            if (contentEl) {
+                                contentEl.hidden = false;
+                                contentEl.style.display = '';
+                            }
+                            if (titleEl) {
+                                titleEl.setAttribute('aria-expanded', 'true');
+                            }
+                        } else {
+                            item.classList.remove('uk-open');
+                            if (contentEl) {
+                                contentEl.hidden = true;
+                            }
+                            if (titleEl) {
+                                titleEl.setAttribute('aria-expanded', 'false');
+                            }
+                        }
+                    } else {
+                        item.style.display = 'none';
+                        item.classList.remove('uk-open');
+                        if (contentEl) {
+                            contentEl.hidden = true;
+                        }
+                        if (titleEl) {
+                            titleEl.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+            } else {
+                // Reset all items when search is cleared
+                items.forEach(function (item) {
+                    item.style.display = '';
+                    item.classList.remove('uk-open');
+                    const contentEl = item.querySelector('.uk-accordion-content');
+                    if (contentEl) {
+                        contentEl.hidden = true;
+                    }
+                    const titleEl = item.querySelector('.uk-accordion-title');
+                    if (titleEl) {
+                        titleEl.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                applySearch(this.value.trim().toLowerCase());
+            });
+
+            searchInput.addEventListener('search', function () {
+                applySearch(this.value.trim().toLowerCase());
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (searchInput) {
+                    searchInput.value = '';
+                    applySearch('');
+                    searchInput.focus();
+                }
+            });
+        }
+    }
+
+    // Initialize immediately if DOM is already ready (e.g. YOOtheme Customizer builder preview), or on DOMContentLoaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAccordion);
+    } else {
+        initAccordion();
+    }
+})();
+</script>
+                
+            
+        
+    
+</div>
+    
+</div>
+</div>
+</div>    <div>
+<div class="uk-panel" id="module-tm-5">
+
+    
+    <ul class="uk-grid uk-flex-inline uk-flex-middle uk-flex-nowrap">                    <li><a href="https://www.instagram.com/westchesterlegislators/" class="uk-preserve-width uk-icon-link" rel="noreferrer" aria-label="Open page on Instagram"><span uk-icon="icon: instagram; width: 28; height: 28;"></span></a></li>
+                    <li><a href="https://www.facebook.com/westchesterlegislators/" class="uk-preserve-width uk-icon-link" rel="noreferrer" aria-label="Open page on Facebook"><span uk-icon="icon: facebook; width: 28; height: 28;"></span></a></li>
+                    <li><a href="https://twitter.com/westchesterBOL" class="uk-preserve-width uk-icon-link" rel="noreferrer" aria-label="Open page on X/Twitter"><span uk-icon="icon: x; width: 28; height: 28;"></span></a></li>
+                    <li><a href="https://www.linkedin.com/company/westchester-county-board" class="uk-preserve-width uk-icon-link" rel="noreferrer" aria-label="Open page on LinkedIn"><span uk-icon="icon: linkedin; width: 28; height: 28;"></span></a></li>
+                    <li><a href="https://www.youtube.com/@westchesterlegislators" class="uk-preserve-width uk-icon-link" rel="noreferrer" aria-label="Open page on YouTube"><span uk-icon="icon: youtube; width: 28; height: 28;"></span></a></li>
+            </ul>
+</div>
+</div></div>
+            </div>
+            
+            
+        </div>
+    </div>
+    
+    
+    
+
+</header>
+
+
+
+
+<header class="tm-header uk-visible@m">
+
+
+
+
+    
+    
+                <div uk-sticky media="@m" cls-active="uk-navbar-sticky" sel-target=".uk-navbar-container">
+        
+            <div class="uk-navbar-container">
+
+                <div class="uk-container">
+                    <nav class="uk-navbar" uk-navbar="{&quot;align&quot;:&quot;center&quot;,&quot;container&quot;:&quot;.tm-header &gt; [uk-sticky]&quot;,&quot;boundary&quot;:&quot;.tm-header .uk-navbar-container&quot;}">
+
+                        
+                        <div class="uk-navbar-center">
+
+                            
+                                                                <div class="uk-navbar-center-left uk-preserve-width">
+                                    
+<ul class="uk-navbar-nav">
+    
+	<li class="item-101"><a href="/">Home</a></li>
+	<li class="item-143 uk-parent"><a href="/about">About</a>
+	<div class="uk-drop uk-navbar-dropdown"><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-1163"><a href="/about/about-the-board">About the Board</a></li>
+		<li class="item-1164"><a href="/about/history-of-the-board">History of the Board</a></li>
+		<li class="item-1165"><a href="/images/pdf/role-of-county-government.pdf" target="_blank">Role of the County</a></li>
+		<li class="item-1168"><a href="/about/student-legislature">Student Legislature</a></li>
+		<li class="item-1672"><a href="/about/herman-s-geist-fellowship-program">Herman S. Geist Fellowship Program</a></li>
+		<li class="item-1166"><a href="/about/meet-our-staff">Meet Our Staff</a></li>
+		<li class="item-1169"><a href="/about/contact-us">Contact Us</a></li></ul></div></div></li>
+	<li class="item-144 uk-parent"><a href="/legislators">Legislators</a>
+	<div class="uk-drop uk-navbar-dropdown uk-navbar-dropdown-width-2"><div class="uk-drop-grid uk-child-width-1-2" uk-grid><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-1176"><a href="https://experience.arcgis.com/experience/c25f0c6de5bc458d9ad66340fa15e392">Find Your Legislator</a></li>
+		<li class="item-401"><a href="/legislators/district-1">D1 - Colin Smith</a></li>
+		<li class="item-405"><a href="/legislators/district-2">D2 - Erika Pierce</a></li>
+		<li class="item-423"><a href="/legislators/district-3">D3 - Margaret Cunzio</a></li>
+		<li class="item-429"><a href="/legislators/district-4">D4 - Vedat Gashi</a></li>
+		<li class="item-433"><a href="/legislators/district-5">D5 - Jenn Puja</a></li>
+		<li class="item-438"><a href="/legislators/district-6">D6 - Nancy Barr</a></li>
+		<li class="item-442"><a href="/legislators/district-7">D7 - Anant Nambiar</a></li>
+		<li class="item-447"><a href="/legislators/district-8">D8 - Jewel Williams Johnson</a></li></ul></div><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-448"><a href="/legislators/district-9">D9 - Emiljana Ulaj</a></li>
+		<li class="item-451"><a href="/legislators/district-10">D10 - Judah Holstein</a></li>
+		<li class="item-453"><a href="/legislators/district-11">D11 - Terry Clements</a></li>
+		<li class="item-456"><a href="/legislators/district-12">D12 - David Imamura</a></li>
+		<li class="item-459"><a href="/legislators/district-13">D13 - Tyrae Woodson-Samuels</a></li>
+		<li class="item-462"><a href="/legislators/district-14">D14 - David Tubiolo</a></li>
+		<li class="item-464"><a href="/legislators/district-15">D15 - James Nolan</a></li>
+		<li class="item-467"><a href="/legislators/district-16">D16 - Shanae Williams</a></li>
+		<li class="item-469"><a href="/legislators/district-17">D17 - José Alvarado</a></li></ul></div></div></div></li>
+	<li class="item-179 uk-parent"><a href="/committees">Committees</a>
+	<div class="uk-drop uk-navbar-dropdown uk-navbar-dropdown-width-2"><div class="uk-drop-grid uk-child-width-1-2" uk-grid><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-1593"><a href="/committees/committees" class="uk-preserve-width"><picture><source type="image/webp" srcset="/media/yootheme/cache/29/arrow-295dacea.webp 9w" sizes="(min-width: 9px) 9px"><img src="/images/stories/arrow.png" alt width="9" height="9"></picture> Committees</a></li>
+		<li class="item-1594"><a href="/appointments">Appointments</a></li>
+		<li class="item-1595"><a href="/budget-and-appropriations">Budget &amp; Appropriations</a></li>
+		<li class="item-1599"><a href="/health-2026">Health</a></li>
+		<li class="item-1596"><a href="/infrastructure-housing">Infrastructure &amp; Housing</a></li>
+		<li class="item-1597"><a href="/intergovernmental-affairs">Intergovernmental Affairs</a></li>
+		<li class="item-1598"><a href="/labor">Labor</a></li>
+		<li class="item-1602"><a href="/legislation">Legislation</a></li>
+		<li class="item-1601"><a href="/lit">Litigation</a></li>
+		<li class="item-1603"><a href="/parks-environment">Parks &amp; Environment</a></li></ul></div><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-1604"><a href="/public-safety-veterans">Public Safety &amp; Veterans</a></li>
+		<li class="item-1606"><a href="/rules">Rules</a></li>
+		<li class="item-1600"><a href="/sy">Seniors &amp; Youth</a></li>
+		<li class="item-1605"><a href="/small-business">Small Business</a></li>
+		<li class="item-1607"><a href="/ssdhr">Social Services, Disabilities &amp; Human Right</a></li>
+		<li class="item-1727"><a href="/affordability-economic-development-task-force">Affordability &amp; Economic Development Task Force</a></li>
+		<li class="item-1608"><a href="/cultural-affairs-task-force">Cultural Affairs Task Force</a></li>
+		<li class="item-1609"><a href="/ftf">Families Task Force</a></li>
+		<li class="item-1611"><a href="/non-profit-task-force">Non-Profit Task Force</a></li></ul></div></div></div></li></ul>
+
+                                </div>
+                                
+                                <a href="https://www.westchesterlegislatorsny.gov/" aria-label="Back to home" class="uk-logo uk-navbar-item">
+    <picture><source type="image/webp" srcset="/media/yootheme/cache/fb/BOL_seal-fbd1a201.webp 160w" sizes="(min-width: 80px) 80px"><img src="/component/ajax?p=cache/8e/BOL_seal-8eb629ee.png&amp;src=images/BOL_seal.png&amp;thumbnail=80,77,&amp;hash=e96d915c" width="80" height="77" alt="Westchester County BOL"></picture></a>
+
+                                                                <div class="uk-navbar-center-right uk-preserve-width">
+                                    
+<ul class="uk-navbar-nav">
+    
+	<li class="item-1184"><a href="/latest-news">News</a></li>
+	<li class="item-1153 uk-parent"><a href="/meetings">Meetings</a>
+	<div class="uk-drop uk-navbar-dropdown"><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-1424"><a href="/meetings/how-to-participate">How to Participate</a></li>
+		<li class="item-1171"><a href="https://westchestercountyny.legistar.com/Calendar.aspx" target="_blank">Current/On-Demand Meetings</a></li>
+		<li class="item-1293"><a href="https://westchestercountyny.granicus.com/ViewPublisher.php?view_id=01" target="_blank">Meetings from 9/6/19 - 1/12/21</a></li>
+		<li class="item-1172"><a href="https://westchestercountyny.iqm2.com/Citizens/Default.aspx" target="_blank">Meetings prior to 09/05/19</a></li></ul></div></div></li>
+	<li class="item-147 uk-parent"><a href="/search-legislation">Legislation</a>
+	<div class="uk-drop uk-navbar-dropdown"><div><ul class="uk-nav uk-navbar-dropdown-nav">
+
+		<li class="item-1295"><a href="https://westchestercountyny.legistar.com/Legislation.aspx" target="_blank">Current Legislation</a></li>
+		<li class="item-379"><a href="https://westchestercountyny.iqm2.com/Citizens/Search.aspx#SearchText=" uk-scroll target="_blank">Legislation prior to 1/1/21</a></li></ul></div></div></li></ul>
+
+<div class="uk-navbar-item" id="module-115">
+
+    
+    <div class="gptranslate_wrapper" id="gpt-wrapper-115"></div>
+</div>
+
+<div class="uk-navbar-item" id="module-tm-3">
+
+    
+    
+
+    <form action="/component/finder/search" method="get" role="search" class="uk-search js-finder-searchform uk-search-navbar"><span uk-search-icon></span><input name="q" class="js-finder-search-query uk-search-input" placeholder="Search" required aria-label="Search" type="search"></form>
+    
+
+</div>
+
+                                </div>
+                                
+                            
+                        </div>
+
+                        
+                    </nav>
+                </div>
+
+            </div>
+
+                </div>
+        
+    
+    
+
+
+
+
+
+
+</header>
+
+            
+            
+
+            <main id="tm-main" class="tm-main uk-section uk-section-default" uk-height-viewport="expand: true">
+
+                                <div class="uk-container">
+
+                    
+                            
+                
+                <div id="system-message-container" aria-live="polite"></div>
+
+                
+<article id="article-64" class="uk-article" data-permalink="https://www.westchesterlegislatorsny.gov/interactive-maps" typeof="Article" vocab="https://schema.org/">
+
+    <meta property="name" content="Westchester County Legislative District Maps ">
+    <meta property="author" typeof="Person" content="Administrator">
+    <meta property="dateModified" content="2026-05-20T20:08:34-04:00">
+    <meta property="datePublished" content="2010-02-25T17:31:46-05:00">
+    <meta class="uk-margin-remove-adjacent" property="articleSection" content="General">
+
+            
+    
+                        
+                    <h1 property="headline" class="uk-margin-top uk-margin-remove-bottom uk-article-title">
+                Westchester County Legislative District Maps             </h1>
+        
+        
+        
+        
+        
+                <div class="uk-margin-medium-top" property="text">
+
+            
+                            
+<p class="HEADERORANGE"><br />Click any link below for the most current Westchester County Map.</p>
+<p class="COPY" style="text-align: left;"><strong>The links below provide access to photographs, interactive maps and downloadable maps of the 17 districts:</strong></p>
+<ul>
+<li style="text-align: left;"><a href="/images/pdf/maps/2026/Legislative_Districts_Countywide.pdf" target="_blank" rel="noreferrer">County Legislative District Map</a></li>
+<li style="text-align: left;"><a href="https://giswww.westchestergov.com/wcgis/Mapping.htm" target="_blank" rel="noopener noreferrer" style="margin-top: 0px; margin-bottom: 0px;"><span style="color: #810081;">Interactive Maps</span></a></li>
+<li style="text-align: left;"><a href="https://planning.westchestergov.com/land-use-development/publications/maps-and-aerial-photos" target="_blank" rel="noopener noreferrer">Maps and Aerial Photographs</a></li>
+</ul>
+<p style="text-align: left;"><span style="color: #000000;"><strong>Legislative District Maps*:</strong></span></p>
+<p><b>*</b>The following legislative district maps conform to the District boundaries adopted by the Westchester County Board of Legislators via Local Law No. 18 – 2022, and amended via Local Law No. 12-2023.</p>
+<ul>
+<li><a href="/images/pdf/maps/2026/colegdist-1.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 1</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-2.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 2</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-3.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 3</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-4.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 4</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-5.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 5</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-6.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 6</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-7.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 7</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-8.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 8</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-9.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 9</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-10.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 10</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-11.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 11</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-12.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 12</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-13.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 13</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-14.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 14</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-15.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 15</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-16.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 16</a></li>
+<li><a href="/images/pdf/maps/2026/colegdist-17.pdf" target="_blank" title="Opens County Legislative District Map PDF in new window and leaves Westchester Legislators website">District 17</a></li>
+</ul>
+<p style="padding-left: 30px;">&nbsp;</p>
+<p style="padding-left: 30px;">&nbsp;</p>
+<p style="padding-left: 30px;">&nbsp;</p>             
+        </div>
+        
+        
+        
+        
+        
+        
+        
+    
+</article>
+
+
+                
+                        
+                </div>
+                
+            </main>
+
+            
+
+                        <footer>
+                <!-- Builder #footer -->
+<div class="uk-section-default uk-section uk-section-xsmall">
+    
+        
+        
+        
+            
+                                <div class="uk-container">                
+                    
+<div class="uk-grid-margin uk-container">
+        <div class="uk-grid uk-flex-center uk-child-width-1-1">    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    <hr>
+<div class="uk-margin uk-text-center">    <ul class="uk-child-width-auto uk-flex-inline uk-flex-middle" uk-grid>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.instagram.com/westchesterlegislators/" aria-label="Instagram"><span uk-icon="icon: instagram;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.facebook.com/westchesterlegislators/" aria-label="Facebook"><span uk-icon="icon: facebook;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://twitter.com/westchesterBOL" aria-label="X"><span uk-icon="icon: x;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.linkedin.com/company/westchester-county-board" aria-label="LinkedIn"><span uk-icon="icon: linkedin;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.youtube.com/@westchesterlegislators" aria-label="YouTube"><span uk-icon="icon: youtube;"></span></a></li>
+    
+    </ul></div><hr>
+                
+            
+        
+    
+</div>
+        </div>    
+</div>
+                                </div>                
+            
+        
+    
+</div>
+<div class="uk-section-primary uk-section uk-section-small-top uk-padding-remove-bottom">
+    
+        
+        
+        
+            
+                                <div class="uk-container">                
+                    
+<div class="uk-grid-margin uk-grid tm-grid-expand" uk-grid>
+    
+        
+<div class="uk-width-1-2@s uk-width-1-4@m uk-width-1-6@l uk-width-1-6@xl">
+    
+        
+            
+            
+            
+                
+                    
+<h2 class="uk-text-meta uk-heading-divider">
+    
+        
+                    Who We Are        
+        
+    
+</h2>
+<ul class="uk-list">
+    
+    
+                <li class="el-item">            <div class="el-content uk-panel"><a href="/about-the-board" class="el-link uk-link-reset uk-margin-remove-last-child">About the Board</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/about/history-of-the-board" class="el-link uk-link-reset uk-margin-remove-last-child">History of the Board</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/about/meet-our-staff" class="el-link uk-link-reset uk-margin-remove-last-child">Meet Our Staff</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/legislators" class="el-link uk-link-reset uk-margin-remove-last-child">Meet Your Legislator</a></div>        </li>        
+    
+    
+</ul>
+                
+            
+        
+    
+</div>
+<div class="uk-width-1-2@s uk-width-1-4@m uk-width-1-6@l uk-width-1-6@xl">
+    
+        
+            
+            
+            
+                
+                    
+<h2 class="uk-text-meta uk-heading-divider">
+    
+        
+                    Legislative Resources        
+        
+    
+</h2>
+<ul class="uk-list">
+    
+    
+                <li class="el-item">            <div class="el-content uk-panel"><a href="/search-legislation" class="el-link uk-link-reset uk-margin-remove-last-child">Search Legislation</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="https://library.municode.com/ny/westchester_county/codes/code_of_ordinances" class="el-link uk-link-reset uk-margin-remove-last-child">County Charter &amp; Administrative Code</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/fy2026-budget-dashboard" class="el-link uk-link-reset uk-margin-remove-last-child">Budget Dashboard</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="https://giswww.westchestergov.com/ElectedOfficials/index.html" class="el-link uk-link-reset uk-margin-remove-last-child">Legislative District Maps</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/archive">Archive</a></div>        </li>        
+    
+    
+</ul>
+                
+            
+        
+    
+</div>
+<div class="uk-width-1-2@s uk-width-1-4@m uk-width-1-6@l uk-width-1-6@xl">
+    
+        
+            
+            
+            
+                
+                    
+<h2 class="uk-text-meta uk-heading-divider">
+    
+        
+                    Get Involved        
+        
+    
+</h2>
+<ul class="uk-list">
+    
+    
+                <li class="el-item">            <div class="el-content uk-panel"><a href="/latest-news" class="el-link uk-link-reset uk-margin-remove-last-child">Latest News</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="https://westchestercountyny.legistar.com/Calendar.aspx" class="el-link uk-link-reset uk-margin-remove-last-child">Meeting Calendar</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/how-to-participate" class="el-link uk-link-reset uk-margin-remove-last-child">How To Participate</a></div>        </li>                <li class="el-item">            <div class="el-content uk-panel"><a href="/subscribe-to-legislators-e-news" class="el-link uk-link-reset uk-margin-remove-last-child">Subscribe to eNews</a></div>        </li>        
+    
+    
+</ul>
+                
+            
+        
+    
+</div>
+<div class="uk-width-1-2@s uk-width-1-4@m">
+    
+        
+            
+            
+            
+                
+                    
+<h2 class="uk-text-meta uk-heading-divider">
+    
+        
+                    Contact Us        
+        
+    
+</h2>
+<ul class="uk-list uk-margin uk-text-left">        <li class="el-item">
+
+
+    
+    
+<div class="el-title uk-margin-remove uk-text-bold">Westchester County Board of Legislators</div>
+    
+    <div class="el-content uk-panel"><div>800 Michaelian Office Building</div>
+<div>148 Martine Avenue, 8th Floor</div>
+<div>White Plains, NY 10601</div></div>
+            
+
+</li>
+    </ul>
+<div class="uk-margin uk-text-center">
+        <div class="uk-flex-middle uk-grid-column-medium uk-grid-row-small uk-child-width-1-1" uk-grid>    
+    
+                <div class="el-item">
+        
+        
+<a class="el-content uk-width-1-1 uk-button uk-button-default uk-flex-inline uk-flex-center uk-flex-middle" href="https://maps.app.goo.gl/wADbGdGg8XeKKXrK9">
+        <span class="uk-margin-xsmall-right" uk-icon="location"></span>    
+        Get Directions    
+    
+</a>
+
+
+                </div>
+        
+    
+                <div class="el-item">
+        
+        
+<a class="el-content uk-width-1-1 uk-button uk-button-default uk-flex-inline uk-flex-center uk-flex-middle" href="tel:+1-914-995-2800">
+        <span class="uk-margin-xsmall-right" uk-icon="receiver"></span>    
+        (914) 995-2800    
+    
+</a>
+
+
+                </div>
+        
+    
+        </div>    
+</div>
+
+                
+            
+        
+    
+</div>
+    
+</div>
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    <div class="uk-panel uk-margin-large uk-text-center"><p style="text-align: center;"><a href="/privacy-statement">Privacy Statement</a>  I  <a href="/terms-a-conditions">Terms &amp; Conditions</a></p>
+<p style="text-align: center;">© 2026 Westchester County Legislators. All Rights Reserved</p>
+<p style="text-align: left;"></p>
+<p style="text-align: left;"></p></div>
+                
+            
+        
+    
+</div>
+    
+</div>
+                                </div>                
+            
+        
+    
+</div>            </footer>
+            
+        </div>
+
+        
+        
+        
+
+    </body>
+</html>
